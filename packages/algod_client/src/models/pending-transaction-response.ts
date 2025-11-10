@@ -1,5 +1,5 @@
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { ModelMetadata } from '../core/model-runtime'
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { AccountStateDelta } from './account-state-delta'
 import { AccountStateDeltaMeta } from './account-state-delta'
 import type { StateDelta } from './state-delta'
@@ -99,7 +99,7 @@ export const PendingTransactionResponseMeta: ModelMetadata = {
       wireKey: 'close-rewards',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'closingAmount',

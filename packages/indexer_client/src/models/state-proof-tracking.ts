@@ -45,7 +45,7 @@ export const StateProofTrackingMeta: ModelMetadata = {
       wireKey: 'online-total-weight',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'nextRound',

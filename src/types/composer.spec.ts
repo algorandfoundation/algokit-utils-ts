@@ -5,7 +5,7 @@ describe('TransactionComposer', () => {
   const fixture = algorandFixture()
 
   beforeEach(async () => {
-    await fixture.beforeEach()
+    await fixture.newScope()
   })
 
   describe('error transformers', () => {

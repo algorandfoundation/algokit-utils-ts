@@ -1,25 +1,30 @@
-import algosdk, { ABIMethod, Address } from 'algosdk'
+import { AlgodClient, SimulateRequest, SimulateTransaction, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { AccessReference, OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import {
+  ABIMethod,
+  Address,
+  AtomicTransactionComposer,
+  TransactionSigner,
+  TransactionWithSigner,
+  isTransactionWithSigner,
+} from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
+import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendAtomicTransactionComposerResults, SendParams } from './transaction'
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import Transaction = algosdk.Transaction
-import TransactionSigner = algosdk.TransactionSigner
-import TransactionWithSigner = algosdk.TransactionWithSigner
-import isTransactionWithSigner = algosdk.isTransactionWithSigner
-import SimulateResponse = algosdk.modelsv2.SimulateResponse
-import modelsv2 = algosdk.modelsv2
-
-const address = (address: string | Address): Address => {
-  return typeof address === 'string' ? Address.fromString(address) : address
-}
+import {
+  Arc2TransactionNote,
+  SendAtomicTransactionComposerResults,
+  SendParams,
+  TransactionWrapper,
+  wrapPendingTransactionResponse,
+} from './transaction'
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
@@ -36,7 +41,7 @@ export type SkipSignaturesSimulateOptions = Expand<
 /** The raw API options to control a simulate request.
  * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
-export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
+export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
 
 /** All options to control a simulate request */
 export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
@@ -344,7 +349,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   /** ID of the application; 0 if the application is being created. */
   appId: bigint
   /** The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. */
-  onComplete?: algosdk.OnApplicationComplete
+  onComplete?: OnApplicationComplete
   /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
   args?: Uint8Array[]
   /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
@@ -366,7 +371,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
 /** Parameters to define an app create transaction */
 export type AppCreateParams = Expand<
   Omit<CommonAppCallParams, 'appId'> & {
-    onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.ClearStateOC>
+    onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
     /** The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
@@ -392,7 +397,7 @@ export type AppCreateParams = Expand<
 /** Parameters to define an app update transaction */
 export type AppUpdateParams = Expand<
   CommonAppCallParams & {
-    onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC
+    onComplete?: OnApplicationComplete.UpdateApplication
     /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
@@ -402,20 +407,17 @@ export type AppUpdateParams = Expand<
 
 /** Parameters to define an application call transaction. */
 export type AppCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
 }
 
 /** Common parameters to define an ABI method call transaction. */
 export type AppMethodCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<
-    algosdk.OnApplicationComplete,
-    algosdk.OnApplicationComplete.UpdateApplicationOC | algosdk.OnApplicationComplete.ClearStateOC
-  >
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication | OnApplicationComplete.ClearState>
 }
 
 /** Parameters to define an application delete call transaction. */
 export type AppDeleteParams = CommonAppCallParams & {
-  onComplete?: algosdk.OnApplicationComplete.DeleteApplicationOC
+  onComplete?: OnApplicationComplete.DeleteApplication
 }
 
 /** Parameters to define an ABI method call create transaction. */
@@ -500,11 +502,11 @@ class ErrorTransformerError extends Error {
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
-  algod: algosdk.Algodv2
+  algod: AlgodClient
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
-  getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
+  getSuggestedParams?: () => Promise<SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
@@ -538,7 +540,7 @@ type TransactionWithSignerAndContext = algosdk.TransactionWithSigner & Transacti
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: algosdk.Transaction[]
+  transactions: Transaction[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, algosdk.ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
@@ -562,10 +564,10 @@ export class TransactionComposer {
   private txns: Txn[] = []
 
   /** The algod client used by the composer. */
-  private algod: algosdk.Algodv2
+  private algod: AlgodClient
 
   /** An async function that will return suggested params for the transaction. */
-  private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
+  private getSuggestedParams: () => Promise<SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
   private getSigner: (address: string | Address) => algosdk.TransactionSigner
@@ -609,7 +611,7 @@ export class TransactionComposer {
    */
   constructor(params: TransactionComposerParams) {
     this.algod = params.algod
-    const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
+    const defaultGetSuggestedParams = () => params.algod.suggestedParams()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
@@ -959,7 +961,7 @@ export class TransactionComposer {
    *    localByteSlices: 4
    *  },
    *  extraProgramPages: 1,
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1007,7 +1009,7 @@ export class TransactionComposer {
    *  sender: 'CREATORADDRESS',
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
-   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  onComplete: OnApplicationComplete.UpdateApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1028,7 +1030,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
+    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.UpdateApplication })
 
     return this
   }
@@ -1047,7 +1049,7 @@ export class TransactionComposer {
    * ```typescript
    * composer.addAppDelete({
    *  sender: 'CREATORADDRESS',
-   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  onComplete: OnApplicationComplete.DeleteApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1068,7 +1070,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
+    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.DeleteApplication })
 
     return this
   }
@@ -1089,7 +1091,7 @@ export class TransactionComposer {
    * ```typescript
    * composer.addAppCall({
    *  sender: 'CREATORADDRESS',
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1150,7 +1152,7 @@ export class TransactionComposer {
    *    localByteSlices: 4
    *  },
    *  extraProgramPages: 1,
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1203,7 +1205,7 @@ export class TransactionComposer {
    *  args: ["arg1_value"],
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
-   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  onComplete: OnApplicationComplete.UpdateApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1224,7 +1226,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
+    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.UpdateApplication })
     return this
   }
 
@@ -1254,7 +1256,7 @@ export class TransactionComposer {
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
-   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  onComplete: OnApplicationComplete.DeleteApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1275,7 +1277,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
+    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.DeleteApplication })
     return this
   }
 
@@ -1305,7 +1307,7 @@ export class TransactionComposer {
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1459,11 +1461,11 @@ export class TransactionComposer {
     // We are going to mutate suggested params, let's create a clone first
     txnParams.suggestedParams = { ...txnParams.suggestedParams }
 
-    if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies algosdk.Transaction['lease']
-    if (params.rekeyTo) txnParams.rekeyTo = address(params.rekeyTo) satisfies algosdk.Transaction['rekeyTo']
+    if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies Transaction['lease']
+    if (params.rekeyTo) txnParams.rekeyTo = params.rekeyTo.toString() satisfies Transaction['rekeyTo']
     const encoder = new TextEncoder()
     if (params.note)
-      txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies algosdk.Transaction['note']
+      txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies Transaction['note']
 
     if (params.firstValidRound) {
       txnParams.suggestedParams.firstValid = params.firstValidRound
@@ -1476,7 +1478,7 @@ export class TransactionComposer {
       //  LocalNet set a bigger window to avoid dead transactions
       const window = params.validityWindow
         ? BigInt(params.validityWindow)
-        : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisID ?? 'unknown')
+        : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisId ?? 'unknown')
           ? 1000n
           : this.defaultValidityWindow
       txnParams.suggestedParams.lastValid = BigInt(txnParams.suggestedParams.firstValid) + window
@@ -1486,16 +1488,17 @@ export class TransactionComposer {
       throw Error('Cannot set both staticFee and extraFee')
     }
 
+    let txn = buildTxn(txnParams)
+
     if (params.staticFee !== undefined) {
-      txnParams.suggestedParams.fee = params.staticFee.microAlgo
-      txnParams.suggestedParams.flatFee = true
-    }
-
-    const txn = buildTxn(txnParams)
-
-    if (params.extraFee) txn.fee += params.extraFee.microAlgo
-    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
-      throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
+      txn.fee = params.staticFee.microAlgos
+    } else {
+      txn = assignFee(txn, {
+        feePerByte: txnParams.suggestedParams.fee,
+        minFee: txnParams.suggestedParams.minFee,
+        extraFee: params.extraFee?.microAlgos,
+        maxFee: params.maxFee?.microAlgos,
+      })
     }
 
     const logicalMaxFee =
@@ -1511,7 +1514,7 @@ export class TransactionComposer {
    */
   private async buildMethodCall(
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
-    suggestedParams: algosdk.SuggestedParams,
+    suggestedParams: SuggestedParams,
     includeSigner: boolean,
   ): Promise<TransactionWithSignerAndContext[]> {
     const methodArgs: (algosdk.ABIArgument | TransactionWithSignerAndContext)[] = []
@@ -1627,16 +1630,22 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
+    // If accessReferences is provided, we should not pass legacy foreign arrays
+    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
     const txnParams = {
       appID: appId,
       sender: params.sender,
       suggestedParams,
-      onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
-      appAccounts: params.accountReferences,
-      appForeignApps: params.appReferences?.map((x) => Number(x)),
-      appForeignAssets: params.assetReferences?.map((x) => Number(x)),
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
+      ...(hasAccessReferences
+        ? { access: params.accessReferences }
+        : {
+            appAccounts: params.accountReferences,
+            appForeignApps: params.appReferences?.map((x) => Number(x)),
+            appForeignAssets: params.assetReferences?.map((x) => Number(x)),
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       approvalProgram,
       clearProgram: clearStateProgram,
       extraPages:
@@ -1687,19 +1696,25 @@ export class TransactionComposer {
     // Process the ATC to get a set of transactions ready for broader grouping
     return this.buildAtc(methodAtc).map(({ context: _context, ...txnWithSigner }, idx) => {
       const maxFee = idx === methodAtc.count() - 1 ? result.context.maxFee : maxFees.get(idx)
+      // TODO: PD - review this way of assigning fee
+      const fee = idx === methodAtc.count() - 1 ? result.txn.fee : txnWithSigner.txn.fee
       const context = {
         ..._context, // Adds method context info
         maxFee,
       }
 
       return {
-        ...txnWithSigner,
+        signer: txnWithSigner.signer,
+        txn: {
+          ...txnWithSigner.txn,
+          fee: fee,
+        },
         context,
       }
     })
   }
 
-  private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildPayment(params: PaymentParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
@@ -1709,7 +1724,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetCreate(params: AssetCreateParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetCreate(params: AssetCreateParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       total: params.total,
@@ -1727,7 +1742,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetConfig(params: AssetConfigParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetConfig(params: AssetConfigParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1740,7 +1755,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1748,7 +1763,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1758,7 +1773,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
@@ -1770,7 +1785,7 @@ export class TransactionComposer {
     })
   }
 
-  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: algosdk.SuggestedParams) {
+  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: SuggestedParams) {
     const appId = 'appId' in params ? params.appId : 0n
     const approvalProgram =
       'approvalProgram' in params
@@ -1785,16 +1800,22 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
+    // If accessReferences is provided, we should not pass legacy foreign arrays
+    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
     const sdkParams = {
       sender: params.sender,
       suggestedParams,
       appArgs: params.args,
-      onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
-      accounts: params.accountReferences,
-      foreignApps: params.appReferences?.map((x) => Number(x)),
-      foreignAssets: params.assetReferences?.map((x) => Number(x)),
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
+      ...(hasAccessReferences
+        ? { access: params.accessReferences }
+        : {
+            accounts: params.accountReferences,
+            foreignApps: params.appReferences?.map((x) => Number(x)),
+            foreignAssets: params.assetReferences?.map((x) => Number(x)),
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       approvalProgram,
       clearProgram: clearStateProgram,
     }
@@ -1822,7 +1843,7 @@ export class TransactionComposer {
     }
   }
 
-  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: SuggestedParams) {
     if ('voteKey' in params) {
       return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
         sender: params.sender,
@@ -1845,7 +1866,7 @@ export class TransactionComposer {
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithContext[]> {
+  private async buildTxn(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithContext[]> {
     switch (txn.type) {
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
@@ -1872,7 +1893,7 @@ export class TransactionComposer {
     }
   }
 
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
       return [
         {
@@ -1907,7 +1928,7 @@ export class TransactionComposer {
   async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
 
-    const transactions: algosdk.Transaction[] = []
+    const transactions: Transaction[] = []
     const methodCalls = new Map<number, algosdk.ABIMethod>()
     const signers = new Map<number, algosdk.TransactionSigner>()
 
@@ -1965,7 +1986,6 @@ export class TransactionComposer {
   async build() {
     if (this.atc.getStatus() === algosdk.AtomicTransactionComposerStatus.BUILDING) {
       const suggestedParams = await this.getSuggestedParams()
-
       // Build all of the transactions
       const txnWithSigners: TransactionWithSignerAndContext[] = []
       for (const txn of this.txns) {
@@ -2072,7 +2092,7 @@ export class TransactionComposer {
    * const result = await composer.simulate()
    * ```
    */
-  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -2085,7 +2105,7 @@ export class TransactionComposer {
    */
   async simulate(
     options: SkipSignaturesSimulateOptions,
-  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -2096,8 +2116,8 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
-  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
+  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
     const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
 
@@ -2116,26 +2136,23 @@ export class TransactionComposer {
       await this.build()
     }
 
-    const { methodResults, simulateResponse } = await atc.simulate(
-      this.algod,
-      new modelsv2.SimulateRequest({
-        txnGroups: [],
-        ...rawOptions,
-        ...(Config.debug
-          ? {
-              allowEmptySignatures: true,
-              fixSigners: true,
-              allowMoreLogging: true,
-              execTraceConfig: new modelsv2.SimulateTraceConfig({
-                enable: true,
-                scratchChange: true,
-                stackChange: true,
-                stateChange: true,
-              }),
-            }
-          : undefined),
-      }),
-    )
+    const { methodResults, simulateResponse } = await atc.simulate(this.algod, {
+      txnGroups: [],
+      ...rawOptions,
+      ...(Config.debug
+        ? {
+            allowEmptySignatures: true,
+            fixSigners: true,
+            allowMoreLogging: true,
+            execTraceConfig: {
+              enable: true,
+              scratchChange: true,
+              stackChange: true,
+              stateChange: true,
+            },
+          }
+        : undefined),
+    } satisfies SimulateRequest)
 
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {
@@ -2156,9 +2173,9 @@ export class TransactionComposer {
     const transactions = atc.buildGroup().map((t) => t.txn)
     const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
     return {
-      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
-      transactions: transactions,
-      txIds: transactions.map((t) => t.txID()),
+      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+      transactions: transactions.map((t) => new TransactionWrapper(t)),
+      txIds: transactions.map((t) => getTransactionId(t)),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
       returns: methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),

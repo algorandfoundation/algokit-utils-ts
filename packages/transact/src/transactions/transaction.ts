@@ -32,7 +32,7 @@ import {
   StateSchemaDto,
   TransactionDto,
 } from '../encoding/transaction-dto'
-import { AppCallTransactionFields, OnApplicationComplete, ResourceReference, StateSchema, validateAppCallTransaction } from './app-call'
+import { AccessReference, AppCallTransactionFields, OnApplicationComplete, StateSchema, validateAppCallTransaction } from './app-call'
 import { AssetConfigTransactionFields, validateAssetConfigTransaction } from './asset-config'
 import { AssetFreezeTransactionFields, validateAssetFreezeTransaction } from './asset-freeze'
 import { AssetTransferTransactionFields, validateAssetTransferTransaction } from './asset-transfer'
@@ -52,7 +52,7 @@ export type Transaction = {
   /**
    * The type of transaction
    */
-  transactionType: TransactionType
+  type: TransactionType
 
   /**
    * The account that authorized the transaction.
@@ -219,7 +219,7 @@ export type FeeParams = {
  */
 export function getEncodedTransactionType(encoded_transaction: Uint8Array): TransactionType {
   const decoded = decodeTransaction(encoded_transaction)
-  return decoded.transactionType
+  return decoded.type
 }
 
 /**
@@ -553,7 +553,7 @@ const heartbeatProofDtoCodec = new OmitEmptyObjectCodec<HeartbeatProofDto>()
 
 export function toTransactionDto(transaction: Transaction): TransactionDto {
   const txDto: TransactionDto = {
-    type: toTransactionTypeDto(transaction.transactionType),
+    type: toTransactionTypeDto(transaction.type),
     fv: bigIntCodec.encode(transaction.firstValid),
     lv: bigIntCodec.encode(transaction.lastValid),
     snd: addressCodec.encode(transaction.sender),
@@ -628,13 +628,21 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     txDto.apas = bigIntArrayCodec.encode(transaction.appCall.assetReferences ?? [])
     // Encode box references
     if (transaction.appCall.boxReferences && transaction.appCall.boxReferences.length > 0) {
-      txDto.apbx = transaction.appCall.boxReferences.map((box) => ({
-        i: bigIntCodec.encode(box.appId),
-        n: bytesCodec.encode(box.name),
-      }))
+      txDto.apbx = transaction.appCall.boxReferences.map((box) => {
+        const isCurrentApp = box.appId === 0n || box.appId === transaction.appCall?.appId
+        const foreignAppsIndex = (transaction.appCall?.appReferences ?? []).indexOf(box.appId) + 1
+        if (foreignAppsIndex === 0 && !isCurrentApp) {
+          throw new Error(`Box ref with appId ${box.appId} not in appReferences`)
+        }
+
+        return {
+          i: numberCodec.encode(foreignAppsIndex),
+          n: bytesCodec.encode(box.name),
+        }
+      })
     }
     // Encode access references
-    if (transaction.appCall.access && transaction.appCall.access.length > 0) {
+    if (transaction.appCall.accessReferences && transaction.appCall.accessReferences.length > 0) {
       const accessList: ResourceReferenceDto[] = []
       const appId = transaction.appCall.appId
 
@@ -653,7 +661,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       }
 
       // Helper function to ensure a reference exists and return its 1-based index
-      function ensure(target: ResourceReference): number {
+      function ensure(target: AccessReference): number {
         for (let idx = 0; idx < accessList.length; idx++) {
           const a = accessList[idx]
           if (
@@ -676,14 +684,14 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         return accessList.length // length is 1-based position of new element
       }
 
-      for (const resourceReference of transaction.appCall.access) {
-        if (resourceReference.address || resourceReference.assetId || resourceReference.appId) {
-          ensure(resourceReference)
+      for (const accessReferences of transaction.appCall.accessReferences) {
+        if (accessReferences.address || accessReferences.assetId || accessReferences.appId) {
+          ensure(accessReferences)
           continue
         }
 
-        if (resourceReference.holding) {
-          const holding = resourceReference.holding
+        if (accessReferences.holding) {
+          const holding = accessReferences.holding
           let addressIndex = 0
           if (holding.address && holding.address !== ZERO_ADDRESS) {
             addressIndex = ensure({ address: holding.address })
@@ -698,8 +706,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           continue
         }
 
-        if (resourceReference.locals) {
-          const locals = resourceReference.locals
+        if (accessReferences.locals) {
+          const locals = accessReferences.locals
           let addressIndex = 0
           if (locals.address && locals.address !== ZERO_ADDRESS) {
             addressIndex = ensure({ address: locals.address })
@@ -708,18 +716,19 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           if (locals.appId && locals.appId !== appId) {
             appIndex = ensure({ appId: locals.appId })
           }
-          // TODO: PD - confirm what happens if both are 0
-          accessList.push({
-            l: {
-              d: numberCodec.encode(addressIndex),
-              p: numberCodec.encode(appIndex),
-            },
-          })
+          if (addressIndex !== 0 || appIndex !== 0) {
+            accessList.push({
+              l: {
+                d: numberCodec.encode(addressIndex),
+                p: numberCodec.encode(appIndex),
+              },
+            })
+          }
           continue
         }
 
-        if (resourceReference.box) {
-          const b = resourceReference.box
+        if (accessReferences.box) {
+          const b = accessReferences.box
           let appIdx = 0
           if (b.appId && b.appId !== appId) {
             appIdx = ensure({ appId: b.appId })
@@ -819,12 +828,11 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
   return txDto
 }
 
-// TODO: PD - fix bug https://github.com/algorand/js-algorand-sdk/issues/1013
 export function fromTransactionDto(transactionDto: TransactionDto): Transaction {
   const transactionType = fromTransactionTypeDto(transactionDto.type)
 
   const tx: Transaction = {
-    transactionType,
+    type: transactionType,
     sender: addressCodec.decode(transactionDto.snd),
     firstValid: bigIntCodec.decode(transactionDto.fv),
     lastValid: bigIntCodec.decode(transactionDto.lv),
@@ -892,14 +900,29 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         accountReferences: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
         appReferences: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
         assetReferences: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
-        boxReferences: transactionDto.apbx?.map((box) => ({
-          appId: bigIntCodec.decode(box.i),
-          name: bytesCodec.decode(box.n),
-        })),
-        access: transactionDto.al
+        boxReferences: transactionDto.apbx?.map((box) => {
+          const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
+          let appId: bigint
+          if (index === 0) {
+            // 0 means current app
+            appId = 0n
+          } else {
+            // 1-based index into foreignApps array
+            const foreignAppId = transactionDto.apfa?.[index - 1]
+            if (foreignAppId === undefined) {
+              throw new Error(`Failed to find the app reference at index ${index - 1}`)
+            }
+            appId = bigIntCodec.decode(foreignAppId)
+          }
+          return {
+            appId: appId,
+            name: bytesCodec.decode(box.n),
+          }
+        }),
+        accessReferences: transactionDto.al
           ? (() => {
               const accessList = transactionDto.al!
-              const result: ResourceReference[] = []
+              const result: AccessReference[] = []
 
               for (const ref of accessList) {
                 if (ref.d) {
@@ -922,13 +945,13 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                     throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
                   }
 
-                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : result[addrIdx - 1].address!
-                  const holdingAssetId = result[assetIdx - 1].assetId!
+                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
+                  const holdingAssetId = accessList[assetIdx - 1].s!
 
                   result.push({
                     holding: {
-                      address: holdingAddress,
-                      assetId: holdingAssetId,
+                      address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
+                      assetId: bigIntCodec.decode(holdingAssetId),
                     },
                   })
                   continue
@@ -938,13 +961,13 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                   const addrIdx = ref.l.d ?? 0
                   const appIdx = ref.l.p ?? 0
 
-                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : result[addrIdx - 1].address!
-                  const localsAppId = appIdx === 0 ? BigInt(0) : result[appIdx - 1].appId!
+                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
+                  const localsAppId = appIdx === 0 ? BigInt(0) : accessList[appIdx - 1].p!
 
                   result.push({
                     locals: {
-                      address: localsAddress,
-                      appId: localsAppId,
+                      address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
+                      appId: bigIntCodec.decode(localsAppId),
                     },
                   })
                   continue
@@ -957,11 +980,11 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                     throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
                   }
 
-                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : result[boxAppIdx - 1].appId!
+                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : accessList[boxAppIdx - 1].p!
 
                   result.push({
                     box: {
-                      appId: boxAppId,
+                      appId: bigIntCodec.decode(boxAppId),
                       name: bytesCodec.decode(name),
                     },
                   })

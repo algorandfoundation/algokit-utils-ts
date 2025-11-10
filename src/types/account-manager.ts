@@ -1,4 +1,7 @@
-import algosdk, { Address } from 'algosdk'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import type { Account } from '@algorandfoundation/sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, LogicSigAccount, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -8,9 +11,6 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import LogicSigAccount = algosdk.LogicSigAccount
-import Account = algosdk.Account
-import TransactionSigner = algosdk.TransactionSigner
 
 const address = (address: string | Address) => (typeof address === 'string' ? Address.fromString(address) : address)
 
@@ -62,11 +62,11 @@ export class AccountManager {
     this._kmdAccountManager = new KmdAccountManager(clientManager)
   }
 
-  private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
+  private _getComposer(getSuggestedParams?: () => Promise<SuggestedParams>) {
     return new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: this.getSigner.bind(this),
-      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),
+      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.suggestedParams()),
     })
   }
 
@@ -239,17 +239,19 @@ export class AccountManager {
    * @returns The account information
    */
   public async getInformation(sender: string | Address): Promise<AccountInformation> {
+    const senderAddress = typeof sender === 'string' ? sender : sender.toString()
     const {
       round,
       lastHeartbeat = undefined,
       lastProposed = undefined,
       address,
       ...account
-    } = await this._clientManager.algod.accountInformation(sender).do()
+    } = await this._clientManager.algod.accountInformation(senderAddress)
 
     return {
       ...account,
       // None of the Number types can practically overflow 2^53
+      authAddr: account.authAddr ? Address.fromString(account.authAddr) : undefined,
       address: Address.fromString(address),
       balance: AlgoAmount.MicroAlgo(Number(account.amount)),
       amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),

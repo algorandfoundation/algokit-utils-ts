@@ -36,7 +36,7 @@ export type SimulateRequest = {
   /**
    * Applies extra opcode budget during simulation for each transaction group.
    */
-  extraOpcodeBudget?: bigint
+  extraOpcodeBudget?: number
   execTraceConfig?: SimulateTraceConfig
 
   /**

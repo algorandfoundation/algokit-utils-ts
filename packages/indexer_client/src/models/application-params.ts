@@ -34,7 +34,7 @@ export type ApplicationParams = {
   /**
    * the number of updates to the application programs
    */
-  version?: bigint
+  version?: number
 }
 
 export const ApplicationParamsMeta: ModelMetadata = {

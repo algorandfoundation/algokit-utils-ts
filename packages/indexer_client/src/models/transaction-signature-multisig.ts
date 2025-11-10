@@ -17,12 +17,12 @@ export type TransactionSignatureMultisig = {
   /**
    * \[thr\]
    */
-  threshold?: bigint
+  threshold?: number
 
   /**
    * \[v\]
    */
-  version?: bigint
+  version?: number
 }
 
 export const TransactionSignatureMultisigMeta: ModelMetadata = {

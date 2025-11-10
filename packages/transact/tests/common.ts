@@ -92,7 +92,7 @@ const defaultReviver = (key: string, value: unknown) => {
     }
   }
 
-  if (key === 'transactionType') {
+  if (key === 'type') {
     return transactionTypes[value as keyof typeof transactionTypes] as TransactionType
   }
 

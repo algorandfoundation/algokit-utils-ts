@@ -1,6 +1,6 @@
 import { PUBLIC_KEY_BYTE_LENGTH, ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from './codecs'
+import { OmitEmptyObjectCodec, addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, stringCodec } from './codecs'
 
 describe('Codecs', () => {
   describe('AddressCodec', () => {

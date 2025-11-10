@@ -6,7 +6,7 @@ import { EvalDeltaMeta } from './eval-delta'
  * Key-value pairs for StateDelta.
  */
 export type EvalDeltaKeyValue = {
-  key: string
+  key: Uint8Array
   value: EvalDelta
 }
 
@@ -19,7 +19,7 @@ export const EvalDeltaKeyValueMeta: ModelMetadata = {
       wireKey: 'key',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBytes: true },
     },
     {
       name: 'value',

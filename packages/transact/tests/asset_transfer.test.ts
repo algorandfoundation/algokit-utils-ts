@@ -70,7 +70,7 @@ describe('AssetTransfer', () => {
   describe('Asset Transfer Validation', () => {
     test('should throw error when asset ID is zero', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -86,7 +86,7 @@ describe('AssetTransfer', () => {
 
     test('should validate valid asset transfer transaction', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -103,7 +103,7 @@ describe('AssetTransfer', () => {
     test('should validate asset opt-in transaction', () => {
       const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: senderAddress,
         firstValid: 1000n,
         lastValid: 2000n,
@@ -119,7 +119,7 @@ describe('AssetTransfer', () => {
 
     test('should validate asset transfer with clawback', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA', // Clawback address
         firstValid: 1000n,
         lastValid: 2000n,
@@ -136,7 +136,7 @@ describe('AssetTransfer', () => {
 
     test('should validate asset opt-out transaction', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -153,7 +153,7 @@ describe('AssetTransfer', () => {
 
     test('should validate asset transfer with both clawback and close remainder', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -172,7 +172,7 @@ describe('AssetTransfer', () => {
     test('should validate asset transfer to self', () => {
       const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: senderAddress,
         firstValid: 1000n,
         lastValid: 2000n,
@@ -188,7 +188,7 @@ describe('AssetTransfer', () => {
 
     test('should validate asset close-out transaction (zero amount with close remainder)', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetTransfer,
+        type: TransactionType.AssetTransfer,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,

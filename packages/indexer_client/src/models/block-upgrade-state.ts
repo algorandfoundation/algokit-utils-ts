@@ -17,7 +17,7 @@ export type BlockUpgradeState = {
   /**
    * \[nextyes\] Number of blocks which approved the protocol upgrade.
    */
-  nextProtocolApprovals?: bigint
+  nextProtocolApprovals?: number
 
   /**
    * \[nextswitch\] Round on which the protocol upgrade will take effect.
@@ -60,14 +60,14 @@ export const BlockUpgradeStateMeta: ModelMetadata = {
       wireKey: 'next-protocol-switch-on',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'nextProtocolVoteBefore',
       wireKey: 'next-protocol-vote-before',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
   ],
 }

@@ -4,7 +4,7 @@ export type HashFactory = {
   /**
    * \[t\]
    */
-  hashType?: bigint
+  hashType?: number
 }
 
 export const HashFactoryMeta: ModelMetadata = {

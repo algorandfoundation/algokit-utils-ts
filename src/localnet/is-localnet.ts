@@ -1,11 +1,10 @@
-import algosdk from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { ClientManager } from '../types/client-manager'
-import Algodv2 = algosdk.Algodv2
 
 /** @deprecated Use `await algorand.client.isLocalNet()` or `await new ClientManager({ algod }).isLocalNet()` instead.
  *
  * Returns true if the algod client is pointing to a LocalNet Algorand network
  */
-export async function isLocalNet(algod: Algodv2): Promise<boolean> {
+export async function isLocalNet(algod: AlgodClient): Promise<boolean> {
   return await new ClientManager({ algod }).isLocalNet()
 }

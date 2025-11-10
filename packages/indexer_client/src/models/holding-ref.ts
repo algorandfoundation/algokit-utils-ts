@@ -31,7 +31,7 @@ export const HoldingRefMeta: ModelMetadata = {
       wireKey: 'asset',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
   ],
 }

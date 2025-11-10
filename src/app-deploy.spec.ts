@@ -1,4 +1,4 @@
-import { getApplicationAddress } from 'algosdk'
+import { getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
@@ -106,7 +106,7 @@ describe('deploy-app', () => {
 
     invariant('transaction' in result)
     invariant(result.confirmation)
-    expect(result.appId).toBe(BigInt(result.confirmation.applicationIndex!))
+    expect(result.appId).toBe(BigInt(result.confirmation.appId!))
     expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(BigInt(result.confirmation.confirmedRound!))
@@ -157,7 +157,10 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
+
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -197,7 +200,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -233,7 +238,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -264,7 +271,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -309,7 +318,9 @@ describe('deploy-app', () => {
     })) as AppDeployParams
 
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
@@ -346,7 +357,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -391,7 +404,9 @@ describe('deploy-app', () => {
     })) as AppDeployParams
 
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
@@ -428,7 +443,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -460,7 +477,9 @@ describe('deploy-app', () => {
       metadata: getMetadata(),
     })
     const initialDeployment = await algorand.appDeployer.deploy(deployment)
-    await waitForIndexer()
+    if (initialDeployment.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const result = await algorand.appDeployer.deploy(deployment)
@@ -494,7 +513,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -534,7 +555,9 @@ describe('deploy-app', () => {
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexer()
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({

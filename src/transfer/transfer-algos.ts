@@ -1,10 +1,9 @@
-import algosdk from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { PaymentParams } from '../types/composer'
 import { SendTransactionResult } from '../types/transaction'
 import { AlgoTransferParams } from '../types/transfer'
-import Algodv2 = algosdk.Algodv2
 
 /**
  * @deprecated Use `algorand.send.payment()` / `algorand.createTransaction.payment()` instead
@@ -19,7 +18,7 @@ import Algodv2 = algosdk.Algodv2
  * await algokit.transferAlgos({ from, to, amount: algokit.algo(1) }, algod)
  * ```
  */
-export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
+export async function transferAlgos(transfer: AlgoTransferParams, algod: AlgodClient): Promise<SendTransactionResult> {
   const params: PaymentParams = {
     sender: getSenderAddress(transfer.from),
     receiver: getSenderAddress(transfer.to),

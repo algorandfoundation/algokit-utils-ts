@@ -1,9 +1,7 @@
-import { ApiError } from './api-error'
-import type { BodyValue, QueryParams } from './base-http-request'
 import type { ClientConfig } from './client-config'
+import { ApiError } from './api-error'
 import { decodeMsgPack, encodeMsgPack } from './codecs'
-
-type BodyInit = string | Uint8Array
+import type { QueryParams, BodyValue } from './base-http-request'
 
 const encodeURIPath = (path: string): string => encodeURI(path).replace(/%5B/g, '[').replace(/%5D/g, ']')
 
@@ -63,11 +61,11 @@ export async function request<T>(
   let bodyPayload: BodyInit | undefined = undefined
   if (options.body != null) {
     if (options.body instanceof Uint8Array) {
-      bodyPayload = options.body
+      bodyPayload = options.body.slice().buffer
     } else if (typeof options.body === 'string') {
       bodyPayload = options.body
     } else if (options.mediaType?.includes('msgpack')) {
-      bodyPayload = encodeMsgPack(options.body)
+      bodyPayload = encodeMsgPack(options.body).slice().buffer
     } else if (options.mediaType?.includes('json')) {
       bodyPayload = JSON.stringify(options.body)
     } else {

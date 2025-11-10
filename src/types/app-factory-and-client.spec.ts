@@ -1,4 +1,6 @@
-import algosdk, { ABIUintType, Address, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
+import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { ABIUintType, Address, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
@@ -56,7 +58,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -81,7 +83,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
   test('Create app with oncomplete overload', async () => {
     const { result: app } = await factory.send.bare.create({
-      onComplete: OnApplicationComplete.OptInOC,
+      onComplete: OnApplicationComplete.OptIn,
       updatable: true,
       deletable: true,
       deployTimeParams: {
@@ -89,10 +91,10 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptIn)
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -117,7 +119,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
     expect(app.compiledClear).toBeTruthy()
   })
@@ -136,7 +138,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
     expect(app.return).toBe('arg_io')
   })
 
@@ -188,7 +190,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
     expect(app.return).toBe('arg_io')
   })
 
@@ -252,8 +254,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -286,8 +288,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
     expect(app.return).toBe('arg_io')
     expect(app.deleteReturn).toBe('arg2_io')
   })
@@ -415,7 +417,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transactions[0].applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call.transactions[0].appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
 
     const call2 = await client.createTransaction.call({
       method: 'call_abi',
@@ -423,7 +425,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       boxReferences: ['1'],
     })
 
-    expect(call2.transactions[0].applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call2.transactions[0].appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
@@ -533,7 +535,7 @@ describe('ARC32: app-factory-and-app-client', () => {
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(e.stack).toContain('assert failed')
+        expect(e.message).toContain('assert failed')
       }
 
       newClient.importSourceMaps(JSON.parse(JSON.stringify(oldSourceMaps)))
@@ -615,7 +617,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
-    expect(result.transaction.type).toBe(TransactionType.pay)
+    expect(result.transaction.type).toBe(TransactionType.Payment)
     expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress.toString())
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)
@@ -905,7 +907,7 @@ retsub
       ;({ appClient } = await factory.send.create({
         extraFee: algokit.microAlgos(1000),
         method: 'createApplication',
-        onComplete: OnApplicationComplete.OptInOC,
+        onComplete: OnApplicationComplete.OptIn,
       }))
 
       await algorand.account.ensureFunded(appClient.appAddress, testAccount, algokit.microAlgos(251200))

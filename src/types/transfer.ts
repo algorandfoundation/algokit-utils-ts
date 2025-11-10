@@ -1,8 +1,7 @@
-import algosdk from 'algosdk'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { AlgoAmount } from './amount'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
-import SuggestedParams = algosdk.SuggestedParams
 
 /** @deprecated Parameters for `transferAlgos` call. */
 export interface AlgoTransferParams extends SendTransactionParams {

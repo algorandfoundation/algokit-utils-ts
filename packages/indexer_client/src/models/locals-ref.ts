@@ -31,7 +31,7 @@ export const LocalsRefMeta: ModelMetadata = {
       wireKey: 'app',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
   ],
 }

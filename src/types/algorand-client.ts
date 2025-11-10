@@ -1,4 +1,7 @@
-import algosdk, { Address } from 'algosdk'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import type { Account } from '@algorandfoundation/sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
@@ -9,8 +12,6 @@ import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
-import Account = algosdk.Account
-import LogicSigAccount = algosdk.LogicSigAccount
 
 /**
  * A client that brokers easy access to Algorand functionality.
@@ -24,7 +25,7 @@ export class AlgorandClient {
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
 
-  private _cachedSuggestedParams?: algosdk.SuggestedParams
+  private _cachedSuggestedParams?: SuggestedParams
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
@@ -122,7 +123,7 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setSuggestedParamsCache(suggestedParams, new Date(+new Date() + 3_600_000))
    * ```
    */
-  public setSuggestedParamsCache(suggestedParams: algosdk.SuggestedParams, until?: Date) {
+  public setSuggestedParamsCache(suggestedParams: SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -148,14 +149,14 @@ export class AlgorandClient {
    * @example
    * const params = await AlgorandClient.mainNet().getSuggestedParams();
    */
-  public async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
+  public async getSuggestedParams(): Promise<SuggestedParams> {
     if (this._cachedSuggestedParams && (!this._cachedSuggestedParamsExpiry || this._cachedSuggestedParamsExpiry > new Date())) {
       return {
         ...this._cachedSuggestedParams,
       }
     }
 
-    this._cachedSuggestedParams = await this._clientManager.algod.getTransactionParams().do()
+    this._cachedSuggestedParams = await this._clientManager.algod.suggestedParams()
     this._cachedSuggestedParamsExpiry = new Date(new Date().getTime() + this._cachedSuggestedParamsTimeout)
 
     return {

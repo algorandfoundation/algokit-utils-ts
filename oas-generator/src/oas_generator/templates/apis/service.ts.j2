@@ -1,0 +1,175 @@
+import type { BaseHttpRequest } from '../core/base-http-request';
+import { AlgorandSerializer } from '../core/model-runtime';
+import type { BodyFormat } from '../core/model-runtime';
+{% if custom_imports %}
+{% for import_statement in custom_imports %}
+{{ import_statement }}
+{% endfor %}
+{% endif %}
+{% if import_types and import_types|length > 0 %}
+{% set sorted = import_types | sort %}
+import type { {{ sorted | join(', ') }} } from '../models/index';
+import { {% for t in sorted %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
+{% endif %}
+
+{% macro field_type_meta(type_name) -%}
+{%- if type_name in import_types -%}
+({ kind: 'model', meta: () => {{ type_name }}Meta } as const)
+{%- elif type_name == 'SignedTransaction' -%}
+({ kind: 'codec', codecKey: 'SignedTransaction' } as const)
+{%- elif type_name == 'Uint8Array' -%}
+({ kind: 'scalar', isBytes: true } as const)
+{%- elif type_name == 'bigint' -%}
+({ kind: 'scalar', isBigint: true } as const)
+{%- else -%}
+null
+{%- endif -%}
+{%- endmacro %}
+
+{% macro array_meta(type_name) -%}
+{%- set inner = type_name.strip() -%}
+{%- if inner.endswith('[]') -%}
+  {%- set base = inner[:-2] -%}
+{%- elif inner.startswith('Array<') and inner.endswith('>') -%}
+  {%- set base = inner[6:-1] -%}
+{%- else -%}
+  {%- set base = None -%}
+{%- endif -%}
+{%- if base is none -%}
+null
+{%- else -%}
+  {%- set item = field_type_meta(base) -%}
+{%- if item == 'null' -%}
+null
+  {%- else -%}
+({ name: '{{ base }}[]', kind: 'array', arrayItems: {{ item }} } as const)
+  {%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro base_meta(type_name) -%}
+{%- set t = type_name.strip() -%}
+{%- if t.endswith('[]') or (t.startswith('Array<') and t.endswith('>')) -%}
+{{ array_meta(type_name) }}
+{%- else -%}
+  {%- if t in import_types -%}
+{{ t }}Meta
+  {%- elif t == 'SignedTransaction' -%}
+({ name: 'SignedTransaction', kind: 'passthrough', codecKey: 'SignedTransaction' } as const)
+  {%- elif t == 'Uint8Array' -%}
+({ name: 'Uint8Array', kind: 'passthrough', passThrough: { kind: 'scalar', isBytes: true } as const } as const)
+  {%- elif t == 'bigint' -%}
+({ name: 'bigint', kind: 'passthrough', passThrough: { kind: 'scalar', isBigint: true } as const } as const)
+  {%- else -%}
+null
+  {%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro meta_expr(type_name) -%}
+{%- set meta = base_meta(type_name) -%}
+{%- if meta == 'null' -%}
+undefined
+{%- else -%}
+{{ meta }}
+{%- endif -%}
+{%- endmacro %}
+
+export class {{ service_class_name }} {
+  constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+  private static acceptFor(format: BodyFormat): string {
+    return format === 'json' ? 'application/json' : 'application/msgpack';
+  }
+
+  private static mediaFor(format: BodyFormat): string {
+    return format === 'json' ? 'application/json' : 'application/msgpack';
+  }
+
+{% for op in operations %}
+  {% set is_raw_bytes_body = op.requestBody and op.requestBody.tsType == 'Uint8Array' %}
+  {{ op.description | ts_doc_comment }}
+  {% if op.isPrivate %}private async _{% else %}async {% endif %}{{ op.operationId | ts_camel_case }}(
+{%- for p in op.pathParameters %}
+    {{ p.varName }}: {{ p.tsType }},
+{%- endfor %}
+{%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
+    body{% if not op.requestBody.required %}?{% endif %}: {{ op.requestBody.tsType }},
+{%- endif %}
+{%- if op.otherParameters|length > 0 %}
+    params?: {
+{%- for p in op.otherParameters %}
+      {{ p.varName }}{% if not p.required %}?{% endif %}: {{ p.tsType }};
+{%- endfor %}
+    }
+{%- endif %}
+  ): Promise<{{ op.responseTsType }}> {
+    const headers: Record<string, string> = {};
+    {% set supports_msgpack = op.returnsMsgpack or (op.requestBody and op.requestBody.supportsMsgpack) %}
+    const responseFormat: BodyFormat = {% if op.forceMsgpackQuery %}'msgpack'{% elif supports_msgpack %}'json'{% else %}'json'{% endif %};
+    headers['Accept'] = {{ service_class_name }}.acceptFor(responseFormat);
+
+    {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
+      {% if is_raw_bytes_body %}
+    const serializedBody = body ?? undefined;
+    const mediaType = 'application/msgpack';
+    headers['Content-Type'] = mediaType;
+      {% else %}
+    const bodyMeta = {{ meta_expr(op.requestBody.tsType) }};
+    const mediaType = bodyMeta ? {{ service_class_name }}.mediaFor(responseFormat) : undefined;
+    if (mediaType) headers['Content-Type'] = mediaType;
+    const serializedBody = bodyMeta && body !== undefined
+      ? AlgorandSerializer.encode(body, bodyMeta, responseFormat)
+      : body;
+      {% endif %}
+    {% endif %}
+
+    {% set query_params = op.otherParameters | selectattr('in', 'equalto', 'query') | list %}
+    {% set header_params = op.otherParameters | selectattr('in', 'equalto', 'header') | list %}
+    {% if header_params|length > 0 %}
+    for (const param of [{% for p in header_params %}{ name: '{{ p.name }}', value: params?.{{ p.varName }} }{% if not loop.last %}, {% endif %}{% endfor %}]) {
+      if (param.value !== undefined) headers[param.name] = String(param.value);
+    }
+    {% endif %}
+
+    const payload = await this.httpRequest.request<unknown>({
+      method: '{{ op.method }}',
+      url: '{{ op.path }}',
+      path: {
+{%- for p in op.pathParameters %}
+        '{{ p.name }}': {% if p.stringifyBigInt %}(typeof {{ p.varName }} === 'bigint' ? {{ p.varName }}.toString() : {{ p.varName }}){% else %}{{ p.varName }}{% endif %},
+{%- endfor %}
+      },
+      query: {
+{%- for p in query_params %}
+        '{{ p.name }}': {% if p.stringifyBigInt %}(typeof params?.{{ p.varName }} === 'bigint' ? (params!.{{ p.varName }} as bigint).toString() : params?.{{ p.varName }}){% else %}params?.{{ p.varName }}{% endif %},
+{%- endfor %}
+{%- if op.forceMsgpackQuery %}
+        'format': 'msgpack',
+{%- endif %}
+      },
+      headers,
+      {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
+      body: serializedBody,
+      mediaType: mediaType,
+      {% else %}
+      body: undefined,
+      mediaType: undefined,
+      {% endif %}
+    });
+
+    const responseMeta = {{ meta_expr(op.responseTsType) }};
+    if (responseMeta) {
+      return AlgorandSerializer.decode(payload, responseMeta, responseFormat);
+    }
+    return payload as {{ op.responseTsType }};
+  }
+
+{% endfor %}
+{% if custom_methods %}
+{% for method in custom_methods %}
+
+  {{ method }}
+{% endfor %}
+{% endif %}
+}

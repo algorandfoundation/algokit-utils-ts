@@ -7,8 +7,8 @@ import { MultisigSubsigMeta } from './multisig-subsig'
  */
 export type MultisigSig = {
   subsigs?: MultisigSubsig[]
-  threshold?: bigint
-  version?: bigint
+  threshold?: number
+  version?: number
 }
 
 export const MultisigSigMeta: ModelMetadata = {

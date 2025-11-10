@@ -33,7 +33,7 @@ export type SimulateUnnamedResourcesAccessed = {
   /**
    * The number of extra box references used to increase the IO budget. This is in addition to the references defined in the input transaction group and any referenced to unnamed boxes.
    */
-  extraBoxRefs?: bigint
+  extraBoxRefs?: number
 
   /**
    * The unnamed asset holdings that were referenced. The order of this array is arbitrary.

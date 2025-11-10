@@ -17,17 +17,17 @@ export type SimulationEvalOverrides = {
   /**
    * The maximum log calls one can make during simulation
    */
-  maxLogCalls?: bigint
+  maxLogCalls?: number
 
   /**
    * The maximum byte number to log during simulation
    */
-  maxLogSize?: bigint
+  maxLogSize?: number
 
   /**
    * The extra opcode budget added to each transaction group during simulation
    */
-  extraOpcodeBudget?: bigint
+  extraOpcodeBudget?: number
 
   /**
    * If true, signers for transactions that are missing signatures will be fixed during evaluation.
