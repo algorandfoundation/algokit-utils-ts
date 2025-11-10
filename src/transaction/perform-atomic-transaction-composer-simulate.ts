@@ -15,6 +15,8 @@ export async function performAtomicTransactionComposerSimulate(
   algod: AlgodClient,
   options?: RawSimulateOptions,
 ) {
+  // TODO: PD - confirm whether calling buildTransactions is a good strategy.
+  // The result of buildTransactions is different to the actual transaction being sent due to resource population
   const transactions = (await composer.buildTransactions()).transactions
 
   const simulateRequest = {

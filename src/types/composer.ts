@@ -26,7 +26,6 @@ import {
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
-import { performAtomicTransactionComposerSimulate } from '../transaction'
 import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -646,7 +645,6 @@ export class TransactionComposer {
   private composerConfig: TransactionComposerConfig
 
   private builtGroup?: TransactionWithSigner[]
-  private signedGroup?: SignedTransaction[]
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -1787,6 +1785,8 @@ export class TransactionComposer {
     }
 
     if (transactions.length > 1) {
+      // TODO: PD - this is a bit HACKY, this can be removed if groupTransactions doesn't mutate the transaction anymore
+      transactions.forEach((txn) => (txn.group = undefined))
       transactions = groupTransactions(transactions)
     }
 
@@ -1813,6 +1813,8 @@ export class TransactionComposer {
 
     const appCallIndexesWithoutMaxFees: number[] = []
 
+    // TODO: PD - calling this.buildTransactions() here affect any object references to the original transaction
+    // Consider cloning here
     const builtTransactions = (await this.buildTransactions()).transactions
 
     let transactionsToSimulate = builtTransactions.map((txn, groupIndex) => {
@@ -1982,34 +1984,36 @@ export class TransactionComposer {
     }
 
     try {
-      await this.gatherSignatures()
+      await this.build()
 
-      if (!this.signedGroup || this.signedGroup.length === 0) {
+      if (!this.builtGroup || this.builtGroup.length === 0) {
         throw new Error('No transactions available')
       }
 
+      const signedTransactions = await this.gatherSignatures(this.builtGroup)
+
       if (Config.debug && Config.traceAll) {
-        const simulateResponse = await performAtomicTransactionComposerSimulate(this, this.algod)
+        const simulateResponse = await this.foo(this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn))
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse,
         })
       }
 
-      const group = this.signedGroup[0].txn.group
+      const group = signedTransactions[0].txn.group
 
       let waitRounds = params?.maxRoundsToWaitForConfirmation
 
       if (waitRounds === undefined) {
         const suggestedParams = await this.getSuggestedParams()
         const firstRound = suggestedParams.firstValid
-        const lastRound = this.signedGroup.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
+        const lastRound = signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
         waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
       }
 
-      const encodedTxns = encodeSignedTransactions(this.signedGroup)
+      const encodedTxns = encodeSignedTransactions(signedTransactions)
       await this.algod.sendRawTransaction(encodedTxns)
 
-      const transactions = this.signedGroup.map((stxn) => stxn.txn)
+      const transactions = this.builtGroup.map((stxn) => stxn.txn)
       const transactionIds = transactions.map((txn) => getTransactionId(txn))
 
       if (transactions.length > 1 && group) {
@@ -2057,7 +2061,12 @@ export class TransactionComposer {
           err,
         )
 
-        const simulateResponse = await performAtomicTransactionComposerSimulate(this, this.algod)
+        // TODO: PD - clean up this logic to make it clear
+        const transactions = this.builtGroup
+          ? this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn)
+          : (await this.buildTransactions()).transactions
+        const simulateResponse = await this.foo(transactions)
+
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
           await Config.events.emitAsync(EventType.TxnGroupSimulated, {
@@ -2138,20 +2147,24 @@ export class TransactionComposer {
   async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
-    const transactionsWithSigners = (await this.build()).transactions
+
     let signedTransactions: SignedTransaction[]
     // Build the transactions
     if (skipSignatures) {
       rawOptions.allowEmptySignatures = true
       rawOptions.fixSigners = true
+
       // Build transactions uses empty signers
-      signedTransactions = transactionsWithSigners.map((txnWithSigner) => ({
-        txn: txnWithSigner.txn,
+      const transactions = (await this.buildTransactions()).transactions
+      signedTransactions = transactions.map((txn) => ({
+        txn: txn,
         signature: EMPTY_SIGNATURE,
       }))
     } else {
       // Build creates real signatures
-      signedTransactions = await this.gatherSignatures()
+      const builtTransactions = await this.buildTransactions()
+      const transactionsWithSigners = this.gatherSigners(builtTransactions)
+      signedTransactions = await this.gatherSignatures(transactionsWithSigners)
     }
 
     const simulateRequest = {
@@ -2220,22 +2233,16 @@ export class TransactionComposer {
     return encoder.encode(arc2Payload)
   }
 
-  private async gatherSignatures(): Promise<SignedTransaction[]> {
-    if (this.signedGroup) {
-      return this.signedGroup
-    }
-
-    await this.build()
-
-    if (!this.builtGroup || this.builtGroup.length === 0) {
+  private async gatherSignatures(transactionsWithSigners: TransactionWithSigner[]): Promise<SignedTransaction[]> {
+    if (transactionsWithSigners.length === 0) {
       throw new Error('No transactions available')
     }
 
-    const transactions = this.builtGroup.map((txnWithSigner) => txnWithSigner.txn)
+    const transactions = transactionsWithSigners.map((txnWithSigner) => txnWithSigner.txn)
 
     // Group transactions by signer
     const signerGroups = new Map<TransactionSigner, number[]>()
-    this.builtGroup.forEach(({ signer }, index) => {
+    transactionsWithSigners.forEach(({ signer }, index) => {
       const indexes = signerGroups.get(signer) ?? []
       indexes.push(index)
       signerGroups.set(signer, indexes)
@@ -2246,7 +2253,7 @@ export class TransactionComposer {
     const signedGroups = await Promise.all(signerEntries.map(([signer, indexes]) => signer(transactions, indexes)))
 
     // Reconstruct signed transactions in original order
-    const signedTransactions = new Array<SignedTransaction>(this.builtGroup.length)
+    const signedTransactions = new Array<SignedTransaction>(transactionsWithSigners.length)
     signerEntries.forEach(([, indexes], signerIndex) => {
       const stxs = signedGroups[signerIndex]
       indexes.forEach((txIndex, stxIndex) => {
@@ -2263,8 +2270,7 @@ export class TransactionComposer {
       throw new Error(`Transactions at indexes [${unsignedIndexes.join(', ')}] were not signed`)
     }
 
-    this.signedGroup = signedTransactions
-    return this.signedGroup
+    return signedTransactions
   }
 
   private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
@@ -2286,6 +2292,31 @@ export class TransactionComposer {
     }
 
     return abiReturns
+  }
+
+  // TODO: PD - name
+  private async foo(transactions: Transaction[]) {
+    const simulateRequest = {
+      allowEmptySignatures: true,
+      fixSigners: true,
+      allowMoreLogging: true,
+      execTraceConfig: {
+        enable: true,
+        scratchChange: true,
+        stackChange: true,
+        stateChange: true,
+      },
+      txnGroups: [
+        {
+          txns: transactions.map((txn) => ({
+            txn: txn,
+            signature: EMPTY_SIGNATURE,
+          })),
+        },
+      ],
+    } satisfies SimulateRequest
+    const simulateResult = await this.algod.simulateTransaction(simulateRequest)
+    return simulateResult
   }
 }
 
