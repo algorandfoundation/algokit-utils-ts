@@ -1,10 +1,13 @@
 import {
   AlgodClient,
+  AlgorandSerializer,
   PendingTransactionResponse,
   SimulateRequest,
   SimulateTransaction,
   SimulateUnnamedResourcesAccessed,
+  SimulationTransactionExecTraceMeta,
   SuggestedParams,
+  toBase64,
 } from '@algorandfoundation/algokit-algod-client'
 import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import {
@@ -1981,6 +1984,13 @@ export class TransactionComposer {
         throw new Error('No transactions available')
       }
 
+      if (Config.debug && Config.traceAll) {
+        const simulateResponse = await this.foo()
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+          simulateResponse,
+        })
+      }
+
       const group = this.signedGroup[0].txn.group
 
       let waitRounds = params?.maxRoundsToWaitForConfirmation
@@ -1997,6 +2007,16 @@ export class TransactionComposer {
 
       const transactions = this.signedGroup.map((stxn) => stxn.txn)
       const transactionIds = transactions.map((txn) => getTransactionId(txn))
+
+      if (transactions.length > 1 && group) {
+        Config.getLogger(params?.suppressLog).verbose(
+          `Group transaction (${toBase64(group)}) sent with ${transactions.length} transactions`,
+        )
+      } else {
+        Config.getLogger(params?.suppressLog).verbose(
+          `Sent transaction ID ${getTransactionId(transactions[0])} ${transactions[0].type} from ${transactions[0].sender}`,
+        )
+      }
 
       const confirmations = new Array<PendingTransactionResponse>()
       if (params?.maxRoundsToWaitForConfirmation !== 0) {
@@ -2015,8 +2035,54 @@ export class TransactionComposer {
         returns: abiReturns,
         confirmations: confirmations.map((c) => wrapPendingTransactionResponse(c)),
       }
-    } catch (originalError: unknown) {
-      throw await this.transformError(originalError)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (originalError: any) {
+      const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Atomic Transaction Composer'
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const err = new Error(errorMessage) as any
+      err.cause = originalError
+      if (typeof originalError === 'object') {
+        err.name = originalError.name
+      }
+
+      if (Config.debug && typeof originalError === 'object') {
+        err.traces = []
+        // TODO: PD - rename any atomic transaction composer to transaction composer
+        Config.getLogger(params?.suppressLog).error(
+          'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
+          err,
+        )
+
+        const simulateResponse = await this.foo()
+        if (Config.debug && !Config.traceAll) {
+          // Emit the event only if traceAll: false, as it should have already been emitted above
+          await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+            simulateResponse,
+          })
+        }
+
+        if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
+          for (const txn of simulateResponse.txnGroups[0].txnResults) {
+            err.traces.push({
+              trace: AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map'),
+              appBudget: txn.appBudgetConsumed,
+              logicSigBudget: txn.logicSigBudgetConsumed,
+              logs: txn.txnResult.logs,
+              message: simulateResponse.txnGroups[0].failureMessage,
+            })
+          }
+        }
+      } else {
+        Config.getLogger(params?.suppressLog).error(
+          'Received error executing Atomic Transaction Composer, for more information enable the debug flag',
+          err,
+        )
+      }
+
+      // Attach the sent transactions so we can use them in error transformers
+      err.sentTransactions = this.builtGroup?.map((t) => new TransactionWrapper(t.txn)) ?? []
+
+      throw await this.transformError(err)
     }
   }
 
@@ -2137,6 +2203,32 @@ export class TransactionComposer {
     }
   }
 
+  // TODO: PD - name
+  async foo() {
+    const transactions = (await this.buildTransactions()).transactions
+    const simulateRequest = {
+      allowEmptySignatures: true,
+      fixSigners: true,
+      allowMoreLogging: true,
+      execTraceConfig: {
+        enable: true,
+        scratchChange: true,
+        stackChange: true,
+        stateChange: true,
+      },
+      txnGroups: [
+        {
+          txns: transactions.map((txn) => ({
+            txn: txn,
+            signature: EMPTY_SIGNATURE,
+          })),
+        },
+      ],
+    } satisfies SimulateRequest
+
+    const simulateResult = await this.algod.simulateTransaction(simulateRequest)
+    return simulateResult
+  }
   /**
    * Create an encoded transaction note that follows the ARC-2 spec.
    *

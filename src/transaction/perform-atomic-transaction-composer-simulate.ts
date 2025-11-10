@@ -9,7 +9,7 @@ import { RawSimulateOptions, TransactionComposer } from '../types/composer'
  * @returns The simulation result, which includes various details about how the transactions would be processed.
  */
 export async function performAtomicTransactionComposerSimulate(composer: TransactionComposer, options?: RawSimulateOptions) {
-  const simulateOptions = options ?? {
+  const rawOptions = options ?? {
     allowEmptySignatures: true,
     fixSigners: true,
     allowMoreLogging: true,
@@ -19,6 +19,11 @@ export async function performAtomicTransactionComposerSimulate(composer: Transac
       stackChange: true,
       stateChange: true,
     },
+  }
+
+  const simulateOptions = {
+    ...rawOptions,
+    skipSignatures: true,
   }
   const { simulateResponse } = await composer.simulate(simulateOptions)
   return simulateResponse
