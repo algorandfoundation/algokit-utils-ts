@@ -25,8 +25,8 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
-import { performAtomicTransactionComposerSimulate } from 'src/transaction'
 import { Config } from '../config'
+import { performAtomicTransactionComposerSimulate } from '../transaction'
 import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -624,11 +624,6 @@ export interface BuiltTransactions {
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
-  /** Map of transaction index in the atc to a max logical fee.
-   * This is set using the value of either maxFee or staticFee.
-   */
-  private txnMaxFees: Map<number, AlgoAmount> = new Map()
-
   /** Transactions that have not yet been composed */
   private txns: Txn[] = []
 
@@ -1596,6 +1591,7 @@ export class TransactionComposer {
     }
   }
 
+  // TODO: PD - can we make this private?
   public async buildTransactions(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
     const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
@@ -1843,7 +1839,7 @@ export class TransactionComposer {
     // Check for required max fees on app calls when fee coverage is enabled
     if (analysisParams.coverAppCallInnerTransactionFees && appCallIndexesWithoutMaxFees.length > 0) {
       throw new Error(
-        `Please provide a max fee for each app call transaction when inner transaction fee coverage is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
+        `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
       )
     }
 
@@ -1873,7 +1869,7 @@ export class TransactionComposer {
     if (groupResponse.failureMessage) {
       if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('fee too small')) {
         throw new Error(
-          'Fees were too small to analyze group requirements via simulate. You may need to increase an app call transaction max fee.',
+          'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
         )
       }
 
@@ -1971,8 +1967,21 @@ export class TransactionComposer {
    * ```
    */
   async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
+    if (
+      this.composerConfig.coverAppCallInnerTransactionFees !== (params?.coverAppCallInnerTransactionFees ?? false) ||
+      this.composerConfig.populateAppCallResources !== (params?.populateAppCallResources ?? true)
+    ) {
+      // If the params are different to the composer config, reset the builtGroup
+      // to ensure that the SendParams overwrites the composer config
+      this.composerConfig = {
+        coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees ?? false,
+        populateAppCallResources: params?.populateAppCallResources ?? true,
+      }
+
+      this.builtGroup = undefined
+    }
+
     try {
-      // TODO: PD - resource population + fee if not done already
       await this.gatherSignatures()
 
       if (!this.signedGroup || this.signedGroup.length === 0) {

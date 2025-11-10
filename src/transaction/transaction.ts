@@ -2,10 +2,10 @@ import { AlgodClient, PendingTransactionResponse, SuggestedParams } from '@algor
 import { OnApplicationComplete, Transaction, TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIReturnType, TransactionSigner } from '@algorandfoundation/sdk'
-import { AppCallParams, TransactionComposer } from '../types/composer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
+import { AppCallParams, TransactionComposer } from '../types/composer'
 import {
   AdditionalAtomicTransactionComposerContext,
   AtomicTransactionComposerToSend,
@@ -229,10 +229,7 @@ export const sendTransaction = async function (
 
   const composer = new TransactionComposer({
     composerConfig: {
-      populateAppCallResources: {
-        enabled: sendParams?.populateAppCallResources ?? Config.populateAppCallResources,
-        useAccessList: false,
-      },
+      populateAppCallResources: sendParams?.populateAppCallResources ?? Config.populateAppCallResources,
       coverAppCallInnerTransactionFees: false,
     },
     algod: algod,
@@ -307,10 +304,7 @@ export async function prepareGroupForSending(
   // TODO: should we support suggestedParams in clone?
   const newComposer = composer.clone({
     coverAppCallInnerTransactionFees: sendParams.coverAppCallInnerTransactionFees ?? false,
-    populateAppCallResources: {
-      enabled: sendParams.populateAppCallResources ?? true,
-      useAccessList: false, // TODO: PD - remove this
-    },
+    populateAppCallResources: sendParams.populateAppCallResources ?? true,
   })
 
   transactionsWithSigners.forEach((txnWithSigner, index) => {

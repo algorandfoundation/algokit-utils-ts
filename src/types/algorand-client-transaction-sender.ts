@@ -19,6 +19,7 @@ import {
   AssetCreateParams,
   AssetOptOutParams,
   TransactionComposer,
+  TransactionComposerConfig,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 
@@ -49,7 +50,7 @@ export class AlgorandClientTransactionSender {
    * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
    * ```
    */
-  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
+  constructor(newGroup: (config?: TransactionComposerConfig) => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
     this._newGroup = newGroup
     this._assetManager = assetManager
     this._appManager = appManager
