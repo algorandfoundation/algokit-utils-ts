@@ -451,8 +451,8 @@ export class AppManager {
         throw new Error(`App call transaction did not log a return value`)
       }
       const lastLog = logs[logs.length - 1]
-      if (AppManager.hasAbiReturnPrefix(lastLog)) {
-        throw new Error(`App call transaction did not log a ABI return value`)
+      if (!AppManager.hasAbiReturnPrefix(lastLog)) {
+        throw new Error(`App call transaction did not log an ABI return value`)
       }
 
       abiResult.rawReturnValue = new Uint8Array(lastLog.slice(4))

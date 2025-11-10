@@ -35,7 +35,6 @@ import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
   ABIAppCallArgs,
-  ABIReturn,
   AppCallArgs,
   AppCallTransactionResult,
   AppCallType,
@@ -2165,7 +2164,7 @@ export class ApplicationClient {
       // There isn't an composer passed in
       !call.sendParams?.transactionComposer &&
       // The method is readonly
-      this.appSpec.hints[this.getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
+      this.appSpec.hints?.[this.getABIMethodSignature(this.getABIMethod(call.method)!)]?.read_only
     ) {
       const transactionComposer = new TransactionComposer({
         algod: this.algod,
@@ -2179,12 +2178,18 @@ export class ApplicationClient {
         throw new Error(result.simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage)
       }
       const txns = (await transactionComposer.build()).transactions
+
+      // Extract ABI return value directly from the last transaction's simulation result
+      const abiMethod = this.getABIMethod(call.method)!
+      const lastTxnResult = result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult
+      const abiReturn = AppManager.getABIReturn(lastTxnResult, abiMethod)
+
       return {
         transaction: new TransactionWrapper(txns[txns.length - 1].txn),
-        confirmation: wrapPendingTransactionResponseOptional(result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult),
+        confirmation: wrapPendingTransactionResponseOptional(lastTxnResult),
         confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
         transactions: txns.map((t) => new TransactionWrapper(t.txn)),
-        return: (result.returns?.length ?? 0 > 0) ? (result.returns![result.returns!.length - 1] as ABIReturn) : undefined,
+        return: abiReturn,
       } satisfies AppCallTransactionResult
     }
 

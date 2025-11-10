@@ -6,7 +6,7 @@ import {
   SimulateUnnamedResourcesAccessed,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
-import { EMPTY_SIGNATURE, concatArrays } from '@algorandfoundation/algokit-common'
+import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import {
   AccessReference,
   OnApplicationComplete,
@@ -1993,9 +1993,7 @@ export class TransactionComposer {
       }
 
       const encodedTxns = encodeSignedTransactions(this.signedGroup)
-      const encodedBytes = concatArrays(...encodedTxns)
-
-      await this.algod.sendRawTransaction(encodedBytes)
+      await this.algod.sendRawTransaction(encodedTxns)
 
       const transactions = this.signedGroup.map((stxn) => stxn.txn)
       const transactionIds = transactions.map((txn) => getTransactionId(txn))
