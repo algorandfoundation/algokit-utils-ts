@@ -387,11 +387,10 @@ export function getTransactionId(transaction: Transaction): string {
  */
 export function groupTransactions(transactions: Transaction[]): Transaction[] {
   const group = computeGroup(transactions)
-  transactions.forEach((tx) => {
-    // TODO: PD - rethink this, can we assign the transaction group right before sending to the network?
-    tx.group = group
-  })
-  return transactions
+  return transactions.map((tx) => ({
+    ...tx,
+    group: group,
+  }))
 }
 
 export function assignFee(transaction: Transaction, feeParams: FeeParams): Transaction {

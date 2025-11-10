@@ -1549,6 +1549,8 @@ export class TransactionComposer {
     return (await this.buildTransactions()).transactions.length
   }
 
+  // TODO: PD - need buildGroup, maybe update build to act like build group?
+
   /**
    * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
    *
@@ -1571,7 +1573,7 @@ export class TransactionComposer {
           ? await this.analyzeGroupRequirements(this.composerConfig)
           : undefined
 
-      const builtTransactions = await this.buildTransactions(groupAnalysis)
+      const builtTransactions = await this.prepareTransactionsForSending(groupAnalysis)
       const transactionsWithSigners = this.gatherSigners(builtTransactions)
 
       this.builtGroup = transactionsWithSigners
@@ -1588,14 +1590,14 @@ export class TransactionComposer {
       methodCalls: methodCalls,
     }
   }
-
+  // TODO: PD - port this over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
   // TODO: PD - can we make this private?
-  public async buildTransactions(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
+  public async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
     const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
     const signers = new Map<number, algosdk.TransactionSigner>()
 
-    let transactions = new Array<Transaction>()
+    const transactions = new Array<Transaction>()
 
     for (let i = 0; i < this.txns.length; i++) {
       const ctxn = this.txns[i]
@@ -1682,6 +1684,18 @@ export class TransactionComposer {
         }
       }
     }
+
+    const methodCalls = new Map(
+      this.txns
+        .map((t, index) => (t.type === 'methodCall' ? ([index, t.data.method] as const) : null))
+        .filter((entry): entry is [number, ABIMethod] => entry !== null),
+    )
+
+    return { transactions, methodCalls, signers }
+  }
+
+  private async prepareTransactionsForSending(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
+    const { transactions, methodCalls, signers } = await this.buildTransactions()
 
     if (groupAnalysis) {
       // Process fee adjustments
@@ -1798,18 +1812,12 @@ export class TransactionComposer {
     }
 
     if (transactions.length > 1) {
-      // TODO: PD - this is a bit HACKY, this can be removed if groupTransactions doesn't mutate the transaction anymore
-      transactions.forEach((txn) => (txn.group = undefined))
-      transactions = groupTransactions(transactions)
+      const groupedTransactions = groupTransactions(transactions)
+      transactions.forEach((t) => (t.group = groupedTransactions[0].group))
+      return { transactions: groupedTransactions, methodCalls, signers }
+    } else {
+      return { transactions, methodCalls, signers }
     }
-
-    const methodCalls = new Map(
-      this.txns
-        .map((t, index) => (t.type === 'methodCall' ? ([index, t.data.method] as const) : null))
-        .filter((entry): entry is [number, ABIMethod] => entry !== null),
-    )
-
-    return { transactions, methodCalls, signers }
   }
 
   private gatherSigners(builtTransactions: BuiltTransactions): TransactionWithSigner[] {
@@ -1826,11 +1834,9 @@ export class TransactionComposer {
 
     const appCallIndexesWithoutMaxFees: number[] = []
 
-    // TODO: PD - calling this.buildTransactions() here affect any object references to the original transaction
-    // Consider cloning here
-    const builtTransactions = (await this.buildTransactions()).transactions
+    const transactions = (await this.buildTransactions()).transactions
 
-    let transactionsToSimulate = builtTransactions.map((txn, groupIndex) => {
+    let transactionsToSimulate = transactions.map((txn, groupIndex) => {
       const ctxn = this.txns[groupIndex]
       const txnToSimulate = { ...txn }
       txnToSimulate.group = undefined
@@ -1894,7 +1900,7 @@ export class TransactionComposer {
     }
 
     const txnAnalysisResults: TransactionAnalysis[] = groupResponse.txnResults.map((simulateTxnResult, groupIndex) => {
-      const btxn = builtTransactions[groupIndex]
+      const btxn = transactions[groupIndex]
 
       let requiredFeeDelta: FeeDelta | undefined
 
@@ -2005,6 +2011,18 @@ export class TransactionComposer {
 
       const signedTransactions = await this.gatherSignatures(this.builtGroup)
 
+      const transactionsToSend = this.builtGroup.map((stxn) => stxn.txn)
+      const transactionIds = transactionsToSend.map((txn) => getTransactionId(txn))
+
+      if (transactionsToSend.length > 1) {
+        const groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
+        Config.getLogger(params?.suppressLog).verbose(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+          transactionsToSend,
+        })
+
+        Config.getLogger(params?.suppressLog).debug(`Transaction IDs (${groupId})`, transactionIds)
+      }
+
       if (Config.debug && Config.traceAll) {
         const simulateResponse = await this.foo(this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn))
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
@@ -2019,23 +2037,20 @@ export class TransactionComposer {
       if (waitRounds === undefined) {
         const suggestedParams = await this.getSuggestedParams()
         const firstRound = suggestedParams.firstValid
-        const lastRound = signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
-        waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
+        const lastRound = signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
+        waitRounds = Number(lastRound - firstRound) + 1
       }
 
       const encodedTxns = encodeSignedTransactions(signedTransactions)
       await this.algod.sendRawTransaction(encodedTxns)
 
-      const transactions = this.builtGroup.map((stxn) => stxn.txn)
-      const transactionIds = transactions.map((txn) => getTransactionId(txn))
-
-      if (transactions.length > 1 && group) {
+      if (transactionsToSend.length > 1 && group) {
         Config.getLogger(params?.suppressLog).verbose(
-          `Group transaction (${toBase64(group)}) sent with ${transactions.length} transactions`,
+          `Group transaction (${toBase64(group)}) sent with ${transactionsToSend.length} transactions`,
         )
       } else {
         Config.getLogger(params?.suppressLog).verbose(
-          `Sent transaction ID ${getTransactionId(transactions[0])} ${transactions[0].type} from ${transactions[0].sender}`,
+          `Sent transaction ID ${getTransactionId(transactionsToSend[0])} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
         )
       }
 
@@ -2051,7 +2066,7 @@ export class TransactionComposer {
 
       return {
         groupId: group ? Buffer.from(group).toString('base64') : undefined,
-        transactions: transactions.map((t) => new TransactionWrapper(t)),
+        transactions: transactionsToSend.map((t) => new TransactionWrapper(t)),
         txIds: transactionIds,
         returns: abiReturns,
         confirmations: confirmations.map((c) => wrapPendingTransactionResponse(c)),
@@ -2168,7 +2183,10 @@ export class TransactionComposer {
       rawOptions.fixSigners = true
 
       // Build transactions uses empty signers
-      const transactions = (await this.buildTransactions()).transactions
+      let transactions = (await this.buildTransactions()).transactions
+      if (transactions.length > 1) {
+        transactions = groupTransactions(transactions)
+      }
       signedTransactions = transactions.map((txn) => ({
         txn: txn,
         signature: EMPTY_SIGNATURE,
@@ -2176,7 +2194,9 @@ export class TransactionComposer {
     } else {
       // Build creates real signatures
       const builtTransactions = await this.buildTransactions()
-      const transactionsWithSigners = this.gatherSigners(builtTransactions)
+      const transactions =
+        builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
+      const transactionsWithSigners = this.gatherSigners({ ...builtTransactions, transactions })
       signedTransactions = await this.gatherSignatures(transactionsWithSigners)
     }
 
@@ -2246,6 +2266,7 @@ export class TransactionComposer {
     return encoder.encode(arc2Payload)
   }
 
+  // TODO: PD - this will need to be public, need to revert transactionsWithSigners
   private async gatherSignatures(transactionsWithSigners: TransactionWithSigner[]): Promise<SignedTransaction[]> {
     if (transactionsWithSigners.length === 0) {
       throw new Error('No transactions available')
