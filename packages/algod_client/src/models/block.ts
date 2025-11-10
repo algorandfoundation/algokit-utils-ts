@@ -1,8 +1,8 @@
 import type { ModelMetadata } from '../core/model-runtime'
 import type { SignedTxnInBlock } from './signed-txn-in-block'
 import { SignedTxnInBlockMeta } from './signed-txn-in-block'
-import type { BlockStateProofTracking } from './block_state_proof_tracking'
-import { BlockStateProofTrackingMeta } from './block_state_proof_tracking'
+import type { BlockStateProofTrackingData } from './block_state_proof_tracking_data'
+import { BlockStateProofTrackingDataMeta } from './block_state_proof_tracking_data'
 
 /**
  * Block contains the BlockHeader and the list of transactions (Payset).
@@ -67,7 +67,7 @@ export interface Block {
   /** [tc] Transaction counter. */
   txnCounter?: bigint
   /** [spt] State proof tracking data keyed by state proof type. */
-  stateProofTracking?: BlockStateProofTracking
+  stateProofTracking?: Map<number, BlockStateProofTrackingData>
   /** [partupdrmv] Expired participation accounts. */
   expiredParticipationAccounts?: Uint8Array[]
   /** [partupdabs] Absent participation accounts. */
@@ -114,7 +114,7 @@ export const BlockMeta: ModelMetadata = {
       wireKey: 'spt',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => BlockStateProofTrackingMeta },
+      type: { kind: 'map', keyType: 'number', value: { kind: 'model', meta: () => BlockStateProofTrackingDataMeta } },
     },
     {
       name: 'expiredParticipationAccounts',

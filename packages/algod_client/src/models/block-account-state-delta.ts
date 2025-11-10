@@ -1,11 +1,12 @@
 import type { ModelMetadata } from '../core/model-runtime'
 import { registerModelMeta } from '../core/model-runtime'
+import type { BlockStateDelta } from './block-state-delta'
 import { BlockStateDeltaMeta } from './block-state-delta'
 
 /** BlockAccountStateDelta pairs an address with a BlockStateDelta map. */
 export interface BlockAccountStateDelta {
   address: string
-  delta: import('./block-state-delta').BlockStateDelta
+  delta: BlockStateDelta
 }
 
 export const BlockAccountStateDeltaMeta: ModelMetadata = {

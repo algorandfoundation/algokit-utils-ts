@@ -199,6 +199,8 @@ class SchemaProcessor:
             signed_txn = False
             bytes_flag = False
             bigint_flag = False
+            inline_object_schema = None
+
             if is_array and isinstance(items, dict):
                 if "$ref" in items:
                     ref_model = ts_pascal_case(items["$ref"].split("/")[-1])
@@ -209,14 +211,30 @@ class SchemaProcessor:
             else:
                 if "$ref" in (prop_schema or {}):
                     ref_model = ts_pascal_case(prop_schema["$ref"].split("/")[-1])
-                fmt = prop_schema.get(constants.SchemaKey.FORMAT)
-                bytes_flag = fmt == "byte" or prop_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
-                bigint_flag = bool(prop_schema.get(constants.X_ALGOKIT_BIGINT) is True)
-                signed_txn = bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+                # Check for special codec flags first
+                elif bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True):
+                    signed_txn = True
+                # For inline nested objects, store the schema for inline metadata generation
+                elif (prop_schema.get(constants.SchemaKey.TYPE) == "object" and
+                      "properties" in prop_schema and
+                      "$ref" not in prop_schema and
+                      prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is not True):
+                    # Store the inline object schema for metadata generation
+                    inline_object_schema = prop_schema
+                else:
+                    fmt = prop_schema.get(constants.SchemaKey.FORMAT)
+                    bytes_flag = fmt == "byte" or prop_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+                    bigint_flag = bool(prop_schema.get(constants.X_ALGOKIT_BIGINT) is True)
+                    signed_txn = bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
             is_nullable = bool(prop_schema.get(constants.SchemaKey.NULLABLE) is True)
+
+            # Generate inline metadata name for nested objects
+            inline_meta_name = None
+            if inline_object_schema:
+                inline_meta_name = f"{model_name}{ts_pascal_case(canonical)}Meta"
 
             fields.append(
                 FieldDescriptor(
@@ -230,6 +248,8 @@ class SchemaProcessor:
                     is_signed_txn=signed_txn,
                     is_optional=is_optional,
                     is_nullable=is_nullable,
+                    inline_object_schema=inline_object_schema,
+                    inline_meta_name=inline_meta_name,
                 )
             )
 
@@ -891,10 +911,6 @@ class CodeGenerator:
                 "models/block/block-state-proof-tracking-data.ts.j2",
                 {"spec": spec},
             )
-            files[models_dir / "block_state_proof_tracking.ts"] = self.renderer.render(
-                "models/block/block-state-proof-tracking.ts.j2",
-                {"spec": spec},
-            )
             files[models_dir / "signed-txn-in-block.ts"] = self.renderer.render(
                 "models/block/signed-txn-in-block.ts.j2",
                 {"spec": spec},
@@ -924,8 +940,6 @@ class CodeGenerator:
                 "export { BlockAppEvalDeltaMeta } from './block-app-eval-delta';\n"
                 "export type { BlockStateProofTrackingData } from './block_state_proof_tracking_data';\n"
                 "export { BlockStateProofTrackingDataMeta } from './block_state_proof_tracking_data';\n"
-                "export type { BlockStateProofTracking } from './block_state_proof_tracking';\n"
-                "export { BlockStateProofTrackingMeta } from './block_state_proof_tracking';\n"
                 "export type { Block } from './block';\n"
                 "export { BlockMeta } from './block';\n"
                 "export type { SignedTxnInBlock } from './signed-txn-in-block';\n"

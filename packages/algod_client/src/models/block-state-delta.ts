@@ -1,9 +1,10 @@
 import type { ModelMetadata } from '../core/model-runtime'
 import { registerModelMeta } from '../core/model-runtime'
+import type { BlockEvalDelta } from './block-eval-delta'
 import { BlockEvalDeltaMeta } from './block-eval-delta'
 
 /** BlockStateDelta is a map keyed by state key to BlockEvalDelta. */
-export type BlockStateDelta = Record<string, import('./block-eval-delta').BlockEvalDelta>
+export type BlockStateDelta = Record<string, BlockEvalDelta>
 
 export const BlockStateDeltaMeta: ModelMetadata = {
   name: 'BlockStateDelta',

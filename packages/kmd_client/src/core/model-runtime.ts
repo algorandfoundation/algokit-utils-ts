@@ -34,7 +34,13 @@ export interface RecordFieldType {
   readonly value: FieldType
 }
 
-export type FieldType = ScalarFieldType | CodecFieldType | ModelFieldType | ArrayFieldType | RecordFieldType
+export interface MapFieldType {
+  readonly kind: 'map'
+  readonly keyType: 'string' | 'number' | 'bigint'
+  readonly value: FieldType
+}
+
+export type FieldType = ScalarFieldType | CodecFieldType | ModelFieldType | ArrayFieldType | RecordFieldType | MapFieldType
 
 export interface FieldMetadata {
   readonly name: string
@@ -218,6 +224,8 @@ export class AlgorandSerializer {
         return Object.fromEntries(
           Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, this.transformType(v, type.value, ctx)]),
         )
+      case 'map':
+        return this.transformMap(value, type, ctx)
       default:
         return value
     }
@@ -262,6 +270,47 @@ export class AlgorandSerializer {
       throw new Error(`Codec for "${codecKey}" is not registered`)
     }
     return ctx.direction === 'encode' ? codec.encode(value, ctx.format) : codec.decode(value, ctx.format)
+  }
+
+  private static transformMap(value: unknown, meta: MapFieldType, ctx: TransformContext): unknown {
+    if (ctx.direction === 'encode') {
+      if (!(value instanceof Map)) return value
+      const result: Record<string, unknown> = {}
+      for (const [k, v] of value.entries()) {
+        const transformedValue = this.transformType(v, meta.value, ctx)
+        result[String(k)] = transformedValue
+      }
+      return result
+    }
+    // Decoding
+    if (typeof value !== 'object' || value === null) return value
+    const result = new Map()
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      const transformedValue = this.transformType(v, meta.value, ctx)
+      const key = this.convertKeyType(k, meta.keyType)
+      result.set(key, transformedValue)
+    }
+    return result
+  }
+
+  private static convertKeyType(keyStr: string, keyType: 'string' | 'number' | 'bigint'): string | number | bigint {
+    switch (keyType) {
+      case 'string':
+        return keyStr
+      case 'number': {
+        const num = Number(keyStr)
+        return Number.isNaN(num) ? keyStr : num
+      }
+      case 'bigint': {
+        try {
+          return BigInt(keyStr)
+        } catch {
+          return keyStr
+        }
+      }
+      default:
+        return keyStr
+    }
   }
 
   private static convertToNestedMaps(value: unknown): Map<string, unknown> | unknown[] | unknown {

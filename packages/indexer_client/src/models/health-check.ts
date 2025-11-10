@@ -1,5 +1,7 @@
 import type { ModelMetadata } from '../core/model-runtime'
 
+const HealthCheckDataMeta: ModelMetadata = { name: 'HealthCheckDataMeta', kind: 'object', fields: [] }
+
 /**
  * A health check response.
  */
@@ -32,7 +34,7 @@ export const HealthCheckMeta: ModelMetadata = {
       wireKey: 'data',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'model', meta: () => HealthCheckDataMeta },
     },
     {
       name: 'round',

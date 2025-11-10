@@ -5,7 +5,7 @@ import { BlockMeta } from './block'
 export type GetBlock = {
   /** Block data including header and transactions. */
   block: Block
-  /** Block certificate (msgpack only). */
+  /** Block certificate. */
   cert?: Record<string, unknown>
 }
 

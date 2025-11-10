@@ -4054,9 +4054,7 @@
                       "description": "base64 encoded program bytes"
                     },
                     "sourcemap": {
-                      "type": "object",
-                      "properties": {},
-                      "description": "JSON of the source map"
+                      "$ref": "#/components/schemas/SourceMap"
                     }
                   }
                 }
@@ -4695,8 +4693,7 @@
           "id",
           "network",
           "proto",
-          "rwd",
-          "timestamp"
+          "rwd"
         ],
         "type": "object",
         "properties": {
@@ -6552,6 +6549,39 @@
           }
         },
         "description": "Proof of transaction in a block."
+      },
+      "SourceMap": {
+        "type": "object",
+        "required": [
+          "version",
+          "sources",
+          "names",
+          "mappings"
+        ],
+        "properties": {
+          "version": {
+            "type": "integer"
+          },
+          "sources": {
+            "description": "A list of original sources used by the \"mappings\" entry.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "names": {
+            "description": "A list of symbol names used by the \"mappings\" entry.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mappings": {
+            "description": "A string with the encoded mapping data.",
+            "type": "string"
+          }
+        },
+        "description": "Source map for the program"
       }
     },
     "responses": {
@@ -7334,9 +7364,7 @@
                   "description": "base64 encoded program bytes"
                 },
                 "sourcemap": {
-                  "type": "object",
-                  "properties": {},
-                  "description": "JSON of the source map"
+                  "$ref": "#/components/schemas/SourceMap"
                 }
               }
             }

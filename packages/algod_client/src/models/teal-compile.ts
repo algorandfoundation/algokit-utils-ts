@@ -1,4 +1,6 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import type { SourceMap } from './source-map'
+import { SourceMapMeta } from './source-map'
 
 export type TealCompile = {
   /**
@@ -10,11 +12,7 @@ export type TealCompile = {
    * base64 encoded program bytes
    */
   result: string
-
-  /**
-   * JSON of the source map
-   */
-  sourcemap?: Record<string, unknown>
+  sourcemap?: SourceMap
 }
 
 export const TealCompileMeta: ModelMetadata = {
@@ -40,7 +38,7 @@ export const TealCompileMeta: ModelMetadata = {
       wireKey: 'sourcemap',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'model', meta: () => SourceMapMeta },
     },
   ],
 }
