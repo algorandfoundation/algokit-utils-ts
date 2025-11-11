@@ -482,7 +482,6 @@ export const waitForConfirmation = async function (
   maxRoundsToWait: number | bigint,
   algod: AlgodClient,
 ): Promise<PendingTransactionResponse> {
-  // TODO: PD - replace the composer-helper version with this
   if (maxRoundsToWait < 0) {
     throw new Error(`Invalid timeout, received ${maxRoundsToWait}, expected > 0`)
   }

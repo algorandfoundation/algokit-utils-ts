@@ -1,6 +1,4 @@
 import {
-  AlgodClient,
-  ApiError,
   ApplicationLocalReference,
   AssetHoldingReference,
   PendingTransactionResponse,
@@ -1299,43 +1297,4 @@ export function getDefaultValidityWindow(genesisId: string): number {
   } else {
     return 10 // Standard default validity window
   }
-}
-
-export async function waitForConfirmation(
-  algodClient: AlgodClient,
-  txId: string,
-  maxRoundsToWait: number,
-): Promise<PendingTransactionResponse> {
-  const status = await algodClient.getStatus()
-  const startRound = status.lastRound + 1n
-  let currentRound = startRound
-  while (currentRound < startRound + BigInt(maxRoundsToWait)) {
-    try {
-      const pendingInfo = await algodClient.pendingTransactionInformation(txId)
-      const confirmedRound = pendingInfo.confirmedRound
-      if (confirmedRound !== undefined && confirmedRound > 0n) {
-        return pendingInfo
-      } else {
-        const poolError = pendingInfo.poolError
-        if (poolError !== undefined && poolError.length > 0) {
-          // If there was a pool error, then the transaction has been rejected!
-          throw new Error(`Transaction ${txId} was rejected; pool error: ${poolError}`)
-        }
-      }
-    } catch (e: unknown) {
-      if (e instanceof ApiError && e.status === 404) {
-        // Transaction not yet in pool, wait for next block
-        await algodClient.waitForBlock(currentRound)
-        currentRound++
-        continue
-      } else {
-        throw e
-      }
-    }
-
-    await algodClient.waitForBlock(currentRound)
-    currentRound++
-  }
-
-  throw new Error(`Transaction ${txId} unconfirmed after ${maxRoundsToWait} rounds`)
 }

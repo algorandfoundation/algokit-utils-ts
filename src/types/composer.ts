@@ -28,6 +28,7 @@ import {
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
+import { waitForConfirmation } from '../transaction'
 import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -57,7 +58,6 @@ import {
   populateGroupResources,
   populateTransactionResources,
   processAppMethodCallArgs,
-  waitForConfirmation,
 } from './composer-helper'
 import { Expand } from './expand'
 import { FeeDelta, FeePriority } from './fee-coverage'
@@ -2179,7 +2179,7 @@ export class TransactionComposer {
       const confirmations = new Array<PendingTransactionResponse>()
       if (params?.maxRoundsToWaitForConfirmation !== 0) {
         for (const id of transactionIds) {
-          const confirmation = await waitForConfirmation(this.algod, id, waitRounds)
+          const confirmation = await waitForConfirmation(id, waitRounds, this.algod)
           confirmations.push(confirmation)
         }
       }
@@ -2203,24 +2203,24 @@ export class TransactionComposer {
         err.name = originalError.name
       }
 
+      // There could be simulate errors occur during the resource population process
+      // In that case, the transactionsWithSigners is not set, fallback to buildTransactions() to get the raw transactions
+      let sentTransactions: Transaction[]
+      if (this.transactionsWithSigners) {
+        sentTransactions = this.transactionsWithSigners.map((transactionWithSigner) => transactionWithSigner.txn)
+      } else {
+        sentTransactions = (await this.buildTransactions()).transactions
+        sentTransactions = groupTransactions(sentTransactions)
+      }
+
       if (Config.debug && typeof originalError === 'object') {
         err.traces = []
-        // TODO: PD - rename any atomic transaction composer to transaction composer
         Config.getLogger(params?.suppressLog).error(
           'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
           err,
         )
 
-        // There could be simulate errors occur during the resource population process
-        // In that case, the transactionsWithSigners is not set, fallback to buildTransactions() to get the raw transactions
-        let transactions: Transaction[]
-        if (this.transactionsWithSigners) {
-          transactions = this.transactionsWithSigners.map((transactionWithSigner) => transactionWithSigner.txn)
-        } else {
-          transactions = (await this.buildTransactions()).transactions
-          transactions = groupTransactions(transactions)
-        }
-        const simulateResponse = await this.simulateTransactionsWithNoSigner(transactions)
+        const simulateResponse = await this.simulateTransactionsWithNoSigner(sentTransactions)
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
@@ -2247,9 +2247,8 @@ export class TransactionComposer {
         )
       }
 
-      // TODO: PD - using transactionsWithSigners here is incorrect
       // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = this.transactionsWithSigners?.map((t) => new TransactionWrapper(t.txn)) ?? []
+      err.sentTransactions = sentTransactions.map((t) => new TransactionWrapper(t))
 
       throw await this.transformError(err)
     }

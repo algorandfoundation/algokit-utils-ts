@@ -13,7 +13,6 @@ A collection of random notes pop up during the migration process.
 - `AssetHoldingReference` replaced by `HoldingReference`
 - `ApplicationLocalReference` replaced by `LocalsReference`
 - BoxReference is gone too
-- Error name is gone (snapshot tests updated)
 - TODO: remove the ATC too
 - TODO: add interface for breaking change, for example, Transaction
 - TODO: simplify signer + account
@@ -41,3 +40,4 @@ A collection of random notes pop up during the migration process.
   - getAtomicTransactionComposerTransactions becomes async
 - call composer .build instead of atc buildGroup. This will populate resources too
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
+- Remove reference to Atomic?
