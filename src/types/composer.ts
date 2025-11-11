@@ -19,7 +19,9 @@ import {
   assignFee,
   calculateFee,
   decodeSignedTransaction,
+  decodeTransaction,
   encodeSignedTransactions,
+  encodeTransactionRaw,
   getTransactionId,
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
@@ -31,6 +33,7 @@ import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
+import { deepCloneTransactionParams } from './composer-clone'
 import {
   buildAppCall,
   buildAppCallMethodCall,
@@ -709,8 +712,8 @@ export class TransactionComposer {
     }
   }
 
-  clone(composerConfig?: TransactionComposerConfig) {
-    return new TransactionComposer({
+  public clone(composerConfig?: TransactionComposerConfig) {
+    const newComposer = new TransactionComposer({
       algod: this.algod,
       getSuggestedParams: this.getSuggestedParams,
       getSigner: this.getSigner,
@@ -722,7 +725,114 @@ export class TransactionComposer {
         ...composerConfig,
       },
     })
-    // TODO: PD - cross check with sdk ATC
+
+    this.txns.forEach((txn) => {
+      switch (txn.type) {
+        case 'pay':
+          newComposer.txns.push({
+            type: 'pay',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetCreate':
+          newComposer.txns.push({
+            type: 'assetCreate',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetConfig':
+          newComposer.txns.push({
+            type: 'assetConfig',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetFreeze':
+          newComposer.txns.push({
+            type: 'assetFreeze',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetDestroy':
+          newComposer.txns.push({
+            type: 'assetDestroy',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetTransfer':
+          newComposer.txns.push({
+            type: 'assetTransfer',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetOptIn':
+          newComposer.txns.push({
+            type: 'assetOptIn',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'assetOptOut':
+          newComposer.txns.push({
+            type: 'assetOptOut',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'appCall':
+          newComposer.txns.push({
+            type: 'appCall',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'keyReg':
+          newComposer.txns.push({
+            type: 'keyReg',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+        case 'txnWithSigner': {
+          const { txn: transaction, signer } = txn.data
+          // Deep clone the transaction using encode/decode and remove group field
+          const encoded = encodeTransactionRaw(transaction)
+          const clonedTxn = decodeTransaction(encoded)
+          clonedTxn.group = undefined
+          newComposer.txns.push({
+            type: 'txnWithSigner',
+            data: {
+              txn: clonedTxn,
+              signer,
+            },
+          })
+          break
+        }
+        case 'asyncTxn': {
+          const { txn: txnPromise, signer } = txn.data
+          // Create a new promise that resolves to a deep cloned transaction without the group field
+          const newTxnPromise = txnPromise.then((resolvedTxn) => {
+            const encoded = encodeTransactionRaw(resolvedTxn)
+            const clonedTxn = decodeTransaction(encoded)
+            clonedTxn.group = undefined
+            return clonedTxn
+          })
+          newComposer.txns.push({
+            type: 'asyncTxn',
+            data: {
+              txn: newTxnPromise,
+              signer,
+            },
+          })
+          break
+        }
+        case 'methodCall':
+          // Method calls have already been processed and their transaction args extracted
+          // Deep clone all data to avoid shared references
+          newComposer.txns.push({
+            type: 'methodCall',
+            data: deepCloneTransactionParams(txn.data),
+          })
+          break
+      }
+    })
+
+    return newComposer
   }
 
   /**

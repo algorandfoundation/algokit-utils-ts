@@ -1,5 +1,7 @@
+import { ABIMethod } from '@algorandfoundation/sdk'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
+import { AlgoAmount } from './amount'
 
 describe('TransactionComposer', () => {
   const fixture = algorandFixture()
@@ -62,6 +64,78 @@ describe('TransactionComposer', () => {
       })
 
       await expect(composer.send()).rejects.toThrow('ASSET MISSING!')
+    })
+  })
+
+  describe('clone composers', () => {
+    test('async transaction argument can be cloned correctly', async () => {
+      const { algorand, context } = fixture
+
+      const testAccount = context.testAccount
+
+      const composer1 = context.algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+      composer1.addAppCallMethodCall({
+        appId: 123n,
+        sender: testAccount,
+        method: ABIMethod.fromSignature('createBoxInNewApp(pay)void'),
+        args: [
+          algorand.createTransaction.payment({
+            sender: testAccount,
+            receiver: testAccount,
+            amount: AlgoAmount.Algos(1),
+          }),
+        ],
+      })
+
+      const composer2 = composer1.clone()
+      composer2.addPayment({
+        sender: testAccount,
+        receiver: testAccount,
+        amount: AlgoAmount.Algos(2),
+      })
+
+      const composer2Transactions = (await composer2.build()).transactions
+      expect(composer2Transactions[0].txn.group).toBeDefined()
+
+      const composer1Transactions = (await composer1.build()).transactions
+      expect(composer1Transactions[0].txn.group).toBeDefined()
+
+      expect(composer2Transactions[0].txn.group).not.toEqual(composer1Transactions[0].txn.group)
+    })
+
+    test('transaction argument can be cloned correctly', async () => {
+      const { algorand, context } = fixture
+
+      const testAccount = context.testAccount
+      const paymentTxn = await algorand.createTransaction.payment({
+        sender: testAccount,
+        receiver: testAccount,
+        amount: AlgoAmount.Algos(1),
+      })
+
+      const composer1 = context.algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+      composer1.addAppCallMethodCall({
+        appId: 123n,
+        sender: testAccount,
+        method: ABIMethod.fromSignature('createBoxInNewApp(pay)void'),
+        args: [paymentTxn],
+      })
+
+      const composer2 = composer1.clone()
+      composer2.addPayment({
+        sender: testAccount,
+        receiver: testAccount,
+        amount: AlgoAmount.Algos(2),
+      })
+
+      const composer2Transactions = (await composer2.build()).transactions
+      expect(composer2Transactions[0].txn.group).toBeDefined()
+
+      const composer1Transactions = (await composer1.build()).transactions
+      expect(composer1Transactions[0].txn.group).toBeDefined()
+
+      expect(composer2Transactions[0].txn.group).not.toEqual(composer1Transactions[0].txn.group)
+      expect(paymentTxn.group).toEqual(composer1Transactions[0].txn.group)
     })
   })
 })
