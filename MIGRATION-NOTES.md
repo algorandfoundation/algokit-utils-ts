@@ -40,3 +40,4 @@ A collection of random notes pop up during the migration process.
   - review docs on those methods
   - getAtomicTransactionComposerTransactions becomes async
 - call composer .build instead of atc buildGroup. This will populate resources too
+- suggestedParams was removed from AdditionalAtomicTransactionComposerContext

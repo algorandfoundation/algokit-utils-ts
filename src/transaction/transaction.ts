@@ -279,15 +279,13 @@ export async function populateAppCallResources(composer: TransactionComposer) {
 }
 
 /**
- * Take an existing  Transaction Composer and return a new one with changes applied to the transactions
+ * Take an existing Transaction Composer and return a new one with changes applied to the transactions
  * based on the supplied sendParams to prepare it for sending.
- * Please note, that before calling `.execute()` on the returned ATC, you must call `.buildGroup()`.
  *
- * @param algod The algod client to use for the simulation
- * @param atc The ATC containing the txn group
+ * @param composer The Transaction Composer containing the txn group
  * @param sendParams The send params for the transaction group
- * @param additionalAtcContext Additional ATC context used to determine how best to change the transactions in the group
- * @returns A new ATC with the changes applied
+ * @param additionalAtcContext Additional context used to determine how best to change the transactions in the group
+ * @returns A new Transaction Composer with the changes applied
  *
  * @privateRemarks
  * Parts of this function will eventually be implemented in algod. Namely:
@@ -296,7 +294,6 @@ export async function populateAppCallResources(composer: TransactionComposer) {
 export async function prepareGroupForSending(
   composer: TransactionComposer,
   sendParams: SendParams,
-  // TODO: PD - can we remove the suggested params from this? yes
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
 ) {
   const transactionsWithSigners = (await composer.build()).transactions

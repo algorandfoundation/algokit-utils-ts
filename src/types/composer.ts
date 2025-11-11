@@ -1576,9 +1576,8 @@ export class TransactionComposer {
           : undefined
 
       await this.populateResourcesAndGroupTransactions(builtTransactions.transactions, groupAnalysis)
-      const transactionsWithSigners = this.gatherSigners(builtTransactions)
 
-      this.transactionsWithSigners = transactionsWithSigners
+      this.transactionsWithSigners = this.gatherSigners(builtTransactions)
     }
 
     const methodCalls = new Map(
