@@ -644,7 +644,7 @@ export class TransactionComposer {
 
   private composerConfig: TransactionComposerConfig
 
-  private builtGroup?: TransactionWithSigner[]
+  private transactionsWithSigners?: TransactionWithSigner[]
 
   private signedTransactions?: SignedTransaction[]
 
@@ -1551,8 +1551,6 @@ export class TransactionComposer {
     return (await this.buildTransactions()).transactions.length
   }
 
-  // TODO: PD - need buildGroup, maybe update build to act like build group?
-
   /**
    * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
    *
@@ -1567,7 +1565,7 @@ export class TransactionComposer {
    * ```
    */
   public async build() {
-    if (!this.builtGroup) {
+    if (!this.transactionsWithSigners) {
       const suggestedParams = await this.getSuggestedParams()
       const builtTransactions = await this.buildTransactionsSuggestedParamsProvided(suggestedParams)
 
@@ -1580,7 +1578,7 @@ export class TransactionComposer {
       await this.populateResourcesAndGroupTransactions(builtTransactions.transactions, groupAnalysis)
       const transactionsWithSigners = this.gatherSigners(builtTransactions)
 
-      this.builtGroup = transactionsWithSigners
+      this.transactionsWithSigners = transactionsWithSigners
     }
 
     const methodCalls = new Map(
@@ -1590,7 +1588,7 @@ export class TransactionComposer {
     )
 
     return {
-      transactions: this.builtGroup,
+      transactions: this.transactionsWithSigners,
       methodCalls: methodCalls,
     }
   }
@@ -1981,7 +1979,7 @@ export class TransactionComposer {
    * ```
    */
   async rebuild() {
-    this.builtGroup = undefined
+    this.transactionsWithSigners = undefined
     return await this.build()
   }
 
@@ -2008,17 +2006,23 @@ export class TransactionComposer {
         populateAppCallResources: params?.populateAppCallResources ?? true,
       }
 
-      this.builtGroup = undefined
+      this.transactionsWithSigners = undefined
+      this.signedTransactions = undefined
     }
 
     try {
       await this.gatherSignatures()
 
-      if (!this.builtGroup || this.builtGroup.length === 0 || !this.signedTransactions || this.signedTransactions.length === 0) {
+      if (
+        !this.transactionsWithSigners ||
+        this.transactionsWithSigners.length === 0 ||
+        !this.signedTransactions ||
+        this.signedTransactions.length === 0
+      ) {
         throw new Error('No transactions available')
       }
 
-      const transactionsToSend = this.builtGroup.map((stxn) => stxn.txn)
+      const transactionsToSend = this.transactionsWithSigners.map((stxn) => stxn.txn)
       const transactionIds = transactionsToSend.map((txn) => getTransactionId(txn))
 
       if (transactionsToSend.length > 1) {
@@ -2032,7 +2036,7 @@ export class TransactionComposer {
 
       if (Config.debug && Config.traceAll) {
         const simulateResponse = await this.simulateTransactionsWithNoSigner(
-          this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn),
+          this.transactionsWithSigners.map((transactionWithSigner) => transactionWithSigner.txn),
         )
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse,
@@ -2098,10 +2102,15 @@ export class TransactionComposer {
           err,
         )
 
-        // TODO: PD - clean up this logic to make it clear
-        const transactions = this.builtGroup
-          ? this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn)
-          : (await this.buildTransactions()).transactions
+        // There could be simulate errors occur during the resource population process
+        // In that case, the transactionsWithSigners is not set, fallback to buildTransactions() to get the raw transactions
+        let transactions: Transaction[]
+        if (this.transactionsWithSigners) {
+          transactions = this.transactionsWithSigners.map((transactionWithSigner) => transactionWithSigner.txn)
+        } else {
+          transactions = (await this.buildTransactions()).transactions
+          transactions = groupTransactions(transactions)
+        }
         const simulateResponse = await this.simulateTransactionsWithNoSigner(transactions)
 
         if (Config.debug && !Config.traceAll) {
@@ -2129,8 +2138,9 @@ export class TransactionComposer {
         )
       }
 
+      // TODO: PD - using transactionsWithSigners here is incorrect
       // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = this.builtGroup?.map((t) => new TransactionWrapper(t.txn)) ?? []
+      err.sentTransactions = this.transactionsWithSigners?.map((t) => new TransactionWrapper(t.txn)) ?? []
 
       throw await this.transformError(err)
     }
@@ -2185,6 +2195,10 @@ export class TransactionComposer {
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
 
+    const builtTransactions = await this.buildTransactions()
+    const transactions =
+      builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
+
     let signedTransactions: SignedTransaction[]
     // Build the transactions
     if (skipSignatures) {
@@ -2192,19 +2206,12 @@ export class TransactionComposer {
       rawOptions.fixSigners = true
 
       // Build transactions uses empty signers
-      let transactions = (await this.buildTransactions()).transactions
-      if (transactions.length > 1) {
-        transactions = groupTransactions(transactions)
-      }
       signedTransactions = transactions.map((txn) => ({
         txn: txn,
         signature: EMPTY_SIGNATURE,
       }))
     } else {
       // Build creates real signatures
-      const builtTransactions = await this.buildTransactions()
-      const transactions =
-        builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
       const transactionsWithSigners = this.gatherSigners({ ...builtTransactions, transactions })
       signedTransactions = await this.signTransactions(transactionsWithSigners)
     }
@@ -2249,7 +2256,6 @@ export class TransactionComposer {
       await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
     }
 
-    const transactions = signedTransactions.map((stxn) => stxn.txn)
     const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
 
     return {
@@ -2282,11 +2288,11 @@ export class TransactionComposer {
 
     await this.build()
 
-    if (!this.builtGroup || this.builtGroup.length === 0) {
+    if (!this.transactionsWithSigners || this.transactionsWithSigners.length === 0) {
       throw new Error('No transactions available to sign')
     }
 
-    this.signedTransactions = await this.signTransactions(this.builtGroup)
+    this.signedTransactions = await this.signTransactions(this.transactionsWithSigners)
     return this.signedTransactions
   }
 
