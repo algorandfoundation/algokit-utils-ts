@@ -42,3 +42,4 @@ A collection of random notes pop up during the migration process.
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
 - Remove reference to Atomic?
 - composer.count is not async anymore
+- generated app client will be changed, no references to atc anymore

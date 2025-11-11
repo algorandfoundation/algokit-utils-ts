@@ -1141,88 +1141,85 @@ describe('Resource population: meta', () => {
     expect(boxRef?.appId).toBe(0n)
   })
 
-  // TODO: PD - review this test
-  // test('order is deterministic', async () => {
-  //   const { algorand, context } = fixture
+  test('order is deterministic', async () => {
+    const { algorand, context } = fixture
 
-  //   const testAccount = context.testAccount
+    const testAccount = context.testAccount
 
-  //   const v9AppFactory = algorand.client.getAppFactory({
-  //     appSpec: JSON.stringify(v9ARC32),
-  //     defaultSender: testAccount,
-  //   })
+    const v9AppFactory = algorand.client.getAppFactory({
+      appSpec: JSON.stringify(v9ARC32),
+      defaultSender: testAccount,
+    })
 
-  //   const v9AppClient = (await v9AppFactory.send.create({ method: 'createApplication' })).appClient
+    const v9AppClient = (await v9AppFactory.send.create({ method: 'createApplication' })).appClient
 
-  //   await v9AppClient.fundAppAccount({ amount: (118_000).microAlgo() })
+    await v9AppClient.fundAppAccount({ amount: (118_000).microAlgo() })
 
-  //   const accounts = []
-  //   for (let i = 0; i < 4; i++) {
-  //     accounts.push(algorand.account.random().addr)
-  //   }
+    const accounts = []
+    for (let i = 0; i < 4; i++) {
+      accounts.push(algorand.account.random().addr)
+    }
 
-  //   const apps = []
-  //   for (let i = 0; i < 4; i++) {
-  //     const app = await v9AppFactory.send.create({ method: 'createApplication' })
-  //     apps.push(app.appClient.appId)
-  //   }
+    const apps = []
+    for (let i = 0; i < 4; i++) {
+      const app = await v9AppFactory.send.create({ method: 'createApplication' })
+      apps.push(app.appClient.appId)
+    }
 
-  //   const assets = []
-  //   for (let i = 0; i < 4; i++) {
-  //     const res = await algorand.send.assetCreate({ sender: testAccount, total: 1n })
-  //     assets.push(res.assetId)
-  //   }
+    const assets = []
+    for (let i = 0; i < 4; i++) {
+      const res = await algorand.send.assetCreate({ sender: testAccount, total: 1n })
+      assets.push(res.assetId)
+    }
 
-  //   const appCall = await v9AppClient.params.call({
-  //     method: 'manyResources',
-  //     args: [accounts, assets, apps, [1, 2, 3, 4]],
-  //   })
+    const appCall = await v9AppClient.params.call({
+      method: 'manyResources',
+      args: [accounts, assets, apps, [1, 2, 3, 4]],
+    })
 
-  //   const composer = algorand.newGroup()
+    const composer = algorand.newGroup()
 
-  //   composer.addAppCallMethodCall(appCall)
+    composer.addAppCallMethodCall(appCall)
 
-  //   for (let i = 0; i < 10; i++) {
-  //     composer.addAppCallMethodCall(await v9AppClient.params.call({ method: 'dummy', note: `${i}` }))
-  //   }
+    for (let i = 0; i < 10; i++) {
+      composer.addAppCallMethodCall(await v9AppClient.params.call({ method: 'dummy', note: `${i}` }))
+    }
 
-  //   const atc = (await composer.build()).atc
-  //   const getResources = async () => {
-  //     const populatedAtc = await populateAppCallResources(atc, algorand.client.algod)
+    const getResources = async () => {
+      const resources = []
+      const transactionsWithSigners = (await composer.build()).transactions
+      for (const txnWithSigner of transactionsWithSigners) {
+        const txn = txnWithSigner.txn
 
-  //     const resources = []
-  //     for (const txnWithSigner of populatedAtc.buildGroup()) {
-  //       const txn = txnWithSigner.txn
+        for (const acct of txn.appCall?.accountReferences ?? []) {
+          resources.push(acct.toString())
+        }
 
-  //   for (const acct of txn.appCall?.accountReferences ?? []) {
-  //     resources.push(acct.toString())
-  //   }
+        for (const asset of txn.appCall?.assetReferences ?? []) {
+          resources.push(asset.toString())
+        }
 
-  //   for (const asset of txn.appCall?.assetReferences ?? []) {
-  //     resources.push(asset.toString())
-  //   }
+        for (const app of txn.appCall?.appReferences ?? []) {
+          resources.push(app.toString())
+        }
 
-  //   for (const app of txn.appCall?.appReferences ?? []) {
-  //     resources.push(app.toString())
-  //   }
+        for (const box of txn.appCall?.boxReferences ?? []) {
+          resources.push(`${box.appId}-${box.name.toString()}`)
+        }
+      }
 
-  //   for (const box of txn.appCall?.boxReferences ?? []) {
-  //     resources.push(`${box.appId}-${box.name.toString()}`)
-  //   }
-  // }
+      return resources
+    }
 
-  //     return resources
-  //   }
+    const allResources = []
+    for (let i = 0; i < 100; i++) {
+      allResources.push(await getResources())
+    }
 
-  //   const allResources = []
-  //   for (let i = 0; i < 100; i++) {
-  //     allResources.push(await getResources())
-  //   }
-
-  //   for (let i = 1; i < allResources.length; i++) {
-  //     expect(allResources[i]).toEqual(allResources[0])
-  //   }
-  // })
+    for (let i = 1; i < allResources.length; i++) {
+      expect(allResources[i]).toEqual(allResources[0])
+    }
+  })
 })
 
 describe('abi return', () => {
