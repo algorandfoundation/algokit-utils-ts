@@ -651,6 +651,14 @@ export class TransactionComposer {
 
   private signedTransactions?: SignedTransaction[]
 
+  private pushTransactions(transactions: Txn[]): void {
+    if (this.txns.length + transactions.length > MAX_TRANSACTION_GROUP_SIZE) {
+      throw new Error(`Transaction group size exceeds the max limit of: ${MAX_TRANSACTION_GROUP_SIZE}`)
+    }
+
+    this.txns.push(...transactions)
+  }
+
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
     if (!(originalError instanceof Error)) {
@@ -845,7 +853,6 @@ export class TransactionComposer {
     return this
   }
 
-  // TODO: PD - logic to enforce max group size
   /**
    * Add a pre-built transaction to the transaction group.
    * @param transaction The pre-built transaction
@@ -857,13 +864,15 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
-    this.txns.push({
-      data: {
-        txn: transaction,
-        signer: signer ?? this.getSigner(transaction.sender),
+    this.pushTransactions([
+      {
+        data: {
+          txn: transaction,
+          signer: signer ?? this.getSigner(transaction.sender),
+        },
+        type: 'txnWithSigner',
       },
-      type: 'txnWithSigner',
-    })
+    ])
 
     return this
   }
@@ -902,7 +911,7 @@ export class TransactionComposer {
    * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'pay' })
+    this.pushTransactions([{ data: params, type: 'pay' }])
 
     return this
   }
@@ -943,7 +952,7 @@ export class TransactionComposer {
    * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetCreate' })
+    this.pushTransactions([{ data: params, type: 'assetCreate' }])
 
     return this
   }
@@ -978,7 +987,7 @@ export class TransactionComposer {
    * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetConfig' })
+    this.pushTransactions([{ data: params, type: 'assetConfig' }])
 
     return this
   }
@@ -1012,7 +1021,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetFreeze' })
+    this.pushTransactions([{ data: params, type: 'assetFreeze' }])
 
     return this
   }
@@ -1044,7 +1053,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetDestroy' })
+    this.pushTransactions([{ data: params, type: 'assetDestroy' }])
 
     return this
   }
@@ -1081,7 +1090,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetTransfer' })
+    this.pushTransactions([{ data: params, type: 'assetTransfer' }])
 
     return this
   }
@@ -1113,7 +1122,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetOptIn' })
+    this.pushTransactions([{ data: params, type: 'assetOptIn' }])
 
     return this
   }
@@ -1151,7 +1160,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'assetOptOut' })
+    this.pushTransactions([{ data: params, type: 'assetOptOut' }])
 
     return this
   }
@@ -1206,7 +1215,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'appCall' })
+    this.pushTransactions([{ data: params, type: 'appCall' }])
 
     return this
   }
@@ -1248,7 +1257,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
+    this.pushTransactions([{ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' }])
 
     return this
   }
@@ -1288,7 +1297,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
+    this.pushTransactions([{ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' }])
 
     return this
   }
@@ -1330,7 +1339,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'appCall' })
+    this.pushTransactions([{ data: params, type: 'appCall' }])
 
     return this
   }
@@ -1392,12 +1401,13 @@ export class TransactionComposer {
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.txns.push(...txnArgs)
-
-    this.txns.push({
-      data: { ...params, args: processAppMethodCallArgs(params.args) },
-      type: 'methodCall',
-    })
+    this.pushTransactions([
+      ...txnArgs,
+      {
+        data: { ...params, args: processAppMethodCallArgs(params.args) },
+        type: 'methodCall',
+      },
+    ])
     return this
   }
 
@@ -1451,12 +1461,13 @@ export class TransactionComposer {
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.txns.push(...txnArgs)
-
-    this.txns.push({
-      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
-      type: 'methodCall',
-    })
+    this.pushTransactions([
+      ...txnArgs,
+      {
+        data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
+        type: 'methodCall',
+      },
+    ])
     return this
   }
 
@@ -1508,12 +1519,13 @@ export class TransactionComposer {
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.txns.push(...txnArgs)
-
-    this.txns.push({
-      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
-      type: 'methodCall',
-    })
+    this.pushTransactions([
+      ...txnArgs,
+      {
+        data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
+        type: 'methodCall',
+      },
+    ])
     return this
   }
 
@@ -1565,9 +1577,7 @@ export class TransactionComposer {
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.txns.push(...txnArgs)
-
-    this.txns.push({ data: { ...params, args: processAppMethodCallArgs(params.args) }, type: 'methodCall' })
+    this.pushTransactions([...txnArgs, { data: { ...params, args: processAppMethodCallArgs(params.args) }, type: 'methodCall' }])
     return this
   }
 
@@ -1613,7 +1623,7 @@ export class TransactionComposer {
    * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'keyReg' })
+    this.pushTransactions([{ data: params, type: 'keyReg' }])
 
     return this
   }
@@ -1648,7 +1658,7 @@ export class TransactionComposer {
    * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
-    this.txns.push({ data: params, type: 'keyReg' })
+    this.pushTransactions([{ data: params, type: 'keyReg' }])
 
     return this
   }
