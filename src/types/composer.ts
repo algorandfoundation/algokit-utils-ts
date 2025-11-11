@@ -646,6 +646,8 @@ export class TransactionComposer {
 
   private builtGroup?: TransactionWithSigner[]
 
+  private signedTransactions?: SignedTransaction[]
+
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
     if (!(originalError instanceof Error)) {
@@ -1566,14 +1568,16 @@ export class TransactionComposer {
    */
   public async build() {
     if (!this.builtGroup) {
-      // TODO: PD - do we need to share the same suggested params between analyzeGroupRequirements and buildTransactions
+      const suggestedParams = await this.getSuggestedParams()
+      const builtTransactions = await this.buildTransactionsSuggestedParamsProvided(suggestedParams)
+
       const groupAnalysis =
         (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
         this.txns.some((t) => isAppCall(t))
-          ? await this.analyzeGroupRequirements(this.composerConfig)
+          ? await this.analyzeGroupRequirements(builtTransactions.transactions, suggestedParams, this.composerConfig)
           : undefined
 
-      const builtTransactions = await this.prepareTransactionsForSending(groupAnalysis)
+      await this.populateResourcesAndGroupTransactions(builtTransactions.transactions, groupAnalysis)
       const transactionsWithSigners = this.gatherSigners(builtTransactions)
 
       this.builtGroup = transactionsWithSigners
@@ -1590,11 +1594,10 @@ export class TransactionComposer {
       methodCalls: methodCalls,
     }
   }
-  // TODO: PD - port this over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
-  // TODO: PD - can we make this private?
-  public async buildTransactions(): Promise<BuiltTransactions> {
-    const suggestedParams = await this.getSuggestedParams()
+
+  private async buildTransactionsSuggestedParamsProvided(suggestedParams: SuggestedParams) {
     const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
+
     const signers = new Map<number, algosdk.TransactionSigner>()
 
     const transactions = new Array<Transaction>()
@@ -1694,9 +1697,14 @@ export class TransactionComposer {
     return { transactions, methodCalls, signers }
   }
 
-  private async prepareTransactionsForSending(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
-    const { transactions, methodCalls, signers } = await this.buildTransactions()
+  // TODO: PD - port this over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
+  // TODO: PD - can we make this private?
+  public async buildTransactions(): Promise<BuiltTransactions> {
+    const suggestedParams = await this.getSuggestedParams()
+    return this.buildTransactionsSuggestedParamsProvided(suggestedParams)
+  }
 
+  private async populateResourcesAndGroupTransactions(transactions: Transaction[], groupAnalysis?: GroupAnalysis): Promise<Transaction[]> {
     if (groupAnalysis) {
       // Process fee adjustments
       let surplusGroupFees = 0n
@@ -1813,10 +1821,11 @@ export class TransactionComposer {
 
     if (transactions.length > 1) {
       const groupedTransactions = groupTransactions(transactions)
+      // Mutate the input transactions so that the group is updated for any transaction passed into the composer
       transactions.forEach((t) => (t.group = groupedTransactions[0].group))
-      return { transactions: groupedTransactions, methodCalls, signers }
+      return transactions
     } else {
-      return { transactions, methodCalls, signers }
+      return transactions
     }
   }
 
@@ -1829,12 +1838,12 @@ export class TransactionComposer {
     })
   }
 
-  private async analyzeGroupRequirements(analysisParams: TransactionComposerConfig): Promise<GroupAnalysis> {
-    const suggestedParams = await this.getSuggestedParams()
-
+  private async analyzeGroupRequirements(
+    transactions: Transaction[],
+    suggestedParams: SuggestedParams,
+    analysisParams: TransactionComposerConfig,
+  ): Promise<GroupAnalysis> {
     const appCallIndexesWithoutMaxFees: number[] = []
-
-    const transactions = (await this.buildTransactions()).transactions
 
     let transactionsToSimulate = transactions.map((txn, groupIndex) => {
       const ctxn = this.txns[groupIndex]
@@ -2003,13 +2012,11 @@ export class TransactionComposer {
     }
 
     try {
-      await this.build()
+      await this.gatherSignatures()
 
-      if (!this.builtGroup || this.builtGroup.length === 0) {
+      if (!this.builtGroup || this.builtGroup.length === 0 || !this.signedTransactions || this.signedTransactions.length === 0) {
         throw new Error('No transactions available')
       }
-
-      const signedTransactions = await this.gatherSignatures(this.builtGroup)
 
       const transactionsToSend = this.builtGroup.map((stxn) => stxn.txn)
       const transactionIds = transactionsToSend.map((txn) => getTransactionId(txn))
@@ -2024,24 +2031,26 @@ export class TransactionComposer {
       }
 
       if (Config.debug && Config.traceAll) {
-        const simulateResponse = await this.foo(this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn))
+        const simulateResponse = await this.simulateTransactionsWithNoSigner(
+          this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn),
+        )
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse,
         })
       }
 
-      const group = signedTransactions[0].txn.group
+      const group = this.signedTransactions[0].txn.group
 
       let waitRounds = params?.maxRoundsToWaitForConfirmation
 
       if (waitRounds === undefined) {
         const suggestedParams = await this.getSuggestedParams()
         const firstRound = suggestedParams.firstValid
-        const lastRound = signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
+        const lastRound = this.signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
         waitRounds = Number(lastRound - firstRound) + 1
       }
 
-      const encodedTxns = encodeSignedTransactions(signedTransactions)
+      const encodedTxns = encodeSignedTransactions(this.signedTransactions)
       await this.algod.sendRawTransaction(encodedTxns)
 
       if (transactionsToSend.length > 1 && group) {
@@ -2093,7 +2102,7 @@ export class TransactionComposer {
         const transactions = this.builtGroup
           ? this.builtGroup.map((transactionWithSigner) => transactionWithSigner.txn)
           : (await this.buildTransactions()).transactions
-        const simulateResponse = await this.foo(transactions)
+        const simulateResponse = await this.simulateTransactionsWithNoSigner(transactions)
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
@@ -2197,7 +2206,7 @@ export class TransactionComposer {
       const transactions =
         builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
       const transactionsWithSigners = this.gatherSigners({ ...builtTransactions, transactions })
-      signedTransactions = await this.gatherSignatures(transactionsWithSigners)
+      signedTransactions = await this.signTransactions(transactionsWithSigners)
     }
 
     const simulateRequest = {
@@ -2266,10 +2275,24 @@ export class TransactionComposer {
     return encoder.encode(arc2Payload)
   }
 
-  // TODO: PD - this will need to be public, need to revert transactionsWithSigners
-  private async gatherSignatures(transactionsWithSigners: TransactionWithSigner[]): Promise<SignedTransaction[]> {
+  public async gatherSignatures(): Promise<SignedTransaction[]> {
+    if (this.signedTransactions) {
+      return this.signedTransactions
+    }
+
+    await this.build()
+
+    if (!this.builtGroup || this.builtGroup.length === 0) {
+      throw new Error('No transactions available to sign')
+    }
+
+    this.signedTransactions = await this.signTransactions(this.builtGroup)
+    return this.signedTransactions
+  }
+
+  private async signTransactions(transactionsWithSigners: TransactionWithSigner[]): Promise<SignedTransaction[]> {
     if (transactionsWithSigners.length === 0) {
-      throw new Error('No transactions available')
+      throw new Error('No transactions available to sign')
     }
 
     const transactions = transactionsWithSigners.map((txnWithSigner) => txnWithSigner.txn)
@@ -2328,8 +2351,7 @@ export class TransactionComposer {
     return abiReturns
   }
 
-  // TODO: PD - name
-  private async foo(transactions: Transaction[]) {
+  private async simulateTransactionsWithNoSigner(transactions: Transaction[]) {
     const simulateRequest = {
       allowEmptySignatures: true,
       fixSigners: true,
