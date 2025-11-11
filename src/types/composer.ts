@@ -720,6 +720,27 @@ export class TransactionComposer {
     }
   }
 
+  /**
+   * Creates a new TransactionComposer with the same context (algod, getSigner, etc.) but without any transactions.
+   * @param composerConfig Optional configuration to override the current composer config
+   * @returns A new TransactionComposer instance with the same context but no transactions
+   * @deprecated This method is intended to used by prepareGroupForSending only
+   */
+  public cloneWithoutTransactions(composerConfig?: TransactionComposerConfig): TransactionComposer {
+    return new TransactionComposer({
+      algod: this.algod,
+      getSuggestedParams: this.getSuggestedParams,
+      getSigner: this.getSigner,
+      defaultValidityWindow: this.defaultValidityWindow,
+      appManager: this.appManager,
+      errorTransformers: this.errorTransformers,
+      composerConfig: {
+        ...this.composerConfig,
+        ...composerConfig,
+      },
+    })
+  }
+
   public clone(composerConfig?: TransactionComposerConfig) {
     const newComposer = new TransactionComposer({
       algod: this.algod,
@@ -1667,8 +1688,8 @@ export class TransactionComposer {
    * Get the number of transactions currently added to this composer.
    * @returns The number of transactions currently added to this composer
    */
-  async count() {
-    return (await this.buildTransactions()).transactions.length
+  count() {
+    return this.txns.length
   }
 
   /**
@@ -1815,7 +1836,7 @@ export class TransactionComposer {
   }
 
   // TODO: PD - port this over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
-  // TODO: PD - can we make this private?
+
   public async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
     return this.buildTransactionsSuggestedParamsProvided(suggestedParams)

@@ -275,7 +275,8 @@ export const sendTransaction = async function (
  *
  */
 export async function populateAppCallResources(composer: TransactionComposer) {
-  return await prepareGroupForSending(composer, { populateAppCallResources: true })
+  await composer.build()
+  return composer
 }
 
 /**
@@ -298,8 +299,7 @@ export async function prepareGroupForSending(
 ) {
   const transactionsWithSigners = (await composer.build()).transactions
 
-  // TODO: should we support suggestedParams in clone?
-  const newComposer = composer.clone({
+  const newComposer = composer.cloneWithoutTransactions({
     coverAppCallInnerTransactionFees: sendParams.coverAppCallInnerTransactionFees ?? false,
     populateAppCallResources: sendParams.populateAppCallResources ?? true,
   })

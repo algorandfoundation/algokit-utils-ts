@@ -41,3 +41,4 @@ A collection of random notes pop up during the migration process.
 - call composer .build instead of atc buildGroup. This will populate resources too
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
 - Remove reference to Atomic?
+- composer.count is not async anymore
