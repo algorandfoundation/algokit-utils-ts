@@ -66,6 +66,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     const transaction = await txn(transactionCreator)(params)
     const txns = 'transactions' in transaction ? transaction.transactions : [transaction]
     if (sendParams.transactionComposer) {
+      const baseIndex = await sendParams.transactionComposer.count()
       txns
         .map((txn, i) => ({
           txn,
@@ -73,6 +74,10 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
             'signers' in transaction ? (transaction.signers.get(i) ?? getSenderTransactionSigner(from)) : getSenderTransactionSigner(from),
         }))
         .forEach((t) => sendParams.transactionComposer!.addTransaction(t.txn, t.signer))
+
+      if ('transactions' in transaction) {
+        transaction.methodCalls.forEach((m, i) => sendParams.transactionComposer!['methodCalls'].set(i + baseIndex, m))
+      }
     }
     return { transaction: new TransactionWrapper(txns.at(-1)!), transactions: txns.map((t) => new TransactionWrapper(t)) }
   }

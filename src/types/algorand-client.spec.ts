@@ -61,26 +61,26 @@ describe('AlgorandClient', () => {
     expect(createResult.assetId).toBeGreaterThan(0)
   })
 
-  // TODO: PD - review this test
-  // test('addAtc from generated client', async () => {
-  //   const alicePreBalance = (await algorand.account.getInformation(alice)).balance
-  //   const bobPreBalance = (await algorand.account.getInformation(bob)).balance
+  test('addTransactionComposer from generated client', async () => {
+    const alicePreBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPreBalance = (await algorand.account.getInformation(bob)).balance
 
-  //   const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
-  //   const result = await algorand
-  //     .newGroup()
-  //     .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
-  //     .addAtc(doMathAtc)
-  //     .send()
+    const doMathComposer = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).transactionComposer()
 
-  //   const alicePostBalance = (await algorand.account.getInformation(alice)).balance
-  //   const bobPostBalance = (await algorand.account.getInformation(bob)).balance
+    const result = await algorand
+      .newGroup()
+      .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
+      .addTransactionComposer(doMathComposer)
+      .send()
 
-  //   expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001n)
-  //   expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
+    const alicePostBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-  //   expect(result.returns?.[0].returnValue?.valueOf()).toBe(3n)
-  // })
+    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001n)
+    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
+
+    expect(result.returns?.[0].returnValue?.valueOf()).toBe(3n)
+  })
 
   test('addAppCallMethodCall', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance

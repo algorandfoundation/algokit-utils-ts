@@ -549,6 +549,7 @@ type Txn =
   | { data: algosdk.TransactionWithSigner; type: 'txnWithSigner' }
   | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
+  | { data: TransactionComposer; type: 'composer' }
 
 /**
  * A function that transforms an error into a new error.
@@ -651,13 +652,7 @@ export class TransactionComposer {
 
   private signedTransactions?: SignedTransaction[]
 
-  private pushTransactions(transactions: Txn[]): void {
-    if (this.txns.length + transactions.length > MAX_TRANSACTION_GROUP_SIZE) {
-      throw new Error(`Transaction group size exceeds the max limit of: ${MAX_TRANSACTION_GROUP_SIZE}`)
-    }
-
-    this.txns.push(...transactions)
-  }
+  private methodCalls: Map<number, algosdk.ABIMethod>
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -718,13 +713,14 @@ export class TransactionComposer {
       coverAppCallInnerTransactionFees: false,
       populateAppCallResources: true,
     }
+    this.methodCalls = new Map()
   }
 
   /**
    * Creates a new TransactionComposer with the same context (algod, getSigner, etc.) but without any transactions.
    * @param composerConfig Optional configuration to override the current composer config
    * @returns A new TransactionComposer instance with the same context but no transactions
-   * @deprecated This method is intended to used by prepareGroupForSending only
+   * @deprecated This method is intended to used by internal only. It will be removed in the future
    */
   public cloneWithoutTransactions(composerConfig?: TransactionComposerConfig): TransactionComposer {
     return new TransactionComposer({
@@ -861,6 +857,8 @@ export class TransactionComposer {
       }
     })
 
+    newComposer.methodCalls = new Map(this.methodCalls)
+
     return newComposer
   }
 
@@ -885,15 +883,36 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
-    this.pushTransactions([
-      {
-        data: {
-          txn: transaction,
-          signer: signer ?? this.getSigner(transaction.sender),
-        },
-        type: 'txnWithSigner',
+    this.txns.push({
+      data: {
+        txn: transaction,
+        signer: signer ?? this.getSigner(transaction.sender),
       },
-    ])
+      type: 'txnWithSigner',
+    })
+
+    return this
+  }
+
+  /**
+   * Add a transaction composer to the transaction group.
+   * The composer will be built and its transactions will be added to this group.
+   * @param composer The transaction composer to add
+   * @returns The composer so you can chain method calls
+   * @example
+   * ```typescript
+   * const innerComposer = algorand.newGroup()
+   *   .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (1).algo() })
+   *   .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (2).algo() })
+   *
+   * composer.addTransactionComposer(innerComposer)
+   * ```
+   */
+  public addTransactionComposer(composer: TransactionComposer): TransactionComposer {
+    this.txns.push({
+      data: composer,
+      type: 'composer',
+    })
 
     return this
   }
@@ -932,7 +951,7 @@ export class TransactionComposer {
    * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'pay' }])
+    this.txns.push({ data: params, type: 'pay' })
 
     return this
   }
@@ -973,7 +992,7 @@ export class TransactionComposer {
    * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetCreate' }])
+    this.txns.push({ data: params, type: 'assetCreate' })
 
     return this
   }
@@ -1008,7 +1027,7 @@ export class TransactionComposer {
    * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetConfig' }])
+    this.txns.push({ data: params, type: 'assetConfig' })
 
     return this
   }
@@ -1042,7 +1061,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetFreeze' }])
+    this.txns.push({ data: params, type: 'assetFreeze' })
 
     return this
   }
@@ -1074,7 +1093,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetDestroy' }])
+    this.txns.push({ data: params, type: 'assetDestroy' })
 
     return this
   }
@@ -1111,7 +1130,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetTransfer' }])
+    this.txns.push({ data: params, type: 'assetTransfer' })
 
     return this
   }
@@ -1143,7 +1162,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetOptIn' }])
+    this.txns.push({ data: params, type: 'assetOptIn' })
 
     return this
   }
@@ -1181,7 +1200,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'assetOptOut' }])
+    this.txns.push({ data: params, type: 'assetOptOut' })
 
     return this
   }
@@ -1236,7 +1255,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'appCall' }])
+    this.txns.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1278,7 +1297,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.pushTransactions([{ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' }])
+    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
 
     return this
   }
@@ -1318,7 +1337,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.pushTransactions([{ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' }])
+    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
 
     return this
   }
@@ -1360,7 +1379,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'appCall' }])
+    this.txns.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1422,13 +1441,21 @@ export class TransactionComposer {
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.pushTransactions([
-      ...txnArgs,
-      {
-        data: { ...params, args: processAppMethodCallArgs(params.args) },
-        type: 'methodCall',
-      },
-    ])
+    // Track methodCalls in txnArgs
+    txnArgs.forEach((txn) => {
+      const currentIndex = this.txns.length
+      this.txns.push(txn)
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex, txn.data.method)
+      }
+    })
+    // Add the main method call and track it
+    const methodCallIndex = this.txns.length
+    this.txns.push({
+      data: { ...params, args: processAppMethodCallArgs(params.args) },
+      type: 'methodCall',
+    })
+    this.methodCalls.set(methodCallIndex, params.method)
     return this
   }
 
@@ -1482,13 +1509,21 @@ export class TransactionComposer {
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.pushTransactions([
-      ...txnArgs,
-      {
-        data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
-        type: 'methodCall',
-      },
-    ])
+    // Track methodCalls in txnArgs
+    txnArgs.forEach((txn) => {
+      const currentIndex = this.txns.length
+      this.txns.push(txn)
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex, txn.data.method)
+      }
+    })
+    // Add the main method call and track it
+    const methodCallIndex = this.txns.length
+    this.txns.push({
+      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
+      type: 'methodCall',
+    })
+    this.methodCalls.set(methodCallIndex, params.method)
     return this
   }
 
@@ -1540,13 +1575,21 @@ export class TransactionComposer {
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.pushTransactions([
-      ...txnArgs,
-      {
-        data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
-        type: 'methodCall',
-      },
-    ])
+    // Track methodCalls in txnArgs
+    txnArgs.forEach((txn) => {
+      const currentIndex = this.txns.length
+      this.txns.push(txn)
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex, txn.data.method)
+      }
+    })
+    // Add the main method call and track it
+    const methodCallIndex = this.txns.length
+    this.txns.push({
+      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
+      type: 'methodCall',
+    })
+    this.methodCalls.set(methodCallIndex, params.method)
     return this
   }
 
@@ -1598,7 +1641,21 @@ export class TransactionComposer {
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    this.pushTransactions([...txnArgs, { data: { ...params, args: processAppMethodCallArgs(params.args) }, type: 'methodCall' }])
+    // Track methodCalls in txnArgs
+    txnArgs.forEach((txn) => {
+      const currentIndex = this.txns.length
+      this.txns.push(txn)
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex, txn.data.method)
+      }
+    })
+    // Add the main method call and track it
+    const methodCallIndex = this.txns.length
+    this.txns.push({
+      data: { ...params, args: processAppMethodCallArgs(params.args) },
+      type: 'methodCall',
+    })
+    this.methodCalls.set(methodCallIndex, params.method)
     return this
   }
 
@@ -1644,7 +1701,7 @@ export class TransactionComposer {
    * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'keyReg' }])
+    this.txns.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1679,7 +1736,7 @@ export class TransactionComposer {
    * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
-    this.pushTransactions([{ data: params, type: 'keyReg' }])
+    this.txns.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1688,8 +1745,8 @@ export class TransactionComposer {
    * Get the number of transactions currently added to this composer.
    * @returns The number of transactions currently added to this composer
    */
-  count() {
-    return this.txns.length
+  async count() {
+    return (await this.buildTransactions()).transactions.length
   }
 
   /**
@@ -1721,37 +1778,67 @@ export class TransactionComposer {
       this.transactionsWithSigners = this.gatherSigners(builtTransactions)
     }
 
-    const methodCalls = new Map(
-      this.txns
-        .map((t, index) => (t.type === 'methodCall' ? ([index, t.data.method] as const) : null))
-        .filter((entry): entry is [number, ABIMethod] => entry !== null),
-    )
-
     return {
       transactions: this.transactionsWithSigners,
-      methodCalls: methodCalls,
+      methodCalls: this.methodCalls,
     }
   }
 
   private async buildTransactionsSuggestedParamsProvided(suggestedParams: SuggestedParams) {
     const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
-
     const signers = new Map<number, algosdk.TransactionSigner>()
-
     const transactions = new Array<Transaction>()
 
-    for (let i = 0; i < this.txns.length; i++) {
-      const ctxn = this.txns[i]
-
+    let transactionIndex = 0
+    for (const ctxn of this.txns) {
       if (ctxn.type === 'txnWithSigner') {
         transactions.push(ctxn.data.txn)
-        signers.set(i, ctxn.data.signer)
+        signers.set(transactionIndex, ctxn.data.signer)
+        transactionIndex++
       } else if (ctxn.type === 'asyncTxn') {
         transactions.push(await ctxn.data.txn)
         // Use the signer that was set when the asyncTxn was added
         if (ctxn.data.signer) {
-          signers.set(i, ctxn.data.signer)
+          signers.set(transactionIndex, ctxn.data.signer)
         }
+        transactionIndex++
+      } else if (ctxn.type === 'composer') {
+        // Build the nested composer and add its transactions
+        const builtComposer = await ctxn.data.build()
+        const nestedMethodCallsCount = builtComposer.methodCalls.size
+
+        // Shift existing methodCalls that come after the current index
+        // Collect methodCalls that need to be shifted (those at or after the current index)
+        const methodCallsToShift: Array<{ oldIndex: number; method: algosdk.ABIMethod }> = []
+        this.methodCalls.forEach((method, index) => {
+          if (index >= transactionIndex) {
+            methodCallsToShift.push({ oldIndex: index, method })
+          }
+        })
+
+        // Remove the old entries that will be shifted
+        methodCallsToShift.forEach(({ oldIndex }) => {
+          this.methodCalls.delete(oldIndex)
+        })
+
+        // Add the nested transactions and their methodCalls
+        builtComposer.transactions.forEach((txnWithSigner, j) => {
+          transactions.push(txnWithSigner.txn)
+          signers.set(transactionIndex, txnWithSigner.signer)
+
+          // Map method calls from the nested composer to the correct transaction index
+          const nestedMethodCall = builtComposer.methodCalls.get(j)
+          if (nestedMethodCall) {
+            this.methodCalls.set(transactionIndex, nestedMethodCall)
+          }
+
+          transactionIndex++
+        })
+
+        // Re-add the shifted entries at their new indices
+        methodCallsToShift.forEach(({ oldIndex, method }) => {
+          this.methodCalls.set(oldIndex + nestedMethodCallsCount, method)
+        })
       } else {
         let transaction: Transaction
         const header = buildTransactionHeader(ctxn.data, suggestedParams, defaultValidityWindow)
@@ -1821,21 +1908,21 @@ export class TransactionComposer {
 
         if (ctxn.data.signer) {
           const signer = 'signer' in ctxn.data.signer ? ctxn.data.signer.signer : ctxn.data.signer
-          signers.set(i, signer)
+          signers.set(transactionIndex, signer)
         }
+        transactionIndex++
       }
     }
 
-    const methodCalls = new Map(
-      this.txns
-        .map((t, index) => (t.type === 'methodCall' ? ([index, t.data.method] as const) : null))
-        .filter((entry): entry is [number, ABIMethod] => entry !== null),
-    )
+    // Validate that the total group size doesn't exceed the maximum
+    if (transactions.length > MAX_TRANSACTION_GROUP_SIZE) {
+      throw new Error(`Transaction group size ${transactions.length} exceeds the maximum limit of ${MAX_TRANSACTION_GROUP_SIZE}`)
+    }
 
-    return { transactions, methodCalls, signers }
+    return { transactions, methodCalls: this.methodCalls, signers }
   }
 
-  // TODO: PD - port this over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
+  // TODO: PD - port this fix over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
 
   public async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
@@ -2148,6 +2235,7 @@ export class TransactionComposer {
 
       this.transactionsWithSigners = undefined
       this.signedTransactions = undefined
+      this.methodCalls = new Map()
     }
 
     try {
@@ -2480,15 +2568,12 @@ export class TransactionComposer {
 
     for (let i = 0; i < confirmations.length; i++) {
       const confirmation = confirmations[i]
-      const transaction = this.txns[i]
+      const method = this.methodCalls.get(i)
 
-      if (transaction) {
-        const method = getMethodFromTransaction(transaction)
-        if (method && method.returns.type !== 'void') {
-          const abiReturn = AppManager.getABIReturn(confirmation, method)
-          if (abiReturn !== undefined) {
-            abiReturns.push(abiReturn)
-          }
+      if (method && method.returns.type !== 'void') {
+        const abiReturn = AppManager.getABIReturn(confirmation, method)
+        if (abiReturn !== undefined) {
+          abiReturns.push(abiReturn)
         }
       }
     }
@@ -2540,7 +2625,7 @@ export function getMethodFromTransaction(transaction: Txn): ABIMethod | undefine
 
 /** Get the logical maximum fee based on staticFee and maxFee */
 function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
-  if (ctxn.type === 'txnWithSigner' || ctxn.type === 'asyncTxn') {
+  if (ctxn.type === 'txnWithSigner' || ctxn.type === 'asyncTxn' || ctxn.type === 'composer') {
     return undefined
   }
 
