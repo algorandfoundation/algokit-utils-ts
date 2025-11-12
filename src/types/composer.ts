@@ -661,26 +661,6 @@ export class TransactionComposer {
 
     let transformedError = originalError
 
-    // If this is an ApiError with a body message, create a new error with that message
-    // so that error transformers can work with the detailed error message
-    // Preserve other properties like traces for debugging
-    if (
-      'body' in transformedError &&
-      transformedError.body &&
-      typeof transformedError.body === 'object' &&
-      'message' in transformedError.body
-    ) {
-      const newError = new Error(transformedError.body.message as string)
-      // Preserve important properties from the original error or body
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const traces = (transformedError as any).traces || (transformedError.body as any).traces
-      if (traces) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(newError as any).traces = traces
-      }
-      transformedError = newError
-    }
-
     for (const transformer of this.errorTransformers) {
       try {
         transformedError = await transformer(transformedError)
@@ -2326,7 +2306,9 @@ export class TransactionComposer {
         sentTransactions = this.transactionsWithSigners.map((transactionWithSigner) => transactionWithSigner.txn)
       } else {
         sentTransactions = (await this.buildTransactions()).transactions
-        sentTransactions = groupTransactions(sentTransactions)
+        if (sentTransactions.length > 1) {
+          sentTransactions = groupTransactions(sentTransactions)
+        }
       }
 
       if (Config.debug && typeof originalError === 'object') {
