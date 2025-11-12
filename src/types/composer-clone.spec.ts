@@ -2,7 +2,7 @@ import * as algosdk from '@algorandfoundation/sdk'
 import { describe, expect, test } from 'vitest'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { deepCloneTransactionParams } from './composer-clone'
+import { deepCloneTransactionParams } from '../transactions/clone'
 
 describe('deepCloneTransactionParams', () => {
   describe('primitive types', () => {

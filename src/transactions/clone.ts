@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AccessReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { TransactionSignerAccount } from './account'
-import { AlgoAmount } from './amount'
-import { BoxReference } from './app-manager'
-
-// TODO: PD - do not export this
+import { TransactionSignerAccount } from '../types/account'
+import { AlgoAmount } from '../types/amount'
+import { BoxReference } from '../types/app-manager'
 
 function isAddress(value: any): value is algosdk.Address {
   return value instanceof algosdk.Address
