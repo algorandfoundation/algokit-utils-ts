@@ -186,7 +186,7 @@ function toMultisigSignatureDto(multisigSignature: MultisigSignature): MultisigS
   })
 }
 
-function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTransactionDto {
+export function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTransactionDto {
   const stx_dto: SignedTransactionDto = {
     txn: toTransactionDto(signedTransaction.txn),
   }
@@ -234,7 +234,7 @@ function fromMultisigSignatureDto(msigDto: MultisigSignatureDto): MultisigSignat
   })
 }
 
-function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): SignedTransaction {
+export function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): SignedTransaction {
   const stx: SignedTransaction = {
     txn: fromTransactionDto(signedTransactionDto.txn),
   }

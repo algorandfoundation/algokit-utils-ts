@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ModelMetadata } from '../core/model-runtime';
 import { getModelMeta } from '../core/model-runtime'
 import { type BlockEvalDelta, BlockEvalDeltaMeta } from './block-eval-delta'
 import { type SignedTxnInBlock } from './signed-txn-in-block'
@@ -8,15 +8,15 @@ import { type SignedTxnInBlock } from './signed-txn-in-block'
  */
 export type BlockAppEvalDelta = {
   /** [gd] Global state delta for the application. */
-  globalDelta?: Map<Uint8Array, BlockEvalDelta>
+  globalDelta?: Map<Uint8Array, BlockEvalDelta>;
   /** [ld] Local state deltas keyed by address index. */
-  localDeltas?: Map<number, Map<Uint8Array, BlockEvalDelta>>
+  localDeltas?: Map<number, Map<Uint8Array, BlockEvalDelta>>;
   /** [itx] Inner transactions produced by this application execution. */
-  innerTxns?: SignedTxnInBlock[]
+  innerTxns?: SignedTxnInBlock[];
   /** [sa] Shared accounts referenced by local deltas. */
-  sharedAccounts?: string[]
+  sharedAccounts?: string[];
   /** [lg] Application log outputs. */
-  logs?: Uint8Array[]
+  logs?: Uint8Array[];
 }
 
 export const BlockAppEvalDeltaMeta: ModelMetadata = {
@@ -41,20 +41,8 @@ export const BlockAppEvalDeltaMeta: ModelMetadata = {
         value: { kind: 'map', keyType: 'bytes', value: { kind: 'model', meta: BlockEvalDeltaMeta } },
       },
     },
-    {
-      name: 'innerTxns',
-      wireKey: 'itx',
-      optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => getModelMeta('SignedTxnInBlock') } },
-    },
-    {
-      name: 'sharedAccounts',
-      wireKey: 'sa',
-      optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isAddress: true } },
-    },
+    { name: 'innerTxns', wireKey: 'itx', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'model', meta: () => getModelMeta('SignedTxnInBlock') } } },
+    { name: 'sharedAccounts', wireKey: 'sa', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isAddress: true } } },
     { name: 'logs', wireKey: 'lg', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isBytes: true } } },
   ],
-}
+};

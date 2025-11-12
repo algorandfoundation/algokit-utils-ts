@@ -311,8 +311,8 @@ export function validateTransaction(transaction: Transaction): void {
  */
 export function encodeTransactionRaw(transaction: Transaction): Uint8Array {
   validateTransaction(transaction)
-  const encodingData = toTransactionDto(transaction)
-  return encodeMsgpack(encodingData)
+  const transactionDto = toTransactionDto(transaction)
+  return encodeMsgpack(transactionDto)
 }
 
 /**
@@ -933,6 +933,94 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
       const appReferences = transactionDto.apfa?.map((id) => bigIntCodec.decode(id))
       const assetReferences = transactionDto.apas?.map((id) => bigIntCodec.decode(id))
       const extraProgramPages = numberCodec.decodeOptional(transactionDto.apep)
+      const boxReferences = transactionDto.apbx?.map((box) => {
+        const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
+        let appId: bigint
+        if (index === 0) {
+          // 0 means current app
+          appId = 0n
+        } else {
+          // 1-based index into foreignApps array
+          const foreignAppId = transactionDto.apfa?.[index - 1]
+          if (foreignAppId === undefined) {
+            throw new Error(`Failed to find the app reference at index ${index - 1}`)
+          }
+          appId = bigIntCodec.decode(foreignAppId)
+        }
+        return {
+          appId: appId,
+          name: bytesCodec.decode(box.n),
+        }
+      })
+      const accessReferences: AccessReference[] = []
+      if (transactionDto.al) {
+        for (const ref of transactionDto.al) {
+          if (ref.d) {
+            accessReferences.push({ address: addressCodec.decode(ref.d) })
+            continue
+          }
+          if (ref.s !== undefined) {
+            accessReferences.push({ assetId: bigIntCodec.decode(ref.s) })
+            continue
+          }
+          if (ref.p !== undefined) {
+            accessReferences.push({ appId: bigIntCodec.decode(ref.p) })
+            continue
+          }
+          if (ref.h) {
+            const addrIdx = ref.h.d ?? 0
+            const assetIdx = ref.h.s
+
+            if (assetIdx === undefined) {
+              throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
+            }
+
+            const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : transactionDto.al[addrIdx - 1].d!
+            const holdingAssetId = transactionDto.al[assetIdx - 1].s!
+
+            accessReferences.push({
+              holding: {
+                address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
+                assetId: bigIntCodec.decode(holdingAssetId),
+              },
+            })
+            continue
+          }
+
+          if (ref.l) {
+            const addrIdx = ref.l.d ?? 0
+            const appIdx = ref.l.p ?? 0
+
+            const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : transactionDto.al[addrIdx - 1].d!
+            const localsAppId = appIdx === 0 ? BigInt(0) : transactionDto.al[appIdx - 1].p!
+
+            accessReferences.push({
+              locals: {
+                address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
+                appId: bigIntCodec.decode(localsAppId),
+              },
+            })
+            continue
+          }
+          if (ref.b) {
+            const boxAppIdx = ref.b.i ?? 0
+            const name = ref.b.n
+
+            if (!name) {
+              throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
+            }
+
+            const boxAppId = boxAppIdx === 0 ? BigInt(0) : transactionDto.al[boxAppIdx - 1].p!
+
+            accessReferences.push({
+              box: {
+                appId: bigIntCodec.decode(boxAppId),
+                name: bytesCodec.decode(name),
+              },
+            })
+          }
+        }
+      }
 
       tx.appCall = {
         appId: bigIntCodec.decode(transactionDto.apid),
@@ -944,100 +1032,8 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         ...(appReferences && { appReferences }),
         ...(assetReferences && { assetReferences }),
         ...(extraProgramPages !== undefined && { extraProgramPages }),
-        boxReferences: transactionDto.apbx?.map((box) => {
-          const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
-          let appId: bigint
-          if (index === 0) {
-            // 0 means current app
-            appId = 0n
-          } else {
-            // 1-based index into foreignApps array
-            const foreignAppId = transactionDto.apfa?.[index - 1]
-            if (foreignAppId === undefined) {
-              throw new Error(`Failed to find the app reference at index ${index - 1}`)
-            }
-            appId = bigIntCodec.decode(foreignAppId)
-          }
-          return {
-            appId: appId,
-            name: bytesCodec.decode(box.n),
-          }
-        }),
-        accessReferences: transactionDto.al
-          ? (() => {
-              const accessList = transactionDto.al!
-              const result: AccessReference[] = []
-
-              for (const ref of accessList) {
-                if (ref.d) {
-                  result.push({ address: addressCodec.decode(ref.d) })
-                  continue
-                }
-                if (ref.s !== undefined) {
-                  result.push({ assetId: bigIntCodec.decode(ref.s) })
-                  continue
-                }
-                if (ref.p !== undefined) {
-                  result.push({ appId: bigIntCodec.decode(ref.p) })
-                  continue
-                }
-                if (ref.h) {
-                  const addrIdx = ref.h.d ?? 0
-                  const assetIdx = ref.h.s
-
-                  if (assetIdx === undefined) {
-                    throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
-                  }
-
-                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
-                  const holdingAssetId = accessList[assetIdx - 1].s!
-
-                  result.push({
-                    holding: {
-                      address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
-                      assetId: bigIntCodec.decode(holdingAssetId),
-                    },
-                  })
-                  continue
-                }
-
-                if (ref.l) {
-                  const addrIdx = ref.l.d ?? 0
-                  const appIdx = ref.l.p ?? 0
-
-                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
-                  const localsAppId = appIdx === 0 ? BigInt(0) : accessList[appIdx - 1].p!
-
-                  result.push({
-                    locals: {
-                      address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
-                      appId: bigIntCodec.decode(localsAppId),
-                    },
-                  })
-                  continue
-                }
-                if (ref.b) {
-                  const boxAppIdx = ref.b.i ?? 0
-                  const name = ref.b.n
-
-                  if (!name) {
-                    throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
-                  }
-
-                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : accessList[boxAppIdx - 1].p!
-
-                  result.push({
-                    box: {
-                      appId: bigIntCodec.decode(boxAppId),
-                      name: bytesCodec.decode(name),
-                    },
-                  })
-                }
-              }
-
-              return result
-            })()
-          : undefined,
+        ...(boxReferences && boxReferences.length > 0 && { boxReferences }),
+        ...(accessReferences && accessReferences.length > 0 && { accessReferences }),
         ...(transactionDto.apgs !== undefined
           ? {
               globalStateSchema: stateSchemaCodec.decodeOptional({

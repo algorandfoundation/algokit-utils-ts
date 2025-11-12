@@ -1,19 +1,24 @@
 import {
-  encodeSignedTransaction as transactEncodeSignedTransaction,
-  decodeSignedTransaction as transactDecodeSignedTransaction,
+  addressFromPublicKey,
+  decodedTransactionMapToObject,
+  fromSignedTransactionDto,
+  toSignedTransactionDto,
   type SignedTransaction,
 } from '@algorandfoundation/algokit-transact';
-import { encodeMsgPack, decodeMsgPack } from './codecs';
-import { toBase64, fromBase64 } from './serialization';
+import { Buffer } from 'buffer';
+import { ApiData, decodeMsgPack, encodeMsgPack } from './codecs';
 
 export type BodyFormat = 'json' | 'msgpack' | 'map';
 
 export interface ScalarFieldType {
   readonly kind: 'scalar';
+  // TODO: NC - Make this a type field
   readonly isBytes?: boolean;
   readonly isBigint?: boolean;
+  readonly isAddress?: boolean;
 }
 
+// TODO: NC - Needs to be renamed
 export interface CodecFieldType {
   readonly kind: 'codec';
   readonly codecKey: string;
@@ -36,7 +41,7 @@ export interface RecordFieldType {
 
 export interface MapFieldType {
   readonly kind: 'map';
-  readonly keyType: 'string' | 'number' | 'bigint';
+  readonly keyType: 'number' | 'bigint' | 'bytes';
   readonly value: FieldType;
 }
 
@@ -80,26 +85,22 @@ export function getModelMeta(name: string): ModelMetadata {
   return meta;
 }
 
-export interface TypeCodec<TValue = unknown> {
-  encode(value: TValue, format: BodyFormat): unknown;
-  decode(value: unknown, format: BodyFormat): TValue;
+export interface EncodeableTypeConverter<T extends Record<string, unknown>> {
+  beforeEncoding(value: T, format: BodyFormat): Record<string, unknown>;
+  afterDecoding(decoded: Record<string, unknown> | Map<number | bigint | Uint8Array, unknown>, format: BodyFormat): T;
 }
 
-const codecRegistry = new Map<string, TypeCodec<unknown>>();
+const encodeableTypeConverterRegistry = new Map<string, EncodeableTypeConverter<Record<string, unknown>>>();
 
-export function registerCodec<T>(key: string, codec: TypeCodec<T>): void {
-  codecRegistry.set(key, codec as TypeCodec<unknown>);
-}
-
-export function getCodec<T = unknown>(key: string): TypeCodec<T> | undefined {
-  return codecRegistry.get(key) as TypeCodec<T> | undefined;
+export function registerEncodeableTypeConverter(key: string, codec: EncodeableTypeConverter<Record<string, unknown>>): void {
+  encodeableTypeConverterRegistry.set(key, codec);
 }
 
 export class AlgorandSerializer {
-  static encode(value: unknown, meta: ModelMetadata, format: 'map'): Map<string, unknown>
-  static encode(value: unknown, meta: ModelMetadata, format: 'json'): string
-  static encode(value: unknown, meta: ModelMetadata, format?: 'msgpack'): Uint8Array
-  static encode(value: unknown, meta: ModelMetadata, format: BodyFormat = 'msgpack'): Uint8Array | string | Map<string, unknown> {
+  static encode(value: Record<string, unknown>, meta: ModelMetadata, format: 'map'): Map<string, unknown>
+  static encode(value: Record<string, unknown>, meta: ModelMetadata, format: 'json'): string
+  static encode(value: Record<string, unknown>, meta: ModelMetadata, format?: 'msgpack'): Uint8Array
+  static encode(value: Record<string, unknown>, meta: ModelMetadata, format: BodyFormat = 'msgpack'): Uint8Array | string | Map<string, unknown> {
     if (format === 'map') {
       // For map format, use msgpack transformation to preserve types like bigint, then convert to nested Maps
       const wire = this.transform(value, meta, { direction: 'encode', format: 'msgpack' });
@@ -113,25 +114,25 @@ export class AlgorandSerializer {
     return typeof wire === 'string' ? wire : JSON.stringify(wire);
   }
 
-  static decode<T>(payload: unknown, meta: ModelMetadata, format: BodyFormat = 'msgpack'): T {
-    let wire: unknown = payload;
+  static decode<T>(value: Uint8Array | string, meta: ModelMetadata, format: BodyFormat = 'msgpack'): T {
+    let wire: ApiData = value;
     if (format === 'msgpack') {
-      if (payload instanceof Uint8Array) {
-        wire = decodeMsgPack(payload);
+      if (value instanceof Uint8Array) {
+        wire = decodeMsgPack(value);
       }
-    } else if (typeof payload === 'string') {
-      wire = JSON.parse(payload);
+    } else if (typeof value === 'string') {
+      wire = JSON.parse(value);
     }
     return this.transform(wire, meta, { direction: 'decode', format }) as T;
   }
 
-  private static transform(value: unknown, meta: ModelMetadata, ctx: TransformContext): unknown {
+  private static transform(value: ApiData, meta: ModelMetadata, ctx: TransformContext): ApiData {
     if (value === undefined || value === null) {
       return value;
     }
 
     if (meta.codecKey) {
-      return this.applyCodec(value, meta.codecKey, ctx);
+      return this.applyEncodeableTypeConversion(value, meta.codecKey, ctx);
     }
 
     switch (meta.kind) {
@@ -145,22 +146,20 @@ export class AlgorandSerializer {
     }
   }
 
-  private static transformObject(value: unknown, meta: ModelMetadata, ctx: TransformContext): unknown {
+  private static transformObject(value: ApiData, meta: ModelMetadata, ctx: TransformContext): ApiData {
     const fields = meta.fields ?? [];
-    const hasFlattenedSignedTxn = fields.some(
-      (f) => f.flattened && f.type.kind === 'codec' && f.type.codecKey === 'SignedTransaction',
-    );
+    const hasFlattenedCodecField = fields.some((f) => f.flattened && f.type.kind === 'codec');
     if (ctx.direction === 'encode') {
-      const src = value as Record<string, unknown>;
-      const out: Record<string, unknown> = {};
+      const src = value as Record<string, ApiData>;
+      const out: Record<string, ApiData> = {};
       for (const field of fields) {
         const fieldValue = src[field.name];
         if (fieldValue === undefined) continue;
         const encoded = this.transformType(fieldValue, field.type, ctx);
         if (encoded === undefined && fieldValue === undefined) continue;
-        if (field.flattened && field.type.kind === 'codec' && field.type.codecKey === 'SignedTransaction') {
-          // Merge signed transaction map into parent
-          const mapValue = encoded as Record<string, unknown>;
+        if (field.flattened && field.type.kind === 'codec') {
+          // Merge code flattened field into parent
+          const mapValue = encoded as Record<string, ApiData>;
           for (const [k, v] of Object.entries(mapValue ?? {})) out[k] = v;
           continue;
         }
@@ -175,57 +174,66 @@ export class AlgorandSerializer {
       return out;
     }
 
-    const src = value as Record<string, unknown>;
-    const out: Record<string, unknown> = {};
+    const out: Record<string, ApiData> = {};
     const fieldByWire = new Map(fields.filter((f) => !!f.wireKey).map((field) => [field.wireKey as string, field]));
 
-    for (const [wireKey, wireValue] of Object.entries(src)) {
-      const field = fieldByWire.get(wireKey);
+    const entries = value instanceof Map ? Array.from(value.entries()) : Object.entries(value as Record<string, ApiData>);
+    for (const [key, wireValue] of entries) {
+      const wireKey = key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : key;
+      const isStringKey = typeof wireKey === 'string';
+      const field = isStringKey ? fieldByWire.get(wireKey) : undefined;
       if (field) {
         const decoded = this.transformType(wireValue, field.type, ctx);
         out[field.name] = decoded;
         continue;
       }
-      if (meta.additionalProperties) {
+      if (isStringKey && meta.additionalProperties) {
         out[wireKey] = this.transformType(wireValue, meta.additionalProperties, ctx);
         continue;
       }
-      // If we have a flattened SignedTransaction, skip unknown keys (e.g., 'sig', 'txn')
-      if (!hasFlattenedSignedTxn) {
+      // If we have a flattened code field, then don't map
+      if (isStringKey && !hasFlattenedCodecField) {
         out[wireKey] = wireValue;
       }
     }
 
     // If there are flattened fields, attempt to reconstruct them from remaining keys by decoding
-    for (const field of fields) {
-      if (out[field.name] !== undefined) continue;
-      if (field.flattened && field.type.kind === 'codec' && field.type.codecKey === 'SignedTransaction') {
-        // Reconstruct from entire object map
-        out[field.name] = this.applyCodec(src, 'SignedTransaction', ctx);
+    if (hasFlattenedCodecField) {
+      for (const field of fields) {
+        if (out[field.name] !== undefined) continue;
+        if (field.flattened && field.type.kind === 'codec') {
+          // Reconstruct from entire object map
+          out[field.name] = this.applyEncodeableTypeConversion(value, field.type.codecKey, ctx);
+        }
       }
     }
 
     return out;
   }
 
-  private static transformType(value: unknown, type: FieldType, ctx: TransformContext): unknown {
+  private static transformType(value: ApiData, type: FieldType, ctx: TransformContext): ApiData {
     if (value === undefined || value === null) return value;
 
     switch (type.kind) {
       case 'scalar':
         return this.transformScalar(value, type, ctx);
       case 'codec':
-        return this.applyCodec(value, type.codecKey, ctx);
+        return this.applyEncodeableTypeConversion(value, type.codecKey, ctx);
       case 'model':
         return this.transform(value, typeof type.meta === 'function' ? type.meta() : type.meta, ctx);
       case 'array':
         if (!Array.isArray(value)) return value;
         return value.map((item) => this.transformType(item, type.item, ctx));
-      case 'record':
-        if (typeof value !== 'object' || value === null) return value;
+      case 'record': {
+        if ((!(value instanceof Map) && typeof value !== 'object') || value === null) return value
+        const entries = value instanceof Map ? Array.from(value.entries()) : Object.entries(value as Record<string, ApiData>);
         return Object.fromEntries(
-          Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, this.transformType(v, type.value, ctx)]),
+          entries.map(([k, v]) => {
+            const key = k instanceof Uint8Array ? Buffer.from(k).toString('utf-8') : k;
+            return [key, this.transformType(v, type.value, ctx)];
+          }),
         );
+      }
       case 'map':
         return this.transformMap(value, type, ctx);
       default:
@@ -233,10 +241,10 @@ export class AlgorandSerializer {
     }
   }
 
-  private static transformScalar(value: unknown, meta: ScalarFieldType, ctx: TransformContext): unknown {
+  private static transformScalar(value: ApiData, meta: ScalarFieldType, ctx: TransformContext): ApiData {
     if (ctx.direction === 'encode') {
       if (meta.isBytes && ctx.format === 'json') {
-        if (value instanceof Uint8Array) return toBase64(value);
+        if (value instanceof Uint8Array) return Buffer.from(value).toString('base64');
       }
       if (meta.isBigint && ctx.format === 'json') {
         if (typeof value === 'bigint') return value.toString();
@@ -247,7 +255,17 @@ export class AlgorandSerializer {
     }
 
     if (meta.isBytes && ctx.format === 'json' && typeof value === 'string') {
-      return fromBase64(value);
+      return new Uint8Array(Buffer.from(value, 'base64'));
+    }
+
+    if (value instanceof Uint8Array) {
+      if (meta.isAddress) {
+        // TODO: NC - Fix all the address models to have this on it.
+        return addressFromPublicKey(value);
+      } else if (!meta.isBytes) {
+        return Buffer.from(value).toString('utf-8');
+      }
+      return value;
     }
 
     if (meta.isBigint) {
@@ -263,61 +281,61 @@ export class AlgorandSerializer {
       }
     }
 
+    if (value instanceof Map) {
+      const out: Record<string, ApiData> = {};
+      for (const [k, v] of value.entries()) {
+        const key = k instanceof Uint8Array ? Buffer.from(k).toString('utf-8') : k.toString();
+        out[key] = this.transformType(v, { kind: 'scalar', isBytes: v instanceof Uint8Array }, ctx);
+      }
+      return out;
+    }
+
+    if (Array.isArray(value)) {
+      return value.map((item) => this.transformType(item, { kind: 'scalar', isBytes: item instanceof Uint8Array }, ctx));
+    }
+
     return value;
   }
 
-  private static applyCodec(value: unknown, codecKey: string, ctx: TransformContext): unknown {
-    const codec = codecRegistry.get(codecKey);
+  private static applyEncodeableTypeConversion(value: ApiData, typeKey: string, ctx: TransformContext): ApiData {
+    const codec = encodeableTypeConverterRegistry.get(typeKey);
     if (!codec) {
-      throw new Error(`Codec for "${codecKey}" is not registered`);
+      throw new Error(`Type converter for "${typeKey}" is not registered`);
     }
-    return ctx.direction === 'encode'
-      ? codec.encode(value, ctx.format)
-      : codec.decode(value, ctx.format);
+
+    // TODO: NC - Need to properly guard against these conditions
+    if (ctx.direction === 'encode') {
+      if (value instanceof Map) {
+        throw new Error(`Cannot encode Map with type converter "${typeKey}"`);
+      }
+      return codec.beforeEncoding(value as Parameters<typeof codec.beforeEncoding>[0], ctx.format);
+    }
+
+    return codec.afterDecoding(value as Parameters<typeof codec.afterDecoding>[0], ctx.format);
   }
 
-  private static transformMap(value: unknown, meta: MapFieldType, ctx: TransformContext): unknown {
+  private static transformMap(value: ApiData, meta: MapFieldType, ctx: TransformContext): ApiData {
     if (ctx.direction === 'encode') {
       if (!(value instanceof Map)) return value;
-      const result: Record<string, unknown> = {};
+      const result = new Map()
       for (const [k, v] of value.entries()) {
         const transformedValue = this.transformType(v, meta.value, ctx);
-        result[String(k)] = transformedValue;
+        result.set(k, transformedValue)
       }
       return result;
     }
     // Decoding
-    if (typeof value !== 'object' || value === null) return value;
+    if ((!(value instanceof Map) && typeof value !== 'object') || value === null) return value;
+    const entries = value instanceof Map ? Array.from(value.entries()) : Object.entries(value as Record<string, ApiData>);
     const result = new Map();
-    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+    for (const [k, v] of entries) {
       const transformedValue = this.transformType(v, meta.value, ctx);
-      const key = this.convertKeyType(k, meta.keyType);
-      result.set(key, transformedValue);
+      result.set(k, transformedValue);
     }
     return result;
   }
 
-  private static convertKeyType(keyStr: string, keyType: 'string' | 'number' | 'bigint'): string | number | bigint {
-    switch (keyType) {
-      case 'string':
-        return keyStr;
-      case 'number': {
-        const num = Number(keyStr);
-        return Number.isNaN(num) ? keyStr : num;
-      }
-      case 'bigint': {
-        try {
-          return BigInt(keyStr);
-        } catch {
-          return keyStr;
-        }
-      }
-      default:
-        return keyStr;
-    }
-  }
-
-  private static convertToNestedMaps(value: unknown): Map<string, unknown> | unknown[] | unknown {
+  private static convertToNestedMaps(value: ApiData): Map<string, ApiData> | ApiData[] | ApiData {
     if (value === null || value === undefined) {
       return value;
     }
@@ -335,8 +353,8 @@ export class AlgorandSerializer {
     }
 
     if (typeof value === 'object' && value !== null && !(value instanceof Uint8Array)) {
-      const map = new Map<string, unknown>();
-      Object.entries(value as Record<string, unknown>).forEach(([key, val]) => {
+      const map = new Map<string, ApiData>();
+      Object.entries(value as Record<string, ApiData>).forEach(([key, val]) => {
         map.set(key, this.convertToNestedMaps(val));
       });
       return map;
@@ -354,42 +372,23 @@ interface TransformContext {
   readonly format: BodyFormat;
 }
 
-const encodeSignedTransactionImpl = (value: unknown): Uint8Array =>
-  transactEncodeSignedTransaction(value as SignedTransaction);
-const decodeSignedTransactionImpl = (value: Uint8Array): SignedTransaction =>
-  transactDecodeSignedTransaction(value);
-
-class SignedTransactionCodec implements TypeCodec<unknown> {
-  encode(value: unknown, format: BodyFormat): unknown {
-    if (value == null) return value;
+class SignedTransactionConverter implements EncodeableTypeConverter<SignedTransaction> {
+  beforeEncoding(value: SignedTransaction, format: BodyFormat): Record<string, unknown> {
     if (format === 'json') {
-      if (value instanceof Uint8Array) return toBase64(value);
-      return toBase64(encodeSignedTransactionImpl(value));
+      throw new Error('JSON format not supported for SignedTransaction encoding');
     }
-    if (value instanceof Uint8Array) {
-      // Already canonical bytes; decode to structured map so parent encoding keeps map semantics
-      return decodeMsgPack(value);
-    }
-    // Convert signed transaction object into canonical map representation
-    return decodeMsgPack(encodeSignedTransactionImpl(value));
+    return toSignedTransactionDto(value);
   }
-
-  decode(value: unknown, format: BodyFormat): unknown {
-    if (value == null) return value;
-    if (format === 'json') {
-      if (typeof value === 'string') return decodeSignedTransactionImpl(fromBase64(value));
-      if (value instanceof Uint8Array) return decodeSignedTransactionImpl(value);
-      return value;
+  afterDecoding(value: Record<string, unknown> | Map<number | bigint | Uint8Array, unknown>, format: BodyFormat): SignedTransaction {
+    if (format === 'json' || !(value instanceof Map)) {
+      throw new Error('JSON format not supported for SignedTransaction decoding');
     }
-    if (value instanceof Uint8Array) return decodeSignedTransactionImpl(value);
-    // Value is a decoded map; re-encode to bytes before handing to transact decoder
-    try {
-      return decodeSignedTransactionImpl(encodeMsgPack(value));
-    } catch {
-      return value;
+    if (!(value instanceof Map)) {
+      throw new Error('Invalid decoded msgpack format for SignedTransaction');
     }
+    const stxnDto = decodedTransactionMapToObject(value) as Parameters<typeof fromSignedTransactionDto>[0];
+    return fromSignedTransactionDto(stxnDto);
   }
 }
 
-registerCodec('SignedTransaction', new SignedTransactionCodec());
-
+registerEncodeableTypeConverter('SignedTransaction', new SignedTransactionConverter());

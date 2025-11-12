@@ -101,7 +101,7 @@ export const GenesisAllocationMeta: ModelMetadata = {
       wireKey: 'state',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => GenesisAllocationStateMeta },
+      type: { kind: 'model', meta: GenesisAllocationStateMeta },
     },
   ],
 }

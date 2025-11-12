@@ -18,7 +18,7 @@
 {%- elif ref_model -%}
 { kind: 'model', meta: () => {{ ref_model }}Meta }
 {%- elif inline_meta_name -%}
-{ kind: 'model', meta: () => {{ inline_meta_name }} }
+{ kind: 'model', meta: {{ inline_meta_name }} }
 {%- else -%}
 {{ scalar_meta(is_bytes, is_bigint) }}
 {%- endif -%}

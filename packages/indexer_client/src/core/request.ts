@@ -85,7 +85,11 @@ export async function request<T>(
     try {
       const ct = response.headers.get('content-type') ?? ''
       if (ct.includes('application/msgpack')) {
-        errorBody = decodeMsgPack(new Uint8Array(await response.arrayBuffer()))
+        errorBody = decodeMsgPack(new Uint8Array(await response.arrayBuffer()), {
+          useMap: false,
+          rawBinaryStringKeys: false,
+          rawBinaryStringValues: false,
+        })
       } else if (ct.includes('application/json')) {
         errorBody = JSON.parse(await response.text())
       } else {

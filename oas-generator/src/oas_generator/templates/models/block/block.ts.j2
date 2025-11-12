@@ -7,7 +7,7 @@ import { BlockStateProofTrackingDataMeta } from './block_state_proof_tracking_da
 /**
  * Block contains the BlockHeader and the list of transactions (Payset).
  */
-export interface Block {
+export type Block = {
   /** [rnd] Round number. */
   round?: bigint;
   /** [prev] Previous block hash. */
@@ -29,7 +29,7 @@ export interface Block {
   /** [gh] Genesis hash. */
   genesisHash?: Uint8Array;
   /** [prp] Proposer address. */
-  proposer?: Uint8Array;
+  proposer?: string;
   /** [fc] Fees collected in this block. */
   feesCollected?: bigint;
   /** [bi] Bonus incentive for block proposal. */
@@ -37,9 +37,9 @@ export interface Block {
   /** [pp] Proposer payout. */
   proposerPayout?: bigint;
   /** [fees] FeeSink address. */
-  feeSink?: Uint8Array;
+  feeSink?: string;
   /** [rwd] RewardsPool address. */
-  rewardsPool?: Uint8Array;
+  rewardsPool?: string;
   /** [earn] Rewards level. */
   rewardsLevel?: bigint;
   /** [rate] Rewards rate. */
@@ -90,12 +90,12 @@ export const BlockMeta: ModelMetadata = {
     { name: 'timestamp', wireKey: 'ts', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
     { name: 'genesisId', wireKey: 'gen', optional: true, nullable: false, type: { kind: 'scalar' } },
     { name: 'genesisHash', wireKey: 'gh', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'proposer', wireKey: 'prp', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
+    { name: 'proposer', wireKey: 'prp', optional: true, nullable: false, type: { kind: 'scalar', isAddress: true } },
     { name: 'feesCollected', wireKey: 'fc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
     { name: 'bonus', wireKey: 'bi', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
     { name: 'proposerPayout', wireKey: 'pp', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'feeSink', wireKey: 'fees', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'rewardsPool', wireKey: 'rwd', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
+    { name: 'feeSink', wireKey: 'fees', optional: true, nullable: false, type: { kind: 'scalar', isAddress: true } },
+    { name: 'rewardsPool', wireKey: 'rwd', optional: true, nullable: false, type: { kind: 'scalar', isAddress: true } },
     { name: 'rewardsLevel', wireKey: 'earn', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
     { name: 'rewardsRate', wireKey: 'rate', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
     { name: 'rewardsResidue', wireKey: 'frac', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
@@ -109,12 +109,9 @@ export const BlockMeta: ModelMetadata = {
     { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
     { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, nullable: false, type: { kind: 'scalar' } },
     { name: 'txnCounter', wireKey: 'tc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'stateProofTracking', wireKey: 'spt', optional: true, nullable: false, type: { kind: 'map', keyType: 'number', value: { kind: 'model', meta: () => BlockStateProofTrackingDataMeta } } },
+    { name: 'stateProofTracking', wireKey: 'spt', optional: true, nullable: false, type: { kind: 'map', keyType: 'number', value: { kind: 'model', meta: BlockStateProofTrackingDataMeta } } },
     { name: 'expiredParticipationAccounts', wireKey: 'partupdrmv', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isBytes: true } } },
     { name: 'absentParticipationAccounts', wireKey: 'partupdabs', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isBytes: true } } },
-    { name: 'transactions', wireKey: 'txns', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'model', meta: () => SignedTxnInBlockMeta } } },
+    { name: 'transactions', wireKey: 'txns', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'model', meta: SignedTxnInBlockMeta } } },
   ],
 };
-
-
-

@@ -894,17 +894,9 @@ class CodeGenerator:
                 "models/block/block-eval-delta.ts.j2",
                 {"spec": spec},
             )
-            files[models_dir / "block-state-delta.ts"] = self.renderer.render(
-                "models/block/block-state-delta.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "block-account-state-delta.ts"] = self.renderer.render(
-                "models/block/block-account-state-delta.ts.j2",
-                {"spec": spec},
-            )
             # BlockAppEvalDelta is implemented by repurposing application-eval-delta.ts.j2 to new name
             files[models_dir / "block-app-eval-delta.ts"] = self.renderer.render(
-                "models/block/application-eval-delta.ts.j2",
+                "models/block/block-app-eval-delta.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block_state_proof_tracking_data.ts"] = self.renderer.render(
@@ -932,10 +924,6 @@ class CodeGenerator:
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { BlockEvalDelta } from './block-eval-delta';\n"
                 "export { BlockEvalDeltaMeta } from './block-eval-delta';\n"
-                "export type { BlockStateDelta } from './block-state-delta';\n"
-                "export { BlockStateDeltaMeta } from './block-state-delta';\n"
-                "export type { BlockAccountStateDelta } from './block-account-state-delta';\n"
-                "export { BlockAccountStateDeltaMeta } from './block-account-state-delta';\n"
                 "export type { BlockAppEvalDelta } from './block-app-eval-delta';\n"
                 "export { BlockAppEvalDeltaMeta } from './block-app-eval-delta';\n"
                 "export type { BlockStateProofTrackingData } from './block_state_proof_tracking_data';\n"
@@ -976,7 +964,6 @@ class CodeGenerator:
             core_dir / "fetch-http-request.ts": ("base/src/core/fetch-http-request.ts.j2", context),
             core_dir / "api-error.ts": ("base/src/core/api-error.ts.j2", context),
             core_dir / "request.ts": ("base/src/core/request.ts.j2", context),
-            core_dir / "serialization.ts": ("base/src/core/serialization.ts.j2", context),
             core_dir / "codecs.ts": ("base/src/core/codecs.ts.j2", context),
             core_dir / "model-runtime.ts": ("base/src/core/model-runtime.ts.j2", context),
             # Project files

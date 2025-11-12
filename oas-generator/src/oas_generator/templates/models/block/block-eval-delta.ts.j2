@@ -1,8 +1,7 @@
 import type { ModelMetadata } from '../core/model-runtime';
-import { registerModelMeta } from '../core/model-runtime';
 
 /** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
-export interface BlockEvalDelta {
+export type BlockEvalDelta = {
   /** [at] delta action. */
   action: number;
   /** [bs] bytes value. */
@@ -20,7 +19,3 @@ export const BlockEvalDeltaMeta: ModelMetadata = {
     { name: 'uint', wireKey: 'ui', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
   ],
 };
-
-registerModelMeta('BlockEvalDelta', BlockEvalDeltaMeta);
-
-

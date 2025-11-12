@@ -34,7 +34,7 @@ export const HealthCheckMeta: ModelMetadata = {
       wireKey: 'data',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => HealthCheckDataMeta },
+      type: { kind: 'model', meta: HealthCheckDataMeta },
     },
     {
       name: 'round',

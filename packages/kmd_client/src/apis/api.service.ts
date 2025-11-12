@@ -112,9 +112,9 @@ export class KmdApi {
     const bodyMeta = CreateWalletRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/wallet',
       path: {},
@@ -124,11 +124,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletResponse
+    return AlgorandSerializer.decode(payload, PostWalletResponseMeta, responseFormat)
   }
 
   /**
@@ -142,9 +138,9 @@ export class KmdApi {
     const bodyMeta = DeleteKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'DELETE',
       url: '/v1/key',
       path: {},
@@ -154,11 +150,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = DeleteKeyResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as DeleteKeyResponse
+    return AlgorandSerializer.decode(payload, DeleteKeyResponseMeta, responseFormat)
   }
 
   /**
@@ -172,9 +164,9 @@ export class KmdApi {
     const bodyMeta = DeleteMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'DELETE',
       url: '/v1/multisig',
       path: {},
@@ -184,11 +176,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = DeleteMultisigResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as DeleteMultisigResponse
+    return AlgorandSerializer.decode(payload, DeleteMultisigResponseMeta, responseFormat)
   }
 
   /**
@@ -202,9 +190,9 @@ export class KmdApi {
     const bodyMeta = ExportKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/key/export',
       path: {},
@@ -214,11 +202,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyExportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyExportResponse
+    return AlgorandSerializer.decode(payload, PostKeyExportResponseMeta, responseFormat)
   }
 
   /**
@@ -232,9 +216,9 @@ export class KmdApi {
     const bodyMeta = ExportMasterKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/master-key/export',
       path: {},
@@ -244,11 +228,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostMasterKeyExportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMasterKeyExportResponse
+    return AlgorandSerializer.decode(payload, PostMasterKeyExportResponseMeta, responseFormat)
   }
 
   /**
@@ -262,9 +242,9 @@ export class KmdApi {
     const bodyMeta = ExportMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/multisig/export',
       path: {},
@@ -274,11 +254,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigExportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigExportResponse
+    return AlgorandSerializer.decode(payload, PostMultisigExportResponseMeta, responseFormat)
   }
 
   /**
@@ -292,9 +268,9 @@ export class KmdApi {
     const bodyMeta = GenerateKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/key',
       path: {},
@@ -304,11 +280,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyResponse
+    return AlgorandSerializer.decode(payload, PostKeyResponseMeta, responseFormat)
   }
 
   async getVersion(): Promise<VersionsResponse> {
@@ -316,7 +288,7 @@ export class KmdApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/versions',
       path: {},
@@ -326,11 +298,7 @@ export class KmdApi {
       mediaType: undefined,
     })
 
-    const responseMeta = VersionsResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as VersionsResponse
+    return AlgorandSerializer.decode(payload, VersionsResponseMeta, responseFormat)
   }
 
   /**
@@ -344,9 +312,9 @@ export class KmdApi {
     const bodyMeta = WalletInfoRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/wallet/info',
       path: {},
@@ -356,11 +324,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletInfoResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletInfoResponse
+    return AlgorandSerializer.decode(payload, PostWalletInfoResponseMeta, responseFormat)
   }
 
   /**
@@ -374,9 +338,9 @@ export class KmdApi {
     const bodyMeta = ImportKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/key/import',
       path: {},
@@ -386,11 +350,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyImportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyImportResponse
+    return AlgorandSerializer.decode(payload, PostKeyImportResponseMeta, responseFormat)
   }
 
   /**
@@ -404,9 +364,9 @@ export class KmdApi {
     const bodyMeta = ImportMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/multisig/import',
       path: {},
@@ -416,11 +376,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigImportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigImportResponse
+    return AlgorandSerializer.decode(payload, PostMultisigImportResponseMeta, responseFormat)
   }
 
   /**
@@ -434,9 +390,9 @@ export class KmdApi {
     const bodyMeta = InitWalletHandleTokenRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/wallet/init',
       path: {},
@@ -446,11 +402,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletInitResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletInitResponse
+    return AlgorandSerializer.decode(payload, PostWalletInitResponseMeta, responseFormat)
   }
 
   /**
@@ -464,9 +416,9 @@ export class KmdApi {
     const bodyMeta = ListKeysRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/key/list',
       path: {},
@@ -476,11 +428,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyListResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyListResponse
+    return AlgorandSerializer.decode(payload, PostKeyListResponseMeta, responseFormat)
   }
 
   /**
@@ -494,9 +442,9 @@ export class KmdApi {
     const bodyMeta = ListMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/multisig/list',
       path: {},
@@ -506,11 +454,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigListResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigListResponse
+    return AlgorandSerializer.decode(payload, PostMultisigListResponseMeta, responseFormat)
   }
 
   /**
@@ -521,7 +465,7 @@ export class KmdApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v1/wallets',
       path: {},
@@ -531,11 +475,7 @@ export class KmdApi {
       mediaType: undefined,
     })
 
-    const responseMeta = GetWalletsResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as GetWalletsResponse
+    return AlgorandSerializer.decode(payload, GetWalletsResponseMeta, responseFormat)
   }
 
   /**
@@ -549,9 +489,9 @@ export class KmdApi {
     const bodyMeta = ReleaseWalletHandleTokenRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/wallet/release',
       path: {},
@@ -561,11 +501,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletReleaseResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletReleaseResponse
+    return AlgorandSerializer.decode(payload, PostWalletReleaseResponseMeta, responseFormat)
   }
 
   /**
@@ -579,9 +515,9 @@ export class KmdApi {
     const bodyMeta = RenameWalletRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/wallet/rename',
       path: {},
@@ -591,11 +527,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletRenameResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletRenameResponse
+    return AlgorandSerializer.decode(payload, PostWalletRenameResponseMeta, responseFormat)
   }
 
   /**
@@ -609,9 +541,9 @@ export class KmdApi {
     const bodyMeta = RenewWalletHandleTokenRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/wallet/renew',
       path: {},
@@ -621,11 +553,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletRenewResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletRenewResponse
+    return AlgorandSerializer.decode(payload, PostWalletRenewResponseMeta, responseFormat)
   }
 
   /**
@@ -639,9 +567,9 @@ export class KmdApi {
     const bodyMeta = SignProgramMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/multisig/signprogram',
       path: {},
@@ -651,11 +579,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigProgramSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigProgramSignResponse
+    return AlgorandSerializer.decode(payload, PostMultisigProgramSignResponseMeta, responseFormat)
   }
 
   /**
@@ -669,9 +593,9 @@ export class KmdApi {
     const bodyMeta = SignMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/multisig/sign',
       path: {},
@@ -681,11 +605,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigTransactionSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigTransactionSignResponse
+    return AlgorandSerializer.decode(payload, PostMultisigTransactionSignResponseMeta, responseFormat)
   }
 
   /**
@@ -699,9 +619,9 @@ export class KmdApi {
     const bodyMeta = SignProgramRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/program/sign',
       path: {},
@@ -711,11 +631,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostProgramSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostProgramSignResponse
+    return AlgorandSerializer.decode(payload, PostProgramSignResponseMeta, responseFormat)
   }
 
   /**
@@ -729,9 +645,9 @@ export class KmdApi {
     const bodyMeta = SignTransactionRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'POST',
       url: '/v1/transaction/sign',
       path: {},
@@ -741,11 +657,7 @@ export class KmdApi {
       mediaType: mediaType,
     })
 
-    const responseMeta = PostTransactionSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostTransactionSignResponse
+    return AlgorandSerializer.decode(payload, PostTransactionSignResponseMeta, responseFormat)
   }
 
   /**
@@ -756,7 +668,7 @@ export class KmdApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/swagger.json',
       path: {},
@@ -766,10 +678,6 @@ export class KmdApi {
       mediaType: undefined,
     })
 
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as string
+    return payload
   }
 }

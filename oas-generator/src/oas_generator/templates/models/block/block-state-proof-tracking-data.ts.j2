@@ -1,8 +1,7 @@
 import type { ModelMetadata } from '../core/model-runtime';
-import { registerModelMeta } from '../core/model-runtime';
 
 /** Tracking metadata for a specific StateProofType. */
-export interface BlockStateProofTrackingData {
+export type BlockStateProofTrackingData = {
   /** [v] Vector commitment root of state proof voters. */
   stateProofVotersCommitment?: Uint8Array;
   /** [t] Online total weight during state proof round. */
@@ -20,7 +19,3 @@ export const BlockStateProofTrackingDataMeta: ModelMetadata = {
     { name: 'stateProofNextRound', wireKey: 'n', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
   ],
 };
-
-registerModelMeta('BlockStateProofTrackingData', BlockStateProofTrackingDataMeta);
-
-

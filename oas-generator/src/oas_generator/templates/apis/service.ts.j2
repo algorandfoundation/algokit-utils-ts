@@ -14,7 +14,7 @@ import { {% for t in sorted %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% e
 
 {% macro field_type_meta(type_name) -%}
 {%- if type_name in import_types -%}
-({ kind: 'model', meta: () => {{ type_name }}Meta } as const)
+({ kind: 'model', meta: {{ type_name }}Meta } as const)
 {%- elif type_name == 'SignedTransaction' -%}
 ({ kind: 'codec', codecKey: 'SignedTransaction' } as const)
 {%- elif type_name == 'Uint8Array' -%}
@@ -105,8 +105,8 @@ export class {{ service_class_name }} {
 {%- endif %}
   ): Promise<{{ op.responseTsType }}> {
     const headers: Record<string, string> = {};
-    {% set supports_msgpack = op.returnsMsgpack or (op.requestBody and op.requestBody.supportsMsgpack) %}
-    const responseFormat: BodyFormat = {% if op.forceMsgpackQuery %}'msgpack'{% elif supports_msgpack %}'json'{% else %}'json'{% endif %};
+    {% set body_format = 'msgpack' if op.forceMsgpackQuery else 'json' %}
+    const responseFormat: BodyFormat = '{{ body_format }}'
     headers['Accept'] = {{ service_class_name }}.acceptFor(responseFormat);
 
     {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
@@ -118,9 +118,11 @@ export class {{ service_class_name }} {
     const bodyMeta = {{ meta_expr(op.requestBody.tsType) }};
     const mediaType = bodyMeta ? {{ service_class_name }}.mediaFor(responseFormat) : undefined;
     if (mediaType) headers['Content-Type'] = mediaType;
-    const serializedBody = bodyMeta && body !== undefined
-      ? AlgorandSerializer.encode(body, bodyMeta, responseFormat)
-      : body;
+        {% if op.requestBody and not meta_expr(op.requestBody.tsType) == 'undefined' %}
+    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined;
+        {% else %}
+    const serializedBody = body;
+        {% endif %}
       {% endif %}
     {% endif %}
 
@@ -132,7 +134,11 @@ export class {{ service_class_name }} {
     }
     {% endif %}
 
-    const payload = await this.httpRequest.request<unknown>({
+    {% if op.responseTsType == 'void' %}
+    await this.httpRequest.request<void>({
+    {% else %}
+    const payload = await this.httpRequest.request<{{'Uint8Array' if body_format == 'msgpack' else 'string'}}>({
+    {% endif %}
       method: '{{ op.method }}',
       url: '{{ op.path }}',
       path: {
@@ -158,11 +164,13 @@ export class {{ service_class_name }} {
       {% endif %}
     });
 
-    const responseMeta = {{ meta_expr(op.responseTsType) }};
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat);
-    }
-    return payload as {{ op.responseTsType }};
+    {% if op.responseTsType != 'void' %}
+      {% if meta_expr(op.responseTsType) == 'undefined' %}
+    return payload;
+      {% else %}
+    return AlgorandSerializer.decode(payload, {{ meta_expr(op.responseTsType) }}, responseFormat);
+      {% endif %}
+    {% endif %}
   }
 
 {% endfor %}

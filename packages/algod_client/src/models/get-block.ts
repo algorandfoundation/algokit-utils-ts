@@ -13,7 +13,7 @@ export const GetBlockMeta: ModelMetadata = {
   name: 'GetBlock',
   kind: 'object',
   fields: [
-    { name: 'block', wireKey: 'block', optional: false, nullable: false, type: { kind: 'model', meta: () => BlockMeta } },
+    { name: 'block', wireKey: 'block', optional: false, nullable: false, type: { kind: 'model', meta: BlockMeta } },
     { name: 'cert', wireKey: 'cert', optional: true, nullable: false, type: { kind: 'scalar' } },
   ],
 }

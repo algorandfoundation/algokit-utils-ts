@@ -70,7 +70,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/apps-local-state',
       path: { 'account-id': accountId },
@@ -85,11 +85,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountAppLocalStatesMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountAppLocalStates
+    return AlgorandSerializer.decode(payload, LookupAccountAppLocalStatesMeta, responseFormat)
   }
 
   /**
@@ -103,7 +99,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/assets',
       path: { 'account-id': accountId },
@@ -118,11 +114,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountAssetsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountAssets
+    return AlgorandSerializer.decode(payload, LookupAccountAssetsMeta, responseFormat)
   }
 
   /**
@@ -140,7 +132,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts/{account-id}',
       path: { 'account-id': accountId },
@@ -154,11 +146,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountById
+    return AlgorandSerializer.decode(payload, LookupAccountByIdMeta, responseFormat)
   }
 
   /**
@@ -172,7 +160,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-applications',
       path: { 'account-id': accountId },
@@ -187,11 +175,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountCreatedApplicationsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountCreatedApplications
+    return AlgorandSerializer.decode(payload, LookupAccountCreatedApplicationsMeta, responseFormat)
   }
 
   /**
@@ -205,7 +189,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-assets',
       path: { 'account-id': accountId },
@@ -220,11 +204,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountCreatedAssetsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountCreatedAssets
+    return AlgorandSerializer.decode(payload, LookupAccountCreatedAssetsMeta, responseFormat)
   }
 
   /**
@@ -254,7 +234,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/transactions',
       path: { 'account-id': accountId },
@@ -284,11 +264,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountTransactionsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountTransactions
+    return AlgorandSerializer.decode(payload, LookupAccountTransactionsMeta, responseFormat)
   }
 
   /**
@@ -299,7 +275,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/applications/{application-id}/box',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -309,11 +285,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = BoxMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as Box
+    return AlgorandSerializer.decode(payload, BoxMeta, responseFormat)
   }
 
   /**
@@ -324,7 +296,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/applications/{application-id}',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -334,11 +306,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupApplicationByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupApplicationById
+    return AlgorandSerializer.decode(payload, LookupApplicationByIdMeta, responseFormat)
   }
 
   /**
@@ -359,7 +327,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/applications/{application-id}/logs',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -376,11 +344,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupApplicationLogsByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupApplicationLogsById
+    return AlgorandSerializer.decode(payload, LookupApplicationLogsByIdMeta, responseFormat)
   }
 
   /**
@@ -400,7 +364,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/balances',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -420,11 +384,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAssetBalancesMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAssetBalances
+    return AlgorandSerializer.decode(payload, LookupAssetBalancesMeta, responseFormat)
   }
 
   /**
@@ -435,7 +395,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/assets/{asset-id}',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -445,11 +405,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAssetByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAssetById
+    return AlgorandSerializer.decode(payload, LookupAssetByIdMeta, responseFormat)
   }
 
   /**
@@ -481,7 +437,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/transactions',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -513,11 +469,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupAssetTransactionsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAssetTransactions
+    return AlgorandSerializer.decode(payload, LookupAssetTransactionsMeta, responseFormat)
   }
 
   /**
@@ -528,7 +480,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/blocks/{round-number}',
       path: { 'round-number': typeof roundNumber === 'bigint' ? roundNumber.toString() : roundNumber },
@@ -538,11 +490,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = BlockMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as Block
+    return AlgorandSerializer.decode(payload, BlockMeta, responseFormat)
   }
 
   /**
@@ -553,7 +501,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/transactions/{txid}',
       path: { txid: txid },
@@ -563,11 +511,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = LookupTransactionMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupTransaction
+    return AlgorandSerializer.decode(payload, LookupTransactionMeta, responseFormat)
   }
 
   async makeHealthCheck(): Promise<HealthCheck> {
@@ -575,7 +519,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/health',
       path: {},
@@ -585,11 +529,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = HealthCheckMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as HealthCheck
+    return AlgorandSerializer.decode(payload, HealthCheckMeta, responseFormat)
   }
 
   /**
@@ -612,7 +552,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/accounts',
       path: {},
@@ -638,11 +578,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = SearchForAccountsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForAccounts
+    return AlgorandSerializer.decode(payload, SearchForAccountsMeta, responseFormat)
   }
 
   /**
@@ -656,7 +592,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -666,11 +602,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = SearchForApplicationBoxesMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForApplicationBoxes
+    return AlgorandSerializer.decode(payload, SearchForApplicationBoxesMeta, responseFormat)
   }
 
   /**
@@ -687,7 +619,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/applications',
       path: {},
@@ -703,11 +635,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = SearchForApplicationsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForApplications
+    return AlgorandSerializer.decode(payload, SearchForApplicationsMeta, responseFormat)
   }
 
   /**
@@ -726,7 +654,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/assets',
       path: {},
@@ -744,11 +672,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = SearchForAssetsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForAssets
+    return AlgorandSerializer.decode(payload, SearchForAssetsMeta, responseFormat)
   }
 
   /**
@@ -769,7 +693,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/block-headers',
       path: {},
@@ -789,11 +713,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = SearchForBlockHeadersMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForBlockHeaders
+    return AlgorandSerializer.decode(payload, SearchForBlockHeadersMeta, responseFormat)
   }
 
   /**
@@ -825,7 +745,7 @@ export class IndexerApi {
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/v2/transactions',
       path: {},
@@ -860,10 +780,6 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    const responseMeta = SearchForTransactionsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForTransactions
+    return AlgorandSerializer.decode(payload, SearchForTransactionsMeta, responseFormat)
   }
 }
