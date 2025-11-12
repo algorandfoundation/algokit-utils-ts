@@ -16,11 +16,10 @@ import {
   ABIValue,
   Address,
   TransactionSigner,
-  TransactionWithSigner,
   abiTypeIsReference,
   abiTypeIsTransaction,
 } from '@algorandfoundation/sdk'
-import { encodeLease } from '../transaction'
+import { TransactionWithSigner, encodeLease } from '../transaction'
 import { calculateExtraProgramPages } from '../util'
 import { AppManager } from './app-manager'
 import {

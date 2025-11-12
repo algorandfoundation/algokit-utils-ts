@@ -26,9 +26,9 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
+import { ABIMethod, Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
-import { waitForConfirmation } from '../transaction'
+import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -546,7 +546,7 @@ type Txn =
   | { data: AssetOptOutParams; type: 'assetOptOut' }
   | { data: AppCallParams | AppCreateParams | AppUpdateParams; type: 'appCall' }
   | { data: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams; type: 'keyReg' }
-  | { data: algosdk.TransactionWithSigner; type: 'txnWithSigner' }
+  | { data: TransactionWithSigner; type: 'txnWithSigner' }
   | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
   | { data: TransactionComposer; type: 'composer' }

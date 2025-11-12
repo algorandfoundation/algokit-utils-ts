@@ -22,8 +22,11 @@ import {
 } from '../types/transaction'
 import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
 
+/** Represents an unsigned transactions and a signer that can authorize that transaction. */
 export interface TransactionWithSigner {
+  /** An unsigned transaction */
   txn: Transaction
+  /** A transaction signer that can authorize txn */
   signer: TransactionSigner
 }
 

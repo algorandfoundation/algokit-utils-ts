@@ -1,6 +1,7 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap, TransactionWithSigner } from '@algorandfoundation/sdk'
+import { ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { TransactionWithSigner } from '../transaction'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,
