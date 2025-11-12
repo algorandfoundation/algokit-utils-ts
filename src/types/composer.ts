@@ -2235,7 +2235,6 @@ export class TransactionComposer {
 
       this.transactionsWithSigners = undefined
       this.signedTransactions = undefined
-      this.methodCalls = new Map()
     }
 
     try {
