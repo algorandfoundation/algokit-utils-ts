@@ -66,7 +66,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     const transaction = await txn(transactionCreator)(params)
     const txns = 'transactions' in transaction ? transaction.transactions : [transaction]
     if (sendParams.transactionComposer) {
-      const baseIndex = await sendParams.transactionComposer.count()
+      const baseIndex = sendParams.transactionComposer.count()
       txns
         .map((txn, i) => ({
           txn,

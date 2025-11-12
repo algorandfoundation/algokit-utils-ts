@@ -549,7 +549,6 @@ type Txn =
   | { data: TransactionWithSigner; type: 'txnWithSigner' }
   | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
-  | { data: TransactionComposer; type: 'composer' }
 
 /**
  * A function that transforms an error into a new error.
@@ -652,7 +651,7 @@ export class TransactionComposer {
 
   private signedTransactions?: SignedTransaction[]
 
-  private methodCalls: Map<number, algosdk.ABIMethod>
+  private methodCalls: Map<number, algosdk.ABIMethod> = new Map()
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -713,7 +712,6 @@ export class TransactionComposer {
       coverAppCallInnerTransactionFees: false,
       populateAppCallResources: true,
     }
-    this.methodCalls = new Map()
   }
 
   /**
@@ -737,6 +735,113 @@ export class TransactionComposer {
     })
   }
 
+  /**
+   * Helper function to clone a single transaction
+   * @param txn The transaction to clone
+   * @returns The cloned transaction
+   */
+  private cloneTransaction(txn: Txn): Txn {
+    switch (txn.type) {
+      case 'pay':
+        return {
+          type: 'pay',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetCreate':
+        return {
+          type: 'assetCreate',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetConfig':
+        return {
+          type: 'assetConfig',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetFreeze':
+        return {
+          type: 'assetFreeze',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetDestroy':
+        return {
+          type: 'assetDestroy',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetTransfer':
+        return {
+          type: 'assetTransfer',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetOptIn':
+        return {
+          type: 'assetOptIn',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'assetOptOut':
+        return {
+          type: 'assetOptOut',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'appCall':
+        return {
+          type: 'appCall',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'keyReg':
+        return {
+          type: 'keyReg',
+          data: deepCloneTransactionParams(txn.data),
+        }
+      case 'txnWithSigner': {
+        const { txn: transaction, signer } = txn.data
+        // Deep clone the transaction using encode/decode and remove group field
+        const encoded = encodeTransactionRaw(transaction)
+        const clonedTxn = decodeTransaction(encoded)
+        clonedTxn.group = undefined
+        return {
+          type: 'txnWithSigner',
+          data: {
+            txn: clonedTxn,
+            signer,
+          },
+        }
+      }
+      case 'asyncTxn': {
+        const { txn: txnPromise, signer } = txn.data
+        // Create a new promise that resolves to a deep cloned transaction without the group field
+        const newTxnPromise = txnPromise.then((resolvedTxn) => {
+          const encoded = encodeTransactionRaw(resolvedTxn)
+          const clonedTxn = decodeTransaction(encoded)
+          clonedTxn.group = undefined
+          return clonedTxn
+        })
+        return {
+          type: 'asyncTxn',
+          data: {
+            txn: newTxnPromise,
+            signer,
+          },
+        }
+      }
+      case 'methodCall':
+        // Method calls have already been processed and their transaction args extracted
+        // Deep clone all data to avoid shared references
+        return {
+          type: 'methodCall',
+          data: deepCloneTransactionParams(txn.data),
+        }
+    }
+  }
+
+  private validateGroupSize(count: number = 1): void {
+    const newSize = this.txns.length + count
+    if (newSize > MAX_TRANSACTION_GROUP_SIZE) {
+      throw new Error(
+        `Adding ${count} transaction(s) would exceed the maximum group size. Current: ${this.txns.length}, Maximum: ${MAX_TRANSACTION_GROUP_SIZE}`,
+      )
+    }
+  }
+
   public clone(composerConfig?: TransactionComposerConfig) {
     const newComposer = new TransactionComposer({
       algod: this.algod,
@@ -752,111 +857,10 @@ export class TransactionComposer {
     })
 
     this.txns.forEach((txn) => {
-      switch (txn.type) {
-        case 'pay':
-          newComposer.txns.push({
-            type: 'pay',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetCreate':
-          newComposer.txns.push({
-            type: 'assetCreate',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetConfig':
-          newComposer.txns.push({
-            type: 'assetConfig',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetFreeze':
-          newComposer.txns.push({
-            type: 'assetFreeze',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetDestroy':
-          newComposer.txns.push({
-            type: 'assetDestroy',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetTransfer':
-          newComposer.txns.push({
-            type: 'assetTransfer',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetOptIn':
-          newComposer.txns.push({
-            type: 'assetOptIn',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'assetOptOut':
-          newComposer.txns.push({
-            type: 'assetOptOut',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'appCall':
-          newComposer.txns.push({
-            type: 'appCall',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'keyReg':
-          newComposer.txns.push({
-            type: 'keyReg',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-        case 'txnWithSigner': {
-          const { txn: transaction, signer } = txn.data
-          // Deep clone the transaction using encode/decode and remove group field
-          const encoded = encodeTransactionRaw(transaction)
-          const clonedTxn = decodeTransaction(encoded)
-          clonedTxn.group = undefined
-          newComposer.txns.push({
-            type: 'txnWithSigner',
-            data: {
-              txn: clonedTxn,
-              signer,
-            },
-          })
-          break
-        }
-        case 'asyncTxn': {
-          const { txn: txnPromise, signer } = txn.data
-          // Create a new promise that resolves to a deep cloned transaction without the group field
-          const newTxnPromise = txnPromise.then((resolvedTxn) => {
-            const encoded = encodeTransactionRaw(resolvedTxn)
-            const clonedTxn = decodeTransaction(encoded)
-            clonedTxn.group = undefined
-            return clonedTxn
-          })
-          newComposer.txns.push({
-            type: 'asyncTxn',
-            data: {
-              txn: newTxnPromise,
-              signer,
-            },
-          })
-          break
-        }
-        case 'methodCall':
-          // Method calls have already been processed and their transaction args extracted
-          // Deep clone all data to avoid shared references
-          newComposer.txns.push({
-            type: 'methodCall',
-            data: deepCloneTransactionParams(txn.data),
-          })
-          break
-      }
+      newComposer.txns.push(this.cloneTransaction(txn))
     })
 
+    // Clone the methodCalls map
     newComposer.methodCalls = new Map(this.methodCalls)
 
     return newComposer
@@ -883,6 +887,8 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({
       data: {
         txn: transaction,
@@ -909,9 +915,16 @@ export class TransactionComposer {
    * ```
    */
   public addTransactionComposer(composer: TransactionComposer): TransactionComposer {
-    this.txns.push({
-      data: composer,
-      type: 'composer',
+    this.validateGroupSize(composer.txns.length)
+
+    const currentIndex = this.txns.length
+    composer.txns.forEach((txn) => {
+      this.txns.push(this.cloneTransaction(txn))
+    })
+
+    // Copy methodCalls from the target composer, adjusting indices
+    composer.methodCalls.forEach((method, index) => {
+      this.methodCalls.set(currentIndex + index, method)
     })
 
     return this
@@ -951,6 +964,8 @@ export class TransactionComposer {
    * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'pay' })
 
     return this
@@ -992,6 +1007,8 @@ export class TransactionComposer {
    * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetCreate' })
 
     return this
@@ -1027,6 +1044,8 @@ export class TransactionComposer {
    * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetConfig' })
 
     return this
@@ -1061,6 +1080,8 @@ export class TransactionComposer {
    * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetFreeze' })
 
     return this
@@ -1093,6 +1114,8 @@ export class TransactionComposer {
    * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetDestroy' })
 
     return this
@@ -1130,6 +1153,8 @@ export class TransactionComposer {
    * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetTransfer' })
 
     return this
@@ -1162,6 +1187,8 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetOptIn' })
 
     return this
@@ -1200,6 +1227,8 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'assetOptOut' })
 
     return this
@@ -1255,6 +1284,8 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'appCall' })
 
     return this
@@ -1297,6 +1328,8 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
 
     return this
@@ -1337,6 +1370,8 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
 
     return this
@@ -1379,6 +1414,8 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'appCall' })
 
     return this
@@ -1441,21 +1478,20 @@ export class TransactionComposer {
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Track methodCalls in txnArgs
+    // Validate group size: txnArgs + 1 for the method call itself
+    this.validateGroupSize(txnArgs.length + 1)
+
     txnArgs.forEach((txn) => {
-      const currentIndex = this.txns.length
       this.txns.push(txn)
       if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex, txn.data.method)
+        this.methodCalls.set(this.txns.length - 1, txn.data.method)
       }
     })
-    // Add the main method call and track it
-    const methodCallIndex = this.txns.length
     this.txns.push({
       data: { ...params, args: processAppMethodCallArgs(params.args) },
       type: 'methodCall',
     })
-    this.methodCalls.set(methodCallIndex, params.method)
+    this.methodCalls.set(this.txns.length - 1, params.method)
     return this
   }
 
@@ -1509,21 +1545,20 @@ export class TransactionComposer {
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Track methodCalls in txnArgs
+    // Validate group size: txnArgs + 1 for the method call itself
+    this.validateGroupSize(txnArgs.length + 1)
+
     txnArgs.forEach((txn) => {
-      const currentIndex = this.txns.length
       this.txns.push(txn)
       if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex, txn.data.method)
+        this.methodCalls.set(this.txns.length - 1, txn.data.method)
       }
     })
-    // Add the main method call and track it
-    const methodCallIndex = this.txns.length
     this.txns.push({
       data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
       type: 'methodCall',
     })
-    this.methodCalls.set(methodCallIndex, params.method)
+    this.methodCalls.set(this.txns.length - 1, params.method)
     return this
   }
 
@@ -1575,21 +1610,20 @@ export class TransactionComposer {
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Track methodCalls in txnArgs
+    // Validate group size: txnArgs + 1 for the method call itself
+    this.validateGroupSize(txnArgs.length + 1)
+
     txnArgs.forEach((txn) => {
-      const currentIndex = this.txns.length
       this.txns.push(txn)
       if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex, txn.data.method)
+        this.methodCalls.set(this.txns.length - 1, txn.data.method)
       }
     })
-    // Add the main method call and track it
-    const methodCallIndex = this.txns.length
     this.txns.push({
       data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
       type: 'methodCall',
     })
-    this.methodCalls.set(methodCallIndex, params.method)
+    this.methodCalls.set(this.txns.length - 1, params.method)
     return this
   }
 
@@ -1641,21 +1675,20 @@ export class TransactionComposer {
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Track methodCalls in txnArgs
+    // Validate group size: txnArgs + 1 for the method call itself
+    this.validateGroupSize(txnArgs.length + 1)
+
     txnArgs.forEach((txn) => {
-      const currentIndex = this.txns.length
       this.txns.push(txn)
       if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex, txn.data.method)
+        this.methodCalls.set(this.txns.length - 1, txn.data.method)
       }
     })
-    // Add the main method call and track it
-    const methodCallIndex = this.txns.length
     this.txns.push({
       data: { ...params, args: processAppMethodCallArgs(params.args) },
       type: 'methodCall',
     })
-    this.methodCalls.set(methodCallIndex, params.method)
+    this.methodCalls.set(this.txns.length - 1, params.method)
     return this
   }
 
@@ -1701,6 +1734,8 @@ export class TransactionComposer {
    * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'keyReg' })
 
     return this
@@ -1736,6 +1771,8 @@ export class TransactionComposer {
    * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
+    this.validateGroupSize(1)
+
     this.txns.push({ data: params, type: 'keyReg' })
 
     return this
@@ -1745,8 +1782,8 @@ export class TransactionComposer {
    * Get the number of transactions currently added to this composer.
    * @returns The number of transactions currently added to this composer
    */
-  async count() {
-    return (await this.buildTransactions()).transactions.length
+  count() {
+    return this.txns.length
   }
 
   /**
@@ -1802,43 +1839,6 @@ export class TransactionComposer {
           signers.set(transactionIndex, ctxn.data.signer)
         }
         transactionIndex++
-      } else if (ctxn.type === 'composer') {
-        // Build the nested composer and add its transactions
-        const builtComposer = await ctxn.data.build()
-        const nestedMethodCallsCount = builtComposer.methodCalls.size
-
-        // Shift existing methodCalls that come after the current index
-        // Collect methodCalls that need to be shifted (those at or after the current index)
-        const methodCallsToShift: Array<{ oldIndex: number; method: algosdk.ABIMethod }> = []
-        this.methodCalls.forEach((method, index) => {
-          if (index >= transactionIndex) {
-            methodCallsToShift.push({ oldIndex: index, method })
-          }
-        })
-
-        // Remove the old entries that will be shifted
-        methodCallsToShift.forEach(({ oldIndex }) => {
-          this.methodCalls.delete(oldIndex)
-        })
-
-        // Add the nested transactions and their methodCalls
-        builtComposer.transactions.forEach((txnWithSigner, j) => {
-          transactions.push(txnWithSigner.txn)
-          signers.set(transactionIndex, txnWithSigner.signer)
-
-          // Map method calls from the nested composer to the correct transaction index
-          const nestedMethodCall = builtComposer.methodCalls.get(j)
-          if (nestedMethodCall) {
-            this.methodCalls.set(transactionIndex, nestedMethodCall)
-          }
-
-          transactionIndex++
-        })
-
-        // Re-add the shifted entries at their new indices
-        methodCallsToShift.forEach(({ oldIndex, method }) => {
-          this.methodCalls.set(oldIndex + nestedMethodCallsCount, method)
-        })
       } else {
         let transaction: Transaction
         const header = buildTransactionHeader(ctxn.data, suggestedParams, defaultValidityWindow)
@@ -2300,7 +2300,7 @@ export class TransactionComposer {
         }
       }
 
-      const abiReturns = this.parseAbiReturnValues(confirmations)
+      const abiReturns = this.parseAbiReturnValues(confirmations, this.methodCalls)
 
       return {
         groupId: group ? Buffer.from(group).toString('base64') : undefined,
@@ -2480,7 +2480,10 @@ export class TransactionComposer {
       await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
     }
 
-    const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
+    const abiReturns = this.parseAbiReturnValues(
+      simulateResult.txnResults.map((t) => t.txnResult),
+      this.methodCalls,
+    )
 
     return {
       confirmations: simulateResult.txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
@@ -2560,12 +2563,12 @@ export class TransactionComposer {
     return signedTransactions
   }
 
-  private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
+  private parseAbiReturnValues(confirmations: PendingTransactionResponse[], methodCalls: Map<number, ABIMethod>): ABIReturn[] {
     const abiReturns = new Array<ABIReturn>()
 
     for (let i = 0; i < confirmations.length; i++) {
       const confirmation = confirmations[i]
-      const method = this.methodCalls.get(i)
+      const method = methodCalls.get(i)
 
       if (method && method.returns.type !== 'void') {
         const abiReturn = AppManager.getABIReturn(confirmation, method)
@@ -2611,18 +2614,9 @@ function isAppCall(ctxn: Txn): boolean {
   )
 }
 
-export function getMethodFromTransaction(transaction: Txn): ABIMethod | undefined {
-  switch (transaction.type) {
-    case 'methodCall':
-      return transaction.data.method
-    default:
-      return undefined
-  }
-}
-
 /** Get the logical maximum fee based on staticFee and maxFee */
 function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
-  if (ctxn.type === 'txnWithSigner' || ctxn.type === 'asyncTxn' || ctxn.type === 'composer') {
+  if (ctxn.type === 'txnWithSigner' || ctxn.type === 'asyncTxn') {
     return undefined
   }
 
