@@ -11,7 +11,6 @@ import {
 } from '@algorandfoundation/algokit-algod-client'
 import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import {
-  AccessReference,
   OnApplicationComplete,
   SignedTransaction,
   Transaction,
@@ -29,38 +28,17 @@ import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
-import { asJson } from '../util'
-import { TransactionSignerAccount } from './account'
-import { AlgoAmount } from './amount'
-import { ABIReturn } from './app'
-import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
-import { deepCloneTransactionParams } from '../transactions/clone'
 import {
   buildAppCall,
   buildAppCreate,
   buildAppUpdate,
   populateGroupResources,
   populateTransactionResources,
-  type AppCreateParams,
-  type AppUpdateParams,
   type AppCallParams,
-  type AppMethodCallParams,
+  type AppCreateParams,
   type AppDeleteParams,
+  type AppUpdateParams,
 } from '../transactions/app-call'
-import {
-  buildAppCallMethodCall,
-  buildAppCreateMethodCall,
-  buildAppUpdateMethodCall,
-  extractComposerTransactionsFromAppMethodCallParams,
-  processAppMethodCallArgs,
-  type AppCreateMethodCall,
-  type AppUpdateMethodCall,
-  type AppDeleteMethodCall,
-  type AppCallMethodCall,
-  type ProcessedAppCreateMethodCall,
-  type ProcessedAppUpdateMethodCall,
-  type ProcessedAppCallMethodCall,
-} from '../transactions/method-call'
 import {
   buildAssetConfig,
   buildAssetCreate,
@@ -69,17 +47,40 @@ import {
   buildAssetOptIn,
   buildAssetOptOut,
   buildAssetTransfer,
-  type AssetCreateParams,
   type AssetConfigParams,
-  type AssetFreezeParams,
+  type AssetCreateParams,
   type AssetDestroyParams,
-  type AssetTransferParams,
+  type AssetFreezeParams,
   type AssetOptInParams,
   type AssetOptOutParams,
+  type AssetTransferParams,
 } from '../transactions/asset'
-import { buildTransactionHeader, calculateInnerFeeDelta, getDefaultValidityWindow, type AsyncTransactionWithSigner } from '../transactions/common'
-import { buildKeyReg, type OnlineKeyRegistrationParams, type OfflineKeyRegistrationParams } from '../transactions/key-registration'
+import { deepCloneTransactionParams } from '../transactions/clone'
+import {
+  buildTransactionHeader,
+  calculateInnerFeeDelta,
+  getDefaultValidityWindow,
+  type AsyncTransactionWithSigner,
+} from '../transactions/common'
+import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
+import {
+  buildAppCallMethodCall,
+  buildAppCreateMethodCall,
+  buildAppUpdateMethodCall,
+  extractComposerTransactionsFromAppMethodCallParams,
+  processAppMethodCallArgs,
+  type AppCallMethodCall,
+  type AppCreateMethodCall,
+  type AppDeleteMethodCall,
+  type AppUpdateMethodCall,
+  type ProcessedAppCallMethodCall,
+  type ProcessedAppCreateMethodCall,
+  type ProcessedAppUpdateMethodCall,
+} from '../transactions/method-call'
 import { buildPayment, type PaymentParams } from '../transactions/payment'
+import { asJson } from '../util'
+import { ABIReturn } from './app'
+import { AppManager } from './app-manager'
 import { Expand } from './expand'
 import { FeeDelta, FeePriority } from './fee-coverage'
 import { EventType } from './lifecycle-events'
@@ -94,37 +95,37 @@ import {
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
 // Re-export transaction parameter types
-export type { CommonTransactionParams, AsyncTransactionWithSigner } from '../transactions/common'
-export type { PaymentParams } from '../transactions/payment'
 export type {
-  AssetCreateParams,
-  AssetConfigParams,
-  AssetFreezeParams,
-  AssetDestroyParams,
-  AssetTransferParams,
-  AssetOptInParams,
-  AssetOptOutParams,
-} from '../transactions/asset'
-export type {
-  CommonAppCallParams,
-  AppCreateParams,
-  AppUpdateParams,
   AppCallParams,
-  AppMethodCallParams,
+  AppCreateParams,
   AppDeleteParams,
+  AppMethodCallParams,
+  AppUpdateParams,
+  CommonAppCallParams,
 } from '../transactions/app-call'
 export type {
-  AppCreateMethodCall,
-  AppUpdateMethodCall,
-  AppDeleteMethodCall,
+  AssetConfigParams,
+  AssetCreateParams,
+  AssetDestroyParams,
+  AssetFreezeParams,
+  AssetOptInParams,
+  AssetOptOutParams,
+  AssetTransferParams,
+} from '../transactions/asset'
+export type { AsyncTransactionWithSigner, CommonTransactionParams } from '../transactions/common'
+export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
+export type {
   AppCallMethodCall,
+  AppCreateMethodCall,
+  AppDeleteMethodCall,
+  AppMethodCall,
+  AppMethodCallTransactionArgument,
+  AppUpdateMethodCall,
+  ProcessedAppCallMethodCall,
   ProcessedAppCreateMethodCall,
   ProcessedAppUpdateMethodCall,
-  ProcessedAppCallMethodCall,
-  AppMethodCallTransactionArgument,
-  AppMethodCall,
 } from '../transactions/method-call'
-export type { OnlineKeyRegistrationParams, OfflineKeyRegistrationParams } from '../transactions/key-registration'
+export type { PaymentParams } from '../transactions/payment'
 
 /** Options to control a simulate request, that does not require transaction signing */
 export type SkipSignaturesSimulateOptions = Expand<
@@ -260,6 +261,9 @@ export class TransactionComposer {
 
   private signedTransactions?: SignedTransaction[]
 
+  // Note: This doesn't need to be a private field of this class
+  // It has been done this way so that another process can manipulate this values
+  // Have a look at `legacySendTransactionBridge`
   private methodCalls: Map<number, algosdk.ABIMethod> = new Map()
 
   private async transformError(originalError: unknown): Promise<unknown> {
