@@ -1,4 +1,4 @@
-import * as ed from '@noble/ed25519' // TODO: PD: look into @noble/ed25519
+import * as ed from '@noble/ed25519'
 import { expect } from 'vitest'
 import {
   SignedTransaction,

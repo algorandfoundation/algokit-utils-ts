@@ -56,7 +56,6 @@ import { genesisIdIsLocalNet } from './network-client'
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
 type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 
-// TODO: PD - match this with the type from composer
 type ExtractedMethodCallTransactionArg =
   | { data: TransactionWithSigner; type: 'txnWithSigner' }
   | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
@@ -1159,7 +1158,6 @@ function populateGroupResource(
     if (txn.type !== TransactionType.AppCall) {
       return false
     }
-    // TODO: PD - make a function for this
     if (txn.appCall?.accessReferences?.length) {
       return false
     }

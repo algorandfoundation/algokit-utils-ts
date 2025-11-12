@@ -725,7 +725,7 @@ export class TestContractClient {
     const transactionComposer = new TransactionComposer({
       algod: this.algod,
       getSigner: (address) => {
-        throw new Error(`No signer for address ${address}`) // TODO: PD - confirm that this is right for the SDK ATC
+        throw new Error(`No signer for address ${address}`)
       },
     })
     let promiseChain: Promise<unknown> = Promise.resolve()

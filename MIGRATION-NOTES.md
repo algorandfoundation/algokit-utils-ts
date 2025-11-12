@@ -41,5 +41,6 @@ A collection of random notes pop up during the migration process.
 - call composer .build instead of atc buildGroup. This will populate resources too
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
 - Remove reference to Atomic?
-- composer.count is not async anymore
 - generated app client will be changed, no references to atc anymore
+- atc.parseMethodResponse was replaced by app-manager.getABIReturn
+- transaction_asserts uses 'noble/ed25519' while composer uses nacl, which one should we use?

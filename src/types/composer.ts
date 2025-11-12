@@ -2210,8 +2210,6 @@ export class TransactionComposer {
     return await this.build()
   }
 
-  // TODO: PD - clone and other missing methods from the atc
-
   /**
    * Compose the atomic transaction group and send it to the network.
    * @param params The parameters to control execution with
