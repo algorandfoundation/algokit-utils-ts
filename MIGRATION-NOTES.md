@@ -23,7 +23,7 @@ A collection of random notes pop up during the migration process.
   - need to update subscriber to use the new utils and remove algosdk
 - TODO: go ahead with resource/fee on build. Need to have backward compatibility, when resource population is set in send, do it but make sure that it only happens once.
 - `encodeUnsignedSimulateTransaction` was removed from sdk
-- can't add atc into the composer anymore
+- can't add atc into the composer anymore, can add composer to composer. Adding composer is just cloning the txns from the param composer to the caller composer
 - SendAtomicTransactionComposerResults.group is string | undefined
 - buildTransactions will include the signer for nested txn now
 - Discuss the inconsistency of transaction and txn, txIds, txID
@@ -44,3 +44,4 @@ A collection of random notes pop up during the migration process.
 - generated app client will be changed, no references to atc anymore
 - atc.parseMethodResponse was replaced by app-manager.getABIReturn
 - transaction_asserts uses 'noble/ed25519' while composer uses nacl, which one should we use?
+- additionalAtcContext was removed from AtomicTransactionComposerToSend

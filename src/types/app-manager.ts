@@ -1,4 +1,3 @@
-import { ABI_RETURN_PREFIX } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
 import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -6,6 +5,7 @@ import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import {
+  ABI_RETURN_PREFIX,
   BoxName,
   DELETABLE_TEMPLATE_NAME,
   UPDATABLE_TEMPLATE_NAME,

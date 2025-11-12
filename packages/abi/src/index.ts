@@ -22,4 +22,3 @@ export type {
   ABIUintType,
 } from './abi-type'
 export type { ABIReferenceValue, ABIValue } from './abi-value'
-export * from './constants'
