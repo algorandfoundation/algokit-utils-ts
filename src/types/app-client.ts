@@ -2179,15 +2179,14 @@ export class ApplicationClient {
       }
       const txns = (await transactionComposer.build()).transactions
 
-      // Extract ABI return value directly from the last transaction's simulation result
-      const abiMethod = this.getABIMethod(call.method)!
-      const lastTxnResult = result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult
-      const abiReturn = AppManager.getABIReturn(lastTxnResult, abiMethod)
+      const simulateTransactionResult = result.simulateResponse.txnGroups[0].txnResults
+      const lastTxnResult = simulateTransactionResult.at(-1)?.txnResult
+      const abiReturn = result.returns?.at(-1)
 
       return {
         transaction: new TransactionWrapper(txns[txns.length - 1].txn),
         confirmation: wrapPendingTransactionResponseOptional(lastTxnResult),
-        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+        confirmations: simulateTransactionResult.map((t) => wrapPendingTransactionResponse(t.txnResult)),
         transactions: txns.map((t) => new TransactionWrapper(t.txn)),
         return: abiReturn,
       } satisfies AppCallTransactionResult

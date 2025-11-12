@@ -21,7 +21,7 @@ export async function performAtomicTransactionComposerSimulate(
   // In this version, we use the raw transactions because there is a chance that resource population would fail
 
   let transactions = (await composer.buildTransactions()).transactions
-  if (transactions.length > 0) {
+  if (transactions.length > 1) {
     transactions = groupTransactions(transactions)
   }
 

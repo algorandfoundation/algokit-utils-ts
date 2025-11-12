@@ -74,7 +74,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
             'signers' in transaction ? (transaction.signers.get(i) ?? getSenderTransactionSigner(from)) : getSenderTransactionSigner(from),
         }))
         .forEach((t) => sendParams.transactionComposer!.addTransaction(t.txn, t.signer))
-
+      // Populate the composer with method calls
       if ('transactions' in transaction) {
         transaction.methodCalls.forEach((m, i) => sendParams.transactionComposer!['methodCalls'].set(i + baseIndex, m))
       }
