@@ -11,11 +11,7 @@ import { RawSimulateOptions, TransactionComposer } from '../types/composer'
  * @param algod An Algod client to perform the simulation.
  * @returns The simulation result, which includes various details about how the transactions would be processed.
  */
-export async function performAtomicTransactionComposerSimulate(
-  composer: TransactionComposer,
-  algod: AlgodClient,
-  options?: RawSimulateOptions,
-) {
+export async function performTransactionComposerSimulate(composer: TransactionComposer, algod: AlgodClient, options?: RawSimulateOptions) {
   // NOTE: the existing version takes atc as params, then call atc.buildGroup to get the transactions
   // The state of the atc is unknown, whether it has resource populated or not
   // In this version, we use the raw transactions because there is a chance that resource population would fail

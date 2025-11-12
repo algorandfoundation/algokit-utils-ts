@@ -86,8 +86,8 @@ import { FeeDelta, FeePriority } from './fee-coverage'
 import { EventType } from './lifecycle-events'
 import {
   Arc2TransactionNote,
-  SendAtomicTransactionComposerResults,
   SendParams,
+  SendTransactionComposerResults,
   TransactionWrapper,
   wrapPendingTransactionResponse,
 } from './transaction'
@@ -1380,13 +1380,13 @@ export class TransactionComposer {
   }
 
   /**
-   * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
+   * Compose all of the transactions in a single transaction group and an transaction composer.
    *
    * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
    *
    * Once this method is called, no further transactions will be able to be added.
    * You can safely call this method multiple times to get the same result.
-   * @returns The built atomic transaction composer, the transactions and any corresponding method calls
+   * @returns The built transaction composer, the transactions and any corresponding method calls
    * @example
    * ```typescript
    * const { atc, transactions, methodCalls } = await composer.build()
@@ -1792,7 +1792,7 @@ export class TransactionComposer {
   /**
    * Rebuild the group, discarding any previously built transactions.
    * This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
-   * @returns The newly built atomic transaction composer and the transactions
+   * @returns The newly built transaction composer and the transactions
    * @example
    * ```typescript
    * const { atc, transactions, methodCalls } = await composer.rebuild()
@@ -1804,7 +1804,7 @@ export class TransactionComposer {
   }
 
   /**
-   * Compose the atomic transaction group and send it to the network.
+   * Compose the transaction group and send it to the network.
    * @param params The parameters to control execution with
    * @returns The execution result
    * @example
@@ -1812,7 +1812,7 @@ export class TransactionComposer {
    * const result = await composer.send()
    * ```
    */
-  async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
+  async send(params?: SendParams): Promise<SendTransactionComposerResults> {
     if (
       this.composerConfig.coverAppCallInnerTransactionFees !== (params?.coverAppCallInnerTransactionFees ?? false) ||
       this.composerConfig.populateAppCallResources !== (params?.populateAppCallResources ?? true)
@@ -1904,7 +1904,7 @@ export class TransactionComposer {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (originalError: any) {
-      const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Atomic Transaction Composer'
+      const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Transaction Composer'
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = new Error(errorMessage) as any
       err.cause = originalError
@@ -1927,7 +1927,7 @@ export class TransactionComposer {
       if (Config.debug && typeof originalError === 'object') {
         err.traces = []
         Config.getLogger(params?.suppressLog).error(
-          'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
+          'Received error executing Transaction Composer and debug flag enabled; attempting simulation to get more information',
           err,
         )
 
@@ -1953,7 +1953,7 @@ export class TransactionComposer {
         }
       } else {
         Config.getLogger(params?.suppressLog).error(
-          'Received error executing Atomic Transaction Composer, for more information enable the debug flag',
+          'Received error executing Transaction Composer, for more information enable the debug flag',
           err,
         )
       }
@@ -1968,27 +1968,27 @@ export class TransactionComposer {
   /**
    * @deprecated Use `send` instead.
    *
-   * Compose the atomic transaction group and send it to the network
+   * Compose the transaction group and send it to the network
    *
    * An alias for `composer.send(params)`.
    * @param params The parameters to control execution with
    * @returns The execution result
    */
-  async execute(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
+  async execute(params?: SendParams): Promise<SendTransactionComposerResults> {
     return this.send(params)
   }
 
   /**
-   * Compose the atomic transaction group and simulate sending it to the network
+   * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
    * ```typescript
    * const result = await composer.simulate()
    * ```
    */
-  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
-   * Compose the atomic transaction group and simulate sending it to the network
+   * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
    * ```typescript
@@ -1999,9 +1999,9 @@ export class TransactionComposer {
    */
   async simulate(
     options: SkipSignaturesSimulateOptions,
-  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  ): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
-   * Compose the atomic transaction group and simulate sending it to the network
+   * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
    * ```typescript
@@ -2010,8 +2010,8 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
-  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
+  async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
 
     const builtTransactions = await this.buildTransactions()

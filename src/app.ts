@@ -374,10 +374,10 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
 /**
  * @deprecated Use `TransactionComposer` methods to construct transactions instead.
  *
- * Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
+ * Returns the app args ready to load onto an ABI method call in `TransactionComposer`
  * @param args The ABI app call args
  * @param from The transaction signer
- * @returns The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
+ * @returns The parameters ready to pass into `addMethodCall` within TransactionComposer
  */
 export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
   return _getAppArgsForABICall(args, from)

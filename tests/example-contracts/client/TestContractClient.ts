@@ -808,7 +808,7 @@ export class TestContractClient {
       },
       async execute(sendParams?: AppClientComposeExecuteParams) {
         await promiseChain
-        const result = await algokit.sendAtomicTransactionComposer({ transactionComposer, sendParams })
+        const result = await algokit.sendTransactionComposer({ transactionComposer, sendParams })
         return {
           ...result,
           returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)),

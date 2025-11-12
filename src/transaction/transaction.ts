@@ -7,13 +7,13 @@ import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
 import { AppCallParams, TransactionComposer } from '../types/composer'
 import {
-  AdditionalAtomicTransactionComposerContext,
-  AtomicTransactionComposerToSend,
-  SendAtomicTransactionComposerResults,
+  AdditionalTransactionComposerContext,
   SendParams,
+  SendTransactionComposerResults,
   SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
+  TransactionComposerToSend,
   TransactionGroupToSend,
   TransactionNote,
   TransactionToSign,
@@ -118,7 +118,7 @@ export const getSenderAddress = function (sender: string | SendTransactionFrom):
  * construct an `algosdk.TransactionWithSigner` manually instead.
  *
  * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
- * AtomicTransactionComposer's addTransaction method.
+ * TransactionComposer's addTransaction method.
  * @param transaction One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the
  * signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by
  * one of algokit utils' helpers (signer is obtained from the defaultSender parameter)
@@ -261,7 +261,8 @@ export const sendTransaction = async function (
 }
 
 /**
- * Take an existing Atomic Transaction Composer and return a new one with the required
+ * @deprecated Use `composer.build()` directly
+ * Take an existing Transaction Composer and return a new one with the required
  * app call resources populated into it
  *
  * @param algod The algod client to use for the simulation
@@ -298,7 +299,7 @@ export async function populateAppCallResources(composer: TransactionComposer) {
 export async function prepareGroupForSending(
   composer: TransactionComposer,
   sendParams: SendParams,
-  additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
+  additionalAtcContext?: AdditionalTransactionComposerContext,
 ) {
   const transactionsWithSigners = (await composer.build()).transactions
 
@@ -373,14 +374,13 @@ export async function prepareGroupForSending(
 }
 
 /**
- * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
- * @param atcSend The parameters controlling the send, including `atc` The `AtomicTransactionComposer` and params to control send behaviour
+ * @deprecated Use `composer.send()` directly
+ * Signs and sends transactions that have been collected by an `TransactionComposer`.
+ * @param atcSend The parameters controlling the send, including `atc` The `TransactionComposer` and params to control send behaviour
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
-export const sendAtomicTransactionComposer = async function (
-  atcSend: AtomicTransactionComposerToSend,
-): Promise<SendAtomicTransactionComposerResults> {
+export const sendTransactionComposer = async function (atcSend: TransactionComposerToSend): Promise<SendTransactionComposerResults> {
   const { transactionComposer: givenComposer, sendParams, ...executeParams } = atcSend
 
   return atcSend.transactionComposer.send({
@@ -417,7 +417,7 @@ export function getABIReturnValue(result: algosdk.ABIResult, type: ABIReturnType
 }
 
 /**
- * @deprecated Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
+ * @deprecated Use `TransactionComposer` (`algorand.newGroup()`) to construct and send group transactions instead.
  *
  * Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transactions/atomic-txn-groups/#create-transactions) transactions to the chain
  *
@@ -430,7 +430,7 @@ export function getABIReturnValue(result: algosdk.ABIResult, type: ABIReturnType
 export const sendGroupOfTransactions = async function (
   groupSend: TransactionGroupToSend,
   algod: AlgodClient,
-): Promise<Omit<SendAtomicTransactionComposerResults, 'returns'>> {
+): Promise<Omit<SendTransactionComposerResults, 'returns'>> {
   const { transactions, signer, sendParams } = groupSend
 
   const defaultTransactionSigner = signer ? getSenderTransactionSigner(signer) : undefined
@@ -602,11 +602,11 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
 /**
  * @deprecated Use `atc.clone().buildGroup()` instead.
  *
- * Returns the array of transactions currently present in the given `AtomicTransactionComposer`
- * @param atc The atomic transaction composer
+ * Returns the array of transactions currently present in the given `TransactionComposer`
+ * @param atc The transaction composer
  * @returns The array of transactions with signers
  */
-export async function getAtomicTransactionComposerTransactions(composer: TransactionComposer) {
+export async function getTransactionComposerTransactions(composer: TransactionComposer) {
   try {
     return await composer.clone().build()
   } catch {

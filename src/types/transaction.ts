@@ -58,7 +58,7 @@ export interface SendTransactionParams {
 }
 
 /** Result from sending a single transaction. */
-export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerResults & ConfirmedTransactionResult>
+export type SendSingleTransactionResult = Expand<SendTransactionComposerResults & ConfirmedTransactionResult>
 
 /** The result of sending a transaction */
 export interface SendTransactionResult {
@@ -78,9 +78,9 @@ export interface SendTransactionResults {
   confirmations?: PendingTransactionResponseWrapper[]
 }
 
-/** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
-export interface SendAtomicTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
-  /** base64 encoded representation of the group ID of the atomic group */
+/** The result of preparing and/or sending multiple transactions using an `TransactionComposer` */
+export interface SendTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
+  /** base64 encoded representation of the group ID of the group */
   groupId: string | undefined
   /** The transaction IDs that have been prepared and/or sent */
   txIds: string[]
@@ -126,7 +126,7 @@ export interface TransactionToSign {
   signer: SendTransactionFrom
 }
 
-/** A group of transactions to send together as an atomic group
+/** A group of transactions to send together as an group
  * https://dev.algorand.co/concepts/transactions/atomic-txn-groups/
  */
 export interface TransactionGroupToSend {
@@ -153,15 +153,15 @@ export interface SendParams {
   coverAppCallInnerTransactionFees?: boolean
 }
 
-/** Additional context about the `AtomicTransactionComposer`. */
-export interface AdditionalAtomicTransactionComposerContext {
-  /** A map of transaction index in the `AtomicTransactionComposer` to the max fee that can be calculated for a transaction in the group */
+/** Additional context about the `TransactionComposer`. */
+export interface AdditionalTransactionComposerContext {
+  /** A map of transaction index in the `TransactionComposer` to the max fee that can be calculated for a transaction in the group */
   maxFees: Map<number, AlgoAmount>
 }
 
-/** An `AtomicTransactionComposer` with transactions to send. */
-export interface AtomicTransactionComposerToSend extends SendParams {
-  /** The `AtomicTransactionComposer` with transactions loaded to send */
+/** An `TransactionComposer` with transactions to send. */
+export interface TransactionComposerToSend extends SendParams {
+  /** The `TransactionComposer` with transactions loaded to send */
   transactionComposer: TransactionComposer
   /**
    * @deprecated - set the parameters at the top level instead
