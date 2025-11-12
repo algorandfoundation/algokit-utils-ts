@@ -6,9 +6,9 @@ import {
 import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
 import { BoxReference, OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address } from '@algorandfoundation/sdk'
-import { calculateExtraProgramPages } from '../util'
 import { AppManager, BoxIdentifier } from '../types/app-manager'
 import { Expand } from '../types/expand'
+import { calculateExtraProgramPages } from '../util'
 import { CommonTransactionParams, TransactionHeader } from './common'
 
 /** Common parameters for defining an application call transaction. */

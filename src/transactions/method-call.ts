@@ -12,18 +12,11 @@ import {
   abiTypeIsTransaction,
 } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
-import { calculateExtraProgramPages } from '../util'
 import { AppManager } from '../types/app-manager'
 import { Expand } from '../types/expand'
+import { calculateExtraProgramPages } from '../util'
+import { AppCreateParams, AppDeleteParams, AppMethodCallParams, AppUpdateParams } from './app-call'
 import { TransactionHeader } from './common'
-import {
-  AppCallParams,
-  AppCreateParams,
-  AppDeleteParams,
-  AppMethodCallParams,
-  AppUpdateParams,
-  CommonAppCallParams,
-} from './app-call'
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 

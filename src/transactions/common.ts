@@ -1,7 +1,6 @@
-import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Transaction } from '@algorandfoundation/algokit-transact'
 import { Address, TransactionSigner } from '@algorandfoundation/sdk'
-import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { encodeLease } from '../transaction'
 import { TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
