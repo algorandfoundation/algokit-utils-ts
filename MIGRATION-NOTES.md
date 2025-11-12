@@ -2,30 +2,21 @@
 
 A collection of random notes pop up during the migration process.
 
-- TODO: review the retry logic
-- const { lastRound: firstRound } = suggestedParams! // TODO: document suggested params doesn't have first round anymore
 - explain the type differences between transact and algod
-- remove waitForIndexer
-  - DO NOT remove it
-- ATC was removed as a transaction type in the composer
 - Fee calc inside the txn constructor
 - error messages changed, for example, asset tests
 - `AssetHoldingReference` replaced by `HoldingReference`
 - `ApplicationLocalReference` replaced by `LocalsReference`
-- BoxReference is gone too
-- TODO: remove the ATC too
 - TODO: add interface for breaking change, for example, Transaction
-- TODO: simplify signer + account
 - TODO: take notes of the legacy functions to be removed and communicate with devrels
 - TODO: standardise box ref
 - TODO: keep track of the changes we make to algokit_transact to fit with algosdk
 - For integration with lora to work:
   - need to update subscriber to use the new utils and remove algosdk
-- TODO: go ahead with resource/fee on build. Need to have backward compatibility, when resource population is set in send, do it but make sure that it only happens once.
 - `encodeUnsignedSimulateTransaction` was removed from sdk
-- can't add atc into the composer anymore, can add composer to composer. Adding composer is just cloning the txns from the param composer to the caller composer
+- can't addatc into the composer anymore, can addTransactionComposer to composer. Adding composer is just cloning the txns from the param composer to the caller composer
 - SendAtomicTransactionComposerResults.group is string | undefined
-- buildTransactions will include the signer for nested txn now
+- buildTransactions will include the signer for nested txn now, this was done at the ATC before
 - Discuss the inconsistency of transaction and txn, txIds, txID
 - Disucss the naming of foreignApps vs appReferences + access references
 - Discuss appCall vs applicationCall
@@ -40,8 +31,7 @@ A collection of random notes pop up during the migration process.
   - getAtomicTransactionComposerTransactions becomes async
 - call composer .build instead of atc buildGroup. This will populate resources too
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
-- Remove reference to Atomic? yes, TODO: PD
-- generated app client will be changed, no references to atc anymore
+- generated app client will be changed, no references to atc anymore (this was for v2, confirm for v3)
 - atc.parseMethodResponse was replaced by app-manager.getABIReturn
 - transaction_asserts uses 'noble/ed25519' while composer uses nacl, which one should we use?
 - additionalAtcContext was removed from AtomicTransactionComposerToSend
