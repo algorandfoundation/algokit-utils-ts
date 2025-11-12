@@ -4,9 +4,14 @@ import {
   SimulateUnnamedResourcesAccessed,
 } from '@algorandfoundation/algokit-algod-client'
 import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
-import { BoxReference, OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import {
+  OnApplicationComplete,
+  BoxReference as TransactBoxReference,
+  Transaction,
+  TransactionType,
+} from '@algorandfoundation/algokit-transact'
 import { Address } from '@algorandfoundation/sdk'
-import { AppManager, BoxIdentifier } from '../types/app-manager'
+import { AppManager, BoxIdentifier, BoxReference as UtilsBoxReference } from '../types/app-manager'
 import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
 import { CommonTransactionParams, TransactionHeader } from './common'
@@ -30,7 +35,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
    * Either the name identifier (which will be set against app ID of `0` i.e.
    *  the current app), or a box identifier with the name identifier and app ID.
    */
-  boxReferences?: (BoxReference | BoxIdentifier)[]
+  boxReferences?: (UtilsBoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
   accessReferences?: import('@algorandfoundation/algokit-transact').AccessReference[]
   rejectVersion?: bigint
@@ -372,7 +377,7 @@ type GroupResourceToPopulate =
   | { type: GroupResourceType.Account; data: string }
   | { type: GroupResourceType.App; data: bigint }
   | { type: GroupResourceType.Asset; data: bigint }
-  | { type: GroupResourceType.Box; data: BoxReference }
+  | { type: GroupResourceType.Box; data: TransactBoxReference }
   | { type: GroupResourceType.ExtraBoxRef }
   | { type: GroupResourceType.AssetHolding; data: AssetHoldingReference }
   | { type: GroupResourceType.AppLocal; data: ApplicationLocalReference }
