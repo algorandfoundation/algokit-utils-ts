@@ -9,7 +9,6 @@ A collection of random notes pop up during the migration process.
 - `ApplicationLocalReference` replaced by `LocalsReference`
 - TODO: add interface for breaking change, for example, Transaction
 - TODO: take notes of the legacy functions to be removed and communicate with devrels
-- TODO: standardise box ref
 - TODO: keep track of the changes we make to algokit_transact to fit with algosdk
 - For integration with lora to work:
   - need to update subscriber to use the new utils and remove algosdk
@@ -26,8 +25,7 @@ A collection of random notes pop up during the migration process.
 - check for buffer polyfill
 - transaction.ts
   - sendTransaction takes composer
-  - getGroupExecutionInfo ..
-  - review docs on those methods
+  - getGroupExecutionInfo removed
   - getAtomicTransactionComposerTransactions becomes async
 - call composer .build instead of atc buildGroup. This will populate resources too
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
