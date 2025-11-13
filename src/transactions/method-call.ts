@@ -176,8 +176,8 @@ export function processAppMethodCallArgs(args: AppMethodCallArg[] | undefined): 
       // Handle explicit placeholders (either transaction or default value)
       return undefined
     } else if (!isAbiValue(arg)) {
-      // Handle Transactions by replacing with the transaction placeholder
-      // If the arg is not an ABIValue, it's must be a transaction
+      // If the arg is not an ABIValue, it's must be a transaction, set to undefined
+      // transaction arguments should be flattened out and added into the composer during the add process
       return undefined
     }
     return arg

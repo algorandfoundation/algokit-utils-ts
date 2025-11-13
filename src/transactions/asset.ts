@@ -1,12 +1,6 @@
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address } from '@algorandfoundation/sdk'
-import { CommonTransactionParams, TransactionHeader } from './common'
-
-const ensureString = (data?: string | Uint8Array) => {
-  if (data === undefined) return undefined
-  const encoder = new TextEncoder()
-  return typeof data === 'string' ? encoder.encode(data) : data
-}
+import { CommonTransactionParams, TransactionHeader, ensureString } from './common'
 
 /** Parameters to define an asset create transaction.
  *

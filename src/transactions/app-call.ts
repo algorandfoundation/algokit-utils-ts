@@ -5,6 +5,7 @@ import {
 } from '@algorandfoundation/algokit-algod-client'
 import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
 import {
+  AccessReference,
   OnApplicationComplete,
   BoxReference as TransactBoxReference,
   Transaction,
@@ -37,7 +38,8 @@ export type CommonAppCallParams = CommonTransactionParams & {
    */
   boxReferences?: (UtilsBoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
-  accessReferences?: import('@algorandfoundation/algokit-transact').AccessReference[]
+  accessReferences?: AccessReference[]
+  /** The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. */
   rejectVersion?: bigint
 }
 

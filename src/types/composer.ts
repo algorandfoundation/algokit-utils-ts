@@ -56,12 +56,7 @@ import {
   type AssetTransferParams,
 } from '../transactions/asset'
 import { deepCloneTransactionParams } from '../transactions/clone'
-import {
-  buildTransactionHeader,
-  calculateInnerFeeDelta,
-  getDefaultValidityWindow,
-  type AsyncTransactionWithSigner,
-} from '../transactions/common'
+import { buildTransactionHeader, calculateInnerFeeDelta, getDefaultValidityWindow } from '../transactions/common'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
   buildAppCallMethodCall,
@@ -112,7 +107,7 @@ export type {
   AssetOptOutParams,
   AssetTransferParams,
 } from '../transactions/asset'
-export type { AsyncTransactionWithSigner, CommonTransactionParams } from '../transactions/common'
+export type { CommonTransactionParams } from '../transactions/common'
 export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
 export type {
   AppCallMethodCall,
@@ -144,6 +139,14 @@ export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
 
 /** All options to control a simulate request */
 export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
+
+/** A transaction (promise) with an associated signer for signing the transaction */
+type AsyncTransactionWithSigner = {
+  /** The transaction (promise) to be signed */
+  txn: Promise<Transaction>
+  /** The signer to use for signing the transaction */
+  signer?: TransactionSigner
+}
 
 type Txn =
   | { data: PaymentParams; type: 'pay' }

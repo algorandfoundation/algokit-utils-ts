@@ -1,5 +1,4 @@
 import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Transaction } from '@algorandfoundation/algokit-transact'
 import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { encodeLease } from '../transaction'
 import { TransactionSignerAccount } from '../types/account'
@@ -48,14 +47,6 @@ export type CommonTransactionParams = {
   lastValidRound?: bigint
 }
 
-/** A transaction (promise) with an associated signer for signing the transaction */
-export type AsyncTransactionWithSigner = {
-  /** The transaction (promise) to be signed */
-  txn: Promise<Transaction>
-  /** The signer to use for signing the transaction */
-  signer?: TransactionSigner
-}
-
 export type TransactionHeader = {
   sender: string
   fee?: bigint
@@ -69,7 +60,7 @@ export type TransactionHeader = {
   group?: Uint8Array
 }
 
-const ensureString = (data?: string | Uint8Array) => {
+export const ensureString = (data?: string | Uint8Array) => {
   if (data === undefined) return undefined
   const encoder = new TextEncoder()
   return typeof data === 'string' ? encoder.encode(data) : data
