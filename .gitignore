@@ -66,3 +66,6 @@ __pycache__/
 env/
 venv/
 ENV/
+
+# Polytest (temporary files until polytest branch merged to main)
+.polytest_algokit-polytest/
