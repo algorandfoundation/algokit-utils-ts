@@ -1520,6 +1520,15 @@ export class TransactionComposer {
 
   // TODO: PD - port this fix over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
 
+  /**
+   * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
+   *
+   * @returns The array of built transactions and any corresponding method calls
+   * @example
+   * ```typescript
+   * const { transactions, methodCalls, signers } = await composer.buildTransactions()
+   * ```
+   */
   public async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
     return this.buildTransactionsSuggestedParamsProvided(suggestedParams)
