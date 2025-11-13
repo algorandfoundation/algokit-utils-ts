@@ -1,6 +1,8 @@
 import { RawSimulateOptions, SimulateOptions, TransactionComposer } from '../types/composer'
 
 /**
+ * @deprecated Use `composer.simulate` with `allowEmptySignatures` flag set to true
+ *
  * Performs a simulation of the transactions loaded into the given TransactionComposer.
  * Uses empty transaction signers for all transactions.
  *

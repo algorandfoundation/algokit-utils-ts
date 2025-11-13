@@ -96,7 +96,7 @@ export type {
   AppDeleteParams,
   AppMethodCallParams,
   AppUpdateParams,
-  CommonAppCallParams,
+  CommonAppCallParams
 } from '../transactions/app-call'
 export type {
   AssetConfigParams,
@@ -105,7 +105,7 @@ export type {
   AssetFreezeParams,
   AssetOptInParams,
   AssetOptOutParams,
-  AssetTransferParams,
+  AssetTransferParams
 } from '../transactions/asset'
 export type { CommonTransactionParams } from '../transactions/common'
 export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
@@ -118,7 +118,7 @@ export type {
   AppUpdateMethodCall,
   ProcessedAppCallMethodCall,
   ProcessedAppCreateMethodCall,
-  ProcessedAppUpdateMethodCall,
+  ProcessedAppUpdateMethodCall
 } from '../transactions/method-call'
 export type { PaymentParams } from '../transactions/payment'
 
@@ -195,7 +195,7 @@ type TransactionAnalysis = {
   unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
 }
 
-export type GroupAnalysis = {
+type GroupAnalysis = {
   /** Analysis of each transaction in the group */
   transactions: TransactionAnalysis[]
   /** Resources accessed by the group that qualify for group resource sharing */
@@ -265,8 +265,8 @@ export class TransactionComposer {
   private signedTransactions?: SignedTransaction[]
 
   // Note: This doesn't need to be a private field of this class
-  // It has been done this way so that another process can manipulate this values
-  // Have a look at `legacySendTransactionBridge`
+  // It has been done this way so that another process can manipulate this values, i.e. `legacySendTransactionBridge`
+  // Once the legacy bridges are removed, this can be calculated on the fly
   private methodCalls: Map<number, algosdk.ABIMethod> = new Map()
 
   private async transformError(originalError: unknown): Promise<unknown> {
@@ -497,8 +497,9 @@ export class TransactionComposer {
   }
 
   /**
-   * Add a transaction composer to the transaction group.
-   * The composer will be built and its transactions will be added to this group.
+   * Add another transaction composer to the current transaction composer.
+   * The transaction params of the input transaction composer will be added.
+   * If the input transaction composer is updated, it won't affect the current transaction composer.
    * @param composer The transaction composer to add
    * @returns The composer so you can chain method calls
    * @example
@@ -1897,12 +1898,9 @@ export class TransactionComposer {
         )
       }
 
-      const confirmations = new Array<PendingTransactionResponse>()
+      let confirmations = new Array<PendingTransactionResponse>()
       if (params?.maxRoundsToWaitForConfirmation !== 0) {
-        for (const id of transactionIds) {
-          const confirmation = await waitForConfirmation(id, waitRounds, this.algod)
-          confirmations.push(confirmation)
-        }
+        confirmations = await Promise.all(transactionIds.map(async (id) => await waitForConfirmation(id, waitRounds, this.algod)))
       }
 
       const abiReturns = this.parseAbiReturnValues(confirmations, this.methodCalls)

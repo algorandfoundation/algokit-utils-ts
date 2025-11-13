@@ -284,6 +284,8 @@ export async function populateAppCallResources(composer: TransactionComposer) {
 }
 
 /**
+ * @deprecated Use `composer.build()` directly
+ *
  * Take an existing Transaction Composer and return a new one with changes applied to the transactions
  * based on the supplied sendParams to prepare it for sending.
  *
@@ -600,7 +602,7 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
 }
 
 /**
- * @deprecated Use `atc.clone().buildGroup()` instead.
+ * @deprecated Use `composer.clone().buildTransactions().transactions` instead.
  *
  * Returns the array of transactions currently present in the given `TransactionComposer`
  * @param atc The transaction composer
@@ -608,7 +610,7 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
  */
 export async function getTransactionComposerTransactions(composer: TransactionComposer) {
   try {
-    return await composer.clone().build()
+    return (await composer.clone().buildTransactions()).transactions
   } catch {
     return []
   }

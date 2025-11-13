@@ -93,7 +93,6 @@ import {
   TransactionNote,
   TransactionWrapper,
   wrapPendingTransactionResponse,
-  wrapPendingTransactionResponseOptional,
 } from './transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
@@ -2177,17 +2176,14 @@ export class ApplicationClient {
       if (result.simulateResponse.txnGroups.some((group) => group.failureMessage)) {
         throw new Error(result.simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage)
       }
-      const txns = (await transactionComposer.build()).transactions
-
-      const simulateTransactionResult = result.simulateResponse.txnGroups[0].txnResults
-      const lastTxnResult = simulateTransactionResult.at(-1)?.txnResult
+      const confirmations = result.simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult))
       const abiReturn = result.returns?.at(-1)
 
       return {
-        transaction: new TransactionWrapper(txns[txns.length - 1].txn),
-        confirmation: wrapPendingTransactionResponseOptional(lastTxnResult),
-        confirmations: simulateTransactionResult.map((t) => wrapPendingTransactionResponse(t.txnResult)),
-        transactions: txns.map((t) => new TransactionWrapper(t.txn)),
+        transaction: result.transactions.at(-1)!,
+        confirmation: confirmations.at(-1)!,
+        confirmations: confirmations,
+        transactions: result.transactions,
         return: abiReturn,
       } satisfies AppCallTransactionResult
     }
