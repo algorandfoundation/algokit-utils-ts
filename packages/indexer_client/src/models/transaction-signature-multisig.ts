@@ -34,7 +34,7 @@ export const TransactionSignatureMultisigMeta: ModelMetadata = {
       wireKey: 'subsignature',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TransactionSignatureMultisigSubsignatureMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: TransactionSignatureMultisigSubsignatureMeta } },
     },
     {
       name: 'threshold',

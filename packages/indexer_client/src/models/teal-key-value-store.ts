@@ -10,5 +10,5 @@ export type TealKeyValueStore = TealKeyValue[]
 export const TealKeyValueStoreMeta: ModelMetadata = {
   name: 'TealKeyValueStore',
   kind: 'array',
-  arrayItems: { kind: 'model', meta: () => TealKeyValueMeta },
+  arrayItems: { kind: 'model', meta: TealKeyValueMeta },
 }

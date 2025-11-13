@@ -23,7 +23,7 @@ export const GenesisMeta: ModelMetadata = {
       wireKey: 'alloc',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => GenesisAllocationMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: GenesisAllocationMeta } },
     },
     {
       name: 'comment',

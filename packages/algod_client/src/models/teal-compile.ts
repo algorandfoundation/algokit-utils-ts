@@ -38,7 +38,7 @@ export const TealCompileMeta: ModelMetadata = {
       wireKey: 'sourcemap',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => SourceMapMeta },
+      type: { kind: 'model', meta: SourceMapMeta },
     },
   ],
 }

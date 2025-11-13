@@ -25,7 +25,7 @@ export const SearchForAssetsMeta: ModelMetadata = {
       wireKey: 'assets',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AssetMeta } },
     },
     {
       name: 'currentRound',

@@ -65,7 +65,7 @@ export const AssetMeta: ModelMetadata = {
       wireKey: 'params',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      type: { kind: 'model', meta: AssetParamsMeta },
     },
   ],
 }

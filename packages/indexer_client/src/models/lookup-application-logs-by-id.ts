@@ -50,7 +50,7 @@ export const LookupApplicationLogsByIdMeta: ModelMetadata = {
       wireKey: 'log-data',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationLogDataMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationLogDataMeta } },
     },
   ],
 }

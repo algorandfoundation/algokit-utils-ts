@@ -58,7 +58,7 @@ export const WalletMeta: ModelMetadata = {
       wireKey: 'supported_txs',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TxTypeMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: TxTypeMeta } },
     },
   ],
 }

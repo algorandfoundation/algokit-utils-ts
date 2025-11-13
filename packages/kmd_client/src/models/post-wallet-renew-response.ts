@@ -35,7 +35,7 @@ export const PostWalletRenewResponseMeta: ModelMetadata = {
       wireKey: 'wallet_handle',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => WalletHandleMeta },
+      type: { kind: 'model', meta: WalletHandleMeta },
     },
   ],
 }

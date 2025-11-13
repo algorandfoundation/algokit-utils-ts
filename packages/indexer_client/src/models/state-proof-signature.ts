@@ -36,7 +36,7 @@ export const StateProofSignatureMeta: ModelMetadata = {
       wireKey: 'proof',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => MerkleArrayProofMeta },
+      type: { kind: 'model', meta: MerkleArrayProofMeta },
     },
     {
       name: 'verifyingKey',

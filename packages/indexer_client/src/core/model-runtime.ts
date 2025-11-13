@@ -72,19 +72,6 @@ export interface ModelMetadata {
   readonly passThrough?: FieldType
 }
 
-// Registry for model metadata to avoid direct circular imports between model files
-const modelMetaRegistry = new Map<string, ModelMetadata>()
-
-export function registerModelMeta(name: string, meta: ModelMetadata): void {
-  modelMetaRegistry.set(name, meta)
-}
-
-export function getModelMeta(name: string): ModelMetadata {
-  const meta = modelMetaRegistry.get(name)
-  if (!meta) throw new Error(`Model metadata not registered: ${name}`)
-  return meta
-}
-
 export interface EncodeableTypeConverter<T extends Record<string, unknown>> {
   beforeEncoding(value: T, format: BodyFormat): Record<string, unknown>
   afterDecoding(decoded: Record<string, unknown> | Map<number | bigint | Uint8Array, unknown>, format: BodyFormat): T
@@ -152,7 +139,7 @@ export class AlgorandSerializer {
 
   private static transformObject(value: ApiData, meta: ModelMetadata, ctx: TransformContext): ApiData {
     const fields = meta.fields ?? []
-    const hasFlattenedCodecField = fields.some((f) => f.flattened && f.type.kind === 'codec')
+    const hasFlattenedField = fields.some((f) => f.flattened)
     if (ctx.direction === 'encode') {
       const src = value as Record<string, ApiData>
       const out: Record<string, ApiData> = {}
@@ -161,8 +148,8 @@ export class AlgorandSerializer {
         if (fieldValue === undefined) continue
         const encoded = this.transformType(fieldValue, field.type, ctx)
         if (encoded === undefined && fieldValue === undefined) continue
-        if (field.flattened && field.type.kind === 'codec') {
-          // Merge code flattened field into parent
+        if (field.flattened) {
+          // Merge flattened field into parent
           const mapValue = encoded as Record<string, ApiData>
           for (const [k, v] of Object.entries(mapValue ?? {})) out[k] = v
           continue
@@ -178,41 +165,114 @@ export class AlgorandSerializer {
       return out
     }
 
+    // Decoding
     const out: Record<string, ApiData> = {}
     const fieldByWire = new Map(fields.filter((f) => !!f.wireKey).map((field) => [field.wireKey as string, field]))
 
-    const entries = value instanceof Map ? Array.from(value.entries()) : Object.entries(value as Record<string, ApiData>)
-    for (const [key, wireValue] of entries) {
-      const wireKey = key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : key
-      const isStringKey = typeof wireKey === 'string'
-      const field = isStringKey ? fieldByWire.get(wireKey) : undefined
-      if (field) {
-        const decoded = this.transformType(wireValue, field.type, ctx)
-        out[field.name] = decoded
-        continue
-      }
-      if (isStringKey && meta.additionalProperties) {
-        out[wireKey] = this.transformType(wireValue, meta.additionalProperties, ctx)
-        continue
-      }
-      // If we have a flattened code field, then don't map
-      if (isStringKey && !hasFlattenedCodecField) {
-        out[wireKey] = wireValue
-      }
-    }
-
-    // If there are flattened fields, attempt to reconstruct them from remaining keys by decoding
-    if (hasFlattenedCodecField) {
+    // Build a map of wire keys for each flattened field
+    const flattenedFieldWireKeys = new Map<FieldMetadata, Set<string>>()
+    if (hasFlattenedField) {
       for (const field of fields) {
-        if (out[field.name] !== undefined) continue
-        if (field.flattened && field.type.kind === 'codec') {
-          // Reconstruct from entire object map
-          out[field.name] = this.applyEncodeableTypeConversion(value, field.type.codecKey, ctx)
+        if (field.flattened && field.type.kind === 'model') {
+          const modelMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
+          const wireKeys = this.collectWireKeys(modelMeta)
+          flattenedFieldWireKeys.set(field, wireKeys)
         }
       }
     }
 
+    const entries = value instanceof Map ? Array.from(value.entries()) : Object.entries(value as Record<string, ApiData>)
+    const unmatchedEntries = new Map<string, ApiData>()
+
+    for (const [key, wireValue] of entries) {
+      const wireKey = key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : key
+      const isStringKey = typeof wireKey === 'string'
+      const field = isStringKey ? fieldByWire.get(wireKey) : undefined
+
+      if (field) {
+        const decoded = this.transformType(wireValue, field.type, ctx)
+        out[field.name] = decoded === null && !field.nullable ? undefined : decoded
+        continue
+      }
+
+      if (isStringKey && meta.additionalProperties) {
+        out[wireKey] = this.transformType(wireValue, meta.additionalProperties, ctx)
+        continue
+      }
+
+      // Store unmatched entries for potential flattened field reconstruction
+      if (isStringKey) {
+        unmatchedEntries.set(wireKey, wireValue)
+      }
+    }
+
+    // Reconstruct flattened fields from unmatched entries
+    if (hasFlattenedField) {
+      for (const field of fields) {
+        if (out[field.name] !== undefined) continue
+        if (field.flattened) {
+          if (field.type.kind === 'codec') {
+            // Reconstruct codec from entire object map
+            out[field.name] = this.applyEncodeableTypeConversion(value, field.type.codecKey, ctx)
+          } else if (field.type.kind === 'model') {
+            // Filter the wire data to only include keys belonging to this flattened model
+            const modelWireKeys = flattenedFieldWireKeys.get(field)
+            if (modelWireKeys) {
+              const filteredData: Record<string, ApiData> = {}
+              for (const [k, v] of unmatchedEntries.entries()) {
+                if (modelWireKeys.has(k)) {
+                  filteredData[k] = v
+                }
+              }
+              // Also check if the original value is a Map and filter it
+              if (value instanceof Map) {
+                const filteredMap = new Map<string | Uint8Array, ApiData>()
+                for (const [k, v] of value.entries()) {
+                  const keyStr = k instanceof Uint8Array ? Buffer.from(k).toString('utf-8') : String(k)
+                  if (typeof keyStr === 'string' && modelWireKeys.has(keyStr)) {
+                    filteredMap.set(k as string | Uint8Array, v)
+                  }
+                }
+                const modelMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
+                out[field.name] = this.transform(filteredMap, modelMeta, ctx)
+              } else {
+                const modelMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
+                out[field.name] = this.transform(filteredData, modelMeta, ctx)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Add any remaining unmatched entries if there are no flattened fields
+    if (!hasFlattenedField) {
+      for (const [k, v] of unmatchedEntries.entries()) {
+        out[k] = v
+      }
+    }
+
     return out
+  }
+
+  private static collectWireKeys(meta: ModelMetadata): Set<string> {
+    const wireKeys = new Set<string>()
+    if (meta.kind !== 'object' || !meta.fields) return wireKeys
+
+    for (const field of meta.fields) {
+      if (field.wireKey) {
+        wireKeys.add(field.wireKey)
+      }
+      if (field.flattened && field.type.kind === 'model') {
+        const childMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
+        const childKeys = this.collectWireKeys(childMeta)
+        for (const key of childKeys) {
+          wireKeys.add(key)
+        }
+      }
+    }
+
+    return wireKeys
   }
 
   private static transformType(value: ApiData, type: FieldType, ctx: TransformContext): ApiData {

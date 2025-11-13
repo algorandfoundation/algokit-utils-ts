@@ -875,44 +875,27 @@ class CodeGenerator:
                        if ts_pascal_case(name) in all_used_types}
 
 
-
         # Generate components (only used schemas)
         files.update(self.schema_processor.generate_models(output_dir, used_schemas))
 
         if service_class == "AlgodApi":
             models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
 
-            # Add SuggestedParams custom model
+            # Generate the custom typed models
             files[models_dir / "suggested-params.ts"] = self.renderer.render(
-                "models/transaction-params/suggested-params.ts.j2",
-                {"spec": spec},
-            )
-
-            # Custom typed block models
-            # Block-specific models (prefixed to avoid shape collisions)
-            files[models_dir / "block-eval-delta.ts"] = self.renderer.render(
-                "models/block/block-eval-delta.ts.j2",
-                {"spec": spec},
-            )
-            # BlockAppEvalDelta is implemented by repurposing application-eval-delta.ts.j2 to new name
-            files[models_dir / "block-app-eval-delta.ts"] = self.renderer.render(
-                "models/block/block-app-eval-delta.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "block_state_proof_tracking_data.ts"] = self.renderer.render(
-                "models/block/block-state-proof-tracking-data.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "signed-txn-in-block.ts"] = self.renderer.render(
-                "models/block/signed-txn-in-block.ts.j2",
+                "models/custom/suggested-params.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block.ts"] = self.renderer.render(
-                "models/block/block.ts.j2",
+                "models/custom/block.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "get-block.ts"] = self.renderer.render(
-                "models/block/get-block.ts.j2",
+                "models/custom/get-block.ts.j2",
+                {"spec": spec},
+            )
+            files[models_dir / "ledger-state-delta.ts"] = self.renderer.render(
+                "models/custom/ledger-state-delta.ts.j2",
                 {"spec": spec},
             )
 
@@ -922,16 +905,8 @@ class CodeGenerator:
             extras = (
                 "\n"
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
-                "export type { BlockEvalDelta } from './block-eval-delta';\n"
-                "export { BlockEvalDeltaMeta } from './block-eval-delta';\n"
-                "export type { BlockAppEvalDelta } from './block-app-eval-delta';\n"
-                "export { BlockAppEvalDeltaMeta } from './block-app-eval-delta';\n"
-                "export type { BlockStateProofTrackingData } from './block_state_proof_tracking_data';\n"
-                "export { BlockStateProofTrackingDataMeta } from './block_state_proof_tracking_data';\n"
                 "export type { Block } from './block';\n"
                 "export { BlockMeta } from './block';\n"
-                "export type { SignedTxnInBlock } from './signed-txn-in-block';\n"
-                "export { SignedTxnInBlockMeta } from './signed-txn-in-block';\n"
             )
             files[index_path] = base_index + extras
         files.update(self._generate_client_files(output_dir, client_class, service_class))

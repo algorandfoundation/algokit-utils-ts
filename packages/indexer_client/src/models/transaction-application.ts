@@ -90,7 +90,7 @@ export const TransactionApplicationMeta: ModelMetadata = {
       wireKey: 'on-completion',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => OnCompletionMeta },
+      type: { kind: 'model', meta: OnCompletionMeta },
     },
     {
       name: 'applicationArgs',
@@ -104,7 +104,7 @@ export const TransactionApplicationMeta: ModelMetadata = {
       wireKey: 'access',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ResourceRefMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ResourceRefMeta } },
     },
     {
       name: 'accounts',
@@ -118,7 +118,7 @@ export const TransactionApplicationMeta: ModelMetadata = {
       wireKey: 'box-references',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => BoxReferenceMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: BoxReferenceMeta } },
     },
     {
       name: 'foreignApps',
@@ -139,14 +139,14 @@ export const TransactionApplicationMeta: ModelMetadata = {
       wireKey: 'local-state-schema',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateSchemaMeta },
+      type: { kind: 'model', meta: StateSchemaMeta },
     },
     {
       name: 'globalStateSchema',
       wireKey: 'global-state-schema',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateSchemaMeta },
+      type: { kind: 'model', meta: StateSchemaMeta },
     },
     {
       name: 'approvalProgram',

@@ -29,14 +29,14 @@ export const AccountApplicationInformationMeta: ModelMetadata = {
       wireKey: 'app-local-state',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => ApplicationLocalStateMeta },
+      type: { kind: 'model', meta: ApplicationLocalStateMeta },
     },
     {
       name: 'createdApp',
       wireKey: 'created-app',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => ApplicationParamsMeta },
+      type: { kind: 'model', meta: ApplicationParamsMeta },
     },
   ],
 }

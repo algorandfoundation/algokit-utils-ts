@@ -20,7 +20,7 @@ export const LookupAssetByIdMeta: ModelMetadata = {
       wireKey: 'asset',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => AssetMeta },
+      type: { kind: 'model', meta: AssetMeta },
     },
     {
       name: 'currentRound',

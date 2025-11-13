@@ -48,14 +48,14 @@ export const DryrunRequestMeta: ModelMetadata = {
       wireKey: 'accounts',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AccountMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AccountMeta } },
     },
     {
       name: 'apps',
       wireKey: 'apps',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationMeta } },
     },
     {
       name: 'protocolVersion',
@@ -83,7 +83,7 @@ export const DryrunRequestMeta: ModelMetadata = {
       wireKey: 'sources',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => DryrunSourceMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: DryrunSourceMeta } },
     },
   ],
 }

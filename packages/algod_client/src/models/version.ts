@@ -21,7 +21,7 @@ export const VersionMeta: ModelMetadata = {
       wireKey: 'build',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => BuildVersionMeta },
+      type: { kind: 'model', meta: BuildVersionMeta },
     },
     {
       name: 'genesisHashB64',

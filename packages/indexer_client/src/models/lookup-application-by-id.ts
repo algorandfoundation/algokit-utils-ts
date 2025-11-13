@@ -20,7 +20,7 @@ export const LookupApplicationByIdMeta: ModelMetadata = {
       wireKey: 'application',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => ApplicationMeta },
+      type: { kind: 'model', meta: ApplicationMeta },
     },
     {
       name: 'currentRound',

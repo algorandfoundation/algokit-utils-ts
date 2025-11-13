@@ -32,14 +32,14 @@ export const ApplicationLocalStateMeta: ModelMetadata = {
       wireKey: 'schema',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => ApplicationStateSchemaMeta },
+      type: { kind: 'model', meta: ApplicationStateSchemaMeta },
     },
     {
       name: 'keyValue',
       wireKey: 'key-value',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => TealKeyValueStoreMeta },
+      type: { kind: 'model', meta: TealKeyValueStoreMeta },
     },
   ],
 }

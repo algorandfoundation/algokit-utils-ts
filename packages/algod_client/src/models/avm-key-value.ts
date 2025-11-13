@@ -26,7 +26,7 @@ export const AvmKeyValueMeta: ModelMetadata = {
       wireKey: 'value',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => AvmValueMeta },
+      type: { kind: 'model', meta: AvmValueMeta },
     },
   ],
 }

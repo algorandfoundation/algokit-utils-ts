@@ -26,14 +26,14 @@ export const TransactionSignatureMeta: ModelMetadata = {
       wireKey: 'logicsig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => TransactionSignatureLogicsigMeta },
+      type: { kind: 'model', meta: TransactionSignatureLogicsigMeta },
     },
     {
       name: 'multisig',
       wireKey: 'multisig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => TransactionSignatureMultisigMeta },
+      type: { kind: 'model', meta: TransactionSignatureMultisigMeta },
     },
     {
       name: 'sig',

@@ -1,8 +1,131 @@
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact';
 import type { ModelMetadata } from '../core/model-runtime';
-import type { SignedTxnInBlock } from './signed-txn-in-block';
-import { SignedTxnInBlockMeta } from './signed-txn-in-block';
-import type { BlockStateProofTrackingData } from './block_state_proof_tracking_data';
-import { BlockStateProofTrackingDataMeta } from './block_state_proof_tracking_data';
+
+/** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
+export type BlockEvalDelta = {
+  /** [at] delta action. */
+  action: number;
+  /** [bs] bytes value. */
+  bytes?: string;
+  /** [ui] uint value. */
+  uint?: bigint;
+}
+
+export const BlockEvalDeltaMeta: ModelMetadata = {
+  name: 'BlockEvalDelta',
+  kind: 'object',
+  fields: [
+    { name: 'action', wireKey: 'at', optional: false, nullable: false, type: { kind: 'scalar' } },
+    { name: 'bytes', wireKey: 'bs', optional: true, nullable: false, type: { kind: 'scalar' } },
+    { name: 'uint', wireKey: 'ui', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+  ],
+};
+
+/**
+ * State changes from application execution, including inner transactions and logs.
+ */
+export type BlockAppEvalDelta = {
+  /** [gd] Global state delta for the application. */
+  globalDelta?: Map<Uint8Array, BlockEvalDelta>;
+  /** [ld] Local state deltas keyed by address index. */
+  localDeltas?: Map<number, Map<Uint8Array, BlockEvalDelta>>;
+  /** [itx] Inner transactions produced by this application execution. */
+  innerTxns?: SignedTxnInBlock[];
+  /** [sa] Shared accounts referenced by local deltas. */
+  sharedAccounts?: string[];
+  /** [lg] Application log outputs. */
+  logs?: Uint8Array[];
+}
+
+export const BlockAppEvalDeltaMeta: ModelMetadata = {
+  name: 'BlockAppEvalDelta',
+  kind: 'object',
+  fields: [
+    {
+      name: 'globalDelta',
+      wireKey: 'gd',
+      optional: true,
+      nullable: false,
+      type: { kind: 'map', keyType: 'bytes', value: { kind: 'model', meta: BlockEvalDeltaMeta } },
+    },
+    {
+      name: 'localDeltas',
+      wireKey: 'ld',
+      optional: true,
+      nullable: false,
+      type: {
+        kind: 'map',
+        keyType: 'number',
+        value: { kind: 'map', keyType: 'bytes', value: { kind: 'model', meta: BlockEvalDeltaMeta } },
+      },
+    },
+    { name: 'innerTxns', wireKey: 'itx', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'model', meta: () => SignedTxnInBlockMeta } } },
+    { name: 'sharedAccounts', wireKey: 'sa', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isAddress: true } } },
+    { name: 'logs', wireKey: 'lg', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isBytes: true } } },
+  ],
+};
+
+/** Tracking metadata for a specific StateProofType. */
+export type BlockStateProofTrackingData = {
+  /** [v] Vector commitment root of state proof voters. */
+  stateProofVotersCommitment?: Uint8Array;
+  /** [t] Online total weight during state proof round. */
+  stateProofOnlineTotalWeight?: bigint;
+  /** [n] Next round for which state proofs are accepted. */
+  stateProofNextRound?: bigint;
+}
+
+export const BlockStateProofTrackingDataMeta: ModelMetadata = {
+  name: 'BlockStateProofTrackingData',
+  kind: 'object',
+  fields: [
+    { name: 'stateProofVotersCommitment', wireKey: 'v', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
+    { name: 'stateProofOnlineTotalWeight', wireKey: 't', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'stateProofNextRound', wireKey: 'n', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+  ],
+};
+
+/**
+ * SignedTxnInBlock is a SignedTransaction with additional ApplyData and block-specific metadata.
+ */
+export type SignedTxnInBlock = {
+  signedTransaction: SignedTransaction;
+  closingAmount?: bigint;
+  assetClosingAmount?: bigint;
+  senderRewards?: bigint;
+  receiverRewards?: bigint;
+  closeRewards?: bigint;
+  evalDelta?: BlockAppEvalDelta;
+  configAsset?: bigint;
+  applicationId?: bigint;
+  hasGenesisId?: boolean;
+  hasGenesisHash?: boolean;
+}
+
+export const SignedTxnInBlockMeta: ModelMetadata = {
+  name: 'SignedTxnInBlock',
+  kind: 'object',
+  fields: [
+    {
+      name: 'signedTransaction',
+      // flatten signed transaction fields into parent
+      flattened: true,
+      optional: false,
+      nullable: false,
+      type: { kind: 'codec', codecKey: 'SignedTransaction' },
+    },
+    { name: 'closingAmount', wireKey: 'ca', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'assetClosingAmount', wireKey: 'aca', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'senderRewards', wireKey: 'rs', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'receiverRewards', wireKey: 'rr', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'closeRewards', wireKey: 'rc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'evalDelta', wireKey: 'dt', optional: true, nullable: false, type: { kind: 'model', meta: BlockAppEvalDeltaMeta } },
+    { name: 'configAsset', wireKey: 'caid', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'applicationId', wireKey: 'apid', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'hasGenesisId', wireKey: 'hgi', optional: true, nullable: false, type: { kind: 'scalar' } },
+    { name: 'hasGenesisHash', wireKey: 'hgh', optional: true, nullable: false, type: { kind: 'scalar' } },
+  ],
+};
 
 /**
  * Block contains the BlockHeader and the list of transactions (Payset).

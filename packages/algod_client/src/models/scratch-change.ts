@@ -29,7 +29,7 @@ export const ScratchChangeMeta: ModelMetadata = {
       wireKey: 'new-value',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => AvmValueMeta },
+      type: { kind: 'model', meta: AvmValueMeta },
     },
   ],
 }

@@ -44,7 +44,7 @@ export const PostMultisigExportResponseMeta: ModelMetadata = {
       wireKey: 'pks',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => PublicKeyMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: PublicKeyMeta } },
     },
     {
       name: 'threshold',

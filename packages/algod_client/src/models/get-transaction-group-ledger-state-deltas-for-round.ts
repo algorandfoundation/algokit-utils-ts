@@ -15,7 +15,7 @@ export const GetTransactionGroupLedgerStateDeltasForRoundMeta: ModelMetadata = {
       wireKey: 'Deltas',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => LedgerStateDeltaForTransactionGroupMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: LedgerStateDeltaForTransactionGroupMeta } },
     },
   ],
 }

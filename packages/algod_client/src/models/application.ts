@@ -29,7 +29,7 @@ export const ApplicationMeta: ModelMetadata = {
       wireKey: 'params',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => ApplicationParamsMeta },
+      type: { kind: 'model', meta: ApplicationParamsMeta },
     },
   ],
 }

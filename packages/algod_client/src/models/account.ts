@@ -200,7 +200,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'apps-local-state',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationLocalStateMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationLocalStateMeta } },
     },
     {
       name: 'totalAppsOptedIn',
@@ -214,7 +214,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'apps-total-schema',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => ApplicationStateSchemaMeta },
+      type: { kind: 'model', meta: ApplicationStateSchemaMeta },
     },
     {
       name: 'appsTotalExtraPages',
@@ -228,7 +228,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'assets',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetHoldingMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AssetHoldingMeta } },
     },
     {
       name: 'totalAssetsOptedIn',
@@ -242,7 +242,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'created-apps',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationMeta } },
     },
     {
       name: 'totalCreatedApps',
@@ -256,7 +256,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'created-assets',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AssetMeta } },
     },
     {
       name: 'totalCreatedAssets',
@@ -284,7 +284,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'participation',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => AccountParticipationMeta },
+      type: { kind: 'model', meta: AccountParticipationMeta },
     },
     {
       name: 'incentiveEligible',

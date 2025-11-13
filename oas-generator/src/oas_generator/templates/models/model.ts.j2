@@ -16,7 +16,7 @@
 {%- if is_signed_txn -%}
 { kind: 'codec', codecKey: 'SignedTransaction' }
 {%- elif ref_model -%}
-{ kind: 'model', meta: () => {{ ref_model }}Meta }
+{ kind: 'model', meta: {% if modelName == ref_model %}() => {% endif %}{{ ref_model }}Meta }
 {%- elif inline_meta_name -%}
 { kind: 'model', meta: {{ inline_meta_name }} }
 {%- else -%}

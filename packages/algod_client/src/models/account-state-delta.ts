@@ -26,7 +26,7 @@ export const AccountStateDeltaMeta: ModelMetadata = {
       wireKey: 'delta',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => StateDeltaMeta },
+      type: { kind: 'model', meta: StateDeltaMeta },
     },
   ],
 }

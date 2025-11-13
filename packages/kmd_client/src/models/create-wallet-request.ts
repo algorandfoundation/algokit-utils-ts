@@ -21,7 +21,7 @@ export const CreateWalletRequestMeta: ModelMetadata = {
       wireKey: 'master_derivation_key',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => MasterDerivationKeyMeta },
+      type: { kind: 'model', meta: MasterDerivationKeyMeta },
     },
     {
       name: 'walletDriverName',

@@ -54,7 +54,7 @@ export const SimulateRequestMeta: ModelMetadata = {
       wireKey: 'txn-groups',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SimulateRequestTransactionGroupMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: SimulateRequestTransactionGroupMeta } },
     },
     {
       name: 'round',
@@ -96,7 +96,7 @@ export const SimulateRequestMeta: ModelMetadata = {
       wireKey: 'exec-trace-config',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => SimulateTraceConfigMeta },
+      type: { kind: 'model', meta: SimulateTraceConfigMeta },
     },
     {
       name: 'fixSigners',

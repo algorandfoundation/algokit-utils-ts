@@ -21,7 +21,7 @@ export const TealDryrunMeta: ModelMetadata = {
       wireKey: 'txns',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => DryrunTxnResultMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: DryrunTxnResultMeta } },
     },
     {
       name: 'error',
