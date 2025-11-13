@@ -7,8 +7,6 @@ export { ByteArraySchema, FixedLengthByteArraySchema } from './bytearray.js'
 
 export { BlockHashSchema } from './blockhash.js'
 
-export { SpecialCaseBinaryStringSchema } from './binarystring.js'
-
 export { ArraySchema } from './array.js'
 export * from './map.js'
 export { OptionalSchema } from './optional.js'
