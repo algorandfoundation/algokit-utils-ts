@@ -1,0 +1,26 @@
+{
+  "name": "algorand-59-handle-testnet-dispenser-api-errors",
+  "version": "1.0.0",
+  "description": "Handle errors when the TestNet dispenser API fails to fund an account",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "testnet",
+    "dispenser",
+    "error-handling",
+    "funding",
+    "api-error"
+  ],
+  "author": "",
+  "license": "MIT"
+}

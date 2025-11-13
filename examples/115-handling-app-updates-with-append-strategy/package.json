@@ -1,0 +1,27 @@
+{
+  "name": "algorand-115-handling-app-updates-with-append-strategy",
+  "version": "1.0.0",
+  "description": "Deploy an app, then handle schema breaks or version updates by creating a new app with onSchemaBreak='append' or onUpdate='append' to maintain multiple versions",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-deployment",
+    "schema-management",
+    "version-management",
+    "blue-green-deployment",
+    "multi-app-management",
+    "migration-strategies"
+  ],
+  "author": "",
+  "license": "MIT"
+}

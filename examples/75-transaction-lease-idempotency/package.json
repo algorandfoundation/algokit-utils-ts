@@ -1,0 +1,29 @@
+{
+  "name": "algorand-75-transaction-lease-idempotency",
+  "version": "1.0.0",
+  "description": "Use transaction leases to prevent duplicate transactions and handle overlapping lease errors for payments and asset transfers",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "transactions",
+    "leases",
+    "idempotency",
+    "payments",
+    "asset-transfers",
+    "error-handling",
+    "transaction-uniqueness",
+    "double-spending-prevention"
+  ],
+  "author": "",
+  "license": "MIT"
+}

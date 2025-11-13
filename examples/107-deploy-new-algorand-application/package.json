@@ -1,0 +1,28 @@
+{
+  "name": "algorand-107-deploy-new-algorand-application",
+  "version": "1.0.0",
+  "description": "Deploy a new app with deployment metadata and verify all fields are correctly set",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-deployment",
+    "deployment-metadata",
+    "idempotency",
+    "smart-contracts",
+    "application-lifecycle",
+    "updatable-apps",
+    "deletable-apps"
+  ],
+  "author": "",
+  "license": "MIT"
+}

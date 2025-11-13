@@ -1,0 +1,26 @@
+{
+  "name": "algorand-118-multi-account-transaction-groups-with-different-signers",
+  "version": "1.0.0",
+  "description": "Call an ABI method with a transaction argument signed by a different account",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "transaction-groups",
+    "multi-account",
+    "abi-calls",
+    "transaction-composition",
+    "signers"
+  ],
+  "author": "",
+  "license": "MIT"
+}

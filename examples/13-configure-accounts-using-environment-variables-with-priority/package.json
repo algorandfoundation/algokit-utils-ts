@@ -1,0 +1,26 @@
+{
+  "name": "algorand-13-configure-accounts-using-environment-variables-with-priority",
+  "version": "1.0.0",
+  "description": "Configure an account via environment variable mnemonic and verify that fromEnvironment prioritizes environment variables over KMD",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "account-management",
+    "environment-variables",
+    "mnemonic",
+    "configuration",
+    "account-priority"
+  ],
+  "author": "",
+  "license": "MIT"
+}

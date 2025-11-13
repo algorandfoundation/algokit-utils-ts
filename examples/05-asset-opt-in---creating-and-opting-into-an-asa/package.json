@@ -1,0 +1,26 @@
+{
+  "name": "algorand-05-asset-opt-in---creating-and-opting-into-an-asa",
+  "version": "1.0.0",
+  "description": "Create an asset and opt an account into holding that asset",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "asset-opt-in",
+    "asset-creation",
+    "asa-management",
+    "algorand-standard-assets",
+    "token-creation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

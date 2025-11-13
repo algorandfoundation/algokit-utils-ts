@@ -1,0 +1,26 @@
+{
+  "name": "algorand-16-configure-indexer-client-from-environment-variables",
+  "version": "1.0.0",
+  "description": "Configure indexer client using environment variables for server, port, and token",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "configuration",
+    "environment-variables",
+    "indexer",
+    "client-setup",
+    "blockchain-data"
+  ],
+  "author": "",
+  "license": "MIT"
+}

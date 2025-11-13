@@ -1,0 +1,27 @@
+{
+  "name": "algorand-110-fail-fast-deployment-strategy-with-onupdatefail",
+  "version": "1.0.0",
+  "description": "Deploy an app, then attempt to deploy an update with onUpdate='fail', verifying that deployment stops with an error",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-deployment",
+    "deployment-strategies",
+    "error-handling",
+    "fail-fast",
+    "devops",
+    "onUpdate-parameter"
+  ],
+  "author": "",
+  "license": "MIT"
+}

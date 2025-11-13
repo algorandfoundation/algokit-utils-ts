@@ -1,0 +1,27 @@
+{
+  "name": "algorand-131-update-application-with-abi-update-method",
+  "version": "1.0.0",
+  "description": "Update an existing application using an ABI update method",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-client",
+    "update",
+    "abi",
+    "update-method",
+    "return-values",
+    "on-complete"
+  ],
+  "author": "",
+  "license": "MIT"
+}

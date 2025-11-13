@@ -1,0 +1,27 @@
+{
+  "name": "algorand-129-simulate-transaction-group-before-sending",
+  "version": "1.0.0",
+  "description": "Simulate a transaction group and compare results with actual execution",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "transaction-group",
+    "simulation",
+    "testing",
+    "abi-method-call",
+    "payment",
+    "group-transactions"
+  ],
+  "author": "",
+  "license": "MIT"
+}

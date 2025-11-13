@@ -1,0 +1,25 @@
+{
+  "name": "algorand-01-abi-methods-with-default-arguments",
+  "version": "1.0.0",
+  "description": "Call an ABI method with a default argument value defined as a constant",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "abi",
+    "default-arguments",
+    "method-calls",
+    "optional-parameters"
+  ],
+  "author": "",
+  "license": "MIT"
+}

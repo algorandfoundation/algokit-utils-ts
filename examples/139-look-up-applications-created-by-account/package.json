@@ -1,0 +1,27 @@
+{
+  "name": "algorand-139-look-up-applications-created-by-account",
+  "version": "1.0.0",
+  "description": "Look up all applications created by a specific account using the indexer with pagination support",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "indexer",
+    "application-lookup",
+    "pagination",
+    "app-factory",
+    "application-deployment",
+    "creator-filtering"
+  ],
+  "author": "",
+  "license": "MIT"
+}

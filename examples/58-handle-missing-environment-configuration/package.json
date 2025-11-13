@@ -1,0 +1,26 @@
+{
+  "name": "algorand-58-handle-missing-environment-configuration",
+  "version": "1.0.0",
+  "description": "Verify that attempting to get indexer config without required environment variables throws a descriptive error",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "error-handling",
+    "configuration",
+    "environment-variables",
+    "indexer",
+    "validation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

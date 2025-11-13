@@ -1,0 +1,30 @@
+{
+  "name": "algorand-137-arc56-error-handling-in-smart-contract-applications",
+  "version": "1.0.0",
+  "description": "Handle and display custom error messages from ARC56-compliant smart contracts in various scenarios including deployment, method calls, and nested app calls",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "arc56",
+    "error-handling",
+    "smart-contracts",
+    "app-deployment",
+    "inner-transactions",
+    "nested-calls",
+    "template-variables",
+    "app-factory",
+    "app-client"
+  ],
+  "author": "",
+  "license": "MIT"
+}

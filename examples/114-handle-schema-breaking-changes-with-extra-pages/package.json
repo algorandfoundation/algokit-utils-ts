@@ -1,0 +1,27 @@
+{
+  "name": "algorand-114-handle-schema-breaking-changes-with-extra-pages",
+  "version": "1.0.0",
+  "description": "Handle schema breaking changes when extra program pages are needed",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "schema-break-detection",
+    "extra-pages",
+    "deployment-strategies",
+    "error-handling",
+    "app-factory",
+    "breaking-changes"
+  ],
+  "author": "",
+  "license": "MIT"
+}

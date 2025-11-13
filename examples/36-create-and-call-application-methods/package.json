@@ -1,0 +1,27 @@
+{
+  "name": "algorand-36-create-and-call-application-methods",
+  "version": "1.0.0",
+  "description": "Call an ABI method on a newly created application",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-creation",
+    "abi-methods",
+    "method-call",
+    "app-client",
+    "return-values",
+    "basic-workflow"
+  ],
+  "author": "",
+  "license": "MIT"
+}

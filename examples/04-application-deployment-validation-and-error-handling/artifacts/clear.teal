@@ -1,0 +1,4 @@
+#pragma version 8
+// Simple clear state program that always approves
+int 1
+return

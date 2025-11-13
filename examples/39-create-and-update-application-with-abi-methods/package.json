@@ -1,0 +1,28 @@
+{
+  "name": "algorand-39-create-and-update-application-with-abi-methods",
+  "version": "1.0.0",
+  "description": "Create and update an application using ABI methods with return value handling",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-client",
+    "abi-methods",
+    "app-creation",
+    "app-update",
+    "return-values",
+    "deploy-time-params",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "MIT"
+}

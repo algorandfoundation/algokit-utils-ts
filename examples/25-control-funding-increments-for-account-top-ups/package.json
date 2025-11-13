@@ -1,0 +1,26 @@
+{
+  "name": "algorand-25-control-funding-increments-for-account-top-ups",
+  "version": "1.0.0",
+  "description": "Control the minimum amount to fund when topping up an existing account",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "account-funding",
+    "funding-increment",
+    "account-management",
+    "funding-optimization",
+    "transaction-optimization"
+  ],
+  "author": "",
+  "license": "MIT"
+}

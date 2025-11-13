@@ -1,0 +1,26 @@
+{
+  "name": "algorand-98-create-algorand-application-with-deploy-time-parameters",
+  "version": "1.0.0",
+  "description": "Create a new application with deploy-time parameters and verify creation",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-deployment",
+    "app-creation",
+    "deploy-time-parameters",
+    "app-client",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "MIT"
+}

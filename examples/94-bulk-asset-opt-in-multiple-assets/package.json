@@ -1,0 +1,26 @@
+{
+  "name": "algorand-94-bulk-asset-opt-in-multiple-assets",
+  "version": "1.0.0",
+  "description": "Opt-in multiple assets (20 total) to an account in batches using bulk opt-in",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "bulk-opt-in",
+    "multiple-assets",
+    "batch-processing",
+    "asset-management",
+    "account-state"
+  ],
+  "author": "",
+  "license": "MIT"
+}

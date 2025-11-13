@@ -1,0 +1,27 @@
+{
+  "name": "algorand-32-create-application-with-custom-oncomplete-action-optin",
+  "version": "1.0.0",
+  "description": "Create an application with a custom onComplete action (OptIn)",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-creation",
+    "optin",
+    "oncomplete",
+    "local-state",
+    "updatable-app",
+    "deletable-app"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "algorand-22-connect-to-testnet-using-algonode-configuration",
+  "version": "1.0.0",
+  "description": "Get pre-configured AlgoNode settings for connecting to TestNet indexer",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "algonode",
+    "testnet",
+    "indexer",
+    "configuration",
+    "client-setup"
+  ],
+  "author": "",
+  "license": "MIT"
+}

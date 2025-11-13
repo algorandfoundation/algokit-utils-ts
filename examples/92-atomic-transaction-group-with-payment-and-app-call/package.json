@@ -1,0 +1,28 @@
+{
+  "name": "algorand-92-atomic-transaction-group-with-payment-and-app-call",
+  "version": "1.0.0",
+  "description": "Create an atomic transaction group combining a payment and an app method call using an AtomicTransactionComposer from a generated client",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "atomic-transactions",
+    "transaction-groups",
+    "atc",
+    "app-call",
+    "payment",
+    "typed-client",
+    "compose"
+  ],
+  "author": "",
+  "license": "MIT"
+}

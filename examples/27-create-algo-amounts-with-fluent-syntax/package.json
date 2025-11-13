@@ -1,0 +1,26 @@
+{
+  "name": "algorand-27-create-algo-amounts-with-fluent-syntax",
+  "version": "1.0.0",
+  "description": "Create AlgoAmount instances using intuitive syntax for better code readability",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "algo-amount",
+    "fluent-api",
+    "amount-creation",
+    "syntactic-sugar",
+    "type-safety"
+  ],
+  "author": "",
+  "license": "MIT"
+}

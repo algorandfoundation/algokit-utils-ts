@@ -1,0 +1,26 @@
+{
+  "name": "algorand-87-account-rekeying-with-application-opt-in",
+  "version": "1.0.0",
+  "description": "Rekey an account while opting into an application",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "account-rekeying",
+    "opt-in",
+    "transaction-management",
+    "account-security",
+    "app-client"
+  ],
+  "author": "",
+  "license": "MIT"
+}

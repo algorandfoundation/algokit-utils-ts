@@ -1,0 +1,25 @@
+{
+  "name": "algorand-11-clone-app-client-with-custom-name",
+  "version": "1.0.0",
+  "description": "Clone an app client with a different app name",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-client",
+    "clone",
+    "client-management",
+    "configuration"
+  ],
+  "author": "",
+  "license": "MIT"
+}

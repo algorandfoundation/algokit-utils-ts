@@ -1,0 +1,27 @@
+{
+  "name": "algorand-68-retrieve-value-from-box-map-by-key",
+  "version": "1.0.0",
+  "description": "Retrieve a specific value from a box map by key",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "box-storage",
+    "box-maps",
+    "arc-56",
+    "key-value-retrieval",
+    "state-management",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "MIT"
+}

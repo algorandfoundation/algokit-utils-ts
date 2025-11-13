@@ -1,0 +1,27 @@
+{
+  "name": "algorand-38-create-and-retrieve-accounts-from-environment",
+  "version": "1.0.0",
+  "description": "Create new accounts dynamically with automatic funding and retrieve them idempotently",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "account-creation",
+    "account-funding",
+    "account-retrieval",
+    "account-management",
+    "idempotency",
+    "balance-verification"
+  ],
+  "author": "",
+  "license": "MIT"
+}

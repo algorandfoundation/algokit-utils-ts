@@ -1,0 +1,27 @@
+{
+  "name": "algorand-54-fund-accounts-on-testnet-using-dispenser-api",
+  "version": "1.0.0",
+  "description": "Fund accounts on TestNet using the dispenser API with access token authentication",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "testnet-funding",
+    "dispenser-api",
+    "access-token",
+    "api-integration",
+    "automated-funding",
+    "testnet-development"
+  ],
+  "author": "",
+  "license": "MIT"
+}

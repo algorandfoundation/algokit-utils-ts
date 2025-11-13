@@ -1,0 +1,27 @@
+{
+  "name": "algorand-122-raw-application-call-with-manual-argument-encoding",
+  "version": "1.0.0",
+  "description": "Make a raw application call with manually encoded arguments in an atomic transaction group",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "transaction-groups",
+    "raw-app-call",
+    "manual-encoding",
+    "abi-method-selector",
+    "atomic-transactions",
+    "advanced"
+  ],
+  "author": "",
+  "license": "MIT"
+}

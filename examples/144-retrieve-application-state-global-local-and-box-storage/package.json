@@ -1,0 +1,27 @@
+{
+  "name": "algorand-144-retrieve-application-state-global-local-and-box-storage",
+  "version": "1.0.0",
+  "description": "Retrieve and decode global state, local state, and box storage",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "state-retrieval",
+    "global-state",
+    "local-state",
+    "box-storage",
+    "abi-decoding",
+    "state-management"
+  ],
+  "author": "",
+  "license": "MIT"
+}

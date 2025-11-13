@@ -1,0 +1,28 @@
+{
+  "name": "algorand-33-create-an-algorand-application",
+  "version": "1.0.0",
+  "description": "Create a new Algorand application with approval and clear state programs",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-creation",
+    "smart-contracts",
+    "deployment",
+    "approval-program",
+    "clear-state-program",
+    "state-schema",
+    "app-address"
+  ],
+  "author": "",
+  "license": "MIT"
+}

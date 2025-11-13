@@ -1,0 +1,26 @@
+{
+  "name": "algorand-63-look-up-transaction-by-id-using-indexer",
+  "version": "1.0.0",
+  "description": "Look up a transaction by its ID using the indexer and verify it was recorded correctly",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "indexer",
+    "transaction-lookup",
+    "transaction-verification",
+    "localnet",
+    "payment-transaction"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "algorand-146-working-with-complex-multi-level-abi-structures",
+  "version": "1.0.0",
+  "description": "Convert highly complex nested structures combining arrays and tuples (byte[2][],uint8,(bool,byte[3])) for real-world smart contract data",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "abi",
+    "complex-structures",
+    "nested-arrays",
+    "tuples",
+    "dynamic-arrays",
+    "type-conversion",
+    "smart-contracts",
+    "advanced",
+    "algosdk"
+  ],
+  "author": "",
+  "license": "MIT"
+}

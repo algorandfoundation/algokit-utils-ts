@@ -1,0 +1,26 @@
+{
+  "name": "algorand-113-handle-failed-update-of-immutable-application",
+  "version": "1.0.0",
+  "description": "Deploy an immutable app and attempt to update it, verifying that the update fails with a logic error",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-deployment",
+    "error-handling",
+    "immutable-apps",
+    "logic-errors",
+    "app-security"
+  ],
+  "author": "",
+  "license": "MIT"
+}

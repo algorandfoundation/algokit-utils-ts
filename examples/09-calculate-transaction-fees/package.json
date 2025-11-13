@@ -1,0 +1,26 @@
+{
+  "name": "algorand-09-calculate-transaction-fees",
+  "version": "1.0.0",
+  "description": "Calculate transaction fees for budgeting and fee estimation in atomic transaction groups",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "transaction-fees",
+    "fee-calculation",
+    "algo-amount",
+    "atomic-transfers",
+    "transaction-management"
+  ],
+  "author": "",
+  "license": "MIT"
+}

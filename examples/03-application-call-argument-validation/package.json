@@ -1,0 +1,26 @@
+{
+  "name": "algorand-03-application-call-argument-validation",
+  "version": "1.0.0",
+  "description": "Validate that calling a method with too many arguments throws an error",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "error-handling",
+    "argument-validation",
+    "type-safety",
+    "app-client",
+    "method-calls"
+  ],
+  "author": "",
+  "license": "MIT"
+}

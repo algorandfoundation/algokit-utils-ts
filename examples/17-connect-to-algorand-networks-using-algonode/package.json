@@ -1,0 +1,29 @@
+{
+  "name": "algorand-17-connect-to-algorand-networks-using-algonode",
+  "version": "1.0.0",
+  "description": "Get pre-configured AlgoNode settings for connecting to different Algorand networks and services without manual configuration",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "algonode",
+    "configuration",
+    "mainnet",
+    "testnet",
+    "algod",
+    "indexer",
+    "client-setup",
+    "network-connection"
+  ],
+  "author": "",
+  "license": "MIT"
+}

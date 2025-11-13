@@ -1,0 +1,28 @@
+{
+  "name": "algorand-105-decode-abi-uint-types-with-number-and-bigint-handling",
+  "version": "1.0.0",
+  "description": "Decode all valid uint types with proper type mapping (number vs bigint)",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "abi-decoding",
+    "uint-types",
+    "number-vs-bigint",
+    "arc-56",
+    "type-safety",
+    "data-encoding",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "MIT"
+}

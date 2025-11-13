@@ -1,0 +1,28 @@
+{
+  "name": "algorand-57-fund-and-manage-testnet-accounts-with-dispenser-api",
+  "version": "1.0.0",
+  "description": "Fund TestNet accounts, check dispenser limits, and refund unused Algos using authenticated API calls",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "dispenser",
+    "testnet",
+    "funding",
+    "refund",
+    "authentication",
+    "account-management",
+    "rate-limiting"
+  ],
+  "author": "",
+  "license": "MIT"
+}

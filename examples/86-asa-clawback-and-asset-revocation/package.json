@@ -1,0 +1,28 @@
+{
+  "name": "algorand-86-asa-clawback-and-asset-revocation",
+  "version": "1.0.0",
+  "description": "Use clawback functionality to transfer assets from a third-party account (revocationTarget) to another account",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "asset-clawback",
+    "asset-revocation",
+    "asa",
+    "compliance",
+    "regulated-assets",
+    "opt-in",
+    "balance-verification"
+  ],
+  "author": "",
+  "license": "MIT"
+}

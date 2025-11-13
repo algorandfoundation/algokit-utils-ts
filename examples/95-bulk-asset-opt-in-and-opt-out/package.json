@@ -1,0 +1,27 @@
+{
+  "name": "algorand-95-bulk-asset-opt-in-and-opt-out",
+  "version": "1.0.0",
+  "description": "Opt-in to 20 assets in bulk and then opt-out of all of them to reclaim minimum balance",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "asset-management",
+    "bulk-operations",
+    "opt-in",
+    "opt-out",
+    "batch-processing",
+    "account-cleanup"
+  ],
+  "author": "",
+  "license": "MIT"
+}

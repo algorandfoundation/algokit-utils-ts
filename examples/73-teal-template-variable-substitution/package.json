@@ -1,0 +1,26 @@
+{
+  "name": "algorand-73-teal-template-variable-substitution",
+  "version": "1.0.0",
+  "description": "Substitute template variables (including those with underscores) in TEAL code with actual values before deployment",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "teal",
+    "template-substitution",
+    "smart-contracts",
+    "parameterization",
+    "preprocessing"
+  ],
+  "author": "",
+  "license": "MIT"
+}

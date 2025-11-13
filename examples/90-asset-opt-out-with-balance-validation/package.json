@@ -1,0 +1,26 @@
+{
+  "name": "algorand-90-asset-opt-out-with-balance-validation",
+  "version": "1.0.0",
+  "description": "Attempt to opt-out of a single asset with non-zero balance when ensureZeroBalance is true",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "asset-management",
+    "opt-out",
+    "balance-validation",
+    "error-handling",
+    "asset-transfer"
+  ],
+  "author": "",
+  "license": "MIT"
+}

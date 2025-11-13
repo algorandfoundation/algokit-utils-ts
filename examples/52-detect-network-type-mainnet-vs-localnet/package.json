@@ -1,0 +1,26 @@
+{
+  "name": "algorand-52-detect-network-type-mainnet-vs-localnet",
+  "version": "1.0.0",
+  "description": "Verify that MainNet connections are correctly identified as not being LocalNet",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "network-detection",
+    "mainnet",
+    "localnet",
+    "client-configuration",
+    "configuration"
+  ],
+  "author": "",
+  "license": "MIT"
+}

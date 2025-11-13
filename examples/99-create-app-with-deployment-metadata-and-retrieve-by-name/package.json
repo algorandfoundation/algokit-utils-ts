@@ -1,0 +1,26 @@
+{
+  "name": "algorand-99-create-app-with-deployment-metadata-and-retrieve-by-name",
+  "version": "1.0.0",
+  "description": "Create an app with metadata and retrieve it by name to verify all metadata fields are correctly stored and returned",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-creation",
+    "deployment-metadata",
+    "app-retrieval",
+    "metadata-storage",
+    "app-deployer"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "algorand-102-custom-transaction-signer-for-group-signing",
+  "version": "1.0.0",
+  "description": "Use a custom signer to sign all transactions in a group with an ABI call",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "transaction-signing",
+    "custom-signer",
+    "transaction-groups",
+    "abi-calls",
+    "wallet-integration"
+  ],
+  "author": "",
+  "license": "MIT"
+}

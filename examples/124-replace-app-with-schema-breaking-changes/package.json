@@ -1,0 +1,26 @@
+{
+  "name": "algorand-124-replace-app-with-schema-breaking-changes",
+  "version": "1.0.0",
+  "description": "Deploy an app, then deploy with a schema-breaking change and onSchemaBreak='replace' to delete and recreate the app",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "schema-management",
+    "schema-breaking-changes",
+    "app-replacement",
+    "state-management",
+    "deployment-strategies"
+  ],
+  "author": "",
+  "license": "MIT"
+}

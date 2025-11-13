@@ -1,0 +1,27 @@
+{
+  "name": "algorand-120-pass-transaction-as-abi-method-argument",
+  "version": "1.0.0",
+  "description": "Call an ABI method with a transaction as an argument",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "abi",
+    "transaction-arguments",
+    "atomic-transactions",
+    "payment-transaction",
+    "app-client",
+    "typed-client"
+  ],
+  "author": "",
+  "license": "MIT"
+}

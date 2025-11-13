@@ -1,0 +1,27 @@
+{
+  "name": "algorand-66-replace-an-existing-application",
+  "version": "1.0.0",
+  "description": "Replace an existing application by deleting it and creating a new one",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "app-deployment",
+    "app-replacement",
+    "delete-and-recreate",
+    "idempotent-deployment",
+    "factory-pattern",
+    "deployment-strategy"
+  ],
+  "author": "",
+  "license": "MIT"
+}

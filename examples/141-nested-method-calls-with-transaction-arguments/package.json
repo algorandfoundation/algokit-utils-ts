@@ -1,0 +1,27 @@
+{
+  "name": "algorand-141-nested-method-calls-with-transaction-arguments",
+  "version": "1.0.0",
+  "description": "Call a method that takes another method call as an argument, where that nested method call itself takes a transaction as an argument",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "nested-method-calls",
+    "transaction-composition",
+    "app-call",
+    "method-arguments",
+    "advanced-composition",
+    "transaction-group"
+  ],
+  "author": "",
+  "license": "MIT"
+}

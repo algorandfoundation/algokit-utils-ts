@@ -1,0 +1,56 @@
+{
+  "hints": {},
+  "source": {
+    "approval": "I3ByYWdtYSB2ZXJzaW9uIDEwCnR4biBBcHBsaWNhdGlvbklECmludCAwCj09CmJueiBjcmVhdGUKdHhuIE9uQ29tcGxldGlvbgppbnQgTm9PcAo9PQphc3NlcnQKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMApwdXNoYnl0ZXMgMHgxNTFmN2M3NQo9PQpibnogZ2V0X3N0YXRpYwp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweDJiM2Y2ZjhhCj09CmJueiBnZXRfZHluYW1pYwplcnIKCmNyZWF0ZToKaW50IDEKcmV0dXJuCgpnZXRfc3RhdGljOgpieXRlIDB4NTQ0NTUzNTQ0NDQxNTQ0MQpsb2cKaW50IDEKcmV0dXJuCgpnZXRfZHluYW1pYzoKYnl0ZSAweDQ0Nzk2ZTYxNmQ2OTYzMjA2MzZmNmU3NDY1NmU3NDIwNjg2NTcyNjUKbG9nCmludCAxCnJldHVybgo=",
+    "clear": "I3ByYWdtYSB2ZXJzaW9uIDEwCmludCAxCg=="
+  },
+  "state": {
+    "global": {
+      "num_byte_slices": 2,
+      "num_uints": 0
+    },
+    "local": {
+      "num_byte_slices": 0,
+      "num_uints": 0
+    }
+  },
+  "schema": {
+    "global": {
+      "declared": {},
+      "reserved": {}
+    },
+    "local": {
+      "declared": {},
+      "reserved": {}
+    }
+  },
+  "bare_call_config": {
+    "no_op": "CREATE",
+    "opt_in": "NEVER",
+    "close_out": "NEVER",
+    "update_application": "NEVER",
+    "delete_application": "NEVER"
+  },
+  "contract": {
+    "name": "ByteArrayApp",
+    "desc": "Example app for demonstrating byte array decoding",
+    "methods": [
+      {
+        "name": "getStaticByteArray",
+        "desc": "Returns a static byte array of fixed length (8 bytes)",
+        "args": [],
+        "returns": {
+          "type": "byte[8]"
+        }
+      },
+      {
+        "name": "getDynamicByteArray",
+        "desc": "Returns a dynamic byte array of variable length",
+        "args": [],
+        "returns": {
+          "type": "byte[]"
+        }
+      }
+    ]
+  }
+}

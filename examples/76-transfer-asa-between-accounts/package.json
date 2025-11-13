@@ -1,0 +1,26 @@
+{
+  "name": "algorand-76-transfer-asa-between-accounts",
+  "version": "1.0.0",
+  "description": "Transfer ASA between accounts and verify the resulting balances",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "asset-transfer",
+    "asa",
+    "opt-in",
+    "balance-verification",
+    "transaction-management"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "algorand-60-handling-empty-byte-arrays-in-abi-types",
+  "version": "1.0.0",
+  "description": "Convert empty byte arrays (byte[0]) to empty Uint8Array for edge case handling",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "abi",
+    "edge-cases",
+    "empty-arrays",
+    "byte-arrays",
+    "type-conversion",
+    "robustness",
+    "smart-contracts",
+    "algosdk"
+  ],
+  "author": "",
+  "license": "MIT"
+}

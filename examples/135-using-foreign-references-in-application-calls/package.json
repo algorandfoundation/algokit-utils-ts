@@ -1,0 +1,27 @@
+{
+  "name": "algorand-135-using-foreign-references-in-application-calls",
+  "version": "1.0.0",
+  "description": "Call an ABI method with foreign app, account, and asset references",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "foreign-references",
+    "cross-app-calls",
+    "foreign-assets",
+    "foreign-accounts",
+    "abi-calls",
+    "app-interaction"
+  ],
+  "author": "",
+  "license": "MIT"
+}

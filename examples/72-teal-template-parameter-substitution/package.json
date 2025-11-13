@@ -1,0 +1,26 @@
+{
+  "name": "algorand-72-teal-template-parameter-substitution",
+  "version": "1.0.0",
+  "description": "Substitute a template variable that appears in both int and bytes contexts, verifying proper encoding for each",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.7.0"
+  },
+  "keywords": [
+    "template-substitution",
+    "teal-preprocessing",
+    "type-conversion",
+    "bytes-encoding",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "MIT"
+}
