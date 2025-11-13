@@ -1,6 +1,6 @@
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
+import { ABIMethod, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -1225,11 +1225,11 @@ describe('Resource population: meta', () => {
 describe('abi return', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getABIResult = (type: string, value: any) => {
-    const abiType = ABIType.from(type)
+    const abiType = algosdk.getABIType(type)
     const result = {
       method: new ABIMethod({ name: '', args: [], returns: { type: type } }),
-      rawReturnValue: abiType.encode(value),
-      returnValue: abiType.decode(abiType.encode(value)),
+      rawReturnValue: algosdk.encodeABIValue(abiType, value),
+      returnValue: algosdk.decodeABIValue(abiType, algosdk.encodeABIValue(abiType, value)),
       txID: '',
     } as algosdk.ABIResult
     return getABIReturnValue(result, abiType)

@@ -7,7 +7,7 @@ import {
   PUBLIC_KEY_BYTE_LENGTH,
   publicKeyFromAddress,
 } from '@algorandfoundation/algokit-common'
-import type { ABIStructValue, ABIValue } from './abi-value'
+import type { ABIAddressValue, ABIStructValue, ABIValue } from './abi-value'
 import { StructField } from './arc56-contract'
 import { bigIntToBytes, bytesToBigInt } from './bigint'
 
@@ -280,6 +280,16 @@ function encodeAddress(value: ABIValue): Uint8Array {
   if (typeof value === 'string') {
     return publicKeyFromAddress(value)
   }
+  if (isABIAddressValue(value)) {
+    return value.publicKey
+  }
+  if (value instanceof Uint8Array) {
+    if (value.byteLength !== 32) {
+      throw new Error(`byte string must be 32 bytes long for an address`)
+    }
+    return value
+  }
+
   throw new Error(`Encoding Error: Cannot encode value as address: ${value}`)
 }
 
@@ -573,7 +583,7 @@ export type ABIStructField = {
 }
 
 function encodeStruct(type: ABIStructType, value: ABIValue): Uint8Array {
-  if (typeof value !== 'object' || Array.isArray(value) || value instanceof Uint8Array) {
+  if (typeof value !== 'object' || Array.isArray(value) || value instanceof Uint8Array || isABIAddressValue(value)) {
     throw new Error(`Cannot encode value as ${structToString(type)}: ${value}`)
   }
 
@@ -980,4 +990,9 @@ function getSize(abiType: ABIType): number {
     case ABITypeName.DynamicArray:
       throw new Error(`Validation Error: Failed to get size, dynamic array is a dynamic type`)
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isABIAddressValue(value: any): value is ABIAddressValue {
+  return 'publicKey' in value
 }

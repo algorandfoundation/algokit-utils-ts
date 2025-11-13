@@ -332,7 +332,7 @@ export class AppManager {
   public async getBoxValueFromABIType(request: BoxValueRequestParams): Promise<algosdk.ABIValue> {
     const { appId, boxName, type } = request
     const value = await this.getBoxValue(appId, boxName)
-    return type.decode(value)
+    return algosdk.decodeABIValue(type, value)
   }
 
   /**
@@ -456,7 +456,7 @@ export class AppManager {
       }
 
       abiResult.rawReturnValue = new Uint8Array(lastLog.slice(4))
-      abiResult.returnValue = method.returns.type.decode(abiResult.rawReturnValue)
+      abiResult.returnValue = algosdk.decodeABIValue(method.returns.type, abiResult.rawReturnValue)
     } catch (err) {
       abiResult.decodeError = err as Error
     }

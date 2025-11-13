@@ -799,11 +799,11 @@ describe('application-client', () => {
     const expectedValue = 1234524352
     await client.call({
       method: 'set_box',
-      methodArgs: [boxName1, new ABIUintType(32).encode(expectedValue)],
+      methodArgs: [boxName1, algosdk.encodeABIValue(algosdk.getABIType("uint32"), expectedValue)],
       boxes: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
+    const boxes = await client.getBoxValuesFromABIType(algosdk.getABIType("uint32"), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, algosdk.getABIType("uint32"))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
@@ -1020,7 +1020,7 @@ describe('app-client', () => {
         // Generate all valid ABI uint bit lengths
         Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
       )('correctly decodes a uint%i', (bitLength) => {
-        const encoded = new ABIUintType(bitLength).encode(1)
+        const encoded = algosdk.encodeABIValue(algosdk.getABIType(`uint${bitLength}`), 1)
         const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
 
         if (bitLength < 53) {

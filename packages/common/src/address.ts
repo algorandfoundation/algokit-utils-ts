@@ -6,7 +6,7 @@ import { hash } from './crypto'
 
 const APP_ID_PREFIX = new TextEncoder().encode('appID')
 
-export function checksumFromPublicKey(publicKey: Uint8Array): Uint8Array {
+function checksumFromPublicKey(publicKey: Uint8Array): Uint8Array {
   return Uint8Array.from(sha512.sha512_256.array(publicKey).slice(HASH_BYTES_LENGTH - CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH))
 }
 

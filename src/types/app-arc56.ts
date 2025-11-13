@@ -28,11 +28,11 @@ export class Arc56Method extends algosdk.ABIMethod {
     super(method)
     this.args = method.args.map((arg) => ({
       ...arg,
-      type: algosdk.abiTypeIsTransaction(arg.type) || algosdk.abiTypeIsReference(arg.type) ? arg.type : algosdk.ABIType.from(arg.type),
+      type: algosdk.abiTypeIsTransaction(arg.type) || algosdk.abiTypeIsReference(arg.type) ? arg.type : algosdk.getABIType(arg.type),
     }))
     this.returns = {
       ...this.method.returns,
-      type: this.method.returns.type === 'void' ? 'void' : algosdk.ABIType.from(this.method.returns.type),
+      type: this.method.returns.type === 'void' ? 'void' : algosdk.getABIType(this.method.returns.type),
     }
   }
 
@@ -50,15 +50,16 @@ export function getABITupleTypeFromABIStructDefinition(
   struct: StructField[],
   structs: Record<string, StructField[]>,
 ): algosdk.ABITupleType {
-  return new algosdk.ABITupleType(
-    struct.map((v) =>
+  return {
+    name: algosdk.ABITypeName.Tuple,
+    childTypes: struct.map((v) =>
       typeof v.type === 'string'
         ? structs[v.type]
           ? getABITupleTypeFromABIStructDefinition(structs[v.type], structs)
-          : algosdk.ABIType.from(v.type)
+          : algosdk.getABIType(v.type)
         : getABITupleTypeFromABIStructDefinition(v.type, structs),
     ),
-  )
+  }
 }
 
 /**
@@ -81,7 +82,7 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
         if (type in structs) {
           abiType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
         } else {
-          abiType = algosdk.ABIType.from(type)
+          abiType = algosdk.getABIType(type)
         }
       } else {
         abiType = getABITupleTypeFromABIStructDefinition(type, structs)
@@ -138,14 +139,15 @@ export function getABIDecodedValue(
 ): algosdk.ABIValue | ABIStruct {
   if (type === 'AVMBytes' || typeof value !== 'object') return value
   if (type === 'AVMString') return Buffer.from(value).toString('utf-8')
-  if (type === 'AVMUint64') return algosdk.ABIType.from('uint64').decode(value)
+  if (type === 'AVMUint64') return algosdk.decodeABIValue(algosdk.getABIType('uint64'), value)
   if (structs[type]) {
-    const tupleValue = getABITupleTypeFromABIStructDefinition(structs[type], structs).decode(value)
+    const tupleType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
+    const tupleValue = algosdk.decodeABIValue(tupleType, value) as algosdk.ABIValue[]
     return getABIStructFromABITuple(tupleValue, structs[type], structs)
   }
 
-  const abiType = algosdk.ABIType.from(type)
-  const decodedValue = convertAbiByteArrays(abiType.decode(value), abiType)
+  const abiType = algosdk.getABIType(type)
+  const decodedValue = convertAbiByteArrays(algosdk.decodeABIValue(abiType, value), abiType)
   return convertABIDecodedBigIntToNumber(decodedValue, abiType)
 }
 
@@ -162,7 +164,7 @@ export function getABIEncodedValue(
   structs: Record<string, StructField[]>,
 ): Uint8Array {
   if (typeof value === 'object' && value instanceof Uint8Array) return value
-  if (type === 'AVMUint64') return algosdk.ABIType.from('uint64').encode(value as bigint | number)
+  if (type === 'AVMUint64') return algosdk.encodeABIValue(algosdk.getABIType('uint64'), value as bigint | number)
   if (type === 'AVMBytes' || type === 'AVMString') {
     if (typeof value === 'string') return Buffer.from(value, 'utf-8')
     if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
@@ -171,12 +173,12 @@ export function getABIEncodedValue(
   if (structs[type]) {
     const tupleType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
     if (Array.isArray(value)) {
-      tupleType.encode(value as algosdk.ABIValue[])
+      return algosdk.encodeABIValue(tupleType, value as algosdk.ABIValue[])
     } else {
-      return tupleType.encode(getABITupleFromABIStruct(value as ABIStruct, structs[type], structs))
+      return algosdk.encodeABIValue(tupleType, getABITupleFromABIStruct(value as ABIStruct, structs[type], structs))
     }
   }
-  return algosdk.ABIType.from(type).encode(value as algosdk.ABIValue)
+  return algosdk.encodeABIValue(algosdk.getABIType(type), value as algosdk.ABIValue)
 }
 
 /**
@@ -231,13 +233,13 @@ export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValu
 
   if (type === 'AVMBytes') return returnValue.rawReturnValue as TReturn
   if (type === 'AVMString') return Buffer.from(returnValue.rawReturnValue).toString('utf-8') as TReturn
-  if (type === 'AVMUint64') return algosdk.ABIType.from('uint64').decode(returnValue.rawReturnValue) as TReturn
+  if (type === 'AVMUint64') return algosdk.decodeABIValue(algosdk.getABIType('uint64'), returnValue.rawReturnValue) as TReturn
 
   if (structs[type]) {
     return getABIStructFromABITuple(returnValue.returnValue as algosdk.ABIValue[], structs[type], structs) as TReturn
   }
 
-  return convertAbiByteArrays(returnValue.returnValue, algosdk.ABIType.from(type)) as TReturn
+  return convertAbiByteArrays(returnValue.returnValue, algosdk.getABIType(type)) as TReturn
 }
 
 /****************/

@@ -34,5 +34,7 @@ A collection of random notes pop up during the migration process.
 - transaction_asserts uses 'noble/ed25519' while composer uses nacl, which one should we use?
 - additionalAtcContext was removed from AtomicTransactionComposerToSend
 - ABI
-  - how to construct ABIStruct from string
+  - ABIStruct can't be constructed from string.
+  - Bring the unhappy path tests over (fail to encode/decode)
+  - TODO: PD - revert this: the names are ABIStaticArrayType and ABIDynamicArrayType (not ABIArrayStaticType and ABIArrayDynamicType)
 - Make sure that the python utils also sort resources during resource population

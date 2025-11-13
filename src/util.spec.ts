@@ -1,14 +1,13 @@
 import { convertAbiByteArrays as convertAbiByteArrays } from './util'
 
 import { describe, it, expect } from 'vitest'
-import { ABIValue, ABIByteType, ABIArrayStaticType, ABIArrayDynamicType, ABITupleType, ABIBoolType, ABIUintType } from '@algorandfoundation/sdk' // Adjust this import path
+import { ABIValue, getABIType, ABITypeName } from '@algorandfoundation/sdk' // Adjust this import path
 
 describe('convertAbiByteArrays', () => {
   describe('Basic byte arrays', () => {
     it('should convert a simple byte array to Uint8Array', () => {
       // Create a static array of bytes: byte[4]
-      const byteType = new ABIByteType()
-      const arrayType = new ABIArrayStaticType(byteType, 4)
+      const arrayType = getABIType('byte[4]')
 
       const value = [1, 2, 3, 4]
       const result = convertAbiByteArrays(value, arrayType)
@@ -19,8 +18,7 @@ describe('convertAbiByteArrays', () => {
 
     it('should handle dynamic byte arrays', () => {
       // Create a dynamic array of bytes: byte[]
-      const byteType = new ABIByteType()
-      const arrayType = new ABIArrayDynamicType(byteType)
+      const arrayType = getABIType('byte[]')
 
       const value = [10, 20, 30, 40, 50]
       const result = convertAbiByteArrays(value, arrayType)
@@ -30,8 +28,7 @@ describe('convertAbiByteArrays', () => {
     })
 
     it('should return existing Uint8Array as is', () => {
-      const byteType = new ABIByteType()
-      const arrayType = new ABIArrayStaticType(byteType, 3)
+      const arrayType = getABIType('byte[3]')
 
       const value = new Uint8Array([5, 6, 7])
       const result = convertAbiByteArrays(value, arrayType)
@@ -43,9 +40,7 @@ describe('convertAbiByteArrays', () => {
   describe('Nested arrays', () => {
     it('should convert byte arrays inside arrays', () => {
       // Create byte[2][]
-      const byteType = new ABIByteType()
-      const innerArrayType = new ABIArrayStaticType(byteType, 2)
-      const outerArrayType = new ABIArrayDynamicType(innerArrayType)
+      const outerArrayType = getABIType('byte[2][]')
 
       const value = [
         [1, 2],
@@ -68,8 +63,7 @@ describe('convertAbiByteArrays', () => {
 
     it('should not convert non-byte arrays', () => {
       // Create uint8[3]
-      const uintType = new ABIUintType(8)
-      const arrayType = new ABIArrayStaticType(uintType, 3)
+      const arrayType = getABIType('uint8[3]')
 
       const value = [1, 2, 3]
       const result = convertAbiByteArrays(value, arrayType)
@@ -82,12 +76,7 @@ describe('convertAbiByteArrays', () => {
   describe('Tuple tests', () => {
     it('should handle tuples with byte arrays', () => {
       // Create (byte[2],bool,byte[3])
-      const byteType = new ABIByteType()
-      const byteArray2Type = new ABIArrayStaticType(byteType, 2)
-      const byteArray3Type = new ABIArrayStaticType(byteType, 3)
-      const boolType = new ABIBoolType()
-
-      const tupleType = new ABITupleType([byteArray2Type, boolType, byteArray3Type])
+      const tupleType = getABIType('(byte[2],bool,byte[3])')
 
       const value = [[1, 2], true, [3, 4, 5]]
       const result = convertAbiByteArrays(value, tupleType) as ABIValue[]
@@ -105,13 +94,7 @@ describe('convertAbiByteArrays', () => {
 
     it('should handle nested tuples with byte arrays', () => {
       // Create (byte[2],(byte[1],bool))
-      const byteType = new ABIByteType()
-      const byteArray2Type = new ABIArrayStaticType(byteType, 2)
-      const byteArray1Type = new ABIArrayStaticType(byteType, 1)
-      const boolType = new ABIBoolType()
-
-      const innerTupleType = new ABITupleType([byteArray1Type, boolType])
-      const outerTupleType = new ABITupleType([byteArray2Type, innerTupleType])
+      const outerTupleType = getABIType('(byte[2],(byte[1],bool))')
 
       const value = [
         [1, 2],
@@ -137,15 +120,7 @@ describe('convertAbiByteArrays', () => {
   describe('Complex mixed structures', () => {
     it('should handle complex nested structures', () => {
       // Create (byte[2][],uint8,(bool,byte[3]))
-      const byteType = new ABIByteType()
-      const byteArray2Type = new ABIArrayStaticType(byteType, 2)
-      const byteArrayDynType = new ABIArrayDynamicType(byteArray2Type)
-      const uintType = new ABIUintType(8)
-      const boolType = new ABIBoolType()
-      const byteArray3Type = new ABIArrayStaticType(byteType, 3)
-
-      const innerTupleType = new ABITupleType([boolType, byteArray3Type])
-      const outerTupleType = new ABITupleType([byteArrayDynType, uintType, innerTupleType])
+      const outerTupleType = getABIType('(byte[2][],uint8,(bool,byte[3]))')
 
       const value = [
         [
@@ -180,8 +155,7 @@ describe('convertAbiByteArrays', () => {
 
   describe('Edge cases', () => {
     it('should handle empty byte arrays', () => {
-      const byteType = new ABIByteType()
-      const arrayType = new ABIArrayStaticType(byteType, 0)
+      const arrayType = getABIType('byte[0]')
 
       const value: number[] = []
       const result = convertAbiByteArrays(value, arrayType)

@@ -2,14 +2,14 @@ import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfo
 import {
   ABIMethod,
   ABIReferenceType,
-  ABITupleType,
   ABIType,
-  ABIUintType,
   ABIValue,
+  ABITypeName,
   Address,
   TransactionSigner,
   abiTypeIsReference,
   abiTypeIsTransaction,
+  encodeABIValue,
 } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
 import { AppManager } from '../types/app-manager'
@@ -335,7 +335,7 @@ function encodeMethodArguments(
           assetReferences,
         )
 
-        abiTypes.push(new ABIUintType(8))
+        abiTypes.push({ name: ABITypeName.Uint, bitSize: 8 })
         abiValues.push(foreignIndex)
       } else {
         throw new Error(`Invalid reference value for ${referenceType}: ${argValue}`)
@@ -374,7 +374,7 @@ function encodeArgsIndividually(abiTypes: ABIType[], abiValues: ABIValue[]): Uin
   for (let i = 0; i < abiTypes.length; i++) {
     const abiType = abiTypes[i]
     const abiValue = abiValues[i]
-    const encoded = abiType.encode(abiValue)
+    const encoded = encodeABIValue(abiType, abiValue)
     encodedArgs.push(encoded)
   }
 
@@ -397,9 +397,9 @@ function encodeArgsWithTuplePacking(abiTypes: ABIType[], abiValues: ABIValue[]):
   const remainingAbiValues = abiValues.slice(ARGS_TUPLE_PACKING_THRESHOLD)
 
   if (remainingAbiTypes.length > 0) {
-    const tupleType = new ABITupleType(remainingAbiTypes)
+    const tupleType = { name: ABITypeName.Tuple as const, childTypes: remainingAbiTypes }
     const tupleValue = remainingAbiValues
-    const tupleEncoded = tupleType.encode(tupleValue)
+    const tupleEncoded = encodeABIValue(tupleType, tupleValue)
     encodedArgs.push(tupleEncoded)
   }
 

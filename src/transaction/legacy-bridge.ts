@@ -1,7 +1,7 @@
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod } from '@algorandfoundation/sdk'
+import { ABIMethod, abiTypeIsTransaction } from '@algorandfoundation/sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
@@ -27,9 +27,10 @@ import {
   SendTransactionParams,
   SendTransactionResult,
   TransactionNote,
+  TransactionToSign,
   TransactionWrapper,
 } from '../types/transaction'
-import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
+import { TransactionWithSigner, encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
 export async function legacySendTransactionBridge<T extends CommonTransactionParams, TResult extends SendSingleTransactionResult>(
@@ -135,24 +136,30 @@ export async function legacySendAppTransactionBridge<
  */
 export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
   const signer = getSenderTransactionSigner(from)
+
   const methodArgs = await Promise.all(
-    ('methodArgs' in args ? args.methodArgs : args)?.map(async (a, index) => {
+    args.methodArgs.map(async (a, index) => {
       if (a === undefined) {
         throw new Error(`Argument at position ${index} does not have a value`)
       }
       if (typeof a !== 'object') {
         return a
       }
-      // Handle the various forms of transactions to wrangle them for ATC
-      return 'txn' in a
-        ? a
-        : a instanceof Promise
-          ? { txn: (await a).transaction, signer }
-          : 'transaction' in a
-            ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
-            : 'type' in a
-              ? { txn: a, signer }
-              : a
+
+      // Handle transaction args separately to avoid conflicts with ABIStructValue
+      const abiArgumentType = args.method.args.at(index)!.type
+      if (abiTypeIsTransaction(abiArgumentType)) {
+        const t = a as TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult> | SendTransactionResult
+        return 'txn' in t
+          ? t
+          : t instanceof Promise
+            ? { txn: (await t).transaction, signer }
+            : 'transaction' in t
+              ? { txn: t.transaction, signer: 'signer' in t ? getSenderTransactionSigner(t.signer) : signer }
+              : { txn: t, signer }
+      }
+
+      return a as algosdk.ABIValue
     }),
   )
   return {

@@ -716,11 +716,11 @@ describe('ARC32: app-factory-and-app-client', () => {
     const expectedValue = 1234524352
     await client.send.call({
       method: 'set_box',
-      args: [boxName1, new ABIUintType(32).encode(expectedValue)],
+      args: [boxName1, algosdk.encodeABIValue(algosdk.getABIType("uint32"), expectedValue)],
       boxReferences: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
+    const boxes = await client.getBoxValuesFromABIType(algosdk.getABIType("uint32"), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, algosdk.getABIType("uint32"))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
