@@ -96,7 +96,7 @@ export type {
   AppDeleteParams,
   AppMethodCallParams,
   AppUpdateParams,
-  CommonAppCallParams
+  CommonAppCallParams,
 } from '../transactions/app-call'
 export type {
   AssetConfigParams,
@@ -105,7 +105,7 @@ export type {
   AssetFreezeParams,
   AssetOptInParams,
   AssetOptOutParams,
-  AssetTransferParams
+  AssetTransferParams,
 } from '../transactions/asset'
 export type { CommonTransactionParams } from '../transactions/common'
 export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
@@ -118,7 +118,7 @@ export type {
   AppUpdateMethodCall,
   ProcessedAppCallMethodCall,
   ProcessedAppCreateMethodCall,
-  ProcessedAppUpdateMethodCall
+  ProcessedAppUpdateMethodCall,
 } from '../transactions/method-call'
 export type { PaymentParams } from '../transactions/payment'
 
@@ -1519,8 +1519,6 @@ export class TransactionComposer {
     return { transactions, methodCalls: this.methodCalls, signers }
   }
 
-  // TODO: PD - port this fix over https://github.com/algorandfoundation/algokit-utils-ts/pull/456
-
   /**
    * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
    *
@@ -1769,7 +1767,6 @@ export class TransactionComposer {
       }
     })
 
-    // TODO: PD - confirm if this is done in python too
     const sortedResources = groupResponse.unnamedResourcesAccessed
 
     // NOTE: We explicitly want to avoid localeCompare as that can lead to different results in different environments

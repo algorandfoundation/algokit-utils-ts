@@ -37,3 +37,4 @@ A collection of random notes pop up during the migration process.
 - additionalAtcContext was removed from AtomicTransactionComposerToSend
 - ABI
   - how to construct ABIStruct from string
+- Make sure that the python utils also sort resources during resource population
