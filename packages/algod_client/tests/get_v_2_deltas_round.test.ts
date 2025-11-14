@@ -1,15 +1,20 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from 'vitest'
+import { AlgodClient } from '../src/client'
+import { config, TEST_ROUND } from './config'
 
-describe("GET v2_deltas_ROUND", () => {
+describe('GET v2_deltas_ROUND', () => {
   // Polytest Suite: GET v2_deltas_ROUND
 
-  describe("Common Tests", () => {
+  describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test("Basic request and response validation", () => {
-      throw new Error("TEST NOT IMPLEMENTED");
-    });
+    // TODO: Fix msgpack response handling in PollyJS mock server
+    test.skip('Basic request and response validation', async () => {
+      const client = new AlgodClient(config)
 
-  });
+      const result = await client.getLedgerStateDelta(TEST_ROUND)
 
-});
+      expect(result).toMatchSnapshot()
+    })
+  })
+})

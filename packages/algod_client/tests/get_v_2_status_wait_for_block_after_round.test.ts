@@ -1,15 +1,19 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from 'vitest'
+import { AlgodClient } from '../src/client'
+import { config, TEST_ROUND } from './config'
 
-describe("GET v2_status_wait-for-block-after_ROUND", () => {
+describe('GET v2_status_wait-for-block-after_ROUND', () => {
   // Polytest Suite: GET v2_status_wait-for-block-after_ROUND
 
-  describe("Common Tests", () => {
+  describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test("Basic request and response validation", () => {
-      throw new Error("TEST NOT IMPLEMENTED");
-    });
+    test('Basic request and response validation', async () => {
+      const client = new AlgodClient(config)
 
-  });
+      const result = await client.waitForBlock(TEST_ROUND)
 
-});
+      expect(result).toMatchSnapshot()
+    })
+  })
+})

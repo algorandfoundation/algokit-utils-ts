@@ -15,78 +15,7 @@ describe('GET v2_assets_ASSET-ID', () => {
 
       const result = await client.getAssetById(TEST_ASSET_ID)
 
-      expect(result).toMatchInlineSnapshot(`
-        {
-          "index": 705457144n,
-          "params": {
-            "clawback": "25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE",
-            "creator": "25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE",
-            "decimals": 0,
-            "defaultFrozen": false,
-            "freeze": "25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE",
-            "manager": "25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE",
-            "name": "gold nugget",
-            "nameB64": Uint8Array [
-              103,
-              111,
-              108,
-              100,
-              32,
-              110,
-              117,
-              103,
-              103,
-              101,
-              116,
-            ],
-            "reserve": "25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE",
-            "total": 1n,
-            "unitName": "piece",
-            "unitNameB64": Uint8Array [
-              112,
-              105,
-              101,
-              99,
-              101,
-            ],
-            "url": "https://path/to/my/asset/details",
-            "urlB64": Uint8Array [
-              104,
-              116,
-              116,
-              112,
-              115,
-              58,
-              47,
-              47,
-              112,
-              97,
-              116,
-              104,
-              47,
-              116,
-              111,
-              47,
-              109,
-              121,
-              47,
-              97,
-              115,
-              115,
-              101,
-              116,
-              47,
-              100,
-              101,
-              116,
-              97,
-              105,
-              108,
-              115,
-            ],
-          },
-        }
-      `)
+      expect(result).toMatchSnapshot()
     })
   })
 })
