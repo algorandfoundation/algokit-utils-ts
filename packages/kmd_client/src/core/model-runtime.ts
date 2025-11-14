@@ -215,30 +215,49 @@ export class AlgorandSerializer {
             // Reconstruct codec from entire object map
             out[field.name] = this.applyEncodeableTypeConversion(value, field.type.codecKey, ctx)
           } else if (field.type.kind === 'model') {
-            // Filter the wire data to only include keys belonging to this flattened model
-            const modelWireKeys = flattenedFieldWireKeys.get(field)
-            if (modelWireKeys) {
-              const filteredData: Record<string, ApiData> = {}
-              for (const [k, v] of unmatchedEntries.entries()) {
-                if (modelWireKeys.has(k)) {
-                  filteredData[k] = v
-                }
-              }
-              // Also check if the original value is a Map and filter it
-              if (value instanceof Map) {
-                const filteredMap = new Map<string | Uint8Array, ApiData>()
-                for (const [k, v] of value.entries()) {
-                  const keyStr = k instanceof Uint8Array ? Buffer.from(k).toString('utf-8') : String(k)
-                  if (typeof keyStr === 'string' && modelWireKeys.has(keyStr)) {
-                    filteredMap.set(k as string | Uint8Array, v)
+            const modelMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
+
+            // Check if this flattened model contains nested flattened codecs
+            const hasNestedCodec = this.hasNestedFlattenedCodec(modelMeta)
+
+            let decoded: ApiData
+            if (hasNestedCodec) {
+              // If the model has nested flattened codecs, we need to pass the original value
+              // so the nested model can reconstruct its flattened codec fields
+              decoded = this.transform(value, modelMeta, ctx)
+            } else {
+              // Filter the wire data to only include keys belonging to this flattened model
+              const modelWireKeys = flattenedFieldWireKeys.get(field)
+              if (modelWireKeys) {
+                const filteredData: Record<string, ApiData> = {}
+                for (const [k, v] of unmatchedEntries.entries()) {
+                  if (modelWireKeys.has(k)) {
+                    filteredData[k] = v
                   }
                 }
-                const modelMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
-                out[field.name] = this.transform(filteredMap, modelMeta, ctx)
+                // Also check if the original value is a Map and filter it
+                if (value instanceof Map) {
+                  const filteredMap = new Map<string | Uint8Array, ApiData>()
+                  for (const [k, v] of value.entries()) {
+                    const keyStr = k instanceof Uint8Array ? Buffer.from(k).toString('utf-8') : String(k)
+                    if (typeof keyStr === 'string' && modelWireKeys.has(keyStr)) {
+                      filteredMap.set(k as string | Uint8Array, v)
+                    }
+                  }
+                  decoded = this.transform(filteredMap, modelMeta, ctx)
+                } else {
+                  decoded = this.transform(filteredData, modelMeta, ctx)
+                }
               } else {
-                const modelMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
-                out[field.name] = this.transform(filteredData, modelMeta, ctx)
+                decoded = undefined
               }
+            }
+
+            // If the field is optional and the decoded object is empty, set it to undefined
+            if (field.optional && decoded !== undefined && this.isEmptyObject(decoded)) {
+              out[field.name] = undefined
+            } else {
+              out[field.name] = decoded
             }
           }
         }
@@ -270,9 +289,46 @@ export class AlgorandSerializer {
           wireKeys.add(key)
         }
       }
+      // Note: flattened codec fields don't have predictable wire keys,
+      // so they need to be handled differently during reconstruction
     }
 
     return wireKeys
+  }
+
+  private static hasNestedFlattenedCodec(meta: ModelMetadata): boolean {
+    if (meta.kind !== 'object' || !meta.fields) return false
+
+    for (const field of meta.fields) {
+      if (field.flattened) {
+        if (field.type.kind === 'codec') {
+          return true
+        }
+        if (field.type.kind === 'model') {
+          const childMeta = typeof field.type.meta === 'function' ? field.type.meta() : field.type.meta
+          if (this.hasNestedFlattenedCodec(childMeta)) {
+            return true
+          }
+        }
+      }
+    }
+
+    return false
+  }
+
+  private static isEmptyObject(value: ApiData): boolean {
+    if (value === null || value === undefined) return true
+    if (typeof value !== 'object') return false
+    if (Array.isArray(value)) return false
+    if (value instanceof Uint8Array) return false
+    if (value instanceof Map) return value.size === 0
+
+    // Check if it's a plain object with no own properties (excluding undefined values)
+    const keys = Object.keys(value)
+    if (keys.length === 0) return true
+
+    // Check if all properties are undefined
+    return keys.every((key) => (value as Record<string, ApiData>)[key] === undefined)
   }
 
   private static transformType(value: ApiData, type: FieldType, ctx: TransformContext): ApiData {
