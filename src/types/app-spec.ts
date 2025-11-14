@@ -1,13 +1,4 @@
-import {
-  ABIMethod,
-  Arc56Contract,
-  Arc56Method,
-  StorageKey,
-  StructField,
-  encodeABIValue,
-  getABIMethodSignature,
-  getABIType,
-} from '@algorandfoundation/algokit-abi'
+import { ABIMethod, Arc56Contract, Arc56Method, StorageKey, StructField, encodeABIValue, getABIType } from '@algorandfoundation/algokit-abi'
 import { ARC28Event } from '@algorandfoundation/algokit-abi/arc28-event'
 
 /**
@@ -27,8 +18,8 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
       return [struct.name, fields]
     }),
   ) satisfies { [structName: string]: StructField[] }
-  const hint = (m: ABIMethodParams) => appSpec.hints[getABIMethodSignature(m)] as Hint | undefined
-  const actions = (m: ABIMethod, type: 'CREATE' | 'CALL') => {
+  const hint = (m: ABIMethodParams) => appSpec.hints[getABIMethodParamsSignature(m)] as Hint | undefined
+  const actions = (m: ABIMethodParams, type: 'CREATE' | 'CALL') => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     return hint(m)?.call_config !== undefined ? callConfigToActions(hint(m)?.call_config!, type) : []
   }
@@ -151,6 +142,13 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
     sourceInfo: undefined,
     templateVariables: undefined,
   } satisfies Arc56Contract
+}
+
+// TODO: PD - confirm this logic
+function getABIMethodParamsSignature(params: ABIMethodParams) {
+  const args = params.args.map((a) => a.type).join(',')
+  const returns = params.returns.type === 'void' ? '' : params.returns.type
+  return `${params.name}(${args})${returns}`
 }
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */

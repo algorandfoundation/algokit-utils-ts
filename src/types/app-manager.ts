@@ -454,7 +454,7 @@ export class AppManager {
     } catch (err) {
       return {
         method: method,
-        rawReturnValue: new Uint8Array(),
+        rawReturnValue: undefined,
         decodeError: err as Error,
         returnValue: undefined,
       }

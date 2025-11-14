@@ -1,4 +1,4 @@
-import { ABIValue, Arc56Contract } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, ABIType, ABIValue, Arc56Contract, ProgramSourceInfo, findABIMethod } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -32,7 +32,6 @@ import {
   AppCompilationResult,
   AppMetadata,
   AppReference,
-  AppReturn,
   AppState,
   AppStorageSchema,
   BoxName,
@@ -900,25 +899,7 @@ export class AppClient {
    * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
    */
   public getABIMethod(methodNameOrSignature: string) {
-    return getArc56Method(methodNameOrSignature, this._appSpec)
-  }
-
-  /**
-   * Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
-   * on the ARC-56 method, replacing the `return` property with the decoded type.
-   *
-   * If the return type is an ARC-56 struct then the struct will be returned.
-   *
-   * @param result The SendAppTransactionResult to be mapped
-   * @param method The method that was called
-   * @returns The smart contract response with an updated return value
-   */
-  public async processMethodCallReturn<
-    TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
-    TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
-    const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) }
+    return findABIMethod(methodNameOrSignature, this._appSpec)
   }
 
   /**
@@ -1098,7 +1079,7 @@ export class AppClient {
     args: AppClientMethodCallParams['args'] | undefined,
     sender: Address | string,
   ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
-    const m = getArc56Method(methodNameOrSignature, this._appSpec)
+    const m = findABIMethod(methodNameOrSignature, this._appSpec)
     return await Promise.all(
       args?.map(async (a, i) => {
         const arg = m.args[i]
@@ -1350,11 +1331,9 @@ export class AppClient {
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
         const compiled = await this.compile(params)
+        const sendTransactionResult = this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
         return {
-          ...(await this.processMethodCallReturn(
-            this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })),
-            getArc56Method(params.method, this._appSpec),
-          )),
+          ...sendTransactionResult,
           ...(compiled as Partial<AppCompilationResult>),
         }
       },
@@ -1364,10 +1343,7 @@ export class AppClient {
        * @returns The result of sending the opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams & SendParams) => {
-        return this.processMethodCallReturn(
-          this._algorand.send.appCallMethodCall(await this.params.optIn(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
       },
       /**
        * Sign and send transactions for a delete ABI call
@@ -1375,10 +1351,7 @@ export class AppClient {
        * @returns The result of sending the delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams & SendParams) => {
-        return this.processMethodCallReturn(
-          this._algorand.send.appDeleteMethodCall(await this.params.delete(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this._algorand.send.appDeleteMethodCall(await this.params.delete(params))
       },
       /**
        * Sign and send transactions for a close out ABI call
@@ -1386,10 +1359,7 @@ export class AppClient {
        * @returns The result of sending the close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams & SendParams) => {
-        return this.processMethodCallReturn(
-          this._algorand.send.appCallMethodCall(await this.params.closeOut(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this._algorand.send.appCallMethodCall(await this.params.closeOut(params))
       },
       /**
        * Sign and send transactions for a call (defaults to no-op)
@@ -1400,7 +1370,7 @@ export class AppClient {
         // Read-only call - do it via simulate
         if (
           (params.onComplete === OnApplicationComplete.NoOp || !params.onComplete) &&
-          getArc56Method(params.method, this._appSpec).method.readonly
+          findABIMethod(params.method, this._appSpec).readonly
         ) {
           const readonlyParams = {
             ...params,
@@ -1427,16 +1397,13 @@ export class AppClient {
                 // Simulate calls for a readonly method can use the max opcode budget
                 extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
-            return this.processMethodCallReturn(
-              {
-                ...result,
-                transaction: result.transactions.at(-1)!,
-                confirmation: result.confirmations.at(-1)!,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-                return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
-              } satisfies SendAppTransactionResult,
-              getArc56Method(params.method, this._appSpec),
-            )
+            return {
+              ...result,
+              transaction: result.transactions.at(-1)!,
+              confirmation: result.confirmations.at(-1)!,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+              return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
+            } satisfies SendAppTransactionResult
           } catch (e) {
             const error = e as Error
             // For read-only calls with max opcode budget, fee issues should be rare
@@ -1448,10 +1415,7 @@ export class AppClient {
           }
         }
 
-        return this.processMethodCallReturn(
-          this._algorand.send.appCallMethodCall(await this.params.call(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this._algorand.send.appCallMethodCall(await this.params.call(params))
       },
     }
   }
@@ -1550,7 +1514,7 @@ export class AppClient {
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     const sender = this.getSender(params.sender)
-    const method = getArc56Method(params.method, this._appSpec)
+    const method = findABIMethod(params.method, this._appSpec)
     const args = await this.getABIArgsWithDefaultValues(params.method, params.args, sender)
     return {
       ...params,

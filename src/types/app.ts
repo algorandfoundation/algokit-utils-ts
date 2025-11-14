@@ -1,8 +1,9 @@
-import { ABIMethod, ABIMethodParams, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
+import { ABIMethodParams } from './app-spec'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,

@@ -33,22 +33,24 @@ export type ABIMethodReturn = {
 }
 
 /** Represents an ABI method return value with parsed data. */
-export type ABIReturn = {
-  /** The method that was called. */
-  method: ABIMethod
-  /** The raw return value as bytes.
-   *
-   * This value will be empty if the method does not return a value (return type "void")
-   */
-  rawReturnValue: Uint8Array
-  /** The parsed ABI return value.
-   *
-   * This value will be undefined if decoding failed or the method does not return a value (return type "void")
-   */
-  returnValue?: ABIValue
-  /** Any error that occurred during decoding, or undefined if decoding was successful */
-  decodeError?: Error
-}
+export type ABIReturn =
+  | {
+      /** The method that was called. */
+      method: ABIMethod
+      /** The raw return value as bytes.
+       *
+       * This value will be empty if the method does not return a value (return type "void")
+       */
+      rawReturnValue: Uint8Array
+      /** The parsed ABI return value.
+       *
+       * This value will be undefined if decoding failed or the method does not return a value (return type "void")
+       */
+      returnValue: ABIValue
+      /** Any error that occurred during decoding, or undefined if decoding was successful */
+      decodeError: undefined
+    }
+  | { rawReturnValue?: undefined; returnValue?: undefined; method: ABIMethod; decodeError: Error }
 
 /** Decoded ARC-56 struct as a struct rather than a tuple. */
 export type ABIStruct = {
