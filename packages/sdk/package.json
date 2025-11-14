@@ -20,9 +20,7 @@
     "audit": "better-npm-audit audit",
     "pre-commit": "run-s check-types lint:fix audit format test"
   },
-  "dependencies": {
-    "@algorandfoundation/algokit-abi": "workspace:*"
-  },
+  "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {}
 }

@@ -4,9 +4,9 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
+import type { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, SimulateRequest, SimulateTransactionGroupResult } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
-import type { ABIResult } from '@algorandfoundation/sdk'
 import * as algokit from '../../../src/index'
 import { TransactionWithSigner } from '../../../src/index'
 import type {
@@ -926,7 +926,7 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
 export type SimulateOptions = Omit<SimulateRequest, 'txnGroups'>
 export type TestContractComposerSimulateResult<TReturns extends [...any[]]> = {
   returns: TReturns
-  methodResults: ABIResult[]
+  methodResults: ABIReturn[]
   simulateResponse: SimulateTransactionGroupResult
 }
 export type TestContractComposerResults<TReturns extends [...any[]]> = {

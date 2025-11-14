@@ -1,3 +1,4 @@
+import { ABIMethod, ABIReturn } from '@algorandfoundation/algokit-abi'
 import {
   AlgodClient,
   AlgorandSerializer,
@@ -25,7 +26,7 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, Address, TransactionSigner } from '@algorandfoundation/sdk'
+import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import {
@@ -74,7 +75,6 @@ import {
 } from '../transactions/method-call'
 import { buildPayment, type PaymentParams } from '../transactions/payment'
 import { asJson } from '../util'
-import { ABIReturn } from './app'
 import { AppManager } from './app-manager'
 import { Expand } from './expand'
 import { FeeDelta, FeePriority } from './fee-coverage'
@@ -232,7 +232,7 @@ export interface BuiltTransactions {
   /** The built transactions */
   transactions: Transaction[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
-  methodCalls: Map<number, algosdk.ABIMethod>
+  methodCalls: Map<number, ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
   signers: Map<number, algosdk.TransactionSigner>
 }
@@ -267,7 +267,7 @@ export class TransactionComposer {
   // Note: This doesn't need to be a private field of this class
   // It has been done this way so that another process can manipulate this values, i.e. `legacySendTransactionBridge`
   // Once the legacy bridges are removed, this can be calculated on the fly
-  private methodCalls: Map<number, algosdk.ABIMethod> = new Map()
+  private methodCalls: Map<number, ABIMethod> = new Map()
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else

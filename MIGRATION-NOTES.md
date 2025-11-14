@@ -37,4 +37,8 @@ A collection of random notes pop up during the migration process.
   - ABIStruct can't be constructed from string.
   - Bring the unhappy path tests over (fail to encode/decode)
   - TODO: PD - revert this: the names are ABIStaticArrayType and ABIDynamicArrayType (not ABIArrayStaticType and ABIArrayDynamicType)
+  - ABIResult vs ABIReturn
+    - TestContractClient was updated
+  - TODO: PD - confirm Converts `bigint`'s for Uint's < 64 to `number` for easier use.
+  - TODO: PD - look into convertAbiByteArrays
 - Make sure that the python utils also sort resources during resource population

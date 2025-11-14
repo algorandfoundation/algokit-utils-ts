@@ -71,14 +71,12 @@ export function verifyBytes(bytes: Uint8Array, signature: Uint8Array, addr: stri
 export const ERROR_MULTISIG_BAD_SENDER = new Error(MULTISIG_BAD_SENDER_ERROR_MSG)
 export const ERROR_INVALID_MICROALGOS = new Error(convert.INVALID_MICROALGOS_ERROR_MSG)
 
-export * from './abi/index'
 export { default as generateAccount } from './account'
 export * from './client'
 // Export client classes with algosdk-compatible names
 export { KmdClient as Kmd } from './client/kmd'
 export { IndexerClient as Indexer } from './client/v2/indexer/index'
 export * as indexerModels from './client/v2/indexer/models/types'
-export * from './composer'
 export * from './convert'
 export { Address, decodeAddress, encodeAddress, getApplicationAddress, isValidAddress } from './encoding/address'
 export { bigIntToBytes, bytesToBigInt } from './encoding/bigint'

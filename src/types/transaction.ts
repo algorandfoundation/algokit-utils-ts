@@ -1,3 +1,4 @@
+import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import {
   AppCallTransactionFields,
@@ -16,7 +17,6 @@ import { StateProofTransactionFields } from '@algorandfoundation/algokit-transac
 import { LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { ABIReturn } from './app'
 import { TransactionComposer } from './composer'
 import { Expand } from './expand'
 

@@ -1,12 +1,3 @@
-import {
-  ABIReturnType,
-  ABIType,
-  ABIValue,
-  ABITypeName,
-  getABITypeName,
-  ABIArrayDynamicType,
-  ABIArrayStaticType,
-} from '@algorandfoundation/sdk'
 import { APP_PAGE_MAX_SIZE } from './types/app'
 
 /**
@@ -114,61 +105,4 @@ export const asJson = (
 /** Calculate minimum number of extra program pages required for provided approval and clear state programs */
 export const calculateExtraProgramPages = (approvalProgram: Uint8Array, clearStateProgram?: Uint8Array): number => {
   return Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0) - 1) / APP_PAGE_MAX_SIZE)
-}
-
-/** Take a decoded ABI value and convert all byte arrays (including nested ones) from number[] to Uint8Arrays */
-export function convertAbiByteArrays(value: ABIValue, type: ABIReturnType): ABIValue {
-  // Return value as is if the type doesn't have any bytes or if it's already an Uint8Array
-  if (typeof type === 'string' || !getABITypeName(type).includes('byte') || value instanceof Uint8Array) {
-    return value
-  }
-
-  // Handle byte arrays (byte[N] or byte[])
-  if (
-    (type.name === ABITypeName.StaticArray || type.name === ABITypeName.DynamicArray) &&
-    type.childType.name === ABITypeName.Byte &&
-    Array.isArray(value)
-  ) {
-    return new Uint8Array(value as number[])
-  }
-
-  // Handle other arrays (for nested structures)
-  if ((type.name === ABITypeName.StaticArray || type.name === ABITypeName.DynamicArray) && Array.isArray(value)) {
-    const result = []
-    for (let i = 0; i < value.length; i++) {
-      result.push(convertAbiByteArrays(value[i], type.childType))
-    }
-    return result
-  }
-
-  // Handle tuples (for nested structures)
-  if (type.name === ABITypeName.Tuple && Array.isArray(value)) {
-    const result = []
-    for (let i = 0; i < value.length && i < type.childTypes.length; i++) {
-      result.push(convertAbiByteArrays(value[i], type.childTypes[i]))
-    }
-    return result
-  }
-
-  // For other types, return the value as is
-  return value
-}
-
-/**
- * Convert bigint values to numbers for uint types with bit size < 53
- */
-export const convertABIDecodedBigIntToNumber = (value: ABIValue, type: ABIType): ABIValue => {
-  if (typeof value === 'bigint') {
-    if (type.name === ABITypeName.Uint) {
-      return type.bitSize < 53 ? Number(value) : value
-    } else {
-      return value
-    }
-  } else if (Array.isArray(value) && (type.name === ABITypeName.StaticArray || type.name === ABITypeName.DynamicArray)) {
-    return value.map((v) => convertABIDecodedBigIntToNumber(v, type.childType))
-  } else if (Array.isArray(value) && type.name === ABITypeName.Tuple) {
-    return value.map((v, i) => convertABIDecodedBigIntToNumber(v, type.childTypes[i]))
-  } else {
-    return value
-  }
 }

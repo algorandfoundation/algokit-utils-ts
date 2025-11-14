@@ -1,17 +1,8 @@
+import { ABIValue, Arc56Contract } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import {
-  ABIMethod,
-  ABIMethodParams,
-  ABIType,
-  ABIValue,
-  Address,
-  Indexer,
-  ProgramSourceMap,
-  TransactionSigner,
-  getApplicationAddress,
-} from '@algorandfoundation/sdk'
+import { Address, Indexer, ProgramSourceMap, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -54,19 +45,6 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import {
-  ABIStruct,
-  Arc56Contract,
-  Arc56Method,
-  ProgramSourceInfo,
-  StorageKey,
-  StorageMap,
-  getABIDecodedValue,
-  getABIEncodedValue,
-  getABITupleFromABIStruct,
-  getArc56Method,
-  getArc56ReturnValue,
-} from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
@@ -391,7 +369,7 @@ export type AppClientMethodCallParams = Expand<
      * * Another method call (via method call params object)
      * * undefined (this represents a placeholder for either a default argument or a transaction argument that is fulfilled by another method call argument)
      */
-    args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
+    args?: (ABIValue | AppMethodCallTransactionArgument | undefined)[]
   }
 >
 

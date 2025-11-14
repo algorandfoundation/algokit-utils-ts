@@ -577,8 +577,11 @@ export type ABIStructType = {
   structFields: ABIStructField[]
 }
 
+/** Information about a single field in a struct */
 export type ABIStructField = {
+  /** The name of the struct field */
   name: string
+  /** The type of the struct field's value */
   type: ABIType | ABIStructField[]
 }
 

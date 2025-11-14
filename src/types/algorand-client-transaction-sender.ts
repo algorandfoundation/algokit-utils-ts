@@ -1,3 +1,4 @@
+import { ABIMethod } from '@algorandfoundation/algokit-abi'
 import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
@@ -23,7 +24,7 @@ import {
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 
-const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
+const getMethodCallForLog = ({ method, args }: { method: ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
     typeof a === 'object'
       ? asJson(a, (k, v) => {
