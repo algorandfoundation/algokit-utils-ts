@@ -58,7 +58,7 @@ export const ApplicationStateOperationMeta: ModelMetadata = {
       wireKey: 'new-value',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => AvmValueMeta },
+      type: { kind: 'model', meta: AvmValueMeta },
     },
     {
       name: 'account',

@@ -47,7 +47,7 @@ export const TransactionHeartbeatMeta: ModelMetadata = {
       wireKey: 'hb-proof',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => HbProofFieldsMeta },
+      type: { kind: 'model', meta: HbProofFieldsMeta },
     },
     {
       name: 'hbSeed',

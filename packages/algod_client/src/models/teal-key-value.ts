@@ -26,7 +26,7 @@ export const TealKeyValueMeta: ModelMetadata = {
       wireKey: 'value',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => TealValueMeta },
+      type: { kind: 'model', meta: TealValueMeta },
     },
   ],
 }

@@ -59,6 +59,9 @@ export type LogicSignatureDto = {
   /** Signature for delegated logic sig (optional) */
   sig?: Uint8Array
 
-  /** Multisig for delegated logic sig (optional) */
+  /** Legacy multisig for delegated logic sig (optional) */
   msig?: MultisigSignatureDto
+
+  /** Multisig for delegated logic sig (optional) */
+  lmsig?: MultisigSignatureDto
 }

@@ -199,6 +199,8 @@ class SchemaProcessor:
             signed_txn = False
             bytes_flag = False
             bigint_flag = False
+            inline_object_schema = None
+
             if is_array and isinstance(items, dict):
                 if "$ref" in items:
                     ref_model = ts_pascal_case(items["$ref"].split("/")[-1])
@@ -209,14 +211,30 @@ class SchemaProcessor:
             else:
                 if "$ref" in (prop_schema or {}):
                     ref_model = ts_pascal_case(prop_schema["$ref"].split("/")[-1])
-                fmt = prop_schema.get(constants.SchemaKey.FORMAT)
-                bytes_flag = fmt == "byte" or prop_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
-                bigint_flag = bool(prop_schema.get(constants.X_ALGOKIT_BIGINT) is True)
-                signed_txn = bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+                # Check for special codec flags first
+                elif bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True):
+                    signed_txn = True
+                # For inline nested objects, store the schema for inline metadata generation
+                elif (prop_schema.get(constants.SchemaKey.TYPE) == "object" and
+                      "properties" in prop_schema and
+                      "$ref" not in prop_schema and
+                      prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is not True):
+                    # Store the inline object schema for metadata generation
+                    inline_object_schema = prop_schema
+                else:
+                    fmt = prop_schema.get(constants.SchemaKey.FORMAT)
+                    bytes_flag = fmt == "byte" or prop_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+                    bigint_flag = bool(prop_schema.get(constants.X_ALGOKIT_BIGINT) is True)
+                    signed_txn = bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
             is_nullable = bool(prop_schema.get(constants.SchemaKey.NULLABLE) is True)
+
+            # Generate inline metadata name for nested objects
+            inline_meta_name = None
+            if inline_object_schema:
+                inline_meta_name = f"{model_name}{ts_pascal_case(canonical)}Meta"
 
             fields.append(
                 FieldDescriptor(
@@ -230,6 +248,8 @@ class SchemaProcessor:
                     is_signed_txn=signed_txn,
                     is_optional=is_optional,
                     is_nullable=is_nullable,
+                    inline_object_schema=inline_object_schema,
+                    inline_meta_name=inline_meta_name,
                 )
             )
 
@@ -855,56 +875,27 @@ class CodeGenerator:
                        if ts_pascal_case(name) in all_used_types}
 
 
-
         # Generate components (only used schemas)
         files.update(self.schema_processor.generate_models(output_dir, used_schemas))
 
         if service_class == "AlgodApi":
             models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
 
-            # Add SuggestedParams custom model
+            # Generate the custom typed models
             files[models_dir / "suggested-params.ts"] = self.renderer.render(
-                "models/transaction-params/suggested-params.ts.j2",
-                {"spec": spec},
-            )
-
-            # Custom typed block models
-            # Block-specific models (prefixed to avoid shape collisions)
-            files[models_dir / "block-eval-delta.ts"] = self.renderer.render(
-                "models/block/block-eval-delta.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "block-state-delta.ts"] = self.renderer.render(
-                "models/block/block-state-delta.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "block-account-state-delta.ts"] = self.renderer.render(
-                "models/block/block-account-state-delta.ts.j2",
-                {"spec": spec},
-            )
-            # BlockAppEvalDelta is implemented by repurposing application-eval-delta.ts.j2 to new name
-            files[models_dir / "block-app-eval-delta.ts"] = self.renderer.render(
-                "models/block/application-eval-delta.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "block_state_proof_tracking_data.ts"] = self.renderer.render(
-                "models/block/block-state-proof-tracking-data.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "block_state_proof_tracking.ts"] = self.renderer.render(
-                "models/block/block-state-proof-tracking.ts.j2",
-                {"spec": spec},
-            )
-            files[models_dir / "signed-txn-in-block.ts"] = self.renderer.render(
-                "models/block/signed-txn-in-block.ts.j2",
+                "models/custom/suggested-params.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block.ts"] = self.renderer.render(
-                "models/block/block.ts.j2",
+                "models/custom/block.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "get-block.ts"] = self.renderer.render(
-                "models/block/get-block.ts.j2",
+                "models/custom/get-block.ts.j2",
+                {"spec": spec},
+            )
+            files[models_dir / "ledger-state-delta.ts"] = self.renderer.render(
+                "models/custom/ledger-state-delta.ts.j2",
                 {"spec": spec},
             )
 
@@ -914,22 +905,8 @@ class CodeGenerator:
             extras = (
                 "\n"
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
-                "export type { BlockEvalDelta } from './block-eval-delta';\n"
-                "export { BlockEvalDeltaMeta } from './block-eval-delta';\n"
-                "export type { BlockStateDelta } from './block-state-delta';\n"
-                "export { BlockStateDeltaMeta } from './block-state-delta';\n"
-                "export type { BlockAccountStateDelta } from './block-account-state-delta';\n"
-                "export { BlockAccountStateDeltaMeta } from './block-account-state-delta';\n"
-                "export type { BlockAppEvalDelta } from './block-app-eval-delta';\n"
-                "export { BlockAppEvalDeltaMeta } from './block-app-eval-delta';\n"
-                "export type { BlockStateProofTrackingData } from './block_state_proof_tracking_data';\n"
-                "export { BlockStateProofTrackingDataMeta } from './block_state_proof_tracking_data';\n"
-                "export type { BlockStateProofTracking } from './block_state_proof_tracking';\n"
-                "export { BlockStateProofTrackingMeta } from './block_state_proof_tracking';\n"
                 "export type { Block } from './block';\n"
                 "export { BlockMeta } from './block';\n"
-                "export type { SignedTxnInBlock } from './signed-txn-in-block';\n"
-                "export { SignedTxnInBlockMeta } from './signed-txn-in-block';\n"
             )
             files[index_path] = base_index + extras
         files.update(self._generate_client_files(output_dir, client_class, service_class))
@@ -962,7 +939,6 @@ class CodeGenerator:
             core_dir / "fetch-http-request.ts": ("base/src/core/fetch-http-request.ts.j2", context),
             core_dir / "api-error.ts": ("base/src/core/api-error.ts.j2", context),
             core_dir / "request.ts": ("base/src/core/request.ts.j2", context),
-            core_dir / "serialization.ts": ("base/src/core/serialization.ts.j2", context),
             core_dir / "codecs.ts": ("base/src/core/codecs.ts.j2", context),
             core_dir / "model-runtime.ts": ("base/src/core/model-runtime.ts.j2", context),
             # Project files

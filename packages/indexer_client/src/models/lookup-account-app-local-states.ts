@@ -25,7 +25,7 @@ export const LookupAccountAppLocalStatesMeta: ModelMetadata = {
       wireKey: 'apps-local-states',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationLocalStateMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationLocalStateMeta } },
     },
     {
       name: 'currentRound',

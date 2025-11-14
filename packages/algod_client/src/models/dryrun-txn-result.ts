@@ -61,7 +61,7 @@ export const DryrunTxnResultMeta: ModelMetadata = {
       wireKey: 'logic-sig-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => DryrunStateMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: DryrunStateMeta } },
     },
     {
       name: 'logicSigMessages',
@@ -75,7 +75,7 @@ export const DryrunTxnResultMeta: ModelMetadata = {
       wireKey: 'app-call-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => DryrunStateMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: DryrunStateMeta } },
     },
     {
       name: 'appCallMessages',
@@ -89,14 +89,14 @@ export const DryrunTxnResultMeta: ModelMetadata = {
       wireKey: 'global-delta',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateDeltaMeta },
+      type: { kind: 'model', meta: StateDeltaMeta },
     },
     {
       name: 'localDeltas',
       wireKey: 'local-deltas',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AccountStateDeltaMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AccountStateDeltaMeta } },
     },
     {
       name: 'logs',

@@ -35,14 +35,14 @@ export const TransactionStateProofMeta: ModelMetadata = {
       wireKey: 'state-proof',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateProofFieldsMeta },
+      type: { kind: 'model', meta: StateProofFieldsMeta },
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => IndexerStateProofMessageMeta },
+      type: { kind: 'model', meta: IndexerStateProofMessageMeta },
     },
   ],
 }

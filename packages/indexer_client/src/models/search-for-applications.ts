@@ -25,7 +25,7 @@ export const SearchForApplicationsMeta: ModelMetadata = {
       wireKey: 'applications',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationMeta } },
     },
     {
       name: 'currentRound',

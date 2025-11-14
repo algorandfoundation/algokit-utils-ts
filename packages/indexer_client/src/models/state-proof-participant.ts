@@ -20,7 +20,7 @@ export const StateProofParticipantMeta: ModelMetadata = {
       wireKey: 'verifier',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateProofVerifierMeta },
+      type: { kind: 'model', meta: StateProofVerifierMeta },
     },
     {
       name: 'weight',

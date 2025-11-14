@@ -35,7 +35,7 @@ export const GetWalletsResponseMeta: ModelMetadata = {
       wireKey: 'wallets',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => WalletMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: WalletMeta } },
     },
   ],
 }

@@ -31,7 +31,7 @@ export const MerkleArrayProofMeta: ModelMetadata = {
       wireKey: 'hash-factory',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => HashFactoryMeta },
+      type: { kind: 'model', meta: HashFactoryMeta },
     },
     {
       name: 'treeDepth',

@@ -21,7 +21,7 @@ export const SimulateInitialStatesMeta: ModelMetadata = {
       wireKey: 'app-initial-states',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationInitialStatesMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationInitialStatesMeta } },
     },
   ],
 }

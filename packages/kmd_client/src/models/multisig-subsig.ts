@@ -22,14 +22,14 @@ export const MultisigSubsigMeta: ModelMetadata = {
       wireKey: 'Key',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      type: { kind: 'model', meta: PublicKeyMeta },
     },
     {
       name: 'sig',
       wireKey: 'Sig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => SignatureMeta },
+      type: { kind: 'model', meta: SignatureMeta },
     },
   ],
 }

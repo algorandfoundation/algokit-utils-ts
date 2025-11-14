@@ -5,7 +5,7 @@ import { BlockMeta } from './block';
 export type GetBlock = {
   /** Block data including header and transactions. */
   block: Block;
-  /** Block certificate (msgpack only). */
+  /** Block certificate. */
   cert?: Record<string, unknown>;
 };
 
@@ -13,10 +13,7 @@ export const GetBlockMeta: ModelMetadata = {
   name: 'GetBlock',
   kind: 'object',
   fields: [
-    { name: 'block', wireKey: 'block', optional: false, nullable: false, type: { kind: 'model', meta: () => BlockMeta } },
+    { name: 'block', wireKey: 'block', optional: false, nullable: false, type: { kind: 'model', meta: BlockMeta } },
     { name: 'cert', wireKey: 'cert', optional: true, nullable: false, type: { kind: 'scalar' } },
   ],
 };
-
-
-

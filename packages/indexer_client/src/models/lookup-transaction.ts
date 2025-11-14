@@ -20,7 +20,7 @@ export const LookupTransactionMeta: ModelMetadata = {
       wireKey: 'transaction',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => TransactionMeta },
+      type: { kind: 'model', meta: TransactionMeta },
     },
     {
       name: 'currentRound',

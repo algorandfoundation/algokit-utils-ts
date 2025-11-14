@@ -26,7 +26,7 @@ export const EvalDeltaKeyValueMeta: ModelMetadata = {
       wireKey: 'value',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => EvalDeltaMeta },
+      type: { kind: 'model', meta: EvalDeltaMeta },
     },
   ],
 }

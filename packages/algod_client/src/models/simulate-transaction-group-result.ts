@@ -44,7 +44,7 @@ export const SimulateTransactionGroupResultMeta: ModelMetadata = {
       wireKey: 'txn-results',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SimulateTransactionResultMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: SimulateTransactionResultMeta } },
     },
     {
       name: 'failureMessage',
@@ -79,7 +79,7 @@ export const SimulateTransactionGroupResultMeta: ModelMetadata = {
       wireKey: 'unnamed-resources-accessed',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => SimulateUnnamedResourcesAccessedMeta },
+      type: { kind: 'model', meta: SimulateUnnamedResourcesAccessedMeta },
     },
   ],
 }

@@ -29,14 +29,14 @@ export const AccountAssetInformationMeta: ModelMetadata = {
       wireKey: 'asset-holding',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => AssetHoldingMeta },
+      type: { kind: 'model', meta: AssetHoldingMeta },
     },
     {
       name: 'createdAsset',
       wireKey: 'created-asset',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      type: { kind: 'model', meta: AssetParamsMeta },
     },
   ],
 }

@@ -18,6 +18,9 @@ import {
   booleanCodec,
   bytesArrayCodec,
   bytesCodec,
+  fixedBytes1793Codec,
+  fixedBytes32Codec,
+  fixedBytes64Codec,
   numberCodec,
   stringCodec,
 } from '../encoding/codecs'
@@ -308,8 +311,8 @@ export function validateTransaction(transaction: Transaction): void {
  */
 export function encodeTransactionRaw(transaction: Transaction): Uint8Array {
   validateTransaction(transaction)
-  const encodingData = toTransactionDto(transaction)
-  return encodeMsgpack(encodingData)
+  const transactionDto = toTransactionDto(transaction)
+  return encodeMsgpack(transactionDto)
 }
 
 /**
@@ -558,12 +561,12 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     lv: bigIntCodec.encode(transaction.lastValid),
     snd: addressCodec.encode(transaction.sender),
     gen: stringCodec.encode(transaction.genesisId),
-    gh: bytesCodec.encode(transaction.genesisHash),
+    gh: fixedBytes32Codec.encode(transaction.genesisHash),
     fee: bigIntCodec.encode(transaction.fee),
     note: bytesCodec.encode(transaction.note),
-    lx: bytesCodec.encode(transaction.lease),
+    lx: fixedBytes32Codec.encode(transaction.lease),
     rekey: addressCodec.encode(transaction.rekeyTo),
-    grp: bytesCodec.encode(transaction.group),
+    grp: fixedBytes32Codec.encode(transaction.group),
   }
 
   // Add transaction type specific fields
@@ -591,7 +594,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       un: stringCodec.encode(transaction.assetConfig.unitName),
       an: stringCodec.encode(transaction.assetConfig.assetName),
       au: stringCodec.encode(transaction.assetConfig.url),
-      am: bytesCodec.encode(transaction.assetConfig.metadataHash),
+      am: fixedBytes32Codec.encode(transaction.assetConfig.metadataHash),
       m: addressCodec.encode(transaction.assetConfig.manager),
       f: addressCodec.encode(transaction.assetConfig.freeze),
       c: addressCodec.encode(transaction.assetConfig.clawback),
@@ -748,12 +751,12 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
   }
 
   if (transaction.keyRegistration) {
-    txDto.votekey = bytesCodec.encode(transaction.keyRegistration.voteKey)
-    txDto.selkey = bytesCodec.encode(transaction.keyRegistration.selectionKey)
+    txDto.votekey = fixedBytes32Codec.encode(transaction.keyRegistration.voteKey)
+    txDto.selkey = fixedBytes32Codec.encode(transaction.keyRegistration.selectionKey)
     txDto.votefst = bigIntCodec.encode(transaction.keyRegistration.voteFirst)
     txDto.votelst = bigIntCodec.encode(transaction.keyRegistration.voteLast)
     txDto.votekd = bigIntCodec.encode(transaction.keyRegistration.voteKeyDilution)
-    txDto.sprfkey = bytesCodec.encode(transaction.keyRegistration.stateProofKey)
+    txDto.sprfkey = fixedBytes64Codec.encode(transaction.keyRegistration.stateProofKey)
     txDto.nonpart = booleanCodec.encode(transaction.keyRegistration.nonParticipation)
   }
 
@@ -761,14 +764,14 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     txDto.hb = heartbeatParamsDtoCodec.encode({
       a: addressCodec.encode(transaction.heartbeat.address),
       prf: heartbeatProofDtoCodec.encode({
-        s: bytesCodec.encode(transaction.heartbeat.proof.sig),
-        p: bytesCodec.encode(transaction.heartbeat.proof.pk),
-        p2: bytesCodec.encode(transaction.heartbeat.proof.pk2),
-        p1s: bytesCodec.encode(transaction.heartbeat.proof.pk1Sig),
-        p2s: bytesCodec.encode(transaction.heartbeat.proof.pk2Sig),
+        s: fixedBytes64Codec.encode(transaction.heartbeat.proof.sig),
+        p: fixedBytes32Codec.encode(transaction.heartbeat.proof.pk),
+        p2: fixedBytes32Codec.encode(transaction.heartbeat.proof.pk2),
+        p1s: fixedBytes64Codec.encode(transaction.heartbeat.proof.pk1Sig),
+        p2s: fixedBytes64Codec.encode(transaction.heartbeat.proof.pk2Sig),
       }),
       sd: bytesCodec.encode(transaction.heartbeat.seed),
-      vid: bytesCodec.encode(transaction.heartbeat.voteId),
+      vid: fixedBytes32Codec.encode(transaction.heartbeat.voteId),
       kd: bigIntCodec.encode(transaction.heartbeat.keyDilution),
     })
   }
@@ -795,14 +798,14 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
                   idx: bigIntCodec.encode(reveal.sigslot.sig.vectorCommitmentIndex),
                   prf: toMerkleArrayProofDto(reveal.sigslot.sig.proof),
                   vkey: {
-                    k: bytesCodec.encode(reveal.sigslot.sig.verifyingKey.publicKey),
+                    k: fixedBytes1793Codec.encode(reveal.sigslot.sig.verifyingKey.publicKey),
                   },
                 },
                 l: bigIntCodec.encode(reveal.sigslot.lowerSigWeight),
               },
               p: {
                 p: {
-                  cmt: bytesCodec.encode(reveal.participant.verifier.commitment),
+                  cmt: fixedBytes64Codec.encode(reveal.participant.verifier.commitment),
                   lf: bigIntCodec.encode(reveal.participant.verifier.keyLifetime),
                 },
                 w: bigIntCodec.encode(reveal.participant.weight),
@@ -831,170 +834,206 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
 export function fromTransactionDto(transactionDto: TransactionDto): Transaction {
   const transactionType = fromTransactionTypeDto(transactionDto.type)
 
+  const fee = bigIntCodec.decodeOptional(transactionDto.fee)
+  const genesisId = stringCodec.decodeOptional(transactionDto.gen)
+  const genesisHash = fixedBytes32Codec.decodeOptional(transactionDto.gh)
+  const note = bytesCodec.decodeOptional(transactionDto.note)
+  const lease = fixedBytes32Codec.decodeOptional(transactionDto.lx)
+  const rekeyTo = addressCodec.decodeOptional(transactionDto.rekey)
+  const group = fixedBytes32Codec.decodeOptional(transactionDto.grp)
+
   const tx: Transaction = {
     type: transactionType,
     sender: addressCodec.decode(transactionDto.snd),
     firstValid: bigIntCodec.decode(transactionDto.fv),
     lastValid: bigIntCodec.decode(transactionDto.lv),
-    fee: bigIntCodec.decodeOptional(transactionDto.fee),
-    genesisId: stringCodec.decodeOptional(transactionDto.gen),
-    genesisHash: bytesCodec.decodeOptional(transactionDto.gh),
-    note: bytesCodec.decodeOptional(transactionDto.note),
-    lease: bytesCodec.decodeOptional(transactionDto.lx),
-    rekeyTo: addressCodec.decodeOptional(transactionDto.rekey),
-    group: bytesCodec.decodeOptional(transactionDto.grp),
+    ...(fee && { fee }),
+    ...(genesisId && { genesisId }),
+    ...(genesisHash && { genesisHash }),
+    ...(note && { note }),
+    ...(lease && { lease }),
+    ...(rekeyTo && { rekeyTo }),
+    ...(group && { group }),
   }
 
   // Add transaction type specific fields
   switch (transactionType) {
-    case TransactionType.Payment:
+    case TransactionType.Payment: {
+      const paymentCloseRemainderTo = addressCodec.decodeOptional(transactionDto.close)
       tx.payment = {
         amount: bigIntCodec.decode(transactionDto.amt),
         receiver: addressCodec.decode(transactionDto.rcv),
-        closeRemainderTo: addressCodec.decodeOptional(transactionDto.close),
+        ...(paymentCloseRemainderTo && { closeRemainderTo: paymentCloseRemainderTo }),
       }
       break
-    case TransactionType.AssetTransfer:
+    }
+    case TransactionType.AssetTransfer: {
+      const assetTransferCloseRemainderTo = addressCodec.decodeOptional(transactionDto.aclose)
+      const assetSender = addressCodec.decodeOptional(transactionDto.asnd)
       tx.assetTransfer = {
         assetId: bigIntCodec.decode(transactionDto.xaid),
         amount: bigIntCodec.decode(transactionDto.aamt),
         receiver: addressCodec.decode(transactionDto.arcv),
-        closeRemainderTo: addressCodec.decodeOptional(transactionDto.aclose),
-        assetSender: addressCodec.decodeOptional(transactionDto.asnd),
+        ...(assetTransferCloseRemainderTo && { closeRemainderTo: assetTransferCloseRemainderTo }),
+        ...(assetSender && { assetSender }),
       }
       break
-    case TransactionType.AssetConfig:
+    }
+    case TransactionType.AssetConfig: {
+      const assetParams = transactionDto.apar
+      let assetConfigParams: Omit<AssetConfigTransactionFields, 'assetId'> | undefined = undefined
+
+      if (assetParams) {
+        const total = bigIntCodec.decodeOptional(assetParams.t)
+        const decimals = numberCodec.decodeOptional(assetParams.dc)
+        const defaultFrozen = booleanCodec.decodeOptional(assetParams.df)
+        const unitName = stringCodec.decodeOptional(assetParams.un)
+        const assetName = stringCodec.decodeOptional(assetParams.an)
+        const url = stringCodec.decodeOptional(assetParams.au)
+        const metadataHash = fixedBytes32Codec.decodeOptional(assetParams.am)
+        const manager = addressCodec.decodeOptional(assetParams.m)
+        const reserve = addressCodec.decodeOptional(assetParams.r)
+        const freeze = addressCodec.decodeOptional(assetParams.f)
+        const clawback = addressCodec.decodeOptional(assetParams.c)
+
+        assetConfigParams = {
+          ...(total !== undefined && { total }),
+          ...(decimals !== undefined && { decimals }),
+          ...(defaultFrozen !== undefined && { defaultFrozen }),
+          ...(unitName && { unitName }),
+          ...(assetName && { assetName }),
+          ...(url && { url }),
+          ...(metadataHash && { metadataHash }),
+          ...(manager && { manager }),
+          ...(reserve && { reserve }),
+          ...(freeze && { freeze }),
+          ...(clawback && { clawback }),
+        }
+      }
+
       tx.assetConfig = {
         assetId: bigIntCodec.decode(transactionDto.caid),
-        ...(transactionDto.apar !== undefined
-          ? {
-              total: bigIntCodec.decodeOptional(transactionDto.apar.t),
-              decimals: numberCodec.decodeOptional(transactionDto.apar.dc),
-              defaultFrozen: booleanCodec.decodeOptional(transactionDto.apar.df),
-              unitName: stringCodec.decodeOptional(transactionDto.apar.un),
-              assetName: stringCodec.decodeOptional(transactionDto.apar.an),
-              url: stringCodec.decodeOptional(transactionDto.apar.au),
-              metadataHash: bytesCodec.decodeOptional(transactionDto.apar.am),
-              manager: addressCodec.decodeOptional(transactionDto.apar.m),
-              reserve: addressCodec.decodeOptional(transactionDto.apar.r),
-              freeze: addressCodec.decodeOptional(transactionDto.apar.f),
-              clawback: addressCodec.decodeOptional(transactionDto.apar.c),
-            }
-          : undefined),
+        ...(assetConfigParams !== undefined && Object.keys(assetConfigParams).length > 0 && assetConfigParams),
       }
       break
-    case TransactionType.AssetFreeze:
+    }
+    case TransactionType.AssetFreeze: {
       tx.assetFreeze = {
         assetId: bigIntCodec.decode(transactionDto.faid),
         freezeTarget: addressCodec.decode(transactionDto.fadd),
         frozen: booleanCodec.decode(transactionDto.afrz),
       }
       break
-    case TransactionType.AppCall:
+    }
+    case TransactionType.AppCall: {
+      const approvalProgram = bytesCodec.decodeOptional(transactionDto.apap)
+      const clearStateProgram = bytesCodec.decodeOptional(transactionDto.apsu)
+      const args = transactionDto.apaa?.map((arg) => bytesCodec.decode(arg))
+      const accountReferences = transactionDto.apat?.map((addr) => addressCodec.decode(addr))
+      const appReferences = transactionDto.apfa?.map((id) => bigIntCodec.decode(id))
+      const assetReferences = transactionDto.apas?.map((id) => bigIntCodec.decode(id))
+      const extraProgramPages = numberCodec.decodeOptional(transactionDto.apep)
+      const boxReferences = transactionDto.apbx?.map((box) => {
+        const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
+        let appId: bigint
+        if (index === 0) {
+          // 0 means current app
+          appId = 0n
+        } else {
+          // 1-based index into foreignApps array
+          const foreignAppId = transactionDto.apfa?.[index - 1]
+          if (foreignAppId === undefined) {
+            throw new Error(`Failed to find the app reference at index ${index - 1}`)
+          }
+          appId = bigIntCodec.decode(foreignAppId)
+        }
+        return {
+          appId: appId,
+          name: bytesCodec.decode(box.n),
+        }
+      })
+      const accessReferences: AccessReference[] = []
+      if (transactionDto.al) {
+        for (const ref of transactionDto.al) {
+          if (ref.d) {
+            accessReferences.push({ address: addressCodec.decode(ref.d) })
+            continue
+          }
+          if (ref.s !== undefined) {
+            accessReferences.push({ assetId: bigIntCodec.decode(ref.s) })
+            continue
+          }
+          if (ref.p !== undefined) {
+            accessReferences.push({ appId: bigIntCodec.decode(ref.p) })
+            continue
+          }
+          if (ref.h) {
+            const addrIdx = ref.h.d ?? 0
+            const assetIdx = ref.h.s
+
+            if (assetIdx === undefined) {
+              throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
+            }
+
+            const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : transactionDto.al[addrIdx - 1].d!
+            const holdingAssetId = transactionDto.al[assetIdx - 1].s!
+
+            accessReferences.push({
+              holding: {
+                address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
+                assetId: bigIntCodec.decode(holdingAssetId),
+              },
+            })
+            continue
+          }
+
+          if (ref.l) {
+            const addrIdx = ref.l.d ?? 0
+            const appIdx = ref.l.p ?? 0
+
+            const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : transactionDto.al[addrIdx - 1].d!
+            const localsAppId = appIdx === 0 ? BigInt(0) : transactionDto.al[appIdx - 1].p!
+
+            accessReferences.push({
+              locals: {
+                address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
+                appId: bigIntCodec.decode(localsAppId),
+              },
+            })
+            continue
+          }
+          if (ref.b) {
+            const boxAppIdx = ref.b.i ?? 0
+            const name = ref.b.n
+
+            if (!name) {
+              throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
+            }
+
+            const boxAppId = boxAppIdx === 0 ? BigInt(0) : transactionDto.al[boxAppIdx - 1].p!
+
+            accessReferences.push({
+              box: {
+                appId: bigIntCodec.decode(boxAppId),
+                name: bytesCodec.decode(name),
+              },
+            })
+          }
+        }
+      }
+
       tx.appCall = {
         appId: bigIntCodec.decode(transactionDto.apid),
         onComplete: fromOnApplicationCompleteDto(transactionDto.apan),
-        approvalProgram: bytesCodec.decodeOptional(transactionDto.apap),
-        clearStateProgram: bytesCodec.decodeOptional(transactionDto.apsu),
-        args: transactionDto.apaa?.map((arg) => bytesCodec.decode(arg)),
-        accountReferences: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
-        appReferences: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
-        assetReferences: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
-        boxReferences: transactionDto.apbx?.map((box) => {
-          const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
-          let appId: bigint
-          if (index === 0) {
-            // 0 means current app
-            appId = 0n
-          } else {
-            // 1-based index into foreignApps array
-            const foreignAppId = transactionDto.apfa?.[index - 1]
-            if (foreignAppId === undefined) {
-              throw new Error(`Failed to find the app reference at index ${index - 1}`)
-            }
-            appId = bigIntCodec.decode(foreignAppId)
-          }
-          return {
-            appId: appId,
-            name: bytesCodec.decode(box.n),
-          }
-        }),
-        accessReferences: transactionDto.al
-          ? (() => {
-              const accessList = transactionDto.al!
-              const result: AccessReference[] = []
-
-              for (const ref of accessList) {
-                if (ref.d) {
-                  result.push({ address: addressCodec.decode(ref.d) })
-                  continue
-                }
-                if (ref.s !== undefined) {
-                  result.push({ assetId: bigIntCodec.decode(ref.s) })
-                  continue
-                }
-                if (ref.p !== undefined) {
-                  result.push({ appId: bigIntCodec.decode(ref.p) })
-                  continue
-                }
-                if (ref.h) {
-                  const addrIdx = ref.h.d ?? 0
-                  const assetIdx = ref.h.s
-
-                  if (assetIdx === undefined) {
-                    throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
-                  }
-
-                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
-                  const holdingAssetId = accessList[assetIdx - 1].s!
-
-                  result.push({
-                    holding: {
-                      address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
-                      assetId: bigIntCodec.decode(holdingAssetId),
-                    },
-                  })
-                  continue
-                }
-
-                if (ref.l) {
-                  const addrIdx = ref.l.d ?? 0
-                  const appIdx = ref.l.p ?? 0
-
-                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
-                  const localsAppId = appIdx === 0 ? BigInt(0) : accessList[appIdx - 1].p!
-
-                  result.push({
-                    locals: {
-                      address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
-                      appId: bigIntCodec.decode(localsAppId),
-                    },
-                  })
-                  continue
-                }
-                if (ref.b) {
-                  const boxAppIdx = ref.b.i ?? 0
-                  const name = ref.b.n
-
-                  if (!name) {
-                    throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
-                  }
-
-                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : accessList[boxAppIdx - 1].p!
-
-                  result.push({
-                    box: {
-                      appId: bigIntCodec.decode(boxAppId),
-                      name: bytesCodec.decode(name),
-                    },
-                  })
-                }
-              }
-
-              return result
-            })()
-          : undefined,
-        extraProgramPages: numberCodec.decodeOptional(transactionDto.apep),
+        ...(approvalProgram && { approvalProgram }),
+        ...(clearStateProgram && { clearStateProgram }),
+        ...(args && { args }),
+        ...(accountReferences && { accountReferences }),
+        ...(appReferences && { appReferences }),
+        ...(assetReferences && { assetReferences }),
+        ...(extraProgramPages !== undefined && { extraProgramPages }),
+        ...(boxReferences && boxReferences.length > 0 && { boxReferences }),
+        ...(accessReferences && accessReferences.length > 0 && { accessReferences }),
         ...(transactionDto.apgs !== undefined
           ? {
               globalStateSchema: stateSchemaCodec.decodeOptional({
@@ -1013,35 +1052,46 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
           : undefined),
       }
       break
-    case TransactionType.KeyRegistration:
+    }
+    case TransactionType.KeyRegistration: {
+      const voteKey = fixedBytes32Codec.decodeOptional(transactionDto.votekey)
+      const selectionKey = fixedBytes32Codec.decodeOptional(transactionDto.selkey)
+      const voteFirst = bigIntCodec.decodeOptional(transactionDto.votefst)
+      const voteLast = bigIntCodec.decodeOptional(transactionDto.votelst)
+      const voteKeyDilution = bigIntCodec.decodeOptional(transactionDto.votekd)
+      const stateProofKey = fixedBytes64Codec.decodeOptional(transactionDto.sprfkey)
+      const nonParticipation = booleanCodec.decodeOptional(transactionDto.nonpart)
+
       tx.keyRegistration = {
-        voteKey: bytesCodec.decodeOptional(transactionDto.votekey),
-        selectionKey: bytesCodec.decodeOptional(transactionDto.selkey),
-        voteFirst: bigIntCodec.decodeOptional(transactionDto.votefst),
-        voteLast: bigIntCodec.decodeOptional(transactionDto.votelst),
-        voteKeyDilution: bigIntCodec.decodeOptional(transactionDto.votekd),
-        stateProofKey: bytesCodec.decodeOptional(transactionDto.sprfkey),
-        nonParticipation: booleanCodec.decodeOptional(transactionDto.nonpart),
+        ...(voteKey && { voteKey }),
+        ...(selectionKey && { selectionKey }),
+        ...(voteFirst !== undefined && { voteFirst }),
+        ...(voteLast !== undefined && { voteLast }),
+        ...(voteKeyDilution !== undefined && { voteKeyDilution }),
+        ...(stateProofKey && { stateProofKey }),
+        ...(nonParticipation !== undefined && { nonParticipation }),
       }
       break
-    case TransactionType.Heartbeat:
+    }
+    case TransactionType.Heartbeat: {
       if (transactionDto.hb) {
         tx.heartbeat = {
           address: addressCodec.decode(transactionDto.hb.a),
           proof: {
-            sig: bytesCodec.decode(transactionDto.hb.prf?.s),
-            pk: bytesCodec.decode(transactionDto.hb.prf?.p),
-            pk2: bytesCodec.decode(transactionDto.hb.prf?.p2),
-            pk1Sig: bytesCodec.decode(transactionDto.hb.prf?.p1s),
-            pk2Sig: bytesCodec.decode(transactionDto.hb.prf?.p2s),
+            sig: fixedBytes64Codec.decode(transactionDto.hb.prf?.s),
+            pk: fixedBytes32Codec.decode(transactionDto.hb.prf?.p),
+            pk2: fixedBytes32Codec.decode(transactionDto.hb.prf?.p2),
+            pk1Sig: fixedBytes64Codec.decode(transactionDto.hb.prf?.p1s),
+            pk2Sig: fixedBytes64Codec.decode(transactionDto.hb.prf?.p2s),
           },
           seed: bytesCodec.decode(transactionDto.hb.sd),
-          voteId: bytesCodec.decode(transactionDto.hb.vid),
+          voteId: fixedBytes32Codec.decode(transactionDto.hb.vid),
           keyDilution: bigIntCodec.decode(transactionDto.hb.kd),
         }
       }
       break
-    case TransactionType.StateProof:
+    }
+    case TransactionType.StateProof: {
       tx.stateProof = {
         stateProofType: transactionDto.sptype ?? 0,
         stateProof: transactionDto.sp
@@ -1061,14 +1111,14 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                         vectorCommitmentIndex: bigIntCodec.decode(reveal.s?.s?.idx),
                         proof: fromMerkleArrayProofDto(reveal.s?.s?.prf),
                         verifyingKey: {
-                          publicKey: bytesCodec.decode(reveal.s?.s?.vkey?.k),
+                          publicKey: fixedBytes1793Codec.decode(reveal.s?.s?.vkey?.k),
                         },
                       },
                       lowerSigWeight: bigIntCodec.decode(reveal.s?.l),
                     },
                     participant: {
                       verifier: {
-                        commitment: bytesCodec.decode(reveal.p?.p?.cmt),
+                        commitment: fixedBytes64Codec.decode(reveal.p?.p?.cmt),
                         keyLifetime: bigIntCodec.decode(reveal.p?.p?.lf),
                       },
                       weight: bigIntCodec.decode(reveal.p?.w),
@@ -1089,6 +1139,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
           : undefined,
       }
       break
+    }
   }
 
   return tx

@@ -20,7 +20,7 @@ export const MultisigSigMeta: ModelMetadata = {
       wireKey: 'Subsigs',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => MultisigSubsigMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: MultisigSubsigMeta } },
     },
     {
       name: 'threshold',

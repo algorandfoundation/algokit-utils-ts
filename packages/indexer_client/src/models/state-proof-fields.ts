@@ -62,14 +62,14 @@ export const StateProofFieldsMeta: ModelMetadata = {
       wireKey: 'sig-proofs',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => MerkleArrayProofMeta },
+      type: { kind: 'model', meta: MerkleArrayProofMeta },
     },
     {
       name: 'partProofs',
       wireKey: 'part-proofs',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => MerkleArrayProofMeta },
+      type: { kind: 'model', meta: MerkleArrayProofMeta },
     },
     {
       name: 'saltVersion',
@@ -83,7 +83,7 @@ export const StateProofFieldsMeta: ModelMetadata = {
       wireKey: 'reveals',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => StateProofRevealMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: StateProofRevealMeta } },
     },
     {
       name: 'positionsToReveal',

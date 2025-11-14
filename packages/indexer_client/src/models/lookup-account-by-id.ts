@@ -20,7 +20,7 @@ export const LookupAccountByIdMeta: ModelMetadata = {
       wireKey: 'account',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => AccountMeta },
+      type: { kind: 'model', meta: AccountMeta },
     },
     {
       name: 'currentRound',

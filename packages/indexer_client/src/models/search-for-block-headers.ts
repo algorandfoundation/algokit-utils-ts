@@ -38,7 +38,7 @@ export const SearchForBlockHeadersMeta: ModelMetadata = {
       wireKey: 'blocks',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => BlockMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: BlockMeta } },
     },
   ],
 }

@@ -19,7 +19,7 @@ export const LedgerStateDeltaForTransactionGroupMeta: ModelMetadata = {
       wireKey: 'Delta',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => LedgerStateDeltaMeta },
+      type: { kind: 'model', meta: LedgerStateDeltaMeta },
     },
     {
       name: 'ids',

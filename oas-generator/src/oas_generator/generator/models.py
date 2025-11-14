@@ -122,6 +122,8 @@ class FieldDescriptor:
     is_signed_txn: bool
     is_optional: bool
     is_nullable: bool
+    inline_object_schema: dict | None = None
+    inline_meta_name: str | None = None
 
 
 @dataclass
