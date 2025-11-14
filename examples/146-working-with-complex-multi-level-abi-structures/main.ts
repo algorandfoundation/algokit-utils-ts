@@ -1,28 +1,58 @@
-import {
-  ABIByteType,
-  ABIArrayStaticType,
-  ABIArrayDynamicType,
-  ABITupleType,
-  ABIBoolType,
-  ABIUintType,
-  convertAbiByteArrays,
-  type ABIValue,
-} from '@algorandfoundation/algokit-utils'
+import algosdk, { type ABIValue, type ABIType } from 'algosdk'
+
+const { ABIArrayStaticType, ABIArrayDynamicType, ABITupleType, ABIByteType, ABIBoolType, ABIUintType } = algosdk
 
 /**
  * Demonstrates working with highly complex nested ABI structures.
- * 
+ *
  * This example shows how to:
  * 1. Define complex multi-level type structures
  * 2. Combine dynamic arrays, static arrays, and tuples
  * 3. Convert complex JavaScript structures to ABI format
  * 4. Handle real-world smart contract data scenarios
- * 
+ *
  * The structure being created is: (byte[2][],uint8,(bool,byte[3]))
  * - First element: Dynamic array of static byte[2] arrays
  * - Second element: 8-bit unsigned integer
  * - Third element: Tuple containing a boolean and byte[3] array
  */
+
+/** Convert byte arrays from number[] to Uint8Array for ABI encoding */
+function convertAbiByteArrays(value: ABIValue, type: ABIType): ABIValue {
+  // Return value as is if the type doesn't have any bytes or if it's already a Uint8Array
+  if (!type.toString().includes('byte') || value instanceof Uint8Array) {
+    return value
+  }
+
+  // Handle byte arrays (byte[N] or byte[])
+  if (
+    (type instanceof ABIArrayStaticType || type instanceof ABIArrayDynamicType) &&
+    type.childType instanceof ABIByteType &&
+    Array.isArray(value)
+  ) {
+    return new Uint8Array(value as number[])
+  }
+
+  // Handle other arrays (for nested structures)
+  if ((type instanceof ABIArrayStaticType || type instanceof ABIArrayDynamicType) && Array.isArray(value)) {
+    const result = []
+    for (let i = 0; i < value.length; i++) {
+      result.push(convertAbiByteArrays(value[i], type.childType))
+    }
+    return result
+  }
+
+  // Handle tuples (for nested structures)
+  if (type instanceof ABITupleType && Array.isArray(value)) {
+    const result = []
+    for (let i = 0; i < value.length && i < type.childTypes.length; i++) {
+      result.push(convertAbiByteArrays(value[i], type.childTypes[i]))
+    }
+    return result
+  }
+
+  return value
+}
 
 function main() {
   console.log('=== Working with Complex Multi-Level ABI Structures ===\n')

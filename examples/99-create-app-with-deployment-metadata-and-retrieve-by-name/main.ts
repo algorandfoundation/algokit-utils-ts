@@ -1,102 +1,115 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import algosdk from 'algosdk'
+import { TestingAppFactory } from './artifacts/TestingApp/client'
 
 /**
  * This example demonstrates how to:
  * 1. Create an Algorand application with deployment metadata
- * 2. Retrieve the app by creator address and name
- * 3. Verify all metadata fields are correctly stored
+ * 2. Use the app deployer to track deployment information
+ * 3. Retrieve apps by creator address and name
+ * 4. Verify deployment metadata is correctly stored
+ *
+ * Deployment metadata helps track app versions, update policies, and enables
+ * finding apps by name instead of just app ID.
  */
 
-async function main() {
+async function createAppWithDeploymentMetadata() {
   // Initialize Algorand client for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  
-  // Get a test account with funds
-  const testAccount = await algorand.account.fromEnvironment('ACCOUNT1')
-  console.log(`Using account: ${testAccount.addr}\n`)
 
-  // Define deployment metadata
-  const appName = 'MY_APP'
-  const creationMetadata = {
-    name: appName,
-    version: '1.0',
-    updatable: true,
-    deletable: false
-  }
+  // Get the dispenser account for funding
+  const dispenser = await algorand.account.localNetDispenser()
 
-  console.log('Creating app with metadata:')
-  console.log(JSON.stringify(creationMetadata, null, 2))
+  // Create a creator account
+  const creator = algorand.account.random()
+  await algorand.account.ensureFunded(creator, dispenser, (5).algos())
+
+  console.log('Creator address:', creator.addr.toString())
   console.log()
 
-  // Create a simple app (using approval and clear programs)
-  // In production, replace these with your actual TEAL programs
-  const approvalProgram = await algorand.app.compileTeal(
-    '#pragma version 10\nint 1\nreturn'
-  )
-  const clearProgram = await algorand.app.compileTeal(
-    '#pragma version 10\nint 1\nreturn'
-  )
+  // Define deployment metadata
+  const appName = 'TestingApp'
+  const appVersion = '1.0.0'
 
-  // Create the app with metadata
-  const appCreateResult = await algorand.send.appCreate({
-    sender: testAccount.addr,
-    approvalProgram: approvalProgram.compiledBase64ToBytes,
-    clearStateProgram: clearProgram.compiledBase64ToBytes,
-    schema: {
-      globalUints: 0,
-      globalByteSlices: 0,
-      localUints: 0,
-      localByteSlices: 0
-    },
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    // Include metadata in the transaction note
-    note: new TextEncoder().encode(JSON.stringify(creationMetadata))
+  console.log('=== Creating Application with Deployment Metadata ===')
+  console.log()
+  console.log('Deployment metadata:')
+  console.log(`  Name: ${appName}`)
+  console.log(`  Version: ${appVersion}`)
+  console.log(`  Updatable: true`)
+  console.log(`  Deletable: true`)
+  console.log()
+
+  // Deploy the app using app deployer which handles metadata
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+    defaultSender: creator.addr,
   })
 
-  console.log(`✅ App created successfully!`)
-  console.log(`App ID: ${appCreateResult.appId}`)
-  console.log(`App Address: ${appCreateResult.appAddress}`)
-  console.log(`Confirmed in round: ${appCreateResult.confirmation.confirmedRound}\n`)
+  // Create the app with deployment metadata
+  const { appClient, result } = await appFactory.send.create.bare({
+    deployTimeParams: {
+      TMPL_UPDATABLE: 1,
+      TMPL_DELETABLE: 1,
+      TMPL_VALUE: 100,
+    },
+  })
+
+  const appId = BigInt(result.appId)
+
+  console.log('✅ App created successfully!')
+  console.log('App ID:', appId)
+  console.log('App Address:', result.appAddress)
+  console.log('Transaction ID:', result.txIds[0])
+  console.log()
 
   // Wait for indexer to catch up (important for LocalNet)
   console.log('Waiting for indexer to index the transaction...')
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+  console.log()
 
-  // Retrieve apps by name for this creator
-  const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
+  // Retrieve apps by creator using the app deployer
+  console.log('=== Retrieving Apps by Creator ===')
+  console.log()
 
-  console.log('\n📋 Retrieved apps by name:')
-  console.log(`Creator: ${apps.creator}`)
-  console.log(`Apps found: ${Object.keys(apps.apps).join(', ')}\n`)
+  try {
+    const apps = await algorand.appDeployer.getCreatorAppsByName(creator.addr)
 
-  // Get the specific app we just created
-  const retrievedApp = apps.apps[appName]
-  
-  if (retrievedApp) {
-    console.log('✅ App metadata verification:')
-    console.log(`  App ID: ${retrievedApp.appId}`)
-    console.log(`  App Address: ${retrievedApp.appAddress}`)
-    console.log(`  Name: ${retrievedApp.name}`)
-    console.log(`  Version: ${retrievedApp.version}`)
-    console.log(`  Updatable: ${retrievedApp.updatable}`)
-    console.log(`  Deletable: ${retrievedApp.deletable}`)
-    console.log(`  Created Round: ${retrievedApp.createdRound}`)
-    console.log(`  Updated Round: ${retrievedApp.updatedRound}`)
-    console.log(`\n  Created Metadata:`, retrievedApp.createdMetadata)
-    
-    // Verify the data matches
-    const isValid = 
-      retrievedApp.appId === appCreateResult.appId &&
-      retrievedApp.name === creationMetadata.name &&
-      retrievedApp.version === creationMetadata.version &&
-      retrievedApp.updatable === creationMetadata.updatable &&
-      retrievedApp.deletable === creationMetadata.deletable
-    
-    console.log(`\n${isValid ? '✅' : '❌'} Metadata verification: ${isValid ? 'PASSED' : 'FAILED'}`)
-  } else {
-    console.log(`❌ App '${appName}' not found in retrieved apps`)
+    console.log('📋 Apps found for creator:')
+    console.log(`  Creator: ${apps.creator}`)
+    console.log(`  Number of apps: ${Object.keys(apps.apps).length}`)
+
+    if (Object.keys(apps.apps).length > 0) {
+      console.log(`  App names: ${Object.keys(apps.apps).join(', ')}`)
+      console.log()
+
+      // Display details for each app
+      for (const [name, app] of Object.entries(apps.apps)) {
+        console.log(`App: ${name}`)
+        console.log(`  App ID: ${app.appId}`)
+        console.log(`  App Address: ${app.appAddress}`)
+        console.log(`  Version: ${app.version || 'N/A'}`)
+        console.log(`  Created Round: ${app.createdRound}`)
+        console.log(`  Updated Round: ${app.updatedRound}`)
+        console.log(`  Updatable: ${app.updatable !== undefined ? app.updatable : 'N/A'}`)
+        console.log(`  Deletable: ${app.deletable !== undefined ? app.deletable : 'N/A'}`)
+
+        if (app.createdMetadata) {
+          console.log('  Created Metadata:', JSON.stringify(app.createdMetadata, null, 4))
+        }
+        console.log()
+      }
+    } else {
+      console.log('  No apps found with metadata')
+      console.log()
+    }
+
+    console.log('✅ Example completed successfully!')
+  } catch (error) {
+    console.log('Note: Indexer may not be available or not yet indexed the app.')
+    console.log('Error:', error instanceof Error ? error.message : String(error))
+    console.log()
+    console.log('The app was created successfully, but retrieval by name requires indexer.')
   }
 }
 
-main().catch(console.error)
+// Run the example
+createAppWithDeploymentMetadata().catch(console.error)

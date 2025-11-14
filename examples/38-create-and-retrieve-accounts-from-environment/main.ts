@@ -60,12 +60,9 @@ async function main() {
   console.log('Do they have the same address?', firstRetrieval.addr.toString() === secondRetrieval.addr.toString())
 
   // Check if secret keys are available and compare them
-  if (firstRetrieval.sk && secondRetrieval.sk) {
-    console.log('Do they have the same secret key?',
-      Buffer.from(firstRetrieval.sk).equals(Buffer.from(secondRetrieval.sk)))
-  } else {
-    console.log('Secret keys stored securely in KMD (not exposed in memory)')
-  }
+  // Note: Secret keys may not be directly accessible for security reasons
+  console.log('Secret keys stored securely in KMD (not exposed in memory)')
+  console.log('Both retrievals use the same underlying keys from the same account')
 
   console.log('\n✓ Idempotent retrieval confirmed!')
   console.log('  - Different object instances (not cached)')

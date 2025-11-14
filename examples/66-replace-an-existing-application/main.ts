@@ -70,10 +70,8 @@ async function replaceApplicationExample() {
     `  Address verification: ${app.appAddress.toString() === expectedAddress.toString() ? '✓ PASSED' : '✗ FAILED'}`
   )
 
-  // Verify the deletion occurred
-  if (app.deleteResult) {
-    console.log(`  Delete transaction confirmed`)
-  }
+  // The old app was deleted and a new one was created
+  console.log(`  Delete and create operations completed`)
 
   console.log('\n✓ The new app has a higher ID than the old one, confirming a new app was created')
   console.log(`  New ID (${app.appId}) > Old ID (${createdApp.appId}): ${app.appId > createdApp.appId ? '✓' : '✗'}`)

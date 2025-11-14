@@ -1,92 +1,427 @@
 # Retrieve Application State (Global, Local, and Box Storage)
 
-Comprehensive example demonstrating how to retrieve and decode all types of application state: global state, local state, and box storage with various data types including ABI-encoded values
+This example demonstrates comprehensive state management in Algorand smart contracts, including how to set and retrieve all three types of application state: global state, local state, and box storage. You'll learn how to work with different data types and use ABI encoding for type-safe storage.
 
-## Example Details
+## Overview
 
-```json
-{
-  "example_id": "144-retrieve-application-state-global-local-and-box-storage",
-  "title": "Retrieve Application State (Global, Local, and Box Storage)",
-  "summary": "Comprehensive example demonstrating how to retrieve and decode all types of application state: global state, local state, and box storage with various data types including ABI-encoded values",
-  "language": "typescript",
-  "complexity": "complex",
-  "example_potential": "high",
-  "use_case_category": "transaction management",
-  "specific_use_case": "Retrieve and decode global state, local state, and box storage",
-  "target_users": [
-    "SDK developers",
-    "Smart contract developers"
-  ],
-  "features_tested": [
-    "client.getGlobalState",
-    "client.getLocalState",
-    "client.getBoxValues",
-    "client.getBoxValue",
-    "client.getBoxValuesFromABIType",
-    "client.getBoxValueFromABIType"
-  ],
-  "feature_tags": [
-    "state-retrieval",
-    "global-state",
-    "local-state",
-    "box-storage",
-    "abi-decoding",
-    "state-management"
-  ],
-  "folder": "144-retrieve-application-state-global-local-and-box-storage",
-  "prerequisites": {
-    "tools": [
-      "algokit",
-      "docker"
-    ],
-    "libraries": [
-      "@algorandfoundation/algokit-utils",
-      "algosdk"
-    ],
-    "environment": [
-      {
-        "name": "TEST_ACCOUNT",
-        "required": true,
-        "example": "Your test account mnemonic or private key"
-      }
-    ]
+Algorand smart contracts support three types of persistent storage:
+
+1. **Global State**: Shared across all users, limited by schema size (max 64 key-value pairs)
+2. **Local State**: Per-account storage, requires opt-in (max 16 key-value pairs per account)
+3. **Box Storage**: Flexible key-value storage with dynamic sizing, requires funding
+
+This example shows how to:
+- Deploy an app with global and local state schemas
+- Set and retrieve global state (integers and byte arrays)
+- Opt into an application to enable local state
+- Set and retrieve local state per account
+- Fund an app account for box storage
+- Create and retrieve boxes with various data types
+- Use ABI encoding/decoding for type-safe box values
+
+## What You'll Learn
+
+- Defining state schemas when deploying applications
+- Setting global state values using ABI methods
+- Opting into applications to use local state
+- Setting and retrieving local state for specific accounts
+- Funding app accounts to cover box storage minimum balance
+- Creating and managing box storage
+- Working with ABI-encoded values in boxes
+- Decoding box values using ABI types
+
+## Key Concepts
+
+### Global State
+
+Global state is shared across all users of the application:
+- Limited to the schema defined at deployment
+- Maximum 64 key-value pairs (combined uints and byte slices)
+- Persists for the lifetime of the application
+- No per-account cost
+
+```typescript
+// Deploy with global state schema
+await algorand.send.appCreate({
+  schema: {
+    globalInts: 2,          // 2 uint64 values
+    globalByteSlices: 2,    // 2 byte slice values
+    // ...
   },
-  "run_instructions": {
-    "setup": [
-      "Start LocalNet: algokit localnet start",
-      "Deploy your smart contract with global state, local state, and box storage support"
-    ],
-    "install": [
-      "npm install @algorandfoundation/algokit-utils algosdk"
-    ],
-    "execute": [
-      "npx tsx main.ts"
-    ]
+})
+
+// Set global state
+await algorand.send.appCallMethodCall({
+  method: setGlobalMethod,
+  args: [42, 100, 'hello', new Uint8Array([1, 2, 3, 4])],
+})
+
+// Retrieve global state
+const appInfo = await algorand.app.getById(appId)
+const globalState = appInfo.params.globalState
+```
+
+### Local State
+
+Local state is per-account storage:
+- Requires the account to opt into the application
+- Limited to the schema defined at deployment
+- Maximum 16 key-value pairs per account
+- Account pays for minimum balance
+
+```typescript
+// Opt in to the application
+await algorand.newGroup().addAppCall({
+  appId,
+  onComplete: algosdk.OnApplicationComplete.OptInOC,
+}).send()
+
+// Set local state
+await algorand.send.appCallMethodCall({
+  method: setLocalMethod,
+  args: [11, 22, 'world', new Uint8Array([5, 6, 7, 8])],
+})
+
+// Retrieve local state
+const accountInfo = await algorand.account.getInformation(address)
+const localState = accountInfo.appsLocalState.find(app => app.id === appId)
+```
+
+### Box Storage
+
+Box storage provides flexible key-value storage:
+- Dynamic sizing (not limited by schema)
+- Requires funding the app account for minimum balance
+- Box names and values can be any byte array
+- Supports ABI encoding for type safety
+
+```typescript
+// Fund app account for box storage
+const appAddress = algosdk.getApplicationAddress(appId)
+await algorand.send.payment({
+  receiver: appAddress,
+  amount: microAlgos(200_000), // Minimum balance for boxes
+})
+
+// Create a box
+await algorand.send.appCallMethodCall({
+  method: setBoxMethod,
+  args: [boxName, boxValue],
+  boxReferences: [{ appId: 0, name: boxName }],
+})
+
+// Retrieve boxes
+const boxes = await algorand.app.getBoxNames(appId)
+const boxValue = await algorand.app.getBoxValue(appId, boxName)
+```
+
+##Example Walkthrough
+
+### Step 1: Deploy App with State Schema
+
+Deploy an application with schemas for both global and local state:
+
+```typescript
+const createResult = await algorand.send.appCreate({
+  sender: deployer.addr,
+  approvalProgram: approvalCompiled.compiledBase64ToBytes,
+  clearStateProgram: clearCompiled.compiledBase64ToBytes,
+  schema: {
+    globalInts: 2,
+    globalByteSlices: 2,
+    localInts: 2,
+    localByteSlices: 2,
   },
-  "expected_output": [
-    "Global state values displayed (integers and byte arrays)",
-    "Local state values displayed after opt-in",
-    "Box storage values retrieved and displayed (both raw and string representations)",
-    "ABI-encoded box values decoded and displayed as numbers",
-    "Success message confirming all state retrieval operations"
+})
+```
+
+The schema defines:
+- `globalInts`: Number of uint64 values in global state
+- `globalByteSlices`: Number of byte slice values in global state
+- `localInts`: Number of uint64 values in local state per account
+- `localByteSlices`: Number of byte slice values in local state per account
+
+### Step 2: Set and Retrieve Global State
+
+Set global state values using an ABI method:
+
+```typescript
+const setGlobalMethod = new algosdk.ABIMethod({
+  name: 'set_global',
+  args: [
+    { type: 'uint64', name: 'int1' },
+    { type: 'uint64', name: 'int2' },
+    { type: 'string', name: 'bytes1' },
+    { type: 'byte[]', name: 'bytes2' }
   ],
-  "source_tests": [
-    {
-      "file": "src/types/app-factory-and-client.spec.ts",
-      "test_name": "Retrieve state"
-    }
-  ],
-  "artifacts_plan": [
-    {
-      "target_file": "TestApp.algo.ts",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "Smart contract with methods: set_global, set_local, opt_in, set_box and appropriate state schema"
-    }
-  ],
-  "notes": "This comprehensive example shows all state management patterns in Algorand smart contracts. Understanding these patterns is crucial for building data-driven applications.",
-  "generated_code": "import { AlgorandClient } from '@algorandfoundation/algokit-utils'\nimport * as algokit from '@algorandfoundation/algokit-utils'\nimport { ABIUintType } from 'algosdk'\nimport { TestAppClient } from './artifacts/TestApp/client' // Adjust import based on your app\n\n/**\n * Example: Retrieve Application State\n * \n * This example demonstrates comprehensive state management including:\n * 1. Reading and decoding global state\n * 2. Reading and decoding local state (per-account)\n * 3. Working with box storage (raw and ABI-encoded values)\n */\nasync function retrieveAppState() {\n  // Initialize AlgorandClient for LocalNet\n  const algorand = AlgorandClient.fromEnvironment()\n  \n  // Get a test account\n  const testAccount = await algorand.account.fromEnvironment('TEST_ACCOUNT')\n  \n  console.log('\\n--- Retrieve Application State Example ---\\n')\n  \n  // Assume we have a deployed app client\n  const client = new TestAppClient(\n    {\n      sender: testAccount,\n      resolveBy: 'id',\n      id: 0, // Your app ID\n    },\n    algorand.client.algod\n  )\n  \n  // ========================================\n  // 1. GLOBAL STATE EXAMPLE\n  // ========================================\n  console.log('\\n1. Working with Global State:')\n  console.log('Setting global state values...')\n  \n  // Set global state with various data types\n  await client.send.call({ \n    method: 'set_global', \n    args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] \n  })\n  \n  // Retrieve global state\n  const globalState = await client.getGlobalState()\n  \n  console.log('\\nGlobal State Retrieved:')\n  console.log(`  int1: ${globalState.int1?.value}`)\n  console.log(`  int2: ${globalState.int2?.value}`)\n  console.log(`  bytes1 (string): ${globalState.bytes1?.value}`)\n  console.log(`  bytes2 (raw): [${globalState.bytes2?.valueRaw}]`)\n  console.log(`  Available keys: ${Object.keys(globalState).sort().join(', ')}`)\n  \n  // ========================================\n  // 2. LOCAL STATE EXAMPLE\n  // ========================================\n  console.log('\\n\\n2. Working with Local State:')\n  console.log('Opting in to the application...')\n  \n  // Opt-in is required before setting local state\n  await client.send.optIn({ method: 'opt_in' })\n  \n  console.log('Setting local state values...')\n  await client.send.call({ \n    method: 'set_local', \n    args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] \n  })\n  \n  // Retrieve local state for the test account\n  const localState = await client.getLocalState(testAccount.addr)\n  \n  console.log('\\nLocal State Retrieved:')\n  console.log(`  local_int1: ${localState.local_int1?.value}`)\n  console.log(`  local_int2: ${localState.local_int2?.value}`)\n  console.log(`  local_bytes1 (string): ${localState.local_bytes1?.value}`)\n  console.log(`  local_bytes2 (raw): [${localState.local_bytes2?.valueRaw}]`)\n  console.log(`  Available keys: ${Object.keys(localState).sort().join(', ')}`)\n  \n  // ========================================\n  // 3. BOX STORAGE EXAMPLE\n  // ========================================\n  console.log('\\n\\n3. Working with Box Storage:')\n  \n  // Define box names\n  const boxName1 = new Uint8Array([0, 0, 0, 1])\n  const boxName1Base64 = Buffer.from(boxName1).toString('base64')\n  const boxName2 = new Uint8Array([0, 0, 0, 2])\n  const boxName2Base64 = Buffer.from(boxName2).toString('base64')\n  \n  // Fund the app account to cover box storage minimum balance\n  console.log('Funding app account for box storage...')\n  await client.fundAppAccount({ amount: algokit.algo(1) })\n  \n  // Create boxes with string values\n  console.log('Creating boxes with string values...')\n  await client.send.call({\n    method: 'set_box',\n    args: [boxName1, 'value1'],\n    boxReferences: [boxName1],\n  })\n  await client.send.call({\n    method: 'set_box',\n    args: [boxName2, 'value2'],\n    boxReferences: [boxName2],\n  })\n  \n  // Retrieve all box values\n  const boxValues = await client.getBoxValues()\n  console.log(`\\nTotal boxes found: ${boxValues.length}`)\n  \n  // Retrieve a specific box value\n  const box1Value = await client.getBoxValue(boxName1)\n  console.log(`\\nBox 1 (${boxName1Base64}):`, Buffer.from(box1Value).toString())\n  \n  const box1 = boxValues.find((b) => b.name.nameBase64 === boxName1Base64)\n  const box2 = boxValues.find((b) => b.name.nameBase64 === boxName2Base64)\n  console.log(`Box 2 (${boxName2Base64}):`, Buffer.from(box2!.value).toString())\n  \n  // ========================================\n  // 4. BOX STORAGE WITH ABI TYPES\n  // ========================================\n  console.log('\\n\\n4. Working with ABI-Encoded Box Values:')\n  \n  const expectedValue = 1234524352\n  console.log(`Setting box with ABI-encoded uint32 value: ${expectedValue}`)\n  \n  // Set box with ABI-encoded value\n  await client.send.call({\n    method: 'set_box',\n    args: [boxName1, new ABIUintType(32).encode(expectedValue)],\n    boxReferences: [boxName1],\n  })\n  \n  // Retrieve and decode box value using ABI type\n  const boxes = await client.getBoxValuesFromABIType(\n    new ABIUintType(32), \n    (n) => n.nameBase64 === boxName1Base64\n  )\n  \n  const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))\n  \n  console.log(`\\nABI-Decoded box value: ${Number(box1AbiValue)}`)\n  console.log(`Filtered boxes count: ${boxes.length}`)\n  console.log(`First box decoded value: ${Number(boxes[0].value)}`)\n  \n  console.log('\\n✅ Successfully demonstrated all state retrieval methods!')\n}\n\n// Run the example\nretrieveAppState().catch(console.error)"
+  returns: { type: 'void' }
+})
+
+await algorand.send.appCallMethodCall({
+  appId,
+  method: setGlobalMethod,
+  args: [42, 100, 'hello', new Uint8Array([1, 2, 3, 4])],
+})
+```
+
+Retrieve and display global state:
+
+```typescript
+const appInfo = await algorand.app.getById(appId)
+const globalState = appInfo.params.globalState
+
+for (const kv of globalState) {
+  const key = Buffer.from(kv.key).toString()
+  const value = kv.value
+
+  if (value.uint !== undefined) {
+    console.log(`${key}: ${value.uint}`)
+  } else {
+    console.log(`${key}: ${Buffer.from(value.bytes).toString('utf8')}`)
+  }
 }
 ```
+
+### Step 3: Opt In and Use Local State
+
+Opt into the application to enable local state:
+
+```typescript
+await algorand.newGroup().addAppCall({
+  sender: deployer.addr,
+  appId,
+  onComplete: algosdk.OnApplicationComplete.OptInOC,
+}).send()
+```
+
+Set local state values:
+
+```typescript
+const setLocalMethod = new algosdk.ABIMethod({
+  name: 'set_local',
+  args: [
+    { type: 'uint64', name: 'local_int1' },
+    { type: 'uint64', name: 'local_int2' },
+    { type: 'string', name: 'local_bytes1' },
+    { type: 'byte[]', name: 'local_bytes2' }
+  ],
+  returns: { type: 'void' }
+})
+
+await algorand.send.appCallMethodCall({
+  appId,
+  method: setLocalMethod,
+  args: [11, 22, 'world', new Uint8Array([5, 6, 7, 8])],
+})
+```
+
+Retrieve local state for an account:
+
+```typescript
+const accountInfo = await algorand.account.getInformation(address)
+const appsLocalState = accountInfo.appsLocalState
+const appLocalState = appsLocalState.find(app => app.id === appId)
+const localStateKvs = appLocalState.keyValue
+
+for (const kv of localStateKvs) {
+  const key = Buffer.from(kv.key).toString()
+  const value = kv.value
+
+  if (value.uint !== undefined) {
+    console.log(`${key}: ${value.uint}`)
+  } else {
+    console.log(`${key}: ${Buffer.from(value.bytes).toString('utf8')}`)
+  }
+}
+```
+
+### Step 4: Work with Box Storage
+
+Fund the app account to cover box storage costs:
+
+```typescript
+const appAddress = algosdk.getApplicationAddress(appId)
+await algorand.send.payment({
+  sender: deployer.addr,
+  receiver: appAddress,
+  amount: microAlgos(200_000), // 0.2 ALGO for box storage
+})
+```
+
+Create boxes with string values:
+
+```typescript
+const boxName1 = new Uint8Array([0, 0, 0, 1])
+const boxName2 = new Uint8Array([0, 0, 0, 2])
+
+const setBoxMethod = new algosdk.ABIMethod({
+  name: 'set_box',
+  args: [
+    { type: 'byte[]', name: 'name' },
+    { type: 'byte[]', name: 'value' }
+  ],
+  returns: { type: 'void' }
+})
+
+await algorand.send.appCallMethodCall({
+  appId,
+  method: setBoxMethod,
+  args: [boxName1, Buffer.from('value1')],
+  boxReferences: [{ appId: 0, name: boxName1 }],
+})
+```
+
+Retrieve all boxes:
+
+```typescript
+const boxes = await algorand.app.getBoxNames(appId)
+console.log(`Total boxes: ${boxes.length}`)
+
+for (const box of boxes) {
+  const boxValue = await algorand.app.getBoxValue(appId, box.nameRaw)
+  console.log(`${box.nameBase64}: ${Buffer.from(boxValue).toString('utf8')}`)
+}
+```
+
+### Step 5: Use ABI Encoding for Box Values
+
+Store an ABI-encoded uint32 value in a box:
+
+```typescript
+const abiType = new ABIUintType(32)
+const encodedValue = abiType.encode(1234567890)
+
+await algorand.send.appCallMethodCall({
+  appId,
+  method: setBoxMethod,
+  args: [boxName1, encodedValue],
+  boxReferences: [{ appId: 0, name: boxName1 }],
+})
+```
+
+Retrieve and decode the ABI value:
+
+```typescript
+const box1Value = await algorand.app.getBoxValue(appId, boxName1)
+const decodedValue = abiType.decode(box1Value)
+
+console.log(`Decoded value: ${Number(decodedValue)}`) // 1234567890
+```
+
+## Running the Example
+
+### Prerequisites
+
+```bash
+# Start LocalNet
+algokit localnet start
+
+# Verify algod is running
+curl http://localhost:4001/versions
+
+# Install dependencies
+npm install
+```
+
+### Execute
+
+```bash
+npm start
+```
+
+### Expected Output
+
+```
+=== Retrieve Application State (Global, Local, and Box Storage) ===
+
+Using deployer account: RZG...PM
+
+=== STEP 1: Loading Contract and Deploying App ===
+
+Deploying app with state schema...
+✅ App deployed with ID: 1054n
+
+=== STEP 2: Working with Global State ===
+
+Setting global state values...
+  int1: 42
+  int2: 100
+  bytes1: "hello"
+  bytes2: [1, 2, 3, 4]
+
+Global State Retrieved:
+  int1: 42
+  int2: 100
+  bytes1: "hello" (raw: [104, 101, 108, 108, 111])
+  bytes2: "" (raw: [1, 2, 3, 4])
+
+=== STEP 3: Working with Local State ===
+
+Opting in to the application...
+✅ Opted in successfully
+
+Setting local state values...
+  local_int1: 11
+  local_int2: 22
+  local_bytes1: "world"
+  local_bytes2: [5, 6, 7, 8]
+
+Local State Retrieved:
+  local_int1: 11
+  local_int2: 22
+  local_bytes1: "world" (raw: [119, 111, 114, 108, 100])
+  local_bytes2: "" (raw: [5, 6, 7, 8])
+
+=== STEP 4: Working with Box Storage ===
+
+Funding app account for box storage...
+✅ App account funded
+
+Creating boxes with string values...
+  Box AAAAAQ==: "value1"
+  Box AAAAAg==: "value2"
+
+Retrieving all boxes...
+✅ Total boxes found: 2
+
+Box values:
+  AAAAAQ==: "value1"
+  AAAAAg==: "value2"
+
+=== STEP 5: Working with ABI-Encoded Box Values ===
+
+Setting box with ABI-encoded uint32 value: 1234567890
+
+Retrieving and decoding ABI box value...
+✅ ABI-Decoded box value: 1234567890
+   Original value: 1234567890
+   Values match: true
+
+✨ Example completed successfully!
+```
+
+## Key Takeaways
+
+1. **Three Storage Types**: Global state, local state, and box storage each serve different purposes
+2. **Schema Definition**: Global and local state require schema definition at deployment
+3. **Opt-In Requirement**: Local state requires accounts to opt into the application
+4. **Box Funding**: Box storage requires funding the app account for minimum balance
+5. **ABI Encoding**: Use ABI types for type-safe encoding/decoding of complex values
+6. **Box References**: Always include box references in transactions that access boxes
+
+## Additional Resources
+
+- [Algorand Smart Contract State](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/state/)
+- [Box Storage](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/state/#box-storage)
+- [ABI Specification](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
+- [AlgoKit Utils Documentation](https://github.com/algorandfoundation/algokit-utils-ts)
+
+## Related Examples
+
+- Example 32: Fund App Account
+- Example 24: Method Calls with ABI
+- Example 138: Full App Lifecycle (Create, Update, Delete)
+
+---
+
+This example demonstrates production-ready patterns for comprehensive state management in Algorand applications, covering all three types of persistent storage and their appropriate use cases

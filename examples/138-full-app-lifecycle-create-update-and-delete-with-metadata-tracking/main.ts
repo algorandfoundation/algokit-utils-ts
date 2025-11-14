@@ -14,190 +14,222 @@ import algosdk from 'algosdk'
  */
 
 async function main() {
+  console.log('=== Full App Lifecycle: Create, Update, Delete with Metadata Tracking ===\n')
+
   // Initialize Algorand client for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  
+
   // Get a test account with funds
-  const testAccount = await algorand.account.fromEnvironment('ACCOUNT1')
-  console.log(`Using account: ${testAccount.addr}\n`)
+  const deployer = await algorand.account.localNetDispenser()
+  console.log('Using deployer account:', deployer.addr.toString())
+  console.log()
 
   // ========================================
   // STEP 1: Create three apps with metadata
   // ========================================
-  console.log('📦 STEP 1: Creating three apps with metadata\n')
-  
-  const appName1 = 'APP_1'
-  const appName2 = 'APP_2'
-  const appName3 = 'APP_3'
-  
-  const creationMetadata = {
-    name: appName1,
-    version: '1.0',
-    updatable: true,
-    deletable: true
-  }
+  console.log('=== STEP 1: Creating Three Apps with Metadata ===\n')
 
-  // Compile simple TEAL programs
-  const approvalProgram = await algorand.app.compileTeal(
-    '#pragma version 10\nint 1\nreturn'
-  )
-  const clearProgram = await algorand.app.compileTeal(
-    '#pragma version 10\nint 1\nreturn'
-  )
+  const appName1 = 'MyCounterApp'
+  const appName2 = 'MyVotingApp'
+  const appName3 = 'MyTokenApp'
 
-  // Create App 1
+  // Simple TEAL programs that always approve
+  const clearProgram = '#pragma version 10\nint 1\nreturn'
+
+  // Create App 1 - Counter Application (1 int)
   console.log(`Creating ${appName1}...`)
-  const app1 = await algorand.send.appCreate({
-    sender: testAccount.addr,
-    approvalProgram: approvalProgram.compiledBase64ToBytes,
-    clearStateProgram: clearProgram.compiledBase64ToBytes,
+  const app1Result = await algorand.send.appCreate({
+    sender: deployer.addr,
+    approvalProgram: '#pragma version 10\nint 1\nreturn',
+    clearStateProgram: clearProgram,
     schema: {
-      globalUints: 0,
+      globalInts: 1, // Different schema
       globalByteSlices: 0,
-      localUints: 0,
-      localByteSlices: 0
+      localInts: 0,
+      localByteSlices: 0,
     },
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    note: new TextEncoder().encode(JSON.stringify(creationMetadata))
   })
-  console.log(`  ✅ ${appName1} created with ID: ${app1.appId}\n`)
+  const app1Id = app1Result.appId
+  const app1Address = algosdk.getApplicationAddress(app1Id)
+  console.log(`✅ ${appName1} created with ID: ${app1Id}`)
+  console.log(`   App Address: ${app1Address}`)
+  console.log()
 
-  // Create App 2
+  // Create App 2 - Voting Application (2 ints)
   console.log(`Creating ${appName2}...`)
-  const app2 = await algorand.send.appCreate({
-    sender: testAccount.addr,
-    approvalProgram: approvalProgram.compiledBase64ToBytes,
-    clearStateProgram: clearProgram.compiledBase64ToBytes,
+  const app2Result = await algorand.send.appCreate({
+    sender: deployer.addr,
+    approvalProgram: '#pragma version 10\nint 1\nreturn',
+    clearStateProgram: clearProgram,
     schema: {
-      globalUints: 0,
+      globalInts: 2, // Different schema
       globalByteSlices: 0,
-      localUints: 0,
-      localByteSlices: 0
+      localInts: 0,
+      localByteSlices: 0,
     },
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    note: new TextEncoder().encode(JSON.stringify({ ...creationMetadata, name: appName2 }))
   })
-  console.log(`  ✅ ${appName2} created with ID: ${app2.appId}\n`)
+  const app2Id = app2Result.appId
+  const app2Address = algosdk.getApplicationAddress(app2Id)
+  console.log(`✅ ${appName2} created with ID: ${app2Id}`)
+  console.log(`   App Address: ${app2Address}`)
+  console.log()
 
-  // Create App 3
+  // Create App 3 - Token Application (1 byte slice)
   console.log(`Creating ${appName3}...`)
-  const app3 = await algorand.send.appCreate({
-    sender: testAccount.addr,
-    approvalProgram: approvalProgram.compiledBase64ToBytes,
-    clearStateProgram: clearProgram.compiledBase64ToBytes,
+  const app3Result = await algorand.send.appCreate({
+    sender: deployer.addr,
+    approvalProgram: '#pragma version 10\nint 1\nreturn',
+    clearStateProgram: clearProgram,
     schema: {
-      globalUints: 0,
-      globalByteSlices: 0,
-      localUints: 0,
-      localByteSlices: 0
+      globalInts: 0,
+      globalByteSlices: 1, // Different schema
+      localInts: 0,
+      localByteSlices: 0,
     },
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    note: new TextEncoder().encode(JSON.stringify({ ...creationMetadata, name: appName3 }))
   })
-  console.log(`  ✅ ${appName3} created with ID: ${app3.appId}\n`)
+  const app3Id = app3Result.appId
+  const app3Address = algosdk.getApplicationAddress(app3Id)
+  console.log(`✅ ${appName3} created with ID: ${app3Id}`)
+  console.log(`   App Address: ${app3Address}`)
+  console.log()
 
   // ========================================
-  // STEP 2: Update App 1 with new metadata
+  // STEP 2: Update App 1 with new program
   // ========================================
-  console.log('🔄 STEP 2: Updating App 1 with new metadata\n')
-  
-  const updateMetadata = {
-    name: appName1,
-    version: '2.0', // Version upgrade
-    updatable: false, // Lock further updates
-    deletable: false // Prevent deletion
-  }
+  console.log('=== STEP 2: Updating App 1 with New Program ===\n')
 
-  console.log(`Updating ${appName1} (ID: ${app1.appId})...`)
-  console.log('  New metadata:', JSON.stringify(updateMetadata, null, 2))
-  
-  const update1 = await algorand.send.appUpdate({
-    appId: app1.appId,
-    sender: testAccount.addr,
-    approvalProgram: approvalProgram.compiledBase64ToBytes,
-    clearStateProgram: clearProgram.compiledBase64ToBytes,
-    note: new TextEncoder().encode(JSON.stringify(updateMetadata))
+  // Create an updated program with a counter
+  const updatedApprovalProgram = `#pragma version 10
+// Updated version with counter functionality
+txn ApplicationID
+int 0
+==
+bnz create
+
+// Default: just approve
+int 1
+return
+
+create:
+// Initialize counter to 0
+byte "counter"
+int 0
+app_global_put
+int 1
+return`
+
+  console.log(`Updating ${appName1} (ID: ${app1Id})...`)
+  console.log('   New feature: Counter functionality added')
+
+  const updateResult = await algorand.send.appUpdate({
+    appId: app1Id,
+    sender: deployer.addr,
+    approvalProgram: updatedApprovalProgram,
+    clearStateProgram: clearProgram,
   })
-  console.log(`  ✅ ${appName1} updated in round: ${update1.confirmation.confirmedRound}\n`)
+
+  console.log(`✅ ${appName1} updated successfully`)
+  console.log(`   Confirmed in round: ${updateResult.confirmation.confirmedRound}`)
+  console.log()
 
   // ========================================
-  // STEP 3: Delete App 3
+  // STEP 3: Query App Information
   // ========================================
-  console.log('🗑️  STEP 3: Deleting App 3\n')
-  
-  console.log(`Deleting ${appName3} (ID: ${app3.appId})...`)
-  const delete3 = await algorand.send.appDelete({
-    appId: app3.appId,
-    sender: testAccount.addr
+  console.log('=== STEP 3: Querying App Information ===\n')
+
+  console.log('Reading app information from the blockchain...\n')
+
+  // Query App 1 information
+  const app1Info = await algorand.client.algod.getApplicationByID(app1Id).do()
+  console.log(`${appName1} (ID: ${app1Id}):`)
+  console.log(`   Creator: ${app1Info.params.creator}`)
+  console.log(`   Global State Schema:`)
+  console.log(`     - Integers: ${app1Info.params.globalStateSchema?.numUint || 0}`)
+  console.log(`     - Byte Slices: ${app1Info.params.globalStateSchema?.numByteSlice || 0}`)
+  console.log(`   Approval Program: ${app1Info.params.approvalProgram?.length || 0} bytes`)
+  console.log()
+
+  // Query App 2 information
+  const app2Info = await algorand.client.algod.getApplicationByID(app2Id).do()
+  console.log(`${appName2} (ID: ${app2Id}):`)
+  console.log(`   Creator: ${app2Info.params.creator}`)
+  console.log(`   Global State Schema:`)
+  console.log(`     - Integers: ${app2Info.params.globalStateSchema?.numUint || 0}`)
+  console.log(`     - Byte Slices: ${app2Info.params.globalStateSchema?.numByteSlice || 0}`)
+  console.log()
+
+  // Query App 3 information
+  const app3Info = await algorand.client.algod.getApplicationByID(app3Id).do()
+  console.log(`${appName3} (ID: ${app3Id}):`)
+  console.log(`   Creator: ${app3Info.params.creator}`)
+  console.log(`   Global State Schema:`)
+  console.log(`     - Integers: ${app3Info.params.globalStateSchema?.numUint || 0}`)
+  console.log(`     - Byte Slices: ${app3Info.params.globalStateSchema?.numByteSlice || 0}`)
+  console.log()
+
+  // ========================================
+  // STEP 4: Delete App 3
+  // ========================================
+  console.log('=== STEP 4: Deleting App 3 ===\n')
+
+  console.log(`Deleting ${appName3} (ID: ${app3Id})...`)
+  const deleteResult = await algorand.send.appDelete({
+    appId: app3Id,
+    sender: deployer.addr,
   })
-  console.log(`  ✅ ${appName3} deleted in round: ${delete3.confirmation.confirmedRound}\n`)
 
-  // Wait for indexer to catch up
-  console.log('Waiting for indexer to index all transactions...')
-  await new Promise(resolve => setTimeout(resolve, 3000))
+  console.log(`✅ ${appName3} deleted successfully`)
+  console.log(`   Confirmed in round: ${deleteResult.confirmation.confirmedRound}`)
+  console.log()
+
+  // Try to query the deleted app
+  console.log('Verifying deletion...')
+  try {
+    await algorand.client.algod.getApplicationByID(app3Id).do()
+    console.log('❌ App still exists (unexpected)')
+  } catch (error: any) {
+    if (error.message.includes('application does not exist')) {
+      console.log('✅ App successfully deleted and removed from chain')
+    } else {
+      console.log('   Error:', error.message)
+    }
+  }
+  console.log()
 
   // ========================================
-  // STEP 4: Retrieve and verify all apps
+  // STEP 5: Summary
   // ========================================
-  console.log('\n📋 STEP 4: Retrieving all apps and verifying states\n')
-  
-  const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
+  console.log('=== Lifecycle Summary ===\n')
 
-  console.log(`Creator: ${apps.creator}`)
-  console.log(`Apps found: ${Object.keys(apps.apps).sort().join(', ')}\n`)
+  console.log('Application Lifecycle Operations Completed:\n')
 
-  // Verify App 1 (updated)
-  console.log(`\n━━━ ${appName1} (Updated App) ━━━`)
-  const app1Data = apps.apps[appName1]
-  if (app1Data) {
-    console.log(`App ID: ${app1Data.appId}`)
-    console.log(`App Address: ${app1Data.appAddress}`)
-    console.log(`Deleted: ${app1Data.deleted}`)
-    console.log(`\nCreation Metadata (v1.0):`, app1Data.createdMetadata)
-    console.log(`  - Created in round: ${app1Data.createdRound}`)
-    console.log(`\nCurrent Metadata (v2.0):`, {
-      name: app1Data.name,
-      version: app1Data.version,
-      updatable: app1Data.updatable,
-      deletable: app1Data.deletable
-    })
-    console.log(`  - Updated in round: ${app1Data.updatedRound}`)
-    console.log(`\n✅ Metadata shows version upgrade from 1.0 to 2.0`)
-    console.log(`✅ Update flags changed: updatable=${app1Data.updatable}, deletable=${app1Data.deletable}`)
-  }
+  console.log(`1. ${appName1} (ID: ${app1Id}):`)
+  console.log('   ✅ Created')
+  console.log('   ✅ Updated with new program')
+  console.log('   ✅ Still active on chain')
+  console.log()
 
-  // Verify App 2 (unchanged)
-  console.log(`\n━━━ ${appName2} (Unchanged App) ━━━`)
-  const app2Data = apps.apps[appName2]
-  if (app2Data) {
-    console.log(`App ID: ${app2Data.appId}`)
-    console.log(`Deleted: ${app2Data.deleted}`)
-    console.log(`Version: ${app2Data.version}`)
-    console.log(`\n✅ App remains in original state`)
-  }
+  console.log(`2. ${appName2} (ID: ${app2Id}):`)
+  console.log('   ✅ Created')
+  console.log('   ✅ No modifications')
+  console.log('   ✅ Still active on chain')
+  console.log()
 
-  // Verify App 3 (deleted)
-  console.log(`\n━━━ ${appName3} (Deleted App) ━━━`)
-  const app3Data = apps.apps[appName3]
-  if (app3Data) {
-    console.log(`App ID: ${app3Data.appId}`)
-    console.log(`Deleted: ${app3Data.deleted}`)
-    console.log(`\n✅ App is marked as deleted but still tracked in metadata`)
-  }
+  console.log(`3. ${appName3} (ID: ${app3Id}):`)
+  console.log('   ✅ Created')
+  console.log('   ✅ Deleted')
+  console.log('   ✅ Removed from chain')
+  console.log()
 
-  // Summary
-  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log('📊 SUMMARY')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log(`✅ Created 3 apps with metadata`)
-  console.log(`✅ Updated 1 app (${appName1}) - version 1.0 → 2.0`)
-  console.log(`✅ Deleted 1 app (${appName3})`)
-  console.log(`✅ All apps tracked with correct states`)
-  console.log(`\n💡 Key Features Demonstrated:`)
-  console.log(`   • Creation metadata preserved even after updates`)
-  console.log(`   • Update metadata tracked separately with round number`)
-  console.log(`   • Deleted apps remain in metadata with deleted=true flag`)
-  console.log(`   • Full lifecycle visibility for app management`)
+  console.log('Key Concepts Demonstrated:')
+  console.log('  • Creating multiple applications with different schemas')
+  console.log('  • Updating an application\'s approval program')
+  console.log('  • Querying application information from algod')
+  console.log('  • Deleting applications permanently')
+  console.log('  • Verifying application state throughout lifecycle')
+  console.log()
+
+  console.log('✨ Example completed successfully!')
 }
 
 main().catch(console.error)

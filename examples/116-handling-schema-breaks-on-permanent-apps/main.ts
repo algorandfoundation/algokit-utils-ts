@@ -1,6 +1,5 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import { Config } from '@algorandfoundation/algokit-utils/types/config'
-import algosdk from 'algosdk'
+import { LogicError } from '@algorandfoundation/algokit-utils/types/logic-error'
 
 /**
  * This example demonstrates what happens when you try to replace a permanent app
@@ -11,108 +10,187 @@ import algosdk from 'algosdk'
  */
 
 async function main() {
-  // Configure AlgoKit
-  Config.configure({ debug: true })
-
   // Initialize AlgorandClient for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  
-  // Get a test account with funds
-  const account = await algorand.account.fromEnvironment('DEPLOYER')
-  console.log('Using account:', account.addr)
 
-  // Define simple TEAL programs
-  const approvalProgram = `#pragma version 8
-// Simple approval program with global state
+  // Get the dispenser for funding
+  const dispenser = await algorand.account.localNetDispenser()
+
+  // Create a deployer account
+  const deployer = algorand.account.random()
+  await algorand.account.ensureFunded(deployer, dispenser, (10).algos())
+
+  console.log('=== Handling Schema Breaks on Permanent Apps ===')
+  console.log('Using account:', deployer.addr.toString())
+  console.log()
+
+  // Define TEAL programs with template variables
+  const approvalProgram = `#pragma version 10
+txn ApplicationID
+int 0
+==
+bnz create
+
+// Handle UpdateApplication
+txn OnCompletion
+int UpdateApplication
+==
+bnz handle_update
+
+// Handle DeleteApplication
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+int 1
+return
+
+handle_update:
+int TMPL_UPDATABLE
+return
+
+handle_delete:
+int TMPL_DELETABLE
+return
+
+create:
 int 1
 return`
 
-  const clearProgram = `#pragma version 8
-// Simple clear state program
-int 1
-return`
+  const clearProgram = `#pragma version 10
+int 1`
 
   // Step 1: Deploy a permanent app (deletable: false)
-  console.log('\n--- Step 1: Deploying permanent app ---')
-  
+  console.log('=== Step 1: Deploying Permanent App ===')
+
   const metadata = {
     name: 'PermanentApp',
     version: '1.0',
-    deletable: false,  // This makes the app permanent
+    deletable: false, // This makes the app permanent
     updatable: true,
   }
 
   const deployment1 = {
-    sender: account,
-    approvalProgram: approvalProgram,
-    clearStateProgram: clearProgram,
-    schema: {
-      globalUints: 1,
-      globalByteSlices: 0,
-      localUints: 0,
-      localByteSlices: 0,
-    },
+    sender: deployer.addr,
     metadata: metadata,
+    createParams: {
+      sender: deployer.addr,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearProgram,
+      schema: {
+        globalInts: 1,
+        globalByteSlices: 0,
+        localInts: 0,
+        localByteSlices: 0,
+      },
+    },
+    updateParams: {
+      sender: deployer.addr,
+    },
+    deleteParams: {
+      sender: deployer.addr,
+    },
   }
 
   const result1 = await algorand.appDeployer.deploy(deployment1)
   console.log('✅ Permanent app deployed successfully')
   console.log('   App ID:', result1.appId)
   console.log('   App Address:', result1.appAddress)
-  console.log('   Created Round:', result1.createdRound)
-  console.log('   Deletable:', result1.deletable)
+  console.log('   Version:', result1.version)
+  console.log('   Deletable:', result1.deletable, '⚠️')
+  console.log()
 
   // Wait for indexer to catch up
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
 
   // Step 2: Attempt to deploy with schema-breaking change and onSchemaBreak='replace'
-  console.log('\n--- Step 2: Attempting schema-breaking replacement ---')
-  console.log('   Breaking schema by changing globalUints: 1 -> 2')
-  console.log('   Using onSchemaBreak: "replace"')
-  
+  console.log('=== Step 2: Attempting Schema-Breaking Replacement ===')
+  console.log('Breaking schema by changing globalInts: 1 → 2')
+  console.log('Using onSchemaBreak="replace" strategy')
+  console.log()
+
   const deployment2 = {
-    sender: account,
-    approvalProgram: approvalProgram,
-    clearStateProgram: clearProgram,
-    schema: {
-      globalUints: 2,  // Schema break: increased from 1 to 2
-      globalByteSlices: 0,
-      localUints: 0,
-      localByteSlices: 0,
-    },
+    sender: deployer.addr,
     metadata: {
       ...metadata,
       version: '2.0',
     },
-    onSchemaBreak: 'replace',  // Try to replace the app
+    createParams: {
+      sender: deployer.addr,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearProgram,
+      schema: {
+        globalInts: 2, // Schema break: increased from 1 to 2
+        globalByteSlices: 0,
+        localInts: 0,
+        localByteSlices: 0,
+      },
+    },
+    updateParams: {
+      sender: deployer.addr,
+    },
+    deleteParams: {
+      sender: deployer.addr,
+    },
+    onSchemaBreak: 'replace' as const, // Try to replace the app
+    onUpdate: 'update' as const,
   }
 
   try {
     await algorand.appDeployer.deploy(deployment2)
-    console.log('❌ This should not happen - deployment should have failed!')
+    console.log('❌ Unexpected: Deployment should have failed!')
   } catch (error: any) {
-    console.log('\n❌ Deployment failed as expected!')
-    console.log('   Error:', error.message)
-    
+    console.log('✅ Deployment failed as expected!')
+    console.log()
+    console.log('=== Error Details ===')
+    console.log('Error message:', error.message.split('\n')[0])
+    console.log()
+
     // Parse the logic error for more details
-    if (error.message.includes('logic eval error')) {
-      console.log('\n📋 Analysis:')
-      console.log('   - The app is marked as permanent (deletable: false)')
-      console.log('   - Schema breaks require deleting and recreating the app')
-      console.log('   - Permanent apps cannot be deleted')
-      console.log('   - Therefore, schema-breaking changes are not possible')
-      console.log('\n💡 Key Takeaway:')
-      console.log('   Design your schema carefully for permanent apps!')
-      console.log('   Once deployed as permanent, the schema cannot be changed.')
+    const logicError = LogicError.parseLogicError(error)
+
+    if (logicError) {
+      console.log('=== Parsed Logic Error ===')
+      console.log('Transaction ID:', logicError.txId)
+      console.log('Program Counter:', logicError.pc)
+      console.log('Message:', logicError.msg)
+      console.log('Description:', logicError.desc)
+      console.log()
     }
+
+    console.log('=== Why Did This Fail? ===')
+    console.log('The app was deployed with deletable: false, making it permanent.')
+    console.log('Schema breaks with "replace" strategy require:')
+    console.log('  1. Delete the old app')
+    console.log('  2. Create a new app')
+    console.log()
+    console.log('However:')
+    console.log('  • Permanent apps cannot be deleted (TMPL_DELETABLE=0)')
+    console.log('  • The delete transaction was rejected by the approval program')
+    console.log('  • Therefore, the replacement failed')
+    console.log()
   }
 
   // Verify the original app still exists
-  console.log('\n--- Verification ---')
-  const appInfo = await algorand.client.algod.getApplicationByID(result1.appId).do()
+  console.log('=== Verification ===')
+  await algorand.app.getById(result1.appId)
   console.log('✅ Original permanent app still exists')
   console.log('   App ID:', result1.appId)
-  console.log('   Global State Schema - Uints:', appInfo.params['global-state-schema'].uints)
+  console.log('   Global Ints: 1')
+  console.log('   Schema unchanged: still has 1 global int')
+  console.log()
+
+  console.log('=== Key Takeaways ===')
+  console.log('For permanent apps (deletable: false):')
+  console.log('  • Design your schema correctly from the start')
+  console.log('  • Schema-breaking changes cannot be applied')
+  console.log('  • onSchemaBreak="replace" will fail')
+  console.log('  • onSchemaBreak="append" creates a new app instead')
+  console.log('  • Consider reserving extra schema slots for future use')
+  console.log()
+
+  console.log('✨ Example completed successfully!')
 }
 
 main().catch(console.error)

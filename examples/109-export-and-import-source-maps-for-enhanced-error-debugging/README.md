@@ -1,106 +1,342 @@
 # Export and Import Source Maps for Enhanced Error Debugging
 
-Demonstrates how to export source maps from an app client and import them into another client instance to get detailed TEAL stack traces when debugging smart contract errors.
+This example demonstrates a practical, step-by-step workflow for exporting and importing source maps to enable enhanced error debugging in production applications.
 
-## Example Details
+## Key Concepts
 
-```json
-{
-  "example_id": "109-export-and-import-source-maps-for-enhanced-error-debugging",
-  "title": "Export and Import Source Maps for Enhanced Error Debugging",
-  "summary": "Demonstrates how to export source maps from an app client and import them into another client instance to get detailed TEAL stack traces when debugging smart contract errors.",
-  "language": "typescript",
-  "complexity": "moderate",
-  "example_potential": "high",
-  "use_case_category": "error handling",
-  "specific_use_case": "Export and import source maps for enhanced error debugging",
-  "target_users": [
-    "SDK developers",
-    "Smart contract developers"
-  ],
-  "features_tested": [
-    "client.exportSourceMaps",
-    "client.importSourceMaps",
-    "error debugging",
-    "TEAL stack traces"
-  ],
-  "feature_tags": [
-    "source-maps",
-    "debugging",
-    "error-handling",
-    "teal",
-    "app-client"
-  ],
-  "folder": "109-export-and-import-source-maps-for-enhanced-error-debugging",
-  "prerequisites": {
-    "tools": [
-      "algokit",
-      "docker"
-    ],
-    "libraries": [
-      "@algorandfoundation/algokit-utils",
-      "algosdk"
-    ],
-    "environment": [
-      {
-        "name": "ALGOD_SERVER",
-        "required": false,
-        "example": "http://localhost"
-      },
-      {
-        "name": "ALGOD_PORT",
-        "required": false,
-        "example": "4001"
-      },
-      {
-        "name": "ALGOD_TOKEN",
-        "required": false,
-        "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      }
-    ]
+- **Step-by-Step Workflow**: Clear phases for deployment and runtime
+- **Production-Ready Pattern**: Practical approach for real applications
+- **Source Map Persistence**: Saving and loading debugging information
+- **Enhanced Error Messages**: Comparing errors with and without source maps
+
+## What This Example Shows
+
+This example walks through a 7-step process:
+
+### Deployment Phase
+1. **Deploy Application** - Create and deploy your smart contract
+2. **Export Source Maps** - Extract debugging information from the deployed app
+3. **Save Source Maps** - Serialize and store for later use
+
+### Runtime Phase
+4. **Create Fresh Client** - New client instance (simulating restart or different service)
+5. **Test Without Source Maps** - See limited error information
+6. **Load and Import Source Maps** - Restore debugging capabilities
+7. **Test With Source Maps** - See enhanced error information with TEAL stack traces
+
+## Quick Start
+
+### Prerequisites
+
+1. Start AlgoKit LocalNet:
+   ```bash
+   algokit localnet start
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Run the Example
+
+```bash
+npm start
+```
+
+## Code Walkthrough
+
+### Deployment Phase
+
+```typescript
+// 1. Deploy your application
+const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+  defaultSender: deployer.addr,
+})
+
+const { appClient } = await appFactory.send.create.bare({
+  deployTimeParams: {
+    TMPL_UPDATABLE: 1,
+    TMPL_DELETABLE: 1,
+    TMPL_VALUE: 100,
   },
-  "run_instructions": {
-    "setup": [
-      "Start LocalNet: algokit localnet start"
-    ],
-    "install": [
-      "npm install"
-    ],
-    "execute": [
-      "npm run start"
-    ]
-  },
-  "expected_output": [
-    "Application deployed with ID",
-    "Source maps exported successfully",
-    "Error caught without source maps (limited info)",
-    "Source maps imported successfully",
-    "Enhanced stack trace with TEAL code",
-    "Program counter and error location details"
-  ],
-  "source_tests": [
-    {
-      "file": "src/types/app-client.spec.ts",
-      "test_name": "Export and import of source map works"
-    }
-  ],
-  "artifacts_plan": [
-    {
-      "target_file": "contract.algo.ts",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "Simple contract with an error method that demonstrates TEAL debugging"
-    },
-    {
-      "target_file": "package.json",
-      "type": "config",
-      "action": "generate",
-      "source_path": null,
-      "note": "Package configuration with dependencies"
-    }
-  ],
-  "notes": "This example requires a smart contract with an 'error' method that intentionally fails. The artifacts should include a simple contract for demonstration purposes.",
-  "generated_code": "import { AlgorandClient } from '@algorandfoundation/algokit-utils'\nimport algosdk from 'algosdk'\nimport * as algokit from '@algorandfoundation/algokit-utils'\n\n/**\n * This example demonstrates how to export and import source maps for enhanced error debugging.\n * Source maps allow you to see the original TEAL source code in stack traces when errors occur,\n * making it much easier to debug smart contract issues.\n */\n\nasync function exportAndImportSourceMaps() {\n  // Initialize the AlgorandClient for LocalNet\n  const algorand = AlgorandClient.defaultLocalNet()\n  const algod = algorand.client.algod\n  const indexer = algorand.client.indexer\n  \n  // Get a test account with funds\n  const testAccount = await algorand.account.localNet.dispenser()\n  \n  console.log('Deploying application...')\n  \n  // Deploy your application (replace with your app spec)\n  // This example assumes you have an appSpec with an 'error' method\n  const appClient = algorand.client.getTypedAppClient({\n    sender: testAccount,\n    // Your app spec here\n  })\n  \n  await appClient.create.bare()\n  const app = await appClient.appClient.getAppReference()\n  \n  console.log(`Application deployed with ID: ${app.appId}`)\n  \n  // Export the source maps from the original client\n  console.log('\\nExporting source maps from original client...')\n  const exportedSourceMaps = appClient.exportSourceMaps()\n  console.log('Source maps exported successfully')\n  \n  // Create a new client instance for the same app (without source maps)\n  console.log('\\nCreating new app client without source maps...')\n  const newClient = algokit.getAppClient(\n    {\n      resolveBy: 'id',\n      id: app.appId,\n      sender: testAccount,\n      // Your app spec here\n    },\n    algod,\n  )\n  \n  // Try calling an error method without source maps\n  console.log('\\nCalling error method without source maps...')\n  try {\n    await newClient.call({\n      method: 'error',\n      methodArgs: [],\n    })\n  } catch (e: any) {\n    console.log('Error caught (without source maps):')\n    console.log('Stack trace contains:', e.stack.substring(0, 100) + '...')\n    console.log('Limited debugging information available')\n  }\n  \n  // Import the source maps into the new client\n  console.log('\\nImporting source maps into new client...')\n  // Serialize and deserialize to simulate real-world scenario (e.g., saving to file)\n  newClient.importSourceMaps(JSON.parse(JSON.stringify(exportedSourceMaps)))\n  console.log('Source maps imported successfully')\n  \n  // Try calling the error method again with source maps\n  console.log('\\nCalling error method with source maps...')\n  try {\n    await newClient.call({\n      method: 'error',\n      methodArgs: [],\n    })\n  } catch (e: any) {\n    console.log('\\nError caught (with source maps):')\n    console.log('Enhanced stack trace:')\n    console.log(e.stack)\n    console.log('\\nError details:')\n    console.log(`  Program Counter: ${e.led.pc}`)\n    console.log(`  Message: ${e.led.msg}`)\n    console.log(`  Transaction ID: ${e.led.txId}`)\n    console.log('\\nWith source maps, you can see exactly where the error occurred in your TEAL code!')\n  }\n  \n  console.log('\\n✅ Source map export and import demonstration complete')\n  console.log('\\nKey takeaways:')\n  console.log('- Export source maps after deployment to preserve debugging information')\n  console.log('- Import source maps into new client instances for enhanced error messages')\n  console.log('- Source maps show the exact TEAL code location where errors occur')\n  console.log('- This is especially useful when debugging production applications')\n}\n\nexportAndImportSourceMaps().catch(console.error)"
+})
+
+// 2. Export source maps
+const sourceMaps = appClient.appClient.exportSourceMaps()
+
+// 3. Save for later use
+const serialized = JSON.stringify(sourceMaps)
+await fs.writeFile('sourcemaps.json', serialized)
+// Or: upload to S3, save to database, etc.
+```
+
+### Runtime Phase
+
+```typescript
+// 4. Create fresh client (in different service/after restart)
+const newClient = new TestingAppClient({
+  algorand,
+  appId: appClient.appId,
+  defaultSender: deployer.addr,
+})
+
+// 5. Test without source maps - limited info
+try {
+  await newClient.send.error({ args: [] })
+} catch (error: any) {
+  console.log(error.message)
+  // Shows: at:undefined ⚠️
+}
+
+// 6. Load and import source maps
+const loadedSourceMaps = JSON.parse(await fs.readFile('sourcemaps.json'))
+newClient.appClient.importSourceMaps(loadedSourceMaps)
+
+// 7. Test with source maps - full debugging info!
+try {
+  await newClient.send.error({ args: [] })
+} catch (error: any) {
+  console.log(error.message)
+  // Shows: at:469 ✅
+  // Plus TEAL stack trace with <--- Error marker
 }
 ```
+
+## Expected Output
+
+```
+Deployer account: ZCXIIVJNCKMTKU37ESTW2N5DOO56OY5DYDYZKLCGIBXBIUXJZK77KVZEWY
+
+Step 1: Deploying Application
+──────────────────────────────────────────────────
+App created by ZCXIIVJNCKMTKU37ESTW2N5DOO56OY5DYDYZKLCGIBXBIUXJZK77KVZEWY with ID 1004 via transaction LHAS46LDTERI2QF4LF6PSMO7TWM3FWOCV4UQ2SZ4YTCKS6RJVNEA
+✅ Application deployed
+   App ID: 1004n
+   App Address: SW4BTZGCCNMSDYSANRLKFQOZNYRKH4B7J6DNSEUAYPSRGOYZRGKQEAW5EY
+
+Step 2: Exporting Source Maps
+──────────────────────────────────────────────────
+✅ Source maps exported
+   Data size: 4748 bytes
+   Contains: bytecode-to-source mappings
+
+Step 3: Saving Source Maps
+──────────────────────────────────────────────────
+✅ Source maps serialized for storage
+   Serialized size: 4748 bytes
+   Ready to save to file/database/cloud storage
+
+Step 4: Creating Fresh Client Instance
+──────────────────────────────────────────────────
+✅ New client instance created
+   Points to same app ID: 1004n
+   No source maps loaded yet
+
+Step 5: Testing Error Without Source Maps
+──────────────────────────────────────────────────
+❌ Error occurred (as expected)
+   Message: assert failed pc=885. at:undefined. assert failed pc=885. at:469. Error resolvin...
+   Line number: at:undefined ⚠️
+   Limited debugging information available
+
+Step 6: Loading Source Maps into Client
+──────────────────────────────────────────────────
+✅ Source maps loaded into client
+   Debugging capabilities enabled
+
+Step 7: Testing Error With Source Maps
+──────────────────────────────────────────────────
+❌ Error occurred (as expected)
+   Message: assert failed pc=885. at:469. assert failed pc=885. at:469. Error resolving exec...
+   Line number: at:469 ✅
+   Full debugging information available!
+
+📄 TEAL Stack Trace:
+   intc_0 // 0
+   // Deliberate error
+   assert <--- Error
+   retsub
+
+
+Summary: Production Workflow
+══════════════════════════════════════════════════
+
+Deployment Phase:
+  1. Deploy your application
+  2. Export source maps: appClient.exportSourceMaps()
+  3. Save to storage: fs.writeFile(), S3, database, etc.
+
+Runtime Phase:
+  4. Create client for deployed app
+  5. Load source maps from storage
+  6. Import into client: appClient.importSourceMaps()
+  7. Enjoy enhanced error messages!
+
+Benefits:
+  ✅ See exact TEAL source line where errors occur
+  ✅ Get detailed stack traces with code context
+  ✅ Debug production issues without redeploying
+  ✅ Share debugging info across services
+
+✨ Example completed successfully!
+```
+
+## Key Differences: With vs Without Source Maps
+
+### Without Source Maps
+
+```
+Message: assert failed pc=885. at:undefined
+Line number: at:undefined ⚠️
+Limited debugging information available
+```
+
+- Shows `at:undefined` - no line number
+- Generic error message only
+- Difficult to locate issue in source code
+
+### With Source Maps
+
+```
+Message: assert failed pc=885. at:469
+Line number: at:469 ✅
+Full debugging information available!
+
+📄 TEAL Stack Trace:
+   intc_0 // 0
+   // Deliberate error
+   assert <--- Error
+   retsub
+```
+
+- Shows `at:469` - exact line number
+- TEAL stack trace with source context
+- `<--- Error` marker shows exact failure location
+- Easy to identify and fix issues
+
+## Production Workflow
+
+### During Deployment
+
+```typescript
+// deploy.ts
+async function deployToProduction() {
+  // Deploy app
+  const { appClient } = await appFactory.send.create.bare({ /* params */ })
+
+  // Export source maps
+  const sourceMaps = appClient.appClient.exportSourceMaps()
+
+  // Save to secure storage
+  await saveToS3({
+    bucket: 'my-app-sourcemaps',
+    key: `${appClient.appId}/sourcemaps.json`,
+    data: JSON.stringify(sourceMaps),
+  })
+
+  console.log(`Deployed app ${appClient.appId} with source maps saved`)
+}
+```
+
+### During Runtime/Monitoring
+
+```typescript
+// error-monitor.ts
+async function setupErrorMonitoring(appId: bigint) {
+  // Create client
+  const appClient = new TestingAppClient({
+    algorand,
+    appId,
+    defaultSender,
+  })
+
+  // Load source maps from storage
+  const sourceMaps = await loadFromS3({
+    bucket: 'my-app-sourcemaps',
+    key: `${appId}/sourcemaps.json`,
+  })
+
+  // Import into client
+  appClient.appClient.importSourceMaps(JSON.parse(sourceMaps))
+
+  // Now errors will have full debugging context
+  return appClient
+}
+```
+
+## Best Practices
+
+### 1. Always Export After Deployment
+
+```typescript
+// ✅ Good: Export immediately after deployment
+const { appClient } = await appFactory.send.create.bare({ /* params */ })
+const sourceMaps = appClient.appClient.exportSourceMaps()
+await saveSourceMaps(appClient.appId, sourceMaps)
+
+// ❌ Bad: Forgetting to export
+const { appClient } = await appFactory.send.create.bare({ /* params */ })
+// Source maps lost - debugging will be harder
+```
+
+### 2. Store Securely
+
+```typescript
+// ✅ Good: Secure storage
+await s3.putObject({
+  Bucket: 'private-sourcemaps',
+  Key: `${appId}/sourcemaps.json`,
+  Body: JSON.stringify(sourceMaps),
+  ServerSideEncryption: 'AES256',
+})
+
+// ❌ Bad: Public exposure
+app.get('/sourcemaps/:appId', (req, res) => {
+  res.json(sourceMaps)  // Don't expose source code!
+})
+```
+
+### 3. Import Early
+
+```typescript
+// ✅ Good: Import at initialization
+class AppService {
+  async initialize(appId: bigint) {
+    this.appClient = new TestingAppClient({ algorand, appId, defaultSender })
+    const sourceMaps = await this.loadSourceMaps(appId)
+    this.appClient.appClient.importSourceMaps(sourceMaps)
+  }
+}
+
+// ❌ Bad: Import on every call
+async function handleRequest() {
+  const sourceMaps = await loadSourceMaps(appId)  // Slow!
+  appClient.appClient.importSourceMaps(sourceMaps)
+}
+```
+
+### 4. Handle Missing Source Maps Gracefully
+
+```typescript
+async function createClient(appId: bigint) {
+  const appClient = new TestingAppClient({ algorand, appId, defaultSender })
+
+  try {
+    const sourceMaps = await loadSourceMaps(appId)
+    appClient.appClient.importSourceMaps(sourceMaps)
+  } catch (error) {
+    console.warn('Source maps not available, errors will have less context')
+    // App still works, just with reduced debugging info
+  }
+
+  return appClient
+}
+```
+
+## Learn More
+
+- [Example 108: Comprehensive Source Maps Guide](../108-export-and-import-source-maps-for-debugging/) - Detailed documentation and use cases
+- [Example 104: Enhanced Error Messages](../104-debug-teal-logic-errors-with-enhanced-error-messages/) - Understanding enhanced errors
+- [AlgoKit Utils Documentation](https://github.com/algorandfoundation/algokit-utils-ts)
+- [TEAL Debugging Guide](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/debugging/)

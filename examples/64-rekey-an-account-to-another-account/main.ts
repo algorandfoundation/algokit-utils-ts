@@ -62,8 +62,8 @@ async function main() {
   console.log('Account information after rekeying:')
   console.log(`- Account address: ${accountInfo.address}`)
 
-  // The auth address might be in different properties depending on the API version
-  const authAddr = accountInfo['auth-addr'] || accountInfo.authAddr
+  // The auth address will be in the authAddr property
+  const authAddr = accountInfo.authAddr
   console.log(`- Auth address (controlling account): ${authAddr || 'None'}\n`)
 
   // Verify the rekeying was successful

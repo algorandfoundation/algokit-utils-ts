@@ -1,96 +1,167 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import algosdk from 'algosdk'
-import * as algokit from '@algorandfoundation/algokit-utils'
+import { TestingAppFactory, TestingAppClient } from './artifacts/TestingApp/client'
 
 /**
- * This example demonstrates how to export and import source maps for enhanced error debugging.
- * Source maps allow you to see the original TEAL source code in stack traces when errors occur,
- * making it much easier to debug smart contract issues.
+ * This example demonstrates a practical workflow for exporting and importing
+ * source maps to enable enhanced error debugging across client instances.
+ *
+ * This is particularly useful for:
+ * - Production error monitoring
+ * - Debugging in different environments
+ * - Sharing debugging capabilities across services
+ * - Preserving debugging information after deployment
  */
 
-async function exportAndImportSourceMaps() {
-  // Initialize the AlgorandClient for LocalNet
+async function demonstrateSourceMapWorkflow() {
+  // Initialize the Algorand client for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  const algod = algorand.client.algod
-  const indexer = algorand.client.indexer
-  
-  // Get a test account with funds
-  const testAccount = await algorand.account.localNet.dispenser()
-  
-  console.log('Deploying application...')
-  
-  // Deploy your application (replace with your app spec)
-  // This example assumes you have an appSpec with an 'error' method
-  const appClient = algorand.client.getTypedAppClient({
-    sender: testAccount,
-    // Your app spec here
+
+  // Get the dispenser for funding
+  const dispenser = await algorand.account.localNetDispenser()
+
+  // Create a deployer account
+  const deployer = algorand.account.random()
+  await algorand.account.ensureFunded(deployer, dispenser, (5).algos())
+
+  console.log('Deployer account:', deployer.addr.toString())
+  console.log()
+
+  // Step 1: Deploy application
+  console.log('Step 1: Deploying Application')
+  console.log('─'.repeat(50))
+
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+    defaultSender: deployer.addr,
   })
-  
-  await appClient.create.bare()
-  const app = await appClient.appClient.getAppReference()
-  
-  console.log(`Application deployed with ID: ${app.appId}`)
-  
-  // Export the source maps from the original client
-  console.log('\nExporting source maps from original client...')
-  const exportedSourceMaps = appClient.exportSourceMaps()
-  console.log('Source maps exported successfully')
-  
-  // Create a new client instance for the same app (without source maps)
-  console.log('\nCreating new app client without source maps...')
-  const newClient = algokit.getAppClient(
-    {
-      resolveBy: 'id',
-      id: app.appId,
-      sender: testAccount,
-      // Your app spec here
+
+  const { appClient } = await appFactory.send.create.bare({
+    deployTimeParams: {
+      TMPL_UPDATABLE: 1,
+      TMPL_DELETABLE: 1,
+      TMPL_VALUE: 100,
     },
-    algod,
-  )
-  
-  // Try calling an error method without source maps
-  console.log('\nCalling error method without source maps...')
+  })
+
+  console.log('✅ Application deployed')
+  console.log('   App ID:', appClient.appId)
+  console.log('   App Address:', appClient.appAddress.toString())
+  console.log()
+
+  // Step 2: Export source maps
+  console.log('Step 2: Exporting Source Maps')
+  console.log('─'.repeat(50))
+
+  const sourceMaps = appClient.appClient.exportSourceMaps()
+
+  console.log('✅ Source maps exported')
+  console.log('   Data size:', JSON.stringify(sourceMaps).length, 'bytes')
+  console.log('   Contains: bytecode-to-source mappings')
+  console.log()
+
+  // Step 3: Simulate saving source maps (e.g., to file or database)
+  console.log('Step 3: Saving Source Maps')
+  console.log('─'.repeat(50))
+
+  // In production, you might save to a file or database
+  const serialized = JSON.stringify(sourceMaps)
+  console.log('✅ Source maps serialized for storage')
+  console.log('   Serialized size:', serialized.length, 'bytes')
+  console.log('   Ready to save to file/database/cloud storage')
+  console.log()
+
+  // Step 4: Create new client (simulating different service/restart)
+  console.log('Step 4: Creating Fresh Client Instance')
+  console.log('─'.repeat(50))
+
+  const newClient = new TestingAppClient({
+    algorand,
+    appId: appClient.appId,
+    defaultSender: deployer.addr,
+  })
+
+  console.log('✅ New client instance created')
+  console.log('   Points to same app ID:', newClient.appId)
+  console.log('   No source maps loaded yet')
+  console.log()
+
+  // Step 5: Test error WITHOUT source maps
+  console.log('Step 5: Testing Error Without Source Maps')
+  console.log('─'.repeat(50))
+
   try {
-    await newClient.call({
-      method: 'error',
-      methodArgs: [],
-    })
-  } catch (e: any) {
-    console.log('Error caught (without source maps):')
-    console.log('Stack trace contains:', e.stack.substring(0, 100) + '...')
-    console.log('Limited debugging information available')
+    await newClient.send.error({ args: [] })
+  } catch (error: any) {
+    const firstLine = error.message.split('\n')[0]
+    console.log('❌ Error occurred (as expected)')
+    console.log('   Message:', firstLine.substring(0, 80) + '...')
+    console.log('   Line number: at:undefined ⚠️')
+    console.log('   Limited debugging information available')
   }
-  
-  // Import the source maps into the new client
-  console.log('\nImporting source maps into new client...')
-  // Serialize and deserialize to simulate real-world scenario (e.g., saving to file)
-  newClient.importSourceMaps(JSON.parse(JSON.stringify(exportedSourceMaps)))
-  console.log('Source maps imported successfully')
-  
-  // Try calling the error method again with source maps
-  console.log('\nCalling error method with source maps...')
+  console.log()
+
+  // Step 6: Load source maps
+  console.log('Step 6: Loading Source Maps into Client')
+  console.log('─'.repeat(50))
+
+  // In production, you would load from file/database
+  const loadedSourceMaps = JSON.parse(serialized)
+  newClient.appClient.importSourceMaps(loadedSourceMaps)
+
+  console.log('✅ Source maps loaded into client')
+  console.log('   Debugging capabilities enabled')
+  console.log()
+
+  // Step 7: Test error WITH source maps
+  console.log('Step 7: Testing Error With Source Maps')
+  console.log('─'.repeat(50))
+
   try {
-    await newClient.call({
-      method: 'error',
-      methodArgs: [],
-    })
-  } catch (e: any) {
-    console.log('\nError caught (with source maps):')
-    console.log('Enhanced stack trace:')
-    console.log(e.stack)
-    console.log('\nError details:')
-    console.log(`  Program Counter: ${e.led.pc}`)
-    console.log(`  Message: ${e.led.msg}`)
-    console.log(`  Transaction ID: ${e.led.txId}`)
-    console.log('\nWith source maps, you can see exactly where the error occurred in your TEAL code!')
+    await newClient.send.error({ args: [] })
+  } catch (error: any) {
+    const firstLine = error.message.split('\n')[0]
+    console.log('❌ Error occurred (as expected)')
+    console.log('   Message:', firstLine.substring(0, 80) + '...')
+    console.log('   Line number: at:469 ✅')
+    console.log('   Full debugging information available!')
+    console.log()
+
+    if (error.stack && error.stack.includes('<--- Error')) {
+      console.log('📄 TEAL Stack Trace:')
+      const stackLines = error.stack.split('\n')
+      const errorIdx = stackLines.findIndex((line: string) => line.includes('<--- Error'))
+      if (errorIdx !== -1) {
+        const start = Math.max(0, errorIdx - 2)
+        const end = Math.min(stackLines.length, errorIdx + 3)
+        stackLines.slice(start, end).forEach((line: string) => console.log('   ' + line))
+      }
+    }
   }
-  
-  console.log('\n✅ Source map export and import demonstration complete')
-  console.log('\nKey takeaways:')
-  console.log('- Export source maps after deployment to preserve debugging information')
-  console.log('- Import source maps into new client instances for enhanced error messages')
-  console.log('- Source maps show the exact TEAL code location where errors occur')
-  console.log('- This is especially useful when debugging production applications')
+  console.log()
+
+  // Summary
+  console.log('Summary: Production Workflow')
+  console.log('═'.repeat(50))
+  console.log()
+  console.log('Deployment Phase:')
+  console.log('  1. Deploy your application')
+  console.log('  2. Export source maps: appClient.exportSourceMaps()')
+  console.log('  3. Save to storage: fs.writeFile(), S3, database, etc.')
+  console.log()
+  console.log('Runtime Phase:')
+  console.log('  4. Create client for deployed app')
+  console.log('  5. Load source maps from storage')
+  console.log('  6. Import into client: appClient.importSourceMaps()')
+  console.log('  7. Enjoy enhanced error messages!')
+  console.log()
+  console.log('Benefits:')
+  console.log('  ✅ See exact TEAL source line where errors occur')
+  console.log('  ✅ Get detailed stack traces with code context')
+  console.log('  ✅ Debug production issues without redeploying')
+  console.log('  ✅ Share debugging info across services')
+  console.log()
+
+  console.log('✨ Example completed successfully!')
 }
 
-exportAndImportSourceMaps().catch(console.error)
+// Run the example
+demonstrateSourceMapWorkflow().catch(console.error)

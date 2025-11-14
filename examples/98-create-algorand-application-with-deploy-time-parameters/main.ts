@@ -1,92 +1,71 @@
-import * as algokit from '@algorandfoundation/algokit-utils'
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { getApplicationAddress } from 'algosdk'
+import { TestingAppFactory } from './artifacts/TestingApp/client'
 
 /**
  * Demonstrates creating an Algorand application with deploy-time parameters.
- * 
- * This example shows two approaches:
- * 1. Passing deploy-time parameters in the create() method
- * 2. Passing deploy-time parameters in the client constructor
+ *
+ * Deploy-time parameters are template variables in your smart contract that get
+ * substituted during compilation. Common use cases include:
+ * - TMPL_UPDATABLE: Whether the app can be updated after deployment
+ * - TMPL_DELETABLE: Whether the app can be deleted
+ * - Custom values: Any other configuration values your contract needs
+ *
+ * This example shows how to pass deploy-time parameters when creating an app.
  */
-async function main() {
-  // Initialize AlgoKit with LocalNet
-  const localnet = await algokit.getLocalNetDispenserAccount(
-    algokit.getAlgoClient(),
-    algokit.getAlgoIndexerClient()
-  )
-  const algod = algokit.getAlgoClient()
-  const indexer = algokit.getAlgoIndexerClient()
-  const testAccount = localnet
+async function createApplicationWithDeployTimeParameters() {
+  // Initialize AlgorandClient for LocalNet
+  const algorand = AlgorandClient.defaultLocalNet()
 
-  // Load your app spec (replace with your actual app spec)
-  // This should be imported from your contract's artifacts
-  const appSpec = {
-    // Your app specification here
-    // Typically generated from your smart contract
-  } as algokit.AppSpec
+  // Get the dispenser account for funding
+  const dispenser = await algorand.account.localNetDispenser()
 
-  console.log('\n=== Approach 1: Deploy-time parameters in create() method ===')
-  
-  // Create an app client that resolves by creator and name
-  const client1 = algokit.getAppClient(
-    {
-      resolveBy: 'creatorAndName',
-      app: appSpec,
-      sender: testAccount,
-      creatorAddress: testAccount.addr,
-      findExistingUsing: indexer,
-    },
-    algod,
-  )
+  // Create a test account to be the app creator
+  const creator = algorand.account.random()
+  await algorand.account.ensureFunded(creator, dispenser, (5).algos())
+
+  console.log('Creator address:', creator.addr)
+  console.log()
+
+  console.log('=== Creating Application with Deploy-Time Parameters ===')
+  console.log()
+
+  // Get the typed app factory
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+    defaultSender: creator.addr,
+  })
 
   // Create the app with deploy-time parameters
-  // Deploy-time parameters are template variables that get substituted during compilation
-  const app1 = await client1.create({
+  // These parameters are substituted into the smart contract during compilation
+  const { appClient, result } = await appFactory.send.create.bare({
     deployTimeParams: {
-      // The TMPL_ prefix is automatically stripped
-      TMPL_UPDATABLE: 0,  // Set if the app can be updated
-      DELETABLE: 0,       // Set if the app can be deleted
-      VALUE: 1,           // Custom app parameter
+      TMPL_UPDATABLE: 1, // 1 = updatable, 0 = not updatable
+      TMPL_DELETABLE: 1, // 1 = deletable, 0 = not deletable
+      TMPL_VALUE: 42, // Custom parameter value
     },
   })
 
-  console.log('App created successfully!')
-  console.log('- App ID:', app1.appId)
-  console.log('- App Address:', app1.appAddress)
-  console.log('- Expected Address:', getApplicationAddress(app1.appId).toString())
-  console.log('- Application Index:', app1.confirmation?.applicationIndex?.toString())
-  console.log('- Compiled Approval Program:', app1.compiledApproval ? 'Present' : 'Missing')
+  const appId = BigInt(result.appId)
+  const appAddress = getApplicationAddress(appId)
 
-  console.log('\n=== Approach 2: Deploy-time parameters in constructor ===')
-  
-  // Alternative approach: set deploy-time params in the constructor
-  const client2 = algokit.getAppClient(
-    {
-      resolveBy: 'id',
-      app: appSpec,
-      sender: testAccount,
-      id: 0,  // 0 means create a new app
-      deployTimeParams: {
-        UPDATABLE: 0,
-        DELETABLE: 0,
-        VALUE: 1,
-      },
-    },
-    algod,
-  )
+  console.log('✅ App created successfully!')
+  console.log('App ID:', appId)
+  console.log('App Address:', appAddress)
+  console.log()
 
-  // Create the app without needing to pass params again
-  const app2 = await client2.create()
+  console.log('Deploy-time parameters used:')
+  console.log('  TMPL_UPDATABLE: 1 (app is updatable)')
+  console.log('  TMPL_DELETABLE: 1 (app is deletable)')
+  console.log('  TMPL_VALUE: 42 (custom value)')
+  console.log()
 
-  console.log('App created with constructor params!')
-  console.log('- App ID:', app2.appId)
-  console.log('- App Address:', app2.appAddress)
+  // You can now use the app client for further operations
+  console.log('The app client is ready for method calls.')
+  console.log('Example: await appClient.send.methodName({ args: [...] })')
+  console.log()
 
-  console.log('\n=== Summary ===')
-  console.log('Both approaches successfully created apps with deploy-time parameters.')
-  console.log('Choose the approach that best fits your application architecture:')
-  console.log('- Method params: Better for dynamic parameters')
-  console.log('- Constructor params: Better for consistent parameters across operations')
+  console.log('✅ Example completed successfully!')
 }
 
-main().catch(console.error)
+// Run the example
+createApplicationWithDeployTimeParameters().catch(console.error)

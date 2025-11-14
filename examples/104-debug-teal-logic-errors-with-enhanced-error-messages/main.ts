@@ -1,85 +1,197 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import algosdk from 'algosdk'
+import { TestingAppFactory } from './artifacts/TestingApp/client'
 
 /**
- * This example demonstrates how AlgoKit Utils SDK provides enhanced error messages
+ * This example demonstrates how AlgoKit Utils provides enhanced error messages
  * when TEAL logic errors occur during smart contract execution.
- * 
- * The SDK automatically:
- * - Captures the TEAL stack trace
- * - Provides the program counter (PC) where the error occurred
- * - Shows the exact TEAL instruction that failed
- * - Includes transaction traces for debugging
+ *
+ * The SDK automatically enriches errors with:
+ * - TEAL stack traces showing the exact instruction that failed
+ * - Program Counter (PC) information
+ * - Transaction details and IDs
+ * - Execution traces for step-by-step debugging
+ * - Human-readable error messages
+ *
+ * This makes debugging smart contract logic errors much easier compared to raw errors.
  */
 
-async function debugLogicErrors() {
-  // Initialize the AlgorandClient for LocalNet
+async function demonstrateEnhancedErrorMessages() {
+  // Initialize the Algorand client for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  const algod = algorand.client.algod
-  const indexer = algorand.client.indexer
-  
-  // Get a test account with funds
-  const testAccount = await algorand.account.localNet.dispenser()
-  
-  console.log('Deploying application with intentional error...')
-  
-  // Deploy your application (replace with your app spec)
-  // This example assumes you have an appSpec with an 'error' method
-  const appClient = algorand.client.getTypedAppClient({
-    sender: testAccount,
-    // Your app spec here
+
+  // Get the dispenser for funding
+  const dispenser = await algorand.account.localNetDispenser()
+
+  // Create a test account
+  const testAccount = algorand.account.random()
+  await algorand.account.ensureFunded(testAccount, dispenser, (5).algos())
+
+  console.log('Test account address:', testAccount.addr.toString())
+  console.log()
+
+  console.log('=== Deploying Test Application ===')
+  console.log()
+  console.log('This application has an "error" method that deliberately fails.')
+  console.log()
+
+  // Deploy the TestingApp which has an error() method that always fails
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+    defaultSender: testAccount.addr,
   })
-  
-  await appClient.create.bare()
-  const app = await appClient.appClient.getAppReference()
-  
-  console.log(`Application deployed with ID: ${app.appId}`)
-  console.log(`Application address: ${app.appAddress}`)
-  
-  // Call a method that will cause a TEAL logic error
-  console.log('\nCalling method that will trigger a logic error...')
-  
+
+  const { appClient } = await appFactory.send.create.bare({
+    deployTimeParams: {
+      TMPL_UPDATABLE: 1,
+      TMPL_DELETABLE: 1,
+      TMPL_VALUE: 100,
+    },
+  })
+
+  console.log('✅ App deployed successfully!')
+  console.log('App ID:', appClient.appId)
+  console.log()
+
+  console.log('=== Triggering Logic Error ===')
+  console.log()
+  console.log('Calling the "error" method which deliberately fails with assert(0)...')
+  console.log()
+
   try {
-    await appClient.call({
-      method: 'error',
-      methodArgs: [],
-    })
-    
+    // Call the error() method which intentionally fails
+    await appClient.send.error({ args: [] })
+
     // This line should never be reached
-    console.log('No error occurred (unexpected!)')
-    
-  } catch (e: any) {
-    console.log('\n❌ Logic error caught! Here\'s the enhanced debugging information:\n')
-    
-    // The SDK provides a 'led' (Logic Error Details) object
-    console.log('=== Logic Error Details (e.led) ===')
-    console.log(`Program Counter: ${e.led.pc}`)
-    console.log(`Error Message: ${e.led.msg}`)
-    console.log(`Transaction ID: ${e.led.txId}`)
-    console.log(`Number of traces: ${e.led.traces.length}`)
-    
-    // The stack trace shows exactly where in the TEAL code the error occurred
-    console.log('\n=== TEAL Stack Trace ===')
-    console.log(e.stack)
-    
-    // Additional information available in the error object
-    console.log('\n=== Additional Debug Info ===')
-    console.log(`Transaction confirmed: ${e.led.txId.length === 52}`)
-    console.log(`Error type: TEAL logic error (assert failed)`)
-    
-    // The error details help you:
-    // 1. Find the exact line in your TEAL code that failed
-    // 2. Understand why the assertion failed
-    // 3. Access transaction traces for step-by-step debugging
-    
-    console.log('\n✅ Error debugging information successfully captured')
-    console.log('\nKey features demonstrated:')
-    console.log('- Detailed TEAL stack traces showing the error location')
-    console.log('- Program counter (PC) for pinpointing the instruction')
-    console.log('- Transaction ID for looking up details on the blockchain')
-    console.log('- Error traces for step-by-step debugging')
-    console.log('\nThis makes debugging TEAL logic errors much easier!')
+    console.log('❌ ERROR: Method should have failed but succeeded!')
+  } catch (error: any) {
+    console.log('✅ Logic error caught as expected!')
+    console.log()
+
+    console.log('═══════════════════════════════════════════════════')
+    console.log('📊 ENHANCED ERROR INFORMATION')
+    console.log('═══════════════════════════════════════════════════')
+    console.log()
+
+    // Display the enhanced error message
+    console.log('🔴 Error Message:')
+    console.log(`   ${error.message}`)
+    console.log()
+
+    // The error message includes several key pieces of information:
+    // 1. Error type (e.g., "assert failed")
+    // 2. Program Counter (PC) - the bytecode position
+    // 3. Line number in TEAL source (if available)
+    // 4. Transaction details
+
+    // Parse the error message to highlight key information
+    const pcMatch = error.message.match(/pc=(\d+)/)
+    if (pcMatch) {
+      console.log('📍 Program Counter (PC):')
+      console.log(`   ${pcMatch[1]} - This is the bytecode position where the error occurred`)
+      console.log()
+    }
+
+    const lineMatch = error.message.match(/at:(\d+)/)
+    if (lineMatch) {
+      console.log('📄 TEAL Source Line:')
+      console.log(`   Line ${lineMatch[1]} in the TEAL source code`)
+      console.log()
+    }
+
+    // Check if execution traces are available
+    if (error.traces) {
+      console.log('📋 Execution Traces:')
+      console.log(`   Available: ${error.traces.length > 0 ? 'Yes' : 'No'}`)
+      if (error.traces.length > 0) {
+        console.log(`   Number of trace entries: ${error.traces.length}`)
+        console.log('   These traces show step-by-step execution of your contract')
+      }
+      console.log()
+    }
+
+    // Display transaction information if available
+    if (error.transaction) {
+      console.log('🔗 Transaction Information:')
+      console.log(`   Transaction ID: ${error.transaction.txID()}`)
+      console.log('   You can use this ID to look up the transaction on AlgoExplorer')
+      console.log()
+    }
+
+    // Stack trace with TEAL source code
+    if (error.stack) {
+      console.log('═══════════════════════════════════════════════════')
+      console.log('📄 TEAL STACK TRACE')
+      console.log('═══════════════════════════════════════════════════')
+      console.log()
+
+      // Show the relevant part of the stack trace
+      const stackLines = error.stack.split('\n')
+
+      // Find the error line in the stack trace
+      let errorLineIndex = -1
+      for (let i = 0; i < stackLines.length; i++) {
+        if (stackLines[i].includes('<--- Error')) {
+          errorLineIndex = i
+          break
+        }
+      }
+
+      if (errorLineIndex !== -1) {
+        // Show context around the error (5 lines before, the error line, and 5 lines after)
+        const startIndex = Math.max(0, errorLineIndex - 5)
+        const endIndex = Math.min(stackLines.length, errorLineIndex + 6)
+
+        const relevantLines = stackLines.slice(startIndex, endIndex)
+        console.log(relevantLines.join('\n'))
+        console.log()
+
+        console.log('The line marked "<--- Error" shows exactly where the failure occurred!')
+        console.log()
+      } else {
+        // Show first 15 lines if we couldn't find the error marker
+        const stackPreview = stackLines.slice(0, 15)
+        console.log(stackPreview.join('\n'))
+        console.log()
+      }
+    }
+
+    console.log('═══════════════════════════════════════════════════')
+    console.log('💡 WHAT MAKES THESE ERROR MESSAGES ENHANCED?')
+    console.log('═══════════════════════════════════════════════════')
+    console.log()
+
+    console.log('Without AlgoKit Utils, you would get:')
+    console.log('  ❌ Generic error: "TransactionPool.Remember: transaction <ID>: logic eval error"')
+    console.log('  ❌ No indication of where in your code the error occurred')
+    console.log('  ❌ No TEAL source code context')
+    console.log('  ❌ Difficult to debug and fix')
+    console.log()
+
+    console.log('With AlgoKit Utils enhanced errors, you get:')
+    console.log('  ✅ Exact error type (assert failed, budget exceeded, etc.)')
+    console.log('  ✅ Program Counter (PC) - bytecode position')
+    console.log('  ✅ Line number in TEAL source code')
+    console.log('  ✅ TEAL stack trace with error location marked')
+    console.log('  ✅ Transaction ID for further investigation')
+    console.log('  ✅ Execution traces for step-by-step debugging')
+    console.log()
+
+    console.log('This dramatically reduces debugging time!')
   }
+
+  console.log('═══════════════════════════════════════════════════')
+  console.log('✨ Example Completed Successfully')
+  console.log('═══════════════════════════════════════════════════')
+  console.log()
+
+  console.log('You now understand how AlgoKit Utils provides enhanced error messages!')
+  console.log()
+  console.log('Key Takeaways:')
+  console.log('  • AlgoKit Utils automatically enriches error messages')
+  console.log('  • You get TEAL stack traces showing exactly where errors occur')
+  console.log('  • Program Counter and line numbers help pinpoint issues')
+  console.log('  • Transaction IDs and traces enable deeper debugging')
+  console.log('  • This makes debugging smart contracts much easier!')
 }
 
-debugLogicErrors().catch(console.error)
+// Run the example
+demonstrateEnhancedErrorMessages().catch(console.error)

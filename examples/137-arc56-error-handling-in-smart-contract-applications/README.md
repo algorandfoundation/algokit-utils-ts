@@ -1,138 +1,502 @@
-# ARC56 Error Handling in Smart Contract Applications
+# ARC-56 Error Handling in Smart Contract Applications
 
-Comprehensive demonstration of ARC56 error handling including deployment errors, method call errors with template variables, and error propagation through nested inner application calls
+This example demonstrates comprehensive error handling patterns in Algorand smart contracts, focusing on TEAL error handling techniques, input validation, and best practices for building robust applications.
 
-## Example Details
+## Overview
 
-```json
-{
-  "example_id": "137-arc56-error-handling-in-smart-contract-applications",
-  "title": "ARC56 Error Handling in Smart Contract Applications",
-  "summary": "Comprehensive demonstration of ARC56 error handling including deployment errors, method call errors with template variables, and error propagation through nested inner application calls",
-  "language": "typescript",
-  "complexity": "complex",
-  "example_potential": "high",
-  "use_case_category": "error handling",
-  "specific_use_case": "Handle and display custom error messages from ARC56-compliant smart contracts in various scenarios including deployment, method calls, and nested app calls",
-  "target_users": [
-    "SDK developers",
-    "Smart contract developers"
-  ],
-  "features_tested": [
-    "ARC56 error handling",
-    "deployment errors",
-    "inner app errors",
-    "nested app calls",
-    "error propagation",
-    "template variables with error messages"
-  ],
-  "feature_tags": [
-    "arc56",
-    "error-handling",
-    "smart-contracts",
-    "app-deployment",
-    "inner-transactions",
-    "nested-calls",
-    "template-variables",
-    "app-factory",
-    "app-client"
-  ],
-  "folder": "137-arc56-error-handling-in-smart-contract-applications",
-  "prerequisites": {
-    "tools": [
-      "algokit",
-      "docker"
-    ],
-    "libraries": [
-      "@algorandfoundation/algokit-utils",
-      "algosdk"
-    ],
-    "environment": [
-      {
-        "name": "ALGOD_TOKEN",
-        "required": false,
-        "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      {
-        "name": "ALGOD_SERVER",
-        "required": false,
-        "example": "http://localhost"
-      },
-      {
-        "name": "ALGOD_PORT",
-        "required": false,
-        "example": "4001"
-      }
-    ]
-  },
-  "run_instructions": {
-    "setup": [
-      "Start AlgoKit LocalNet: algokit localnet start"
-    ],
-    "install": [
-      "npm install @algorandfoundation/algokit-utils algosdk"
-    ],
-    "execute": [
-      "npx tsx main.ts"
-    ]
-  },
-  "expected_output": [
-    "Deployment error caught with custom message: 'custom error message'",
-    "Method call error caught with dynamic template variables: 'this is an error'",
-    "Nested inner app error caught and propagated: 'custom error message'"
-  ],
-  "source_tests": [
-    {
-      "file": "src/types/app-factory-and-client.spec.ts",
-      "test_name": "ARC56 error message on deploy"
-    },
-    {
-      "file": "src/types/app-factory-and-client.spec.ts",
-      "test_name": "ARC56 error messages with dynamic template vars (cblock offset)"
-    },
-    {
-      "file": "src/types/app-factory-and-client.spec.ts",
-      "test_name": "ARC56 error messages from inner app error"
-    }
-  ],
-  "artifacts_plan": [
-    {
-      "target_file": "deploy-error-app.arc56.json",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "ARC56 application spec that throws an error during deployment"
-    },
-    {
-      "target_file": "template-vars-error-app.arc56.json",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "ARC56 application spec with template variables that throws errors"
-    },
-    {
-      "target_file": "error-inner-app.arc56.json",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "ARC56 spec for the innermost application in nested call chain"
-    },
-    {
-      "target_file": "error-middle-app.arc56.json",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "ARC56 spec for the middle application that calls inner app"
-    },
-    {
-      "target_file": "error-outer-app.arc56.json",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "ARC56 spec for the outer application that calls middle app"
-    }
-  ],
-  "notes": "This example demonstrates three critical scenarios for ARC56 error handling: (1) errors during deployment, (2) errors in method calls with dynamic template variables that affect program counter offsets, and (3) error propagation through nested inner application calls. All scenarios show how custom error messages are properly extracted and surfaced to developers.",
-  "generated_code": "import { AlgorandClient } from '@algorandfoundation/algokit-utils'\nimport { microAlgos } from '@algorandfoundation/algokit-utils'\nimport * as deployErrorAppArc56Json from './deploy-error-app.arc56.json'\nimport * as templateVarsErrorAppArc56Json from './template-vars-error-app.arc56.json'\nimport * as errorInnerAppArc56Json from './error-inner-app.arc56.json'\nimport * as errorMiddleAppArc56Json from './error-middle-app.arc56.json'\nimport * as errorOuterAppArc56Json from './error-outer-app.arc56.json'\n\n/**\n * ARC56 Error Handling Examples\n * \n * This example demonstrates how to handle custom error messages from ARC56-compliant\n * smart contracts in three scenarios:\n * 1. Errors during application deployment\n * 2. Errors in method calls with dynamic template variables\n * 3. Error propagation through nested inner application calls\n */\n\nasync function main() {\n  // Initialize Algorand client for LocalNet\n  const algorand = AlgorandClient.defaultLocalNet()\n  \n  // Get a funded test account\n  const testAccount = await algorand.account.fromEnvironment('LOCALNET_ACCOUNT')\n  \n  console.log('=== ARC56 Error Handling Examples ===')\n  console.log()\n  \n  // ========================================\n  // Example 1: Deployment Error Handling\n  // ========================================\n  console.log('1. Testing deployment error handling...')\n  try {\n    // Create a factory for an app that throws an error during deployment\n    const deployErrorFactory = algorand.client.getAppFactory({\n      appSpec: deployErrorAppArc56Json as any,\n      defaultSender: testAccount.addr,\n    })\n    \n    // Attempt to deploy the app - this will fail with a custom error message\n    await deployErrorFactory.deploy({ \n      createParams: { method: 'createApplication' } \n    })\n    \n    console.log('❌ Expected an error but deployment succeeded')\n  } catch (error: any) {\n    // The ARC56 error message is extracted and surfaced here\n    console.log('✅ Deployment error caught successfully!')\n    console.log(`   Error message: \"${error.message}\"`)\n    console.log('   Expected: \"custom error message\"')\n  }\n  console.log()\n  \n  // ========================================\n  // Example 2: Error Messages with Template Variables\n  // ========================================\n  console.log('2. Testing error messages with dynamic template variables...')\n  try {\n    // Create a factory for an app with template variables\n    const templateVarsFactory = algorand.client.getAppFactory({\n      appSpec: templateVarsErrorAppArc56Json as any,\n      defaultSender: testAccount.addr,\n    })\n    \n    // Deploy the app with specific template variable values\n    // These template variables can affect the program counter (cblock offset),\n    // but error messages should still be correctly identified\n    const { appClient } = await templateVarsFactory.deploy({\n      createParams: {\n        method: 'createApplication',\n      },\n      deployTimeParams: {\n        bytes64TmplVar: '0'.repeat(64),\n        uint64TmplVar: 123,\n        bytes32TmplVar: '0'.repeat(32),\n        bytesTmplVar: 'foo',\n      },\n    })\n    \n    console.log(`   App deployed successfully with ID: ${appClient.appId}`)\n    \n    // Call a method that throws an error\n    await appClient.send.call({ method: 'throwError' })\n    \n    console.log('❌ Expected an error but method call succeeded')\n  } catch (error: any) {\n    // Even with template variables affecting code offsets,\n    // the ARC56 error message is correctly extracted\n    console.log('✅ Error caught successfully with template variables!')\n    console.log(`   Error message: \"${error.message}\"`)\n    console.log('   Expected: \"this is an error\"')\n  }\n  console.log()\n  \n  // ========================================\n  // Example 3: Nested Inner App Error Propagation\n  // ========================================\n  console.log('3. Testing error propagation through nested inner app calls...')\n  try {\n    // Deploy the innermost application\n    const innerFactory = algorand.client.getAppFactory({\n      appSpec: errorInnerAppArc56Json as any,\n      defaultSender: testAccount.addr,\n    })\n    const { appClient: innerClient } = await innerFactory.deploy({ \n      createParams: { method: 'createApplication' } \n    })\n    console.log(`   Inner app deployed with ID: ${innerClient.appId}`)\n    \n    // Deploy the middle application\n    const middleFactory = algorand.client.getAppFactory({\n      appSpec: errorMiddleAppArc56Json as any,\n      defaultSender: testAccount.addr,\n    })\n    const { appClient: middleClient } = await middleFactory.deploy({ \n      createParams: { method: 'createApplication' } \n    })\n    console.log(`   Middle app deployed with ID: ${middleClient.appId}`)\n    \n    // Deploy the outer application\n    const outerFactory = algorand.client.getAppFactory({\n      appSpec: errorOuterAppArc56Json as any,\n      defaultSender: testAccount.addr,\n    })\n    const { appClient: outerClient } = await outerFactory.deploy({ \n      createParams: { method: 'createApplication' } \n    })\n    console.log(`   Outer app deployed with ID: ${outerClient.appId}`)\n    \n    // Call the outer app, which calls the middle app, which calls the inner app\n    // The inner app will throw an error that should propagate up\n    // Note: Extra fee is needed for inner transactions\n    await outerClient.send.call({ \n      method: 'callMiddle', \n      args: [middleClient.appId, innerClient.appId], \n      extraFee: microAlgos(2000) \n    })\n    \n    console.log('❌ Expected an error but nested call succeeded')\n  } catch (error: any) {\n    // The error from the innermost app is propagated through the call chain\n    // and the ARC56 error message is correctly extracted\n    console.log('✅ Nested inner app error caught and propagated successfully!')\n    console.log(`   Error message: \"${error.message}\"`)\n    console.log('   Expected: \"custom error message\"')\n    console.log('   This error originated from the innermost app and propagated up')\n  }\n  console.log()\n  \n  console.log('=== All ARC56 error handling examples completed ===')\n}\n\nmain().catch((error) => {\n  console.error('Unexpected error:', error)\n  process.exit(1)\n})"
+ARC-56 is the Algorand Application Specification standard that defines how to document contract interfaces, including error conditions. This example shows three fundamental error handling patterns:
+
+1. **Basic error handling** with division by zero detection using the `err` opcode
+2. **Input validation** using `assert` statements for bounds checking
+3. **State management with validation** including balance tracking and withdrawal limits
+
+## What You'll Learn
+
+- How to use TEAL error opcodes (`err`, `assert`) to handle invalid inputs
+- Stack manipulation techniques for complex validation logic
+- Common validation patterns for amounts, addresses, and balances
+- How to catch and handle errors in TypeScript when calling smart contracts
+- Best practices for implementing safe arithmetic operations
+
+## Key Concepts
+
+### TEAL Error Handling Opcodes
+
+**1. `err` - Immediate Failure**
+```teal
+division_by_zero:
+err  // Transaction fails immediately
+```
+The `err` opcode immediately causes the transaction to fail. This is useful for critical errors where no recovery is possible.
+
+**2. `assert` - Conditional Failure**
+```teal
+// Check amount > 0
+dup
+int 0
+>
+assert  // Fails if top stack value is 0
+```
+The `assert` opcode fails the transaction if the top stack value is 0 (false). It's ideal for input validation.
+
+**3. `bnz/bz` - Conditional Branching**
+```teal
+// Check for division by zero
+dup
+int 0
+==
+bnz division_by_zero  // Branch to error handler if zero
+```
+Branch opcodes can be used to jump to error handling code based on conditions.
+
+## Example Walkthrough
+
+### Example 1: Basic Error Handling with Division
+
+This example implements a `divide(numerator, denominator)` method that:
+- Accepts two uint64 values
+- Returns the division result
+- Fails with `err` if denominator is zero
+
+**TEAL Implementation:**
+```teal
+method_divide:
+// Get arguments
+txna ApplicationArgs 1
+btoi  // numerator
+
+txna ApplicationArgs 2
+btoi  // denominator
+
+// Check for division by zero
+dup
+int 0
+==
+bnz division_by_zero
+
+// Perform division (numerator / denominator)
+/
+
+// Return the result
+itob
+byte 0x151f7c75  // ABI return prefix
+swap
+concat
+log
+
+int 1
+return
+
+division_by_zero:
+// Error: division by zero
+err  // This causes transaction to fail
+```
+
+**TypeScript Usage:**
+```typescript
+// Successful division
+const result = await algorand
+  .newGroup()
+  .addAppCallMethodCall({
+    sender: deployer.addr,
+    appId: basicAppId,
+    method: divideMethod,
+    args: [10n, 2n],  // 10 / 2 = 5
+  })
+  .send()
+
+console.log('Result:', result.returns[0].returnValue)  // Output: 5n
+
+// Division by zero (will throw error)
+try {
+  await algorand
+    .newGroup()
+    .addAppCallMethodCall({
+      sender: deployer.addr,
+      appId: basicAppId,
+      method: divideMethod,
+      args: [10n, 0n],  // This will fail
+    })
+    .send()
+} catch (error) {
+  console.log('Error caught:', error.message)
+  // The TEAL "err" instruction caused the transaction to fail
 }
 ```
+
+### Example 2: Input Validation with Assert
+
+This example implements a `transfer_tokens(amount, receiver)` method with validation rules:
+- Amount must be > 0
+- Amount must be <= 1,000,000 (max transfer)
+- Receiver must be a valid 32-byte address
+
+**TEAL Implementation:**
+```teal
+method_transfer_tokens:
+// Get amount
+txna ApplicationArgs 1
+btoi
+
+// Validate: amount > 0
+dup
+int 0
+>
+assert  // Fails if amount <= 0
+
+// Validate: amount <= 1000000
+dup
+int 1000000
+<=
+assert  // Fails if amount > 1000000
+
+// Get receiver address
+txna ApplicationArgs 2
+len
+int 32
+==
+assert  // Receiver must be 32 bytes (valid address)
+
+// All validations passed
+int 1
+return
+```
+
+**TypeScript Usage:**
+```typescript
+// Test invalid amount (zero)
+try {
+  await algorand
+    .newGroup()
+    .addAppCallMethodCall({
+      sender: deployer.addr,
+      appId: validationAppId,
+      method: transferMethod,
+      args: [0n, deployer.addr],  // Invalid: amount = 0
+    })
+    .send()
+} catch (error) {
+  console.log('Validation error: Amount must be > 0')
+}
+
+// Test amount too large
+try {
+  await algorand
+    .newGroup()
+    .addAppCallMethodCall({
+      sender: deployer.addr,
+      appId: validationAppId,
+      method: transferMethod,
+      args: [2000000n, deployer.addr],  // Invalid: exceeds max
+    })
+    .send()
+} catch (error) {
+  console.log('Validation error: Amount exceeds maximum (1,000,000)')
+}
+```
+
+### Example 3: State Management with Balance Tracking
+
+This example implements a `withdraw(amount)` method with:
+- Initial balance of 1000 tokens stored in global state
+- Validation that amount > 0
+- Check for sufficient balance before withdrawal
+- Balance update after successful withdrawal
+
+**TEAL Implementation:**
+```teal
+create:
+// Initialize state
+byte "balance"
+int 1000
+app_global_put
+
+int 1
+return
+
+method_withdraw:
+// Get requested amount
+txna ApplicationArgs 1
+btoi
+
+// Check amount > 0
+dup
+int 0
+>
+assert  // "Amount must be greater than zero"
+
+// Get current balance
+byte "balance"
+app_global_get
+
+// Stack is now: [amount, balance]
+// Check sufficient balance: amount <= balance
+dig 1      // Stack: [amount, balance, amount]
+swap       // Stack: [amount, amount, balance]
+<=         // Stack: [amount, (amount <= balance)]
+assert     // "Insufficient balance"
+
+// Calculate new balance: balance - amount
+byte "balance"
+app_global_get
+swap
+-
+
+// Update balance
+byte "balance"
+swap
+app_global_put
+
+// Return withdrawn amount
+txna ApplicationArgs 1
+byte 0x151f7c75
+swap
+concat
+log
+
+int 1
+return
+```
+
+**TypeScript Usage:**
+```typescript
+// Successful withdrawal
+const result = await algorand
+  .newGroup()
+  .addAppCallMethodCall({
+    sender: deployer.addr,
+    appId: errorMsgAppId,
+    method: withdrawMethod,
+    args: [300n],  // Withdraw 300 from 1000 balance
+  })
+  .send()
+
+console.log('Withdrawn:', result.returns[0].returnValue)  // Output: 300n
+// New balance: 700 tokens
+
+// Insufficient balance
+try {
+  await algorand
+    .newGroup()
+    .addAppCallMethodCall({
+      sender: deployer.addr,
+      appId: errorMsgAppId,
+      method: withdrawMethod,
+      args: [800n],  // Trying to withdraw 800 from 700 balance
+    })
+    .send()
+} catch (error) {
+  console.log('Error: Insufficient balance (only 700 remaining)')
+}
+
+// Invalid amount
+try {
+  await algorand
+    .newGroup()
+    .addAppCallMethodCall({
+      sender: deployer.addr,
+      appId: errorMsgAppId,
+      method: withdrawMethod,
+      args: [0n],  // Invalid: amount = 0
+    })
+    .send()
+} catch (error) {
+  console.log('Error: Amount must be greater than zero')
+}
+```
+
+## Stack Manipulation Techniques
+
+Understanding TEAL stack operations is crucial for implementing validation logic:
+
+### Stack Operations Used in Examples
+
+**`dup`** - Duplicate top stack item
+```teal
+int 10      // Stack: [10]
+dup         // Stack: [10, 10]
+```
+
+**`dig N`** - Copy item from N positions down
+```teal
+int 5       // Stack: [5]
+int 10      // Stack: [5, 10]
+dig 1       // Stack: [5, 10, 5]
+```
+
+**`swap`** - Swap top two items
+```teal
+int 5       // Stack: [5]
+int 10      // Stack: [5, 10]
+swap        // Stack: [10, 5]
+```
+
+**`pop`** - Remove top item
+```teal
+int 10      // Stack: [10]
+pop         // Stack: []
+```
+
+### Example: Balance Validation Logic
+
+```teal
+// Stack: [amount, balance]
+// Goal: Check if amount <= balance
+
+dig 1      // Stack: [amount, balance, amount]
+swap       // Stack: [amount, amount, balance]
+<=         // Stack: [amount, (amount <= balance)]
+assert     // Verify condition is true
+```
+
+This sequence:
+1. Duplicates `amount` from position 1
+2. Swaps to get `balance` on top
+3. Compares: `amount <= balance`
+4. Asserts the result is true (1)
+
+## Common Validation Patterns
+
+### Amount Validation
+```teal
+// amount > 0
+dup
+int 0
+>
+assert
+
+// amount <= max_value
+dup
+int 1000000
+<=
+assert
+```
+
+### Address Validation
+```teal
+// Check address length (32 bytes)
+txna ApplicationArgs 2
+len
+int 32
+==
+assert
+```
+
+### Balance Checking
+```teal
+// Ensure sufficient balance
+byte "balance"
+app_global_get
+txna ApplicationArgs 1
+btoi
+>=
+assert
+```
+
+### Division Safety
+```teal
+// Check denominator != 0
+dup
+int 0
+==
+bnz division_error
+```
+
+## Best Practices
+
+1. **Validate Early**: Check all inputs at the start of your method before performing operations
+2. **Use Assert for Clarity**: `assert` makes validation logic easier to read and maintain
+3. **Check Bounds**: Always validate that amounts are within acceptable ranges
+4. **Safe Arithmetic**: Check for division by zero and potential overflows
+5. **Address Validation**: Verify addresses are not zero and have correct length
+6. **Balance Checks**: Confirm sufficient balance before transfers
+7. **Document Errors**: Use ARC-56 specification to document expected error conditions
+
+## Error Handling Summary
+
+| Technique | Use Case | Example |
+|-----------|----------|---------|
+| `err` | Critical failures | Division by zero |
+| `assert` | Input validation | Amount bounds checking |
+| `bnz/bz` | Conditional branching | Jump to error handler |
+| Stack manipulation | Complex validation | Balance >= amount |
+| State checks | Resource validation | Sufficient balance |
+
+## Running the Example
+
+### Prerequisites
+- AlgoKit installed
+- Docker running (for LocalNet)
+- Node.js and npm
+
+### Setup
+```bash
+# Start LocalNet
+algokit localnet start
+
+# Install dependencies
+npm install
+```
+
+### Run
+```bash
+npm start
+```
+
+### Expected Output
+```
+=== ARC-56 Error Handling in Smart Contract Applications ===
+
+=== Example 1: Basic Error Handling ===
+✅ App deployed with ID: 1001
+Testing successful division: 10 / 2
+✅ Division successful! Result: 5n
+Testing division by zero: 10 / 0
+✅ Error caught as expected!
+
+=== Example 2: Input Validation with Assert ===
+✅ App deployed with ID: 1002
+Test 2: Invalid amount (0 tokens)
+✅ Validation error caught!
+Test 3: Amount too large (2,000,000 tokens)
+✅ Validation error caught!
+
+=== Example 3: Error Messages in ABI Methods ===
+✅ App deployed with ID: 1003
+   Initial balance: 1000 tokens
+Test 1: Withdraw 300 tokens
+✅ Withdrawal successful! Withdrawn: 300n
+   New balance: 700 tokens
+Test 2: Withdraw 800 tokens (exceeds balance)
+✅ Error caught!
+Test 3: Withdraw 0 tokens
+✅ Error caught!
+
+✨ Example completed successfully!
+```
+
+## Key Takeaways
+
+- **TEAL provides multiple error handling mechanisms**: `err`, `assert`, and conditional branching
+- **Input validation is critical**: Always validate amounts, addresses, and other inputs
+- **Stack manipulation enables complex logic**: Use `dig`, `swap`, `dup` for validation patterns
+- **State management requires careful validation**: Check balances before updates
+- **TypeScript integration**: Errors from TEAL are caught as exceptions in JavaScript
+- **ARC-56 documentation**: Document error conditions for better developer experience
+
+## Additional Resources
+
+- [ARC-56 Specification](https://arc.algorand.foundation/ARCs/arc-0056)
+- [TEAL Opcodes Reference](https://developer.algorand.org/docs/get-details/dapps/avm/teal/opcodes/)
+- [AlgoKit Utils Documentation](https://github.com/algorandfoundation/algokit-utils-ts)
+- [Algorand Smart Contract Guidelines](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/guidelines/)
+
+## Related Examples
+
+- Example 122: Raw application calls with manual argument encoding
+- Example 135: Using foreign references in application calls
+- Example 136: Working with nested ABI tuples
+
+---
+
+This example demonstrates production-ready error handling patterns that you should implement in your own Algorand smart contracts to ensure security and reliability.

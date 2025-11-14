@@ -1,0 +1,47 @@
+{
+  "name": "SmallApp",
+  "desc": "A small application that fits in one page",
+  "methods": [],
+  "structs": {},
+  "state": {
+    "schema": {
+      "global": {
+        "ints": 1,
+        "bytes": 0
+      },
+      "local": {
+        "ints": 0,
+        "bytes": 0
+      }
+    },
+    "keys": {
+      "global": {},
+      "local": {},
+      "box": {}
+    },
+    "maps": {
+      "global": {},
+      "local": {},
+      "box": {}
+    }
+  },
+  "bareActions": {
+    "create": ["NoOp"],
+    "call": ["NoOp"]
+  },
+  "sourceInfo": {
+    "approval": {
+      "teal": "#pragma version 10\ntxn ApplicationID\nint 0\n==\nbnz create\nint 1\nreturn\ncreate:\nint 1\nreturn",
+      "sourceMap": []
+    },
+    "clear": {
+      "teal": "#pragma version 10\nint 1",
+      "sourceMap": []
+    }
+  },
+  "source": {
+    "approval": "#pragma version 10\ntxn ApplicationID\nint 0\n==\nbnz create\nint 1\nreturn\ncreate:\nint 1\nreturn",
+    "clear": "#pragma version 10\nint 1"
+  },
+  "arcs": [56]
+}

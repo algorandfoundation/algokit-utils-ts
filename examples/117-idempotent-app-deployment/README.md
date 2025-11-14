@@ -1,105 +1,556 @@
-# Idempotent App Deployment
+# Example 117: Idempotent App Deployment
 
-Demonstrates the idempotent nature of the app deployer - deploying the same app twice with identical parameters results in no operation on the second deployment, avoiding unnecessary transactions and costs.
+This example demonstrates the idempotent nature of AlgoKit Utils' app deployer. When you deploy an app with identical parameters multiple times, the deployer intelligently detects that nothing has changed and skips unnecessary operations, avoiding blockchain transactions and costs.
 
-## Example Details
+## Core Concept
 
-```json
-{
-  "example_id": "117-idempotent-app-deployment",
-  "title": "Idempotent App Deployment",
-  "summary": "Demonstrates the idempotent nature of the app deployer - deploying the same app twice with identical parameters results in no operation on the second deployment, avoiding unnecessary transactions and costs.",
-  "language": "typescript",
-  "complexity": "moderate",
-  "example_potential": "high",
-  "use_case_category": "app deployment",
-  "specific_use_case": "Deploy an app twice with identical parameters and verify the second deployment performs no operation",
-  "target_users": [
-    "SDK developers",
-    "DevOps engineers",
-    "Infrastructure engineers"
-  ],
-  "features_tested": [
-    "algorand.appDeployer.deploy",
-    "idempotent deployment",
-    "deployment optimization"
-  ],
-  "feature_tags": [
-    "app-deployment",
-    "idempotency",
-    "optimization",
-    "ci-cd",
-    "deployment-best-practices"
-  ],
-  "folder": "117-idempotent-app-deployment",
-  "prerequisites": {
-    "tools": [
-      "algokit",
-      "docker"
-    ],
-    "libraries": [
-      "@algorandfoundation/algokit-utils",
-      "algosdk"
-    ],
-    "environment": [
-      {
-        "name": "ALGOD_SERVER",
-        "required": false,
-        "example": "http://localhost:4001"
-      },
-      {
-        "name": "ALGOD_TOKEN",
-        "required": false,
-        "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      {
-        "name": "INDEXER_SERVER",
-        "required": false,
-        "example": "http://localhost:8980"
-      }
-    ]
-  },
-  "run_instructions": {
-    "setup": [
-      "Start LocalNet using 'algokit localnet start'"
-    ],
-    "install": [
-      "npm install"
-    ],
-    "execute": [
-      "npx tsx main.ts"
-    ]
-  },
-  "expected_output": [
-    "First deployment creates a new app with transaction details",
-    "Second deployment detects no changes and returns existing app details",
-    "No transaction is created on the second deployment",
-    "Both deployments return the same app ID and metadata",
-    "Console output clearly shows the optimization"
-  ],
-  "source_tests": [
-    {
-      "file": "src/app-deploy.spec.ts",
-      "test_name": "Do nothing if deploying app with no changes"
-    }
-  ],
-  "artifacts_plan": [
-    {
-      "target_file": "approval.teal",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "Simple TEAL approval program"
-    },
-    {
-      "target_file": "clear.teal",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "Simple TEAL clear state program"
-    }
-  ],
-  "notes": "This example is particularly valuable for CI/CD pipelines where deployments may run multiple times. The idempotent behavior ensures efficiency and cost savings.",
-  "generated_code": "import { AlgorandClient } from '@algorandfoundation/algokit-utils'\nimport { Config } from '@algorandfoundation/algokit-utils/types/config'\nimport algosdk from 'algosdk'\n\n/**\n * This example demonstrates the idempotent nature of the app deployer.\n * \n * When you deploy an app with identical parameters multiple times, the deployer\n * intelligently detects that nothing has changed and skips the deployment,\n * avoiding unnecessary transactions and costs.\n * \n * This is especially useful for:\n * - CI/CD pipelines that may run multiple times\n * - Development workflows with frequent deployments\n * - Infrastructure-as-code scenarios where you want declarative deployments\n */\n\nasync function main() {\n  // Configure AlgoKit\n  Config.configure({ debug: true })\n\n  // Initialize AlgorandClient for LocalNet\n  const algorand = AlgorandClient.defaultLocalNet()\n  \n  // Get a test account with funds\n  const account = await algorand.account.fromEnvironment('DEPLOYER')\n  console.log('Using account:', account.addr)\n  console.log('Initial balance:', algosdk.microalgosToAlgos(await algorand.client.algod.accountInformation(account.addr).do().then(info => info.amount)), 'ALGO')\n\n  // Define simple TEAL programs\n  const approvalProgram = `#pragma version 8\n// Simple approval program\nint 1\nreturn`\n\n  const clearProgram = `#pragma version 8\n// Simple clear state program\nint 1\nreturn`\n\n  // Define deployment parameters\n  const metadata = {\n    name: 'IdempotentApp',\n    version: '1.0.0',\n    deletable: true,\n    updatable: true,\n  }\n\n  const deploymentParams = {\n    sender: account,\n    approvalProgram: approvalProgram,\n    clearStateProgram: clearProgram,\n    schema: {\n      globalUints: 1,\n      globalByteSlices: 1,\n      localUints: 0,\n      localByteSlices: 0,\n    },\n    metadata: metadata,\n  }\n\n  // Step 1: Initial deployment\n  console.log('\\n=== FIRST DEPLOYMENT ===')\n  console.log('Deploying app with:')\n  console.log('  - Name:', metadata.name)\n  console.log('  - Version:', metadata.version)\n  console.log('  - Schema: globalUints=1, globalByteSlices=1')\n  \n  const initialDeployment = await algorand.appDeployer.deploy(deploymentParams)\n  \n  console.log('\\n✅ Initial deployment completed')\n  console.log('   Transaction created:', 'transaction' in initialDeployment ? 'Yes' : 'No')\n  if ('transaction' in initialDeployment) {\n    console.log('   Transaction ID:', initialDeployment.transaction.txID())\n  }\n  console.log('   App ID:', initialDeployment.appId)\n  console.log('   App Address:', initialDeployment.appAddress)\n  console.log('   Created Round:', initialDeployment.createdRound)\n  console.log('   Updated Round:', initialDeployment.updatedRound)\n  console.log('   Version:', initialDeployment.version)\n  console.log('   Deletable:', initialDeployment.deletable)\n  console.log('   Updatable:', initialDeployment.updatable)\n\n  // Wait for indexer to catch up\n  await new Promise(resolve => setTimeout(resolve, 2000))\n\n  // Get balance after first deployment\n  const balanceAfterFirst = algosdk.microalgosToAlgos(\n    await algorand.client.algod.accountInformation(account.addr).do().then(info => info.amount)\n  )\n  console.log('\\n   Balance after first deployment:', balanceAfterFirst, 'ALGO')\n\n  // Step 2: Second deployment with identical parameters\n  console.log('\\n=== SECOND DEPLOYMENT (IDENTICAL PARAMETERS) ===')\n  console.log('Deploying the exact same app again...')\n  \n  const secondDeployment = await algorand.appDeployer.deploy(deploymentParams)\n  \n  console.log('\\n✅ Second deployment completed')\n  console.log('   Transaction created:', 'transaction' in secondDeployment ? 'Yes' : 'No')\n  console.log('   App ID:', secondDeployment.appId)\n  console.log('   App Address:', secondDeployment.appAddress)\n  console.log('   Created Round:', secondDeployment.createdRound)\n  console.log('   Updated Round:', secondDeployment.updatedRound)\n  console.log('   Version:', secondDeployment.version)\n  console.log('   Deletable:', secondDeployment.deletable)\n  console.log('   Updatable:', secondDeployment.updatable)\n\n  // Get balance after second deployment\n  const balanceAfterSecond = algosdk.microalgosToAlgos(\n    await algorand.client.algod.accountInformation(account.addr).do().then(info => info.amount)\n  )\n  console.log('\\n   Balance after second deployment:', balanceAfterSecond, 'ALGO')\n\n  // Step 3: Analysis\n  console.log('\\n=== IDEMPOTENCY ANALYSIS ===')\n  \n  const hasTransaction = 'transaction' in secondDeployment\n  console.log('\\n📊 Comparison:')\n  console.log('   Same App ID:', initialDeployment.appId === secondDeployment.appId ? '✅' : '❌')\n  console.log('   Same App Address:', initialDeployment.appAddress === secondDeployment.appAddress ? '✅' : '❌')\n  console.log('   Same Version:', initialDeployment.version === secondDeployment.version ? '✅' : '❌')\n  console.log('   Created Round:', initialDeployment.createdRound === secondDeployment.createdRound ? '✅ Same' : '❌ Different')\n  console.log('   Updated Round:', initialDeployment.updatedRound === secondDeployment.updatedRound ? '✅ Same (no update)' : '❌ Different')\n  console.log('   Transaction Created:', hasTransaction ? '❌ Yes (unexpected)' : '✅ No (optimized!)')\n  console.log('   Balance Changed:', balanceAfterFirst === balanceAfterSecond ? '✅ No (no fees)' : '❌ Yes')\n\n  console.log('\\n💡 Key Insights:')\n  console.log('   1. The deployer detected no changes between deployments')\n  console.log('   2. No transaction was created (saving time and fees)')\n  console.log('   3. The same app information was returned')\n  console.log('   4. This behavior is called \"idempotency\"')\n  \n  console.log('\\n🎯 Benefits:')\n  console.log('   ✅ Safe to run deployment scripts multiple times')\n  console.log('   ✅ No unnecessary blockchain transactions')\n  console.log('   ✅ Cost savings (no transaction fees)')\n  console.log('   ✅ Faster deployment cycles')\n  console.log('   ✅ Perfect for CI/CD automation')\n  \n  console.log('\\n🔧 When Updates Occur:')\n  console.log('   - When approval or clear program changes')\n  console.log('   - When schema changes (within allowed bounds)')\n  console.log('   - When version number changes')\n  console.log('   - When metadata changes')\n}\n\nmain().catch(console.error)"
+**Idempotency** is a property where an operation can be performed multiple times without changing the result beyond the initial application. In the context of app deployment:
+
+- First deployment with specific parameters → Creates the app
+- Second deployment with **identical** parameters → No operation (detects no changes)
+- Third deployment with **identical** parameters → No operation (still detects no changes)
+
+This is crucial for:
+- **CI/CD pipelines** that may run multiple times
+- **Development workflows** with frequent redeployments
+- **Infrastructure-as-code** scenarios requiring declarative deployments
+- **Deployment automation** without manual intervention
+
+## What This Example Shows
+
+This example demonstrates:
+
+1. **First Deployment**: Creating an app with specific metadata, TEAL programs, and schema
+2. **Second Deployment**: Deploying with identical parameters
+3. **Idempotency Verification**: Confirming no transaction was created on the second deployment
+4. **Cost Analysis**: Showing that balance remains unchanged (no fees on second deployment)
+5. **Comparison**: Detailed comparison of both deployment results
+
+## Key Components
+
+### 1. App Metadata
+
+```typescript
+const metadata = {
+  name: 'IdempotentApp',
+  version: '1.0.0',
+  deletable: true,
+  updatable: true,
 }
 ```
+
+The deployer uses metadata to:
+- Identify existing apps by name and creator
+- Track versions for update detection
+- Determine if updates/deletes are allowed
+
+### 2. Deployment Parameters
+
+```typescript
+const deploymentParams = {
+  sender: deployer.addr,
+  metadata: metadata,
+  createParams: {
+    sender: deployer.addr,
+    approvalProgram: approvalProgram,
+    clearStateProgram: clearProgram,
+    schema: {
+      globalInts: 1,
+      globalByteSlices: 1,
+      localInts: 0,
+      localByteSlices: 0,
+    },
+  },
+  updateParams: {
+    sender: deployer.addr,
+  },
+  deleteParams: {
+    sender: deployer.addr,
+  },
+}
+```
+
+### 3. First Deployment
+
+```typescript
+const initialDeployment = await algorand.appDeployer.deploy(deploymentParams)
+
+// Result:
+// - Operation: 'create'
+// - App ID: New app ID
+// - Transaction created: Yes
+// - Fees charged: Yes
+```
+
+### 4. Second Deployment (Identical Parameters)
+
+```typescript
+const secondDeployment = await algorand.appDeployer.deploy(deploymentParams)
+
+// Result:
+// - Operation: 'nothing'
+// - App ID: Same as first deployment
+// - Transaction created: No
+// - Fees charged: No
+```
+
+## Deployment Detection Logic
+
+The app deployer detects existing apps using:
+
+1. **App Name**: From metadata
+2. **Creator Address**: From deployment sender
+3. **Indexer Query**: Searches for apps created by the sender
+
+If an existing app is found:
+- Compare TEAL programs (approval and clear state)
+- Compare schema requirements
+- Compare version numbers
+- Compare metadata
+
+If everything matches → **No operation** (idempotent)
+If something differs → **Update or replace** (as configured)
+
+## When Updates Occur
+
+The deployer will create a transaction when:
+
+### 1. TEAL Program Changes
+
+```typescript
+// First deployment
+approvalProgram: `#pragma version 10
+int 1
+return`
+
+// Second deployment with different program
+approvalProgram: `#pragma version 10
+int 2  // Changed!
+return`
+
+// Result: Update transaction created
+```
+
+### 2. Schema Changes (Within Bounds)
+
+```typescript
+// First deployment
+schema: {
+  globalInts: 1,
+  globalByteSlices: 1,
+  localInts: 0,
+  localByteSlices: 0,
+}
+
+// Second deployment with compatible schema change
+schema: {
+  globalInts: 2,  // Increased (non-breaking if no decrease)
+  globalByteSlices: 1,
+  localInts: 0,
+  localByteSlices: 0,
+}
+
+// Result: May update or fail depending on strategy
+```
+
+### 3. Version Number Changes
+
+```typescript
+// First deployment
+metadata: {
+  name: 'IdempotentApp',
+  version: '1.0.0',
+}
+
+// Second deployment with different version
+metadata: {
+  name: 'IdempotentApp',
+  version: '2.0.0',  // Changed!
+}
+
+// Result: Update transaction created
+```
+
+### 4. Metadata Changes
+
+```typescript
+// First deployment
+metadata: {
+  name: 'IdempotentApp',
+  version: '1.0.0',
+  updatable: true,
+  deletable: true,
+}
+
+// Second deployment with different metadata
+metadata: {
+  name: 'IdempotentApp',
+  version: '1.0.0',
+  updatable: false,  // Changed!
+  deletable: true,
+}
+
+// Result: Update transaction may be created
+```
+
+## Benefits of Idempotent Deployment
+
+### 1. Safe CI/CD Pipelines
+
+```yaml
+# GitHub Actions example
+- name: Deploy Algorand App
+  run: npx tsx deploy.ts
+  # Safe to run multiple times!
+  # Won't create duplicate apps or waste fees
+```
+
+### 2. No Unnecessary Costs
+
+```
+First run:  10.100000 ALGO → 10.099000 ALGO (0.001 ALGO fee)
+Second run: 10.099000 ALGO → 10.099000 ALGO (0 ALGO fee)  ✅
+Third run:  10.099000 ALGO → 10.099000 ALGO (0 ALGO fee)  ✅
+```
+
+### 3. Faster Deployment Cycles
+
+```
+First deployment:  ~2-3 seconds (transaction + confirmation)
+Second deployment: ~0.5 seconds (detection only, no transaction)  ✅
+```
+
+### 4. Declarative Infrastructure
+
+```typescript
+// deployment.ts - Run this anytime, as many times as needed
+await algorand.appDeployer.deploy({
+  metadata: { name: 'MyApp', version: '1.0.0' },
+  createParams: { /* ... */ },
+})
+
+// The deployer ensures the desired state matches actual state
+// No manual "check if exists" logic needed!
+```
+
+## Comparison Output
+
+The example includes a detailed comparison:
+
+```
+Comparison:
+   Same App ID: ✅
+   Same App Address: ✅
+   Same Version: ✅
+   Created Round: ✅ Same
+   Updated Round: ✅ Same (no update)
+   Operation Performed: ✅ Nothing (optimized!)
+   Balance Changed: ✅ No (no fees)
+```
+
+## Best Practices
+
+### 1. Use Consistent Metadata
+
+```typescript
+// ✅ Good: Consistent metadata across deployments
+const metadata = {
+  name: 'MyApp',
+  version: '1.0.0',
+  updatable: true,
+  deletable: true,
+}
+```
+
+### 2. Version Bump for Intentional Updates
+
+```typescript
+// When you want to update the app:
+const metadata = {
+  name: 'MyApp',
+  version: '1.1.0',  // Increment version
+  updatable: true,
+  deletable: true,
+}
+```
+
+### 3. Use Environment-Specific Names
+
+```typescript
+// Development
+const metadata = {
+  name: 'MyApp-dev',
+  version: '1.0.0',
+}
+
+// Production
+const metadata = {
+  name: 'MyApp-prod',
+  version: '1.0.0',
+}
+
+// Different names = different apps = no conflicts
+```
+
+### 4. Leverage in CI/CD
+
+```typescript
+// deploy.ts
+async function deploy() {
+  const algorand = AlgorandClient.defaultLocalNet()
+
+  // This script can run multiple times safely
+  const result = await algorand.appDeployer.deploy({
+    metadata: { name: 'MyApp', version: process.env.VERSION },
+    createParams: { /* ... */ },
+  })
+
+  if (result.operationPerformed === 'nothing') {
+    console.log('✅ App already up to date')
+  } else {
+    console.log('✅ App deployed:', result.operationPerformed)
+  }
+}
+```
+
+### 5. Handle Different Environments
+
+```typescript
+async function deploy(environment: 'dev' | 'prod') {
+  const algorand = environment === 'prod'
+    ? AlgorandClient.mainnet()
+    : AlgorandClient.testnet()
+
+  const deployer = await algorand.account.fromEnvironment(
+    `${environment.toUpperCase()}_DEPLOYER`
+  )
+
+  await algorand.appDeployer.deploy({
+    sender: deployer.addr,
+    metadata: {
+      name: `MyApp-${environment}`,
+      version: '1.0.0',
+    },
+    createParams: { /* ... */ },
+  })
+}
+```
+
+## Common Scenarios
+
+### Scenario 1: Accidental Re-run
+
+```typescript
+// User accidentally runs deploy script twice
+await deployApp()  // Creates app
+await deployApp()  // Does nothing (idempotent) ✅
+
+// Without idempotency:
+// - Would create duplicate app
+// - Waste transaction fees
+// - Cause confusion about which app to use
+```
+
+### Scenario 2: CI/CD Pipeline Retry
+
+```yaml
+# GitHub Actions
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: npm run deploy
+        # If this step fails and retries, idempotency ensures
+        # we don't create duplicate apps or waste fees
+```
+
+### Scenario 3: Team Development
+
+```typescript
+// Developer A deploys
+await deployApp()  // Creates app with ID 1001
+
+// Developer B (same creator account) deploys same code
+await deployApp()  // Uses existing app 1001 (idempotent) ✅
+
+// Without idempotency:
+// - Would create app with ID 1002
+// - Team would have 2 identical apps
+// - Confusion about which one to use
+```
+
+### Scenario 4: Deployment Verification
+
+```typescript
+// Deploy in CI
+await deployApp()
+
+// Later, run verification script
+const result = await deployApp()
+
+if (result.operationPerformed === 'nothing') {
+  console.log('✅ Deployment verified: No drift detected')
+} else {
+  console.warn('⚠️  Drift detected: App was modified')
+}
+```
+
+## Technical Implementation
+
+The app deployer performs these checks:
+
+### 1. Query Existing Apps
+
+```typescript
+// Pseudo-code of what happens internally
+const existingApps = await indexer.searchForApplications()
+  .creator(sender)
+  .name(metadata.name)
+  .do()
+```
+
+### 2. Compare Programs
+
+```typescript
+// Compile new programs
+const newApprovalCompiled = await algod.compile(approvalProgram).do()
+const newClearCompiled = await algod.compile(clearProgram).do()
+
+// Compare with existing
+if (existingApp.approvalProgram === newApprovalCompiled.result &&
+    existingApp.clearStateProgram === newClearCompiled.result) {
+  // Programs match
+}
+```
+
+### 3. Compare Schema
+
+```typescript
+// Compare schema requirements
+const schemaMatches =
+  existingApp.globalInts === schema.globalInts &&
+  existingApp.globalByteSlices === schema.globalByteSlices &&
+  existingApp.localInts === schema.localInts &&
+  existingApp.localByteSlices === schema.localByteSlices
+```
+
+### 4. Compare Metadata
+
+```typescript
+// Compare version and other metadata
+const metadataMatches =
+  existingApp.version === metadata.version &&
+  existingApp.updatable === metadata.updatable &&
+  existingApp.deletable === metadata.deletable
+```
+
+### 5. Decision
+
+```typescript
+if (programsMatch && schemaMatches && metadataMatches) {
+  return {
+    operationPerformed: 'nothing',
+    appId: existingApp.id,
+    // ... other fields from existing app
+  }
+} else {
+  // Perform update or create new app
+}
+```
+
+## Troubleshooting
+
+### Issue 1: Expected Update But Got "Nothing"
+
+**Problem**: You changed the code but deployment says "nothing"
+
+**Solution**: Check if you updated the version number
+
+```typescript
+// ❌ Version unchanged
+metadata: {
+  name: 'MyApp',
+  version: '1.0.0',  // Same as before
+}
+
+// ✅ Version bumped
+metadata: {
+  name: 'MyApp',
+  version: '1.1.0',  // Incremented
+}
+```
+
+### Issue 2: Multiple Apps with Same Name
+
+**Problem**: Finding multiple apps with the same name
+
+**Solution**: Use unique names per environment
+
+```typescript
+// ✅ Environment-specific names
+const metadata = {
+  name: `MyApp-${process.env.ENVIRONMENT}`,
+  version: '1.0.0',
+}
+```
+
+### Issue 3: Idempotency Not Working Across Accounts
+
+**Problem**: Deploying from different accounts creates new apps
+
+**Explanation**: Idempotency is per creator account
+
+```typescript
+// Account A deploys
+const deployerA = algorand.account.fromMnemonic('...')
+await deploy(deployerA)  // Creates app with creator = A
+
+// Account B deploys same app
+const deployerB = algorand.account.fromMnemonic('...')
+await deploy(deployerB)  // Creates NEW app with creator = B
+
+// Solution: Use the same deployer account for idempotency
+```
+
+## Key Takeaways
+
+1. **Idempotency is automatic**: The app deployer handles it for you
+2. **No duplicate apps**: Safe to run deployment scripts multiple times
+3. **No wasted fees**: Only creates transactions when changes are detected
+4. **Version control**: Use version numbers to trigger intentional updates
+5. **Per-creator**: Idempotency is scoped to the creator account
+6. **Perfect for CI/CD**: Enables safe, automated deployment pipelines
+
+## Related Examples
+
+- [Example 113: Handle Failed Update of Immutable Application](../113-handle-failed-update-of-immutable-application/README.md) - Understanding immutable apps
+- [Example 115: Handling App Updates with Append Strategy](../115-handling-app-updates-with-append-strategy/README.md) - Creating new app instances
+- [Example 116: Handling Schema Breaks on Permanent Apps](../116-handling-schema-breaks-on-permanent-apps/README.md) - Dealing with permanent apps
+
+## Running This Example
+
+1. Ensure AlgoKit LocalNet is running:
+   ```bash
+   algokit localnet start
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run the example:
+   ```bash
+   npm start
+   ```
+
+## Expected Output
+
+The example will:
+1. Create a new app on first deployment (with transaction)
+2. Detect no changes on second deployment (no transaction)
+3. Display a detailed comparison showing idempotency
+4. Confirm balances remained unchanged (no fees on second deployment)
+
+You should see `Operation: nothing` for the second deployment, indicating that idempotency successfully prevented an unnecessary transaction.

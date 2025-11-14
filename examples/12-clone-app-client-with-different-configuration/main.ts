@@ -65,7 +65,7 @@ async function demonstrateAppClientCloneWithDifferentSender() {
   console.log('--- Cloning App Client ---')
 
   const clonedAppClient = appClient.clone({
-    sender: account2,
+    defaultSender: account2.addr,
   })
 
   console.log('✅ App client cloned successfully!\n')

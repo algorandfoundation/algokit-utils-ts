@@ -1,86 +1,469 @@
-# Full App Lifecycle: Create, Update, and Delete with Metadata Tracking
+# Full App Lifecycle: Create, Update, and Delete
 
-Comprehensive example demonstrating the complete app lifecycle including creating multiple apps, updating one with new metadata, deleting another, and tracking all state changes
+This example demonstrates the complete lifecycle of Algorand smart contract applications, including creation, updating, querying, and deletion operations.
 
-## Example Details
+## Overview
 
-```json
-{
-  "example_id": "138-full-app-lifecycle-create-update-and-delete-with-metadata-tracking",
-  "title": "Full App Lifecycle: Create, Update, and Delete with Metadata Tracking",
-  "summary": "Comprehensive example demonstrating the complete app lifecycle including creating multiple apps, updating one with new metadata, deleting another, and tracking all state changes",
-  "language": "typescript",
-  "complexity": "complex",
-  "example_potential": "high",
-  "use_case_category": "app deployment",
-  "specific_use_case": "Create multiple apps, update one with new metadata, delete another, and verify all apps and their states are correctly tracked",
-  "target_users": [
-    "SDK developers",
-    "Smart contract developers"
-  ],
-  "features_tested": [
-    "algorand.send.appCreate",
-    "algorand.send.appUpdate",
-    "algorand.send.appDelete",
-    "algorand.appDeployer.getCreatorAppsByName"
-  ],
-  "feature_tags": [
-    "app-lifecycle",
-    "app-creation",
-    "app-update",
-    "app-deletion",
-    "metadata-tracking",
-    "deployment-metadata",
-    "app-deployer"
-  ],
-  "folder": "138-full-app-lifecycle-create-update-and-delete-with-metadata-tracking",
-  "prerequisites": {
-    "tools": [
-      "algokit",
-      "docker"
-    ],
-    "libraries": [
-      "@algorandfoundation/algokit-utils"
-    ],
-    "environment": [
-      {
-        "name": "ALGOD_SERVER",
-        "required": false,
-        "example": "http://localhost:4001"
-      },
-      {
-        "name": "ALGOD_TOKEN",
-        "required": false,
-        "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      }
-    ]
+Managing the full lifecycle of smart contract applications is a fundamental skill for blockchain developers. This example walks through every stage of an application's life on the Algorand blockchain, from deployment to deletion.
+
+The example demonstrates:
+1. **Creating multiple applications** with different schemas
+2. **Updating an application** with a new approval program
+3. **Querying application information** from the blockchain
+4. **Deleting an application** permanently
+5. **Verifying state changes** throughout the lifecycle
+
+## What You'll Learn
+
+- How to create multiple applications with custom schemas
+- How to update an application's approval program
+- How to query application information using algod API
+- How to delete applications and verify deletion
+- Understanding application addresses and IDs
+- Best practices for managing application lifecycles
+
+## Application Lifecycle Stages
+
+### 1. Creation
+
+When you create an application on Algorand, you must specify:
+- **Approval Program**: The TEAL code that defines application logic
+- **Clear State Program**: The TEAL code that runs when accounts clear their local state
+- **Global State Schema**: How much global storage the app needs (integers and byte slices)
+- **Local State Schema**: How much local storage per account the app needs
+
+```typescript
+const appResult = await algorand.send.appCreate({
+  sender: deployer.addr,
+  approvalProgram: '#pragma version 10\nint 1\nreturn',
+  clearStateProgram: clearProgram,
+  schema: {
+    globalInts: 1, // 1 integer in global state
+    globalByteSlices: 0,
+    localInts: 0,
+    localByteSlices: 0,
   },
-  "run_instructions": {
-    "setup": [
-      "Start LocalNet using 'algokit localnet start'"
-    ],
-    "install": [
-      "npm install"
-    ],
-    "execute": [
-      "npx tsx main.ts"
-    ]
-  },
-  "expected_output": [
-    "Three apps created with different names",
-    "One app updated with new metadata (version, updatable, deletable flags changed)",
-    "One app deleted",
-    "Retrieved apps showing correct states: one updated, one unchanged, one deleted",
-    "Metadata tracking showing creation and update metadata separately"
-  ],
-  "source_tests": [
-    {
-      "file": "src/app-deploy.spec.ts",
-      "test_name": "Created, updated and deleted apps are retrieved by name with deployment metadata"
-    }
-  ],
-  "artifacts_plan": [],
-  "notes": "This is the most comprehensive example showing full app lifecycle management. It demonstrates best practices for managing app deployments including versioning, metadata updates, and proper tracking of app states.",
-  "generated_code": "import { AlgorandClient } from '@algorandfoundation/algokit-utils'\nimport algosdk from 'algosdk'\n\n/**\n * Comprehensive example demonstrating the full Algorand app lifecycle:\n * \n * 1. Create multiple apps with deployment metadata\n * 2. Update an app with new metadata (version upgrade, flag changes)\n * 3. Delete an app\n * 4. Retrieve all apps and verify their states\n * \n * This shows how metadata is tracked throughout the app's lifetime,\n * including creation metadata, update metadata, and deletion status.\n */\n\nasync function main() {\n  // Initialize Algorand client for LocalNet\n  const algorand = AlgorandClient.defaultLocalNet()\n  \n  // Get a test account with funds\n  const testAccount = await algorand.account.fromEnvironment('ACCOUNT1')\n  console.log(`Using account: ${testAccount.addr}\\n`)\n\n  // ========================================\n  // STEP 1: Create three apps with metadata\n  // ========================================\n  console.log('📦 STEP 1: Creating three apps with metadata\\n')\n  \n  const appName1 = 'APP_1'\n  const appName2 = 'APP_2'\n  const appName3 = 'APP_3'\n  \n  const creationMetadata = {\n    name: appName1,\n    version: '1.0',\n    updatable: true,\n    deletable: true\n  }\n\n  // Compile simple TEAL programs\n  const approvalProgram = await algorand.app.compileTeal(\n    '#pragma version 10\\nint 1\\nreturn'\n  )\n  const clearProgram = await algorand.app.compileTeal(\n    '#pragma version 10\\nint 1\\nreturn'\n  )\n\n  // Create App 1\n  console.log(`Creating ${appName1}...`)\n  const app1 = await algorand.send.appCreate({\n    sender: testAccount.addr,\n    approvalProgram: approvalProgram.compiledBase64ToBytes,\n    clearStateProgram: clearProgram.compiledBase64ToBytes,\n    schema: {\n      globalUints: 0,\n      globalByteSlices: 0,\n      localUints: 0,\n      localByteSlices: 0\n    },\n    onComplete: algosdk.OnApplicationComplete.NoOpOC,\n    note: new TextEncoder().encode(JSON.stringify(creationMetadata))\n  })\n  console.log(`  ✅ ${appName1} created with ID: ${app1.appId}\\n`)\n\n  // Create App 2\n  console.log(`Creating ${appName2}...`)\n  const app2 = await algorand.send.appCreate({\n    sender: testAccount.addr,\n    approvalProgram: approvalProgram.compiledBase64ToBytes,\n    clearStateProgram: clearProgram.compiledBase64ToBytes,\n    schema: {\n      globalUints: 0,\n      globalByteSlices: 0,\n      localUints: 0,\n      localByteSlices: 0\n    },\n    onComplete: algosdk.OnApplicationComplete.NoOpOC,\n    note: new TextEncoder().encode(JSON.stringify({ ...creationMetadata, name: appName2 }))\n  })\n  console.log(`  ✅ ${appName2} created with ID: ${app2.appId}\\n`)\n\n  // Create App 3\n  console.log(`Creating ${appName3}...`)\n  const app3 = await algorand.send.appCreate({\n    sender: testAccount.addr,\n    approvalProgram: approvalProgram.compiledBase64ToBytes,\n    clearStateProgram: clearProgram.compiledBase64ToBytes,\n    schema: {\n      globalUints: 0,\n      globalByteSlices: 0,\n      localUints: 0,\n      localByteSlices: 0\n    },\n    onComplete: algosdk.OnApplicationComplete.NoOpOC,\n    note: new TextEncoder().encode(JSON.stringify({ ...creationMetadata, name: appName3 }))\n  })\n  console.log(`  ✅ ${appName3} created with ID: ${app3.appId}\\n`)\n\n  // ========================================\n  // STEP 2: Update App 1 with new metadata\n  // ========================================\n  console.log('🔄 STEP 2: Updating App 1 with new metadata\\n')\n  \n  const updateMetadata = {\n    name: appName1,\n    version: '2.0', // Version upgrade\n    updatable: false, // Lock further updates\n    deletable: false // Prevent deletion\n  }\n\n  console.log(`Updating ${appName1} (ID: ${app1.appId})...`)\n  console.log('  New metadata:', JSON.stringify(updateMetadata, null, 2))\n  \n  const update1 = await algorand.send.appUpdate({\n    appId: app1.appId,\n    sender: testAccount.addr,\n    approvalProgram: approvalProgram.compiledBase64ToBytes,\n    clearStateProgram: clearProgram.compiledBase64ToBytes,\n    note: new TextEncoder().encode(JSON.stringify(updateMetadata))\n  })\n  console.log(`  ✅ ${appName1} updated in round: ${update1.confirmation.confirmedRound}\\n`)\n\n  // ========================================\n  // STEP 3: Delete App 3\n  // ========================================\n  console.log('🗑️  STEP 3: Deleting App 3\\n')\n  \n  console.log(`Deleting ${appName3} (ID: ${app3.appId})...`)\n  const delete3 = await algorand.send.appDelete({\n    appId: app3.appId,\n    sender: testAccount.addr\n  })\n  console.log(`  ✅ ${appName3} deleted in round: ${delete3.confirmation.confirmedRound}\\n`)\n\n  // Wait for indexer to catch up\n  console.log('Waiting for indexer to index all transactions...')\n  await new Promise(resolve => setTimeout(resolve, 3000))\n\n  // ========================================\n  // STEP 4: Retrieve and verify all apps\n  // ========================================\n  console.log('\\n📋 STEP 4: Retrieving all apps and verifying states\\n')\n  \n  const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)\n\n  console.log(`Creator: ${apps.creator}`)\n  console.log(`Apps found: ${Object.keys(apps.apps).sort().join(', ')}\\n`)\n\n  // Verify App 1 (updated)\n  console.log(`\\n━━━ ${appName1} (Updated App) ━━━`)\n  const app1Data = apps.apps[appName1]\n  if (app1Data) {\n    console.log(`App ID: ${app1Data.appId}`)\n    console.log(`App Address: ${app1Data.appAddress}`)\n    console.log(`Deleted: ${app1Data.deleted}`)\n    console.log(`\\nCreation Metadata (v1.0):`, app1Data.createdMetadata)\n    console.log(`  - Created in round: ${app1Data.createdRound}`)\n    console.log(`\\nCurrent Metadata (v2.0):`, {\n      name: app1Data.name,\n      version: app1Data.version,\n      updatable: app1Data.updatable,\n      deletable: app1Data.deletable\n    })\n    console.log(`  - Updated in round: ${app1Data.updatedRound}`)\n    console.log(`\\n✅ Metadata shows version upgrade from 1.0 to 2.0`)\n    console.log(`✅ Update flags changed: updatable=${app1Data.updatable}, deletable=${app1Data.deletable}`)\n  }\n\n  // Verify App 2 (unchanged)\n  console.log(`\\n━━━ ${appName2} (Unchanged App) ━━━`)\n  const app2Data = apps.apps[appName2]\n  if (app2Data) {\n    console.log(`App ID: ${app2Data.appId}`)\n    console.log(`Deleted: ${app2Data.deleted}`)\n    console.log(`Version: ${app2Data.version}`)\n    console.log(`\\n✅ App remains in original state`)\n  }\n\n  // Verify App 3 (deleted)\n  console.log(`\\n━━━ ${appName3} (Deleted App) ━━━`)\n  const app3Data = apps.apps[appName3]\n  if (app3Data) {\n    console.log(`App ID: ${app3Data.appId}`)\n    console.log(`Deleted: ${app3Data.deleted}`)\n    console.log(`\\n✅ App is marked as deleted but still tracked in metadata`)\n  }\n\n  // Summary\n  console.log('\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')\n  console.log('📊 SUMMARY')\n  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')\n  console.log(`✅ Created 3 apps with metadata`)\n  console.log(`✅ Updated 1 app (${appName1}) - version 1.0 → 2.0`)\n  console.log(`✅ Deleted 1 app (${appName3})`)\n  console.log(`✅ All apps tracked with correct states`)\n  console.log(`\\n💡 Key Features Demonstrated:`)\n  console.log(`   • Creation metadata preserved even after updates`)\n  console.log(`   • Update metadata tracked separately with round number`)\n  console.log(`   • Deleted apps remain in metadata with deleted=true flag`)\n  console.log(`   • Full lifecycle visibility for app management`)\n}\n\nmain().catch(console.error)"
+})
+
+const appId = appResult.appId
+const appAddress = algosdk.getApplicationAddress(appId)
+```
+
+**Key points:**
+- Each application gets a unique application ID
+- Applications have their own blockchain address (derived from the app ID)
+- The schema (storage allocation) is fixed at creation and cannot be changed
+- The creator becomes the application's owner
+
+### 2. Updating
+
+Applications can be updated to change their approval and clear state programs:
+
+```typescript
+const updatedApprovalProgram = `#pragma version 10
+// Updated version with counter functionality
+txn ApplicationID
+int 0
+==
+bnz create
+
+// Default: just approve
+int 1
+return
+
+create:
+// Initialize counter to 0
+byte "counter"
+int 0
+app_global_put
+int 1
+return`
+
+const updateResult = await algorand.send.appUpdate({
+  appId: appId,
+  sender: deployer.addr,
+  approvalProgram: updatedApprovalProgram,
+  clearStateProgram: clearProgram,
+})
+```
+
+**Important:**
+- Only the application creator can update it
+- Updates must be signed by the creator
+- The schema cannot be changed during an update
+- Updates are immediate and affect all future transactions
+
+### 3. Querying
+
+You can query application information at any time:
+
+```typescript
+const appInfo = await algorand.client.algod.getApplicationByID(appId).do()
+
+console.log('Creator:', appInfo.params.creator)
+console.log('Global Ints:', appInfo.params['global-state-schema']?.['num-uint'])
+console.log('Global Bytes:', appInfo.params['global-state-schema']?.['num-byte-slice'])
+```
+
+The response includes:
+- Creator address
+- Current approval and clear state programs
+- Global and local state schemas
+- Current global state values
+- Application parameters
+
+### 4. Deletion
+
+Applications can be permanently deleted from the blockchain:
+
+```typescript
+const deleteResult = await algorand.send.appDelete({
+  appId: appId,
+  sender: deployer.addr,
+})
+```
+
+**After deletion:**
+- The application ID cannot be reused
+- All global state is destroyed
+- The application address becomes invalid
+- Queries for the application will fail
+
+**Verification:**
+```typescript
+try {
+  await algorand.client.algod.getApplicationByID(appId).do()
+  console.log('App still exists')
+} catch (error) {
+  if (error.message.includes('application does not exist')) {
+    console.log('App successfully deleted')
+  }
 }
 ```
+
+## Example Walkthrough
+
+This example creates three different applications to demonstrate various scenarios:
+
+### Application 1: MyCounterApp
+- **Initial Schema**: 1 global integer
+- **Action**: Created, then updated with new program
+- **Final State**: Active with updated program
+
+```typescript
+// Create with basic schema
+const app1Result = await algorand.send.appCreate({
+  sender: deployer.addr,
+  approvalProgram: '#pragma version 10\nint 1\nreturn',
+  clearStateProgram: clearProgram,
+  schema: {
+    globalInts: 1, // Room for a counter
+    globalByteSlices: 0,
+    localInts: 0,
+    localByteSlices: 0,
+  },
+})
+
+// Later: Update with counter logic
+const updateResult = await algorand.send.appUpdate({
+  appId: app1Id,
+  sender: deployer.addr,
+  approvalProgram: updatedApprovalProgram, // Now includes counter logic
+  clearStateProgram: clearProgram,
+})
+```
+
+### Application 2: MyVotingApp
+- **Initial Schema**: 2 global integers
+- **Action**: Created only, no modifications
+- **Final State**: Active in original state
+
+```typescript
+const app2Result = await algorand.send.appCreate({
+  sender: deployer.addr,
+  approvalProgram: '#pragma version 10\nint 1\nreturn',
+  clearStateProgram: clearProgram,
+  schema: {
+    globalInts: 2, // Room for vote counts
+    globalByteSlices: 0,
+    localInts: 0,
+    localByteSlices: 0,
+  },
+})
+```
+
+### Application 3: MyTokenApp
+- **Initial Schema**: 1 global byte slice
+- **Action**: Created, then deleted
+- **Final State**: Deleted (removed from chain)
+
+```typescript
+// Create
+const app3Result = await algorand.send.appCreate({
+  sender: deployer.addr,
+  approvalProgram: '#pragma version 10\nint 1\nreturn',
+  clearStateProgram: clearProgram,
+  schema: {
+    globalInts: 0,
+    globalByteSlices: 1, // Room for token name
+    localInts: 0,
+    localByteSlices: 0,
+  },
+})
+
+// Later: Delete
+const deleteResult = await algorand.send.appDelete({
+  appId: app3Id,
+  sender: deployer.addr,
+})
+```
+
+## Application Addresses
+
+Every application has a unique blockchain address derived from its ID:
+
+```typescript
+const appId = 1010
+const appAddress = algosdk.getApplicationAddress(appId)
+// Returns: VSFZF5BRBVJY7P5QQN73JQ27DX3RP6PWSHW4I3SFFFZYFNTGCM3ZC2DHLE
+```
+
+**Use cases for application addresses:**
+- Sending ALGOs to the application
+- Sending assets to the application
+- Checking application balances
+- Using the app as a receiver in transactions
+
+## Schema Design Considerations
+
+When designing your application's schema, consider:
+
+**Global State:**
+- Stores data visible to all users
+- Limited to 64 key-value pairs maximum
+- Each key can store either a uint64 or byte slice (up to 128 bytes)
+- Costs are paid once at creation
+
+**Local State:**
+- Stores data per opted-in account
+- Also limited to 16 key-value pairs per account
+- Each account pays minimum balance for their local state
+- Useful for user-specific data like balances or permissions
+
+**Schema cannot be changed after creation**, so plan carefully:
+
+```typescript
+schema: {
+  globalInts: 10,        // Reserve enough integers
+  globalByteSlices: 5,   // Reserve enough byte slices
+  localInts: 4,          // Per-account integers
+  localByteSlices: 2,    // Per-account byte slices
+}
+```
+
+## Update Strategy
+
+### When to Update
+- Bug fixes in logic
+- Feature additions
+- Performance improvements
+- Security patches
+
+### What Can Be Updated
+- ✅ Approval program logic
+- ✅ Clear state program logic
+- ❌ State schema (cannot change)
+- ❌ Application ID (permanent)
+
+### Update Best Practices
+
+1. **Test thoroughly** before updating on MainNet
+2. **Version your programs** to track changes
+3. **Consider immutability** - some apps should not be updatable
+4. **Plan upgrade paths** in your initial design
+5. **Communicate changes** to your users
+
+### Making Apps Immutable
+
+To make an app immutable after creation, update it with programs that reject updates:
+
+```teal
+#pragma version 10
+// This program rejects all transactions
+int 0
+return
+```
+
+Once updated with this program, no further updates are possible.
+
+## Deletion Considerations
+
+### When to Delete
+- Testing applications that are no longer needed
+- Migrating to a new application version
+- Recovering minimum balance from unused apps
+- Discontinuing a service
+
+### What Happens on Deletion
+- Application removed from blockchain
+- Global state destroyed
+- Minimum balance returned to creator
+- Application ID becomes invalid
+- Application address becomes inaccessible
+
+### Deletion Requirements
+- Must be signed by creator
+- Application must not have any accounts opted in with local state
+- All local state must be cleared before deletion
+
+## Running the Example
+
+### Prerequisites
+```bash
+# Start LocalNet
+algokit localnet start
+
+# Install dependencies
+npm install
+```
+
+### Execute
+```bash
+npm start
+```
+
+### Expected Output
+
+```
+=== Full App Lifecycle: Create, Update, Delete with Metadata Tracking ===
+
+Using deployer account: F2T4H...
+
+=== STEP 1: Creating Three Apps with Metadata ===
+
+Creating MyCounterApp...
+✅ MyCounterApp created with ID: 1010
+   App Address: VSFZF5BRBVJY7P5QQN73JQ27DX3RP6PWSHW4I3SFFFZYFNTGCM3ZC2DHLE
+
+Creating MyVotingApp...
+✅ MyVotingApp created with ID: 1011
+   App Address: YCVGIALPB5UCXY3QS4ICXLGXXAAFCA35QAEUB2MSBH7J6UJQU5D3LEY36Q
+
+Creating MyTokenApp...
+✅ MyTokenApp created with ID: 1012
+   App Address: 3X4ABWUJOBYVXI6HC245NYWR5VYXDMFIAQDKQLNV5G3GQ7FRWZAUVAQ3YM
+
+=== STEP 2: Updating App 1 with New Program ===
+
+Updating MyCounterApp (ID: 1010)...
+   New feature: Counter functionality added
+✅ MyCounterApp updated successfully
+   Confirmed in round: 13
+
+=== STEP 3: Querying App Information ===
+
+MyCounterApp (ID: 1010):
+   Creator: F2T4H...
+   Global State Schema:
+     - Integers: 1
+     - Byte Slices: 0
+
+MyVotingApp (ID: 1011):
+   Creator: F2T4H...
+   Global State Schema:
+     - Integers: 2
+     - Byte Slices: 0
+
+MyTokenApp (ID: 1012):
+   Creator: F2T4H...
+   Global State Schema:
+     - Integers: 0
+     - Byte Slices: 1
+
+=== STEP 4: Deleting App 3 ===
+
+Deleting MyTokenApp (ID: 1012)...
+✅ MyTokenApp deleted successfully
+   Confirmed in round: 14
+
+Verifying deletion...
+✅ App successfully deleted and removed from chain
+
+=== Lifecycle Summary ===
+
+1. MyCounterApp (ID: 1010):
+   ✅ Created
+   ✅ Updated with new program
+   ✅ Still active on chain
+
+2. MyVotingApp (ID: 1011):
+   ✅ Created
+   ✅ No modifications
+   ✅ Still active on chain
+
+3. MyTokenApp (ID: 1012):
+   ✅ Created
+   ✅ Deleted
+   ✅ Removed from chain
+
+✨ Example completed successfully!
+```
+
+## Key Takeaways
+
+1. **Application Lifecycle**: Create → Update (optional) → Delete
+2. **Schema is Permanent**: Plan your storage needs carefully at creation
+3. **Creator Control**: Only the creator can update or delete an application
+4. **Application Addresses**: Each app has a unique address for receiving assets
+5. **Updates are Immediate**: Changes to approval programs affect all future transactions
+6. **Deletion is Permanent**: Deleted applications cannot be recovered
+7. **Query Anytime**: Application information is always accessible via algod API
+
+## Common Use Cases
+
+### Development & Testing
+- Create test applications on LocalNet
+- Update programs during development
+- Delete when moving to new versions
+
+### Production Deployment
+- Deploy with well-tested programs
+- Use immutable contracts for critical applications
+- Version control for upgradeable contracts
+
+### Maintenance
+- Update to fix bugs
+- Add new features
+- Deprecate old applications
+
+### Migration
+- Deploy new version
+- Migrate data/users
+- Delete old version
+
+## Best Practices
+
+1. **Test Extensively**: Always test on LocalNet/TestNet before MainNet
+2. **Document Changes**: Keep records of all updates and reasons
+3. **Plan for Immutability**: Decide if your app should be updatable
+4. **Reserve Adequate Storage**: Schema cannot be changed later
+5. **Monitor Application State**: Regularly query to verify correct operation
+6. **Clean Up**: Delete unused test applications to recover minimum balance
+7. **Version Control**: Track program versions for audibility
+
+## Additional Resources
+
+- [Algorand Application Specification](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/)
+- [TEAL Reference](https://developer.algorand.org/docs/get-details/dapps/avm/teal/)
+- [AlgoKit Utils Documentation](https://github.com/algorandfoundation/algokit-utils-ts)
+- [Smart Contract Guidelines](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/guidelines/)
+
+## Related Examples
+
+- Example 135: Using foreign references in application calls
+- Example 136: Working with nested ABI tuples
+- Example 137: ARC-56 error handling in smart contracts
+
+---
+
+This example provides the foundation for managing Algorand smart contract applications throughout their entire lifecycle, from creation through updates to eventual deletion.

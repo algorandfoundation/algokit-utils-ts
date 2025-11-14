@@ -1,151 +1,101 @@
-import { AlgorandClient, AppManager } from '@algorandfoundation/algokit-utils'
-import { microAlgo } from '@algorandfoundation/algokit-utils/amount'
-import algosdk from 'algosdk'
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { TestingAppFactory } from './artifacts/TestingApp/client'
 
 /**
  * This example demonstrates how to call an ABI method that accepts a transaction
  * as one of its arguments. This enables powerful transaction composition patterns
  * where the smart contract can verify and react to other transactions in the same
  * atomic group.
+ *
+ * The TestingApp contract has a method `call_abi_txn(pay,string)string` that:
+ * - Accepts a payment transaction as the first argument
+ * - Accepts a string message as the second argument
+ * - Returns a string describing the payment amount and message
  */
-
-// Sample app spec with call_abi_txn method that accepts a transaction argument
-const appSpec = {
-  hints: {
-    call_abi_txn: {
-      call_config: {
-        no_op: 'CALL',
-      },
-    },
-  },
-  contract: {
-    name: 'TransactionCompositionApp',
-    methods: [
-      {
-        name: 'call_abi_txn',
-        args: [
-          { type: 'txn', name: 'payment_txn' },  // Transaction argument
-          { type: 'string', name: 'message' },
-        ],
-        returns: { type: 'string' },
-      },
-    ],
-  },
-  state: {
-    global: {
-      num_byte_slices: 0,
-      num_uints: 0,
-    },
-    local: {
-      num_byte_slices: 0,
-      num_uints: 0,
-    },
-  },
-  schema: {
-    global: {
-      declared: {},
-      reserved: {},
-    },
-    local: {
-      declared: {},
-      reserved: {},
-    },
-  },
-  source: {
-    approval: 'I3ByYWdtYSB2ZXJzaW9uIDEw',
-    clear: 'I3ByYWdtYSB2ZXJzaW9uIDEw',
-  },
-  bare_call_config: {
-    no_op: 'CREATE',
-    opt_in: 'NEVER',
-    close_out: 'NEVER',
-    update_application: 'NEVER',
-    delete_application: 'NEVER',
-  },
-  template_variables: {
-    UPDATABLE: { type: 'uint64' },
-    DELETABLE: { type: 'uint64' },
-    VALUE: { type: 'uint64' },
-  },
-}
 
 async function callABIMethodWithTransactionArgument() {
   // Initialize AlgorandClient for LocalNet
-  const algod = new algosdk.Algodv2('a' + 'a'.repeat(63), 'http://localhost', 4001)
-  const algorand = AlgorandClient.fromClients({ algod })
+  const algorand = AlgorandClient.defaultLocalNet()
 
-  // Get a test account from the LocalNet dispenser
-  const testAccount = await algorand.account.fromEnvironment('LOCALNET')
-  console.log(`Using account: ${testAccount.addr}`)
+  // Get the dispenser account for funding
+  const dispenser = await algorand.account.localNetDispenser()
 
-  // Step 1: Create and deploy the app
-  console.log('\nCreating app...')
-  const appClient = algorand.client.getAppClient({
-    resolveBy: 'id',
-    app: appSpec,
-    sender: testAccount,
-    id: 0,
+  // Create test accounts
+  const alice = algorand.account.random()
+  await algorand.account.ensureFunded(alice, dispenser, (5).algos())
+
+  const bob = algorand.account.random()
+  await algorand.account.ensureFunded(bob, dispenser, (1).algos())
+
+  console.log('Alice address:', alice.addr)
+  console.log('Bob address:', bob.addr)
+  console.log()
+
+  // Step 1: Deploy the app
+  console.log('Deploying app...')
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+    defaultSender: alice.addr,
   })
 
-  const createResult = await appClient.create({
+  const { appClient, result: createResult } = await appFactory.send.create.bare({
     deployTimeParams: {
-      UPDATABLE: 1,
-      DELETABLE: 1,
-      VALUE: 1,
+      TMPL_UPDATABLE: 1,
+      TMPL_DELETABLE: 1,
+      TMPL_VALUE: 123,
     },
   })
 
-  console.log(`App created with ID: ${createResult.appId}`)
+  const appId = BigInt(createResult.appId)
+  console.log('App deployed with ID:', appId)
+  console.log()
 
   // Step 2: Create a payment transaction to pass as an argument
-  const paymentAmount = microAlgo(Math.ceil(Math.random() * 10000))
-  console.log(`\nCreating payment transaction for ${paymentAmount.microAlgo} microAlgos`)
-  
+  const paymentAmount = (0.5).algos()
+  console.log(`Creating payment transaction for ${paymentAmount.microAlgo} microAlgos (${paymentAmount.algos} ALGOs)`)
+  console.log(`Payment: Alice → Bob`)
+  console.log()
+
   const paymentTxn = await algorand.createTransaction.payment({
-    sender: testAccount.addr,
-    receiver: testAccount.addr,
+    sender: alice.addr,
+    receiver: bob.addr,
     amount: paymentAmount,
   })
 
   // Step 3: Call the ABI method with the transaction as an argument
-  console.log('\nCalling ABI method with transaction argument...')
-  
+  console.log('Calling ABI method with transaction argument...')
+  console.log('Method: call_abi_txn(pay, string)')
+  console.log()
+
   /**
-   * When you pass a transaction as a methodArg, AlgoKit Utils will:
-   * 1. Automatically group the transactions together atomically
-   * 2. Handle the ABI encoding for the transaction reference
-   * 3. Sign and send both transactions as a group
+   * When you pass a transaction as a method argument, AlgoKit Utils will:
+   * 1. Accept the pre-created payment transaction
+   * 2. Create the app call transaction with the ABI method
+   * 3. Automatically group them together atomically
+   * 4. Handle the ABI encoding for the transaction reference
+   * 5. Sign and send both transactions as a group
    */
-  const result = await appClient.call({
-    method: 'call_abi_txn',
-    methodArgs: [
-      paymentTxn,  // Pass the payment transaction as the first argument
-      'test',      // String message as second argument
-    ],
+  const result = await appClient.send.callAbiTxn({
+    args: {
+      txn: { txn: paymentTxn, signer: alice.signer },
+      value: 'Hello from transaction argument!',
+    },
   })
 
   // Step 4: Process the results
-  console.log('Transaction group sent successfully!')
-  console.log(`Number of transactions in group: ${result.transactions.length}`)
-  console.log(`Transaction IDs: ${result.txIds.join(', ')}`)
+  console.log('✅ Transaction group sent successfully!')
+  console.log('Transaction ID:', result.transaction.txID())
+  console.log('Group ID:', result.groupId)
+  console.log()
 
-  // Step 5: Extract and display the ABI return value
-  if (result.confirmations && result.confirmations[1]) {
-    const abiMethod = appClient.getABIMethod('call_abi_txn')
-    if (abiMethod) {
-      const returnValue = AppManager.getABIReturn(
-        result.confirmations[1],
-        abiMethod
-      )
-      
-      if (returnValue?.returnValue) {
-        console.log(`\nReturn value: ${returnValue.returnValue}`)
-        console.log(`Expected format: "Sent ${paymentAmount.microAlgo}. test"`)
-      }
-    }
-  }
+  // Step 5: Display the ABI return value
+  console.log('Return value:', result.return)
+  console.log()
 
-  console.log('\n✅ Example completed successfully!')
+  console.log('The app call transaction received the payment transaction as an argument.')
+  console.log(`Payment of ${paymentAmount.microAlgo} microAlgos was processed in the same atomic group.`)
+  console.log()
+
+  console.log('✅ Example completed successfully!')
 }
 
 // Run the example

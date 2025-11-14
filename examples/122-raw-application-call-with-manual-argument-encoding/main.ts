@@ -1,94 +1,306 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 import algosdk from 'algosdk'
 
 /**
  * This example demonstrates how to make a raw application call with manually encoded arguments.
  * This approach gives you fine-grained control over the call parameters and is useful when you need
- * to work directly with the low-level ABI encoding.
+ * to work directly with the low-level ABI encoding, bypassing the high-level ABI method call API.
+ *
+ * Use cases:
+ * - Testing low-level protocol behavior
+ * - Debugging ABI encoding issues
+ * - Building custom tools that need direct control
+ * - Working with non-standard or custom encoding schemes
  */
 
 async function rawAppCallExample() {
+  console.log('=== Raw Application Call with Manual Argument Encoding ===')
+  console.log()
+  console.log('This example demonstrates making a raw app call with manually')
+  console.log('encoded arguments, giving you full control over the encoding.')
+  console.log()
+
   // Initialize AlgorandClient - connects to your Algorand node
   const algorand = AlgorandClient.defaultLocalNet()
 
-  // Get accounts from LocalNet
-  const alice = (await algorand.account.localNetDispenser()).account
-  const bob = algosdk.generateAccount()
+  // Get account from LocalNet
+  const sender = (await algorand.account.localNetDispenser()).account
 
-  // Fund bob's account
-  await algorand.send.payment({
-    sender: alice.addr,
-    receiver: bob.addr,
-    amount: AlgoAmount.Algos(10),
+  console.log('Account:', sender.addr.toString())
+  console.log()
+
+  // Deploy a smart contract with a doMath method
+  console.log('Deploying smart contract...')
+
+  const approvalProgram = `#pragma version 10
+// This contract has a doMath method that takes two uint64s and a string operation
+
+txn ApplicationID
+int 0
+==
+bnz create
+
+// Handle UpdateApplication
+txn OnCompletion
+int UpdateApplication
+==
+bnz handle_update
+
+// Handle DeleteApplication
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+// doMath(uint64,uint64,string)uint64
+txn ApplicationArgs 0
+method "doMath(uint64,uint64,string)uint64"
+==
+bnz do_math
+
+int 0
+return
+
+do_math:
+// Get the two numbers (args 1 and 2)
+txn ApplicationArgs 1
+btoi
+txn ApplicationArgs 2
+btoi
+
+// Get the operation (arg 3) - ABI encoded string
+// ABI string format: 2-byte length prefix + string bytes
+txn ApplicationArgs 3
+extract 2 0  // Skip the 2-byte length prefix to get raw string
+byte "sum"
+==
+bnz operation_sum
+
+// If not sum, just return 0 for this example
+int 0
+b encode_result
+
+operation_sum:
+// Add the two numbers
++
+
+encode_result:
+// Encode the result as ABI uint64
+itob
+
+// Prepend ABI return prefix
+byte 0x151f7c75 // ABI return prefix for uint64
+swap
+concat
+
+log
+int 1
+return
+
+handle_update:
+int TMPL_UPDATABLE
+return
+
+handle_delete:
+int TMPL_DELETABLE
+return
+
+create:
+int 1
+return`
+
+  const clearProgram = `#pragma version 10
+int 1`
+
+  const deployment = {
+    sender: sender.addr,
+    metadata: {
+      name: 'MathApp',
+      version: '1.0',
+      updatable: false,
+      deletable: false,
+    },
+    createParams: {
+      sender: sender.addr,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearProgram,
+      schema: {
+        globalInts: 0,
+        globalByteSlices: 0,
+        localInts: 0,
+        localByteSlices: 0,
+      },
+    },
+    updateParams: {
+      sender: sender.addr,
+    },
+    deleteParams: {
+      sender: sender.addr,
+    },
+  }
+
+  const appResult = await algorand.appDeployer.deploy(deployment)
+  console.log('✅ Application deployed')
+  console.log('   App ID:', appResult.appId.toString())
+  console.log('   App Address:', appResult.appAddress.toString())
+  console.log()
+
+  // Wait for indexer to catch up
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+
+  console.log('=== Method Selector Calculation ===')
+  console.log()
+
+  // Get the ABI method and its selector
+  const doMathMethod = new algosdk.ABIMethod({
+    name: 'doMath',
+    args: [
+      { type: 'uint64', name: 'a', desc: 'First number' },
+      { type: 'uint64', name: 'b', desc: 'Second number' },
+      { type: 'string', name: 'op', desc: 'Operation' },
+    ],
+    returns: { type: 'uint64', desc: 'Result' },
   })
 
-  // Deploy a test application (replace this with your actual app deployment)
-  // For this example, assume we have an app with a 'doMath' method that takes two uint64s and an operation
-  const appId = 1234 // Replace with your actual app ID
+  const methodSelector = doMathMethod.getSelector()
+  console.log('Method signature:', doMathMethod.getSignature())
+  console.log('Method selector (hex):', Buffer.from(methodSelector).toString('hex'))
+  console.log('Method selector (bytes):', Array.from(methodSelector))
+  console.log()
 
-  // Get the ABI method selector for 'doMath'
-  // In a real scenario, you'd get this from your contract's ABI
-  const methodSelector = new Uint8Array([0x15, 0x1f, 0x7c, 0x75]) // Example selector
+  console.log('=== Manual Argument Encoding ===')
+  console.log()
 
-  console.log('Creating atomic transaction group with payment and raw app call...')
+  // Manually encode the arguments
+  const arg1 = algosdk.encodeUint64(5)
+  const arg2 = algosdk.encodeUint64(3)
+  const arg3 = Uint8Array.from(Buffer.from('AANzdW0=', 'base64')) // "sum" encoded
 
-  // Get balances before the transaction
-  const alicePreBalance = (await algorand.account.getInformation(alice.addr)).balance
-  const bobPreBalance = (await algorand.account.getInformation(bob.addr)).balance
+  console.log('Argument 1 (uint64: 5):', Array.from(arg1))
+  console.log('Argument 2 (uint64: 3):', Array.from(arg2))
+  console.log('Argument 3 (string: "sum"):', Array.from(arg3))
+  console.log()
 
-  console.log(`Alice balance before: ${alicePreBalance.microAlgo} microAlgos`)
-  console.log(`Bob balance before: ${bobPreBalance.microAlgo} microAlgos`)
+  console.log('=== Making Raw Application Call ===')
+  console.log()
 
-  // Create an atomic transaction group with:
-  // 1. A payment transaction from Alice to Bob
+  // Get balance before
+  const balanceBefore = await algorand.account.getInformation(sender.addr)
+  console.log('Balance before:', balanceBefore.balance.algos.toFixed(6), 'ALGO')
+  console.log()
+
+  // Create a transaction group with:
+  // 1. A payment transaction
   // 2. A raw app call with manually encoded arguments
   const result = await algorand
     .newGroup()
-    // Add a payment transaction
+    // Add a payment transaction (just to demonstrate atomic groups)
     .addPayment({
-      sender: alice.addr,
-      receiver: bob.addr,
-      amount: AlgoAmount.MicroAlgo(1),
-      note: new Uint8Array([1]),
+      sender: sender.addr,
+      receiver: sender.addr,
+      amount: (0).microAlgo(),
+      note: new TextEncoder().encode('Payment in group'),
     })
     // Add a raw app call with manually encoded arguments
     .addAppCall({
-      sender: alice.addr,
-      appId: appId,
+      sender: sender.addr,
+      appId: appResult.appId,
       args: [
         methodSelector, // Method selector (first 4 bytes of method signature hash)
-        algosdk.encodeUint64(1), // First argument: uint64 value 1
-        algosdk.encodeUint64(2), // Second argument: uint64 value 2
-        Uint8Array.from(Buffer.from('AANzdW0=', 'base64')), // Third argument: operation ("sum")
+        arg1, // First argument: uint64 value 5
+        arg2, // Second argument: uint64 value 3
+        arg3, // Third argument: operation ("sum")
       ],
-      note: 'addAppCall',
+      note: new TextEncoder().encode('Raw app call'),
     })
     .execute()
 
-  console.log('\nTransaction group executed successfully!')
-  console.log(`Group ID: ${result.groupId}`)
+  console.log('✅ Transaction group executed successfully!')
+  console.log()
+  console.log('   Transaction IDs:')
+  console.log(`     [0] ${result.txIds[0]} (Payment)`)
+  console.log(`     [1] ${result.txIds[1]} (Raw App Call)`)
+  console.log('   Group ID:', result.groupId)
+  console.log('   Confirmed in round:', result.confirmations[0]!.confirmedRound!.toString())
+  console.log()
 
-  // Get balances after the transaction
-  const alicePostBalance = (await algorand.account.getInformation(alice.addr)).balance
-  const bobPostBalance = (await algorand.account.getInformation(bob.addr)).balance
-
-  console.log(`\nAlice balance after: ${alicePostBalance.microAlgo} microAlgos`)
-  console.log(`Bob balance after: ${bobPostBalance.microAlgo} microAlgos`)
-  console.log(`Alice paid: ${alicePreBalance.microAlgo - alicePostBalance.microAlgo} microAlgos (includes fees)`)
-  console.log(`Bob received: ${bobPostBalance.microAlgo - bobPreBalance.microAlgo} microAlgos`)
+  // Get balance after
+  const balanceAfter = await algorand.account.getInformation(sender.addr)
+  console.log('   Balance after:', balanceAfter.balance.algos.toFixed(6), 'ALGO')
+  console.log('   Fees paid:', (balanceBefore.balance.microAlgos - balanceAfter.balance.microAlgos).toString(), 'microALGOs')
+  console.log()
 
   // Check if there are logs from the app call
-  if (result.confirmations[1].logs && result.confirmations[1].logs.length > 0) {
-    const logData = Buffer.from(result.confirmations[1].logs[0]).toString('hex')
-    console.log(`\nApp call log output: ${logData}`)
-  }
+  console.log('=== Application Call Result ===')
+  console.log()
 
-  console.log('\nKey takeaways:')
-  console.log('- Raw app calls give you fine-grained control over arguments')
-  console.log('- Method selectors are the first 4 bytes of the method signature hash')
-  console.log('- Arguments must be manually encoded using algosdk encoding functions')
-  console.log('- Atomic groups ensure all transactions succeed or fail together')
+  if (result.confirmations[1].logs && result.confirmations[1].logs.length > 0) {
+    const logData = Buffer.from(result.confirmations[1].logs[0])
+    console.log('App call log output (hex):', logData.toString('hex'))
+
+    // Decode the result
+    // The log should contain: ABI return prefix (4 bytes) + uint64 result (8 bytes)
+    if (logData.length >= 12) {
+      const returnPrefix = logData.subarray(0, 4).toString('hex')
+      const resultBytes = logData.subarray(4, 12)
+      const resultValue = algosdk.decodeUint64(resultBytes, 'safe')
+
+      console.log('   Return prefix:', returnPrefix)
+      console.log('   Result value:', resultValue.toString())
+      console.log('   Expected: 8 (5 + 3)')
+      console.log('   Match:', resultValue === 8 ? '✅' : '❌')
+    }
+  }
+  console.log()
+
+  console.log('=== What Happened ===')
+  console.log()
+  console.log('1. We calculated the method selector from the signature')
+  console.log('2. We manually encoded each argument using algosdk functions')
+  console.log('3. We created a raw app call with the encoded arguments')
+  console.log('4. The app processed the arguments and returned the result')
+  console.log('5. We decoded the result from the logs')
+  console.log()
+
+  console.log('=== Comparison: ABI Method Call vs Raw Call ===')
+  console.log()
+  console.log('High-level ABI method call:')
+  console.log('  await algorand.newGroup().addAppCallMethodCall({')
+  console.log('    method: doMathMethod,')
+  console.log('    args: [5, 3, "sum"], // Automatically encoded')
+  console.log('  }).send()')
+  console.log()
+  console.log('Low-level raw call (this example):')
+  console.log('  await algorand.newGroup().addAppCall({')
+  console.log('    args: [')
+  console.log('      methodSelector,        // Must provide selector')
+  console.log('      algosdk.encodeUint64(5), // Manual encoding')
+  console.log('      algosdk.encodeUint64(3), // Manual encoding')
+  console.log('      encodedString("sum"),  // Manual encoding')
+  console.log('    ]')
+  console.log('  }).execute()')
+  console.log()
+
+  console.log('=== Key Takeaways ===')
+  console.log()
+  console.log('✓ Raw app calls require manual argument encoding')
+  console.log('✓ Method selectors are the first 4 bytes of keccak256(signature)')
+  console.log('✓ Use algosdk.encodeUint64(), encodeAddress(), etc. for encoding')
+  console.log('✓ Results must be manually decoded from logs')
+  console.log('✓ Use .execute() instead of .send() for raw calls')
+  console.log('✓ Useful for debugging, testing, and custom encoding scenarios')
+  console.log()
+
+  console.log('=== When to Use Raw Calls ===')
+  console.log()
+  console.log('Prefer ABI method calls (.addAppCallMethodCall) unless you need:')
+  console.log('  • Direct control over encoding (debugging, testing)')
+  console.log('  • Custom encoding not supported by ABI')
+  console.log('  • Low-level protocol testing')
+  console.log('  • Building tools that need fine-grained control')
+  console.log()
+
+  console.log('✨ Example completed successfully!')
 }
 
 // Run the example

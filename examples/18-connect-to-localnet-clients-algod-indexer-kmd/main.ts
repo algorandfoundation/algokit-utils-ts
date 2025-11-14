@@ -55,7 +55,7 @@ async function main() {
     console.log('  ✓ Successfully connected to LocalNet KMD client')
     console.log(`    - Server: http://localhost:4002`)
     console.log(`    - Found ${wallets.wallets.length} wallet(s):`)
-    wallets.wallets.forEach((wallet) => {
+    wallets.wallets.forEach((wallet: { name: string; id: string }) => {
       console.log(`      • ${wallet.name} (ID: ${wallet.id})`)
     })
     console.log()

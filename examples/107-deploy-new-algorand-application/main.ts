@@ -1,107 +1,134 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import { getApplicationAddress } from 'algosdk'
-import * as fs from 'fs'
-import * as path from 'path'
+import { TestingAppFactory } from './artifacts/TestingApp/client'
 
 /**
- * This example demonstrates how to deploy a new Algorand application using the appDeployer.
- * The appDeployer is the recommended high-level API for app deployment as it handles:
- * - Idempotent deployments (won't redeploy if the app already exists)
- * - Deployment metadata tracking
- * - Updatability and deletability controls
+ * This example demonstrates how to deploy a new Algorand application.
+ *
+ * Key concepts:
+ * - Creating and funding a deployer account
+ * - Using a typed app factory to deploy applications
+ * - Setting deploy-time template parameters
+ * - Understanding app deployment results
+ * - Retrieving app information after deployment
+ *
+ * The example shows the basic workflow for deploying a smart contract
+ * to the Algorand blockchain using AlgoKit Utils v9.1.2.
  */
+
 async function deployNewApp() {
   // Initialize the Algorand client for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
 
-  // Get a test account with funds from the LocalNet dispenser
-  const deployer = await algorand.account.localNet.dispenser()
-  
-  console.log('Deployer account:', deployer.addr)
+  // Get the dispenser for funding
+  const dispenser = await algorand.account.localNetDispenser()
 
-  // Read the approval and clear state programs
-  const approvalProgram = fs.readFileSync(
-    path.join(__dirname, 'approval.teal'),
-    'utf8'
-  )
-  const clearProgram = fs.readFileSync(
-    path.join(__dirname, 'clear.teal'),
-    'utf8'
-  )
+  // Create a deployer account
+  const deployer = algorand.account.random()
+  await algorand.account.ensureFunded(deployer, dispenser, (10).algos())
 
-  // Compile the TEAL programs
-  const approvalCompiled = await algorand.client.algod.compile(approvalProgram).do()
-  const clearCompiled = await algorand.client.algod.compile(clearProgram).do()
+  console.log('Deployer account:', deployer.addr.toString())
+  console.log()
 
-  // Define deployment metadata
-  // This metadata is used for idempotent deployments and tracking
-  const metadata = {
-    name: 'MyExampleApp',
-    version: '1.0.0',
-    updatable: true,  // Can be updated after deployment
-    deletable: true,  // Can be deleted after deployment
-  }
+  console.log('=== Deploying New Application ===')
+  console.log()
 
-  console.log('\nDeploying application with metadata:', metadata)
+  // Get the typed app factory
+  // This factory knows about the TestingApp contract and its methods
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+    defaultSender: deployer.addr,
+  })
 
-  // Create the deployment parameters
-  const deployment = {
-    sender: deployer.addr,
-    metadata,
-    createParams: {
-      approvalProgram: new Uint8Array(Buffer.from(approvalCompiled.result, 'base64')),
-      clearStateProgram: new Uint8Array(Buffer.from(clearCompiled.result, 'base64')),
-      globalNumUint: 1,
-      globalNumByteSlice: 1,
-      localNumUint: 0,
-      localNumByteSlice: 0,
-    },
+  console.log('Deploying TestingApp with deploy-time parameters...')
+  console.log()
+
+  // Deploy the application
+  // Use deploy-time template parameters to configure the app
+  const { appClient, result } = await appFactory.send.create.bare({
     deployTimeParams: {
-      TMPL_UPDATABLE: metadata.updatable ? 1 : 0,
-      TMPL_DELETABLE: metadata.deletable ? 1 : 0,
+      TMPL_UPDATABLE: 1,  // Make the app updatable
+      TMPL_DELETABLE: 1,  // Make the app deletable
+      TMPL_VALUE: 42,     // Set a template value
     },
-  }
+  })
 
-  try {
-    // Deploy the application
-    // This will create the app on the blockchain
-    const result = await algorand.appDeployer.deploy(deployment)
+  console.log('✅ Application deployed successfully!')
+  console.log()
 
-    console.log('\n✅ Application deployed successfully!')
-    console.log('\nDeployment Details:')
-    console.log('-------------------')
-    console.log('App ID:', result.appId.toString())
-    console.log('App Address:', result.appAddress)
-    console.log('Transaction ID:', result.transaction.txID())
-    console.log('Created Round:', result.createdRound.toString())
-    console.log('Updated Round:', result.updatedRound.toString())
-    console.log('\nMetadata:')
-    console.log('Name:', result.name)
-    console.log('Version:', result.version)
-    console.log('Updatable:', result.updatable)
-    console.log('Deletable:', result.deletable)
-    console.log('Deleted:', result.deleted)
+  console.log('=== Deployment Details ===')
+  console.log()
+  console.log('App ID:', appClient.appId)
+  console.log('App Address:', appClient.appAddress.toString())
+  console.log('Transaction ID:', result.txIds[0])
+  console.log()
 
-    // Verify the app address matches the expected address
-    const expectedAddress = getApplicationAddress(result.appId)
-    console.log('\nVerification:')
-    console.log('Expected Address:', expectedAddress)
-    console.log('Matches:', result.appAddress === expectedAddress ? '✓' : '✗')
+  console.log('Deploy-Time Parameters:')
+  console.log('  TMPL_UPDATABLE: 1 (app can be updated)')
+  console.log('  TMPL_DELETABLE: 1 (app can be deleted)')
+  console.log('  TMPL_VALUE: 42')
+  console.log()
 
-    return result
-  } catch (error) {
-    console.error('❌ Deployment failed:', error)
-    throw error
-  }
+  // Retrieve app information from the blockchain
+  console.log('=== Retrieving App Information ===')
+  console.log()
+
+  const appInfo = await algorand.client.algod.getApplicationByID(Number(appClient.appId)).do()
+
+  console.log('On-Chain App Information:')
+  console.log('  Creator:', appInfo.params.creator.toString())
+  console.log('  Approval Program Size:', appInfo.params.approvalProgram.length, 'bytes')
+  console.log('  Clear Program Size:', appInfo.params.clearStateProgram.length, 'bytes')
+  console.log('  Global State Schema:')
+  console.log('    Uints:', appInfo.params.globalStateSchema?.numUint || 0)
+  console.log('    Bytes:', appInfo.params.globalStateSchema?.numByteSlice || 0)
+  console.log('  Local State Schema:')
+  console.log('    Uints:', appInfo.params.localStateSchema?.numUint || 0)
+  console.log('    Bytes:', appInfo.params.localStateSchema?.numByteSlice || 0)
+  console.log()
+
+  console.log('=== Understanding the Deployment ===')
+  console.log()
+  console.log('What just happened:')
+  console.log('  1. Created a deployer account and funded it')
+  console.log('  2. Got a typed app factory for TestingApp')
+  console.log('  3. Called create.bare() with deploy-time parameters')
+  console.log('  4. AlgoKit Utils compiled the TEAL code')
+  console.log('  5. Sent an application creation transaction')
+  console.log('  6. Received an app ID and app address')
+  console.log()
+
+  console.log('The app is now deployed and ready to use!')
+  console.log('You can call its methods using the appClient.')
+  console.log()
+
+  console.log('=== Testing the Deployed App ===')
+  console.log()
+  console.log('Calling the "callAbi" method with value="Hello from deployed app"...')
+
+  // Test calling a method on the deployed app
+  const callResult = await appClient.send.callAbi({
+    args: {
+      value: 'Hello from deployed app',
+    },
+  })
+
+  console.log('✅ Method call successful!')
+  console.log('Transaction ID:', callResult.txIds[0])
+  console.log('Returned value:', callResult.return)
+  console.log()
+
+  console.log('=== Example Completed Successfully ===')
+  console.log()
+
+  console.log('Key Takeaways:')
+  console.log('  • Use AlgorandClient.defaultLocalNet() to connect to LocalNet')
+  console.log('  • Create and fund accounts using account.random() and ensureFunded()')
+  console.log('  • Use getTypedAppFactory() to get a typed app factory')
+  console.log('  • Deploy with send.create.bare() and deploy-time parameters')
+  console.log('  • The result includes appClient for interacting with the app')
+  console.log('  • Call methods on the deployed app using appClient.send')
+
+  return appClient
 }
 
 // Run the example
-deployNewApp()
-  .then(() => {
-    console.log('\n✅ Example completed successfully')
-    process.exit(0)
-  })
-  .catch((error) => {
-    console.error('\n❌ Example failed:', error)
-    process.exit(1)
-  })
+deployNewApp().catch(console.error)

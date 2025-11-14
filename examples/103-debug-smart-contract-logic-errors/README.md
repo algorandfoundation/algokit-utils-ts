@@ -1,93 +1,570 @@
 # Debug Smart Contract Logic Errors
 
-Demonstrates how to handle and debug logic errors in smart contracts with detailed error information including program counter, stack traces, and source code context.
+This example demonstrates how to handle and debug logic errors in smart contracts with detailed error information including error messages, stack traces, program counter information, and TEAL source code context.
 
-## Example Details
+## Key Concepts
 
-```json
-{
-  "example_id": "103-debug-smart-contract-logic-errors",
-  "title": "Debug Smart Contract Logic Errors",
-  "summary": "Demonstrates how to handle and debug logic errors in smart contracts with detailed error information including program counter, stack traces, and source code context.",
-  "language": "typescript",
-  "complexity": "moderate",
-  "example_potential": "high",
-  "use_case_category": "error handling",
-  "specific_use_case": "Handle and debug logic errors in smart contracts",
-  "target_users": [
-    "SDK developers",
-    "Smart contract developers"
-  ],
-  "features_tested": [
-    "error handling",
-    "logic error details",
-    "error traces",
-    "program counter tracking",
-    "stack traces with source context"
-  ],
-  "feature_tags": [
-    "error-handling",
-    "debugging",
-    "logic-errors",
-    "stack-trace",
-    "program-counter",
-    "teal-debugging",
-    "developer-experience"
-  ],
-  "folder": "103-debug-smart-contract-logic-errors",
-  "prerequisites": {
-    "tools": [
-      "algokit"
-    ],
-    "libraries": [
-      "@algorandfoundation/algokit-utils",
-      "algosdk"
-    ],
-    "environment": [
-      {
-        "name": "ALGOD_SERVER",
-        "required": false,
-        "example": "http://localhost"
-      },
-      {
-        "name": "ALGOD_PORT",
-        "required": false,
-        "example": "4001"
-      },
-      {
-        "name": "ALGOD_TOKEN",
-        "required": false,
-        "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      }
-    ]
+- **Logic Errors**: Errors that occur during smart contract execution (assert failures, budget exceeded, etc.)
+- **Error Handling**: Catching and processing errors from failed contract calls
+- **Program Counter (PC)**: The bytecode position where an error occurred
+- **Stack Traces**: TEAL source code with error location marked
+- **Debugging Information**: Rich error details to help identify and fix issues
+
+## What This Example Shows
+
+1. Deploying a contract with a method that deliberately fails
+2. Catching logic errors from failed contract calls
+3. Extracting detailed error information
+4. Understanding error messages and stack traces
+5. Using debugging information to locate issues
+
+## Code Walkthrough
+
+### Deploy Test Application
+
+```typescript
+const algorand = AlgorandClient.defaultLocalNet()
+const dispenser = await algorand.account.localNetDispenser()
+
+const testAccount = algorand.account.random()
+await algorand.account.ensureFunded(testAccount, dispenser, (5).algos())
+
+// Deploy TestingApp which has an error() method
+const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+  defaultSender: testAccount.addr,
+})
+
+const { appClient } = await appFactory.send.create.bare({
+  deployTimeParams: {
+    TMPL_UPDATABLE: 1,
+    TMPL_DELETABLE: 1,
+    TMPL_VALUE: 100,
   },
-  "run_instructions": {
-    "setup": [
-      "Start LocalNet with 'algokit localnet start'",
-      "Deploy a smart contract with a method that contains a logic error (e.g., failed assert)"
-    ],
-    "install": [
-      "npm install @algorandfoundation/algokit-utils algosdk"
-    ],
-    "execute": [
-      "npx tsx main.ts"
-    ]
-  },
-  "expected_output": [
-    "Detailed error information including program counter (PC)",
-    "Transaction ID of the failed transaction",
-    "Stack trace showing exact TEAL source code with error location marked",
-    "Error traces for debugging",
-    "Pretty-printed error context"
-  ],
-  "source_tests": [
-    {
-      "file": "src/types/app-factory-and-client.spec.ts",
-      "test_name": "Display nice error messages when there is a logic error"
-    }
-  ],
-  "artifacts_plan": [],
-  "notes": "AlgoKit Utils automatically provides enhanced error messages for logic errors. The 'led' (Logic Error Details) object contains comprehensive debugging information including PC, transaction ID, traces, and source code context when source maps are available.",
-  "generated_code": "import { AlgorandClient } from '@algorandfoundation/algokit-utils'\n\n/**\n * This example demonstrates how to handle and debug logic errors in smart contracts.\n * \n * When a smart contract encounters a logic error (like a failed assert), AlgoKit Utils\n * provides detailed debugging information including:\n * - Program Counter (PC): The exact bytecode position where the error occurred\n * - Transaction ID: The ID of the failed transaction\n * - Stack trace: TEAL source code with the error location marked\n * - Traces: Execution traces for step-by-step debugging\n * - LED (Logic Error Details): Comprehensive error metadata\n * \n * This makes debugging smart contracts much easier compared to raw Algorand errors.\n */\n\nasync function demonstrateLogicErrorDebugging() {\n  // Initialize the Algorand client for LocalNet\n  const algorand = AlgorandClient.defaultLocalNet()\n  \n  // Get or create a test account\n  const testAccount = await algorand.account.fromEnvironment('TEST_ACCOUNT')\n  \n  console.log('Test account address:', testAccount.addr)\n  console.log('\\nThis example will intentionally trigger a logic error to demonstrate debugging features.\\n')\n  \n  // Get the app client for your deployed contract\n  // This should be a contract with an 'error' method that fails\n  const appId = 123n // Replace with your deployed app ID\n  const appSpec = {} // Replace with your app spec\n  \n  const client = algorand.client.getAppClientById({\n    appId: appId,\n    defaultSender: testAccount.addr,\n    appSpec: appSpec,\n  })\n  \n  console.log('Calling smart contract method that will fail...')\n  \n  try {\n    // Call a method that intentionally fails (e.g., has a failed assert)\n    await client.send.call({\n      method: 'error',\n    })\n    \n    // This line should never be reached\n    console.log('❌ ERROR: Method should have failed but succeeded!')\n    \n  } catch (error: any) {\n    console.log('\\n✅ Logic error caught as expected!\\n')\n    \n    // The error object contains rich debugging information\n    console.log('═══════════════════════════════════════════════════')\n    console.log('📊 LOGIC ERROR DETAILS (LED)')\n    console.log('═══════════════════════════════════════════════════\\n')\n    \n    if (error.led) {\n      // Program Counter: The exact position in the bytecode where the error occurred\n      console.log('🎯 Program Counter (PC):', error.led.pc)\n      console.log('   This is the bytecode position of the failing instruction\\n')\n      \n      // Error message from the blockchain\n      console.log('💬 Error Message:', error.led.msg)\n      console.log('   Raw error message from the Algorand node\\n')\n      \n      // Transaction ID of the failed transaction\n      console.log('🔗 Transaction ID:', error.led.txId)\n      console.log('   Use this to look up the transaction on AlgoExplorer\\n')\n      \n      // Execution traces (if available)\n      if (error.led.traces && error.led.traces.length > 0) {\n        console.log('📋 Execution Traces:', error.led.traces.length, 'trace(s) available')\n        console.log('   Traces show the execution path leading to the error\\n')\n      }\n    } else {\n      console.log('⚠️  No LED information available (source maps may be missing)\\n')\n    }\n    \n    // Stack trace with source code context (when source maps are available)\n    if (error.stack) {\n      console.log('═══════════════════════════════════════════════════')\n      console.log('📄 STACK TRACE WITH SOURCE CODE')\n      console.log('═══════════════════════════════════════════════════\\n')\n      \n      console.log(error.stack)\n      \n      console.log('\\n✨ The stack trace shows:')\n      console.log('   - The actual TEAL source code')\n      console.log('   - The exact line where the error occurred (marked with \"<--- Error\")')\n      console.log('   - Surrounding code context for better understanding')\n    } else {\n      console.log('⚠️  No stack trace available\\n')\n    }\n    \n    console.log('\\n═══════════════════════════════════════════════════')\n    console.log('💡 DEBUGGING TIPS')\n    console.log('═══════════════════════════════════════════════════\\n')\n    \n    console.log('1. Program Counter (PC):')\n    console.log('   - Shows exactly where in the bytecode the error occurred')\n    console.log('   - Useful for pinpointing issues in compiled code\\n')\n    \n    console.log('2. Source Maps:')\n    console.log('   - Enable source maps during compilation for better errors')\n    console.log('   - AlgoKit automatically includes source maps in debug builds\\n')\n    \n    console.log('3. Stack Traces:')\n    console.log('   - Read the marked line (\"<--- Error\") to see the failing instruction')\n    console.log('   - Review surrounding code to understand the context\\n')\n    \n    console.log('4. Traces:')\n    console.log('   - Use traces to follow the execution path')\n    console.log('   - Helpful for understanding how the contract reached the error\\n')\n    \n    console.log('5. Transaction ID:')\n    console.log('   - Look up on AlgoExplorer for additional details')\n    console.log('   - Can view full transaction state and inner transactions\\n')\n  }\n}\n\n// Run the example\ndemonstratLogicErrorDebugging()\n  .then(() => {\n    console.log('\\n✨ Example completed successfully!')\n    console.log('\\nYou now know how to debug logic errors in Algorand smart contracts!')\n    process.exit(0)\n  })\n  .catch((error) => {\n    console.error('\\n❌ Example failed:', error)\n    process.exit(1)\n  })"
+})
+```
+
+Deploy an application with an `error()` method that deliberately fails with `assert(0)`.
+
+### Trigger Logic Error
+
+```typescript
+try {
+  // Call the error() method which intentionally fails
+  await appClient.send.error({ args: [] })
+
+  // This line should never be reached
+  console.log('❌ ERROR: Method should have failed!')
+} catch (error: any) {
+  // Error is caught here
+  console.log('✅ Logic error caught as expected!')
 }
 ```
+
+**Key point**: When a smart contract fails, AlgoKit Utils throws an error with rich debugging information.
+
+### Extract Error Information
+
+```typescript
+catch (error: any) {
+  // Error message
+  console.log('Error Message:', error.message)
+
+  // Execution traces (if available)
+  if (error.traces) {
+    console.log('Traces available:', error.traces.length > 0)
+  }
+
+  // Transaction information
+  if (error.transaction) {
+    console.log('Transaction ID:', error.transaction.txID())
+  }
+
+  // Stack trace with TEAL source code
+  if (error.stack) {
+    console.log(error.stack)
+    // Shows TEAL code with error location marked
+  }
+}
+```
+
+**Important**: The error object contains multiple properties with debugging information.
+
+## API Patterns (AlgoKit Utils v9.1.2)
+
+### Error Object Structure
+
+```typescript
+interface LogicError extends Error {
+  message: string           // Error description
+  stack?: string           // Stack trace with TEAL source
+  traces?: any[]           // Execution traces
+  transaction?: Transaction // Failed transaction
+  cause?: Error            // Underlying error
+}
+```
+
+### Catching Logic Errors
+
+```typescript
+try {
+  await appClient.send.methodName({ args: [...] })
+} catch (error: any) {
+  // Check error type
+  if (error.message.includes('assert failed')) {
+    console.log('Assertion failure in contract')
+  } else if (error.message.includes('budget exceeded')) {
+    console.log('Computation budget exceeded')
+  }
+
+  // Access debugging information
+  console.log('Error:', error.message)
+  console.log('Stack:', error.stack)
+}
+```
+
+### Reading Stack Traces
+
+```typescript
+if (error.stack) {
+  // Stack trace format:
+  // // function_name
+  // label:
+  // opcode // comment
+  // opcode <--- Error
+  // retsub
+
+  // Parse to find error location
+  const lines = error.stack.split('\n')
+  const errorLine = lines.find(line => line.includes('<--- Error'))
+
+  if (errorLine) {
+    console.log('Error at:', errorLine)
+  }
+}
+```
+
+### Program Counter Information
+
+```typescript
+// Error message includes PC information:
+// "assert failed pc=885"
+
+// PC indicates the bytecode position
+// Can be used to locate the instruction in TEAL bytecode
+
+const match = error.message.match(/pc=(\d+)/)
+if (match) {
+  const programCounter = parseInt(match[1])
+  console.log('Failed at bytecode position:', programCounter)
+}
+```
+
+## Common Logic Errors
+
+### Assert Failure
+
+```typescript
+// Contract code (TEAL):
+// assert  // Fails if top of stack is 0
+
+// Example error:
+// "assert failed pc=885"
+
+// Cause: A condition check failed
+// Solution: Review the assertion logic
+```
+
+### Budget Exceeded
+
+```typescript
+// Error: "dynamic cost budget exceeded"
+
+// Cause: Contract used too many compute units
+// Solution:
+// - Optimize contract code
+// - Reduce loop iterations
+// - Use inner transactions judiciously
+// - Consider app pooling
+```
+
+### Stack Overflow
+
+```typescript
+// Error: "stack overflow"
+
+// Cause: Too many values on the stack
+// Solution:
+// - Reduce stack usage
+// - Use stack manipulation opcodes (dig, swap, etc.)
+// - Restructure contract logic
+```
+
+### Invalid Operation
+
+```typescript
+// Error: "/ arg 0 < 1"
+
+// Cause: Division by zero
+// Solution: Add checks before division operations
+```
+
+### Invalid Reference
+
+```typescript
+// Error: "invalid Account reference"
+
+// Cause: Referencing an account/app/asset not in arrays
+// Solution: Ensure all references are passed in transaction
+```
+
+## Debugging Workflow
+
+### Step 1: Read the Error Message
+
+```typescript
+catch (error: any) {
+  console.log(error.message)
+  // Example: "assert failed pc=885. at:469."
+  // - "assert failed" = type of error
+  // - "pc=885" = program counter
+  // - "at:469" = line in TEAL source
+}
+```
+
+### Step 2: Examine the Stack Trace
+
+```typescript
+if (error.stack) {
+  // Stack trace shows TEAL source code
+  // Look for the line marked "<--- Error"
+  console.log(error.stack)
+
+  // Example output:
+  // // error
+  // error_7:
+  // proto 0 0
+  // intc_0 // 0
+  // // Deliberate error
+  // assert <--- Error
+  // retsub
+}
+```
+
+### Step 3: Identify the Problem
+
+```typescript
+// Common patterns in error messages:
+// - "assert failed" → Condition was false
+// - "budget exceeded" → Too much computation
+// - "stack overflow" → Too many stack values
+// - "invalid {type}" → Missing reference
+// - "{op} arg {n} {condition}" → Invalid operand
+```
+
+### Step 4: Fix and Test
+
+```typescript
+// After identifying the issue:
+// 1. Fix the contract code
+// 2. Redeploy the contract
+// 3. Test with same inputs
+// 4. Verify error is resolved
+
+try {
+  await appClient.send.fixedMethod({ args: [...] })
+  console.log('✅ Fixed!')
+} catch (error) {
+  console.log('Still failing:', error.message)
+  // Continue debugging
+}
+```
+
+## Advanced Debugging Techniques
+
+### Using Simulation
+
+```typescript
+// AlgoKit Utils automatically simulates before sending
+// Simulation catches errors without committing to blockchain
+
+// To disable simulation (not recommended):
+await appClient.send.methodName({
+  args: [...],
+  skipSimulation: true,  // Sends directly
+})
+```
+
+### Logging Contract State
+
+```typescript
+// Add log statements in your TEAL contract:
+// log  // Logs bytes from stack
+
+// Then check logs in successful transactions:
+const result = await appClient.send.methodName({ args: [...] })
+if (result.confirmation.logs) {
+  result.confirmation.logs.forEach(log => {
+    console.log('Log:', Buffer.from(log).toString())
+  })
+}
+```
+
+### Testing with Smaller Inputs
+
+```typescript
+// If contract fails with large inputs, test with smaller ones:
+
+try {
+  // Large input
+  await appClient.send.process({ args: [largeArray] })
+} catch (error) {
+  console.log('Failed with large input')
+
+  // Try with small input
+  try {
+    await appClient.send.process({ args: [smallArray] })
+    console.log('Works with small input - size issue')
+  } catch (error2) {
+    console.log('Fails with any input - logic issue')
+  }
+}
+```
+
+### Transaction Inspection
+
+```typescript
+catch (error: any) {
+  if (error.transaction) {
+    const txId = error.transaction.txID()
+    console.log(`View on AlgoExplorer:`)
+    console.log(`https://testnet.algoexplorer.io/tx/${txId}`)
+
+    // Or use algod/indexer to get more details
+    const txInfo = await algorand.client.algod
+      .pendingTransactionInformation(txId)
+      .do()
+
+    console.log('Transaction details:', txInfo)
+  }
+}
+```
+
+### Comparing Traces
+
+```typescript
+// Save traces from successful calls
+let successTrace: any[] = []
+
+try {
+  const result = await appClient.send.workingMethod({ args: [...] })
+  if (result.traces) {
+    successTrace = result.traces
+  }
+} catch (error) {
+  // Doesn't reach here
+}
+
+// Compare with failed call traces
+try {
+  await appClient.send.brokenMethod({ args: [...] })
+} catch (error: any) {
+  if (error.traces && successTrace.length > 0) {
+    console.log('Success trace steps:', successTrace.length)
+    console.log('Failed trace steps:', error.traces.length)
+    // Identify where execution diverged
+  }
+}
+```
+
+## Expected Output
+
+```
+Test account address: B4BQXC5OF3X4JIDPSHEMSBV2KXXULJ5YQUXLIXEOKBCN3IE546SO47MWVA
+
+=== Deploying Test Application ===
+
+This application has an "error" method that deliberately fails.
+
+✅ App deployed successfully!
+App ID: 1641n
+
+=== Triggering Logic Error ===
+
+Calling the "error" method which deliberately fails with assert(0)...
+
+✅ Logic error caught as expected!
+
+═══════════════════════════════════════════════════
+📊 ERROR INFORMATION
+═══════════════════════════════════════════════════
+
+🔴 Error Message:
+   assert failed pc=885. at:469. Error resolving execution info via simulate in transaction 0: transaction ISKJJKNLXMNUJ2U6GR4WUPPVQOQO6CRNGVJ7S24KOF5Z7OUIQ4JQ: logic eval error: assert failed pc=885. Details: app=1641, pc=885, opcodes=proto 0 0; intc_0 // 0; assert
+
+═══════════════════════════════════════════════════
+📄 STACK TRACE
+═══════════════════════════════════════════════════
+
+// error
+error_7:
+proto 0 0
+intc_0 // 0
+// Deliberate error
+assert <--- Error
+retsub
+
+// create
+create_8:
+
+═══════════════════════════════════════════════════
+💡 DEBUGGING TIPS
+═══════════════════════════════════════════════════
+
+1. Error Message:
+   - Read the error message carefully
+   - It often indicates the type of failure (assert, stack overflow, etc.)
+
+2. Stack Trace:
+   - Shows the JavaScript call stack leading to the error
+   - Helps identify where in your code the error originated
+
+3. Transaction ID:
+   - Use to look up the transaction on AlgoExplorer or Goal
+   - Can view full transaction details and inner transactions
+
+4. Execution Traces:
+   - When available, traces show step-by-step execution
+   - Helpful for understanding the contract execution path
+
+5. Common Logic Errors:
+   - assert(0): Deliberate assertion failure
+   - Stack overflow: Too much recursion or stack usage
+   - Invalid operation: Division by zero, invalid bytecode, etc.
+   - Budget exceeded: Program used too many compute units
+
+6. Debugging Workflow:
+   - Add log statements in your contract
+   - Test with smaller inputs to isolate the issue
+   - Use simulation mode to test without committing
+   - Review the TEAL source code and approval program
+
+═══════════════════════════════════════════════════
+✨ Example Completed Successfully
+═══════════════════════════════════════════════════
+
+You now understand how AlgoKit Utils helps debug smart contract logic errors!
+
+Key Takeaways:
+  • Errors provide detailed information for debugging
+  • Stack traces help locate issues in your code
+  • Transaction IDs can be used for further investigation
+  • AlgoKit Utils catches and enriches error information
+```
+
+## Running the Example
+
+### Prerequisites
+
+1. Start AlgoKit LocalNet:
+   ```bash
+   algokit localnet start
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Execute
+
+```bash
+npm start
+```
+
+The example will:
+1. Create and fund a test account
+2. Deploy an application with a failing method
+3. Call the method to trigger a logic error
+4. Catch the error and display debugging information
+5. Show how to interpret error messages and stack traces
+
+## Best Practices
+
+### Always Use Try-Catch
+
+```typescript
+// GOOD: Proper error handling
+try {
+  await appClient.send.methodName({ args: [...] })
+} catch (error: any) {
+  console.error('Contract call failed:', error.message)
+  // Handle error appropriately
+}
+
+// BAD: No error handling
+await appClient.send.methodName({ args: [...] })
+// Error crashes program
+```
+
+### Log Error Details
+
+```typescript
+catch (error: any) {
+  // Log comprehensive error information
+  console.error('Error:', {
+    message: error.message,
+    hasStack: !!error.stack,
+    hasTraces: !!error.traces,
+    hasTransaction: !!error.transaction,
+  })
+
+  // In production, send to error tracking service
+  // Sentry.captureException(error)
+}
+```
+
+### Provide User-Friendly Messages
+
+```typescript
+catch (error: any) {
+  // Don't show technical details to end users
+  if (error.message.includes('assert failed')) {
+    throw new Error('Transaction validation failed. Please check your inputs.')
+  } else if (error.message.includes('budget exceeded')) {
+    throw new Error('Operation too complex. Please simplify your request.')
+  } else {
+    throw new Error('Transaction failed. Please try again.')
+  }
+}
+```
+
+### Test Error Scenarios
+
+```typescript
+// Write tests for error conditions
+describe('Contract error handling', () => {
+  it('should fail with invalid input', async () => {
+    await expect(
+      appClient.send.methodName({ args: [invalidInput] })
+    ).rejects.toThrow('assert failed')
+  })
+
+  it('should provide helpful error message', async () => {
+    try {
+      await appClient.send.methodName({ args: [invalidInput] })
+      fail('Should have thrown')
+    } catch (error: any) {
+      expect(error.stack).toContain('<--- Error')
+      expect(error.message).toContain('pc=')
+    }
+  })
+})
+```
+
+## Learn More
+
+- [AlgoKit Utils Documentation](https://github.com/algorandfoundation/algokit-utils-ts)
+- [TEAL Debugging Guide](https://developer.algorand.org/docs/get-details/dapps/avm/teal/debugging/)
+- [Smart Contract Errors](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/debugging/)
+- [AlgoExplorer](https://algoexplorer.io/) - View transactions on-chain
+- [Error Handling Best Practices](https://developer.algorand.org/docs/get-started/basics/best_practices/)

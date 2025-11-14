@@ -1,4 +1,4 @@
-import { algo, microAlgo, AlgoAmount } from '@algorandfoundation/algokit-utils'
+import { algo, microAlgo } from '@algorandfoundation/algokit-utils'
 
 /**
  * This example demonstrates creating AlgoAmount instances using the microAlgo()

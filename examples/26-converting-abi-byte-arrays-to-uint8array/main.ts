@@ -28,7 +28,8 @@ console.log(`   Is Uint8Array: ${staticEncoded instanceof Uint8Array}`)
 
 // Decode it back
 const staticDecoded = staticArrayType.decode(staticEncoded)
-console.log(`   Decoded: [${Array.from(staticDecoded as Uint8Array).join(', ')}]`)
+const staticDecodedArray = staticDecoded instanceof Uint8Array ? staticDecoded : new Uint8Array(staticDecoded as number[])
+console.log(`   Decoded: [${Array.from(staticDecodedArray).join(', ')}]`)
 console.log(`   Decoded is Uint8Array: ${staticDecoded instanceof Uint8Array}`)
 console.log()
 
@@ -51,7 +52,8 @@ console.log(`   Is Uint8Array: ${dynamicEncoded instanceof Uint8Array}`)
 
 // Decode it back
 const dynamicDecoded = dynamicArrayType.decode(dynamicEncoded)
-console.log(`   Decoded: [${Array.from(dynamicDecoded as Uint8Array).join(', ')}]`)
+const dynamicDecodedArray = dynamicDecoded instanceof Uint8Array ? dynamicDecoded : new Uint8Array(dynamicDecoded as number[])
+console.log(`   Decoded: [${Array.from(dynamicDecodedArray).join(', ')}]`)
 console.log(`   Decoded is Uint8Array: ${dynamicDecoded instanceof Uint8Array}`)
 console.log()
 
@@ -73,7 +75,8 @@ console.log(`   Is Uint8Array: ${uint8Encoded instanceof Uint8Array}`)
 
 // Decode it back
 const uint8Decoded = uint8ArrayType.decode(uint8Encoded)
-console.log(`   Decoded: [${Array.from(uint8Decoded as Uint8Array).join(', ')}]`)
+const uint8DecodedArray = uint8Decoded instanceof Uint8Array ? uint8Decoded : new Uint8Array(uint8Decoded as number[])
+console.log(`   Decoded: [${Array.from(uint8DecodedArray).join(', ')}]`)
 console.log(`   Decoded is Uint8Array: ${uint8Decoded instanceof Uint8Array}`)
 console.log()
 
@@ -98,11 +101,12 @@ console.log(`   As text: ${String.fromCharCode(...hexBytes)}`)
 // Create dynamic array type for variable length
 const hexArrayType = new ABIArrayDynamicType(byteType)
 const hexEncoded = hexArrayType.encode(hexBytes)
-const hexDecoded = hexArrayType.decode(hexEncoded) as Uint8Array
+const hexDecoded = hexArrayType.decode(hexEncoded)
+const hexDecodedArray = hexDecoded instanceof Uint8Array ? hexDecoded : new Uint8Array(hexDecoded as number[])
 
 console.log(`   Encoded: ${hexEncoded}`)
-console.log(`   Decoded: [${Array.from(hexDecoded).join(', ')}]`)
-console.log(`   Back to text: ${String.fromCharCode(...hexDecoded)}`)
+console.log(`   Decoded: [${Array.from(hexDecodedArray).join(', ')}]`)
+console.log(`   Back to text: ${String.fromCharCode(...hexDecodedArray)}`)
 console.log()
 
 console.log('=== Summary ===')

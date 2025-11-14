@@ -1,96 +1,521 @@
 # Call ABI Method with Transaction as Argument
 
-Demonstrates how to call an ABI method that accepts a transaction as an argument, enabling complex multi-step operations and transaction composition.
+This example demonstrates how to call an ABI method that accepts a transaction as one of its arguments. This powerful pattern enables smart contracts to verify and react to other transactions in the same atomic group, creating complex transaction composition workflows.
 
-## Example Details
+## Key Concepts
 
-```json
-{
-  "example_id": "97-call-abi-method-with-transaction-as-argument",
-  "title": "Call ABI Method with Transaction as Argument",
-  "summary": "Demonstrates how to call an ABI method that accepts a transaction as an argument, enabling complex multi-step operations and transaction composition.",
-  "language": "typescript",
-  "complexity": "moderate",
-  "example_potential": "high",
-  "use_case_category": "transaction composition",
-  "specific_use_case": "Call an ABI method that accepts a transaction as an argument",
-  "target_users": [
-    "SDK developers",
-    "Smart contract developers"
-  ],
-  "features_tested": [
-    "client.call",
-    "ABI method with transaction argument",
-    "AppManager.getABIReturn",
-    "transaction groups",
-    "createTransaction.payment"
-  ],
-  "feature_tags": [
-    "abi-method",
-    "transaction-argument",
-    "transaction-composition",
-    "atomic-transactions",
-    "multi-transaction",
-    "payment"
-  ],
-  "folder": "97-call-abi-method-with-transaction-as-argument",
-  "prerequisites": {
-    "tools": [
-      "algokit",
-      "docker"
-    ],
-    "libraries": [
-      "algokit-utils",
-      "algosdk"
-    ],
-    "environment": [
-      {
-        "name": "ALGOD_TOKEN",
-        "required": true,
-        "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      {
-        "name": "ALGOD_SERVER",
-        "required": true,
-        "example": "http://localhost:4001"
-      }
-    ]
+- **Transaction Arguments**: ABI methods can accept transactions as parameters
+- **Atomic Grouping**: The SDK automatically groups the transaction argument with the app call
+- **Transaction Reference**: The contract receives a reference to the transaction in the same group
+- **Pre-Created Transactions**: Create transactions before passing them as arguments
+- **Transaction with Signer**: Wrap transactions with their signer for proper execution
+
+## What This Example Shows
+
+1. Deploying a smart contract that accepts transaction arguments
+2. Creating a payment transaction to pass as an argument
+3. Calling an ABI method with the transaction as a parameter
+4. Automatic atomic grouping of transactions
+5. Accessing the return value that processes the transaction argument
+
+## Code Walkthrough
+
+### Setup and Deploy App
+
+```typescript
+const algorand = AlgorandClient.defaultLocalNet()
+const dispenser = await algorand.account.localNetDispenser()
+
+const alice = algorand.account.random()
+await algorand.account.ensureFunded(alice, dispenser, (5).algos())
+
+const bob = algorand.account.random()
+await algorand.account.ensureFunded(bob, dispenser, (1).algos())
+
+// Deploy the app
+const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
+  defaultSender: alice.addr,
+})
+
+const { appClient, result: createResult } = await appFactory.send.create.bare({
+  deployTimeParams: {
+    TMPL_UPDATABLE: 1,
+    TMPL_DELETABLE: 1,
+    TMPL_VALUE: 123,
   },
-  "run_instructions": {
-    "setup": [
-      "Start AlgoKit LocalNet: algokit localnet start"
-    ],
-    "install": [
-      "npm install algokit-utils algosdk"
-    ],
-    "execute": [
-      "npx tsx main.ts"
-    ]
+})
+```
+
+Create test accounts and deploy the TestingApp contract that has a method accepting transaction arguments.
+
+### Create the Payment Transaction
+
+```typescript
+const paymentAmount = (0.5).algos()
+
+const paymentTxn = await algorand.createTransaction.payment({
+  sender: alice.addr,
+  receiver: bob.addr,
+  amount: paymentAmount,
+})
+```
+
+**Key point**: Create the transaction first using `algorand.createTransaction.payment()`. This returns a `Transaction` object that can be passed as an argument.
+
+### Call Method with Transaction Argument
+
+```typescript
+const result = await appClient.send.callAbiTxn({
+  args: {
+    txn: { txn: paymentTxn, signer: alice.signer },
+    value: 'Hello from transaction argument!',
   },
-  "expected_output": [
-    "App created with ID: <app_id>",
-    "Creating payment transaction for <amount> microAlgos",
-    "Calling ABI method with transaction argument...",
-    "Transaction group sent successfully",
-    "Number of transactions in group: 2",
-    "Return value: Sent <amount>. test"
-  ],
-  "source_tests": [
-    {
-      "file": "src/types/app-client.spec.ts",
-      "test_name": "Construct transaction with abi encoding including transaction"
-    }
-  ],
-  "artifacts_plan": [
-    {
-      "target_file": "contract.algo.ts",
-      "type": "contract",
-      "action": "generate",
-      "source_path": null,
-      "note": "Sample ARC-32 app spec with call_abi_txn method that accepts transaction"
-    }
-  ],
-  "notes": "This example demonstrates transaction composition where an ABI method accepts a transaction as an argument. This is useful for complex operations like verifying a payment was made before performing an action, or coordinating multiple transactions atomically.",
-  "generated_code": "import { AlgorandClient, AppManager } from '@algorandfoundation/algokit-utils'\nimport { microAlgo } from '@algorandfoundation/algokit-utils/amount'\nimport algosdk from 'algosdk'\n\n/**\n * This example demonstrates how to call an ABI method that accepts a transaction\n * as one of its arguments. This enables powerful transaction composition patterns\n * where the smart contract can verify and react to other transactions in the same\n * atomic group.\n */\n\n// Sample app spec with call_abi_txn method that accepts a transaction argument\nconst appSpec = {\n  hints: {\n    call_abi_txn: {\n      call_config: {\n        no_op: 'CALL',\n      },\n    },\n  },\n  contract: {\n    name: 'TransactionCompositionApp',\n    methods: [\n      {\n        name: 'call_abi_txn',\n        args: [\n          { type: 'txn', name: 'payment_txn' },  // Transaction argument\n          { type: 'string', name: 'message' },\n        ],\n        returns: { type: 'string' },\n      },\n    ],\n  },\n  state: {\n    global: {\n      num_byte_slices: 0,\n      num_uints: 0,\n    },\n    local: {\n      num_byte_slices: 0,\n      num_uints: 0,\n    },\n  },\n  schema: {\n    global: {\n      declared: {},\n      reserved: {},\n    },\n    local: {\n      declared: {},\n      reserved: {},\n    },\n  },\n  source: {\n    approval: 'I3ByYWdtYSB2ZXJzaW9uIDEw',\n    clear: 'I3ByYWdtYSB2ZXJzaW9uIDEw',\n  },\n  bare_call_config: {\n    no_op: 'CREATE',\n    opt_in: 'NEVER',\n    close_out: 'NEVER',\n    update_application: 'NEVER',\n    delete_application: 'NEVER',\n  },\n  template_variables: {\n    UPDATABLE: { type: 'uint64' },\n    DELETABLE: { type: 'uint64' },\n    VALUE: { type: 'uint64' },\n  },\n}\n\nasync function callABIMethodWithTransactionArgument() {\n  // Initialize AlgorandClient for LocalNet\n  const algod = new algosdk.Algodv2('a' + 'a'.repeat(63), 'http://localhost', 4001)\n  const algorand = AlgorandClient.fromClients({ algod })\n\n  // Get a test account from the LocalNet dispenser\n  const testAccount = await algorand.account.fromEnvironment('LOCALNET')\n  console.log(`Using account: ${testAccount.addr}`)\n\n  // Step 1: Create and deploy the app\n  console.log('\\nCreating app...')\n  const appClient = algorand.client.getAppClient({\n    resolveBy: 'id',\n    app: appSpec,\n    sender: testAccount,\n    id: 0,\n  })\n\n  const createResult = await appClient.create({\n    deployTimeParams: {\n      UPDATABLE: 1,\n      DELETABLE: 1,\n      VALUE: 1,\n    },\n  })\n\n  console.log(`App created with ID: ${createResult.appId}`)\n\n  // Step 2: Create a payment transaction to pass as an argument\n  const paymentAmount = microAlgo(Math.ceil(Math.random() * 10000))\n  console.log(`\\nCreating payment transaction for ${paymentAmount.microAlgo} microAlgos`)\n  \n  const paymentTxn = await algorand.createTransaction.payment({\n    sender: testAccount.addr,\n    receiver: testAccount.addr,\n    amount: paymentAmount,\n  })\n\n  // Step 3: Call the ABI method with the transaction as an argument\n  console.log('\\nCalling ABI method with transaction argument...')\n  \n  /**\n   * When you pass a transaction as a methodArg, AlgoKit Utils will:\n   * 1. Automatically group the transactions together atomically\n   * 2. Handle the ABI encoding for the transaction reference\n   * 3. Sign and send both transactions as a group\n   */\n  const result = await appClient.call({\n    method: 'call_abi_txn',\n    methodArgs: [\n      paymentTxn,  // Pass the payment transaction as the first argument\n      'test',      // String message as second argument\n    ],\n  })\n\n  // Step 4: Process the results\n  console.log('Transaction group sent successfully!')\n  console.log(`Number of transactions in group: ${result.transactions.length}`)\n  console.log(`Transaction IDs: ${result.txIds.join(', ')}`)\n\n  // Step 5: Extract and display the ABI return value\n  if (result.confirmations && result.confirmations[1]) {\n    const abiMethod = appClient.getABIMethod('call_abi_txn')\n    if (abiMethod) {\n      const returnValue = AppManager.getABIReturn(\n        result.confirmations[1],\n        abiMethod\n      )\n      \n      if (returnValue?.returnValue) {\n        console.log(`\\nReturn value: ${returnValue.returnValue}`)\n        console.log(`Expected format: \"Sent ${paymentAmount.microAlgo}. test\"`)\n      }\n    }\n  }\n\n  console.log('\\n✅ Example completed successfully!')\n}\n\n// Run the example\ncallABIMethodWithTransactionArgument().catch(console.error)\n"
+})
+```
+
+**Critical pattern**:
+- Wrap the transaction with `{ txn: paymentTxn, signer: alice.signer }`
+- The SDK automatically:
+  1. Groups the payment and app call together
+  2. Ensures atomic execution
+  3. Encodes the transaction reference for ABI
+  4. Signs both transactions
+  5. Sends them as a group
+
+### Process Results
+
+```typescript
+console.log('Transaction ID:', result.transaction.txID())
+console.log('Group ID:', result.groupId)
+console.log('Return value:', result.return)
+```
+
+The return value shows the contract successfully processed the payment transaction. In this example, it returns: `"Sent 500000. Hello from transaction argument!"`
+
+## API Patterns (AlgoKit Utils v9.1.2)
+
+### Create Transaction
+
+```typescript
+const transaction = await algorand.createTransaction.payment({
+  sender: senderAddress,
+  receiver: receiverAddress,
+  amount: (1).algos(),
+})
+```
+
+Returns an algosdk `Transaction` object.
+
+### Pass Transaction as Argument
+
+```typescript
+const result = await appClient.send.methodName({
+  args: {
+    txn: { txn: transaction, signer: account.signer },
+    // other arguments...
+  },
+})
+```
+
+**TransactionWithSigner format**:
+- `txn`: The pre-created Transaction object
+- `signer`: The signer that will sign this transaction
+
+### Alternative: Inline Transaction Creation
+
+For simpler cases, you can also create the transaction inline:
+
+```typescript
+const result = await appClient.send.methodName({
+  args: {
+    txn: {
+      txn: await algorand.createTransaction.payment({
+        sender: alice.addr,
+        receiver: bob.addr,
+        amount: (1).algos(),
+      }),
+      signer: alice.signer,
+    },
+    // other arguments...
+  },
+})
+```
+
+## Common Use Cases
+
+### Payment Verification
+
+Verify a payment was made before performing an action:
+
+```typescript
+// Create payment from user to contract
+const payment = await algorand.createTransaction.payment({
+  sender: user.addr,
+  receiver: appAddress,
+  amount: requiredPayment,
+})
+
+// Call method that verifies the payment
+await appClient.send.processPayment({
+  args: {
+    payment: { txn: payment, signer: user.signer },
+  },
+})
+```
+
+### Asset Transfer Validation
+
+Validate asset transfers in the contract:
+
+```typescript
+const assetTransfer = await algorand.createTransaction.assetTransfer({
+  sender: user.addr,
+  receiver: appAddress,
+  assetId: tokenId,
+  amount: 100n,
+})
+
+await appClient.send.acceptAssets({
+  args: {
+    transfer: { txn: assetTransfer, signer: user.signer },
+  },
+})
+```
+
+### Multi-Party Coordination
+
+Coordinate actions between multiple accounts:
+
+```typescript
+// User sends payment
+const userPayment = await algorand.createTransaction.payment({
+  sender: user.addr,
+  receiver: merchant.addr,
+  amount: purchasePrice,
+})
+
+// App verifies and processes
+await appClient.send.completePurchase({
+  args: {
+    payment: { txn: userPayment, signer: user.signer },
+    orderId: 'ORDER-123',
+  },
+})
+```
+
+### Escrow Release
+
+Release funds from an escrow based on conditions:
+
+```typescript
+const escrowPayment = await algorand.createTransaction.payment({
+  sender: escrowAccount.addr,
+  receiver: beneficiary.addr,
+  amount: escrowAmount,
+})
+
+await appClient.send.releaseEscrow({
+  args: {
+    release: { txn: escrowPayment, signer: escrowAccount.signer },
+    condition: 'FULFILLED',
+  },
+})
+```
+
+## Important Considerations
+
+### Transaction Type Support
+
+The `AppMethodCallTransactionArgument` type accepts:
+- `TransactionWithSigner`: `{ txn: Transaction, signer: TransactionSigner }`
+- `Transaction`: Bare Transaction object
+- `Promise<Transaction>`: Async transaction creation
+- `AppMethodCall`: Nested method calls
+
+### Atomic Grouping
+
+```typescript
+// When you pass a transaction as an argument:
+// 1. Payment transaction (txn argument)
+// 2. App call transaction (method call)
+// These are automatically grouped atomically
+```
+
+**Important**: All transactions in the group succeed or all fail. This ensures the contract can trust the transaction argument exists.
+
+### Transaction Order
+
+The transaction passed as an argument always comes **before** the app call in the group:
+
+```
+Group:
+  [0] Payment transaction (argument)
+  [1] App call transaction (method)
+```
+
+The contract accesses the transaction using `gtxn` opcodes with index 0.
+
+### Signer Requirements
+
+```typescript
+// Correct: Provide signer
+const result = await appClient.send.method({
+  args: {
+    txn: { txn: transaction, signer: account.signer },
+  },
+})
+
+// Incorrect: Missing signer will cause signing errors
+const result = await appClient.send.method({
+  args: {
+    txn: transaction,  // Missing signer wrapper
+  },
+})
+```
+
+### Transaction Parameters
+
+The transaction must have valid parameters:
+- **Sender**: Must match the signer
+- **Amount**: Must be valid for the transaction type
+- **Receiver**: Must be a valid address
+- **Fee**: Will be set automatically if not specified
+
+### Multiple Transaction Arguments
+
+Some methods accept multiple transactions:
+
+```typescript
+const payment1 = await algorand.createTransaction.payment({
+  sender: alice.addr,
+  receiver: bob.addr,
+  amount: (1).algos(),
+})
+
+const payment2 = await algorand.createTransaction.payment({
+  sender: bob.addr,
+  receiver: charlie.addr,
+  amount: (0.5).algos(),
+})
+
+await appClient.send.processTwoPayments({
+  args: {
+    payment1: { txn: payment1, signer: alice.signer },
+    payment2: { txn: payment2, signer: bob.signer },
+  },
+})
+
+// Resulting group:
+// [0] payment1
+// [1] payment2
+// [2] app call
+```
+
+### Error Handling
+
+```typescript
+try {
+  const result = await appClient.send.methodWithTxnArg({
+    args: {
+      txn: { txn: payment, signer: account.signer },
+    },
+  })
+} catch (error) {
+  // Common errors:
+  // - Transaction validation failed
+  // - Insufficient balance for payment
+  // - Signer mismatch
+  // - Contract logic rejected the transaction
+  console.error('Failed to call method with transaction:', error)
 }
 ```
+
+## Smart Contract Considerations
+
+### Accessing Transaction Arguments
+
+In your Tealish/PyTeal smart contract:
+
+```python
+@abimethod
+def call_abi_txn(payment: abi.PaymentTransaction, message: abi.String) -> abi.String:
+    # Access the payment transaction
+    assert payment.get().receiver() == Global.current_application_address()
+    amount = payment.get().amount()
+
+    # Process the transaction
+    return abi.String(f"Received {amount} microAlgos: {message}")
+```
+
+### Transaction Verification
+
+Common verifications in contracts:
+- **Receiver**: Ensure payment goes to correct address
+- **Amount**: Verify payment meets minimum requirements
+- **Type**: Confirm transaction is the expected type
+- **Sender**: Validate the sender is authorized
+
+### Group Transaction Access
+
+```python
+# In the smart contract:
+# txn argument is at index 0 (or earlier in the group)
+# current app call is at index 1 (or later)
+
+payment_txn = Gtxn[Txn.group_index() - 1]  # Previous transaction
+assert payment_txn.type_enum() == TxnType.Payment
+```
+
+## Expected Output
+
+```
+Alice address: QAJRXA26I5QKT7N5OTU4QYNMPWZR2A4FLFATCPMCQMCHVSWEWO7NO6666Y
+Bob address: M2UH2RU4AY6B3IUFJAB5WQRD7Q7AJVEA5PPVNO7PM6X4H6VJFWONRSGAAQ
+
+Deploying app...
+App deployed with ID: 1600
+
+Creating payment transaction for 500000 microAlgos (0.5 ALGOs)
+Payment: Alice → Bob
+
+Calling ABI method with transaction argument...
+Method: call_abi_txn(pay, string)
+
+✅ Transaction group sent successfully!
+Transaction ID: 3O5FF4DLOBIHCYWLVPHFE6OQ5XIZMPNMAITKD7ZSKJGWJ54QL45A
+Group ID: 1MxUNDXCNRn0Rb1wW/C1Yh4aQZeX8IRLrIbsRgTrrt4=
+
+Return value: Sent 500000. Hello from transaction argument!
+
+The app call transaction received the payment transaction as an argument.
+Payment of 500000 microAlgos was processed in the same atomic group.
+
+✅ Example completed successfully!
+```
+
+## Running the Example
+
+### Prerequisites
+
+1. Start AlgoKit LocalNet:
+   ```bash
+   algokit localnet start
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Execute
+
+```bash
+npm start
+```
+
+The example will:
+1. Create and fund test accounts (Alice and Bob)
+2. Deploy the TestingApp smart contract
+3. Create a payment transaction (0.5 ALGO from Alice to Bob)
+4. Call the ABI method with the transaction as an argument
+5. Display the transaction results and return value
+
+## Debugging Transaction Arguments
+
+### Check Transaction Creation
+
+```typescript
+const txn = await algorand.createTransaction.payment({
+  sender: alice.addr,
+  receiver: bob.addr,
+  amount: (1).algos(),
+})
+
+console.log('Transaction type:', txn.type)
+console.log('From:', algosdk.encodeAddress(txn.from.publicKey))
+console.log('To:', algosdk.encodeAddress(txn.to.publicKey))
+console.log('Amount:', txn.amount)
+```
+
+### Verify Group Formation
+
+```typescript
+const result = await appClient.send.method({
+  args: { txn: { txn: payment, signer: alice.signer } },
+})
+
+console.log('Group ID:', result.groupId)
+console.log('Transaction ID:', result.transaction.txID())
+```
+
+### Contract Tracing
+
+Enable trace output to see how the contract processes the transaction:
+
+```typescript
+const result = await appClient.send.method({
+  args: { txn: { txn: payment, signer: alice.signer } },
+})
+
+// Check the app call return value
+console.log('Contract response:', result.return)
+```
+
+## Advanced Patterns
+
+### Conditional Transaction Arguments
+
+```typescript
+const shouldPayApp = checkCondition()
+
+const payment = await algorand.createTransaction.payment({
+  sender: user.addr,
+  receiver: shouldPayApp ? appAddress : otherAddress,
+  amount: requiredAmount,
+})
+
+await appClient.send.conditionalMethod({
+  args: {
+    payment: { txn: payment, signer: user.signer },
+    condition: shouldPayApp,
+  },
+})
+```
+
+### Transaction Argument with Reference Types
+
+```typescript
+// Payment with asset reference
+const payment = await algorand.createTransaction.payment({
+  sender: user.addr,
+  receiver: appAddress,
+  amount: (1).algos(),
+})
+
+await appClient.send.processPaymentAndAsset({
+  args: {
+    payment: { txn: payment, signer: user.signer },
+  },
+  assetReferences: [assetId],  // Additional references
+})
+```
+
+### Nested Method Calls with Transactions
+
+```typescript
+// Pass both a transaction and a nested method call
+await parentApp.send.complexOperation({
+  args: {
+    payment: { txn: payment, signer: user.signer },
+    nestedCall: childApp.params.someMethod({ value: 42 }),
+  },
+})
+```
+
+## Learn More
+
+- [AlgoKit Utils Documentation](https://github.com/algorandfoundation/algokit-utils-ts)
+- [ABI Transaction Arguments](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
+- [Atomic Transfers](https://developer.algorand.org/docs/get-details/atomic_transfers/)
+- [Group Transactions](https://developer.algorand.org/docs/get-details/atomic_transfers/)
+- [Transaction Types](https://developer.algorand.org/docs/get-details/transactions/)

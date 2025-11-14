@@ -16,7 +16,7 @@ import { TransactionComposer } from '@algorandfoundation/algokit-utils/types/com
  * Custom error transformer that catches asset-related errors
  * and transforms them into user-friendly messages
  */
-function assetErrorTransformer(error: Error): Error {
+async function assetErrorTransformer(error: Error): Promise<Error> {
   // Convert error to string to check all nested messages
   const errorString = error.toString() + ' ' + error.message
 
@@ -38,7 +38,7 @@ function assetErrorTransformer(error: Error): Error {
 /**
  * Another error transformer for account balance errors
  */
-function balanceErrorTransformer(error: Error): Error {
+async function balanceErrorTransformer(error: Error): Promise<Error> {
   const errorString = error.toString() + ' ' + error.message
 
   if (errorString.includes('overspend') || errorString.toLowerCase().includes('insufficient')) {

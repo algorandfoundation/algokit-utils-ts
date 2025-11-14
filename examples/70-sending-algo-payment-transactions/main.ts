@@ -55,7 +55,7 @@ async function sendAlgoPayment() {
   console.log('\nReceiver Account Information:')
   console.log(`  Address: ${accountInfo.address}`)
   console.log(`  Balance: ${accountInfo.balance} microAlgos (${Number(accountInfo.balance) / 1_000_000} Algos)`)
-  const minBalance = accountInfo['min-balance'] || accountInfo.minBalance || 100000
+  const minBalance = accountInfo.minBalance ?? 100000
   console.log(`  Min Balance: ${minBalance} microAlgos`)
 
   // Verify the balance matches what we sent (5 Algos = 5,000,000 microAlgos)

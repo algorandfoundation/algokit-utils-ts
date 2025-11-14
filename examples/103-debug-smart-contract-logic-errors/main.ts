@@ -1,131 +1,167 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { TestingAppFactory } from './artifacts/TestingApp/client'
 
 /**
  * This example demonstrates how to handle and debug logic errors in smart contracts.
- * 
+ *
  * When a smart contract encounters a logic error (like a failed assert), AlgoKit Utils
  * provides detailed debugging information including:
+ * - The error message and transaction details
  * - Program Counter (PC): The exact bytecode position where the error occurred
- * - Transaction ID: The ID of the failed transaction
- * - Stack trace: TEAL source code with the error location marked
- * - Traces: Execution traces for step-by-step debugging
- * - LED (Logic Error Details): Comprehensive error metadata
- * 
+ * - Source maps: When available, maps bytecode to source code
+ * - Stack traces: Shows the execution path and error location
+ *
  * This makes debugging smart contracts much easier compared to raw Algorand errors.
  */
 
 async function demonstrateLogicErrorDebugging() {
   // Initialize the Algorand client for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  
-  // Get or create a test account
-  const testAccount = await algorand.account.fromEnvironment('TEST_ACCOUNT')
-  
-  console.log('Test account address:', testAccount.addr)
-  console.log('\nThis example will intentionally trigger a logic error to demonstrate debugging features.\n')
-  
-  // Get the app client for your deployed contract
-  // This should be a contract with an 'error' method that fails
-  const appId = 123n // Replace with your deployed app ID
-  const appSpec = {} // Replace with your app spec
-  
-  const client = algorand.client.getAppClientById({
-    appId: appId,
+
+  // Get the dispenser for funding
+  const dispenser = await algorand.account.localNetDispenser()
+
+  // Create a test account
+  const testAccount = algorand.account.random()
+  await algorand.account.ensureFunded(testAccount, dispenser, (5).algos())
+
+  console.log('Test account address:', testAccount.addr.toString())
+  console.log()
+
+  console.log('=== Deploying Test Application ===')
+  console.log()
+  console.log('This application has an "error" method that deliberately fails.')
+  console.log()
+
+  // Deploy the TestingApp which has an error() method that always fails
+  const appFactory = algorand.client.getTypedAppFactory(TestingAppFactory, {
     defaultSender: testAccount.addr,
-    appSpec: appSpec,
   })
-  
-  console.log('Calling smart contract method that will fail...')
-  
+
+  const { appClient } = await appFactory.send.create.bare({
+    deployTimeParams: {
+      TMPL_UPDATABLE: 1,
+      TMPL_DELETABLE: 1,
+      TMPL_VALUE: 100,
+    },
+  })
+
+  console.log('✅ App deployed successfully!')
+  console.log('App ID:', appClient.appId)
+  console.log()
+
+  console.log('=== Triggering Logic Error ===')
+  console.log()
+  console.log('Calling the "error" method which deliberately fails with assert(0)...')
+  console.log()
+
   try {
-    // Call a method that intentionally fails (e.g., has a failed assert)
-    await client.send.call({
-      method: 'error',
-    })
-    
+    // Call the error() method which intentionally fails
+    await appClient.send.error({ args: [] })
+
     // This line should never be reached
     console.log('❌ ERROR: Method should have failed but succeeded!')
-    
   } catch (error: any) {
-    console.log('\n✅ Logic error caught as expected!\n')
-    
-    // The error object contains rich debugging information
+    console.log('✅ Logic error caught as expected!')
+    console.log()
+
     console.log('═══════════════════════════════════════════════════')
-    console.log('📊 LOGIC ERROR DETAILS (LED)')
-    console.log('═══════════════════════════════════════════════════\n')
-    
-    if (error.led) {
-      // Program Counter: The exact position in the bytecode where the error occurred
-      console.log('🎯 Program Counter (PC):', error.led.pc)
-      console.log('   This is the bytecode position of the failing instruction\n')
-      
-      // Error message from the blockchain
-      console.log('💬 Error Message:', error.led.msg)
-      console.log('   Raw error message from the Algorand node\n')
-      
-      // Transaction ID of the failed transaction
-      console.log('🔗 Transaction ID:', error.led.txId)
-      console.log('   Use this to look up the transaction on AlgoExplorer\n')
-      
-      // Execution traces (if available)
-      if (error.led.traces && error.led.traces.length > 0) {
-        console.log('📋 Execution Traces:', error.led.traces.length, 'trace(s) available')
-        console.log('   Traces show the execution path leading to the error\n')
+    console.log('📊 ERROR INFORMATION')
+    console.log('═══════════════════════════════════════════════════')
+    console.log()
+
+    // Display the error message
+    console.log('🔴 Error Message:')
+    console.log(`   ${error.message}`)
+    console.log()
+
+    // Check if this is a logic error with detailed information
+    if (error.traces) {
+      console.log('📋 Execution Traces Available:', error.traces.length > 0 ? 'Yes' : 'No')
+      if (error.traces.length > 0) {
+        console.log('   Traces contain step-by-step execution information')
       }
-    } else {
-      console.log('⚠️  No LED information available (source maps may be missing)\n')
+      console.log()
     }
-    
-    // Stack trace with source code context (when source maps are available)
+
+    // Display transaction information if available
+    if (error.transaction) {
+      console.log('🔗 Transaction Information:')
+      console.log(`   Transaction ID: ${error.transaction.txID()}`)
+      console.log()
+    }
+
+    // Stack trace with error details
     if (error.stack) {
       console.log('═══════════════════════════════════════════════════')
-      console.log('📄 STACK TRACE WITH SOURCE CODE')
-      console.log('═══════════════════════════════════════════════════\n')
-      
-      console.log(error.stack)
-      
-      console.log('\n✨ The stack trace shows:')
-      console.log('   - The actual TEAL source code')
-      console.log('   - The exact line where the error occurred (marked with "<--- Error")')
-      console.log('   - Surrounding code context for better understanding')
-    } else {
-      console.log('⚠️  No stack trace available\n')
+      console.log('📄 STACK TRACE')
+      console.log('═══════════════════════════════════════════════════')
+      console.log()
+
+      // Show first part of stack trace (the most relevant part)
+      const stackLines = error.stack.split('\n').slice(0, 15)
+      console.log(stackLines.join('\n'))
+      console.log()
+
+      if (error.stack.split('\n').length > 15) {
+        console.log('... (truncated for brevity)')
+        console.log()
+      }
     }
-    
-    console.log('\n═══════════════════════════════════════════════════')
+
+    console.log('═══════════════════════════════════════════════════')
     console.log('💡 DEBUGGING TIPS')
-    console.log('═══════════════════════════════════════════════════\n')
-    
-    console.log('1. Program Counter (PC):')
-    console.log('   - Shows exactly where in the bytecode the error occurred')
-    console.log('   - Useful for pinpointing issues in compiled code\n')
-    
-    console.log('2. Source Maps:')
-    console.log('   - Enable source maps during compilation for better errors')
-    console.log('   - AlgoKit automatically includes source maps in debug builds\n')
-    
-    console.log('3. Stack Traces:')
-    console.log('   - Read the marked line ("<--- Error") to see the failing instruction')
-    console.log('   - Review surrounding code to understand the context\n')
-    
-    console.log('4. Traces:')
-    console.log('   - Use traces to follow the execution path')
-    console.log('   - Helpful for understanding how the contract reached the error\n')
-    
-    console.log('5. Transaction ID:')
-    console.log('   - Look up on AlgoExplorer for additional details')
-    console.log('   - Can view full transaction state and inner transactions\n')
+    console.log('═══════════════════════════════════════════════════')
+    console.log()
+
+    console.log('1. Error Message:')
+    console.log('   - Read the error message carefully')
+    console.log('   - It often indicates the type of failure (assert, stack overflow, etc.)')
+    console.log()
+
+    console.log('2. Stack Trace:')
+    console.log('   - Shows the JavaScript call stack leading to the error')
+    console.log('   - Helps identify where in your code the error originated')
+    console.log()
+
+    console.log('3. Transaction ID:')
+    console.log('   - Use to look up the transaction on AlgoExplorer or Goal')
+    console.log('   - Can view full transaction details and inner transactions')
+    console.log()
+
+    console.log('4. Execution Traces:')
+    console.log('   - When available, traces show step-by-step execution')
+    console.log('   - Helpful for understanding the contract execution path')
+    console.log()
+
+    console.log('5. Common Logic Errors:')
+    console.log('   - assert(0): Deliberate assertion failure')
+    console.log('   - Stack overflow: Too much recursion or stack usage')
+    console.log('   - Invalid operation: Division by zero, invalid bytecode, etc.')
+    console.log('   - Budget exceeded: Program used too many compute units')
+    console.log()
+
+    console.log('6. Debugging Workflow:')
+    console.log('   - Add log statements in your contract')
+    console.log('   - Test with smaller inputs to isolate the issue')
+    console.log('   - Use simulation mode to test without committing')
+    console.log('   - Review the TEAL source code and approval program')
+    console.log()
   }
+
+  console.log('═══════════════════════════════════════════════════')
+  console.log('✨ Example Completed Successfully')
+  console.log('═══════════════════════════════════════════════════')
+  console.log()
+
+  console.log('You now understand how AlgoKit Utils helps debug smart contract logic errors!')
+  console.log()
+  console.log('Key Takeaways:')
+  console.log('  • Errors provide detailed information for debugging')
+  console.log('  • Stack traces help locate issues in your code')
+  console.log('  • Transaction IDs can be used for further investigation')
+  console.log('  • AlgoKit Utils catches and enriches error information')
 }
 
 // Run the example
-demonstratLogicErrorDebugging()
-  .then(() => {
-    console.log('\n✨ Example completed successfully!')
-    console.log('\nYou now know how to debug logic errors in Algorand smart contracts!')
-    process.exit(0)
-  })
-  .catch((error) => {
-    console.error('\n❌ Example failed:', error)
-    process.exit(1)
-  })
+demonstrateLogicErrorDebugging().catch(console.error)

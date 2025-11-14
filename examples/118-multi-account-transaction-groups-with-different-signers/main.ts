@@ -1,5 +1,4 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
-import * as algokit from '@algorandfoundation/algokit-utils'
 
 /**
  * This example demonstrates how to compose transaction groups where different
@@ -10,75 +9,174 @@ import * as algokit from '@algorandfoundation/algokit-utils'
  */
 
 async function multiAccountTransactionGroupExample() {
-  // Initialize AlgoKit and get clients
+  // Initialize AlgorandClient for LocalNet
   const algorand = AlgorandClient.defaultLocalNet()
-  const algod = algorand.client.algod
-  const indexer = algorand.client.indexer
 
-  // Get the main application account (deployer)
-  const appAccount = await algorand.account.localNetDispenser()
-  console.log(`App account address: ${appAccount.addr}`)
+  // Get the dispenser for funding
+  const dispenser = await algorand.account.localNetDispenser()
+
+  // Create the main deployer account
+  const deployer = algorand.account.random()
+  await algorand.account.ensureFunded(deployer, dispenser, (10).algos())
+
+  console.log('=== Multi-Account Transaction Groups ===')
+  console.log('Deployer account:', deployer.addr.toString())
+  console.log()
 
   // Create and fund a second account that will sign a transaction in the group
-  console.log('\nCreating and funding second signer account...')
+  console.log('Creating and funding second signer account...')
   const secondSigner = algorand.account.random()
-  
-  // Fund the second account
-  await algorand.send.payment({
-    sender: appAccount.addr,
-    receiver: secondSigner.addr,
-    amount: algokit.algo(1),
-  })
-  console.log(`Second signer address: ${secondSigner.addr}`)
-  console.log('Second signer account funded with 1 ALGO')
+  await algorand.account.ensureFunded(secondSigner, dispenser, (1).algos())
 
-  // Deploy or get an existing application
-  console.log('\nDeploying application...')
-  const { client } = await deployYourApp(appAccount, algod, indexer)
+  console.log('Second signer account:', secondSigner.addr.toString())
+  console.log()
+
+  // Deploy a simple application
+  console.log('Deploying application...')
+
+  const approvalProgram = `#pragma version 10
+// This app accepts any transaction in a transaction group
+// It validates that a payment transaction is present before the app call
+
+txn ApplicationID
+int 0
+==
+bnz create
+
+// Handle UpdateApplication
+txn OnCompletion
+int UpdateApplication
+==
+bnz handle_update
+
+// Handle DeleteApplication
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+// Verify we're in a group with at least 2 transactions
+global GroupSize
+int 2
+>=
+assert
+
+// Verify the previous transaction (txn 0) is a payment
+gtxn 0 TypeEnum
+int pay
+==
+assert
+
+// Verify the payment amount is at least 5000 microALGOs
+gtxn 0 Amount
+int 5000
+>=
+assert
+
+int 1
+return
+
+handle_update:
+int TMPL_UPDATABLE
+return
+
+handle_delete:
+int TMPL_DELETABLE
+return
+
+create:
+int 1
+return`
+
+  const clearProgram = `#pragma version 10
+int 1`
+
+  const deployment = {
+    sender: deployer.addr,
+    metadata: {
+      name: 'MultiSignerApp',
+      version: '1.0',
+      updatable: false,
+      deletable: false,
+    },
+    createParams: {
+      sender: deployer.addr,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearProgram,
+      schema: {
+        globalInts: 0,
+        globalByteSlices: 0,
+        localInts: 0,
+        localByteSlices: 0,
+      },
+    },
+    updateParams: {
+      sender: deployer.addr,
+    },
+    deleteParams: {
+      sender: deployer.addr,
+    },
+  }
+
+  const appResult = await algorand.appDeployer.deploy(deployment)
+  console.log('✅ Application deployed')
+  console.log('   App ID:', appResult.appId.toString())
+  console.log('   App Address:', appResult.appAddress.toString())
+  console.log()
+
+  // Wait for indexer to catch up
+  await new Promise((resolve) => setTimeout(resolve, 2000))
 
   // Create a payment transaction from the second signer
   // This transaction will be included in the group but signed by the second account
-  console.log('\nCreating payment transaction from second signer...')
+  console.log('Creating transaction group with multiple signers...')
+  console.log()
+
+  // Create payment transaction from second signer (will be txn 0 in group)
   const paymentTxn = await algorand.createTransaction.payment({
     sender: secondSigner.addr,
-    receiver: secondSigner.addr,
-    amount: algokit.microAlgo(5000),
+    receiver: deployer.addr,
+    amount: (0.005).algos(), // 5000 microALGOs
   })
 
-  console.log('Calling ABI method with multi-account transaction group...')
-  console.log('  - App call will be signed by app account')
-  console.log('  - Payment transaction will be signed by second signer')
-
-  // Call the ABI method, passing the transaction with its signer
-  // The framework will automatically handle signing each transaction with the appropriate signer
-  const result = await client.call({
-    method: 'call_abi_txn',
-    methodArgs: [
-      // Pass both the transaction and its signer as an object
-      { transaction: paymentTxn, signer: secondSigner },
-      'test'
-    ],
-    sender: appAccount.addr, // The app call itself is signed by appAccount
+  // Create app call transaction from deployer (will be txn 1 in group)
+  const appCallTxn = await algorand.createTransaction.appCall({
+    sender: deployer.addr,
+    appId: appResult.appId,
   })
 
-  console.log('\n✅ Transaction group successfully sent!')
-  console.log(`Total transactions in group: ${result.transactions.length}`)
-  console.log('\nTransaction details:')
-  result.transactions.forEach((txn, idx) => {
-    console.log(`  [${idx}] Type: ${txn.type}, ID: ${txn.txID()}`)
-  })
+  console.log('Transaction group composition:')
+  console.log('  [0] Payment: ', secondSigner.addr.toString().slice(0, 10), '... → ', deployer.addr.toString().slice(0, 10), '... (signed by secondSigner)')
+  console.log('  [1] App Call: ', deployer.addr.toString().slice(0, 10), '... → App', appResult.appId.toString(), '(signed by deployer)')
+  console.log()
 
-  console.log('\nKey takeaway: Different transactions in the group were signed by different accounts')
-  console.log('  - Transaction 0 (app call): Signed by app account')
-  console.log('  - Transaction 1 (payment): Signed by second signer')
-}
+  // Send the transaction group with different signers
+  console.log('Sending transaction group...')
+  const result = await algorand
+    .newGroup()
+    .addTransaction(paymentTxn, secondSigner.signer)
+    .addTransaction(appCallTxn, deployer.signer)
+    .send()
 
-// Helper function placeholder - replace with your actual app deployment
-async function deployYourApp(account: any, algod: any, indexer: any) {
-  // This is a placeholder - implement your actual app deployment logic
-  // The app should have a method like:
-  // call_abi_txn(txn: Transaction, note: string) -> void
-  throw new Error('Implement your app deployment logic here')
+  console.log()
+  console.log('✅ Transaction group successfully sent!')
+  // The result contains the transaction IDs and confirmation information
+  console.log('   Transaction IDs:')
+  console.log(`     [0] ${result.txIds[0]}`)
+  console.log(`     [1] ${result.txIds[1]}`)
+  console.log('   Group ID:', result.groupId)
+  console.log('   Confirmed in round:', result.confirmations[0]!.confirmedRound!.toString())
+  console.log()
+
+  console.log('=== Key Takeaways ===')
+  console.log('✅ Different transactions in the group were signed by different accounts')
+  console.log('✅ Transaction 0 (payment): Signed by second signer')
+  console.log('✅ Transaction 1 (app call): Signed by deployer')
+  console.log('✅ The app validated that the payment came before the app call')
+  console.log('✅ All transactions were atomic - they either all succeeded or all failed')
+  console.log()
+
+  console.log('✨ Example completed successfully!')
 }
 
 // Run the example
