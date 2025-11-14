@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_ledger_supply > Common Tests > Basic request and response validation 1`] = `
+{
+  "currentRound": 57490073n,
+  "onlineMoney": 4932435449098711n,
+  "totalMoney": 10123920987202652n,
+}
+`;

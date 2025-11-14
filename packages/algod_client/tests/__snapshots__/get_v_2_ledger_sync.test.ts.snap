@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_ledger_sync > Common Tests > Basic request and response validation 1`] = `
+{
+  "nodely": "virtual instant follower service",
+  "round": 0n,
+}
+`;
