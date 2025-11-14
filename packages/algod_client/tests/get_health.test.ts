@@ -13,7 +13,7 @@ describe('GET health', () => {
 
       const result = await client.healthCheck()
 
-      expect(result).toMatchInlineSnapshot(`null`)
+      expect(result).toMatchSnapshot()
     })
   })
 })
