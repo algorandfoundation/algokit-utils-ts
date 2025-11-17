@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalState } from './application-local-state'
 import { ApplicationLocalStateMeta } from './application-local-state'
 import type { ApplicationParams } from './application-params'
@@ -22,21 +23,21 @@ export const AccountApplicationInformationMeta: ModelMetadata = {
       wireKey: 'round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'appLocalState',
       wireKey: 'app-local-state',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationLocalStateMeta },
+      codec: new ModelCodec(ApplicationLocalStateMeta),
     },
     {
       name: 'createdApp',
       wireKey: 'created-app',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationParamsMeta },
+      codec: new ModelCodec(ApplicationParamsMeta),
     },
   ],
 }

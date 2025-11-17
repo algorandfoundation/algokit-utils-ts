@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents an AVM value.
@@ -12,7 +13,7 @@ export type AvmValue = {
   /**
    * bytes value.
    */
-  bytes?: string
+  bytes?: Uint8Array
 
   /**
    * uint value.
@@ -29,21 +30,21 @@ export const AvmValueMeta: ModelMetadata = {
       wireKey: 'type',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'bytes',
       wireKey: 'bytes',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: bytesCodec,
     },
     {
       name: 'uint',
       wireKey: 'uint',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

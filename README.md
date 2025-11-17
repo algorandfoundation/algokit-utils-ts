@@ -1,4 +1,4 @@
-# AlgoKit TypeScript Utilities
+ee# AlgoKit TypeScript Utilities
 
 A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
 

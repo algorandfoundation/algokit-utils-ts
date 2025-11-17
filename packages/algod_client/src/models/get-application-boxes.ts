@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxDescriptor } from './box-descriptor'
 import { BoxDescriptorMeta } from './box-descriptor'
 
@@ -15,7 +16,7 @@ export const GetApplicationBoxesMeta: ModelMetadata = {
       wireKey: 'boxes',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: BoxDescriptorMeta } },
+      codec: new ArrayCodec(new ModelCodec(BoxDescriptorMeta)),
     },
   ],
 }

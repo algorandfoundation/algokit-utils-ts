@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
 import type { StateProofReveal } from './state-proof-reveal'
@@ -48,49 +49,49 @@ export const StateProofFieldsMeta: ModelMetadata = {
       wireKey: 'sig-commit',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'signedWeight',
       wireKey: 'signed-weight',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'sigProofs',
       wireKey: 'sig-proofs',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: MerkleArrayProofMeta },
+      codec: new ModelCodec(MerkleArrayProofMeta),
     },
     {
       name: 'partProofs',
       wireKey: 'part-proofs',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: MerkleArrayProofMeta },
+      codec: new ModelCodec(MerkleArrayProofMeta),
     },
     {
       name: 'saltVersion',
       wireKey: 'salt-version',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'reveals',
       wireKey: 'reveals',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: StateProofRevealMeta } },
+      codec: new ArrayCodec(new ModelCodec(StateProofRevealMeta)),
     },
     {
       name: 'positionsToReveal',
       wireKey: 'positions-to-reveal',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: new ArrayCodec(bigIntCodec),
     },
   ],
 }

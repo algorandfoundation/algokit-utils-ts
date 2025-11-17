@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 
 const HealthCheckDataMeta: ModelMetadata = { name: 'HealthCheckDataMeta', kind: 'object', fields: [] }
 
@@ -27,49 +28,49 @@ export const HealthCheckMeta: ModelMetadata = {
       wireKey: 'version',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'data',
       wireKey: 'data',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: HealthCheckDataMeta },
+      codec: new ModelCodec(HealthCheckDataMeta),
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'isMigrating',
       wireKey: 'is-migrating',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'dbAvailable',
       wireKey: 'db-available',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'errors',
       wireKey: 'errors',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: new ArrayCodec(stringCodec),
     },
   ],
 }

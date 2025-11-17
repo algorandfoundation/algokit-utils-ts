@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
 import type { TealKeyValueStore } from './teal-key-value-store'
@@ -40,42 +41,42 @@ export const ApplicationLocalStateMeta: ModelMetadata = {
       wireKey: 'id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'optedInAtRound',
       wireKey: 'opted-in-at-round',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closedOutAtRound',
       wireKey: 'closed-out-at-round',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'schema',
       wireKey: 'schema',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationStateSchemaMeta },
+      codec: new ModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'keyValue',
       wireKey: 'key-value',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: TealKeyValueStoreMeta },
+      codec: new ModelCodec(TealKeyValueStoreMeta),
     },
   ],
 }

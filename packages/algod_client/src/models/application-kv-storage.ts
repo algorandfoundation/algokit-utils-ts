@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmKeyValue } from './avm-key-value'
 import { AvmKeyValueMeta } from './avm-key-value'
 
@@ -26,14 +27,14 @@ export const ApplicationKvStorageMeta: ModelMetadata = {
       wireKey: 'kvs',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: AvmKeyValueMeta } },
+      codec: new ArrayCodec(new ModelCodec(AvmKeyValueMeta)),
     },
     {
       name: 'account',
       wireKey: 'account',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

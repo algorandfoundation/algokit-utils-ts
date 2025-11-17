@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { LedgerStateDeltaForTransactionGroup } from './ledger-state-delta-for-transaction-group'
 import { LedgerStateDeltaForTransactionGroupMeta } from './ledger-state-delta-for-transaction-group'
 
@@ -15,7 +16,7 @@ export const GetTransactionGroupLedgerStateDeltasForRoundMeta: ModelMetadata = {
       wireKey: 'Deltas',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: LedgerStateDeltaForTransactionGroupMeta } },
+      codec: new ArrayCodec(new ModelCodec(LedgerStateDeltaForTransactionGroupMeta)),
     },
   ],
 }

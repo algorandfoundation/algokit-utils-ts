@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields relating to voting for a protocol upgrade.
@@ -29,21 +30,21 @@ export const BlockUpgradeVoteMeta: ModelMetadata = {
       wireKey: 'upgrade-approve',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'upgradeDelay',
       wireKey: 'upgrade-delay',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'upgradePropose',
       wireKey: 'upgrade-propose',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

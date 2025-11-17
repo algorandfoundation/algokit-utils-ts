@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Application } from './application'
 import { ApplicationMeta } from './application'
 
@@ -20,14 +21,14 @@ export const LookupApplicationByIdMeta: ModelMetadata = {
       wireKey: 'application',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationMeta },
+      codec: new ModelCodec(ApplicationMeta),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

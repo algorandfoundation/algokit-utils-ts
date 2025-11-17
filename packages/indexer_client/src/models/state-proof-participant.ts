@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofVerifier } from './state-proof-verifier'
 import { StateProofVerifierMeta } from './state-proof-verifier'
 
@@ -20,14 +21,14 @@ export const StateProofParticipantMeta: ModelMetadata = {
       wireKey: 'verifier',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: StateProofVerifierMeta },
+      codec: new ModelCodec(StateProofVerifierMeta),
     },
     {
       name: 'weight',
       wireKey: 'weight',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

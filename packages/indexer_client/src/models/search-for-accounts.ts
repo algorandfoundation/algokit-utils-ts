@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Account } from './account'
 import { AccountMeta } from './account'
 
@@ -25,21 +26,21 @@ export const SearchForAccountsMeta: ModelMetadata = {
       wireKey: 'accounts',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: AccountMeta } },
+      codec: new ArrayCodec(new ModelCodec(AccountMeta)),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

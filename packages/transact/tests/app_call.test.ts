@@ -1,8 +1,8 @@
-import { ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
-import { ResourceReferenceDto } from '@algorandfoundation/algokit-transact/encoding/transaction-dto'
+import { ModelSerializer, ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
+import { TransactionMeta } from '@algorandfoundation/algokit-transact'
 import { assert, describe, expect, test } from 'vitest'
 import { OnApplicationComplete } from '../src/transactions/app-call'
-import { Transaction, TransactionType, fromTransactionDto, toTransactionDto, validateTransaction } from '../src/transactions/transaction'
+import { Transaction, TransactionType, validateTransaction } from '../src/transactions/transaction'
 import { testData } from './common'
 import {
   assertAssignFee,
@@ -620,22 +620,24 @@ describe('App Call', () => {
         },
       }
 
+      type ResourceHoldingReference = { h?: { d?: number; s?: number } }
+
       // This code is here to demonstrate the problem.
       // When encoding, the cross product references are added first,
       // so modify the access list encoding data to simulate how it may be encoded on chain.
-      const txnDto = toTransactionDto(txn)
-      const accessList = txnDto.al!
+      const txnDto = ModelSerializer.encode(txn, TransactionMeta, 'msgpack')
+      const accessList = txnDto.al! as ResourceHoldingReference[]
       // Index 2 is actually the holding reference.
       // Manually adjust the indexes, because we'll be re-ording the list.
       accessList[2]!.h!.d = 2
       accessList[2]!.h!.s = 3
-      const updateAccessList: ResourceReferenceDto[] = []
+      const updateAccessList: ResourceHoldingReference[] = []
       updateAccessList.push(accessList[2])
       updateAccessList.push(accessList[0])
       updateAccessList.push(accessList[1])
       txnDto.al = updateAccessList
 
-      const decodedTxn = fromTransactionDto(txnDto)
+      const decodedTxn = ModelSerializer.decode<Transaction>(txnDto, TransactionMeta, 'msgpack')
       assert.deepStrictEqual(decodedTxn?.appCall!.accessReferences, txn?.appCall!.accessReferences)
     })
 
@@ -666,8 +668,8 @@ describe('App Call', () => {
         },
       }
 
-      const txnDto = toTransactionDto(txn)
-      assert.isEmpty(txnDto.al!)
+      const txnDto = ModelSerializer.encode(txn, TransactionMeta, 'msgpack')
+      assert.isUndefined(txnDto.al)
     })
   })
 })

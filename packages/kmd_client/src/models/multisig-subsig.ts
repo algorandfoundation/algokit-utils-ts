@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 import type { Signature } from './signature'
@@ -22,14 +23,14 @@ export const MultisigSubsigMeta: ModelMetadata = {
       wireKey: 'Key',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: PublicKeyMeta },
+      codec: new ModelCodec(PublicKeyMeta),
     },
     {
       name: 'sig',
       wireKey: 'Sig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: SignatureMeta },
+      codec: new ModelCodec(SignatureMeta),
     },
   ],
 }

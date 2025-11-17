@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields relating to a protocol upgrade.
@@ -39,35 +40,35 @@ export const BlockUpgradeStateMeta: ModelMetadata = {
       wireKey: 'current-protocol',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'nextProtocol',
       wireKey: 'next-protocol',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'nextProtocolApprovals',
       wireKey: 'next-protocol-approvals',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'nextProtocolSwitchOn',
       wireKey: 'next-protocol-switch-on',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'nextProtocolVoteBefore',
       wireKey: 'next-protocol-vote-before',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

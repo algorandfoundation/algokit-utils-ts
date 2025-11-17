@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { WalletHandle } from './wallet-handle'
 import { WalletHandleMeta } from './wallet-handle'
 
@@ -21,21 +22,21 @@ export const PostWalletRenewResponseMeta: ModelMetadata = {
       wireKey: 'error',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletHandle',
       wireKey: 'wallet_handle',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: WalletHandleMeta },
+      codec: new ModelCodec(WalletHandleMeta),
     },
   ],
 }

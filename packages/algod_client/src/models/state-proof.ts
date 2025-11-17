@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofMessage } from './state-proof-message'
 import { StateProofMessageMeta } from './state-proof-message'
 
@@ -23,14 +24,14 @@ export const StateProofMeta: ModelMetadata = {
       wireKey: 'Message',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: StateProofMessageMeta },
+      codec: new ModelCodec(StateProofMessageMeta),
     },
     {
       name: 'stateProof',
       wireKey: 'StateProof',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

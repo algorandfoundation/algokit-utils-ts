@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
 import type { TealKeyValueStore } from './teal-key-value-store'
@@ -46,56 +47,56 @@ export const ApplicationParamsMeta: ModelMetadata = {
       wireKey: 'creator',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'approvalProgram',
       wireKey: 'approval-program',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'clearStateProgram',
       wireKey: 'clear-state-program',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'extraProgramPages',
       wireKey: 'extra-program-pages',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'localStateSchema',
       wireKey: 'local-state-schema',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationStateSchemaMeta },
+      codec: new ModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'globalStateSchema',
       wireKey: 'global-state-schema',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationStateSchemaMeta },
+      codec: new ModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'globalState',
       wireKey: 'global-state',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: TealKeyValueStoreMeta },
+      codec: new ModelCodec(TealKeyValueStoreMeta),
     },
     {
       name: 'version',
       wireKey: 'version',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

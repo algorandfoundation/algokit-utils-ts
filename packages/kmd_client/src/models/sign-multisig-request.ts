@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Digest } from './digest'
 import { DigestMeta } from './digest'
 import type { MultisigSig } from './multisig-sig'
@@ -27,42 +28,42 @@ export const SignMultisigRequestMeta: ModelMetadata = {
       wireKey: 'partial_multisig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: MultisigSigMeta },
+      codec: new ModelCodec(MultisigSigMeta),
     },
     {
       name: 'publicKey',
       wireKey: 'public_key',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: PublicKeyMeta },
+      codec: new ModelCodec(PublicKeyMeta),
     },
     {
       name: 'signer',
       wireKey: 'signer',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: DigestMeta },
+      codec: new ModelCodec(DigestMeta),
     },
     {
       name: 'transaction',
       wireKey: 'transaction',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

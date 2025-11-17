@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Asset } from './asset'
 import { AssetMeta } from './asset'
 
@@ -20,14 +21,14 @@ export const LookupAssetByIdMeta: ModelMetadata = {
       wireKey: 'asset',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: AssetMeta },
+      codec: new ModelCodec(AssetMeta),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

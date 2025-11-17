@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 
@@ -23,35 +24,35 @@ export const PostMultisigExportResponseMeta: ModelMetadata = {
       wireKey: 'error',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'multisigVersion',
       wireKey: 'multisig_version',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'pks',
       wireKey: 'pks',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: PublicKeyMeta } },
+      codec: new ArrayCodec(new ModelCodec(PublicKeyMeta)),
     },
     {
       name: 'threshold',
       wireKey: 'threshold',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

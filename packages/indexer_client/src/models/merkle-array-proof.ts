@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { HashFactory } from './hash-factory'
 import { HashFactoryMeta } from './hash-factory'
 
@@ -24,21 +25,21 @@ export const MerkleArrayProofMeta: ModelMetadata = {
       wireKey: 'path',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
+      codec: new ArrayCodec(bytesCodec),
     },
     {
       name: 'hashFactory',
       wireKey: 'hash-factory',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: HashFactoryMeta },
+      codec: new ModelCodec(HashFactoryMeta),
     },
     {
       name: 'treeDepth',
       wireKey: 'tree-depth',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

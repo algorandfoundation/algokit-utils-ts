@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationKvStorage } from './application-kv-storage'
 import { ApplicationKvStorageMeta } from './application-kv-storage'
 
@@ -28,28 +29,28 @@ export const ApplicationInitialStatesMeta: ModelMetadata = {
       wireKey: 'id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: ApplicationKvStorageMeta } },
+      codec: new ArrayCodec(new ModelCodec(ApplicationKvStorageMeta)),
     },
     {
       name: 'appGlobals',
       wireKey: 'app-globals',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationKvStorageMeta },
+      codec: new ModelCodec(ApplicationKvStorageMeta),
     },
     {
       name: 'appBoxes',
       wireKey: 'app-boxes',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationKvStorageMeta },
+      codec: new ModelCodec(ApplicationKvStorageMeta),
     },
   ],
 }

@@ -12,6 +12,7 @@ from typing import Any
 
 from oas_generator import constants
 from oas_generator.constants import MediaType, OperationKey, SchemaKey, TypeScriptType
+from oas_generator.generator.codec_processor import CodecProcessor
 
 type Schema = Mapping[str, Any]
 type Schemas = Mapping[str, Schema]
@@ -440,4 +441,7 @@ FILTERS: dict[str, Any] = {
     "ts_array_item_type": ts_array_item_type,
     "ts_is_builtin_or_primitive": ts_is_builtin_or_primitive,
     "ts_is_model_type": ts_is_model_type,
+    # Codec generation filters
+    "field_codec_expr": CodecProcessor.field_codec_expr,
+    "array_item_codec_expr": CodecProcessor.array_item_codec_expr,
 }

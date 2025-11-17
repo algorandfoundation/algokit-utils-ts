@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
 
@@ -22,28 +23,28 @@ export const StateProofSignatureMeta: ModelMetadata = {
       wireKey: 'falcon-signature',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'merkleArrayIndex',
       wireKey: 'merkle-array-index',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'proof',
       wireKey: 'proof',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: MerkleArrayProofMeta },
+      codec: new ModelCodec(MerkleArrayProofMeta),
     },
     {
       name: 'verifyingKey',
       wireKey: 'verifying-key',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

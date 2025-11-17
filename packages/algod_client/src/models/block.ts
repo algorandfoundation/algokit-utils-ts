@@ -1,12 +1,23 @@
-import { SignedTransaction } from '@algorandfoundation/algokit-transact'
+import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import type { ModelMetadata } from '../core/model-runtime'
+import {
+  numberCodec,
+  bigIntCodec,
+  booleanCodec,
+  stringCodec,
+  bytesCodec,
+  addressCodec,
+  ArrayCodec,
+  MapCodec,
+  ModelCodec,
+} from '@algorandfoundation/algokit-common'
 
 /** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
 export type BlockEvalDelta = {
   /** [at] delta action. */
   action: number
   /** [bs] bytes value. */
-  bytes?: string
+  bytes?: Uint8Array
   /** [ui] uint value. */
   uint?: bigint
 }
@@ -15,9 +26,9 @@ export const BlockEvalDeltaMeta: ModelMetadata = {
   name: 'BlockEvalDelta',
   kind: 'object',
   fields: [
-    { name: 'action', wireKey: 'at', optional: false, nullable: false, type: { kind: 'scalar' } },
-    { name: 'bytes', wireKey: 'bs', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'uint', wireKey: 'ui', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'action', wireKey: 'at', optional: false, nullable: false, codec: numberCodec },
+    { name: 'bytes', wireKey: 'bs', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'uint', wireKey: 'ui', optional: true, nullable: false, codec: bigIntCodec },
   ],
 }
 
@@ -46,34 +57,30 @@ export const BlockAppEvalDeltaMeta: ModelMetadata = {
       wireKey: 'gd',
       optional: true,
       nullable: false,
-      type: { kind: 'map', keyType: 'bytes', value: { kind: 'model', meta: BlockEvalDeltaMeta } },
+      codec: new MapCodec(bytesCodec, new ModelCodec(BlockEvalDeltaMeta)),
     },
     {
       name: 'localDeltas',
       wireKey: 'ld',
       optional: true,
       nullable: false,
-      type: {
-        kind: 'map',
-        keyType: 'number',
-        value: { kind: 'map', keyType: 'bytes', value: { kind: 'model', meta: BlockEvalDeltaMeta } },
-      },
+      codec: new MapCodec(numberCodec, new MapCodec(bytesCodec, new ModelCodec(BlockEvalDeltaMeta))),
     },
     {
       name: 'innerTxns',
       wireKey: 'itx',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SignedTxnInBlockMeta } },
+      codec: new ArrayCodec(new ModelCodec(() => SignedTxnInBlockMeta)),
     },
     {
       name: 'sharedAccounts',
       wireKey: 'sa',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isAddress: true } },
+      codec: new ArrayCodec(addressCodec),
     },
-    { name: 'logs', wireKey: 'lg', optional: true, nullable: false, type: { kind: 'array', item: { kind: 'scalar', isBytes: true } } },
+    { name: 'logs', wireKey: 'lg', optional: true, nullable: false, codec: new ArrayCodec(bytesCodec) },
   ],
 }
 
@@ -91,9 +98,9 @@ export const BlockStateProofTrackingDataMeta: ModelMetadata = {
   name: 'BlockStateProofTrackingData',
   kind: 'object',
   fields: [
-    { name: 'stateProofVotersCommitment', wireKey: 'v', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'stateProofOnlineTotalWeight', wireKey: 't', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'stateProofNextRound', wireKey: 'n', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'stateProofVotersCommitment', wireKey: 'v', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'stateProofOnlineTotalWeight', wireKey: 't', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'stateProofNextRound', wireKey: 'n', optional: true, nullable: false, codec: bigIntCodec },
   ],
 }
 
@@ -112,14 +119,14 @@ export const ApplyDataMeta: ModelMetadata = {
   name: 'SignedTxnInBlock',
   kind: 'object',
   fields: [
-    { name: 'closingAmount', wireKey: 'ca', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'assetClosingAmount', wireKey: 'aca', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'senderRewards', wireKey: 'rs', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'receiverRewards', wireKey: 'rr', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'closeRewards', wireKey: 'rc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'evalDelta', wireKey: 'dt', optional: true, nullable: false, type: { kind: 'model', meta: BlockAppEvalDeltaMeta } },
-    { name: 'configAsset', wireKey: 'caid', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'applicationId', wireKey: 'apid', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'closingAmount', wireKey: 'ca', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'assetClosingAmount', wireKey: 'aca', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'senderRewards', wireKey: 'rs', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'receiverRewards', wireKey: 'rr', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'closeRewards', wireKey: 'rc', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'evalDelta', wireKey: 'dt', optional: true, nullable: false, codec: new ModelCodec(BlockAppEvalDeltaMeta) },
+    { name: 'configAsset', wireKey: 'caid', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'applicationId', wireKey: 'apid', optional: true, nullable: false, codec: bigIntCodec },
   ],
 }
 
@@ -142,14 +149,14 @@ export const SignedTxnWithADMeta: ModelMetadata = {
       flattened: true,
       optional: false,
       nullable: false,
-      type: { kind: 'codec', codecKey: 'SignedTransaction' },
+      codec: new ModelCodec(SignedTransactionMeta),
     },
     {
       name: 'applyData',
       flattened: true,
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ApplyDataMeta },
+      codec: new ModelCodec(ApplyDataMeta),
     },
   ],
 }
@@ -172,10 +179,10 @@ export const SignedTxnInBlockMeta: ModelMetadata = {
       flattened: true,
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: SignedTxnWithADMeta },
+      codec: new ModelCodec(SignedTxnWithADMeta),
     },
-    { name: 'hasGenesisId', wireKey: 'hgi', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'hasGenesisHash', wireKey: 'hgh', optional: true, nullable: false, type: { kind: 'scalar' } },
+    { name: 'hasGenesisId', wireKey: 'hgi', optional: true, nullable: false, codec: booleanCodec },
+    { name: 'hasGenesisHash', wireKey: 'hgh', optional: true, nullable: false, codec: booleanCodec },
   ],
 }
 
@@ -195,14 +202,14 @@ export const ParticipationUpdatesMeta: ModelMetadata = {
       wireKey: 'partupdrmv',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isAddress: true } },
+      codec: new ArrayCodec(addressCodec),
     },
     {
       name: 'absentParticipationAccounts',
       wireKey: 'partupdabs',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isAddress: true } },
+      codec: new ArrayCodec(addressCodec),
     },
   ],
 }
@@ -276,48 +283,48 @@ export const BlockHeaderMeta: ModelMetadata = {
   name: 'BlockHeader',
   kind: 'object',
   fields: [
-    { name: 'round', wireKey: 'rnd', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'previousBlockHash', wireKey: 'prev', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'seed', wireKey: 'seed', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'transactionsRoot', wireKey: 'txn', optional: false, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'timestamp', wireKey: 'ts', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'genesisId', wireKey: 'gen', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'genesisHash', wireKey: 'gh', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'proposer', wireKey: 'prp', optional: true, nullable: false, type: { kind: 'scalar', isAddress: true } },
-    { name: 'feesCollected', wireKey: 'fc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'bonus', wireKey: 'bi', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'proposerPayout', wireKey: 'pp', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'feeSink', wireKey: 'fees', optional: true, nullable: false, type: { kind: 'scalar', isAddress: true } },
-    { name: 'rewardsPool', wireKey: 'rwd', optional: true, nullable: false, type: { kind: 'scalar', isAddress: true } },
-    { name: 'rewardsLevel', wireKey: 'earn', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'rewardsRate', wireKey: 'rate', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'rewardsResidue', wireKey: 'frac', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'currentProtocol', wireKey: 'proto', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'nextProtocol', wireKey: 'nextproto', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'nextProtocolSwitchOn', wireKey: 'nextswitch', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'upgradePropose', wireKey: 'upgradeprop', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'txnCounter', wireKey: 'tc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'round', wireKey: 'rnd', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'previousBlockHash', wireKey: 'prev', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'seed', wireKey: 'seed', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'transactionsRoot', wireKey: 'txn', optional: false, nullable: false, codec: bytesCodec },
+    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'timestamp', wireKey: 'ts', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'genesisId', wireKey: 'gen', optional: true, nullable: false, codec: stringCodec },
+    { name: 'genesisHash', wireKey: 'gh', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'proposer', wireKey: 'prp', optional: true, nullable: false, codec: addressCodec },
+    { name: 'feesCollected', wireKey: 'fc', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'bonus', wireKey: 'bi', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'proposerPayout', wireKey: 'pp', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'feeSink', wireKey: 'fees', optional: true, nullable: false, codec: addressCodec },
+    { name: 'rewardsPool', wireKey: 'rwd', optional: true, nullable: false, codec: addressCodec },
+    { name: 'rewardsLevel', wireKey: 'earn', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'rewardsRate', wireKey: 'rate', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'rewardsResidue', wireKey: 'frac', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'currentProtocol', wireKey: 'proto', optional: true, nullable: false, codec: stringCodec },
+    { name: 'nextProtocol', wireKey: 'nextproto', optional: true, nullable: false, codec: stringCodec },
+    { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'nextProtocolSwitchOn', wireKey: 'nextswitch', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'upgradePropose', wireKey: 'upgradeprop', optional: true, nullable: false, codec: stringCodec },
+    { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, nullable: false, codec: booleanCodec },
+    { name: 'txnCounter', wireKey: 'tc', optional: true, nullable: false, codec: bigIntCodec },
     {
       name: 'stateProofTracking',
       wireKey: 'spt',
       optional: true,
       nullable: false,
-      type: { kind: 'map', keyType: 'number', value: { kind: 'model', meta: BlockStateProofTrackingDataMeta } },
+      codec: new MapCodec(numberCodec, new ModelCodec(BlockStateProofTrackingDataMeta)),
     },
     {
       name: 'participationUpdates',
       flattened: true,
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: ParticipationUpdatesMeta },
+      codec: new ModelCodec(ParticipationUpdatesMeta),
     },
   ],
 }
@@ -337,13 +344,13 @@ export const BlockMeta: ModelMetadata = {
   name: 'Block',
   kind: 'object',
   fields: [
-    { name: 'header', flattened: true, optional: false, nullable: false, type: { kind: 'model', meta: BlockHeaderMeta } },
+    { name: 'header', flattened: true, optional: false, nullable: false, codec: new ModelCodec(BlockHeaderMeta) },
     {
       name: 'payset',
       wireKey: 'txns',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: SignedTxnInBlockMeta } },
+      codec: new ArrayCodec(new ModelCodec(SignedTxnInBlockMeta)),
     },
   ],
 }

@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * \[hbprf\] HbProof is a signature using HeartbeatAddress's partkey, thereby showing it is online.
@@ -39,35 +40,35 @@ export const HbProofFieldsMeta: ModelMetadata = {
       wireKey: 'hb-sig',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbPk',
       wireKey: 'hb-pk',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbPk2',
       wireKey: 'hb-pk2',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbPk1sig',
       wireKey: 'hb-pk1sig',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbPk2sig',
       wireKey: 'hb-pk2sig',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

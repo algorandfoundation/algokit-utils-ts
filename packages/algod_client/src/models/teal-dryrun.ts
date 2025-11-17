@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { DryrunTxnResult } from './dryrun-txn-result'
 import { DryrunTxnResultMeta } from './dryrun-txn-result'
 
@@ -21,21 +22,21 @@ export const TealDryrunMeta: ModelMetadata = {
       wireKey: 'txns',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: DryrunTxnResultMeta } },
+      codec: new ArrayCodec(new ModelCodec(DryrunTxnResultMeta)),
     },
     {
       name: 'error',
       wireKey: 'error',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'protocolVersion',
       wireKey: 'protocol-version',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

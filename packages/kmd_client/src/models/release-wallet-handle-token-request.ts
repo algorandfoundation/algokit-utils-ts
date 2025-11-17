@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTWalletReleaseRequest is the request for `POST /v1/wallet/release`
@@ -16,7 +17,7 @@ export const ReleaseWalletHandleTokenRequestMeta: ModelMetadata = {
       wireKey: 'wallet_handle_token',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

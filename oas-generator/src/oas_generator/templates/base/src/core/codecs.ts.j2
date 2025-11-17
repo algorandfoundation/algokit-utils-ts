@@ -1,6 +1,6 @@
 import { decode as msgpackDecode, encode as msgpackEncode } from 'algorand-msgpack'
 
-export function encodeMsgPack(data: ApiData): Uint8Array {
+export function encodeMsgPack(data: Record<string, unknown>): Uint8Array {
   return new Uint8Array(msgpackEncode(data, { sortKeys: true, ignoreUndefined: true }));
 }
 
@@ -16,13 +16,3 @@ export function decodeMsgPack(
 ): Map<number | bigint | Uint8Array, unknown> {
   return msgpackDecode(buffer, options) as Map<number | bigint | Uint8Array, unknown>;
 }
-export type ApiData =
-  | null
-  | undefined
-  | string
-  | number
-  | bigint
-  | boolean
-  | Uint8Array
-  | object
-  | Map<string | number | bigint | Uint8Array, ApiData> // TODO: NC - Do we ever have a string key?

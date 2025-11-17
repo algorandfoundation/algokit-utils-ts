@@ -7,7 +7,7 @@ describe('Codecs', () => {
     describe('zero address handling', () => {
       test('should have zero address as default value', () => {
         const defaultValue = addressCodec.defaultValue()
-        expect(defaultValue).toEqual(new Uint8Array(PUBLIC_KEY_BYTE_LENGTH))
+        expect(defaultValue).toEqual(ZERO_ADDRESS)
       })
 
       test('should omit undefined address when encoding', () => {

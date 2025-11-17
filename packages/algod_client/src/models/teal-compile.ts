@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SourceMap } from './source-map'
 import { SourceMapMeta } from './source-map'
 
@@ -24,21 +25,21 @@ export const TealCompileMeta: ModelMetadata = {
       wireKey: 'hash',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'result',
       wireKey: 'result',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'sourcemap',
       wireKey: 'sourcemap',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: SourceMapMeta },
+      codec: new ModelCodec(SourceMapMeta),
     },
   ],
 }

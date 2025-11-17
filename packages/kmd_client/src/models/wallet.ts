@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { TxType } from './tx-type'
 import { TxTypeMeta } from './tx-type'
 
@@ -23,42 +24,42 @@ export const WalletMeta: ModelMetadata = {
       wireKey: 'driver_name',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'driverVersion',
       wireKey: 'driver_version',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'id',
       wireKey: 'id',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'mnemonicUx',
       wireKey: 'mnemonic_ux',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'name',
       wireKey: 'name',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'supportedTxs',
       wireKey: 'supported_txs',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: TxTypeMeta } },
+      codec: new ArrayCodec(new ModelCodec(TxTypeMeta)),
     },
   ],
 }

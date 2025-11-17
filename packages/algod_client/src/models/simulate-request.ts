@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SimulateRequestTransactionGroup } from './simulate-request-transaction-group'
 import { SimulateRequestTransactionGroupMeta } from './simulate-request-transaction-group'
 import type { SimulateTraceConfig } from './simulate-trace-config'
@@ -54,56 +55,56 @@ export const SimulateRequestMeta: ModelMetadata = {
       wireKey: 'txn-groups',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: SimulateRequestTransactionGroupMeta } },
+      codec: new ArrayCodec(new ModelCodec(SimulateRequestTransactionGroupMeta)),
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'allowEmptySignatures',
       wireKey: 'allow-empty-signatures',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'allowMoreLogging',
       wireKey: 'allow-more-logging',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'allowUnnamedResources',
       wireKey: 'allow-unnamed-resources',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'extraOpcodeBudget',
       wireKey: 'extra-opcode-budget',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'execTraceConfig',
       wireKey: 'exec-trace-config',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: SimulateTraceConfigMeta },
+      codec: new ModelCodec(SimulateTraceConfigMeta),
     },
     {
       name: 'fixSigners',
       wireKey: 'fix-signers',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
   ],
 }

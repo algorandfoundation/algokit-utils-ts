@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalReference } from './application-local-reference'
 import { ApplicationLocalReferenceMeta } from './application-local-reference'
 import type { AssetHoldingReference } from './asset-holding-reference'
@@ -55,49 +56,49 @@ export const SimulateUnnamedResourcesAccessedMeta: ModelMetadata = {
       wireKey: 'accounts',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: new ArrayCodec(stringCodec),
     },
     {
       name: 'assets',
       wireKey: 'assets',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: new ArrayCodec(bigIntCodec),
     },
     {
       name: 'apps',
       wireKey: 'apps',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: new ArrayCodec(bigIntCodec),
     },
     {
       name: 'boxes',
       wireKey: 'boxes',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: BoxReferenceMeta } },
+      codec: new ArrayCodec(new ModelCodec(BoxReferenceMeta)),
     },
     {
       name: 'extraBoxRefs',
       wireKey: 'extra-box-refs',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'assetHoldings',
       wireKey: 'asset-holdings',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: AssetHoldingReferenceMeta } },
+      codec: new ArrayCodec(new ModelCodec(AssetHoldingReferenceMeta)),
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: ApplicationLocalReferenceMeta } },
+      codec: new ArrayCodec(new ModelCodec(ApplicationLocalReferenceMeta)),
     },
   ],
 }

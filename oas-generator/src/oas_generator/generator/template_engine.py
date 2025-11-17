@@ -9,6 +9,7 @@ from typing import Any
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from oas_generator import constants
+from oas_generator.generator.codec_processor import CodecProcessor
 from oas_generator.generator.filters import (
     FILTERS,
     ts_camel_case,
@@ -64,6 +65,8 @@ class TemplateRenderer:
             lstrip_blocks=constants.TEMPLATE_LSTRIP_BLOCKS,
         )
         env.filters.update(FILTERS)
+        # Add codec processor functions as globals for template use
+        env.globals['array_item_codec_expr'] = CodecProcessor.array_item_codec_expr
         return env
 
     def render(self, template_name: str, context: TemplateContext) -> str:

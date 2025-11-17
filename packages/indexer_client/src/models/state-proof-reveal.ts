@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofParticipant } from './state-proof-participant'
 import { StateProofParticipantMeta } from './state-proof-participant'
 import type { StateProofSigSlot } from './state-proof-sig-slot'
@@ -22,21 +23,21 @@ export const StateProofRevealMeta: ModelMetadata = {
       wireKey: 'position',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'sigSlot',
       wireKey: 'sig-slot',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: StateProofSigSlotMeta },
+      codec: new ModelCodec(StateProofSigSlotMeta),
     },
     {
       name: 'participant',
       wireKey: 'participant',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: StateProofParticipantMeta },
+      codec: new ModelCodec(StateProofParticipantMeta),
     },
   ],
 }

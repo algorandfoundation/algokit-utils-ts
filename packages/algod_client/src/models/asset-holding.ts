@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Describes an asset held by an account.
@@ -32,21 +33,21 @@ export const AssetHoldingMeta: ModelMetadata = {
       wireKey: 'amount',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'isFrozen',
       wireKey: 'is-frozen',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
   ],
 }

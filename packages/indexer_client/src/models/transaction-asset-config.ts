@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetParams } from './asset-params'
 import { AssetParamsMeta } from './asset-params'
 
@@ -29,14 +30,14 @@ export const TransactionAssetConfigMeta: ModelMetadata = {
       wireKey: 'asset-id',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: AssetParamsMeta },
+      codec: new ModelCodec(AssetParamsMeta),
     },
   ],
 }

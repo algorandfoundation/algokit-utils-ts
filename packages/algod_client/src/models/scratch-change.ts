@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmValue } from './avm-value'
 import { AvmValueMeta } from './avm-value'
 
@@ -22,14 +23,14 @@ export const ScratchChangeMeta: ModelMetadata = {
       wireKey: 'slot',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'newValue',
       wireKey: 'new-value',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: AvmValueMeta },
+      codec: new ModelCodec(AvmValueMeta),
     },
   ],
 }

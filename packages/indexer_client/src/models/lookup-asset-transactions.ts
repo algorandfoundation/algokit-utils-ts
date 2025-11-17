@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Transaction } from './transaction'
 import { TransactionMeta } from './transaction'
 
@@ -24,21 +25,21 @@ export const LookupAssetTransactionsMeta: ModelMetadata = {
       wireKey: 'current-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'transactions',
       wireKey: 'transactions',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: TransactionMeta } },
+      codec: new ArrayCodec(new ModelCodec(TransactionMeta)),
     },
   ],
 }

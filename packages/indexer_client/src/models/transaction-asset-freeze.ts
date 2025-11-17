@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for an asset freeze transaction.
@@ -32,21 +33,21 @@ export const TransactionAssetFreezeMeta: ModelMetadata = {
       wireKey: 'address',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'newFreezeStatus',
       wireKey: 'new-freeze-status',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
   ],
 }

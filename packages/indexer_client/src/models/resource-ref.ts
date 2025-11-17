@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
 import type { HoldingRef } from './holding-ref'
@@ -40,42 +41,42 @@ export const ResourceRefMeta: ModelMetadata = {
       wireKey: 'address',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'applicationId',
       wireKey: 'application-id',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'box',
       wireKey: 'box',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: BoxReferenceMeta },
+      codec: new ModelCodec(BoxReferenceMeta),
     },
     {
       name: 'holding',
       wireKey: 'holding',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: HoldingRefMeta },
+      codec: new ModelCodec(HoldingRefMeta),
     },
     {
       name: 'local',
       wireKey: 'local',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: LocalsRefMeta },
+      codec: new ModelCodec(LocalsRefMeta),
     },
   ],
 }

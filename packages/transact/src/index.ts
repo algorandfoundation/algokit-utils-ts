@@ -20,13 +20,14 @@ export {
   decodeSignedTransactions,
   encodeSignedTransaction,
   encodeSignedTransactions,
-  fromSignedTransactionDto,
-  toSignedTransactionDto,
   type LogicSignature,
   type MultisigSignature,
   type MultisigSubsignature,
   type SignedTransaction,
 } from './transactions/signed-transaction'
+
+export { SignedTransactionMeta } from './transactions/signed-transaction-meta'
+export { TransactionMeta } from './transactions/transaction-meta'
 
 export * from './transactions/app-call'
 export * from './transactions/asset-config'
@@ -44,5 +45,3 @@ export {
   newMultisigSignature,
   participantsFromMultisigSignature,
 } from './multisig'
-
-export { decodedMapToObject as decodedTransactionMapToObject } from './encoding/msgpack'

@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PendingTransactionResponse } from './pending-transaction-response'
 import { PendingTransactionResponseMeta } from './pending-transaction-response'
 import type { SimulateUnnamedResourcesAccessed } from './simulate-unnamed-resources-accessed'
@@ -39,42 +40,42 @@ export const SimulateTransactionResultMeta: ModelMetadata = {
       wireKey: 'txn-result',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: PendingTransactionResponseMeta },
+      codec: new ModelCodec(PendingTransactionResponseMeta),
     },
     {
       name: 'appBudgetConsumed',
       wireKey: 'app-budget-consumed',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'logicSigBudgetConsumed',
       wireKey: 'logic-sig-budget-consumed',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'execTrace',
       wireKey: 'exec-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: SimulationTransactionExecTraceMeta },
+      codec: new ModelCodec(SimulationTransactionExecTraceMeta),
     },
     {
       name: 'unnamedResourcesAccessed',
       wireKey: 'unnamed-resources-accessed',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: SimulateUnnamedResourcesAccessedMeta },
+      codec: new ModelCodec(SimulateUnnamedResourcesAccessedMeta),
     },
     {
       name: 'fixedSigner',
       wireKey: 'fixed-signer',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

@@ -65,7 +65,7 @@ export async function request<T>(
     } else if (typeof options.body === 'string') {
       bodyPayload = options.body
     } else if (options.mediaType?.includes('msgpack')) {
-      bodyPayload = encodeMsgPack(options.body).slice().buffer
+      bodyPayload = encodeMsgPack(options.body as Record<string, unknown>).slice().buffer
     } else if (options.mediaType?.includes('json')) {
       bodyPayload = JSON.stringify(options.body)
     } else {

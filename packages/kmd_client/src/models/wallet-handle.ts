@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Wallet } from './wallet'
 import { WalletMeta } from './wallet'
 
@@ -20,14 +21,14 @@ export const WalletHandleMeta: ModelMetadata = {
       wireKey: 'expires_seconds',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'wallet',
       wireKey: 'wallet',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: WalletMeta },
+      codec: new ModelCodec(WalletMeta),
     },
   ],
 }

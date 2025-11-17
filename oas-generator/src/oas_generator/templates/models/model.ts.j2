@@ -7,6 +7,8 @@
 {% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
+{% set has_arrays = descriptor.is_array or descriptor.fields | selectattr('is_array') | list | length > 0 %}
+{% set has_models = refTypes | length > 0 or descriptor.fields | selectattr('inline_meta_name') | list | length > 0 or uses_signed_txn %}
 
 {% macro scalar_meta(is_bytes, is_bigint) -%}
 { kind: 'scalar'{% if is_bytes %}, isBytes: true{% endif %}{% if is_bigint %}, isBigint: true{% endif %} }
@@ -14,7 +16,7 @@
 
 {% macro base_type(ref_model, is_signed_txn, is_bytes, is_bigint, inline_meta_name) -%}
 {%- if is_signed_txn -%}
-{ kind: 'codec', codecKey: 'SignedTransaction' }
+{ kind: 'model', meta: SignedTransactionMeta }
 {%- elif ref_model -%}
 { kind: 'model', meta: {% if modelName == ref_model %}() => {% endif %}{{ ref_model }}Meta }
 {%- elif inline_meta_name -%}
@@ -37,8 +39,22 @@
 {%- endmacro %}
 
 import type { ModelMetadata } from '../core/model-runtime';
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  booleanCodec,
+  bytesCodec,
+{%- if has_arrays %}
+  ArrayCodec,
+{%- endif %}
+{%- if has_models %}
+  ModelCodec,
+{%- endif %}
+} from '@algorandfoundation/algokit-common';
 {% if uses_signed_txn %}
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact';
+import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact';
 {% endif %}
 {% set ns = namespace(refs_with_meta=[]) %}
 {% if descriptor.is_object %}
@@ -68,7 +84,17 @@ import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
       wireKey: '{{ prop_name }}',
       optional: {{ 'false' if prop_name in required_fields else 'true' }},
       nullable: {{ 'true' if prop_schema.get('nullable') else 'false' }},
-      type: {{ scalar_meta(prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64'), prop_schema.get('x-algokit-bigint')) }},
+      codec: {%- if prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64') -%}
+        bytesCodec
+      {%- elif prop_schema.get('x-algokit-bigint') -%}
+        bigIntCodec
+      {%- elif prop_schema.get('type') == 'number' or prop_schema.get('type') == 'integer' -%}
+        numberCodec
+      {%- elif prop_schema.get('type') == 'boolean' -%}
+        booleanCodec
+      {%- else -%}
+        stringCodec
+      {%- endif %},
     },
 {%- endfor %}
   ] }
@@ -105,7 +131,7 @@ export const {{ modelName }}Meta: ModelMetadata = {
       wireKey: '{{ f.wire_name }}',
       optional: {{ 'true' if f.is_optional else 'false' }},
       nullable: {{ 'true' if f.is_nullable else 'false' }},
-      type: {{ field_type(f) }},
+      codec: {{ f | field_codec_expr(modelName) }},
     },
 {%   endfor %}
   ],
@@ -113,12 +139,16 @@ export const {{ modelName }}Meta: ModelMetadata = {
   additionalProperties: {{ scalar_meta(false, false) }},
 {%   endif %}
 {% elif isArray %}
-  arrayItems: {{ array_item_meta(descriptor) }},
+  arrayCodec: new ArrayCodec({{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint) }}),
 {% else %}
 {%   if schemaSignedTxn %}
-  codecKey: 'SignedTransaction',
+  codec: new ModelCodec(SignedTransactionMeta),
+{%   elif schemaBytes %}
+  codec: bytesCodec,
+{%   elif schemaBigint %}
+  codec: bigIntCodec,
 {%   else %}
-  passThrough: {{ scalar_meta(schemaBytes, schemaBigint) }},
+  codec: stringCodec,
 {%   endif %}
 {% endif %}
 };

@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationParams } from './application-params'
 import { ApplicationParamsMeta } from './application-params'
 
@@ -37,35 +38,35 @@ export const ApplicationMeta: ModelMetadata = {
       wireKey: 'id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'createdAtRound',
       wireKey: 'created-at-round',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'deletedAtRound',
       wireKey: 'deleted-at-round',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: ApplicationParamsMeta },
+      codec: new ModelCodec(ApplicationParamsMeta),
     },
   ],
 }

@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { TransactionSignatureLogicsig } from './transaction-signature-logicsig'
 import { TransactionSignatureLogicsigMeta } from './transaction-signature-logicsig'
 import type { TransactionSignatureMultisig } from './transaction-signature-multisig'
@@ -26,21 +27,21 @@ export const TransactionSignatureMeta: ModelMetadata = {
       wireKey: 'logicsig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: TransactionSignatureLogicsigMeta },
+      codec: new ModelCodec(TransactionSignatureLogicsigMeta),
     },
     {
       name: 'multisig',
       wireKey: 'multisig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: TransactionSignatureMultisigMeta },
+      codec: new ModelCodec(TransactionSignatureMultisigMeta),
     },
     {
       name: 'sig',
       wireKey: 'sig',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSubsig } from './multisig-subsig'
 import { MultisigSubsigMeta } from './multisig-subsig'
 
@@ -20,21 +21,21 @@ export const MultisigSigMeta: ModelMetadata = {
       wireKey: 'Subsigs',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: MultisigSubsigMeta } },
+      codec: new ArrayCodec(new ModelCodec(MultisigSubsigMeta)),
     },
     {
       name: 'threshold',
       wireKey: 'Threshold',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'version',
       wireKey: 'Version',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

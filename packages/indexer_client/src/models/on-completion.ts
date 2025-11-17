@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * \[apan\] defines the what additional actions occur with the transaction.
@@ -16,5 +17,5 @@ export type OnCompletion = 'noop' | 'optin' | 'closeout' | 'clear' | 'update' | 
 export const OnCompletionMeta: ModelMetadata = {
   name: 'OnCompletion',
   kind: 'passthrough',
-  passThrough: { kind: 'scalar' },
+  codec: stringCodec,
 }

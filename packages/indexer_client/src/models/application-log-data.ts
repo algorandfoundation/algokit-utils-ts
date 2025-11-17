@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Stores the global information associated with an application.
@@ -24,14 +25,14 @@ export const ApplicationLogDataMeta: ModelMetadata = {
       wireKey: 'txid',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'logs',
       wireKey: 'logs',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
+      codec: new ArrayCodec(bytesCodec),
     },
   ],
 }

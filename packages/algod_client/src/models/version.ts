@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BuildVersion } from './build-version'
 import { BuildVersionMeta } from './build-version'
 
@@ -21,28 +22,28 @@ export const VersionMeta: ModelMetadata = {
       wireKey: 'build',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: BuildVersionMeta },
+      codec: new ModelCodec(BuildVersionMeta),
     },
     {
       name: 'genesisHashB64',
       wireKey: 'genesis_hash_b64',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'genesisId',
       wireKey: 'genesis_id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'versions',
       wireKey: 'versions',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: new ArrayCodec(stringCodec),
     },
   ],
 }

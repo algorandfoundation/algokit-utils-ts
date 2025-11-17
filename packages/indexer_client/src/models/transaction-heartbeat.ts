@@ -1,4 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { HbProofFields } from './hb-proof-fields'
 import { HbProofFieldsMeta } from './hb-proof-fields'
 
@@ -40,35 +41,35 @@ export const TransactionHeartbeatMeta: ModelMetadata = {
       wireKey: 'hb-address',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'hbProof',
       wireKey: 'hb-proof',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: HbProofFieldsMeta },
+      codec: new ModelCodec(HbProofFieldsMeta),
     },
     {
       name: 'hbSeed',
       wireKey: 'hb-seed',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbVoteId',
       wireKey: 'hb-vote-id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbKeyDilution',
       wireKey: 'hb-key-dilution',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }
