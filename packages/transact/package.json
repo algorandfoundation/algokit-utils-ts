@@ -21,7 +21,9 @@
     "check-types": "tsc --noEmit",
     "audit": "better-npm-audit audit",
     "format": "prettier --config ../../.prettierrc.cjs --ignore-path ../../.prettierignore --write .",
-    "pre-commit": "run-s check-types lint:fix audit format test"
+    "pre-commit": "run-s check-types lint:fix audit format test",
+    "polytest:generate": "polytest --config test_configs/transact.jsonc --git https://github.com/joe-p/algokit-polytest#feat/update_transact generate -t vitest",
+    "polytest:run": "polytest --config test_configs/transact.jsonc --git https://github.com/joe-p/algokit-polytest#feat/update_transact run --no-parse -t vitest"
   },
   "dependencies": {},
   "peerDependencies": {},
