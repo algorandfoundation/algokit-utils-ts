@@ -40,7 +40,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
   accessReferences?: AccessReference[]
   /** The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. */
-  rejectVersion?: bigint
+  rejectVersion?: number
 }
 
 /** Parameters to define an app create transaction */

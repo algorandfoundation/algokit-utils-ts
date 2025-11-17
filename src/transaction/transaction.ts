@@ -1,11 +1,11 @@
 import { AlgodClient, PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction, TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIReturnType, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
-import { AppCallParams, TransactionComposer } from '../types/composer'
+import { TransactionComposer } from '../types/composer'
 import {
   AdditionalTransactionComposerContext,
   SendParams,
@@ -284,7 +284,8 @@ export async function populateAppCallResources(composer: TransactionComposer) {
 }
 
 /**
- * @deprecated Use `composer.build()` directly
+ * @deprecated Use `composer.setMaxFees()` instead if you need to set max fees for transactions.
+ * Use `composer.build()` instead if you need to build transactions with resource population.
  *
  * Take an existing Transaction Composer and return a new one with changes applied to the transactions
  * based on the supplied sendParams to prepare it for sending.
@@ -303,72 +304,14 @@ export async function prepareGroupForSending(
   sendParams: SendParams,
   additionalAtcContext?: AdditionalTransactionComposerContext,
 ) {
-  const transactionsWithSigners = (await composer.build()).transactions
-
-  const newComposer = composer.cloneWithoutTransactions({
+  const newComposer = composer.clone({
     coverAppCallInnerTransactionFees: sendParams.coverAppCallInnerTransactionFees ?? false,
     populateAppCallResources: sendParams.populateAppCallResources ?? true,
   })
 
-  transactionsWithSigners.forEach((txnWithSigner, index) => {
-    if (txnWithSigner.txn.type !== TransactionType.AppCall) {
-      newComposer.addTransaction(txnWithSigner.txn)
-    } else {
-      const orignalAppCallTxn = txnWithSigner.txn
-      const appCallFields = orignalAppCallTxn.appCall!
-      const maxFee = additionalAtcContext?.maxFees.get(index)
-
-      const commonParams = {
-        sender: orignalAppCallTxn.sender,
-        args: appCallFields.args,
-        lease: orignalAppCallTxn.lease,
-        note: orignalAppCallTxn.note,
-        firstValidRound: orignalAppCallTxn.firstValid,
-        lastValidRound: orignalAppCallTxn.lastValid,
-        signer: txnWithSigner.signer,
-        rekeyTo: orignalAppCallTxn.rekeyTo,
-        maxFee: maxFee,
-        staticFee: orignalAppCallTxn.fee ? AlgoAmount.MicroAlgos(orignalAppCallTxn.fee) : undefined,
-        rejectVersion: appCallFields.rejectVersion,
-        accessReferences: appCallFields.accessReferences,
-        accountReferences: appCallFields.accountReferences,
-        appReferences: appCallFields.appReferences,
-        assetReferences: appCallFields.assetReferences,
-        boxReferences: appCallFields.boxReferences,
-      } satisfies Omit<AppCallParams, 'appId' | 'onComplete'>
-
-      if (appCallFields.appId === 0n) {
-        newComposer.addAppCreate({
-          ...commonParams,
-          approvalProgram: appCallFields.approvalProgram!,
-          clearStateProgram: appCallFields.clearStateProgram!,
-          extraProgramPages: appCallFields.extraProgramPages,
-          schema:
-            appCallFields.localStateSchema || appCallFields.globalStateSchema
-              ? {
-                  globalByteSlices: appCallFields.globalStateSchema?.numByteSlices ?? 0,
-                  globalInts: appCallFields.globalStateSchema?.numUints ?? 0,
-                  localByteSlices: appCallFields.localStateSchema?.numByteSlices ?? 0,
-                  localInts: appCallFields.localStateSchema?.numUints ?? 0,
-                }
-              : undefined,
-        })
-      } else if (appCallFields.onComplete === OnApplicationComplete.UpdateApplication) {
-        newComposer.addAppUpdate({
-          ...commonParams,
-          appId: appCallFields.appId,
-          approvalProgram: appCallFields.approvalProgram!,
-          clearStateProgram: appCallFields.clearStateProgram!,
-        })
-      } else {
-        newComposer.addAppCall({
-          ...commonParams,
-          appId: appCallFields.appId,
-          onComplete: appCallFields.onComplete,
-        })
-      }
-    }
-  })
+  if (additionalAtcContext?.maxFees) {
+    newComposer.setMaxFees(additionalAtcContext?.maxFees)
+  }
 
   await newComposer.build()
 

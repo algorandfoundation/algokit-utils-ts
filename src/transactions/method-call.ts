@@ -12,6 +12,7 @@ import {
   abiTypeIsTransaction,
 } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
+import { AlgoAmount } from '../types/amount'
 import { AppManager } from '../types/app-manager'
 import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
@@ -85,13 +86,22 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
 type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 
+export type AsyncTransactionParams = {
+  txn: Promise<Transaction>
+  signer?: TransactionSigner
+  maxFee?: AlgoAmount
+}
+
+export type TransactionParams = {
+  txn: Transaction
+  signer?: TransactionSigner
+  maxFee?: AlgoAmount
+}
+
 type ExtractedMethodCallTransactionArg =
-  | { data: TransactionWithSigner; type: 'txnWithSigner' }
+  | { data: TransactionParams; type: 'txn' }
   | {
-      data: {
-        txn: Promise<Transaction>
-        signer?: TransactionSigner
-      }
+      data: AsyncTransactionParams
       type: 'asyncTxn'
     }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
@@ -125,7 +135,7 @@ export function extractComposerTransactionsFromAppMethodCallParams(
           txn: arg.txn,
           signer: arg.signer,
         },
-        type: 'txnWithSigner',
+        type: 'txn',
       })
 
       continue

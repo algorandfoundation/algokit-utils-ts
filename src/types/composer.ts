@@ -59,6 +59,8 @@ import { deepCloneTransactionParams } from '../transactions/clone'
 import { buildTransactionHeader, calculateInnerFeeDelta, getDefaultValidityWindow } from '../transactions/common'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
+  AsyncTransactionParams,
+  TransactionParams,
   buildAppCallMethodCall,
   buildAppCreateMethodCall,
   buildAppUpdateMethodCall,
@@ -74,6 +76,7 @@ import {
 } from '../transactions/method-call'
 import { buildPayment, type PaymentParams } from '../transactions/payment'
 import { asJson } from '../util'
+import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { AppManager } from './app-manager'
 import { Expand } from './expand'
@@ -140,14 +143,6 @@ export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
 /** All options to control a simulate request */
 export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
 
-/** A transaction (promise) with an associated signer for signing the transaction */
-type AsyncTransactionWithSigner = {
-  /** The transaction (promise) to be signed */
-  txn: Promise<Transaction>
-  /** The signer to use for signing the transaction */
-  signer?: TransactionSigner
-}
-
 type Txn =
   | { data: PaymentParams; type: 'pay' }
   | { data: AssetCreateParams; type: 'assetCreate' }
@@ -159,8 +154,8 @@ type Txn =
   | { data: AssetOptOutParams; type: 'assetOptOut' }
   | { data: AppCallParams | AppCreateParams | AppUpdateParams; type: 'appCall' }
   | { data: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams; type: 'keyReg' }
-  | { data: TransactionWithSigner; type: 'txnWithSigner' }
-  | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
+  | { data: TransactionParams; type: 'txn' }
+  | { data: AsyncTransactionParams; type: 'asyncTxn' }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
 
 /**
@@ -310,32 +305,6 @@ export class TransactionComposer {
     }
   }
 
-  /**
-   * Creates a new TransactionComposer with the same context (algod, getSigner, etc.) but without any transactions.
-   * @param composerConfig Optional configuration to override the current composer config
-   * @returns A new TransactionComposer instance with the same context but no transactions
-   * @deprecated This method is intended to used by internal only. It will be removed in the future
-   */
-  public cloneWithoutTransactions(composerConfig?: TransactionComposerConfig): TransactionComposer {
-    return new TransactionComposer({
-      algod: this.algod,
-      getSuggestedParams: this.getSuggestedParams,
-      getSigner: this.getSigner,
-      defaultValidityWindow: this.defaultValidityWindow,
-      appManager: this.appManager,
-      errorTransformers: this.errorTransformers,
-      composerConfig: {
-        ...this.composerConfig,
-        ...composerConfig,
-      },
-    })
-  }
-
-  /**
-   * Helper function to clone a single transaction
-   * @param txn The transaction to clone
-   * @returns The cloned transaction
-   */
   private cloneTransaction(txn: Txn): Txn {
     switch (txn.type) {
       case 'pay':
@@ -388,27 +357,27 @@ export class TransactionComposer {
           type: 'keyReg',
           data: deepCloneTransactionParams(txn.data),
         }
-      case 'txnWithSigner': {
-        const { txn: transaction, signer } = txn.data
-        // Deep clone the transaction using encode/decode and remove group field
+      case 'txn': {
+        const { txn: transaction, signer, maxFee } = txn.data
         const encoded = encodeTransactionRaw(transaction)
         const clonedTxn = decodeTransaction(encoded)
-        clonedTxn.group = undefined
+        delete clonedTxn.group
         return {
-          type: 'txnWithSigner',
+          type: 'txn',
           data: {
             txn: clonedTxn,
             signer,
+            maxFee,
           },
         }
       }
       case 'asyncTxn': {
-        const { txn: txnPromise, signer } = txn.data
+        const { txn: txnPromise, signer, maxFee } = txn.data
         // Create a new promise that resolves to a deep cloned transaction without the group field
         const newTxnPromise = txnPromise.then((resolvedTxn) => {
           const encoded = encodeTransactionRaw(resolvedTxn)
           const clonedTxn = decodeTransaction(encoded)
-          clonedTxn.group = undefined
+          delete clonedTxn.group
           return clonedTxn
         })
         return {
@@ -416,6 +385,7 @@ export class TransactionComposer {
           data: {
             txn: newTxnPromise,
             signer,
+            maxFee: maxFee,
           },
         }
       }
@@ -490,7 +460,7 @@ export class TransactionComposer {
         txn: transaction,
         signer: signer ?? this.getSigner(transaction.sender),
       },
-      type: 'txnWithSigner',
+      type: 'txn',
     })
 
     return this
@@ -1425,13 +1395,14 @@ export class TransactionComposer {
 
     let transactionIndex = 0
     for (const ctxn of this.txns) {
-      if (ctxn.type === 'txnWithSigner') {
+      if (ctxn.type === 'txn') {
         transactions.push(ctxn.data.txn)
-        signers.set(transactionIndex, ctxn.data.signer)
+        if (ctxn.data.signer) {
+          signers.set(transactionIndex, ctxn.data.signer)
+        }
         transactionIndex++
       } else if (ctxn.type === 'asyncTxn') {
         transactions.push(await ctxn.data.txn)
-        // Use the signer that was set when the asyncTxn was added
         if (ctxn.data.signer) {
           signers.set(transactionIndex, ctxn.data.signer)
         }
@@ -2206,19 +2177,27 @@ export class TransactionComposer {
     const simulateResult = await this.algod.simulateTransaction(simulateRequest)
     return simulateResult
   }
+
+  public setMaxFees(maxFees: Map<number, AlgoAmount>) {
+    maxFees.forEach((_, index) => {
+      if (index > this.txns.length - 1) {
+        throw new Error(`Index ${index} is out of range. The composer only contains ${this.txns.length} transactions`)
+      }
+    })
+
+    maxFees.forEach((maxFee, index) => {
+      this.txns[index].data.maxFee = maxFee
+    })
+  }
 }
 
 function isAppCall(ctxn: Txn): boolean {
-  return (
-    ctxn.type === 'appCall' ||
-    ctxn.type === 'methodCall' ||
-    (ctxn.type === 'txnWithSigner' && ctxn.data.txn.type === TransactionType.AppCall)
-  )
+  return ctxn.type === 'appCall' || ctxn.type === 'methodCall' || (ctxn.type === 'txn' && ctxn.data.txn.type === TransactionType.AppCall)
 }
 
 /** Get the logical maximum fee based on staticFee and maxFee */
 function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
-  if (ctxn.type === 'txnWithSigner' || ctxn.type === 'asyncTxn') {
+  if (ctxn.type === 'txn' || ctxn.type === 'asyncTxn') {
     return undefined
   }
 
