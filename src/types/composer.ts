@@ -40,21 +40,24 @@ import {
   type AppUpdateParams,
 } from '../transactions/app-call'
 import {
+  buildAssetOptIn,
+  buildAssetOptOut,
+  buildAssetTransfer,
+  type AssetOptInParams,
+  type AssetOptOutParams,
+  type AssetTransferParams,
+} from '../transactions/asset-transfer'
+
+import {
   buildAssetConfig,
   buildAssetCreate,
   buildAssetDestroy,
   buildAssetFreeze,
-  buildAssetOptIn,
-  buildAssetOptOut,
-  buildAssetTransfer,
   type AssetConfigParams,
   type AssetCreateParams,
   type AssetDestroyParams,
   type AssetFreezeParams,
-  type AssetOptInParams,
-  type AssetOptOutParams,
-  type AssetTransferParams,
-} from '../transactions/asset'
+} from '../transactions/asset-config'
 import { deepCloneTransactionParams } from '../transactions/clone'
 import { buildTransactionHeader, calculateInnerFeeDelta, getDefaultValidityWindow } from '../transactions/common'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
@@ -101,15 +104,8 @@ export type {
   AppUpdateParams,
   CommonAppCallParams,
 } from '../transactions/app-call'
-export type {
-  AssetConfigParams,
-  AssetCreateParams,
-  AssetDestroyParams,
-  AssetFreezeParams,
-  AssetOptInParams,
-  AssetOptOutParams,
-  AssetTransferParams,
-} from '../transactions/asset'
+export type { AssetConfigParams, AssetCreateParams, AssetDestroyParams, AssetFreezeParams } from '../transactions/asset-config'
+export type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from '../transactions/asset-transfer'
 export type { CommonTransactionParams } from '../transactions/common'
 export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
 export type {

@@ -2160,7 +2160,7 @@ export class ApplicationClient {
       call?.method &&
       // We aren't skipping the send
       !call.sendParams?.skipSending &&
-      // There isn't an composer passed in
+      // There isn't a composer passed in
       !call.sendParams?.transactionComposer &&
       // The method is readonly
       this.appSpec.hints?.[this.getABIMethodSignature(this.getABIMethod(call.method)!)]?.read_only
