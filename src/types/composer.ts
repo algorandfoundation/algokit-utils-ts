@@ -59,7 +59,8 @@ import {
   type AssetFreezeParams,
 } from '../transactions/asset-config'
 import { deepCloneTransactionParams } from '../transactions/clone'
-import { buildTransactionHeader, calculateInnerFeeDelta, getDefaultValidityWindow } from '../transactions/common'
+import { buildTransactionHeader, calculateInnerFeeDelta } from '../transactions/common'
+import { FeeDelta, FeePriority } from '../transactions/fee-coverage'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
   AsyncTransactionParams,
@@ -83,8 +84,8 @@ import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { AppManager } from './app-manager'
 import { Expand } from './expand'
-import { FeeDelta, FeePriority } from './fee-coverage'
 import { EventType } from './lifecycle-events'
+import { genesisIdIsLocalNet } from './network-client'
 import {
   Arc2TransactionNote,
   SendParams,
@@ -245,6 +246,9 @@ export class TransactionComposer {
   /** The default transaction validity window */
   private defaultValidityWindow = 10n
 
+  /** Whether the validity window was explicitly set on construction */
+  private defaultValidityWindowIsExplicit = false
+
   private appManager: AppManager
 
   private errorTransformers: ErrorTransformer[]
@@ -293,6 +297,7 @@ export class TransactionComposer {
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
+    this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
     this.errorTransformers = params.errorTransformers ?? []
     this.composerConfig = params.composerConfig ?? {
@@ -395,13 +400,17 @@ export class TransactionComposer {
     }
   }
 
-  private validateGroupSize(count: number = 1): void {
-    const newSize = this.txns.length + count
+  private push(...txns: Txn[]): void {
+    if (this.transactionsWithSigners) {
+      throw new Error('Cannot add new transactions after building')
+    }
+    const newSize = this.txns.length + txns.length
     if (newSize > MAX_TRANSACTION_GROUP_SIZE) {
       throw new Error(
-        `Adding ${count} transaction(s) would exceed the maximum group size. Current: ${this.txns.length}, Maximum: ${MAX_TRANSACTION_GROUP_SIZE}`,
+        `Adding ${txns.length} transaction(s) would exceed the maximum group size. Current: ${this.txns.length}, Maximum: ${MAX_TRANSACTION_GROUP_SIZE}`,
       )
     }
+    this.txns.push(...txns)
   }
 
   public clone(composerConfig?: TransactionComposerConfig) {
@@ -424,6 +433,8 @@ export class TransactionComposer {
 
     // Clone the methodCalls map
     newComposer.methodCalls = new Map(this.methodCalls)
+
+    newComposer.defaultValidityWindowIsExplicit = this.defaultValidityWindowIsExplicit
 
     return newComposer
   }
@@ -449,9 +460,7 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({
+    this.push({
       data: {
         txn: transaction,
         signer: signer ?? this.getSigner(transaction.sender),
@@ -478,12 +487,9 @@ export class TransactionComposer {
    * ```
    */
   public addTransactionComposer(composer: TransactionComposer): TransactionComposer {
-    this.validateGroupSize(composer.txns.length)
-
     const currentIndex = this.txns.length
-    composer.txns.forEach((txn) => {
-      this.txns.push(this.cloneTransaction(txn))
-    })
+    const clonedTxns = composer.txns.map((txn) => this.cloneTransaction(txn))
+    this.push(...clonedTxns)
 
     // Copy methodCalls from the target composer, adjusting indices
     composer.methodCalls.forEach((method, index) => {
@@ -527,9 +533,7 @@ export class TransactionComposer {
    * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'pay' })
+    this.push({ data: params, type: 'pay' })
 
     return this
   }
@@ -570,9 +574,7 @@ export class TransactionComposer {
    * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetCreate' })
+    this.push({ data: params, type: 'assetCreate' })
 
     return this
   }
@@ -607,9 +609,7 @@ export class TransactionComposer {
    * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetConfig' })
+    this.push({ data: params, type: 'assetConfig' })
 
     return this
   }
@@ -643,9 +643,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetFreeze' })
+    this.push({ data: params, type: 'assetFreeze' })
 
     return this
   }
@@ -677,9 +675,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetDestroy' })
+    this.push({ data: params, type: 'assetDestroy' })
 
     return this
   }
@@ -716,9 +712,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetTransfer' })
+    this.push({ data: params, type: 'assetTransfer' })
 
     return this
   }
@@ -750,9 +744,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetOptIn' })
+    this.push({ data: params, type: 'assetOptIn' })
 
     return this
   }
@@ -790,9 +782,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'assetOptOut' })
+    this.push({ data: params, type: 'assetOptOut' })
 
     return this
   }
@@ -847,9 +837,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'appCall' })
+    this.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -891,9 +879,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
+    this.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
 
     return this
   }
@@ -933,9 +919,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
+    this.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
 
     return this
   }
@@ -977,9 +961,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'appCall' })
+    this.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1041,20 +1023,22 @@ export class TransactionComposer {
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Validate group size: txnArgs + 1 for the method call itself
-    this.validateGroupSize(txnArgs.length + 1)
+    const currentIndex = this.txns.length
 
-    txnArgs.forEach((txn) => {
-      this.txns.push(txn)
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(this.txns.length - 1, txn.data.method)
-      }
-    })
-    this.txns.push({
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
       data: { ...params, args: processAppMethodCallArgs(params.args) },
       type: 'methodCall',
     })
-    this.methodCalls.set(this.txns.length - 1, params.method)
+
+    // Set method calls for any method call arguments
+    txnArgs.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex + index, txn.data.method)
+      }
+    })
+    // Set method call for the main transaction
+    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1108,20 +1092,22 @@ export class TransactionComposer {
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Validate group size: txnArgs + 1 for the method call itself
-    this.validateGroupSize(txnArgs.length + 1)
+    const currentIndex = this.txns.length
 
-    txnArgs.forEach((txn) => {
-      this.txns.push(txn)
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(this.txns.length - 1, txn.data.method)
-      }
-    })
-    this.txns.push({
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
       data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
       type: 'methodCall',
     })
-    this.methodCalls.set(this.txns.length - 1, params.method)
+
+    // Set method calls for any method call arguments
+    txnArgs.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex + index, txn.data.method)
+      }
+    })
+    // Set method call for the main transaction
+    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1173,20 +1159,22 @@ export class TransactionComposer {
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Validate group size: txnArgs + 1 for the method call itself
-    this.validateGroupSize(txnArgs.length + 1)
+    const currentIndex = this.txns.length
 
-    txnArgs.forEach((txn) => {
-      this.txns.push(txn)
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(this.txns.length - 1, txn.data.method)
-      }
-    })
-    this.txns.push({
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
       data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
       type: 'methodCall',
     })
-    this.methodCalls.set(this.txns.length - 1, params.method)
+
+    // Set method calls for any method call arguments
+    txnArgs.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex + index, txn.data.method)
+      }
+    })
+    // Set method call for the main transaction
+    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1238,20 +1226,22 @@ export class TransactionComposer {
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    // Validate group size: txnArgs + 1 for the method call itself
-    this.validateGroupSize(txnArgs.length + 1)
+    const currentIndex = this.txns.length
 
-    txnArgs.forEach((txn) => {
-      this.txns.push(txn)
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(this.txns.length - 1, txn.data.method)
-      }
-    })
-    this.txns.push({
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
       data: { ...params, args: processAppMethodCallArgs(params.args) },
       type: 'methodCall',
     })
-    this.methodCalls.set(this.txns.length - 1, params.method)
+
+    // Set method calls for any method call arguments
+    txnArgs.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        this.methodCalls.set(currentIndex + index, txn.data.method)
+      }
+    })
+    // Set method call for the main transaction
+    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1297,9 +1287,7 @@ export class TransactionComposer {
    * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'keyReg' })
+    this.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1334,9 +1322,7 @@ export class TransactionComposer {
    * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
-    this.validateGroupSize(1)
-
-    this.txns.push({ data: params, type: 'keyReg' })
+    this.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1350,16 +1336,16 @@ export class TransactionComposer {
   }
 
   /**
-   * Compose all of the transactions in a single transaction group and an transaction composer.
+   * Build the transaction composer.
    *
-   * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
+   * This method performs resource population and inner transaction fee coverage if these options are set in the composer.
    *
    * Once this method is called, no further transactions will be able to be added.
    * You can safely call this method multiple times to get the same result.
    * @returns The built transaction composer, the transactions and any corresponding method calls
    * @example
    * ```typescript
-   * const { atc, transactions, methodCalls } = await composer.build()
+   * const { transactions, methodCalls } = await composer.build()
    * ```
    */
   public async build() {
@@ -1369,11 +1355,11 @@ export class TransactionComposer {
 
       const groupAnalysis =
         (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
-        this.txns.some((t) => isAppCall(t))
+        builtTransactions.transactions.some((txn) => txn.type === TransactionType.AppCall)
           ? await this.analyzeGroupRequirements(builtTransactions.transactions, suggestedParams, this.composerConfig)
           : undefined
 
-      await this.populateResourcesAndGroupTransactions(builtTransactions.transactions, groupAnalysis)
+      await this.populateTransactionAndGroupResources(builtTransactions.transactions, groupAnalysis)
 
       this.transactionsWithSigners = this.gatherSigners(builtTransactions)
     }
@@ -1385,7 +1371,10 @@ export class TransactionComposer {
   }
 
   private async buildTransactionsSuggestedParamsProvided(suggestedParams: SuggestedParams) {
-    const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
+    const defaultValidityWindow =
+      !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisId ?? 'unknown')
+        ? 1000n
+        : this.defaultValidityWindow
     const signers = new Map<number, algosdk.TransactionSigner>()
     const transactions = new Array<Transaction>()
 
@@ -1500,7 +1489,7 @@ export class TransactionComposer {
     return this.buildTransactionsSuggestedParamsProvided(suggestedParams)
   }
 
-  private async populateResourcesAndGroupTransactions(transactions: Transaction[], groupAnalysis?: GroupAnalysis): Promise<Transaction[]> {
+  private async populateTransactionAndGroupResources(transactions: Transaction[], groupAnalysis?: GroupAnalysis): Promise<Transaction[]> {
     if (groupAnalysis) {
       // Process fee adjustments
       let surplusGroupFees = 0n
@@ -1644,7 +1633,7 @@ export class TransactionComposer {
     let transactionsToSimulate = transactions.map((txn, groupIndex) => {
       const ctxn = this.txns[groupIndex]
       const txnToSimulate = { ...txn }
-      txnToSimulate.group = undefined
+      delete txnToSimulate.group
       if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.AppCall) {
         const logicalMaxFee = getLogicalMaxFee(ctxn)
         if (logicalMaxFee !== undefined) {
@@ -2185,10 +2174,6 @@ export class TransactionComposer {
       this.txns[index].data.maxFee = maxFee
     })
   }
-}
-
-function isAppCall(ctxn: Txn): boolean {
-  return ctxn.type === 'appCall' || ctxn.type === 'methodCall' || (ctxn.type === 'txn' && ctxn.data.txn.type === TransactionType.AppCall)
 }
 
 /** Get the logical maximum fee based on staticFee and maxFee */
