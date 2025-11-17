@@ -58,7 +58,6 @@ import {
   type AssetDestroyParams,
   type AssetFreezeParams,
 } from '../transactions/asset-config'
-import { deepCloneTransactionParams } from '../transactions/clone'
 import { buildTransactionHeader, calculateInnerFeeDelta } from '../transactions/common'
 import { FeeDelta, FeePriority } from '../transactions/fee-coverage'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
@@ -307,56 +306,58 @@ export class TransactionComposer {
   }
 
   private cloneTransaction(txn: Txn): Txn {
+    // The transaction params aren't meant to be mutated therefore a shallow clone is ok here
+    // Only exceptions are txn and asyncTxn where they are encoded, then decoded
     switch (txn.type) {
       case 'pay':
         return {
           type: 'pay',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetCreate':
         return {
           type: 'assetCreate',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetConfig':
         return {
           type: 'assetConfig',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetFreeze':
         return {
           type: 'assetFreeze',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetDestroy':
         return {
           type: 'assetDestroy',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetTransfer':
         return {
           type: 'assetTransfer',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetOptIn':
         return {
           type: 'assetOptIn',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'assetOptOut':
         return {
           type: 'assetOptOut',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'appCall':
         return {
           type: 'appCall',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'keyReg':
         return {
           type: 'keyReg',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
       case 'txn': {
         const { txn: transaction, signer, maxFee } = txn.data
@@ -391,11 +392,9 @@ export class TransactionComposer {
         }
       }
       case 'methodCall':
-        // Method calls have already been processed and their transaction args extracted
-        // Deep clone all data to avoid shared references
         return {
           type: 'methodCall',
-          data: deepCloneTransactionParams(txn.data),
+          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
         }
     }
   }
@@ -460,6 +459,7 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
+    // TODO: confirm txn doesn't have group
     this.push({
       data: {
         txn: transaction,
