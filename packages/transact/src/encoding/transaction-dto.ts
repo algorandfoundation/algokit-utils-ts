@@ -123,7 +123,7 @@ export type TransactionDto = {
   apep?: number
 
   /**  Reject version */
-  aprv?: bigint | number
+  aprv?: number
 
   // Key registration fields (type: 'keyreg')
   /** Vote key */
