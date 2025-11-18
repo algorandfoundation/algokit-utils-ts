@@ -2041,8 +2041,9 @@ export class TransactionComposer {
           ? algosdk.makeEmptyTransactionSigner()
           : (builtTransactions.signers.get(index) ?? algosdk.makeEmptyTransactionSigner()),
       }))
-      // TODO: PD - review gatherSigners method
     } else {
+      rawOptions.allowUnnamedResources = true
+
       transactionsWithSigner = this.transactionsWithSigners.map((e) => ({
         txn: e.txn,
         signer: skipSignatures ? algosdk.makeEmptyTransactionSigner() : e.signer,
@@ -2052,8 +2053,6 @@ export class TransactionComposer {
     const transactions = transactionsWithSigner.map((e) => e.txn)
     const signedTransactions = await this.signTransactions(transactionsWithSigner)
 
-    // TODO: PD - docs to build -> simulate
-    // TODO: PD - think about allowUnnamedResources, when before build
     // TODO: PD - think about readonly transaction, consider allowUnnamedResources
     // TODO: PD - flag for not throwing error
 
