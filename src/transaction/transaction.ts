@@ -545,7 +545,7 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
 }
 
 /**
- * @deprecated Use `composer.clone().buildTransactions().transactions` instead.
+ * @deprecated Use `composer.clone().build()` instead.
  *
  * Returns the array of transactions currently present in the given `TransactionComposer`
  * @param atc The transaction composer
@@ -553,7 +553,7 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
  */
 export async function getTransactionComposerTransactions(composer: TransactionComposer) {
   try {
-    return (await composer.clone().buildTransactions()).transactions
+    return (await composer.clone().build()).transactions.map((transactionWithSigner) => transactionWithSigner.txn)
   } catch {
     return []
   }
