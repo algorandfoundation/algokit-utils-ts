@@ -324,52 +324,52 @@ export class TransactionComposer {
       case 'pay':
         return {
           type: 'pay',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetCreate':
         return {
           type: 'assetCreate',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetConfig':
         return {
           type: 'assetConfig',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetFreeze':
         return {
           type: 'assetFreeze',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetDestroy':
         return {
           type: 'assetDestroy',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetTransfer':
         return {
           type: 'assetTransfer',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetOptIn':
         return {
           type: 'assetOptIn',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'assetOptOut':
         return {
           type: 'assetOptOut',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'appCall':
         return {
           type: 'appCall',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'keyReg':
         return {
           type: 'keyReg',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
       case 'txn': {
         const { txn: transaction, signer, maxFee } = txn.data
@@ -406,7 +406,7 @@ export class TransactionComposer {
       case 'methodCall':
         return {
           type: 'methodCall',
-          data: { ...txn.data, maxFee: txn.data.maxFee ? new AlgoAmount({ microAlgos: txn.data.maxFee.microAlgos }) : undefined },
+          data: { ...txn.data },
         }
     }
   }
@@ -1363,7 +1363,7 @@ export class TransactionComposer {
   public async build() {
     if (!this.transactionsWithSigners) {
       const suggestedParams = await this.getSuggestedParams()
-      const builtTransactions = await this.buildTransactionsSuggestedParamsProvided(suggestedParams)
+      const builtTransactions = await this._buildTransactions(suggestedParams)
 
       const groupAnalysis =
         (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
@@ -1386,8 +1386,7 @@ export class TransactionComposer {
     }
   }
 
-  // TODO: PD - rethink this name
-  private async buildTransactionsSuggestedParamsProvided(suggestedParams: SuggestedParams) {
+  private async _buildTransactions(suggestedParams: SuggestedParams) {
     const defaultValidityWindow =
       !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisId ?? 'unknown')
         ? 1000n
@@ -1911,8 +1910,6 @@ export class TransactionComposer {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (originalError: any) {
-      // TODO: PD - response and body of HTTP error delete
-
       const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Transaction Composer'
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = new Error(errorMessage) as any
@@ -2031,7 +2028,7 @@ export class TransactionComposer {
     let transactionsWithSigner: TransactionWithSigner[]
     if (!this.transactionsWithSigners) {
       const suggestedParams = await this.getSuggestedParams()
-      const builtTransactions = await this.buildTransactionsSuggestedParamsProvided(suggestedParams)
+      const builtTransactions = await this._buildTransactions(suggestedParams)
       const transactions =
         builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
 
@@ -2229,7 +2226,7 @@ export class TransactionComposer {
     })
 
     maxFees.forEach((maxFee, index) => {
-      this.txns[index].data.maxFee = maxFee
+      this.txns[index].data.maxFee = new AlgoAmount({ microAlgos: maxFee.microAlgos })
     })
   }
 }
