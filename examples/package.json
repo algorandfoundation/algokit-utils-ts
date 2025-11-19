@@ -1,0 +1,22 @@
+{
+  "name": "algokit-utils-examples",
+  "version": "1.0.0",
+  "description": "Consolidated examples for @algorandfoundation/algokit-utils",
+  "type": "module",
+  "scripts": {
+    "example": "tsx"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^9.1.2",
+    "algosdk": "^3.5.2",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
