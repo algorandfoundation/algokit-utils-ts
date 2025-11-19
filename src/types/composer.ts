@@ -288,7 +288,6 @@ export class TransactionComposer {
 
     let transformedError = originalError
 
-    // TODO: PD - look into why there are duplicated errorTransformers
     for (const transformer of this.errorTransformers) {
       try {
         transformedError = await transformer(transformedError)

@@ -221,7 +221,6 @@ export class TransactionWrapper implements Transaction {
   }
 }
 
-// TODO: PD - review the names of these wrapper
 export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
   txn: TransactionWrapper
 }

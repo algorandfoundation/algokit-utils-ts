@@ -41,3 +41,4 @@ A collection of random notes pop up during the migration process.
 - TODO: docs for composer simulate workflow
   - without calling `build` first => simulate without resource population
   - call `build` -> resource population into transactions with signers -> simulate will use the transactions with signers
+- review the names of SignedTransactionWrapper
