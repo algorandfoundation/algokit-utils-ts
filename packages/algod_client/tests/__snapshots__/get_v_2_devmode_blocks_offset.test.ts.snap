@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_devmode_blocks_offset > Common Tests > Basic request and response validation 1`] = `
+{
+  "offset": 0,
+}
+`;
