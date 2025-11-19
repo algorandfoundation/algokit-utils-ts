@@ -389,7 +389,7 @@ export function groupTransactions(transactions: Transaction[]): Transaction[] {
   const group = computeGroup(transactions)
   return transactions.map((tx) => ({
     ...tx,
-    group: group,
+    group,
   }))
 }
 

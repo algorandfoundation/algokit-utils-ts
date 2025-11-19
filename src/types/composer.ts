@@ -447,9 +447,7 @@ export class TransactionComposer {
       newComposer.txns.push(this.cloneTransaction(txn))
     })
 
-    // Clone the methodCalls map
     newComposer.methodCalls = new Map(this.methodCalls)
-
     newComposer.defaultValidityWindowIsExplicit = this.defaultValidityWindowIsExplicit
 
     return newComposer
@@ -476,7 +474,9 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
-    // TODO: confirm txn doesn't have group
+    if (transaction.group) {
+      throw new Error('Cannot add a transaction to the composer because it is already in a group')
+    }
     this.push({
       data: {
         txn: transaction,
@@ -1840,6 +1840,7 @@ export class TransactionComposer {
 
       this.transactionsWithSigners = undefined
       this.signedTransactions = undefined
+      this.methodCalls = new Map()
     }
 
     try {
@@ -1919,7 +1920,7 @@ export class TransactionComposer {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = new Error(errorMessage) as any
 
-      // Don't include AnalyzeGroupRequirementsError as cause because it can be noisy
+      // Don't include BuildComposerTransactionsError as cause because it can be noisy
       // If the user needs to, they can enable the debug flag to get traces
       err.cause = !(originalError instanceof BuildComposerTransactionsError) ? originalError : undefined
 
