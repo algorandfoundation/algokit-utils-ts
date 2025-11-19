@@ -3587,6 +3587,7 @@
           "index": {
             "type": "integer",
             "description": "unique asset identifier",
+            "x-algokit-field-rename": "id",
             "x-algokit-bigint": true
           },
           "deleted": {

@@ -38,7 +38,7 @@ export const SearchForTransactionsMeta: ModelMetadata = {
       wireKey: 'transactions',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TransactionMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: TransactionMeta } },
     },
   ],
 }

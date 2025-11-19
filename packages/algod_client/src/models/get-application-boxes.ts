@@ -15,7 +15,7 @@ export const GetApplicationBoxesMeta: ModelMetadata = {
       wireKey: 'boxes',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => BoxDescriptorMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: BoxDescriptorMeta } },
     },
   ],
 }

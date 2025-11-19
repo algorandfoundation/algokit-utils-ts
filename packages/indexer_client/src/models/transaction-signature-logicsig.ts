@@ -50,14 +50,14 @@ export const TransactionSignatureLogicsigMeta: ModelMetadata = {
       wireKey: 'multisig-signature',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => TransactionSignatureMultisigMeta },
+      type: { kind: 'model', meta: TransactionSignatureMultisigMeta },
     },
     {
       name: 'logicMultisigSignature',
       wireKey: 'logic-multisig-signature',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => TransactionSignatureMultisigMeta },
+      type: { kind: 'model', meta: TransactionSignatureMultisigMeta },
     },
     {
       name: 'signature',

@@ -25,7 +25,7 @@ export const LookupAssetBalancesMeta: ModelMetadata = {
       wireKey: 'balances',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => MiniAssetHoldingMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: MiniAssetHoldingMeta } },
     },
     {
       name: 'currentRound',

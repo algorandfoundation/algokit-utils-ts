@@ -57,14 +57,14 @@ export const SimulationOpcodeTraceUnitMeta: ModelMetadata = {
       wireKey: 'scratch-changes',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ScratchChangeMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ScratchChangeMeta } },
     },
     {
       name: 'stateChanges',
       wireKey: 'state-changes',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationStateOperationMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationStateOperationMeta } },
     },
     {
       name: 'spawnedInners',
@@ -85,7 +85,7 @@ export const SimulationOpcodeTraceUnitMeta: ModelMetadata = {
       wireKey: 'stack-additions',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AvmValueMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AvmValueMeta } },
     },
   ],
 }

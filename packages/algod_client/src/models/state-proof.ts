@@ -23,7 +23,7 @@ export const StateProofMeta: ModelMetadata = {
       wireKey: 'Message',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => StateProofMessageMeta },
+      type: { kind: 'model', meta: StateProofMessageMeta },
     },
     {
       name: 'stateProof',

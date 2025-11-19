@@ -176,7 +176,7 @@ export const BlockMeta: ModelMetadata = {
       wireKey: 'rewards',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => BlockRewardsMeta },
+      type: { kind: 'model', meta: BlockRewardsMeta },
     },
     {
       name: 'round',
@@ -197,7 +197,7 @@ export const BlockMeta: ModelMetadata = {
       wireKey: 'state-proof-tracking',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => StateProofTrackingMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: StateProofTrackingMeta } },
     },
     {
       name: 'timestamp',
@@ -211,7 +211,7 @@ export const BlockMeta: ModelMetadata = {
       wireKey: 'transactions',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TransactionMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: TransactionMeta } },
     },
     {
       name: 'transactionsRoot',
@@ -246,21 +246,21 @@ export const BlockMeta: ModelMetadata = {
       wireKey: 'upgrade-state',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => BlockUpgradeStateMeta },
+      type: { kind: 'model', meta: BlockUpgradeStateMeta },
     },
     {
       name: 'upgradeVote',
       wireKey: 'upgrade-vote',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => BlockUpgradeVoteMeta },
+      type: { kind: 'model', meta: BlockUpgradeVoteMeta },
     },
     {
       name: 'participationUpdates',
       wireKey: 'participation-updates',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => ParticipationUpdatesMeta },
+      type: { kind: 'model', meta: ParticipationUpdatesMeta },
     },
   ],
 }

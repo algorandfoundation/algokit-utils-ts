@@ -20,7 +20,7 @@ export const StateProofSigSlotMeta: ModelMetadata = {
       wireKey: 'signature',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateProofSignatureMeta },
+      type: { kind: 'model', meta: StateProofSignatureMeta },
     },
     {
       name: 'lowerSigWeight',

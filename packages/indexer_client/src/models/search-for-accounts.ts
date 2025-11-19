@@ -25,7 +25,7 @@ export const SearchForAccountsMeta: ModelMetadata = {
       wireKey: 'accounts',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AccountMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AccountMeta } },
     },
     {
       name: 'currentRound',

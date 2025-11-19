@@ -35,7 +35,7 @@ export const PostWalletResponseMeta: ModelMetadata = {
       wireKey: 'wallet',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => WalletMeta },
+      type: { kind: 'model', meta: WalletMeta },
     },
   ],
 }

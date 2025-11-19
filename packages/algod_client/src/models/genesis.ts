@@ -11,7 +11,7 @@ export type Genesis = {
   network: string
   proto: string
   rwd: string
-  timestamp: number
+  timestamp?: number
 }
 
 export const GenesisMeta: ModelMetadata = {
@@ -23,7 +23,7 @@ export const GenesisMeta: ModelMetadata = {
       wireKey: 'alloc',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => GenesisAllocationMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: GenesisAllocationMeta } },
     },
     {
       name: 'comment',
@@ -77,7 +77,7 @@ export const GenesisMeta: ModelMetadata = {
     {
       name: 'timestamp',
       wireKey: 'timestamp',
-      optional: false,
+      optional: true,
       nullable: false,
       type: { kind: 'scalar' },
     },

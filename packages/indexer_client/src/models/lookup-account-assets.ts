@@ -38,7 +38,7 @@ export const LookupAccountAssetsMeta: ModelMetadata = {
       wireKey: 'assets',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetHoldingMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AssetHoldingMeta } },
     },
   ],
 }

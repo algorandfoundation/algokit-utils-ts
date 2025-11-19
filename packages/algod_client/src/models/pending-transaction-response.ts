@@ -148,14 +148,14 @@ export const PendingTransactionResponseMeta: ModelMetadata = {
       wireKey: 'local-state-delta',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AccountStateDeltaMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AccountStateDeltaMeta } },
     },
     {
       name: 'globalStateDelta',
       wireKey: 'global-state-delta',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateDeltaMeta },
+      type: { kind: 'model', meta: StateDeltaMeta },
     },
     {
       name: 'logs',

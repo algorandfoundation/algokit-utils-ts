@@ -9,7 +9,7 @@ export type Asset = {
   /**
    * unique asset identifier
    */
-  index: bigint
+  id: bigint
   params: AssetParams
 }
 
@@ -18,7 +18,7 @@ export const AssetMeta: ModelMetadata = {
   kind: 'object',
   fields: [
     {
-      name: 'index',
+      name: 'id',
       wireKey: 'index',
       optional: false,
       nullable: false,
@@ -29,7 +29,7 @@ export const AssetMeta: ModelMetadata = {
       wireKey: 'params',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      type: { kind: 'model', meta: AssetParamsMeta },
     },
   ],
 }

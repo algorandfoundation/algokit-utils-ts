@@ -10,5 +10,5 @@ export type StateDelta = EvalDeltaKeyValue[]
 export const StateDeltaMeta: ModelMetadata = {
   name: 'StateDelta',
   kind: 'array',
-  arrayItems: { kind: 'model', meta: () => EvalDeltaKeyValueMeta },
+  arrayItems: { kind: 'model', meta: EvalDeltaKeyValueMeta },
 }

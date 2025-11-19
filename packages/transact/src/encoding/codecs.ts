@@ -101,6 +101,20 @@ class BytesCodec extends Codec<Uint8Array> {
   }
 }
 
+class FixedBytesCodec extends Codec<Uint8Array> {
+  constructor(private length: number) {
+    super()
+  }
+
+  public defaultValue(): Uint8Array {
+    return new Uint8Array(this.length)
+  }
+
+  protected isDefaultValue(value: Uint8Array): boolean {
+    return value.byteLength === this.length && value.every((byte) => byte === 0)
+  }
+}
+
 class BooleanCodec extends Codec<boolean> {
   public defaultValue(): boolean {
     return false
@@ -150,6 +164,9 @@ export const bigIntCodec = new BigIntCodec()
 export const stringCodec = new StringCodec()
 export const addressCodec = new AddressCodec()
 export const bytesCodec = new BytesCodec()
+export const fixedBytes32Codec = new FixedBytesCodec(32)
+export const fixedBytes64Codec = new FixedBytesCodec(64)
+export const fixedBytes1793Codec = new FixedBytesCodec(0x701)
 export const booleanCodec = new BooleanCodec()
 export const bytesArrayCodec = new ArrayCodec(bytesCodec)
 export const addressArrayCodec = new ArrayCodec(addressCodec)

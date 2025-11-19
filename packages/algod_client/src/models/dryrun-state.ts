@@ -47,14 +47,14 @@ export const DryrunStateMeta: ModelMetadata = {
       wireKey: 'stack',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TealValueMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: TealValueMeta } },
     },
     {
       name: 'scratch',
       wireKey: 'scratch',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TealValueMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: TealValueMeta } },
     },
     {
       name: 'error',

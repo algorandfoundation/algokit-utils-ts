@@ -947,7 +947,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
           err.traces.push({
-            trace: AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map'),
+            trace: txn.execTrace ? AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map') : undefined,
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
             logs: txn.txnResult.logs,

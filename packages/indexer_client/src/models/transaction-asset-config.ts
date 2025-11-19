@@ -36,7 +36,7 @@ export const TransactionAssetConfigMeta: ModelMetadata = {
       wireKey: 'params',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      type: { kind: 'model', meta: AssetParamsMeta },
     },
   ],
 }

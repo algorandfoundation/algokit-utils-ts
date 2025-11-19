@@ -76,7 +76,7 @@ export const SimulateUnnamedResourcesAccessedMeta: ModelMetadata = {
       wireKey: 'boxes',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => BoxReferenceMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: BoxReferenceMeta } },
     },
     {
       name: 'extraBoxRefs',
@@ -90,14 +90,14 @@ export const SimulateUnnamedResourcesAccessedMeta: ModelMetadata = {
       wireKey: 'asset-holdings',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetHoldingReferenceMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AssetHoldingReferenceMeta } },
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationLocalReferenceMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: ApplicationLocalReferenceMeta } },
     },
   ],
 }

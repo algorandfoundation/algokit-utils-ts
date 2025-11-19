@@ -1,4 +1,4 @@
-import { addressCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec } from '../encoding/codecs'
+import { addressCodec, bytesCodec, fixedBytes64Codec, numberCodec, OmitEmptyObjectCodec } from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import { LogicSignatureDto, MultisigSignatureDto, SignedTransactionDto } from '../encoding/signed-transaction-dto'
 import { fromTransactionDto, toTransactionDto, Transaction, validateTransaction } from './transaction'
@@ -94,9 +94,14 @@ export type LogicSignature = {
   signature?: Uint8Array
 
   /**
-   * Multisig for delegated logic sig
+   * Legacy multisig for delegated logic sig
    */
   multiSignature?: MultisigSignature
+
+  /**
+   * Multisig for delegated logic sig
+   */
+  logicMultiSignature?: MultisigSignature
 }
 
 /**
@@ -156,9 +161,6 @@ function validateSignedTransaction(signedTransaction: SignedTransaction): void {
   const sigTypes = [signedTransaction.signature, signedTransaction.multiSignature, signedTransaction.logicSignature]
   const setSigCount = sigTypes.filter((sig) => sig !== undefined).length
 
-  if (setSigCount === 0) {
-    throw new Error('At least one signature type must be set')
-  }
   if (setSigCount > 1) {
     throw new Error(`Only one signature type can be set, found ${setSigCount}`)
   }
@@ -179,18 +181,18 @@ function toMultisigSignatureDto(multisigSignature: MultisigSignature): MultisigS
     thr: numberCodec.encode(multisigSignature.threshold),
     subsig: multisigSignature.subsignatures.map((subsig) => ({
       pk: addressCodec.encode(subsig.address),
-      s: bytesCodec.encode(subsig.signature),
+      s: fixedBytes64Codec.encode(subsig.signature),
     })),
   })
 }
 
-function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTransactionDto {
+export function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTransactionDto {
   const stx_dto: SignedTransactionDto = {
     txn: toTransactionDto(signedTransaction.txn),
   }
 
   if (signedTransaction.signature) {
-    stx_dto.sig = bytesCodec.encode(signedTransaction.signature)
+    stx_dto.sig = fixedBytes64Codec.encode(signedTransaction.signature)
   }
 
   if (signedTransaction.multiSignature) {
@@ -201,10 +203,13 @@ function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTra
     stx_dto.lsig = logicSignatureDtoCodec.encode({
       l: bytesCodec.encode(signedTransaction.logicSignature.logic),
       arg: signedTransaction.logicSignature.args?.map((arg) => bytesCodec.encode(arg) ?? bytesCodec.defaultValue()),
-      sig: bytesCodec.encode(signedTransaction.logicSignature.signature),
-      ...(signedTransaction.logicSignature.multiSignature
-        ? { msig: toMultisigSignatureDto(signedTransaction.logicSignature.multiSignature) }
-        : undefined),
+      sig: fixedBytes64Codec.encode(signedTransaction.logicSignature.signature),
+      ...(signedTransaction.logicSignature.multiSignature && {
+        msig: toMultisigSignatureDto(signedTransaction.logicSignature.multiSignature),
+      }),
+      ...(signedTransaction.logicSignature.logicMultiSignature && {
+        lmsig: toMultisigSignatureDto(signedTransaction.logicSignature.logicMultiSignature),
+      }),
     })
   }
 
@@ -223,36 +228,48 @@ function fromMultisigSignatureDto(msigDto: MultisigSignatureDto): MultisigSignat
       msigDto.subsig?.map((subsigData) => {
         return {
           address: addressCodec.decode(subsigData.pk),
-          signature: bytesCodec.decodeOptional(subsigData.s),
+          signature: fixedBytes64Codec.decodeOptional(subsigData.s),
         } satisfies MultisigSubsignature
       }) ?? [],
   })
 }
 
-function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): SignedTransaction {
+export function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): SignedTransaction {
   const stx: SignedTransaction = {
     txn: fromTransactionDto(signedTransactionDto.txn),
   }
 
-  if (signedTransactionDto.sig) {
-    stx.signature = bytesCodec.decodeOptional(signedTransactionDto.sig)
+  const signature = signedTransactionDto.sig && fixedBytes64Codec.decodeOptional(signedTransactionDto.sig)
+  if (signature) {
+    stx.signature = signature
   }
 
-  if (signedTransactionDto.msig) {
-    stx.multiSignature = fromMultisigSignatureDto(signedTransactionDto.msig)
+  const multiSignature = signedTransactionDto.msig && fromMultisigSignatureDto(signedTransactionDto.msig)
+  if (multiSignature) {
+    stx.multiSignature = multiSignature
   }
 
   if (signedTransactionDto.lsig) {
-    stx.logicSignature = logicSignatureCodec.decodeOptional({
+    const args = signedTransactionDto.lsig.arg?.map((arg) => bytesCodec.decode(arg))
+    const signature = fixedBytes64Codec.decodeOptional(signedTransactionDto.lsig.sig)
+    const multiSignature = signedTransactionDto.lsig.msig && fromMultisigSignatureDto(signedTransactionDto.lsig.msig)
+    const logicMultiSignature = signedTransactionDto.lsig.lmsig && fromMultisigSignatureDto(signedTransactionDto.lsig.lmsig)
+
+    const logicSignature = logicSignatureCodec.decodeOptional({
       logic: bytesCodec.decode(signedTransactionDto.lsig.l),
-      args: signedTransactionDto.lsig.arg?.map((arg) => bytesCodec.decode(arg)),
-      signature: bytesCodec.decodeOptional(signedTransactionDto.lsig.sig),
-      ...(signedTransactionDto.lsig.msig ? { multiSignature: fromMultisigSignatureDto(signedTransactionDto.lsig.msig) } : undefined),
+      ...(args && { args }),
+      ...(signature && { signature }),
+      ...(multiSignature && { multiSignature }),
+      ...(logicMultiSignature && { logicMultiSignature }),
     })
+    if (logicSignature) {
+      stx.logicSignature = logicSignature
+    }
   }
 
-  if (signedTransactionDto.sgnr) {
-    stx.authAddress = addressCodec.decodeOptional(signedTransactionDto.sgnr)
+  const authAddress = signedTransactionDto.sgnr && addressCodec.decodeOptional(signedTransactionDto.sgnr)
+  if (authAddress) {
+    stx.authAddress = authAddress
   }
 
   return stx

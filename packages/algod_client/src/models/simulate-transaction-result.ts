@@ -39,7 +39,7 @@ export const SimulateTransactionResultMeta: ModelMetadata = {
       wireKey: 'txn-result',
       optional: false,
       nullable: false,
-      type: { kind: 'model', meta: () => PendingTransactionResponseMeta },
+      type: { kind: 'model', meta: PendingTransactionResponseMeta },
     },
     {
       name: 'appBudgetConsumed',
@@ -60,14 +60,14 @@ export const SimulateTransactionResultMeta: ModelMetadata = {
       wireKey: 'exec-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => SimulationTransactionExecTraceMeta },
+      type: { kind: 'model', meta: SimulationTransactionExecTraceMeta },
     },
     {
       name: 'unnamedResourcesAccessed',
       wireKey: 'unnamed-resources-accessed',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => SimulateUnnamedResourcesAccessedMeta },
+      type: { kind: 'model', meta: SimulateUnnamedResourcesAccessedMeta },
     },
     {
       name: 'fixedSigner',

@@ -12,11 +12,13 @@
 { kind: 'scalar'{% if is_bytes %}, isBytes: true{% endif %}{% if is_bigint %}, isBigint: true{% endif %} }
 {%- endmacro %}
 
-{% macro base_type(ref_model, is_signed_txn, is_bytes, is_bigint) -%}
+{% macro base_type(ref_model, is_signed_txn, is_bytes, is_bigint, inline_meta_name) -%}
 {%- if is_signed_txn -%}
 { kind: 'codec', codecKey: 'SignedTransaction' }
 {%- elif ref_model -%}
-{ kind: 'model', meta: () => {{ ref_model }}Meta }
+{ kind: 'model', meta: {% if modelName == ref_model %}() => {% endif %}{{ ref_model }}Meta }
+{%- elif inline_meta_name -%}
+{ kind: 'model', meta: {{ inline_meta_name }} }
 {%- else -%}
 {{ scalar_meta(is_bytes, is_bigint) }}
 {%- endif -%}
@@ -24,9 +26,9 @@
 
 {% macro field_type(field) -%}
 {%- if field.is_array -%}
-{ kind: 'array', item: {{ base_type(field.ref_model, field.is_signed_txn, field.is_bytes, field.is_bigint) }} }
+{ kind: 'array', item: {{ base_type(field.ref_model, field.is_signed_txn, field.is_bytes, field.is_bigint, none) }} }
 {%- else -%}
-{{ base_type(field.ref_model, field.is_signed_txn, field.is_bytes, field.is_bigint) }}
+{{ base_type(field.ref_model, field.is_signed_txn, field.is_bytes, field.is_bigint, field.inline_meta_name) }}
 {%- endif -%}
 {%- endmacro %}
 
@@ -57,6 +59,29 @@ import type { {{ r }} } from './{{ r | ts_kebab_case }}';
 import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
 {%   endif %}
 {% endfor %}
+
+{% macro inline_object_meta(inline_schema, required_fields, meta_name) -%}
+{ name: '{{ meta_name }}', kind: 'object', fields: [
+{%- for prop_name, prop_schema in inline_schema.get('properties', {}).items() %}
+    {
+      name: '{{ prop_name | ts_camel_case }}',
+      wireKey: '{{ prop_name }}',
+      optional: {{ 'false' if prop_name in required_fields else 'true' }},
+      nullable: {{ 'true' if prop_schema.get('nullable') else 'false' }},
+      type: {{ scalar_meta(prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64'), prop_schema.get('x-algokit-bigint')) }},
+    },
+{%- endfor %}
+  ] }
+{%- endmacro %}
+
+{% if descriptor.is_object %}
+{%   for f in descriptor.fields %}
+{%     if f.inline_object_schema %}
+const {{ f.inline_meta_name }}: ModelMetadata = {{ inline_object_meta(f.inline_object_schema, f.inline_object_schema.get('required', []), f.inline_meta_name) }};
+
+{%     endif %}
+{%   endfor %}
+{% endif %}
 
 {{ schema.description | ts_doc_comment }}
 {% if isObject and schema.get('allOf') is not defined and schema.get('oneOf') is not defined and schema.get('anyOf') is not defined %}

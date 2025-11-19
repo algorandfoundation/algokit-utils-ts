@@ -29,14 +29,14 @@ export const StateProofRevealMeta: ModelMetadata = {
       wireKey: 'sig-slot',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateProofSigSlotMeta },
+      type: { kind: 'model', meta: StateProofSigSlotMeta },
     },
     {
       name: 'participant',
       wireKey: 'participant',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => StateProofParticipantMeta },
+      type: { kind: 'model', meta: StateProofParticipantMeta },
     },
   ],
 }

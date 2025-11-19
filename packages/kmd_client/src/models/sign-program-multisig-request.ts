@@ -40,14 +40,14 @@ export const SignProgramMultisigRequestMeta: ModelMetadata = {
       wireKey: 'partial_multisig',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => MultisigSigMeta },
+      type: { kind: 'model', meta: MultisigSigMeta },
     },
     {
       name: 'publicKey',
       wireKey: 'public_key',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      type: { kind: 'model', meta: PublicKeyMeta },
     },
     {
       name: 'useLegacyMsig',

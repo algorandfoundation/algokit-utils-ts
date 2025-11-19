@@ -26,7 +26,7 @@ export const ApplicationKvStorageMeta: ModelMetadata = {
       wireKey: 'kvs',
       optional: false,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AvmKeyValueMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: AvmKeyValueMeta } },
     },
     {
       name: 'account',

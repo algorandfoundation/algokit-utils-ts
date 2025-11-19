@@ -28,7 +28,7 @@ export const SignTransactionRequestMeta: ModelMetadata = {
       wireKey: 'public_key',
       optional: true,
       nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      type: { kind: 'model', meta: PublicKeyMeta },
     },
     {
       name: 'transaction',

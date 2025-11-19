@@ -169,7 +169,7 @@ export class AssetManager {
     const asset = await this._algod.getAssetById(assetId)
 
     return {
-      assetId: BigInt(asset.index),
+      assetId: BigInt(asset.id),
       total: BigInt(asset.params.total),
       decimals: Number(asset.params.decimals),
       assetName: asset.params.name,

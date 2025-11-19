@@ -61,7 +61,7 @@ export const SimulationTransactionExecTraceMeta: ModelMetadata = {
       wireKey: 'approval-program-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SimulationOpcodeTraceUnitMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: SimulationOpcodeTraceUnitMeta } },
     },
     {
       name: 'approvalProgramHash',
@@ -75,7 +75,7 @@ export const SimulationTransactionExecTraceMeta: ModelMetadata = {
       wireKey: 'clear-state-program-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SimulationOpcodeTraceUnitMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: SimulationOpcodeTraceUnitMeta } },
     },
     {
       name: 'clearStateProgramHash',
@@ -103,7 +103,7 @@ export const SimulationTransactionExecTraceMeta: ModelMetadata = {
       wireKey: 'logic-sig-trace',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SimulationOpcodeTraceUnitMeta } },
+      type: { kind: 'array', item: { kind: 'model', meta: SimulationOpcodeTraceUnitMeta } },
     },
     {
       name: 'logicSigHash',
