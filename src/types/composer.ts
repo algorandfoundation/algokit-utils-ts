@@ -137,7 +137,13 @@ export type SkipSignaturesSimulateOptions = Expand<
 export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
 
 /** All options to control a simulate request */
-export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
+export type SimulateOptions = Expand<
+  Partial<SkipSignaturesSimulateOptions> &
+    RawSimulateOptions & {
+      /** Whether or not to throw error on simulation failure */
+      throwOnFailure?: boolean
+    }
+>
 
 type Txn =
   | { data: PaymentParams; type: 'pay' }
@@ -2018,7 +2024,7 @@ export class TransactionComposer {
    */
   async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
-    const { skipSignatures = false, ...rawOptions } = options ?? {}
+    const { skipSignatures = false, throwOnFailure = true, ...rawOptions } = options ?? {}
 
     if (skipSignatures) {
       rawOptions.allowEmptySignatures = true
@@ -2050,9 +2056,6 @@ export class TransactionComposer {
     const transactions = transactionsWithSigner.map((e) => e.txn)
     const signedTransactions = await this.signTransactions(transactionsWithSigner)
 
-    // TODO: PD - think about readonly transaction, consider allowUnnamedResources
-    // TODO: PD - flag for not throwing error
-
     const simulateRequest = {
       txnGroups: [
         {
@@ -2078,7 +2081,7 @@ export class TransactionComposer {
     const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
     const simulateResult = simulateResponse.txnGroups[0]
 
-    if (simulateResult?.failureMessage) {
+    if (simulateResult?.failureMessage && throwOnFailure) {
       const errorMessage = `Transaction failed at transaction(s) ${simulateResult.failedAt?.join(', ') || 'unknown'} in the group. ${simulateResult.failureMessage}`
       const error = new Error(errorMessage)
 
