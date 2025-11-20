@@ -2,8 +2,6 @@
 /** ARC-56 spec */
 /****************/
 
-import { ABIType, getABIStructType, getABIType } from './abi-type'
-
 /** Describes the entire contract. This type is an extension of the type described in ARC-4 */
 export type Arc56Contract = {
   /** The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56 */
@@ -279,11 +277,4 @@ export type ProgramSourceInfo = {
    * - cblocks: The pc values in sourceInfo are offset by the PC of the first op following the last cblock at the top of the program
    */
   pcOffsetMethod: 'none' | 'cblocks'
-}
-
-function foo(appSpec: Arc56Contract, type: string): ABIType {
-  if (appSpec.structs[type]) {
-    return getABIStructType(type, appSpec.structs)
-  }
-  return getABIType(type)
 }

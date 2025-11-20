@@ -1,12 +1,12 @@
+import { ABIMethod, ABIReturn, ABIValue, getABIMethodSignature as abiGetABIMethodSignature } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, ABIMethodParams, ABIValue, Address } from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import { encodeLease, getSenderAddress } from './transaction/transaction'
 import {
   ABIAppCallArgs,
-  ABIReturn,
   AppCallArgs,
   AppCallParams,
   AppCallTransactionResult,
@@ -57,7 +57,7 @@ export async function createApp(
           onComplete,
           approvalProgram: create.approvalProgram,
           clearStateProgram: create.clearStateProgram,
-          method: create.args.method instanceof ABIMethod ? create.args.method : new ABIMethod(create.args.method),
+          method: create.args.method,
           extraProgramPages: create.schema.extraPages,
           schema: create.schema,
         },
@@ -113,7 +113,7 @@ export async function updateApp(
           onComplete: OnApplicationComplete.UpdateApplication,
           approvalProgram: update.approvalProgram,
           clearStateProgram: update.clearStateProgram,
-          method: update.args.method instanceof ABIMethod ? update.args.method : new ABIMethod(update.args.method),
+          method: update.args.method,
         },
         (c) => c.appUpdateMethodCall,
         (c) => c.appUpdateMethodCall,
@@ -200,7 +200,7 @@ export async function callApp(call: AppCallParams, algod: AlgodClient): Promise<
           sender: getSenderAddress(call.from),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onComplete: onComplete as any,
-          method: call.args.method instanceof ABIMethod ? call.args.method : new ABIMethod(call.args.method),
+          method: call.args.method,
         },
         (c) => c.appCallMethodCall,
         (c) => c.appCallMethodCall,
@@ -232,9 +232,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransacti
   if (!args || !args.method) {
     return undefined
   }
-  const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
-
-  return AppManager.getABIReturn(confirmation, method)
+  return AppManager.getABIReturn(confirmation, args.method)
 }
 
 /**
@@ -425,12 +423,12 @@ export async function compileTeal(tealCode: string, algod: AlgodClient): Promise
 }
 
 /**
- * @deprecated Use `abiMethod.getSignature()` or `new ABIMethod(abiMethodParams).getSignature()` instead.
+ * @deprecated Use `getABIMethodSignature()` from `algokit-abi`
  *
  * Returns the encoded ABI spec for a given ABI Method
  * @param method The method to return a signature for
  * @returns The encoded ABI method spec e.g. `method_name(uint64,string)string`
  */
-export const getABIMethodSignature = (method: ABIMethodParams | ABIMethod) => {
-  return 'getSignature' in method ? method.getSignature() : new ABIMethod(method).getSignature()
+export const getABIMethodSignature = (method: ABIMethod) => {
+  return abiGetABIMethodSignature(method)
 }

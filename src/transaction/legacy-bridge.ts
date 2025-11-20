@@ -1,7 +1,7 @@
+import { ABIValue, abiTypeIsTransaction } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, abiTypeIsTransaction } from '@algorandfoundation/sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
@@ -147,7 +147,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
       }
 
       // Handle transaction args separately to avoid conflicts with ABIStructValue
-      const abiArgumentType = args.method.args.at(index)!.type
+      const abiArgumentType = args.method.args.at(index)!.argType
       if (abiTypeIsTransaction(abiArgumentType)) {
         const t = a as TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult> | SendTransactionResult
         return 'txn' in t
@@ -159,11 +159,11 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
               : { txn: t, signer }
       }
 
-      return a as algosdk.ABIValue
+      return a as ABIValue
     }),
   )
   return {
-    method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
+    method: args.method,
     sender: getSenderAddress(from),
     signer: signer,
     boxes: args.boxes?.map(_getBoxReference),

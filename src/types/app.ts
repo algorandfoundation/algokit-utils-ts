@@ -3,7 +3,6 @@ import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
-import { ABIMethodParams } from './app-spec'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,
@@ -109,7 +108,7 @@ export type ABIAppCallArg =
  */
 export type ABIAppCallArgs = CoreAppCallArgs & {
   /** The ABI method to call */
-  method: ABIMethodParams | ABIMethod
+  method: ABIMethod
   /** The ABI method args to pass in */
   methodArgs: ABIAppCallArg[]
 }

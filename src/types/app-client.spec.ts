@@ -1,7 +1,9 @@
+import { decodeABIValue, encodeABIValue, getABIMethod, getABIType } from '@algorandfoundation/algokit-abi'
+import { getABIStructType } from '@algorandfoundation/algokit-abi/abi-type'
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Account, Address, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { Account, Address, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
@@ -11,7 +13,6 @@ import { getTestingAppContract } from '../../tests/example-contracts/testing-app
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
 import { ABIAppCallArg } from './app'
-import { getABIDecodedValue } from './app-arc56'
 import { AppClient, ApplicationClient } from './app-client'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
@@ -799,11 +800,11 @@ describe('application-client', () => {
     const expectedValue = 1234524352
     await client.call({
       method: 'set_box',
-      methodArgs: [boxName1, algosdk.encodeABIValue(algosdk.getABIType("uint32"), expectedValue)],
+      methodArgs: [boxName1, encodeABIValue(getABIType('uint32'), expectedValue)],
       boxes: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(algosdk.getABIType("uint32"), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, algosdk.getABIType("uint32"))
+    const boxes = await client.getBoxValuesFromABIType(getABIType('uint32'), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, getABIType('uint32'))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
@@ -935,7 +936,7 @@ describe('app-client', () => {
     const appCall1Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: algosdk.ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
+      method: getABIMethod('set_global(uint64,uint64,string,byte[4])void'),
       args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
     }
 
@@ -948,7 +949,7 @@ describe('app-client', () => {
     const appCall2Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: algosdk.ABIMethod.fromSignature('call_abi(string)string'),
+      method: getABIMethod('call_abi(string)string'),
       args: ['test'],
     }
 
@@ -1005,12 +1006,17 @@ describe('app-client', () => {
 
     describe('getABIDecodedValue', () => {
       test('correctly decodes a struct containing a uint16', () => {
-        const decoded = getABIDecodedValue(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100]), 'User', {
+        const structType = getABIStructType('User', {
           User: [
             { name: 'userId', type: 'uint16' },
             { name: 'name', type: 'string' },
           ],
-        }) as { userId: number; name: string }
+        })
+
+        const decoded = decodeABIValue(structType, new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100])) as {
+          userId: number
+          name: string
+        }
 
         expect(typeof decoded.userId).toBe('number')
         expect(decoded.userId).toBe(1)
@@ -1022,8 +1028,8 @@ describe('app-client', () => {
         // Generate all valid ABI uint bit lengths
         Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
       )('correctly decodes a uint%i', (bitLength) => {
-        const encoded = algosdk.encodeABIValue(algosdk.getABIType(`uint${bitLength}`), 1)
-        const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
+        const encoded = encodeABIValue(getABIType(`uint${bitLength}`), 1)
+        const decoded = decodeABIValue(getABIType(`uint${bitLength}`), encoded)
 
         if (bitLength < 53) {
           expect(typeof decoded).toBe('number')

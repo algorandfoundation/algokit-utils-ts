@@ -1,17 +1,17 @@
-import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import {
   ABIMethod,
   ABIReferenceType,
   ABIType,
-  ABIValue,
   ABITypeName,
-  Address,
-  TransactionSigner,
+  ABIValue,
   abiTypeIsReference,
   abiTypeIsTransaction,
   encodeABIValue,
-} from '@algorandfoundation/sdk'
+  getABIMethodSelector,
+} from '@algorandfoundation/algokit-abi'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { AppManager } from '../types/app-manager'
@@ -235,7 +235,7 @@ function populateMethodArgsIntoReferenceArrays(
   const apps = appReferences ?? []
 
   methodArgs.forEach((arg, i) => {
-    const argType = method.args[i].type
+    const argType = method.args[i].argType
     if (abiTypeIsReference(argType)) {
       switch (argType) {
         case 'account':
@@ -319,7 +319,7 @@ function encodeMethodArguments(
   const encodedArgs = new Array<Uint8Array>()
 
   // Insert method selector at the front
-  encodedArgs.push(method.getSelector())
+  encodedArgs.push(getABIMethodSelector(method))
 
   // Get ABI types for non-transaction arguments
   const abiTypes = new Array<ABIType>()
@@ -330,11 +330,11 @@ function encodeMethodArguments(
     const methodArg = method.args[i]
     const argValue = args[i]
 
-    if (abiTypeIsTransaction(methodArg.type)) {
+    if (abiTypeIsTransaction(methodArg.argType)) {
       // Transaction arguments are not ABI encoded - they're handled separately
-    } else if (abiTypeIsReference(methodArg.type)) {
+    } else if (abiTypeIsReference(methodArg.argType)) {
       // Reference types are encoded as uint8 indexes
-      const referenceType = methodArg.type
+      const referenceType = methodArg.argType
       if (typeof argValue === 'string' || typeof argValue === 'bigint') {
         const foreignIndex = calculateMethodArgReferenceArrayIndex(
           argValue,
@@ -353,7 +353,7 @@ function encodeMethodArguments(
       }
     } else if (argValue !== undefined) {
       // Regular ABI value
-      abiTypes.push(methodArg.type)
+      abiTypes.push(methodArg.argType)
       // it's safe to cast to ABIValue here because the abiType must be ABIValue
       abiValues.push(argValue as ABIValue)
     }

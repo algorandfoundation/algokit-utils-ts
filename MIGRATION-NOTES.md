@@ -41,6 +41,8 @@ A collection of random notes pop up during the migration process.
     - TestContractClient was updated
   - TODO: PD - confirm Converts `bigint`'s for Uint's < 64 to `number` for easier use.
   - TODO: PD - look into convertAbiByteArrays
+  - TODO: PD - support txnCount for ABIMethod
+  - Remove `ABIMethodParams`
 - Make sure that the python utils also sort resources during resource population
 - migration stratefy for EventType.TxnGroupSimulated in utils-ts-debug
 - create BuildComposerTransactionsError error type

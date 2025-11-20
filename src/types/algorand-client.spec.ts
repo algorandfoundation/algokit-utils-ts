@@ -1,3 +1,4 @@
+import { findABIMethod, getABIMethodSelector } from '@algorandfoundation/algokit-abi'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Account, Address } from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
@@ -5,6 +6,7 @@ import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/clie
 import { algorandFixture } from '../testing'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
+import { arc32ToArc56 } from './app-spec'
 import { AppCallMethodCall } from './composer'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
@@ -118,7 +120,7 @@ describe('AlgorandClient', () => {
         sender: alice,
         appId: appId,
         args: [
-          appClient.appClient.getABIMethod('doMath')!.getSelector(),
+          getABIMethodSelector(appClient.appClient.getABIMethod('doMath')!),
           algosdk.encodeUint64(1),
           algosdk.encodeUint64(2),
           Uint8Array.from(Buffer.from('AANzdW0=', 'base64')), //sum
@@ -270,11 +272,11 @@ describe('AlgorandClient', () => {
   })
 
   test('methodCall create', async () => {
-    const contract = new algosdk.ABIContract(APP_SPEC.contract)
+    const arc56Contract = arc32ToArc56(APP_SPEC)
 
     await algorand.send.appCreateMethodCall({
       sender: alice,
-      method: contract.getMethodByName('createApplication'),
+      method: findABIMethod('createApplication', arc56Contract),
       approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
       clearStateProgram: await compileProgram(algorand, APP_SPEC.source.clear),
     })

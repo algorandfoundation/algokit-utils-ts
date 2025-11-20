@@ -1,3 +1,4 @@
+import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, ApplicationStateSchema } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -7,7 +8,6 @@ import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-br
 import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
 import { AlgorandClientTransactionSender } from './types/algorand-client-transaction-sender'
 import {
-  ABIReturn,
   APP_DEPLOY_NOTE_DAPP,
   AppCompilationResult,
   AppDeployMetadata,
@@ -140,8 +140,7 @@ export async function deployApp(
     createParams: deployment.createArgs?.method
       ? ({
           ...createParams,
-          method:
-            'txnCount' in deployment.createArgs.method ? deployment.createArgs.method : new algosdk.ABIMethod(deployment.createArgs.method),
+          method: deployment.createArgs.method,
           args: (await _getAppArgsForABICall(deployment.createArgs, deployment.from)).methodArgs,
         } satisfies AppCreateMethodCall)
       : ({
@@ -154,8 +153,7 @@ export async function deployApp(
     updateParams: deployment.updateArgs?.method
       ? ({
           ...updateParams,
-          method:
-            'txnCount' in deployment.updateArgs.method ? deployment.updateArgs.method : new algosdk.ABIMethod(deployment.updateArgs.method),
+          method: deployment.updateArgs.method,
           args: (await _getAppArgsForABICall(deployment.updateArgs, deployment.from)).methodArgs,
         } satisfies Omit<AppUpdateMethodCall, 'appId'>)
       : ({
@@ -168,8 +166,7 @@ export async function deployApp(
     deleteParams: deployment.deleteArgs?.method
       ? ({
           ...deleteParams,
-          method:
-            'txnCount' in deployment.deleteArgs.method ? deployment.deleteArgs.method : new algosdk.ABIMethod(deployment.deleteArgs.method),
+          method: deployment.deleteArgs.method,
           args: (await _getAppArgsForABICall(deployment.deleteArgs, deployment.from)).methodArgs,
         } satisfies Omit<AppDeleteMethodCall, 'appId'>)
       : ({
