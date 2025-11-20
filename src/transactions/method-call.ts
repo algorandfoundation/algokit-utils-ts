@@ -1,3 +1,4 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import {
   ABIMethod,
@@ -12,11 +13,12 @@ import {
   encodeABIValue,
 } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
+import { AlgoAmount } from '../types/amount'
 import { AppManager } from '../types/app-manager'
 import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
 import { AppCreateParams, AppDeleteParams, AppMethodCallParams, AppUpdateParams } from './app-call'
-import { TransactionHeader } from './common'
+import { TransactionCommonData, buildTransactionCommonData } from './common'
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
@@ -85,13 +87,22 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
 type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 
+export type AsyncTransactionParams = {
+  txn: Promise<Transaction>
+  signer?: TransactionSigner
+  maxFee?: AlgoAmount
+}
+
+export type TransactionParams = {
+  txn: Transaction
+  signer?: TransactionSigner
+  maxFee?: AlgoAmount
+}
+
 type ExtractedMethodCallTransactionArg =
-  | { data: TransactionWithSigner; type: 'txnWithSigner' }
+  | { data: TransactionParams; type: 'txn' }
   | {
-      data: {
-        txn: Promise<Transaction>
-        signer?: TransactionSigner
-      }
+      data: AsyncTransactionParams
       type: 'asyncTxn'
     }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
@@ -125,7 +136,7 @@ export function extractComposerTransactionsFromAppMethodCallParams(
           txn: arg.txn,
           signer: arg.signer,
         },
-        type: 'txnWithSigner',
+        type: 'txn',
       })
 
       continue
@@ -418,7 +429,7 @@ function buildMethodCallCommon(
     appReferences?: bigint[]
     assetReferences?: bigint[]
   },
-  header: TransactionHeader,
+  header: TransactionCommonData,
 ): { args: Uint8Array[]; accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
   const { accountReferences, appReferences, assetReferences } = populateMethodArgsIntoReferenceArrays(
     header.sender,
@@ -451,8 +462,10 @@ function buildMethodCallCommon(
 export const buildAppCreateMethodCall = async (
   params: ProcessedAppCreateMethodCall,
   appManager: AppManager,
-  header: TransactionHeader,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
 ): Promise<Transaction> => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   const approvalProgram =
     typeof params.approvalProgram === 'string'
       ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
@@ -487,14 +500,14 @@ export const buildAppCreateMethodCall = async (
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
     },
-    header,
+    commonData,
   )
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AppCall,
     appCall: {
       appId: 0n,
@@ -521,8 +534,10 @@ export const buildAppCreateMethodCall = async (
 export const buildAppUpdateMethodCall = async (
   params: ProcessedAppUpdateMethodCall,
   appManager: AppManager,
-  header: TransactionHeader,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
 ): Promise<Transaction> => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   const approvalProgram =
     typeof params.approvalProgram === 'string'
       ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
@@ -541,14 +556,14 @@ export const buildAppUpdateMethodCall = async (
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
     },
-    header,
+    commonData,
   )
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AppCall,
     appCall: {
       appId: params.appId,
@@ -557,7 +572,7 @@ export const buildAppUpdateMethodCall = async (
       clearStateProgram: clearStateProgram,
       args: common.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences }
+        ? { accessReferences: params.accessReferences }
         : {
             accountReferences: params.accountReferences?.map((a) => a.toString()),
             appReferences: params.appReferences,
@@ -569,7 +584,12 @@ export const buildAppUpdateMethodCall = async (
   }
 }
 
-export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall, header: TransactionHeader): Promise<Transaction> => {
+export const buildAppCallMethodCall = async (
+  params: ProcessedAppCallMethodCall,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Promise<Transaction> => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   const accountReferences = params.accountReferences?.map((a) => a.toString())
   const common = buildMethodCallCommon(
     {
@@ -580,14 +600,14 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
     },
-    header,
+    commonData,
   )
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AppCall,
     appCall: {
       appId: params.appId,

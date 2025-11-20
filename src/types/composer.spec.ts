@@ -65,6 +65,26 @@ describe('TransactionComposer', () => {
 
       await expect(composer.send()).rejects.toThrow('ASSET MISSING!')
     })
+
+    test('not throw error from simulate when the flag is set', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+      const composer = algorand.newGroup()
+
+      composer.addAssetTransfer({
+        amount: 1n,
+        assetId: 1337n,
+        sender,
+        receiver: sender,
+      })
+
+      errorTransformers.forEach((errorTransformer) => {
+        composer.registerErrorTransformer(errorTransformer)
+      })
+
+      const simulateResult = await composer.simulate({ throwOnFailure: false })
+      expect(simulateResult).toBeDefined()
+    })
   })
 
   describe('clone composers', () => {

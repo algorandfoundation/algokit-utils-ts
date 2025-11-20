@@ -3,8 +3,7 @@ import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { encodeLease } from '../transaction'
 import { TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
-import { FeeDelta } from '../types/fee-coverage'
-import { genesisIdIsLocalNet } from '../types/network-client'
+import { FeeDelta } from './fee-coverage'
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
@@ -47,7 +46,7 @@ export type CommonTransactionParams = {
   lastValidRound?: bigint
 }
 
-export type TransactionHeader = {
+export type TransactionCommonData = {
   sender: string
   fee?: bigint
   firstValid: bigint
@@ -66,10 +65,10 @@ export const ensureString = (data?: string | Uint8Array) => {
   return typeof data === 'string' ? encoder.encode(data) : data
 }
 
-export const buildTransactionHeader = (
+export const buildTransactionCommonData = (
   commonParams: CommonTransactionParams,
   suggestedParams: SuggestedParams,
-  defaultValidityWindow: number,
+  defaultValidityWindow: bigint,
 ) => {
   const firstValid = commonParams.firstValidRound ?? suggestedParams.firstValid
   const lease = commonParams.lease === undefined ? undefined : encodeLease(commonParams.lease)
@@ -86,11 +85,9 @@ export const buildTransactionHeader = (
     firstValid,
     lastValid:
       commonParams.lastValidRound ??
-      (commonParams.validityWindow !== undefined
-        ? firstValid + BigInt(commonParams.validityWindow)
-        : firstValid + BigInt(defaultValidityWindow)),
+      (commonParams.validityWindow !== undefined ? firstValid + BigInt(commonParams.validityWindow) : firstValid + defaultValidityWindow),
     group: undefined,
-  } satisfies TransactionHeader
+  } satisfies TransactionCommonData
 }
 
 export function calculateInnerFeeDelta(
@@ -123,13 +120,4 @@ export function calculateInnerFeeDelta(
 
     return currentFeeDelta
   }, acc)
-}
-
-export function getDefaultValidityWindow(genesisId: string): number {
-  const isLocalNet = genesisIdIsLocalNet(genesisId)
-  if (isLocalNet) {
-    return 1000 // LocalNet gets bigger window to avoid dead transactions
-  } else {
-    return 10 // Standard default validity window
-  }
 }

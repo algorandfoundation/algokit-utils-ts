@@ -389,7 +389,7 @@ export function groupTransactions(transactions: Transaction[]): Transaction[] {
   const group = computeGroup(transactions)
   return transactions.map((tx) => ({
     ...tx,
-    group: group,
+    group,
   }))
 }
 
@@ -745,7 +745,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       txDto.al = accessList
     }
 
-    txDto.aprv = bigIntCodec.encode(transaction.appCall.rejectVersion)
+    txDto.aprv = numberCodec.encode(transaction.appCall.rejectVersion)
     txDto.apep = numberCodec.encode(transaction.appCall.extraProgramPages)
   }
 
@@ -996,7 +996,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
               return result
             })()
           : undefined,
-        rejectVersion: bigIntCodec.decodeOptional(transactionDto.aprv),
+        rejectVersion: numberCodec.decodeOptional(transactionDto.aprv),
         extraProgramPages: numberCodec.decodeOptional(transactionDto.apep),
         ...(transactionDto.apgs !== undefined
           ? {

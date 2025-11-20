@@ -1,3 +1,4 @@
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import { BuiltTransactions, TransactionComposer, TransactionComposerConfig } from './composer'
 import { Expand } from './expand'
 import { TransactionWrapper } from './transaction'
@@ -21,8 +22,8 @@ export class AlgorandClientTransactionCreator {
   private _transaction<T>(c: (c: TransactionComposer) => (params: T) => TransactionComposer): (params: T) => Promise<TransactionWrapper> {
     return async (params: T) => {
       const composer = this._newGroup()
-      const result = await c(composer).apply(composer, [params]).buildTransactions()
-      return new TransactionWrapper(result.transactions.at(-1)!)
+      const result = await c(composer).apply(composer, [params]).build()
+      return new TransactionWrapper(result.transactions.at(-1)!.txn)
     }
   }
 
@@ -31,7 +32,23 @@ export class AlgorandClientTransactionCreator {
   ): (params: T) => Promise<Expand<BuiltTransactions>> {
     return async (params: T) => {
       const composer = this._newGroup()
-      return await c(composer).apply(composer, [params]).buildTransactions()
+      const buildResult = await c(composer).apply(composer, [params]).build()
+
+      const transactions = buildResult.transactions.map((txnWithSigner) => txnWithSigner.txn)
+      transactions.forEach((txn) => {
+        delete txn.group
+      })
+
+      const signers = new Map<number, TransactionSigner>()
+      buildResult.transactions.forEach((txnWithSigner, index) => {
+        signers.set(index, txnWithSigner.signer)
+      })
+
+      return {
+        transactions,
+        methodCalls: buildResult.methodCalls,
+        signers,
+      }
     }
   }
 

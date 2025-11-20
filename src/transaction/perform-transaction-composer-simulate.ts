@@ -1,7 +1,9 @@
 import { RawSimulateOptions, SimulateOptions, TransactionComposer } from '../types/composer'
 
 /**
- * @deprecated Use `composer.simulate` with `allowEmptySignatures` flag set to true
+ * @deprecated Use `composer.simulate` with
+ *  - `allowEmptySignatures` flag set to true
+ *  - `throwOnFailure` flag set to false
  *
  * Performs a simulation of the transactions loaded into the given TransactionComposer.
  * Uses empty transaction signers for all transactions.
@@ -10,13 +12,20 @@ import { RawSimulateOptions, SimulateOptions, TransactionComposer } from '../typ
  * @returns The simulation result, which includes various details about how the transactions would be processed.
  */
 export async function performTransactionComposerSimulate(composer: TransactionComposer, options?: RawSimulateOptions) {
-  // NOTE: the existing version takes atc as params, then call atc.buildGroup to get the transactions
-  // The state of the atc is unknown, whether it has resource populated or not
-  // In this version, we call composer.simulate which doesn't do resource population
-
   const simulateOptions = {
-    ...options,
-    allowEmptySignatures: true,
+    ...(options ?? {
+      skipSignatures: true,
+      allowEmptySignatures: true,
+      fixSigners: true,
+      allowMoreLogging: true,
+      execTraceConfig: {
+        enable: true,
+        scratchChange: true,
+        stackChange: true,
+        stateChange: true,
+      },
+      throwOnFailure: false,
+    }),
   } satisfies SimulateOptions
 
   const simulateResult = await composer.simulate(simulateOptions)

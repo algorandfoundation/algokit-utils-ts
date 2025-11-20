@@ -890,7 +890,7 @@ describe('app-client', () => {
   test('clone overriding the defaultSender and inheriting appName', async () => {
     const { testAccount } = localnet.context
     const appClient = await deploy(testAccount, 'overridden')
-    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(0.1) })
+    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(2) })
 
     const clonedAppClient = appClient.clone({
       defaultSender: testAccount2.addr,
@@ -899,7 +899,9 @@ describe('app-client', () => {
     expect(appClient.appName).toBe('overridden')
     expect(clonedAppClient.appId).toBe(appClient.appId)
     expect(clonedAppClient.appName).toBe(appClient.appName)
-    expect((await clonedAppClient.createTransaction.bare.call()).sender).toBe(testAccount2.addr.toString())
+    expect((await clonedAppClient.createTransaction.call({ method: 'default_value', args: ['test value'] })).transactions[0].sender).toBe(
+      testAccount2.addr.toString(),
+    )
   })
 
   test('clone overriding appName', async () => {

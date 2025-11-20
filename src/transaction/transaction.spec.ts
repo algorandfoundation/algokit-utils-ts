@@ -11,6 +11,7 @@ import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/Res
 import { algo, microAlgo } from '../amount'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
+import { TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import { PaymentParams, TransactionComposer } from '../types/composer'
@@ -1044,7 +1045,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: algosdk.Address & algosdk.Account
+  let testAccount: algosdk.Address & algosdk.Account & TransactionSignerAccount
 
   beforeEach(fixture.newScope)
 
@@ -1132,7 +1133,14 @@ describe('Resource population: meta', () => {
 
     const result = await externalClient.send.call({
       method: 'createBoxInNewApp',
-      args: [algorand.createTransaction.payment({ sender: testAccount, receiver: externalClient.appAddress, amount: (1).algo() })],
+      args: [
+        algorand.createTransaction.payment({
+          sender: testAccount,
+          receiver: externalClient.appAddress,
+          amount: (1).algo(),
+          signer: testAccount,
+        }),
+      ],
       staticFee: (4_000).microAlgo(),
     })
 
