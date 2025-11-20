@@ -134,16 +134,13 @@ export type SkipSignaturesSimulateOptions = Expand<
 /** The raw API options to control a simulate request.
  * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
-export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
+export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>> & {
+  /** Whether or not to throw error on simulation failure */
+  throwOnFailure?: boolean
+}
 
 /** All options to control a simulate request */
-export type SimulateOptions = Expand<
-  Partial<SkipSignaturesSimulateOptions> &
-    RawSimulateOptions & {
-      /** Whether or not to throw error on simulation failure */
-      throwOnFailure?: boolean
-    }
->
+export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
 
 type Txn =
   | { data: PaymentParams; type: 'pay' }
@@ -238,7 +235,7 @@ class BuildComposerTransactionsError extends Error {
   constructor(
     message: string,
     public sentTransactions?: Transaction[],
-    public simulateTransacton?: SimulateTransaction,
+    public simulateResponse?: SimulateTransaction,
   ) {
     super(message)
     this.name = 'BuildComposerTransactionsError'
@@ -1867,11 +1864,20 @@ export class TransactionComposer {
       }
 
       if (Config.debug && Config.traceAll) {
-        const simulateResponse = await this.simulateTransactionsWithNoSigner(
-          this.transactionsWithSigners.map((transactionWithSigner) => transactionWithSigner.txn),
-        )
+        const simulateResult = await this.simulate({
+          allowEmptySignatures: true,
+          fixSigners: true,
+          allowMoreLogging: true,
+          execTraceConfig: {
+            enable: true,
+            scratchChange: true,
+            stackChange: true,
+            stateChange: true,
+          },
+          throwOnFailure: false,
+        })
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
-          simulateResponse,
+          simulateResponse: simulateResult,
         })
       }
 
@@ -1939,10 +1945,24 @@ export class TransactionComposer {
           err,
         )
 
-        const simulateResponse =
-          originalError instanceof BuildComposerTransactionsError
-            ? originalError.simulateTransacton
-            : await this.simulateTransactionsWithNoSigner(sentTransactions)
+        let simulateResponse: SimulateTransaction | undefined
+        if (originalError instanceof BuildComposerTransactionsError) {
+          simulateResponse = originalError.simulateResponse
+        } else {
+          const simulateResult = await this.simulate({
+            allowEmptySignatures: true,
+            fixSigners: true,
+            allowMoreLogging: true,
+            execTraceConfig: {
+              enable: true,
+              scratchChange: true,
+              stackChange: true,
+              stateChange: true,
+            },
+            throwOnFailure: false,
+          })
+          simulateResponse = simulateResult.simulateResponse
+        }
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
@@ -2194,30 +2214,6 @@ export class TransactionComposer {
     }
 
     return abiReturns
-  }
-
-  private async simulateTransactionsWithNoSigner(transactions: Transaction[]) {
-    const simulateRequest = {
-      allowEmptySignatures: true,
-      fixSigners: true,
-      allowMoreLogging: true,
-      execTraceConfig: {
-        enable: true,
-        scratchChange: true,
-        stackChange: true,
-        stateChange: true,
-      },
-      txnGroups: [
-        {
-          txns: transactions.map((txn) => ({
-            txn: txn,
-            signature: EMPTY_SIGNATURE,
-          })),
-        },
-      ],
-    } satisfies SimulateRequest
-    const simulateResult = await this.algod.simulateTransaction(simulateRequest)
-    return simulateResult
   }
 
   public setMaxFees(maxFees: Map<number, AlgoAmount>) {
