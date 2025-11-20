@@ -1,6 +1,7 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address } from '@algorandfoundation/sdk'
-import { CommonTransactionParams, TransactionHeader } from './common'
+import { CommonTransactionParams, buildTransactionCommonData } from './common'
 
 /** Parameters to define an asset transfer transaction. */
 export type AssetTransferParams = CommonTransactionParams & {
@@ -41,9 +42,14 @@ export type AssetOptOutParams = CommonTransactionParams & {
   creator: string | Address
 }
 
-export const buildAssetTransfer = (params: AssetTransferParams, header: TransactionHeader): Transaction => {
+export const buildAssetTransfer = (
+  params: AssetTransferParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetTransfer,
     assetTransfer: {
       assetId: params.assetId,
@@ -55,26 +61,32 @@ export const buildAssetTransfer = (params: AssetTransferParams, header: Transact
   }
 }
 
-export const buildAssetOptIn = (params: AssetOptInParams, header: TransactionHeader): Transaction => {
+export const buildAssetOptIn = (params: AssetOptInParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetTransfer,
     assetTransfer: {
       assetId: params.assetId,
       amount: 0n,
-      receiver: header.sender,
+      receiver: commonData.sender,
     },
   }
 }
 
-export const buildAssetOptOut = (params: AssetOptOutParams, header: TransactionHeader): Transaction => {
+export const buildAssetOptOut = (
+  params: AssetOptOutParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetTransfer,
     assetTransfer: {
       assetId: params.assetId,
       amount: 0n,
-      receiver: header.sender,
+      receiver: commonData.sender,
       closeRemainderTo: params.creator?.toString(),
     },
   }

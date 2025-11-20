@@ -1,6 +1,7 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address } from '@algorandfoundation/sdk'
-import { CommonTransactionParams, TransactionHeader, ensureString } from './common'
+import { CommonTransactionParams, buildTransactionCommonData, ensureString } from './common'
 
 /** Parameters to define an asset create transaction.
  *
@@ -185,9 +186,14 @@ export type AssetDestroyParams = CommonTransactionParams & {
   assetId: bigint
 }
 
-export const buildAssetCreate = (params: AssetCreateParams, header: TransactionHeader): Transaction => {
+export const buildAssetCreate = (
+  params: AssetCreateParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: 0n, // Asset creation always uses ID 0
@@ -206,9 +212,14 @@ export const buildAssetCreate = (params: AssetCreateParams, header: TransactionH
   }
 }
 
-export const buildAssetConfig = (params: AssetConfigParams, header: TransactionHeader): Transaction => {
+export const buildAssetConfig = (
+  params: AssetConfigParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: params.assetId,
@@ -220,9 +231,14 @@ export const buildAssetConfig = (params: AssetConfigParams, header: TransactionH
   }
 }
 
-export const buildAssetFreeze = (params: AssetFreezeParams, header: TransactionHeader): Transaction => {
+export const buildAssetFreeze = (
+  params: AssetFreezeParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetFreeze,
     assetFreeze: {
       assetId: params.assetId,
@@ -232,9 +248,14 @@ export const buildAssetFreeze = (params: AssetFreezeParams, header: TransactionH
   }
 }
 
-export const buildAssetDestroy = (params: AssetDestroyParams, header: TransactionHeader): Transaction => {
+export const buildAssetDestroy = (
+  params: AssetDestroyParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: params.assetId,

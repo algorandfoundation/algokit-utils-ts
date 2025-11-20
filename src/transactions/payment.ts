@@ -1,7 +1,8 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address } from '@algorandfoundation/sdk'
 import { AlgoAmount } from '../types/amount'
-import { CommonTransactionParams, TransactionHeader } from './common'
+import { CommonTransactionParams, buildTransactionCommonData } from './common'
 
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
@@ -16,13 +17,15 @@ export type PaymentParams = CommonTransactionParams & {
   closeRemainderTo?: string | Address
 }
 
-export const buildPayment = (params: PaymentParams, header: TransactionHeader): Transaction => {
+export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.Payment,
     payment: {
       receiver: params.receiver.toString(),
       amount: params.amount.microAlgos,
+      closeRemainderTo: params.closeRemainderTo?.toString(),
     },
   }
 }

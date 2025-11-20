@@ -1,5 +1,6 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { CommonTransactionParams, TransactionHeader } from './common'
+import { CommonTransactionParams, buildTransactionCommonData } from './common'
 
 /** Parameters to define an online key registration transaction. */
 export type OnlineKeyRegistrationParams = CommonTransactionParams & {
@@ -23,10 +24,15 @@ export type OfflineKeyRegistrationParams = CommonTransactionParams & {
   preventAccountFromEverParticipatingAgain?: boolean
 }
 
-export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, header: TransactionHeader): Transaction => {
+export const buildKeyReg = (
+  params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   if ('voteKey' in params) {
     return {
-      ...header,
+      ...commonData,
       type: TransactionType.KeyRegistration,
       keyRegistration: {
         voteKey: params.voteKey,
@@ -40,7 +46,7 @@ export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegi
     }
   } else {
     return {
-      ...header,
+      ...commonData,
       type: TransactionType.KeyRegistration,
       keyRegistration: {
         nonParticipation: params.preventAccountFromEverParticipatingAgain,

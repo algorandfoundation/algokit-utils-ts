@@ -58,7 +58,7 @@ import {
   type AssetDestroyParams,
   type AssetFreezeParams,
 } from '../transactions/asset-config'
-import { buildTransactionHeader, calculateInnerFeeDelta } from '../transactions/common'
+import { calculateInnerFeeDelta } from '../transactions/common'
 import { FeeDelta, FeePriority } from '../transactions/fee-coverage'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
@@ -1412,53 +1412,51 @@ export class TransactionComposer {
         transactionIndex++
       } else {
         let transaction: Transaction
-        const header = buildTransactionHeader(ctxn.data, suggestedParams, defaultValidityWindow)
-        const calculateFee = header?.fee === undefined
 
         switch (ctxn.type) {
           case 'pay':
-            transaction = buildPayment(ctxn.data, header)
+            transaction = buildPayment(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetCreate':
-            transaction = buildAssetCreate(ctxn.data, header)
+            transaction = buildAssetCreate(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetConfig':
-            transaction = buildAssetConfig(ctxn.data, header)
+            transaction = buildAssetConfig(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetFreeze':
-            transaction = buildAssetFreeze(ctxn.data, header)
+            transaction = buildAssetFreeze(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetDestroy':
-            transaction = buildAssetDestroy(ctxn.data, header)
+            transaction = buildAssetDestroy(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetTransfer':
-            transaction = buildAssetTransfer(ctxn.data, header)
+            transaction = buildAssetTransfer(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetOptIn':
-            transaction = buildAssetOptIn(ctxn.data, header)
+            transaction = buildAssetOptIn(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'assetOptOut':
-            transaction = buildAssetOptOut(ctxn.data, header)
+            transaction = buildAssetOptOut(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'appCall':
             if (!('appId' in ctxn.data)) {
-              transaction = await buildAppCreate(ctxn.data, this.appManager, header)
+              transaction = await buildAppCreate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
             } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
-              transaction = await buildAppUpdate(ctxn.data, this.appManager, header)
+              transaction = await buildAppUpdate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
             } else {
-              transaction = buildAppCall(ctxn.data, header)
+              transaction = buildAppCall(ctxn.data, suggestedParams, defaultValidityWindow)
             }
             break
           case 'keyReg':
-            transaction = buildKeyReg(ctxn.data, header)
+            transaction = buildKeyReg(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'methodCall':
             if (!('appId' in ctxn.data)) {
-              transaction = await buildAppCreateMethodCall(ctxn.data, this.appManager, header)
+              transaction = await buildAppCreateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
             } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
-              transaction = await buildAppUpdateMethodCall(ctxn.data, this.appManager, header)
+              transaction = await buildAppUpdateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
             } else {
-              transaction = await buildAppCallMethodCall(ctxn.data, header)
+              transaction = await buildAppCallMethodCall(ctxn.data, suggestedParams, defaultValidityWindow)
             }
             break
           default:
@@ -1466,7 +1464,7 @@ export class TransactionComposer {
             throw new Error(`Unsupported transaction type: ${(ctxn as any).type}`)
         }
 
-        if (calculateFee) {
+        if (transaction.fee === undefined) {
           transaction = assignFee(transaction, {
             feePerByte: suggestedParams.fee,
             minFee: suggestedParams.minFee,

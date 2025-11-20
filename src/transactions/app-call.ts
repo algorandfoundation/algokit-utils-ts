@@ -2,6 +2,7 @@ import {
   ApplicationLocalReference,
   AssetHoldingReference,
   SimulateUnnamedResourcesAccessed,
+  SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
 import {
@@ -15,7 +16,7 @@ import { Address } from '@algorandfoundation/sdk'
 import { AppManager, BoxIdentifier, BoxReference as UtilsBoxReference } from '../types/app-manager'
 import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
-import { CommonTransactionParams, TransactionHeader } from './common'
+import { CommonTransactionParams, buildTransactionCommonData } from './common'
 
 /** Common parameters for defining an application call transaction. */
 export type CommonAppCallParams = CommonTransactionParams & {
@@ -95,7 +96,13 @@ export type AppDeleteParams = CommonAppCallParams & {
   onComplete?: OnApplicationComplete.DeleteApplication
 }
 
-export const buildAppCreate = async (params: AppCreateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
+export const buildAppCreate = async (
+  params: AppCreateParams,
+  appManager: AppManager,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Promise<Transaction> => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   const approvalProgram =
     typeof params.approvalProgram === 'string'
       ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
@@ -125,7 +132,7 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AppCall,
     appCall: {
       appId: 0n, // App creation always uses ID 0
@@ -149,7 +156,13 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
   } satisfies Transaction
 }
 
-export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
+export const buildAppUpdate = async (
+  params: AppUpdateParams,
+  appManager: AppManager,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Promise<Transaction> => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   const approvalProgram =
     typeof params.approvalProgram === 'string'
       ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
@@ -163,7 +176,7 @@ export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppMan
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AppCall,
     appCall: {
       appId: params.appId,
@@ -184,12 +197,17 @@ export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppMan
   } satisfies Transaction
 }
 
-export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: TransactionHeader): Transaction => {
+export const buildAppCall = (
+  params: AppCallParams | AppDeleteParams,
+  suggestedParams: SuggestedParams,
+  defaultValidityWindow: bigint,
+): Transaction => {
+  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
   return {
-    ...header,
+    ...commonData,
     type: TransactionType.AppCall,
     appCall: {
       appId: params.appId,

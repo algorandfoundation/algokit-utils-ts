@@ -46,7 +46,7 @@ export type CommonTransactionParams = {
   lastValidRound?: bigint
 }
 
-export type TransactionHeader = {
+export type TransactionCommonData = {
   sender: string
   fee?: bigint
   firstValid: bigint
@@ -65,7 +65,7 @@ export const ensureString = (data?: string | Uint8Array) => {
   return typeof data === 'string' ? encoder.encode(data) : data
 }
 
-export const buildTransactionHeader = (
+export const buildTransactionCommonData = (
   commonParams: CommonTransactionParams,
   suggestedParams: SuggestedParams,
   defaultValidityWindow: bigint,
@@ -87,7 +87,7 @@ export const buildTransactionHeader = (
       commonParams.lastValidRound ??
       (commonParams.validityWindow !== undefined ? firstValid + BigInt(commonParams.validityWindow) : firstValid + defaultValidityWindow),
     group: undefined,
-  } satisfies TransactionHeader
+  } satisfies TransactionCommonData
 }
 
 export function calculateInnerFeeDelta(
