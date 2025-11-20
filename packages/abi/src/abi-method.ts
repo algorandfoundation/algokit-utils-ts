@@ -25,11 +25,30 @@ export type ABIMethodArg = {
   argType: ABIMethodArgType
   name?: string
   desciption?: string
+  // TODO: PD - implement default value
+  defaultValue?: ABIDefaultValue
 }
 
 export type ABIMethodReturn = {
   type: ABIReturnType
   description?: string
+}
+
+export type ABIDefaultValue = {
+  /** Base64 encoded bytes, base64 ARC4 encoded uint64, or UTF-8 method selector */
+  data: string
+  /** Where the default value is coming from */
+  source: DefaultValueSource
+  /** How the data is encoded. This is the encoding for the data provided here, not the arg type */
+  valueType?: ABIType
+}
+
+export enum DefaultValueSource {
+  Box = 'box',
+  Global = 'global',
+  Local = 'local',
+  Literal = 'literal',
+  Method = 'method',
 }
 
 /** Represents an ABI method return value with parsed data. */

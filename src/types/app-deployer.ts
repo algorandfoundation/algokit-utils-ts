@@ -1,3 +1,4 @@
+import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
@@ -9,7 +10,6 @@ import {
   APP_DEPLOY_NOTE_DAPP,
   OnSchemaBreak,
   OnUpdate,
-  type ABIReturn,
   type AppDeployMetadata,
   type SendAppCreateTransactionResult,
   type SendAppUpdateTransactionResult,
