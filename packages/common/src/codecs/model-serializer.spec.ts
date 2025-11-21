@@ -69,9 +69,15 @@ describe('ModelSerializer', () => {
       age: 30,
       address: { number: 10n, street: '', city: 'New York', postcode: 10001, random: 'test' },
       favouriteNumbers: [0n, 100n, 2147483648n],
-      data: new Map<Uint8Array, Uint8Array>([[Buffer.from('somekey', 'utf-8'), Buffer.from('somevalue', 'utf-8')]]),
+      data: new Map<Uint8Array, Uint8Array>([
+        [Uint8Array.from(Buffer.from('somekey', 'utf-8')), Uint8Array.from(Buffer.from('somevalue', 'utf-8'))],
+      ]),
       random: 1,
     }
+
+    // Add JSON big support
+    // Change bigint JSON codec to not stringify bigints
+    // Change array handling to use consistent values for numbers etc
 
     test('should encode the example model to a json ready model', () => {
       const encoded = ModelSerializer.encode<UserModel>(alice, userMetadata, 'json')
