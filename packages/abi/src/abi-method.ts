@@ -199,12 +199,21 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
     throw new Error('Invalid ABIMethod parameters')
   }
 
-  const args = method.args.map(({ type, name, desc, struct }) => {
+  const args = method.args.map(({ type, name, desc, struct, defaultValue }) => {
+    const convertedDefaultValue: ABIDefaultValue | undefined = defaultValue
+      ? {
+          data: defaultValue.data,
+          source: defaultValue.source as DefaultValueSource,
+          type: defaultValue.type ? (isAVMType(defaultValue.type) ? defaultValue.type : getABIType(defaultValue.type)) : undefined,
+        }
+      : undefined
+
     if (argTypeIsTransaction(type as ABIMethodArgType) || argTypeIsReference(type as ABIMethodArgType)) {
       return {
         type: type as ABIMethodArgType,
         name,
         desciption: desc,
+        defaultValue: convertedDefaultValue,
       } satisfies ABIMethodArg
     }
 
@@ -213,6 +222,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
         type: getABIStructType(struct, appSpec.structs),
         name,
         desciption: desc,
+        defaultValue: convertedDefaultValue,
       } satisfies ABIMethodArg
     }
 
@@ -220,6 +230,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
       type: getABIType(type),
       name,
       desciption: desc,
+      defaultValue: convertedDefaultValue,
     } satisfies ABIMethodArg
   })
 
