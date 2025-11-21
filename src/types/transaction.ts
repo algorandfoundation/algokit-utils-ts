@@ -18,6 +18,7 @@ import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './acc
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
+import { Address } from '@algorandfoundation/algokit-common'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -179,14 +180,14 @@ export interface AtomicTransactionComposerToSend extends SendParams {
 
 export class TransactionWrapper implements Transaction {
   type: TransactionType
-  sender: string
+  sender: Address
   fee?: bigint
   firstValid: bigint
   lastValid: bigint
   genesisHash?: Uint8Array
   genesisId?: string
   note?: Uint8Array
-  rekeyTo?: string
+  rekeyTo?: Address
   lease?: Uint8Array
   group?: Uint8Array
   payment?: PaymentTransactionFields

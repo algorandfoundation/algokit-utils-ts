@@ -7,12 +7,10 @@ import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import { CommonTransactionParams, TransactionComposer } from './composer'
+import { CommonTransactionParams, getAddress, ReadableAddress, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-
-const address = (address: string | Address) => (typeof address === 'string' ? Address.fromString(address) : address)
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -163,7 +161,7 @@ export class AccountManager {
    * @returns The `AccountManager` instance for method chaining
    */
   public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
-    this._accounts[address(sender).toString()] = { addr: address(sender), signer }
+    this._accounts[getAddress(sender).toString()] = { addr: getAddress(sender), signer }
     return this
   }
 
@@ -199,8 +197,8 @@ export class AccountManager {
    * ```
    * @returns The `TransactionSigner` or throws an error if not found and no default signer is set
    */
-  public getSigner(sender: string | Address): algosdk.TransactionSigner {
-    const signer = this._accounts[address(sender).toString()]?.signer ?? this._defaultSigner
+  public getSigner(sender: ReadableAddress): algosdk.TransactionSigner {
+    const signer = this._accounts[getAddress(sender).toString()]?.signer ?? this._defaultSigner
     if (!signer) throw new Error(`No signer found for address ${sender}`)
     return signer
   }
@@ -219,8 +217,8 @@ export class AccountManager {
    * ```
    * @returns The `TransactionSignerAccount` or throws an error if not found
    */
-  public getAccount(sender: string | Address): TransactionSignerAccount {
-    const account = this._accounts[address(sender).toString()]
+  public getAccount(sender: ReadableAddress): TransactionSignerAccount {
+    const account = this._accounts[getAddress(sender).toString()]
     if (!account) throw new Error(`No signer found for address ${sender}`)
     return account
   }
@@ -303,7 +301,7 @@ export class AccountManager {
    * @returns The account
    */
   public rekeyed(sender: string | Address, account: TransactionSignerAccount) {
-    return this.signerAccount({ addr: address(sender), signer: account.signer })
+    return this.signerAccount({ addr: getAddress(sender), signer: account.signer })
   }
 
   /**
@@ -510,10 +508,10 @@ export class AccountManager {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: address(account),
-        receiver: address(account),
+        sender: getAddress(account),
+        receiver: getAddress(account),
         amount: AlgoAmount.MicroAlgo(0),
-        rekeyTo: address(typeof rekeyTo === 'object' && 'addr' in rekeyTo ? rekeyTo.addr : rekeyTo),
+        rekeyTo: getAddress(typeof rekeyTo === 'object' && 'addr' in rekeyTo ? rekeyTo.addr : rekeyTo),
       })
       .send(options)
 
@@ -569,7 +567,7 @@ export class AccountManager {
     } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
-    const addressToFund = address(accountToFund)
+    const addressToFund = getAddress(accountToFund)
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined
@@ -577,7 +575,7 @@ export class AccountManager {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: address(dispenserAccount),
+        sender: getAddress(dispenserAccount),
         receiver: addressToFund,
         amount: amountFunded,
       })
@@ -630,7 +628,7 @@ export class AccountManager {
     } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
-    const addressToFund = address(accountToFund)
+    const addressToFund = getAddress(accountToFund)
     const dispenserAccount = await this.dispenserFromEnvironment()
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
@@ -690,7 +688,7 @@ export class AccountManager {
       throw new Error('Attempt to fund using TestNet dispenser API on non TestNet network.')
     }
 
-    const addressToFund = address(accountToFund)
+    const addressToFund = getAddress(accountToFund)
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined

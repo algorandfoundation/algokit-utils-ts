@@ -121,9 +121,12 @@ export class SigningAccount implements Account {
   }
 }
 
-/** A wrapper around `TransactionSigner` that also has the sender address. */
-export interface TransactionSignerAccount {
+export interface Addressable {
   addr: Readonly<Address>
+}
+
+/** A wrapper around `TransactionSigner` that also has the sender address. */
+export interface TransactionSignerAccount extends Addressable {
   signer: TransactionSigner
 }
 

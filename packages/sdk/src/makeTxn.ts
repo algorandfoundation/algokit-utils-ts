@@ -14,9 +14,9 @@ import {
 } from './types/transactions/base.js'
 
 // Helper function to convert Address to string
-function addressToString(addr: string | Address | undefined): string | undefined {
+function addressToClass(addr: string | Address | undefined): Address | undefined {
   if (!addr) return undefined
-  return typeof addr === 'string' ? addr : addr.toString()
+  return typeof addr === 'string' ? Address.fromString(addr) : addr
 }
 
 // Helper function to ensure bigint
@@ -61,18 +61,18 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
 }: PaymentTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
     type: TransactionType.Payment,
-    sender: addressToString(sender)!,
+    sender: addressToClass(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
     lease,
-    rekeyTo: addressToString(rekeyTo),
+    rekeyTo: addressToClass(rekeyTo),
     payment: {
-      receiver: addressToString(receiver)!,
+      receiver: addressToClass(receiver)!,
       amount: ensureBigInt(amount)!,
-      closeRemainderTo: addressToString(closeRemainderTo),
+      closeRemainderTo: addressToClass(closeRemainderTo),
     },
   }
 
@@ -100,14 +100,14 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
 }: KeyRegistrationTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
     type: TransactionType.KeyRegistration,
-    sender: addressToString(sender)!,
+    sender: addressToClass(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
     lease,
-    rekeyTo: addressToString(rekeyTo),
+    rekeyTo: addressToClass(rekeyTo),
     keyRegistration: {
       voteKey,
       selectionKey,
@@ -148,23 +148,23 @@ export function makeBaseAssetConfigTxn({
 }: AssetConfigurationTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
     type: TransactionType.AssetConfig,
-    sender: addressToString(sender)!,
+    sender: addressToClass(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
     lease,
-    rekeyTo: addressToString(rekeyTo),
+    rekeyTo: addressToClass(rekeyTo),
     assetConfig: {
       assetId: ensureBigInt(assetIndex)!,
       total: ensureBigInt(total),
       decimals: typeof decimals === 'number' ? decimals : undefined,
       defaultFrozen,
-      manager: addressToString(manager),
-      reserve: addressToString(reserve),
-      freeze: addressToString(freeze),
-      clawback: addressToString(clawback),
+      manager: addressToClass(manager),
+      reserve: addressToClass(reserve),
+      freeze: addressToClass(freeze),
+      clawback: addressToClass(clawback),
       unitName,
       assetName,
       url: assetURL,
@@ -355,17 +355,17 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
 }: AssetFreezeTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
     type: TransactionType.AssetFreeze,
-    sender: addressToString(sender)!,
+    sender: addressToClass(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
     lease,
-    rekeyTo: addressToString(rekeyTo),
+    rekeyTo: addressToClass(rekeyTo),
     assetFreeze: {
       assetId: ensureBigInt(assetIndex)!,
-      freezeTarget: addressToString(freezeTarget)!,
+      freezeTarget: addressToClass(freezeTarget)!,
       frozen,
     },
   }
@@ -398,20 +398,20 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
 
   const txn: Transaction = {
     type: TransactionType.AssetTransfer,
-    sender: addressToString(sender)!,
+    sender: addressToClass(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
     lease,
-    rekeyTo: addressToString(rekeyTo),
+    rekeyTo: addressToClass(rekeyTo),
     assetTransfer: {
       assetId: ensureBigInt(assetIndex)!,
-      receiver: addressToString(receiver)!,
+      receiver: addressToClass(receiver)!,
       amount: ensureBigInt(amount)!,
-      assetSender: addressToString(assetSender),
-      closeRemainderTo: addressToString(closeRemainderTo),
+      assetSender: addressToClass(assetSender),
+      closeRemainderTo: addressToClass(closeRemainderTo),
     },
   }
 
@@ -460,7 +460,7 @@ export function makeApplicationCallTxnFromObject({
   if (convertToAccess) {
     access2 = foreignArraysToResourceReferences({
       appIndex,
-      accounts,
+      accounts: accounts?.map((a) => addressToClass(a)!),
       foreignApps,
       foreignAssets,
       holdings,
@@ -470,7 +470,7 @@ export function makeApplicationCallTxnFromObject({
   }
 
   // Convert legacy foreign arrays to new format if access is not provided
-  const accountReferences = access2 ? undefined : accounts?.map((a) => addressToString(a)!)
+  const accountReferences = access2 ? undefined : accounts?.map((a) => addressToClass(a)!)
   const appReferences = access2 ? undefined : foreignApps?.map((a) => ensureBigInt(a)!)
   const assetReferences = access2 ? undefined : foreignAssets?.map((a) => ensureBigInt(a)!)
 
@@ -484,14 +484,14 @@ export function makeApplicationCallTxnFromObject({
 
   const txn: Transaction = {
     type: TransactionType.AppCall,
-    sender: addressToString(sender)!,
+    sender: addressToClass(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
     lease,
-    rekeyTo: addressToString(rekeyTo),
+    rekeyTo: addressToClass(rekeyTo),
     appCall: {
       appId: ensureBigInt(appIndex) || BigInt(0),
       onComplete,

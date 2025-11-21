@@ -1356,7 +1356,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice.toString() }],
+      accessReferences: [{ address: alice }],
     })
   })
 
@@ -1385,7 +1385,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(15)).map((a) => ({ address: a.toString() }))],
+      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
     })
   })
 
@@ -1395,7 +1395,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(16)).map((a) => ({ address: a.toString() }))],
+        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1436,7 +1436,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { address: alice.toString(), assetId: assetId } }],
+      accessReferences: [{ holding: { address: alice, assetId: assetId } }],
     })
   })
 
@@ -1449,7 +1449,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { address: alice.toString(), appId: externalClient.appId } }],
+      accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
     })
   })
 })

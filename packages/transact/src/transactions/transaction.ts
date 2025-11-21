@@ -4,7 +4,6 @@ import {
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
   TRANSACTION_ID_LENGTH,
-  ZERO_ADDRESS,
   concatArrays,
   hash,
 } from '@algorandfoundation/algokit-common'
@@ -41,6 +40,7 @@ import { HeartbeatTransactionFields } from './heartbeat'
 import { KeyRegistrationTransactionFields, validateKeyRegistrationTransaction } from './key-registration'
 import { PaymentTransactionFields } from './payment'
 import { MerkleArrayProof, Reveal, StateProofTransactionFields } from './state-proof'
+import { Address } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a complete Algorand transaction.
@@ -59,7 +59,7 @@ export type Transaction = {
    *
    * Fees are deducted from this account.
    */
-  sender: string
+  sender: Address
 
   /**
    * Optional transaction fee in microALGO.
@@ -108,7 +108,7 @@ export type Transaction = {
    * Reverting back control to the original address must be done by setting this field to
    * the original address.
    */
-  rekeyTo?: string
+  rekeyTo?: Address
 
   /**
    * Optional lease value to enforce mutual transaction exclusion.
@@ -250,10 +250,6 @@ export function encodeTransactions(transactions: Transaction[]): Uint8Array[] {
  * Validate a transaction
  */
 export function validateTransaction(transaction: Transaction): void {
-  if (!transaction.sender) {
-    throw new Error('Transaction sender is required')
-  }
-
   // Validate that only one transaction type specific field is set
   const typeFields = [
     transaction.payment,
@@ -647,7 +643,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       const appId = transaction.appCall.appId
 
       // Helper function to compare two addresses
-      function addressesEqual(a?: Uint8Array, b?: string): boolean {
+      function addressesEqual(a?: Uint8Array, b?: Address): boolean {
         if (!a && !b) return true
         if (!a || !b) return false
         const encodedB = addressCodec.encode(b)!
@@ -693,7 +689,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (accessReferences.holding) {
           const holding = accessReferences.holding
           let addressIndex = 0
-          if (holding.address && holding.address !== ZERO_ADDRESS) {
+          if (holding.address && holding.address.toString() !== Address.zeroAddress().toString()) {
             addressIndex = ensure({ address: holding.address })
           }
           const assetIndex = ensure({ assetId: holding.assetId })
@@ -709,7 +705,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (accessReferences.locals) {
           const locals = accessReferences.locals
           let addressIndex = 0
-          if (locals.address && locals.address !== ZERO_ADDRESS) {
+          if (locals.address && locals.address.toString() !== Address.zeroAddress().toString()) {
             addressIndex = ensure({ address: locals.address })
           }
           let appIndex = 0
@@ -945,12 +941,12 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                     throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
                   }
 
-                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
+                  const holdingAddress = addrIdx === 0 ? Address.zeroAddress().publicKey : accessList[addrIdx - 1].d!
                   const holdingAssetId = accessList[assetIdx - 1].s!
 
                   result.push({
                     holding: {
-                      address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
+                      address: addressCodec.decode(holdingAddress),
                       assetId: bigIntCodec.decode(holdingAssetId),
                     },
                   })
@@ -961,12 +957,12 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                   const addrIdx = ref.l.d ?? 0
                   const appIdx = ref.l.p ?? 0
 
-                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
+                  const localsAddress = addrIdx === 0 ? Address.zeroAddress().publicKey : accessList[addrIdx - 1].d!
                   const localsAppId = appIdx === 0 ? BigInt(0) : accessList[appIdx - 1].p!
 
                   result.push({
                     locals: {
-                      address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
+                      address: addressCodec.decode(localsAddress),
                       appId: bigIntCodec.decode(localsAppId),
                     },
                   })

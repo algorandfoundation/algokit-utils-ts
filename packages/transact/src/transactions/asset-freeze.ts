@@ -1,3 +1,4 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
 /**
@@ -15,7 +16,7 @@ export type AssetFreezeTransactionFields = {
   /**
    * The target account whose asset holdings will be affected.
    */
-  freezeTarget: string
+  freezeTarget: Address
 
   /**
    * The new freeze status.

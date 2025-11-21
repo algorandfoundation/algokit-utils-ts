@@ -10,10 +10,9 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
   }
 
   // Convert Address to string for comparison
-  const lsigAddressStr = lsigAddress.toString()
-  let authAddress: string | undefined
-  if (lsigAddressStr !== txn.sender) {
-    authAddress = lsigAddressStr
+  let authAddress: Address | undefined
+  if (lsigAddress.equals(txn.sender)) {
+    authAddress = lsigAddress
   }
 
   // Create LogicSignature from LogicSig
@@ -26,7 +25,7 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
           version: lsig.lmsig.v,
           threshold: lsig.lmsig.thr,
           subsignatures: lsig.lmsig.subsig.map((subsig) => ({
-            address: new Address(subsig.pk).toString(),
+            address: new Address(subsig.pk),
             signature: subsig.s,
           })),
         }
@@ -70,7 +69,7 @@ export function signLogicSigTransactionObject(txn: Transaction, lsigObject: Logi
       // delegating account is the sender. If that's not the case, the signing
       // will fail.
       // Convert sender string to Address
-      lsigAddress = Address.fromString(txn.sender)
+      lsigAddress = txn.sender
     } else if (lsig.lmsig) {
       const msigMetadata = {
         version: lsig.lmsig.v,

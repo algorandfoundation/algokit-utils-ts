@@ -1,4 +1,4 @@
-import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import { EMPTY_SIGNATURE, Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
@@ -12,25 +12,10 @@ import {
   validateTransaction,
 } from './transaction'
 
-const VALID_ADDRESS_1 = '424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'
+const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI')
 
 describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
-    test('should throw error when sender is missing', () => {
-      const transaction: Transaction = {
-        type: TransactionType.Payment,
-        sender: '',
-        firstValid: 1000n,
-        lastValid: 2000n,
-        payment: {
-          amount: 1000n,
-          receiver: VALID_ADDRESS_1,
-        },
-      }
-
-      expect(() => validateTransaction(transaction)).toThrow('Transaction sender is required')
-    })
-
     test('should throw error when no transaction type specific field is set', () => {
       const transaction: Transaction = {
         type: TransactionType.Payment,

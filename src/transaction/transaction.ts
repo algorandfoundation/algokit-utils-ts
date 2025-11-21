@@ -34,6 +34,7 @@ import {
 } from '../types/transaction'
 import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
+import { getAddress } from 'src/types/composer'
 
 // Type aliases for compatibility
 type ApplicationTransactionFields = AppCallTransactionFields
@@ -528,7 +529,7 @@ export async function prepareGroupForSending(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(group[i].txn as any)['appCall'] = {
           ...group[i].txn.appCall,
-          accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])],
+          accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])].map((a) => getAddress(a)),
           appReferences: [...(group[i].txn?.appCall?.appReferences ?? []), ...(r.apps ?? [])],
           assetReferences: [...(group[i].txn?.appCall?.assetReferences ?? []), ...(r.assets ?? [])],
           boxReferences: [...(group[i].txn?.appCall?.boxReferences ?? [])],
@@ -651,7 +652,7 @@ export async function prepareGroupForSending(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['appCall'] = {
             ...txns[txnIndex].txn.appCall,
-            accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+            accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]].map((a) => getAddress(a)),
           } satisfies Partial<ApplicationTransactionFields>
 
           return
@@ -713,7 +714,7 @@ export async function prepareGroupForSending(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[(reference as Address).toString()]],
+          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[reference as Address]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'app') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -745,7 +746,7 @@ export async function prepareGroupForSending(
         ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]].map((a) => getAddress(a)),
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'appLocal') {
         const { app, account } = reference as ApplicationLocalReference
@@ -753,7 +754,7 @@ export async function prepareGroupForSending(
         ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]].map((a) => getAddress(a)),
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'asset') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

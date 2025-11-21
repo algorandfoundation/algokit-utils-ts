@@ -1,7 +1,9 @@
 import * as ed from '@noble/ed25519' // TODO: PD: look into @noble/ed25519
+import { Address } from '@algorandfoundation/algokit-common'
 import { expect } from 'vitest'
 import {
   SignedTransaction,
+  Transaction,
   applyMultisigSubsignature,
   assignFee,
   decodeTransaction,
@@ -49,7 +51,7 @@ export const assertEncodeWithAuthAddress = async (label: string, testData: Trans
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,
     signature: sig,
-    authAddress: testData.rekeyedSenderAuthAddress,
+    authAddress: Address.fromString(testData.rekeyedSenderAuthAddress),
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
 
@@ -89,9 +91,22 @@ export const assertAssignFee = (label: string, testData: TransactionTestData) =>
 export const assertMultisigExample = async (label: string, testData: TransactionTestData) => {
   const singleSig = await ed.signAsync(encodeTransaction(testData.transaction), testData.signingPrivateKey)
 
-  const unsignedMultisigSignature = newMultisigSignature(1, 2, testData.multisigAddresses)
-  const multisigSignature0 = applyMultisigSubsignature(unsignedMultisigSignature, testData.multisigAddresses[0], singleSig)
-  const multisigSignature1 = applyMultisigSubsignature(unsignedMultisigSignature, testData.multisigAddresses[1], singleSig)
+  const unsignedMultisigSignature = newMultisigSignature(
+    1,
+    2,
+    testData.multisigAddresses.map((addr) => Address.fromString(addr)),
+  )
+  const multisigSignature0 = applyMultisigSubsignature(
+    unsignedMultisigSignature,
+    Address.fromString(testData.multisigAddresses[0]),
+    singleSig,
+  )
+  const multisigSignature1 = applyMultisigSubsignature(
+    unsignedMultisigSignature,
+    Address.fromString(testData.multisigAddresses[1]),
+    singleSig,
+  )
+
   const multisigSignature = mergeMultisignatures(multisigSignature0, multisigSignature1)
 
   const signedTxn: SignedTransaction = {

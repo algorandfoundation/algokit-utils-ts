@@ -13,6 +13,7 @@ import {
   type CompiledTeal,
   type TealTemplateParams,
 } from './app'
+import { getAddress, ReadableAddress } from './composer'
 
 /** Information about an app. */
 export interface AppInformation {
@@ -248,8 +249,8 @@ export class AppManager {
    * const localState = await appManager.getLocalState(12353n, 'ACCOUNTADDRESS');
    * ```
    */
-  public async getLocalState(appId: bigint, address: Address | string) {
-    const appInfo = await this._algod.accountApplicationInformation(address.toString(), Number(appId))
+  public async getLocalState(appId: bigint, address: ReadableAddress) {
+    const appInfo = await this._algod.accountApplicationInformation(getAddress(address).toString(), Number(appId))
 
     if (!appInfo.appLocalState) {
       throw new Error("Couldn't find local state")

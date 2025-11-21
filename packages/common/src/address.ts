@@ -1,91 +1,175 @@
 import base32 from 'hi-base32'
 import sha512 from 'js-sha512'
-import { concatArrays } from './array'
-import { ADDRESS_LENGTH, CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH, PUBLIC_KEY_BYTE_LENGTH } from './constants'
-import { hash } from './crypto'
+import { CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH } from './constants'
 
-const APP_ID_PREFIX = new TextEncoder().encode('appID')
+export const ALGORAND_ADDRESS_BYTE_LENGTH = 36
+export const ALGORAND_CHECKSUM_BYTE_LENGTH = 4
+export const ALGORAND_ADDRESS_LENGTH = 58
+export const ALGORAND_ZERO_ADDRESS_STRING = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
+
+export const MALFORMED_ADDRESS_ERROR_MSG = 'address seems to be malformed'
+export const CHECKSUM_ADDRESS_ERROR_MSG = 'wrong checksum for address'
 
 export function checksumFromPublicKey(publicKey: Uint8Array): Uint8Array {
   return Uint8Array.from(sha512.sha512_256.array(publicKey).slice(HASH_BYTES_LENGTH - CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH))
 }
 
-/**
- * Convert an Ed25519 public key to an Algorand address string
- * @param publicKey - 32-byte Ed25519 public key
- * @returns An Algorand address string
- */
-export function addressFromPublicKey(publicKey: Uint8Array): string {
-  if (!(publicKey instanceof Uint8Array)) {
-    throw new Error(`Expected Uint8Array, got ${typeof publicKey}`)
-  }
-
-  if (publicKey.length !== PUBLIC_KEY_BYTE_LENGTH) {
-    throw new Error(`Expected public key length ${PUBLIC_KEY_BYTE_LENGTH}, got ${publicKey.length}`)
-  }
-
-  const checksum = checksumFromPublicKey(publicKey)
-  const addressBytes = new Uint8Array(publicKey.length + checksum.length)
-  addressBytes.set(publicKey, 0)
-  addressBytes.set(checksum, publicKey.length)
-  return base32.encode(addressBytes).slice(0, ADDRESS_LENGTH)
+function genericHash(arr: sha512.Message) {
+  return sha512.sha512_256.array(arr)
 }
 
-/**
- * Extract the Ed25519 public key from an Algorand address string
- * @param address - An Algorand address string
- * @returns 32-byte Ed25519 public key
- */
-export function publicKeyFromAddress(address: string): Uint8Array {
-  if (address.length !== ADDRESS_LENGTH) {
-    throw new Error(`Expected address length ${ADDRESS_LENGTH}, got ${address.length}`)
-  }
-
-  // Decode the base32 address
-  const decoded = base32.decode.asBytes(address)
-
-  // Check decoded length (32 bytes public key + 4 bytes checksum = 36 bytes)
-  const expectedLength = PUBLIC_KEY_BYTE_LENGTH + CHECKSUM_BYTE_LENGTH
-  if (decoded.length !== expectedLength) {
-    throw new Error(`Expected decoded length ${expectedLength}, got ${decoded.length}`)
-  }
-
-  // Extract public key (first 32 bytes) and checksum (last 4 bytes)
-  const publicKey = new Uint8Array(decoded.slice(0, PUBLIC_KEY_BYTE_LENGTH))
-  const checksum = new Uint8Array(decoded.slice(PUBLIC_KEY_BYTE_LENGTH, expectedLength))
-
-  // Verify checksum
-  const expectedChecksum = checksumFromPublicKey(publicKey)
-
-  // Compare checksums
-  for (let i = 0; i < CHECKSUM_BYTE_LENGTH; i++) {
-    if (checksum[i] !== expectedChecksum[i]) {
-      throw new Error('Invalid address checksum')
-    }
-  }
-
-  return publicKey
+function bytesToHex(bytes: Uint8Array): string {
+  return Buffer.from(bytes).toString('hex')
 }
 
-/**
- *  Computes the escrow address from an application ID.
- * @param appID - The ID of the application.
- * @returns The address corresponding to that application's escrow account.
- */
-export function getAppAddress(appId: bigint): string {
-  const to_hash = concatArrays(APP_ID_PREFIX, encodeUint64(appId))
-  const publicKey = hash(to_hash)
-  const checksum = checksumFromPublicKey(publicKey)
-  return base32.encode(concatArrays(publicKey, checksum)).slice(0, ADDRESS_LENGTH)
+function arrayEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false
+  }
+  return true
 }
 
-function encodeUint64(num: bigint) {
-  if (num < 0n || num > BigInt('0xffffffffffffffff')) {
+function concatArrays(a: Uint8Array, b: Uint8Array): Uint8Array {
+  const result = new Uint8Array(a.length + b.length)
+  result.set(a)
+  result.set(b, a.length)
+  return result
+}
+
+export function encodeUint64(num: number | bigint) {
+  const isInteger = typeof num === 'bigint' || Number.isInteger(num)
+
+  if (!isInteger || num < 0 || num > BigInt('0xffffffffffffffff')) {
     throw new Error('Input is not a 64-bit unsigned integer')
   }
 
-  const encoded = new Uint8Array(8)
-  const view = new DataView(encoded.buffer)
-  view.setBigUint64(0, num)
-  return encoded
+  const encoding = new Uint8Array(8)
+  const view = new DataView(encoding.buffer)
+  view.setBigUint64(0, BigInt(num))
+
+  return encoding
+}
+
+/** Symbol used for instanceof checks across packages (CJS/ESM) */
+const ADDR_SYMBOL = Symbol.for('algokit_common:Address')
+
+/**
+ * Represents an Algorand address
+ */
+export class Address {
+  /**
+   * The binary form of the address. For standard accounts, this is the public key.
+   */
+  public readonly publicKey: Uint8Array;
+
+  /** @internal */
+  [ADDR_SYMBOL]: boolean
+
+  /**
+   * Create a new Address object from its binary form.
+   * @param publicKey - The binary form of the address. Must be 32 bytes.
+   */
+  constructor(publicKey: Uint8Array) {
+    this[ADDR_SYMBOL] = true
+    if (publicKey.length !== ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH)
+      throw new Error(`${MALFORMED_ADDRESS_ERROR_MSG}: 0x${bytesToHex(publicKey)}, length ${publicKey.length}`)
+    this.publicKey = publicKey
+  }
+
+  /**
+   * Check if the address is equal to another address.
+   */
+  equals(other: Address): boolean {
+    return other instanceof Address && arrayEqual(this.publicKey, other.publicKey)
+  }
+
+  /**
+   * Compute the 4 byte checksum of the address.
+   */
+  checksum(): Uint8Array {
+    return checksumFromPublicKey(this.publicKey)
+  }
+
+  /**
+   * Encode the address into a string form.
+   */
+  toString(): string {
+    const addr = base32.encode(concatArrays(this.publicKey, this.checksum()))
+    return addr.slice(0, ALGORAND_ADDRESS_LENGTH) // removing the extra '===='
+  }
+
+  /**
+   * Decode an address from a string.
+   * @param address - The address to decode. Must be 58 bytes long.
+   * @returns An Address object corresponding to the input string.
+   */
+  static fromString(address: string): Address {
+    if (typeof address !== 'string') throw new Error(`${MALFORMED_ADDRESS_ERROR_MSG}: expected string, got ${typeof address}, ${address}`)
+    if (address.length !== ALGORAND_ADDRESS_LENGTH)
+      throw new Error(`${MALFORMED_ADDRESS_ERROR_MSG}: expected length ${ALGORAND_ADDRESS_LENGTH}, got ${address.length}: ${address}`)
+
+    // try to decode
+    const decoded = base32.decode.asBytes(address)
+    // Sanity check
+    if (decoded.length !== ALGORAND_ADDRESS_BYTE_LENGTH)
+      throw new Error(`${MALFORMED_ADDRESS_ERROR_MSG}: expected byte length ${ALGORAND_ADDRESS_BYTE_LENGTH}, got ${decoded.length}`)
+
+    // Find publickey and checksum
+    const pk = new Uint8Array(decoded.slice(0, ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH))
+    const cs = new Uint8Array(decoded.slice(ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH, ALGORAND_ADDRESS_BYTE_LENGTH))
+    const checksum = checksumFromPublicKey(pk)
+    // Check if the checksum and the address are equal
+    if (!arrayEqual(checksum, cs)) throw new Error(`${CHECKSUM_ADDRESS_ERROR_MSG}: ${address} (${cs}, ${checksum})`)
+
+    return new Address(pk)
+  }
+
+  /**
+   * Get the zero address.
+   */
+  static zeroAddress(): Address {
+    return new Address(new Uint8Array(ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH))
+  }
+
+  static [Symbol.hasInstance](obj: unknown) {
+    return Boolean(obj && typeof obj === 'object' && ADDR_SYMBOL in obj && obj[ADDR_SYMBOL as keyof typeof obj])
+  }
+}
+
+/**
+ * decodeAddress takes an Algorand address in string form and decodes it into a Uint8Array.
+ * @param address - an Algorand address with checksum.
+ * @returns the decoded form of the address's public key and checksum
+ */
+export function decodeAddress(address: string): Address {
+  return Address.fromString(address)
+}
+
+/**
+ * isValidAddress checks if a string is a valid Algorand address.
+ * @param address - an Algorand address with checksum.
+ * @returns true if valid, false otherwise
+ */
+export function isValidAddress(address: string): boolean {
+  // Try to decode
+  try {
+    Address.fromString(address)
+  } catch {
+    return false
+  }
+  return true
+}
+
+const APP_ID_PREFIX = new TextEncoder().encode('appID')
+
+/**
+ * Get the escrow address of an application.
+ * @param appID - The ID of the application.
+ * @returns The address corresponding to that application's escrow account.
+ */
+export function getApplicationAddress(appID: number | bigint): Address {
+  const toBeSigned = concatArrays(APP_ID_PREFIX, encodeUint64(appID))
+  const hash = genericHash(toBeSigned)
+  return new Address(Uint8Array.from(hash))
 }

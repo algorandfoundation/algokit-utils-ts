@@ -10,7 +10,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { ErrorTransformer, TransactionComposer } from './composer'
+import { ErrorTransformer, ReadableAddress, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 
 /**
@@ -235,7 +235,7 @@ export class AlgorandClient {
   public newGroup() {
     return new TransactionComposer({
       algod: this.client.algod,
-      getSigner: (addr: string | Address) => this.account.getSigner(addr),
+      getSigner: (addr: ReadableAddress) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,

@@ -3,7 +3,12 @@ import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AlgorandClient } from './types/algorand-client'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
-import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
+import {
+  AssetCreateParams,
+  getOptionalAddress,
+  AssetOptInParams as NewAssetOptInParams,
+  AssetOptOutParams as NewAssetOptOutParams,
+} from './types/composer'
 import { SendTransactionResult } from './types/transaction'
 
 /**
@@ -111,7 +116,8 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: AlgodClient)
     optOut,
     params,
     (c) => c.assetOptOut,
-    (c) => (params: NewAssetOptOutParams) => c.assetOptOut({ ...params, ensureZeroBalance: optOut.ensureZeroBalance ?? true }),
+    (c) => (params: NewAssetOptOutParams) =>
+      c.assetOptOut({ ...params, creator: getOptionalAddress(params.creator), ensureZeroBalance: optOut.ensureZeroBalance ?? true }),
   )
 }
 

@@ -1,3 +1,4 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { Transaction, TransactionType, validateTransaction } from '../src/transactions/transaction'
 import { testData } from './common'
@@ -67,12 +68,12 @@ describe('Asset Freeze', () => {
     test('should throw error when asset ID is zero', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetFreeze,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetFreeze: {
           assetId: 0n, // Invalid asset ID
-          freezeTarget: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          freezeTarget: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           frozen: true,
         },
       }
@@ -83,12 +84,12 @@ describe('Asset Freeze', () => {
     test('should validate valid asset freeze transaction', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetFreeze,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetFreeze: {
           assetId: 123n, // Valid asset ID
-          freezeTarget: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          freezeTarget: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           frozen: true,
         },
       }
@@ -99,12 +100,12 @@ describe('Asset Freeze', () => {
     test('should validate asset unfreeze transaction', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetFreeze,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetFreeze: {
           assetId: 123n,
-          freezeTarget: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          freezeTarget: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           frozen: false, // Unfreeze
         },
       }
@@ -113,7 +114,7 @@ describe('Asset Freeze', () => {
     })
 
     test('should validate freezing the sender themselves', () => {
-      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+      const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
       const transaction: Transaction = {
         type: TransactionType.AssetFreeze,
         sender: senderAddress,
@@ -130,7 +131,7 @@ describe('Asset Freeze', () => {
     })
 
     test('should validate unfreezing the sender themselves', () => {
-      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+      const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
       const transaction: Transaction = {
         type: TransactionType.AssetFreeze,
         sender: senderAddress,

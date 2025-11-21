@@ -10,6 +10,7 @@ import {
   MAX_LOCAL_STATE_KEYS,
   MAX_OVERALL_REFERENCES,
   PROGRAM_PAGE_SIZE,
+  Address,
 } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
@@ -86,7 +87,7 @@ export type AppCallTransactionFields = {
    * List of accounts in addition to the sender that may be accessed
    * from the app's approval program and clear state program.
    */
-  accountReferences?: string[]
+  accountReferences?: Address[]
 
   /**
    * List of apps in addition to the current app that may be called
@@ -195,7 +196,7 @@ export type BoxReference = {
  */
 export interface AccessReference {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
-  address?: string
+  address?: Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
   appId?: bigint
   /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
@@ -216,7 +217,7 @@ export interface HoldingReference {
   assetId: bigint
 
   /** The address of the account holding the asset */
-  address: string
+  address: Address
 }
 
 /** A grouping of the application index and address of the account
@@ -226,7 +227,7 @@ export interface LocalsReference {
   appId: bigint
 
   /** The address of the account holding the local state */
-  address: string
+  address: Address
 }
 
 const FIELD_ARGS = 'Args'
