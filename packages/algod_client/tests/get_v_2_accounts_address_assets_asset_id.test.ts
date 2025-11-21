@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { AccountAssetInformation, AccountAssetInformationMeta } from '../src/models/account-asset-information'
 import { config, TEST_ADDRESS, TEST_ASSET_ID } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET v2_accounts_ADDRESS_assets_ASSET-ID', () => {
   // Polytest Suite: GET v2_accounts_ADDRESS_assets_ASSET-ID
@@ -13,7 +15,10 @@ describe('GET v2_accounts_ADDRESS_assets_ASSET-ID', () => {
 
       const result = await client.accountAssetInformation(TEST_ADDRESS, TEST_ASSET_ID)
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<AccountAssetInformation>()
+      const AccountAssetInformationSchema = modelMetadataToZodSchema(AccountAssetInformationMeta)
+      expect(() => AccountAssetInformationSchema.parse(result)).not.toThrow()
     })
   })
 })

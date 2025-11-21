@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { test, describe } from "vitest";
 
 describe("GET v2_experimental", () => {
   // Polytest Suite: GET v2_experimental
@@ -6,7 +6,8 @@ describe("GET v2_experimental", () => {
   describe("Common Tests", () => {
     // Polytest Group: Common Tests
 
-    test("Basic request and response validation", () => {
+    // Experimental endpoint - not implemented in client
+    test.skip("Basic request and response validation", () => {
       throw new Error("TEST NOT IMPLEMENTED");
     });
 

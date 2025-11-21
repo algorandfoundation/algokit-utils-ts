@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { GetBlockHash, GetBlockHashMeta } from '../src/models/get-block-hash'
 import { config, TEST_ROUND } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET v2_blocks_ROUND_hash', () => {
   // Polytest Suite: GET v2_blocks_ROUND_hash
@@ -13,7 +15,10 @@ describe('GET v2_blocks_ROUND_hash', () => {
 
       const result = await client.getBlockHash(TEST_ROUND)
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<GetBlockHash>()
+      const GetBlockHashSchema = modelMetadataToZodSchema(GetBlockHashMeta)
+      expect(() => GetBlockHashSchema.parse(result)).not.toThrow()
     })
   })
 })

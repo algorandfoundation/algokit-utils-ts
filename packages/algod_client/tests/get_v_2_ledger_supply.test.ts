@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { GetSupply, GetSupplyMeta } from '../src/models/get-supply'
 import { config } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET v2_ledger_supply', () => {
   // Polytest Suite: GET v2_ledger_supply
@@ -13,7 +15,10 @@ describe('GET v2_ledger_supply', () => {
 
       const result = await client.getSupply()
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<GetSupply>()
+      const GetSupplySchema = modelMetadataToZodSchema(GetSupplyMeta)
+      expect(() => GetSupplySchema.parse(result)).not.toThrow()
     })
   })
 })

@@ -554,18 +554,6 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
               97,
               115,
               97,
-            ],
-            "value": {
-              "bytes": Uint8Array [],
-              "type": 2,
-              "uint": 0n,
-            },
-          },
-          {
-            "key": Uint8Array [
-              97,
-              115,
-              97,
               95,
               97,
               109,
@@ -614,6 +602,18 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
               98,
               105,
               100,
+            ],
+            "value": {
+              "bytes": Uint8Array [],
+              "type": 2,
+              "uint": 0n,
+            },
+          },
+          {
+            "key": Uint8Array [
+              97,
+              115,
+              97,
             ],
             "value": {
               "bytes": Uint8Array [],
@@ -3123,26 +3123,6 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
         "globalState": [
           {
             "key": Uint8Array [
-              97,
-              117,
-              99,
-              116,
-              105,
-              111,
-              110,
-              95,
-              101,
-              110,
-              100,
-            ],
-            "value": {
-              "bytes": Uint8Array [],
-              "type": 2,
-              "uint": 0n,
-            },
-          },
-          {
-            "key": Uint8Array [
               112,
               114,
               101,
@@ -3243,6 +3223,26 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
               117,
               110,
               116,
+            ],
+            "value": {
+              "bytes": Uint8Array [],
+              "type": 2,
+              "uint": 0n,
+            },
+          },
+          {
+            "key": Uint8Array [
+              97,
+              117,
+              99,
+              116,
+              105,
+              111,
+              110,
+              95,
+              101,
+              110,
+              100,
             ],
             "value": {
               "bytes": Uint8Array [],
@@ -3794,45 +3794,6 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
         "globalState": [
           {
             "key": Uint8Array [
-              97,
-              115,
-              97,
-              95,
-              97,
-              109,
-              111,
-              117,
-              110,
-              116,
-            ],
-            "value": {
-              "bytes": Uint8Array [],
-              "type": 2,
-              "uint": 0n,
-            },
-          },
-          {
-            "key": Uint8Array [
-              97,
-              117,
-              99,
-              116,
-              105,
-              111,
-              110,
-              95,
-              101,
-              110,
-              100,
-            ],
-            "value": {
-              "bytes": Uint8Array [],
-              "type": 2,
-              "uint": 0n,
-            },
-          },
-          {
-            "key": Uint8Array [
               112,
               114,
               101,
@@ -3918,6 +3879,45 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
                 0,
               ],
               "type": 1,
+              "uint": 0n,
+            },
+          },
+          {
+            "key": Uint8Array [
+              97,
+              115,
+              97,
+              95,
+              97,
+              109,
+              111,
+              117,
+              110,
+              116,
+            ],
+            "value": {
+              "bytes": Uint8Array [],
+              "type": 2,
+              "uint": 0n,
+            },
+          },
+          {
+            "key": Uint8Array [
+              97,
+              117,
+              99,
+              116,
+              105,
+              111,
+              110,
+              95,
+              101,
+              110,
+              100,
+            ],
+            "value": {
+              "bytes": Uint8Array [],
+              "type": 2,
               "uint": 0n,
             },
           },
@@ -4468,6 +4468,18 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
               97,
               115,
               97,
+            ],
+            "value": {
+              "bytes": Uint8Array [],
+              "type": 2,
+              "uint": 0n,
+            },
+          },
+          {
+            "key": Uint8Array [
+              97,
+              115,
+              97,
               95,
               97,
               109,
@@ -4516,18 +4528,6 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
               98,
               105,
               100,
-            ],
-            "value": {
-              "bytes": Uint8Array [],
-              "type": 2,
-              "uint": 0n,
-            },
-          },
-          {
-            "key": Uint8Array [
-              97,
-              115,
-              97,
             ],
             "value": {
               "bytes": Uint8Array [],
@@ -7251,7 +7251,7 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
   "pendingRewards": 0n,
   "rewardBase": 27521n,
   "rewards": 0n,
-  "round": 57650387n,
+  "round": 57711496n,
   "status": "Offline",
   "totalAppsOptedIn": 0,
   "totalAssetsOptedIn": 1,

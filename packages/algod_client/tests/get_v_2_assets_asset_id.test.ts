@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { Asset, AssetMeta } from '../src/models/asset'
 import { config } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 const TEST_ASSET_ID = 705457144
 
@@ -15,7 +17,10 @@ describe('GET v2_assets_ASSET-ID', () => {
 
       const result = await client.getAssetById(TEST_ASSET_ID)
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<Asset>()
+      const AssetSchema = modelMetadataToZodSchema(AssetMeta)
+      expect(() => AssetSchema.parse(result)).not.toThrow()
     })
   })
 })

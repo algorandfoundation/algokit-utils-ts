@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`POST v2_teal_dryrun > Common Tests > Basic request and response validation 1`] = `
+{
+  "error": "",
+  "protocolVersion": "https://github.com/algorandfoundation/specs/tree/236dcc18c9c507d794813ab768e467ea42d1b4d9",
+  "txns": [],
+}
+`;

@@ -23,7 +23,7 @@
     "format": "prettier --config ../../.prettierrc.cjs --ignore-path ../../.prettierignore --write .",
     "pre-commit": "run-s check-types lint:fix audit format test"
   },
-  "dependencies": {},
-  "peerDependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "zod": "^4.1.12"
+  }
 }

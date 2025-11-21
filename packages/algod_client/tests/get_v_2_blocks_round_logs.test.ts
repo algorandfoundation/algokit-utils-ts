@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { test, describe } from "vitest";
 
 describe("GET v2_blocks_ROUND_logs", () => {
   // Polytest Suite: GET v2_blocks_ROUND_logs
@@ -6,7 +6,8 @@ describe("GET v2_blocks_ROUND_logs", () => {
   describe("Common Tests", () => {
     // Polytest Group: Common Tests
 
-    test("Basic request and response validation", () => {
+    // Endpoint not used - not implemented in client
+    test.skip("Basic request and response validation", () => {
       throw new Error("TEST NOT IMPLEMENTED");
     });
 

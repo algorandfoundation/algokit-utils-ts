@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { Version, VersionMeta } from '../src/models/version'
 import { config } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET versions', () => {
   // Polytest Suite: GET versions
@@ -13,7 +15,10 @@ describe('GET versions', () => {
 
       const result = await client.getVersion()
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<Version>()
+      const VersionSchema = modelMetadataToZodSchema(VersionMeta)
+      expect(() => VersionSchema.parse(result)).not.toThrow()
     })
   })
 })

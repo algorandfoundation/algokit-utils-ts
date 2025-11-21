@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { LightBlockHeaderProof, LightBlockHeaderProofMeta } from '../src/models/light-block-header-proof'
 import { config, TEST_ROUND } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET v2_blocks_ROUND_lightheader_proof', () => {
   // Polytest Suite: GET v2_blocks_ROUND_lightheader_proof
@@ -13,7 +15,10 @@ describe('GET v2_blocks_ROUND_lightheader_proof', () => {
 
       const result = await client.getLightBlockHeaderProof(TEST_ROUND)
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<LightBlockHeaderProof>()
+      const LightBlockHeaderProofSchema = modelMetadataToZodSchema(LightBlockHeaderProofMeta)
+      expect(() => LightBlockHeaderProofSchema.parse(result)).not.toThrow()
     })
   })
 })

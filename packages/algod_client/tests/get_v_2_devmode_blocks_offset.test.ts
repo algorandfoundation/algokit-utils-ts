@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { GetBlockTimeStampOffset, GetBlockTimeStampOffsetMeta } from '../src/models/get-block-time-stamp-offset'
 import { localnetConfig } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET v2_devmode_blocks_offset', () => {
   // Polytest Suite: GET v2_devmode_blocks_offset
@@ -13,9 +15,10 @@ describe('GET v2_devmode_blocks_offset', () => {
 
       const result = await client.getBlockTimeStampOffset()
 
-      expect(result).toMatchSnapshot()
-      expect(result).toHaveProperty('offset')
-      expect(typeof result.offset).toBe('number')
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<GetBlockTimeStampOffset>()
+      const GetBlockTimeStampOffsetSchema = modelMetadataToZodSchema(GetBlockTimeStampOffsetMeta)
+      expect(() => GetBlockTimeStampOffsetSchema.parse(result)).not.toThrow()
     })
   })
 })

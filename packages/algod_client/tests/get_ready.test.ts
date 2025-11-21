@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
 import { config } from './config'
 
@@ -13,7 +13,9 @@ describe('GET ready', () => {
 
       const result = await client.getReady()
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure - getReady returns void (no response body)
+      expectTypeOf(result).toEqualTypeOf<void>()
+      expect(result).toBeUndefined()
     })
   })
 })

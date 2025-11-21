@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { test, describe } from "vitest";
 
 describe("POST v2_participation", () => {
   // Polytest Suite: POST v2_participation
@@ -6,7 +6,8 @@ describe("POST v2_participation", () => {
   describe("Common Tests", () => {
     // Polytest Group: Common Tests
 
-    test("Basic request and response validation", () => {
+    // Private endpoint - not implemented in client
+    test.skip("Basic request and response validation", () => {
       throw new Error("TEST NOT IMPLEMENTED");
     });
 

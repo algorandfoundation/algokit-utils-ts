@@ -6,7 +6,7 @@ describe('GET v2_participation_PARTICIPATION-ID', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    // Skipping: This test requires mocking from the mock server
+    // Private endpoint - not implemented in client
     test.skip('Basic request and response validation', () => {
       throw new Error('TEST NOT IMPLEMENTED')
     })

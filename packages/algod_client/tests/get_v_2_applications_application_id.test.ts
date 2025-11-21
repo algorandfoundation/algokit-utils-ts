@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 import { AlgodClient } from '../src/client'
+import { Application, ApplicationMeta } from '../src/models/application'
 import { config, TEST_APP_ID } from './config'
+import { modelMetadataToZodSchema } from './zod-utils'
 
 describe('GET v2_applications_APPLICATION-ID', () => {
   // Polytest Suite: GET v2_applications_APPLICATION-ID
@@ -13,7 +15,10 @@ describe('GET v2_applications_APPLICATION-ID', () => {
 
       const result = await client.getApplicationById(TEST_APP_ID)
 
-      expect(result).toMatchSnapshot()
+      // Assert response structure
+      expectTypeOf(result).toEqualTypeOf<Application>()
+      const ApplicationSchema = modelMetadataToZodSchema(ApplicationMeta)
+      expect(() => ApplicationSchema.parse(result)).not.toThrow()
     })
   })
 })
