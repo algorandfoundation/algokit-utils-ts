@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Address } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
@@ -136,7 +137,7 @@ export interface AssetInformation {
 
 /** Allows management of asset information. */
 export class AssetManager {
-  private _algod: algosdk.Algodv2
+  private _algod: AlgodClient
   private _newGroup: () => TransactionComposer
 
   /**
@@ -148,7 +149,7 @@ export class AssetManager {
    * const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
    * ```
    */
-  constructor(algod: algosdk.Algodv2, newGroup: () => TransactionComposer) {
+  constructor(algod: AlgodClient, newGroup: () => TransactionComposer) {
     this._algod = algod
     this._newGroup = newGroup
   }
@@ -165,10 +166,10 @@ export class AssetManager {
    * @returns The asset information
    */
   public async getById(assetId: bigint): Promise<AssetInformation> {
-    const asset = await this._algod.getAssetByID(Number(assetId)).do()
+    const asset = await this._algod.getAssetById(assetId)
 
     return {
-      assetId: BigInt(asset.index),
+      assetId: BigInt(asset.id),
       total: BigInt(asset.params.total),
       decimals: Number(asset.params.decimals),
       assetName: asset.params.name,
@@ -203,7 +204,7 @@ export class AssetManager {
    * @returns The account asset holding information
    */
   public async getAccountInformation(sender: string | Address, assetId: bigint): Promise<AccountAssetInformation> {
-    const info = await this._algod.accountAssetInformation(sender, Number(assetId)).do()
+    const info = await this._algod.accountAssetInformation(sender.toString(), assetId)
 
     return {
       assetId: BigInt(assetId),

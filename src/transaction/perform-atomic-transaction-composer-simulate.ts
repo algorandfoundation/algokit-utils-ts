@@ -1,7 +1,11 @@
-import algosdk, { SignedTransaction, decodeMsgpack } from 'algosdk'
-import Algodv2 = algosdk.Algodv2
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import modelsv2 = algosdk.modelsv2
+import {
+  AlgodClient,
+  SimulateRequest,
+  SimulateRequestTransactionGroup,
+  SimulateTraceConfig,
+} from '@algorandfoundation/algokit-algod-client'
+import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 
 /**
  * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
@@ -13,30 +17,32 @@ import modelsv2 = algosdk.modelsv2
  */
 export async function performAtomicTransactionComposerSimulate(
   atc: AtomicTransactionComposer,
-  algod: Algodv2,
-  options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,
+  algod: AlgodClient,
+  options?: Omit<SimulateRequest, 'txnGroups'>,
 ) {
-  const unsignedTransactionsSigners = atc.buildGroup()
-  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
+  const transactionsWithSigners = atc.buildGroup()
 
-  const simulateRequest = new modelsv2.SimulateRequest({
+  const simulateRequest = {
     ...(options ?? {
       allowEmptySignatures: true,
       fixSigners: true,
       allowMoreLogging: true,
-      execTraceConfig: new modelsv2.SimulateTraceConfig({
+      execTraceConfig: {
         enable: true,
         scratchChange: true,
         stackChange: true,
         stateChange: true,
-      }),
+      } satisfies SimulateTraceConfig,
     }),
     txnGroups: [
-      new modelsv2.SimulateRequestTransactionGroup({
-        txns: decodedSignedTransactions.map((txn) => decodeMsgpack(txn, SignedTransaction)),
-      }),
+      {
+        txns: transactionsWithSigners.map((txn) => ({
+          txn: txn.txn,
+          signature: EMPTY_SIGNATURE,
+        })),
+      } satisfies SimulateRequestTransactionGroup,
     ],
-  })
-  const simulateResult = await algod.simulateTransactions(simulateRequest).do()
+  } satisfies SimulateRequest
+  const simulateResult = await algod.simulateTransaction(simulateRequest)
   return simulateResult
 }

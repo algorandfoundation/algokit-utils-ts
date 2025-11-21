@@ -1,7 +1,6 @@
-import algosdk from 'algosdk'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { AlgoAmount } from './amount'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
-import SuggestedParams = algosdk.SuggestedParams
 
 /** @deprecated Parameters for `createAsset` call. */
 export interface CreateAssetParams extends SendTransactionParams {

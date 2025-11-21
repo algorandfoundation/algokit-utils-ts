@@ -1,0 +1,124 @@
+{% set modelName = schema_name | ts_pascal_case %}
+{% set descriptor = descriptor %}
+{% set isObject = descriptor.is_object %}
+{% set isArray = descriptor.is_array %}
+{% set refTypes = schema | collect_schema_refs(schema_name) %}
+{% set uses_signed_txn = schema | schema_uses_signed_txn %}
+{% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
+{% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
+{% set schemaBigint = schema.get('x-algokit-bigint') is true %}
+
+{% macro scalar_meta(is_bytes, is_bigint) -%}
+{ kind: 'scalar'{% if is_bytes %}, isBytes: true{% endif %}{% if is_bigint %}, isBigint: true{% endif %} }
+{%- endmacro %}
+
+{% macro base_type(ref_model, is_signed_txn, is_bytes, is_bigint, inline_meta_name) -%}
+{%- if is_signed_txn -%}
+{ kind: 'codec', codecKey: 'SignedTransaction' }
+{%- elif ref_model -%}
+{ kind: 'model', meta: {% if modelName == ref_model %}() => {% endif %}{{ ref_model }}Meta }
+{%- elif inline_meta_name -%}
+{ kind: 'model', meta: {{ inline_meta_name }} }
+{%- else -%}
+{{ scalar_meta(is_bytes, is_bigint) }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro field_type(field) -%}
+{%- if field.is_array -%}
+{ kind: 'array', item: {{ base_type(field.ref_model, field.is_signed_txn, field.is_bytes, field.is_bigint, none) }} }
+{%- else -%}
+{{ base_type(field.ref_model, field.is_signed_txn, field.is_bytes, field.is_bigint, field.inline_meta_name) }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro array_item_meta(descriptor) -%}
+{{ base_type(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint) }}
+{%- endmacro %}
+
+import type { ModelMetadata } from '../core/model-runtime';
+{% if uses_signed_txn %}
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact';
+{% endif %}
+{% set ns = namespace(refs_with_meta=[]) %}
+{% if descriptor.is_object %}
+{%   for f in descriptor.fields %}
+{%     if f.ref_model and f.ref_model not in ns.refs_with_meta %}
+{%       set ns.refs_with_meta = ns.refs_with_meta + [f.ref_model] %}
+{%     endif %}
+{%   endfor %}
+{% endif %}
+{% if descriptor.is_array and descriptor.array_item_ref %}
+{%   if descriptor.array_item_ref not in ns.refs_with_meta %}
+{%     set ns.refs_with_meta = ns.refs_with_meta + [descriptor.array_item_ref] %}
+{%   endif %}
+{% endif %}
+{% for r in refTypes %}
+import type { {{ r }} } from './{{ r | ts_kebab_case }}';
+{%   if r in ns.refs_with_meta %}
+import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
+{%   endif %}
+{% endfor %}
+
+{% macro inline_object_meta(inline_schema, required_fields, meta_name) -%}
+{ name: '{{ meta_name }}', kind: 'object', fields: [
+{%- for prop_name, prop_schema in inline_schema.get('properties', {}).items() %}
+    {
+      name: '{{ prop_name | ts_camel_case }}',
+      wireKey: '{{ prop_name }}',
+      optional: {{ 'false' if prop_name in required_fields else 'true' }},
+      nullable: {{ 'true' if prop_schema.get('nullable') else 'false' }},
+      type: {{ scalar_meta(prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64'), prop_schema.get('x-algokit-bigint')) }},
+    },
+{%- endfor %}
+  ] }
+{%- endmacro %}
+
+{% if descriptor.is_object %}
+{%   for f in descriptor.fields %}
+{%     if f.inline_object_schema %}
+const {{ f.inline_meta_name }}: ModelMetadata = {{ inline_object_meta(f.inline_object_schema, f.inline_object_schema.get('required', []), f.inline_meta_name) }};
+
+{%     endif %}
+{%   endfor %}
+{% endif %}
+
+{{ schema.description | ts_doc_comment }}
+{% if isObject and schema.get('allOf') is not defined and schema.get('oneOf') is not defined and schema.get('anyOf') is not defined %}
+export interface {{ modelName }} {
+{%   for f in descriptor.fields %}
+  {{ f.name }}{{ '' if not f.is_optional else '?' }}: {{ f.ts_type }};
+{%   endfor %}
+}
+{% else %}
+export type {{ modelName }} = {{ schema | ts_type(schemas) }};
+{% endif %}
+
+export const {{ modelName }}Meta: ModelMetadata = {
+  name: '{{ modelName }}',
+  kind: {% if isObject %}'object'{% elif isArray %}'array'{% else %}'passthrough'{% endif %},
+{% if isObject %}
+  fields: [
+{%   for f in descriptor.fields %}
+    {
+      name: '{{ f.name }}',
+      wireKey: '{{ f.wire_name }}',
+      optional: {{ 'true' if f.is_optional else 'false' }},
+      nullable: {{ 'true' if f.is_nullable else 'false' }},
+      type: {{ field_type(f) }},
+    },
+{%   endfor %}
+  ],
+{%   if has_additional_properties %}
+  additionalProperties: {{ scalar_meta(false, false) }},
+{%   endif %}
+{% elif isArray %}
+  arrayItems: {{ array_item_meta(descriptor) }},
+{% else %}
+{%   if schemaSignedTxn %}
+  codecKey: 'SignedTransaction',
+{%   else %}
+  passThrough: {{ scalar_meta(schemaBytes, schemaBigint) }},
+{%   endif %}
+{% endif %}
+};

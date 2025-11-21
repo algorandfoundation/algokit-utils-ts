@@ -2,11 +2,11 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   appType: 'custom',
   test: {
-    include: ['**/*.spec.ts'],
+    projects: ['.', 'packages/*'],
+    include: ['**/*.spec.ts', '**/*.test.ts'],
     exclude: ['node_modules'],
     // Sometimes indexer catchup is slowwwww...
     testTimeout: 20_000,
-    setupFiles: ['tests/setup.ts'],
     coverage: {
       include: ['src/**/*.ts'],
       exclude: ['tests/*.*'],

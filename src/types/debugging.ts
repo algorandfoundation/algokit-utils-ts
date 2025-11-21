@@ -2,7 +2,7 @@
  * An asynchronous event listener
  */
 
-import algosdk from 'algosdk'
+import { SimulateTransactionGroupResult } from '@algorandfoundation/algokit-algod-client'
 import { CompiledTeal } from './app'
 
 /** The directory name for AlgoKit project related files */
@@ -45,5 +45,5 @@ export interface TealSourcesDebugEventData {
  */
 export interface AVMTracesEventData {
   /** The simulation response from Algod */
-  simulateResponse: algosdk.modelsv2.SimulateResponse
+  simulateResponse: SimulateTransactionGroupResult
 }

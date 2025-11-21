@@ -1,4 +1,6 @@
-import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -899,7 +901,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
       const result = await appClient.send.call({
         method: 'addressBalance',
         args: [algosdk.generateAccount().addr.toString()],
-        onComplete: algosdk.OnApplicationComplete.NoOpOC,
+        onComplete: OnApplicationComplete.NoOp,
       })
 
       // Ensure the transaction was not sent via simulate
@@ -965,8 +967,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallAccts = transactions[0].appCall?.accountReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -989,8 +991,8 @@ describe('Resource population: Mixed', () => {
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallApps = transactions[0].appCall?.appReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1099,7 +1101,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1120,7 +1122,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1134,9 +1136,9 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.applicationCall?.boxes?.[0]
+    const boxRef = result.transaction.appCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
-    expect(boxRef?.appIndex).toBe(0n)
+    expect(boxRef?.appId).toBe(0n)
   })
 
   test('order is deterministic', async () => {
@@ -1191,20 +1193,20 @@ describe('Resource population: meta', () => {
       for (const txnWithSigner of populatedAtc.buildGroup()) {
         const txn = txnWithSigner.txn
 
-        for (const acct of txn.applicationCall?.accounts ?? []) {
+        for (const acct of txn.appCall?.accountReferences ?? []) {
           resources.push(acct.toString())
         }
 
-        for (const asset of txn.applicationCall?.foreignAssets ?? []) {
+        for (const asset of txn.appCall?.assetReferences ?? []) {
           resources.push(asset.toString())
         }
 
-        for (const app of txn.applicationCall?.foreignApps ?? []) {
+        for (const app of txn.appCall?.appReferences ?? []) {
           resources.push(app.toString())
         }
 
-        for (const box of txn.applicationCall?.boxes ?? []) {
-          resources.push(`${box.appIndex}-${box.name.toString()}`)
+        for (const box of txn.appCall?.boxReferences ?? []) {
+          resources.push(`${box.appId}-${box.name.toString()}`)
         }
       }
 
@@ -1354,7 +1356,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice }],
+      accessReferences: [{ address: alice.toString() }],
     })
   })
 
@@ -1375,7 +1377,7 @@ describe('access references', () => {
         populateAppCallResources: false,
         accountReferences: [alice, ...(await getTestAccounts(8))],
       }),
-    ).rejects.toThrow(/max number of accounts is 8/)
+    ).rejects.toThrow(/Account references cannot exceed 8 refs, got 9/)
   })
 
   test('up to 16 access addresses can be used', async () => {
@@ -1383,7 +1385,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
+      accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(15)).map((a) => ({ address: a.toString() }))],
     })
   })
 
@@ -1393,7 +1395,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
+        accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(16)).map((a) => ({ address: a.toString() }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1434,7 +1436,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { address: alice, assetId } }],
+      accessReferences: [{ holding: { address: alice.toString(), assetId: assetId } }],
     })
   })
 
@@ -1447,7 +1449,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
+      accessReferences: [{ locals: { address: alice.toString(), appId: externalClient.appId } }],
     })
   })
 })

@@ -1,9 +1,7 @@
-import algosdk from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Indexer, Kmd } from '@algorandfoundation/sdk'
 import { ClientManager } from './types/client-manager'
 import { AlgoClientConfig, AlgoConfig } from './types/network-client'
-import Algodv2 = algosdk.Algodv2
-import Indexer = algosdk.Indexer
-import Kmd = algosdk.Kmd
 
 /**
  * @deprecated Use `ClientManager.getConfigFromEnvironmentOrLocalNet()` instead.
@@ -85,7 +83,7 @@ export function getDefaultLocalNetConfig(configOrPort: 'algod' | 'indexer' | 'km
  *  await algod.healthCheck().do()
  * ```
  */
-export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
+export function getAlgoClient(config?: AlgoClientConfig): AlgodClient {
   return config ? ClientManager.getAlgodClient(config) : ClientManager.getAlgodClientFromEnvironment()
 }
 
@@ -146,11 +144,11 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
 }
 
 /** @deprecated Use `await algorand.client.isTestNet()` or `await new ClientManager({ algod }).isTestNet()` instead. */
-export async function isTestNet(algod: Algodv2): Promise<boolean> {
+export async function isTestNet(algod: AlgodClient): Promise<boolean> {
   return await new ClientManager({ algod }).isTestNet()
 }
 
 /** @deprecated Use `await algorand.client.isMainNet()` or `await new ClientManager({ algod }).isMainNet()` instead. */
-export async function isMainNet(algod: Algodv2): Promise<boolean> {
+export async function isMainNet(algod: AlgodClient): Promise<boolean> {
   return await new ClientManager({ algod }).isMainNet()
 }
