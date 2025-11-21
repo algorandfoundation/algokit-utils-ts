@@ -549,7 +549,7 @@ export const buildAppUpdateMethodCall = async (
   const accountReferences = params.accountReferences?.map((a) => a.toString())
   const common = buildMethodCallCommon(
     {
-      appId: 0n,
+      appId: params.appId,
       method: params.method,
       args: params.args ?? [],
       accountReferences: accountReferences,
@@ -593,7 +593,7 @@ export const buildAppCallMethodCall = async (
   const accountReferences = params.accountReferences?.map((a) => a.toString())
   const common = buildMethodCallCommon(
     {
-      appId: 0n,
+      appId: params.appId,
       method: params.method,
       args: params.args ?? [],
       accountReferences: accountReferences,

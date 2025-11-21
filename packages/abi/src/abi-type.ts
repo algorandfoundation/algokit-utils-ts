@@ -528,7 +528,7 @@ function dynamicArrayToABITupleType(type: ABIDynamicArrayType, length: number) {
 }
 
 function dynamicArrayToString(type: ABIDynamicArrayType): string {
-  return `${type.childType}[]`
+  return `${getABITypeName(type.childType)}[]`
 }
 
 // Static Array
@@ -559,7 +559,7 @@ function decodeStaticArray(type: ABIStaticArrayType, bytes: Uint8Array): ABIValu
 }
 
 function staticArrayToString(type: ABIStaticArrayType): string {
-  return `${type.childType}[${type.length}]`
+  return `${getABITypeName(type.childType)}[${type.length}]`
 }
 
 function staticArrayToABITupleType(type: ABIStaticArrayType) {
