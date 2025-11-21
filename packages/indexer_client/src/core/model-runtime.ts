@@ -1,6 +1,8 @@
 import { decodeMsgPack, encodeMsgPack } from './codecs'
 import {
   ModelSerializer,
+  parseJson,
+  stringifyJson,
   type FieldMetadata,
   type BodyFormat,
   type ModelMetadata,
@@ -31,7 +33,7 @@ export class AlgorandSerializer {
     if (format === 'msgpack') {
       return wire instanceof Uint8Array ? wire : encodeMsgPack(wire)
     }
-    return typeof wire === 'string' ? wire : JSON.stringify(wire)
+    return typeof wire === 'string' ? wire : stringifyJson(wire)
   }
 
   static decode<T>(value: Uint8Array | string, meta: ModelMetadata, format: BodyFormat = 'msgpack'): T {
@@ -39,7 +41,7 @@ export class AlgorandSerializer {
     if (value instanceof Uint8Array) {
       wire = decodeMsgPack(value)
     } else if (typeof value === 'string') {
-      wire = JSON.parse(value)
+      wire = parseJson(value)
     } else {
       wire = value
     }

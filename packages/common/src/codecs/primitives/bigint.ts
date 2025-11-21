@@ -7,14 +7,10 @@ class BigIntCodec extends Codec<bigint, WireBigInt> {
     return 0n
   }
 
-  protected toEncoded(value: bigint, format: BodyFormat): WireBigInt {
+  protected toEncoded(value: bigint, _format: BodyFormat): WireBigInt {
     // Use number if it fits in 32-bit signed integer range, matching expected msgpack encoding behavior
     if (value <= BigInt(0x7fffffff) && value >= BigInt(-0x7fffffff - 1)) {
       return Number(value)
-    }
-
-    if (format === 'json') {
-      return value.toString()
     }
 
     return value

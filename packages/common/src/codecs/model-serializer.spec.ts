@@ -75,8 +75,7 @@ describe('ModelSerializer', () => {
       random: 1,
     }
 
-    // Add JSON big support
-    // Change bigint JSON codec to not stringify bigints
+    // TODO: NC - Do these
     // Change array handling to use consistent values for numbers etc
 
     test('should encode the example model to a json ready model', () => {
@@ -89,16 +88,13 @@ describe('ModelSerializer', () => {
             "n": 10,
             "p": 10001,
           },
-          "d": [
-            [
-              "c29tZWtleQ==",
-              "c29tZXZhbHVl",
-            ],
-          ],
+          "d": {
+            "c29tZWtleQ==": "c29tZXZhbHVl"
+          },
           "fn": [
             0n,
-            100,
-            "2147483648",
+            100n,
+            2147483648n,
           ],
           "n": "Alice",
         }

@@ -7160,7 +7160,7 @@ exports[`GET v2_accounts_ADDRESS > Common Tests > Basic request and response val
             "value": {
               "bytes": Uint8Array [],
               "type": 2,
-              "uint": 33399922244455500n,
+              "uint": 33399922244455501n,
             },
           },
         ],

@@ -1,3 +1,4 @@
+import { parseJson, stringifyJson } from '@algorandfoundation/algokit-common'
 import type { ClientConfig } from './client-config'
 import { ApiError } from './api-error'
 import { decodeMsgPack, encodeMsgPack } from './codecs'
@@ -67,9 +68,9 @@ export async function request<T>(
     } else if (options.mediaType?.includes('msgpack')) {
       bodyPayload = encodeMsgPack(options.body as Record<string, unknown>).slice().buffer
     } else if (options.mediaType?.includes('json')) {
-      bodyPayload = JSON.stringify(options.body)
+      bodyPayload = stringifyJson(options.body)
     } else {
-      bodyPayload = JSON.stringify(options.body)
+      bodyPayload = stringifyJson(options.body)
     }
   }
 
@@ -91,7 +92,7 @@ export async function request<T>(
           rawBinaryStringValues: false,
         })
       } else if (ct.includes('application/json')) {
-        errorBody = JSON.parse(await response.text())
+        errorBody = parseJson(await response.text())
       } else {
         errorBody = await response.text()
       }
@@ -117,7 +118,7 @@ export async function request<T>(
   }
 
   if (contentType.includes('application/json')) {
-    return JSON.parse(await response.text()) as unknown as T
+    return parseJson(await response.text()) as unknown as T
   }
 
   if (!contentType) {
