@@ -1,5 +1,13 @@
-import { ABIMethod, Arc56Contract, Arc56Method, StorageKey, StructField, encodeABIValue, getABIType } from '@algorandfoundation/algokit-abi'
-import { ARC28Event } from '@algorandfoundation/algokit-abi/arc28-event'
+import {
+  ABIMethod,
+  ARC28Event,
+  Arc56Contract,
+  Arc56Method,
+  StorageKey,
+  StructField,
+  encodeABIValue,
+  getABIType,
+} from '@algorandfoundation/algokit-abi'
 
 /**
  * Converts an ARC-32 Application Specification to an ARC-56 Contract

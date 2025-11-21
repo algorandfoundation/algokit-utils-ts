@@ -1,7 +1,10 @@
 export {
+  argTypeIsAbiType,
   argTypeIsReference,
   argTypeIsTransaction,
+  decodeAVMOrABIValue,
   decodeAVMValue,
+  encodeAVMOrABIValue,
   findABIMethod,
   getABIMethod,
   getABIMethodSelector,
@@ -9,7 +12,16 @@ export {
   isAVMType,
 } from './abi-method'
 export type { ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
-export { ABITypeName, decodeABIValue, encodeABIValue, encodeTuple, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+export {
+  ABITypeName,
+  decodeABIValue,
+  encodeABIValue,
+  encodeTuple,
+  getABIStructType,
+  getABIType,
+  getABITypeName,
+  parseTupleContent,
+} from './abi-type'
 export type {
   ABIAddressType,
   ABIBoolType,
@@ -24,7 +36,18 @@ export type {
   ABIUintType,
 } from './abi-type'
 export type { ABIReferenceValue, ABIValue } from './abi-value'
+export type { ARC28Event } from './arc28-event'
+export {
+  getBoxABIStorageKey,
+  getBoxABIStorageMap,
+  getGlobalABIStorageKeys,
+  getGlobalABIStorageMaps,
+  getLocalABIStorageKeys,
+  getLocalABIStorageMaps,
+} from './arc56-contract'
 export type {
+  ABIStorageKey,
+  ABIStorageMap,
   AVMBytes,
   AVMString,
   AVMType,

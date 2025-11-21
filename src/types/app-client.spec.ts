@@ -1,5 +1,4 @@
-import { decodeABIValue, encodeABIValue, getABIMethod, getABIType } from '@algorandfoundation/algokit-abi'
-import { getABIStructType } from '@algorandfoundation/algokit-abi/abi-type'
+import { decodeABIValue, encodeABIValue, getABIMethod, getABIStructType, getABIType } from '@algorandfoundation/algokit-abi'
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
