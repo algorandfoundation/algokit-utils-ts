@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SimulateTransactionResult } from './simulate-transaction-result'
 import { SimulateTransactionResultMeta } from './simulate-transaction-result'
@@ -36,7 +36,7 @@ export type SimulateTransactionGroupResult = {
   unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
 }
 
-export const SimulateTransactionGroupResultMeta: ModelMetadata = {
+export const SimulateTransactionGroupResultMeta: ObjectModelMetadata = {
   name: 'SimulateTransactionGroupResult',
   kind: 'object',
   fields: [

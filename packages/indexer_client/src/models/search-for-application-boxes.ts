@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxDescriptor } from './box-descriptor'
 import { BoxDescriptorMeta } from './box-descriptor'
@@ -16,7 +16,7 @@ export type SearchForApplicationBoxes = {
   nextToken?: string
 }
 
-export const SearchForApplicationBoxesMeta: ModelMetadata = {
+export const SearchForApplicationBoxesMeta: ObjectModelMetadata = {
   name: 'SearchForApplicationBoxes',
   kind: 'object',
   fields: [

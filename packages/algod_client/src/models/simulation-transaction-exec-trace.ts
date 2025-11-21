@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SimulationOpcodeTraceUnit } from './simulation-opcode-trace-unit'
 import { SimulationOpcodeTraceUnitMeta } from './simulation-opcode-trace-unit'
@@ -53,7 +53,7 @@ export type SimulationTransactionExecTrace = {
   innerTrace?: SimulationTransactionExecTrace[]
 }
 
-export const SimulationTransactionExecTraceMeta: ModelMetadata = {
+export const SimulationTransactionExecTraceMeta: ObjectModelMetadata = {
   name: 'SimulationTransactionExecTrace',
   kind: 'object',
   fields: [

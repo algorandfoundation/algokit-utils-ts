@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationKvStorage } from './application-kv-storage'
 import { ApplicationKvStorageMeta } from './application-kv-storage'
@@ -20,7 +20,7 @@ export type ApplicationInitialStates = {
   appBoxes?: ApplicationKvStorage
 }
 
-export const ApplicationInitialStatesMeta: ModelMetadata = {
+export const ApplicationInitialStatesMeta: ObjectModelMetadata = {
   name: 'ApplicationInitialStates',
   kind: 'object',
   fields: [

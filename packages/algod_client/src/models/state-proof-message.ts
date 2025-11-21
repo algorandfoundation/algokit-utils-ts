@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -31,7 +31,7 @@ export type StateProofMessage = {
   lastAttestedRound: bigint
 }
 
-export const StateProofMessageMeta: ModelMetadata = {
+export const StateProofMessageMeta: ObjectModelMetadata = {
   name: 'StateProofMessage',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 export type GetBlockTimeStampOffset = {
@@ -8,7 +8,7 @@ export type GetBlockTimeStampOffset = {
   offset: number
 }
 
-export const GetBlockTimeStampOffsetMeta: ModelMetadata = {
+export const GetBlockTimeStampOffsetMeta: ObjectModelMetadata = {
   name: 'GetBlockTimeStampOffset',
   kind: 'object',
   fields: [

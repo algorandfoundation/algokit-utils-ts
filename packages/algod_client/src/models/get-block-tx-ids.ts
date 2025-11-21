@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 export type GetBlockTxIds = {
@@ -8,7 +8,7 @@ export type GetBlockTxIds = {
   blockTxIds: string[]
 }
 
-export const GetBlockTxIdsMeta: ModelMetadata = {
+export const GetBlockTxIdsMeta: ObjectModelMetadata = {
   name: 'GetBlockTxIds',
   kind: 'object',
   fields: [

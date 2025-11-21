@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { HbProofFields } from './hb-proof-fields'
 import { HbProofFieldsMeta } from './hb-proof-fields'
@@ -32,7 +32,7 @@ export type TransactionHeartbeat = {
   hbKeyDilution: bigint
 }
 
-export const TransactionHeartbeatMeta: ModelMetadata = {
+export const TransactionHeartbeatMeta: ObjectModelMetadata = {
   name: 'TransactionHeartbeat',
   kind: 'object',
   fields: [

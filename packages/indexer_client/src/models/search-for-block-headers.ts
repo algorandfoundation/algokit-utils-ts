@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Block } from './block'
 import { BlockMeta } from './block'
@@ -16,7 +16,7 @@ export type SearchForBlockHeaders = {
   blocks: Block[]
 }
 
-export const SearchForBlockHeadersMeta: ModelMetadata = {
+export const SearchForBlockHeadersMeta: ObjectModelMetadata = {
   name: 'SearchForBlockHeaders',
   kind: 'object',
   fields: [

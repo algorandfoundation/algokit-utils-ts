@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -136,7 +136,7 @@ export type GetStatus = {
   upgradeVoteRounds?: number
 }
 
-export const GetStatusMeta: ModelMetadata = {
+export const GetStatusMeta: ObjectModelMetadata = {
   name: 'GetStatus',
   kind: 'object',
   fields: [

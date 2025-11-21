@@ -2,8 +2,38 @@ import { Buffer } from 'buffer'
 import { ContextualCodec } from './contextual-codec'
 import { ModelCodec } from './model'
 import type { BodyFormat, FieldMetadata, ModelMetadata } from './types'
+/**
+ * Represents a map key coming off the wire.
+ */
+export type WireMapKey = Uint8Array | number | bigint
 
 /**
+ * Represents object data coming off the wire.
+ *
+ * When from msgpack it's a Map. Both bytes and string keys are represented as Uint8Array.
+ * When from JSON it's a plain object with string keys.
+ */
+export type WireObject = Record<string, unknown> | Map<WireMapKey, unknown>
+
+/**
+ * Represents a bigint value coming off the wire.
+ *
+ * When from msgpack it could be a number or bigint, depending on size.
+ * When from JSON it could be a number or string, depending on size.
+ */
+export type WireBigInt = string | number | bigint
+
+/**
+ * Represents a bytes value coming off the wire.
+ *
+ * When from msgpack it's a Uint8Array.
+ * When from JSON it's a base64-encoded bytes string.
+ */
+export type WireBytes = Uint8Array | string
+
+// TODO: NC - These should be removed
+/**
+ *
  * Wire data can be a Map (from msgpack) or a plain object (from JSON)
  */
 type WireData = Map<string | Uint8Array, unknown> | Record<string, unknown>
@@ -13,6 +43,34 @@ type WireData = Map<string | Uint8Array, unknown> | Record<string, unknown>
  */
 type WireEntry = [key: string | Uint8Array, value: unknown]
 
+// TODO: NC - This is pretty inefficient, we can retrieve decoded values, the map, rather than per field we are searching for.
+/**
+ * Type-safe helper to get a value from either a Map or object
+ */
+export function getWireValue<T = unknown>(value: WireObject, key: string | WireMapKey): T | undefined {
+  if (value instanceof Map) {
+    const decodedKey = key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : key
+    // Try direct key lookup
+    if (typeof decodedKey !== 'string' && value.has(decodedKey)) {
+      return value.get(decodedKey) as T | undefined
+    }
+    // Search for Uint8Array key that matches when decoded to string
+    for (const [k, v] of value.entries()) {
+      if (k instanceof Uint8Array) {
+        const keyStr = Buffer.from(k).toString('utf-8')
+        if (keyStr === decodedKey) {
+          return v as T | undefined
+        }
+      }
+    }
+    return undefined
+  }
+  if (typeof key === 'string' && typeof value === 'object') {
+    return value[key] as T | undefined
+  }
+  return undefined
+}
+
 /**
  * Model serializer using codec-based metadata system
  * Handles encoding/decoding of models with codec-based field definitions
@@ -21,30 +79,29 @@ export class ModelSerializer {
   /**
    * Encode a model instance to wire format
    */
-  static encode<T extends object>(value: T, metadata: ModelMetadata, format: BodyFormat): Record<string, unknown> {
-    if (!metadata.fields) {
-      throw new Error(`Cannot encode model ${metadata.name}: no fields defined`)
+
+  // TODO: NC - We could call this toEncoded
+  static encode<T extends Record<string, unknown>>(value: T, metadata: ModelMetadata, format: BodyFormat): Record<string, unknown> {
+    if (metadata.kind !== 'object') {
+      throw new Error(`Cannot encode model ${metadata.name}: expected object kind, got ${metadata.kind}`)
     }
 
     const result: Record<string, unknown> = {}
-    const valueRecord = value as Record<string, unknown>
 
     for (const field of metadata.fields) {
       if (!field.codec) {
         throw new Error(`Field ${field.name} in ${metadata.name} does not have a codec`)
       }
 
-      const fieldValue = valueRecord[field.name]
+      const fieldValue = value[field.name]
 
-      // Handle flattened fields
       if (field.flattened) {
         this.encodeFlattenedField(field, fieldValue, result, format)
         continue
       }
 
-      // Encode regular fields
       const wireKey = field.wireKey ?? field.name
-      const encoded = this.encodeFieldValue(field, fieldValue, valueRecord, format)
+      const encoded = this.encodeFieldValue(field, fieldValue, value, format)
 
       if (encoded !== undefined) {
         result[wireKey] = encoded
@@ -57,9 +114,10 @@ export class ModelSerializer {
   /**
    * Decode wire format to a model instance
    */
+  // TODO: NC - We could call this fromEncoded
   static decode<T>(wireData: unknown, metadata: ModelMetadata, format: BodyFormat): T {
-    if (!metadata.fields) {
-      throw new Error(`Cannot decode model ${metadata.name}: no fields defined`)
+    if (metadata.kind !== 'object') {
+      throw new Error(`Cannot decode model ${metadata.name}: expected object kind, got ${metadata.kind}`)
     }
 
     const result: Record<string, unknown> = {}
@@ -143,27 +201,14 @@ export class ModelSerializer {
     return lookup
   }
 
-  /**
-   * Encode a single field value, handling contextual and optional fields
-   */
-  private static encodeFieldValue(
-    field: FieldMetadata,
-    fieldValue: unknown,
-    parentObject: Record<string, unknown>,
-    format: BodyFormat,
-  ): unknown {
-    const codec = field.codec!
-
+  private static encodeFieldValue(field: FieldMetadata, fieldValue: unknown, parent: Record<string, unknown>, format: BodyFormat): unknown {
+    const codec = field.codec
     if (codec instanceof ContextualCodec) {
-      return codec.encodeWithContext(fieldValue, parentObject, format)
+      return codec.encodeWithContext(fieldValue, parent, format)
     }
-
     return codec.encode(fieldValue, format)
   }
 
-  /**
-   * Encode a flattened field and merge its properties into the result
-   */
   private static encodeFlattenedField(
     field: FieldMetadata,
     fieldValue: unknown,
@@ -235,7 +280,7 @@ export class ModelSerializer {
           keysConsumed++
         }
       }
-      return { data: filteredMap, keysConsumed }
+      return { data: filteredMap.size > 0 ? filteredMap : null, keysConsumed }
     }
 
     if (typeof wireData === 'object') {
@@ -249,7 +294,7 @@ export class ModelSerializer {
           keysConsumed++
         }
       }
-      return { data: filteredData, keysConsumed }
+      return { data: Object.keys(filteredData).length > 0 ? filteredData : null, keysConsumed }
     }
 
     return { data: null, keysConsumed: 0 }
@@ -319,7 +364,7 @@ export class ModelSerializer {
    */
   private static collectWireKeys(meta: ModelMetadata): Set<string> | null {
     const wireKeys = new Set<string>()
-    if (meta.kind !== 'object' || !meta.fields) return wireKeys
+    if (meta.kind !== 'object') return wireKeys
 
     for (const field of meta.fields) {
       if (field.codec) {

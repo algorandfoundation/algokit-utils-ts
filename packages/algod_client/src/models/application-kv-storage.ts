@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmKeyValue } from './avm-key-value'
 import { AvmKeyValueMeta } from './avm-key-value'
@@ -18,7 +18,7 @@ export type ApplicationKvStorage = {
   account?: string
 }
 
-export const ApplicationKvStorageMeta: ModelMetadata = {
+export const ApplicationKvStorageMeta: ObjectModelMetadata = {
   name: 'ApplicationKvStorage',
   kind: 'object',
   fields: [

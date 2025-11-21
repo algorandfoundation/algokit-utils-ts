@@ -1,7 +1,7 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 
-const GenesisAllocationStateMeta: ModelMetadata = {
+const GenesisAllocationStateMeta: ObjectModelMetadata = {
   name: 'GenesisAllocationStateMeta',
   kind: 'object',
   fields: [
@@ -79,7 +79,7 @@ export type GenesisAllocation = {
   }
 }
 
-export const GenesisAllocationMeta: ModelMetadata = {
+export const GenesisAllocationMeta: ObjectModelMetadata = {
   name: 'GenesisAllocation',
   kind: 'object',
   fields: [

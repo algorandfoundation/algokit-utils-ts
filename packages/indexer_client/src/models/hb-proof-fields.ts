@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -31,7 +31,7 @@ export type HbProofFields = {
   hbPk2sig?: Uint8Array
 }
 
-export const HbProofFieldsMeta: ModelMetadata = {
+export const HbProofFieldsMeta: ObjectModelMetadata = {
   name: 'HbProofFields',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Transaction } from './transaction'
 import { TransactionMeta } from './transaction'
@@ -16,7 +16,7 @@ export type SearchForTransactions = {
   transactions: Transaction[]
 }
 
-export const SearchForTransactionsMeta: ModelMetadata = {
+export const SearchForTransactionsMeta: ObjectModelMetadata = {
   name: 'SearchForTransactions',
   kind: 'object',
   fields: [

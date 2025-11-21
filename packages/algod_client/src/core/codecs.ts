@@ -14,5 +14,6 @@ export function decodeMsgPack(
   buffer: Uint8Array,
   options: MsgPackDecodeOptions = { useMap: true, rawBinaryStringKeys: true, rawBinaryStringValues: true },
 ): Map<number | bigint | Uint8Array, unknown> {
+  // TODO: NC - Need to account for int mode here.
   return msgpackDecode(buffer, options) as Map<number | bigint | Uint8Array, unknown>
 }

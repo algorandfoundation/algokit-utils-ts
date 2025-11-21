@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -21,7 +21,7 @@ export type BlockUpgradeVote = {
   upgradePropose?: string
 }
 
-export const BlockUpgradeVoteMeta: ModelMetadata = {
+export const BlockUpgradeVoteMeta: ObjectModelMetadata = {
   name: 'BlockUpgradeVote',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
@@ -40,7 +40,7 @@ export type StateProofFields = {
   positionsToReveal?: bigint[]
 }
 
-export const StateProofFieldsMeta: ModelMetadata = {
+export const StateProofFieldsMeta: ObjectModelMetadata = {
   name: 'StateProofFields',
   kind: 'object',
   fields: [

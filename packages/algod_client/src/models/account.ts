@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AccountParticipation } from './account-participation'
 import { AccountParticipationMeta } from './account-participation'
@@ -164,7 +164,7 @@ export type Account = {
   lastHeartbeat?: bigint
 }
 
-export const AccountMeta: ModelMetadata = {
+export const AccountMeta: ObjectModelMetadata = {
   name: 'Account',
   kind: 'object',
   fields: [

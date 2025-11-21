@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Wallet } from './wallet'
 import { WalletMeta } from './wallet'
@@ -13,7 +13,7 @@ export type GetWalletsResponse = {
   wallets?: Wallet[]
 }
 
-export const GetWalletsResponseMeta: ModelMetadata = {
+export const GetWalletsResponseMeta: ObjectModelMetadata = {
   name: 'GetWalletsResponse',
   kind: 'object',
   fields: [

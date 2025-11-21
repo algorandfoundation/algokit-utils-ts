@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalState } from './application-local-state'
 import { ApplicationLocalStateMeta } from './application-local-state'
@@ -14,7 +14,7 @@ export type AccountApplicationInformation = {
   createdApp?: ApplicationParams
 }
 
-export const AccountApplicationInformationMeta: ModelMetadata = {
+export const AccountApplicationInformationMeta: ObjectModelMetadata = {
   name: 'AccountApplicationInformation',
   kind: 'object',
   fields: [

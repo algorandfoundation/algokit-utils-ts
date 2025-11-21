@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ArrayModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -6,8 +6,8 @@ import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayC
  */
 export type MasterDerivationKey = number[]
 
-export const MasterDerivationKeyMeta: ModelMetadata = {
+export const MasterDerivationKeyMeta: ArrayModelMetadata = {
   name: 'MasterDerivationKey',
   kind: 'array',
-  arrayCodec: new ArrayCodec(stringCodec),
+  codec: new ArrayCodec(stringCodec),
 }

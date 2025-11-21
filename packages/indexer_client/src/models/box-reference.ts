@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -16,7 +16,7 @@ export type BoxReference = {
   name: Uint8Array
 }
 
-export const BoxReferenceMeta: ModelMetadata = {
+export const BoxReferenceMeta: ObjectModelMetadata = {
   name: 'BoxReference',
   kind: 'object',
   fields: [

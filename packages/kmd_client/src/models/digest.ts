@@ -1,10 +1,10 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ArrayModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 export type Digest = number[]
 
-export const DigestMeta: ModelMetadata = {
+export const DigestMeta: ArrayModelMetadata = {
   name: 'Digest',
   kind: 'array',
-  arrayCodec: new ArrayCodec(stringCodec),
+  codec: new ArrayCodec(stringCodec),
 }

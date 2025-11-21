@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -39,7 +39,7 @@ export type TransactionAssetTransfer = {
   sender?: string
 }
 
-export const TransactionAssetTransferMeta: ModelMetadata = {
+export const TransactionAssetTransferMeta: ObjectModelMetadata = {
   name: 'TransactionAssetTransfer',
   kind: 'object',
   fields: [

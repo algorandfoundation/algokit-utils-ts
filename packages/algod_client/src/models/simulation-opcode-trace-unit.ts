@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateOperation } from './application-state-operation'
 import { ApplicationStateOperationMeta } from './application-state-operation'
@@ -42,7 +42,7 @@ export type SimulationOpcodeTraceUnit = {
   stackAdditions?: AvmValue[]
 }
 
-export const SimulationOpcodeTraceUnitMeta: ModelMetadata = {
+export const SimulationOpcodeTraceUnitMeta: ObjectModelMetadata = {
   name: 'SimulationOpcodeTraceUnit',
   kind: 'object',
   fields: [

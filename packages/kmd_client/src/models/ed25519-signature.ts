@@ -1,10 +1,10 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ArrayModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 export type Ed25519Signature = number[]
 
-export const Ed25519SignatureMeta: ModelMetadata = {
+export const Ed25519SignatureMeta: ArrayModelMetadata = {
   name: 'Ed25519Signature',
   kind: 'array',
-  arrayCodec: new ArrayCodec(stringCodec),
+  codec: new ArrayCodec(stringCodec),
 }

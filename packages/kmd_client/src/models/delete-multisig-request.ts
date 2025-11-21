@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -10,7 +10,7 @@ export type DeleteMultisigRequest = {
   walletPassword?: string
 }
 
-export const DeleteMultisigRequestMeta: ModelMetadata = {
+export const DeleteMultisigRequestMeta: ObjectModelMetadata = {
   name: 'DeleteMultisigRequest',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -8,7 +8,7 @@ export type RenewWalletHandleTokenRequest = {
   walletHandleToken?: string
 }
 
-export const RenewWalletHandleTokenRequestMeta: ModelMetadata = {
+export const RenewWalletHandleTokenRequestMeta: ObjectModelMetadata = {
   name: 'RenewWalletHandleTokenRequest',
   kind: 'object',
   fields: [

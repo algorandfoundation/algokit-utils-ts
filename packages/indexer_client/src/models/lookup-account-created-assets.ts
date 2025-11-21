@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Asset } from './asset'
 import { AssetMeta } from './asset'
@@ -17,7 +17,7 @@ export type LookupAccountCreatedAssets = {
   nextToken?: string
 }
 
-export const LookupAccountCreatedAssetsMeta: ModelMetadata = {
+export const LookupAccountCreatedAssetsMeta: ObjectModelMetadata = {
   name: 'LookupAccountCreatedAssets',
   kind: 'object',
   fields: [

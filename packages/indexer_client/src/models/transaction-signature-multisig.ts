@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { TransactionSignatureMultisigSubsignature } from './transaction-signature-multisig-subsignature'
 import { TransactionSignatureMultisigSubsignatureMeta } from './transaction-signature-multisig-subsignature'
@@ -26,7 +26,7 @@ export type TransactionSignatureMultisig = {
   version?: number
 }
 
-export const TransactionSignatureMultisigMeta: ModelMetadata = {
+export const TransactionSignatureMultisigMeta: ObjectModelMetadata = {
   name: 'TransactionSignatureMultisig',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SimulateInitialStates } from './simulate-initial-states'
 import { SimulateInitialStatesMeta } from './simulate-initial-states'
@@ -29,7 +29,7 @@ export type SimulateTransaction = {
   initialStates?: SimulateInitialStates
 }
 
-export const SimulateTransactionMeta: ModelMetadata = {
+export const SimulateTransactionMeta: ObjectModelMetadata = {
   name: 'SimulateTransaction',
   kind: 'object',
   fields: [

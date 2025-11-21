@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 export type BuildVersion = {
@@ -10,7 +10,7 @@ export type BuildVersion = {
   minor: number
 }
 
-export const BuildVersionMeta: ModelMetadata = {
+export const BuildVersionMeta: ObjectModelMetadata = {
   name: 'BuildVersion',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Application } from './application'
 import { ApplicationMeta } from './application'
@@ -17,7 +17,7 @@ export type LookupAccountCreatedApplications = {
   nextToken?: string
 }
 
-export const LookupAccountCreatedApplicationsMeta: ModelMetadata = {
+export const LookupAccountCreatedApplicationsMeta: ObjectModelMetadata = {
   name: 'LookupAccountCreatedApplications',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { PassthroughModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -14,7 +14,7 @@ import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from 
  */
 export type OnCompletion = 'noop' | 'optin' | 'closeout' | 'clear' | 'update' | 'delete'
 
-export const OnCompletionMeta: ModelMetadata = {
+export const OnCompletionMeta: PassthroughModelMetadata = {
   name: 'OnCompletion',
   kind: 'passthrough',
   codec: stringCodec,

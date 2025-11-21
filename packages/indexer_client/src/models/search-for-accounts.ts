@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Account } from './account'
 import { AccountMeta } from './account'
@@ -17,7 +17,7 @@ export type SearchForAccounts = {
   nextToken?: string
 }
 
-export const SearchForAccountsMeta: ModelMetadata = {
+export const SearchForAccountsMeta: ObjectModelMetadata = {
   name: 'SearchForAccounts',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -9,7 +9,7 @@ export type ExportMasterKeyRequest = {
   walletPassword?: string
 }
 
-export const ExportMasterKeyRequestMeta: ModelMetadata = {
+export const ExportMasterKeyRequestMeta: ObjectModelMetadata = {
   name: 'ExportMasterKeyRequest',
   kind: 'object',
   fields: [

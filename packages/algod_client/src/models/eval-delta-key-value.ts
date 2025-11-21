@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { EvalDelta } from './eval-delta'
 import { EvalDeltaMeta } from './eval-delta'
@@ -11,7 +11,7 @@ export type EvalDeltaKeyValue = {
   value: EvalDelta
 }
 
-export const EvalDeltaKeyValueMeta: ModelMetadata = {
+export const EvalDeltaKeyValueMeta: ObjectModelMetadata = {
   name: 'EvalDeltaKeyValue',
   kind: 'object',
   fields: [

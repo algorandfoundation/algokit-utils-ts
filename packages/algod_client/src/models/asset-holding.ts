@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -24,7 +24,7 @@ export type AssetHolding = {
   isFrozen: boolean
 }
 
-export const AssetHoldingMeta: ModelMetadata = {
+export const AssetHoldingMeta: ObjectModelMetadata = {
   name: 'AssetHolding',
   kind: 'object',
   fields: [

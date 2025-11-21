@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
@@ -75,7 +75,7 @@ export type TransactionApplication = {
   rejectVersion?: number
 }
 
-export const TransactionApplicationMeta: ModelMetadata = {
+export const TransactionApplicationMeta: ObjectModelMetadata = {
   name: 'TransactionApplication',
   kind: 'object',
   fields: [

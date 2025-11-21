@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -26,7 +26,7 @@ export type SimulateTraceConfig = {
   stateChange?: boolean
 }
 
-export const SimulateTraceConfigMeta: ModelMetadata = {
+export const SimulateTraceConfigMeta: ObjectModelMetadata = {
   name: 'SimulateTraceConfig',
   kind: 'object',
   fields: [

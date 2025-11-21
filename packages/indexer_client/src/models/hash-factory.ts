@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 export type HashFactory = {
@@ -8,7 +8,7 @@ export type HashFactory = {
   hashType?: number
 }
 
-export const HashFactoryMeta: ModelMetadata = {
+export const HashFactoryMeta: ObjectModelMetadata = {
   name: 'HashFactory',
   kind: 'object',
   fields: [

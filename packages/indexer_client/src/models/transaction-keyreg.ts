@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -44,7 +44,7 @@ export type TransactionKeyreg = {
   stateProofKey?: Uint8Array
 }
 
-export const TransactionKeyregMeta: ModelMetadata = {
+export const TransactionKeyregMeta: ObjectModelMetadata = {
   name: 'TransactionKeyreg',
   kind: 'object',
   fields: [

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { BodyFormat } from './types'
 
 /**
@@ -33,7 +34,9 @@ export abstract class Codec<T, TEncoded = T> {
    */
   public decode(value: TEncoded | undefined, format: BodyFormat): T {
     if (value === undefined) return this.defaultValue()
-    return this.fromEncoded(value, format)
+    const decoded = this.fromEncoded(value, format)
+    if (this.isDefaultValue(decoded)) return this.defaultValue()
+    return decoded
   }
 
   /**
@@ -49,25 +52,29 @@ export abstract class Codec<T, TEncoded = T> {
 
   /**
    * Transform application value to wire format
-   * Override this method to implement encoding logic
+   * Override this method to implement encoding logic, otherwise defaults to pass-through
    * @param value - The application value (guaranteed to not be undefined or default)
    * @param format - The wire format
    * @returns The encoded value
    */
-  protected abstract toEncoded(value: T, format: BodyFormat): TEncoded
+  protected toEncoded(value: T, format: BodyFormat): TEncoded {
+    return value as unknown as TEncoded
+  }
 
   /**
    * Transform wire format to application value
-   * Override this method to implement decoding logic
+   * Override this method to implement specific decoding logic, otherwise defaults to pass-through
    * @param value - The wire value (guaranteed to not be undefined)
    * @param format - The wire format
    * @returns The decoded value
    */
-  protected abstract fromEncoded(value: TEncoded, format: BodyFormat): T
+  protected fromEncoded(value: TEncoded, format: BodyFormat): T {
+    return value as unknown as T
+  }
 
   /**
    * Check if a value equals the default value (determines if it should be omitted during encoding)
-   * Override this method for custom default comparison logic
+   * Override this method for custom default comparison logic, otherwise defaults to default value equality
    * @param value - The value to check
    * @returns True if value equals default
    */

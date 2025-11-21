@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -16,7 +16,7 @@ export type ApplicationStateSchema = {
   numByteSlice: number
 }
 
-export const ApplicationStateSchemaMeta: ModelMetadata = {
+export const ApplicationStateSchemaMeta: ObjectModelMetadata = {
   name: 'ApplicationStateSchema',
   kind: 'object',
   fields: [

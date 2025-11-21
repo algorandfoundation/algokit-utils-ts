@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PendingTransactionResponse } from './pending-transaction-response'
 import { PendingTransactionResponseMeta } from './pending-transaction-response'
@@ -31,7 +31,7 @@ export type SimulateTransactionResult = {
   fixedSigner?: string
 }
 
-export const SimulateTransactionResultMeta: ModelMetadata = {
+export const SimulateTransactionResultMeta: ObjectModelMetadata = {
   name: 'SimulateTransactionResult',
   kind: 'object',
   fields: [

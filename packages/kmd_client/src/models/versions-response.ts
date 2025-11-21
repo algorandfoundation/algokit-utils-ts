@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -9,7 +9,7 @@ export type VersionsResponse = {
   versions?: string[]
 }
 
-export const VersionsResponseMeta: ModelMetadata = {
+export const VersionsResponseMeta: ObjectModelMetadata = {
   name: 'VersionsResponse',
   kind: 'object',
   fields: [

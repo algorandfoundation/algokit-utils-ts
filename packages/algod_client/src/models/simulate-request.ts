@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SimulateRequestTransactionGroup } from './simulate-request-transaction-group'
 import { SimulateRequestTransactionGroupMeta } from './simulate-request-transaction-group'
@@ -46,7 +46,7 @@ export type SimulateRequest = {
   fixSigners?: boolean
 }
 
-export const SimulateRequestMeta: ModelMetadata = {
+export const SimulateRequestMeta: ObjectModelMetadata = {
   name: 'SimulateRequest',
   kind: 'object',
   fields: [

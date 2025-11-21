@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -11,7 +11,7 @@ export type PostKeyListResponse = {
   message?: string
 }
 
-export const PostKeyListResponseMeta: ModelMetadata = {
+export const PostKeyListResponseMeta: ObjectModelMetadata = {
   name: 'PostKeyListResponse',
   kind: 'object',
   fields: [

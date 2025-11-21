@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateDelta } from './state-delta'
 import { StateDeltaMeta } from './state-delta'
@@ -11,7 +11,7 @@ export type AccountStateDelta = {
   delta: StateDelta
 }
 
-export const AccountStateDeltaMeta: ModelMetadata = {
+export const AccountStateDeltaMeta: ObjectModelMetadata = {
   name: 'AccountStateDelta',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
@@ -34,7 +34,7 @@ export type DryrunRequest = {
   sources: DryrunSource[]
 }
 
-export const DryrunRequestMeta: ModelMetadata = {
+export const DryrunRequestMeta: ObjectModelMetadata = {
   name: 'DryrunRequest',
   kind: 'object',
   fields: [

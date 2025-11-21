@@ -1,7 +1,7 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 
-const HealthCheckDataMeta: ModelMetadata = { name: 'HealthCheckDataMeta', kind: 'object', fields: [] }
+const HealthCheckDataMeta: ObjectModelMetadata = { name: 'HealthCheckDataMeta', kind: 'object', fields: [] }
 
 /**
  * A health check response.
@@ -19,7 +19,7 @@ export type HealthCheck = {
   errors?: string[]
 }
 
-export const HealthCheckMeta: ModelMetadata = {
+export const HealthCheckMeta: ObjectModelMetadata = {
   name: 'HealthCheck',
   kind: 'object',
   fields: [

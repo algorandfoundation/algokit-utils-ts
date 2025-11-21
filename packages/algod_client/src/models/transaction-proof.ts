@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -33,7 +33,7 @@ export type TransactionProof = {
   hashtype: 'sha512_256' | 'sha256'
 }
 
-export const TransactionProofMeta: ModelMetadata = {
+export const TransactionProofMeta: ObjectModelMetadata = {
   name: 'TransactionProof',
   kind: 'object',
   fields: [

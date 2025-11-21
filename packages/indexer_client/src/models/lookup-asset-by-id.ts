@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Asset } from './asset'
 import { AssetMeta } from './asset'
@@ -12,7 +12,7 @@ export type LookupAssetById = {
   currentRound: bigint
 }
 
-export const LookupAssetByIdMeta: ModelMetadata = {
+export const LookupAssetByIdMeta: ObjectModelMetadata = {
   name: 'LookupAssetById',
   kind: 'object',
   fields: [

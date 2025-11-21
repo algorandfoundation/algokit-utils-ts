@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
@@ -38,7 +38,7 @@ export type ApplicationParams = {
   version?: number
 }
 
-export const ApplicationParamsMeta: ModelMetadata = {
+export const ApplicationParamsMeta: ObjectModelMetadata = {
   name: 'ApplicationParams',
   kind: 'object',
   fields: [

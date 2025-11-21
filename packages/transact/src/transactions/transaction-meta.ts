@@ -1,9 +1,10 @@
-import type { BodyFormat, ModelMetadata } from '@algorandfoundation/algokit-common'
+import type { BodyFormat, ObjectModelMetadata, WireBigInt, WireBytes, WireObject } from '@algorandfoundation/algokit-common'
 import {
   Codec,
   ContextualCodec,
+  MapCodec,
   ModelCodec,
-  ModelSerializer,
+  ObjectModelCodec,
   addressArrayCodec,
   addressCodec,
   bigIntArrayCodec,
@@ -14,43 +15,51 @@ import {
   fixedBytes1793Codec,
   fixedBytes32Codec,
   fixedBytes64Codec,
+  getWireValue,
   numberCodec,
+  requiredBigIntCodec,
   stringCodec,
 } from '@algorandfoundation/algokit-common'
 import { Buffer } from 'buffer'
-import type { StateSchema } from './app-call'
-import { TransactionType } from './transaction'
+import { AccessReference, BoxReference } from './app-call'
+import { AssetConfigTransactionFields } from './asset-config'
+import { TransactionType } from './transaction-type'
 
-type StateSchemaDto = {
-  /** Number of uints */
-  nui?: number
-
-  /** Number of byte slices */
-  nbs?: number
+type BoxReferenceWire = {
+  /** App index (0 or index into access list) */
+  i?: number
+  /** Box name */
+  n?: WireBytes
 }
 
-/**
- * Helper function to get a value from either a Map or object
- * Maps from msgpack can have Uint8Array keys, so we need to handle that
- */
-function getValue(value: unknown, key: string): unknown {
-  if (value instanceof Map) {
-    // First try the string key directly
-    if (value.has(key)) {
-      return value.get(key)
-    }
-    // Search for Uint8Array key that matches when decoded to string
-    for (const [k, v] of value.entries()) {
-      if (k instanceof Uint8Array) {
-        const keyStr = Buffer.from(k).toString('utf-8')
-        if (keyStr === key) {
-          return v
-        }
-      }
-    }
-    return undefined
+type AccessWireEntry = {
+  /** Account address */
+  d?: WireBytes
+
+  /** App index */
+  p?: WireBigInt
+
+  /** Asset index */
+  s?: WireBigInt
+
+  /** Box reference */
+  b?: BoxReferenceWire
+
+  /** Holding reference (1-based indices into access list) */
+  h?: {
+    /** Address index */
+    d?: number
+    /** Asset index (1-based index into access list) */
+    s?: number
   }
-  return (value as any)[key]
+
+  /** Local state reference (1-based indices into access list) */
+  l?: {
+    /** Address index */
+    d?: number
+    /** App index (0 means current app, or 1-based index into access list) */
+    p?: number
+  }
 }
 
 /**
@@ -116,7 +125,7 @@ class TransactionTypeCodec extends Codec<TransactionType, string> {
   }
 }
 
-const PaymentTransactionFieldsMeta: ModelMetadata = {
+const PaymentTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'PaymentTransactionFields',
   kind: 'object',
   fields: [
@@ -126,7 +135,7 @@ const PaymentTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-const AssetTransferTransactionFieldsMeta: ModelMetadata = {
+const AssetTransferTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'AssetTransferTransactionFields',
   kind: 'object',
   fields: [
@@ -138,7 +147,7 @@ const AssetTransferTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-const AssetFreezeTransactionFieldsMeta: ModelMetadata = {
+const AssetFreezeTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'AssetFreezeTransactionFields',
   kind: 'object',
   fields: [
@@ -148,7 +157,7 @@ const AssetFreezeTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-const KeyRegistrationTransactionFieldsMeta: ModelMetadata = {
+const KeyRegistrationTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'KeyRegistrationTransactionFields',
   kind: 'object',
   fields: [
@@ -162,7 +171,7 @@ const KeyRegistrationTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-const AssetParamsMeta: ModelMetadata = {
+const AssetParamsMeta: ObjectModelMetadata = {
   name: 'AssetParams',
   kind: 'object',
   fields: [
@@ -180,35 +189,27 @@ const AssetParamsMeta: ModelMetadata = {
   ],
 }
 
-/**
- * Custom codec for AssetConfigTransactionFields that uses ModelCodec internally
- * but handles the wire format transformation where assetId → caid and other fields → apar
- */
-class AssetConfigCodec extends Codec<any, any> {
-  private assetParamsCodec = new ModelCodec(AssetParamsMeta)
+class AssetConfigCodec extends Codec<AssetConfigTransactionFields | undefined, WireObject> {
+  private assetParamsCodec = new ObjectModelCodec<Record<string, unknown>>(AssetParamsMeta)
 
-  public defaultValue() {
+  public defaultValue(): undefined {
     return undefined
   }
 
-  protected toEncoded(value: any, format: BodyFormat): any {
-    const result: any = {}
+  protected toEncoded(value: AssetConfigTransactionFields | undefined, format: BodyFormat): WireObject {
+    const result: Record<string, unknown> = {}
 
-    // Encode assetId directly with wireKey 'caid'
+    if (!value) {
+      return result
+    }
+
+    const { assetId, ...assetParams } = value
+
     const encodedAssetId = bigIntCodec.encode(value.assetId, format)
     if (encodedAssetId !== undefined) {
       result.caid = encodedAssetId
     }
 
-    // Collect all asset param fields (everything except assetId)
-    const assetParams: any = {}
-    for (const field of AssetParamsMeta.fields!) {
-      if (value[field.name] !== undefined) {
-        assetParams[field.name] = value[field.name]
-      }
-    }
-
-    // Encode asset params to the 'apar' nested object
     const encodedParams = this.assetParamsCodec.encode(assetParams, format)
     if (encodedParams && Object.keys(encodedParams).length > 0) {
       result.apar = encodedParams
@@ -217,55 +218,52 @@ class AssetConfigCodec extends Codec<any, any> {
     return result
   }
 
-  protected fromEncoded(value: any, format: BodyFormat): any {
-    const caid = getValue(value, 'caid')
-    const apar = getValue(value, 'apar')
+  protected fromEncoded(value: WireObject, format: BodyFormat): AssetConfigTransactionFields | undefined {
+    if ((value instanceof Map && value.size === 0) || (!(value instanceof Map) && Object.keys(value).length === 0)) {
+      return undefined
+    }
 
-    // If neither caid nor apar is present, this is not an asset config transaction
+    const caid = getWireValue<WireBigInt>(value, 'caid')
+    const apar = getWireValue<WireObject>(value, 'apar')
+
     if (caid === undefined && !apar) {
       return undefined
     }
 
-    const result: any = {}
-
-    // Decode assetId from 'caid'
-    result.assetId = bigIntCodec.decode(caid as string | number | bigint | undefined, format)
-
-    // Decode asset params from 'apar' and spread into result
-    if (apar) {
-      const params = this.assetParamsCodec.decode(apar as unknown[] | Record<string, unknown> | undefined, format)
-      Object.assign(result, params)
-    }
-
-    return result
+    return {
+      assetId: bigIntCodec.decode(caid, format),
+      ...this.assetParamsCodec.decode(apar, format),
+    } satisfies AssetConfigTransactionFields
   }
 
-  protected isDefaultValue(value: any): boolean {
+  protected isDefaultValue(value: AssetConfigTransactionFields | undefined): boolean {
     return value === undefined
   }
 }
-
-const assetConfigCodec = new AssetConfigCodec()
 
 /**
  * Contextual codec for box references
  * Needs access to appId and appReferences for proper indexing
  */
-class BoxReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
-  public defaultValue(): unknown[] {
+class BoxReferencesCodec extends ContextualCodec<BoxReference[], BoxReferenceWire[]> {
+  public defaultValue(): BoxReference[] {
     return []
   }
 
-  public encodeWithContext(boxes: unknown[] | undefined, appCall: Record<string, unknown>, format: BodyFormat): unknown[] | undefined {
+  public encodeWithContext(
+    boxes: BoxReference[] | undefined,
+    appCall: Record<string, unknown>,
+    format: BodyFormat,
+  ): BoxReferenceWire[] | undefined {
     if (!boxes || boxes.length === 0) return undefined
 
-    const appId = appCall.appId
-    const appReferences = appCall.appReferences ?? []
+    const appId = appCall.appId as bigint
+    const appReferences = (appCall.appReferences ?? []) as bigint[]
 
-    return boxes.map((box: any) => {
+    return boxes.map((box) => {
       const isCurrentApp = box.appId === 0n || box.appId === appId
       // Index 0 means current app, index > 0 references foreign apps array (1-indexed)
-      const index = isCurrentApp ? 0 : (appReferences as bigint[]).indexOf(box.appId) + 1
+      const index = isCurrentApp ? 0 : appReferences.indexOf(box.appId) + 1
 
       if (index === 0 && !isCurrentApp) {
         throw new Error(`Box ref with appId ${box.appId} not in appReferences`)
@@ -278,19 +276,23 @@ class BoxReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
     })
   }
 
-  public decodeWithContext(dtoBoxes: unknown[] | undefined, parentDTO: Record<string, unknown>, format: BodyFormat): unknown[] {
+  public decodeWithContext(
+    dtoBoxes: BoxReferenceWire[] | undefined,
+    parentDTO: Record<string, unknown>,
+    format: BodyFormat,
+  ): BoxReference[] {
     if (!dtoBoxes || dtoBoxes.length === 0) return []
 
     // Get app references from parent DTO using getValue (parentDTO could be a Map from msgpack)
-    const appReferencesArray = getValue(parentDTO, 'apfa') as unknown[] | undefined
+    const appReferencesArray = getWireValue<unknown[]>(parentDTO, 'apfa')
 
-    return dtoBoxes.map((box: any) => {
+    return dtoBoxes.map((box) => {
       // Use getValue to handle Map values with Uint8Array keys from msgpack
-      const boxIndex = getValue(box, 'i')
-      const boxName = getValue(box, 'n')
+      const boxIndex = getWireValue<number | bigint>(box, 'i')
+      const boxName = getWireValue<string | Uint8Array>(box, 'n')
 
       // Handle index - could be number, bigint, or undefined
-      const index = (typeof boxIndex === 'bigint' ? Number(boxIndex) : typeof boxIndex === 'number' ? boxIndex : 0) as number
+      const index = typeof boxIndex === 'bigint' ? Number(boxIndex) : typeof boxIndex === 'number' ? boxIndex : 0
 
       let appId: bigint
       if (index === 0) {
@@ -306,13 +308,13 @@ class BoxReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
       }
 
       return {
-        appId: appId,
-        name: bytesCodec.decode(boxName as string | Uint8Array | undefined, format),
+        appId,
+        name: bytesCodec.decode(boxName, format),
       }
     })
   }
 
-  protected isDefaultValue(value: unknown[]): boolean {
+  protected isDefaultValue(value: BoxReference[]): boolean {
     return value.length === 0
   }
 }
@@ -321,35 +323,34 @@ class BoxReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
  * Contextual codec for access references
  * Handles complex encoding including holding, locals, and box references
  */
-class AccessReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
-  public defaultValue(): unknown[] {
+class AccessReferencesCodec extends ContextualCodec<AccessReference[], AccessWireEntry[]> {
+  public defaultValue(): AccessReference[] {
     return []
   }
 
-  public encodeWithContext(refs: unknown[] | undefined, appCall: Record<string, unknown>, format: BodyFormat): unknown[] | undefined {
+  public encodeWithContext(
+    refs: AccessReference[] | undefined,
+    appCall: { appId: bigint },
+    format: BodyFormat,
+  ): AccessWireEntry[] | undefined {
     if (!refs || refs.length === 0) return undefined
 
-    const accessList: unknown[] = []
-    const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
+    const accessList: AccessWireEntry[] = []
+    const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ' // TODO: NC - Remove this
 
     // Helper to find or add a simple reference and return its 1-based index
-    const ensure = (target: Record<string, unknown>): number => {
+    const ensure = (target: Pick<AccessReference, 'address' | 'assetId' | 'appId'>): number => {
       // Search for existing entry
       for (let idx = 0; idx < accessList.length; idx++) {
-        const entry: any = accessList[idx]
+        const entry = accessList[idx]
         const matchesAddress =
-          (!entry.d && !target.address) ||
-          (entry.d && target.address && addressCodec.decode(entry.d as string | Uint8Array | undefined, format) === target.address)
+          (!entry.d && !target.address) || (entry.d && target.address && addressCodec.decode(entry.d, format) === target.address)
         const matchesAssetId =
           (entry.s === undefined && target.assetId === undefined) ||
-          (entry.s !== undefined &&
-            target.assetId !== undefined &&
-            bigIntCodec.decode(entry.s as string | number | bigint | undefined, format) === target.assetId)
+          (entry.s !== undefined && target.assetId !== undefined && bigIntCodec.decode(entry.s, format) === target.assetId)
         const matchesAppId =
           (entry.p === undefined && target.appId === undefined) ||
-          (entry.p !== undefined &&
-            target.appId !== undefined &&
-            bigIntCodec.decode(entry.p as string | number | bigint | undefined, format) === target.appId)
+          (entry.p !== undefined && target.appId !== undefined && bigIntCodec.decode(entry.p, format) === target.appId)
 
         if (matchesAddress && matchesAssetId && matchesAppId) {
           return idx + 1 // Return 1-based index
@@ -358,20 +359,20 @@ class AccessReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
 
       // Add new entries for each field
       if (target.address && target.address !== ZERO_ADDRESS) {
-        accessList.push({ d: addressCodec.encode(target.address as string, format) })
+        accessList.push({ d: addressCodec.encode(target.address, format)! })
       }
       if (target.assetId !== undefined) {
-        accessList.push({ s: bigIntCodec.encode(target.assetId as bigint, format) })
+        accessList.push({ s: bigIntCodec.encode(target.assetId, format)! })
       }
       if (target.appId !== undefined) {
-        accessList.push({ p: bigIntCodec.encode(target.appId as bigint, format) })
+        accessList.push({ p: bigIntCodec.encode(target.appId, format)! })
       }
 
       return accessList.length // Return 1-based index of last added
     }
 
     // Process each access reference
-    for (const accessRef of refs as any[]) {
+    for (const accessRef of refs) {
       // Simple references (address, assetId, or appId)
       if (accessRef.address || accessRef.assetId !== undefined || accessRef.appId !== undefined) {
         ensure(accessRef)
@@ -440,140 +441,92 @@ class AccessReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
     return accessList.length > 0 ? accessList : undefined
   }
 
-  public decodeWithContext(dtoAccessList: unknown[] | undefined, parentDTO: unknown, format: BodyFormat): unknown[] {
+  public decodeWithContext(dtoAccessList: AccessWireEntry[] | undefined, parentDTO: unknown, format: BodyFormat): AccessReference[] {
     if (!dtoAccessList || dtoAccessList.length === 0) return []
 
-    const result: unknown[] = []
+    const result: AccessReference[] = []
     const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
 
     // Process each entry in the access list
-    for (const ref of dtoAccessList as any[]) {
-      const d = getValue(ref, 'd')
-      const s = getValue(ref, 's')
-      const p = getValue(ref, 'p')
-      const h = getValue(ref, 'h')
-      const l = getValue(ref, 'l')
-      const b = getValue(ref, 'b')
+    for (const ref of dtoAccessList) {
+      const d = getWireValue<WireBytes>(ref, 'd')
+      const s = getWireValue<WireBigInt>(ref, 's')
+      const p = getWireValue<WireBigInt>(ref, 'p')
+      const h = getWireValue<WireObject>(ref, 'h')
+      const l = getWireValue<WireObject>(ref, 'l')
+      const b = getWireValue<WireObject>(ref, 'b')
 
       // Simple address reference
       if (d) {
-        result.push({ address: addressCodec.decode(d as string | Uint8Array | undefined, format) })
+        result.push({ address: addressCodec.decode(d, format) })
         continue
       }
 
       // Simple asset ID reference
       if (s !== undefined) {
-        result.push({ assetId: bigIntCodec.decode(s as string | number | bigint | undefined, format) })
+        result.push({ assetId: bigIntCodec.decode(s, format) })
         continue
       }
 
       // Simple app ID reference
       if (p !== undefined) {
-        result.push({ appId: bigIntCodec.decode(p as string | number | bigint | undefined, format) })
+        result.push({ appId: bigIntCodec.decode(p, format) })
         continue
       }
 
       // Holding reference (h)
       if (h) {
-        const addrIdx = (getValue(h, 'd') as number) ?? 0
-        const assetIdx = (getValue(h, 's') as number) ?? 0
-        let address: string | undefined
-        let assetId: bigint | undefined
+        const addrIdx = getWireValue<number>(h, 'd') ?? 0
+        const assetIdx = getWireValue<number>(h, 's')
 
-        // Resolve address from 1-based index
-        const addrEntry = dtoAccessList[addrIdx - 1]
-        if (addrIdx > 0 && addrEntry) {
-          const addrD = getValue(addrEntry, 'd')
-          if (addrD) {
-            address = addressCodec.decode(addrD as string | Uint8Array | undefined, format)
-          }
+        if (assetIdx === undefined) {
+          throw new Error('Access list holding reference is missing asset index')
         }
 
-        // Resolve assetId from 1-based index
-        const assetEntry = dtoAccessList[assetIdx - 1]
-        if (assetIdx > 0 && assetEntry) {
-          const assetS = getValue(assetEntry, 's')
-          if (assetS !== undefined) {
-            assetId = bigIntCodec.decode(assetS as string | number | bigint | undefined, format)
-          }
-        }
+        const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : getWireValue<WireBytes>(dtoAccessList[addrIdx - 1], 'd')!
+        const holdingAssetId = getWireValue<WireBigInt>(dtoAccessList[assetIdx - 1], 's')!
 
-        if (assetId !== undefined) {
-          result.push({
-            holding: {
-              assetId,
-              address: address ?? ZERO_ADDRESS,
-            },
-          })
-        }
+        result.push({
+          holding: {
+            assetId: bigIntCodec.decode(holdingAssetId, format),
+            address: typeof holdingAddress == 'string' ? holdingAddress : addressCodec.decode(holdingAddress, format),
+          },
+        })
         continue
       }
 
       // Locals reference (l)
       if (l) {
-        const addrIdx = (getValue(l, 'd') as number) ?? 0
-        const appIdx = (getValue(l, 'p') as number) ?? 0
-        let address: string | undefined
-        let appId: bigint | undefined
+        const addrIdx = getWireValue<number>(l, 'd') ?? 0
+        const appIdx = getWireValue<number>(l, 'p') ?? 0
 
-        // Resolve address from 1-based index
-        const addrEntry = dtoAccessList[addrIdx - 1]
-        if (addrIdx > 0 && addrEntry) {
-          const addrD = getValue(addrEntry, 'd')
-          if (addrD) {
-            address = addressCodec.decode(addrD as string | Uint8Array | undefined, format)
-          }
-        }
+        const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : getWireValue<WireBytes>(dtoAccessList[addrIdx - 1], 'd')!
+        const localsAppId = appIdx === 0 ? 0n : getWireValue<WireBigInt>(dtoAccessList[appIdx - 1], 'p')!
 
-        // Resolve appId from 1-based index
-        const appEntry = dtoAccessList[appIdx - 1]
-        if (appIdx > 0 && appEntry) {
-          const appP = getValue(appEntry, 'p')
-          if (appP !== undefined) {
-            appId = bigIntCodec.decode(appP as string | number | bigint | undefined, format)
-          }
-        }
-
-        if (appId !== undefined) {
-          result.push({
-            locals: {
-              appId,
-              address: address ?? ZERO_ADDRESS,
-            },
-          })
-        }
+        result.push({
+          locals: {
+            appId: bigIntCodec.decode(localsAppId, format),
+            address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress, format),
+          },
+        })
         continue
       }
 
       // Box reference (b)
       if (b) {
-        const appIdx = (getValue(b, 'p') as number) ?? 0
-        let appId: bigint
+        const boxAppIdx = getWireValue<number>(b, 'i') ?? 0
+        const name = getWireValue<WireBytes>(b, 'n')
 
-        // Resolve appId from 1-based index
-        // Index 0 means "current app" (appId = 0n)
-        if (appIdx === 0) {
-          appId = 0n
-        } else {
-          const appEntry = dtoAccessList[appIdx - 1]
-          if (appEntry) {
-            const appP = getValue(appEntry, 'p')
-            if (appP !== undefined) {
-              appId = bigIntCodec.decode(appP as string | number | bigint | undefined, format)
-            } else {
-              // If index is invalid, skip this box reference
-              continue
-            }
-          } else {
-            // If index is invalid, skip this box reference
-            continue
-          }
+        if (!name) {
+          throw new Error('Access list box reference is missing name')
         }
+
+        const boxAppId = boxAppIdx === 0 ? 0n : getWireValue<WireBigInt>(dtoAccessList[boxAppIdx - 1], 'p')!
 
         result.push({
           box: {
-            appId,
-            name: bytesCodec.decode(getValue(b, 'n') as string | Uint8Array | undefined, format),
+            appId: bigIntCodec.decode(boxAppId, format),
+            name: bytesCodec.decode(name, format),
           },
         })
         continue
@@ -583,12 +536,12 @@ class AccessReferencesCodec extends ContextualCodec<unknown[], unknown[]> {
     return result
   }
 
-  protected isDefaultValue(value: unknown[]): boolean {
-    return (value as unknown[]).length === 0
+  protected isDefaultValue(value: AccessReference[]): boolean {
+    return value.length === 0
   }
 }
 
-const StateSchemaMeta: ModelMetadata = {
+const StateSchemaMeta: ObjectModelMetadata = {
   name: 'StateSchema',
   kind: 'object',
   fields: [
@@ -597,37 +550,7 @@ const StateSchemaMeta: ModelMetadata = {
   ],
 }
 
-/**
- * Codec for StateSchema that omits empty objects (both fields are 0)
- * This matches the behavior of the old manual encoder which used OmitEmptyObjectCodec
- */
-class StateSchemaCodec extends Codec<StateSchema, StateSchemaDto> {
-  private modelCodec = new ModelCodec(StateSchemaMeta)
-
-  public defaultValue(): StateSchema {
-    return {
-      numUints: 0,
-      numByteSlices: 0,
-    }
-  }
-
-  protected isDefaultValue(value: StateSchema): boolean {
-    // Omit if both fields are 0 (empty/default state)
-    return value.numUints === 0 && value.numByteSlices === 0
-  }
-
-  protected toEncoded(value: StateSchema, format: BodyFormat): Record<string, unknown> {
-    return this.modelCodec.encode(value, format) as StateSchemaDto
-  }
-
-  protected fromEncoded(value: StateSchemaDto, format: BodyFormat): StateSchema {
-    return this.modelCodec.decode(value, format) as StateSchema
-  }
-}
-
-const stateSchemaCodec = new StateSchemaCodec()
-
-const AppCallTransactionFieldsMeta: ModelMetadata = {
+const AppCallTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'AppCallTransactionFields',
   kind: 'object',
   fields: [
@@ -640,14 +563,14 @@ const AppCallTransactionFieldsMeta: ModelMetadata = {
       wireKey: 'apgs',
       optional: true,
       nullable: false,
-      codec: stateSchemaCodec, // Use codec that omits empty schemas
+      codec: new ModelCodec(StateSchemaMeta),
     },
     {
       name: 'localStateSchema',
       wireKey: 'apls',
       optional: true,
       nullable: false,
-      codec: stateSchemaCodec, // Use codec that omits empty schemas
+      codec: new ModelCodec(StateSchemaMeta),
     },
     { name: 'extraProgramPages', wireKey: 'apep', optional: true, nullable: false, codec: numberCodec },
     { name: 'args', wireKey: 'apaa', optional: true, nullable: false, codec: bytesArrayCodec },
@@ -660,13 +583,13 @@ const AppCallTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-const HashFactoryMeta: ModelMetadata = {
+const HashFactoryMeta: ObjectModelMetadata = {
   name: 'HashFactory',
   kind: 'object',
   fields: [{ name: 'hashType', wireKey: 't', optional: false, nullable: false, codec: numberCodec }],
 }
 
-const MerkleArrayProofMeta: ModelMetadata = {
+const MerkleArrayProofMeta: ObjectModelMetadata = {
   name: 'MerkleArrayProof',
   kind: 'object',
   fields: [
@@ -676,13 +599,13 @@ const MerkleArrayProofMeta: ModelMetadata = {
   ],
 }
 
-const FalconVerifierMeta: ModelMetadata = {
+const FalconVerifierMeta: ObjectModelMetadata = {
   name: 'FalconVerifier',
   kind: 'object',
   fields: [{ name: 'publicKey', wireKey: 'k', optional: false, nullable: false, codec: fixedBytes1793Codec }],
 }
 
-const FalconSignatureStructMeta: ModelMetadata = {
+const FalconSignatureStructMeta: ObjectModelMetadata = {
   name: 'FalconSignatureStruct',
   kind: 'object',
   fields: [
@@ -693,7 +616,7 @@ const FalconSignatureStructMeta: ModelMetadata = {
   ],
 }
 
-const SigslotCommitMeta: ModelMetadata = {
+const SigslotCommitMeta: ObjectModelMetadata = {
   name: 'SigslotCommit',
   kind: 'object',
   fields: [
@@ -702,7 +625,7 @@ const SigslotCommitMeta: ModelMetadata = {
   ],
 }
 
-const MerkleSignatureVerifierMeta: ModelMetadata = {
+const MerkleSignatureVerifierMeta: ObjectModelMetadata = {
   name: 'MerkleSignatureVerifier',
   kind: 'object',
   fields: [
@@ -711,7 +634,7 @@ const MerkleSignatureVerifierMeta: ModelMetadata = {
   ],
 }
 
-const ParticipantMeta: ModelMetadata = {
+const ParticipantMeta: ObjectModelMetadata = {
   name: 'Participant',
   kind: 'object',
   fields: [
@@ -721,101 +644,19 @@ const ParticipantMeta: ModelMetadata = {
 }
 
 /**
- * Custom codec for Reveal structure (containing position, sigslot, and participant)
- * The wire format uses a Map with position as key
+ * Metadata for the Reveal value structure (without position, as position is the map key)
+ * Wire format: { s: SigslotCommit, p: Participant }
  */
-class RevealCodec extends Codec<Record<string, unknown>, Record<string, unknown>> {
-  public defaultValue(): Record<string, unknown> {
-    return { position: 0n, sigslot: {}, participant: {} }
-  }
-
-  protected toEncoded(value: Record<string, unknown>, format: BodyFormat): Record<string, unknown> {
-    return {
-      s: ModelSerializer.encode(value.sigslot as object, SigslotCommitMeta, format),
-      p: ModelSerializer.encode(value.participant as object, ParticipantMeta, format),
-    }
-  }
-
-  protected fromEncoded(value: Record<string, unknown>, format: BodyFormat): Record<string, unknown> {
-    return {
-      position: 0n, // Position is set separately when used in StateProofRevealsCodec
-      sigslot: ModelSerializer.decode(getValue(value, 's'), SigslotCommitMeta, format),
-      participant: ModelSerializer.decode(getValue(value, 'p'), ParticipantMeta, format),
-    }
-  }
-
-  protected isDefaultValue(_value: Record<string, unknown>): boolean {
-    return false
-  }
+const RevealMeta: ObjectModelMetadata = {
+  name: 'Reveal',
+  kind: 'object',
+  fields: [
+    { name: 'sigslot', wireKey: 's', optional: false, nullable: false, codec: new ModelCodec(SigslotCommitMeta) },
+    { name: 'participant', wireKey: 'p', optional: false, nullable: false, codec: new ModelCodec(ParticipantMeta) },
+  ],
 }
 
-export const revealCodec = new RevealCodec()
-
-/**
- * Custom codec for StateProof reveals Map
- * Wire format: Map<bigint, { s: SigslotCommit, p: Participant }>
- * App format: Reveal[]
- */
-class StateProofRevealsCodec extends Codec<unknown[], Map<bigint, Record<string, unknown>>> {
-  public defaultValue(): unknown[] {
-    return []
-  }
-
-  protected toEncoded(reveals: unknown[], format: BodyFormat): Map<bigint, Record<string, unknown>> {
-    const map = new Map<bigint, Record<string, unknown>>()
-    for (const reveal of reveals as any[]) {
-      const position = reveal.position
-      const entry = revealCodec.encode(reveal, format)
-      if (entry) {
-        map.set(position, entry)
-      }
-    }
-    return map
-  }
-
-  protected fromEncoded(revealsMap: Map<bigint, Record<string, unknown>>, format: BodyFormat): unknown[] {
-    const reveals: unknown[] = []
-    for (const [position, entry] of revealsMap.entries()) {
-      const decoded = revealCodec.decode(entry, format)
-      reveals.push({
-        ...decoded,
-        position: bigIntCodec.decode(position, format),
-      })
-    }
-    return reveals
-  }
-
-  protected isDefaultValue(value: unknown[]): boolean {
-    return (value as unknown[]).length === 0
-  }
-}
-
-/**
- * Special codec for positions-to-reveal array
- * Must preserve array as-is without encoding individual bigints (they might be 0 or small values)
- */
-class PositionsToRevealCodec extends Codec<bigint[], (bigint | number)[]> {
-  public defaultValue(): bigint[] {
-    return []
-  }
-
-  protected toEncoded(value: bigint[], _format: BodyFormat): (bigint | number)[] {
-    // Pass through without encoding - preserve bigints even if they're 0
-    return value
-  }
-
-  protected fromEncoded(value: (bigint | number)[], _format: BodyFormat): bigint[] {
-    // Convert each element to bigint (msgpack may decode small values as numbers)
-    if (!value) return []
-    return value.map((v) => (typeof v === 'number' ? BigInt(v) : v))
-  }
-
-  protected isDefaultValue(value: bigint[]): boolean {
-    return value.length === 0
-  }
-}
-
-const StateProofMeta: ModelMetadata = {
+const StateProofMeta: ObjectModelMetadata = {
   name: 'StateProof',
   kind: 'object',
   fields: [
@@ -824,12 +665,18 @@ const StateProofMeta: ModelMetadata = {
     { name: 'sigProofs', wireKey: 'S', optional: false, nullable: false, codec: new ModelCodec(MerkleArrayProofMeta) },
     { name: 'partProofs', wireKey: 'P', optional: false, nullable: false, codec: new ModelCodec(MerkleArrayProofMeta) },
     { name: 'merkleSignatureSaltVersion', wireKey: 'v', optional: false, nullable: false, codec: numberCodec },
-    { name: 'reveals', wireKey: 'r', optional: false, nullable: false, codec: new StateProofRevealsCodec() },
-    { name: 'positionsToReveal', wireKey: 'pr', optional: false, nullable: false, codec: new PositionsToRevealCodec() },
+    {
+      name: 'reveals',
+      wireKey: 'r',
+      optional: false,
+      nullable: false,
+      codec: new MapCodec(requiredBigIntCodec, new ModelCodec(RevealMeta)),
+    },
+    { name: 'positionsToReveal', wireKey: 'pr', optional: false, nullable: false, codec: bigIntArrayCodec },
   ],
 }
 
-const StateProofMessageMeta: ModelMetadata = {
+const StateProofMessageMeta: ObjectModelMetadata = {
   name: 'StateProofMessage',
   kind: 'object',
   fields: [
@@ -841,7 +688,7 @@ const StateProofMessageMeta: ModelMetadata = {
   ],
 }
 
-const StateProofTransactionFieldsMeta: ModelMetadata = {
+const StateProofTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'StateProofTransactionFields',
   kind: 'object',
   fields: [
@@ -851,7 +698,7 @@ const StateProofTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-const HeartbeatProofMeta: ModelMetadata = {
+const HeartbeatProofMeta: ObjectModelMetadata = {
   name: 'HeartbeatProof',
   kind: 'object',
   fields: [
@@ -867,7 +714,7 @@ const HeartbeatProofMeta: ModelMetadata = {
  * Metadata for HeartbeatTransactionFields
  * These fields are nested under 'hb' wire key (not flattened)
  */
-export const HeartbeatTransactionFieldsMeta: ModelMetadata = {
+export const HeartbeatTransactionFieldsMeta: ObjectModelMetadata = {
   name: 'HeartbeatTransactionFields',
   kind: 'object',
   fields: [
@@ -879,7 +726,7 @@ export const HeartbeatTransactionFieldsMeta: ModelMetadata = {
   ],
 }
 
-export const TransactionMeta: ModelMetadata = {
+export const TransactionMeta: ObjectModelMetadata = {
   name: 'Transaction',
   kind: 'object',
   fields: [
@@ -930,7 +777,7 @@ export const TransactionMeta: ModelMetadata = {
       flattened: true,
       optional: true,
       nullable: false,
-      codec: assetConfigCodec,
+      codec: new AssetConfigCodec(),
     },
     {
       name: 'heartbeat',

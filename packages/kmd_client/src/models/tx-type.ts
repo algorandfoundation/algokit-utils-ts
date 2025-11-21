@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { PassthroughModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -6,7 +6,7 @@ import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from 
  */
 export type TxType = string
 
-export const TxTypeMeta: ModelMetadata = {
+export const TxTypeMeta: PassthroughModelMetadata = {
   name: 'TxType',
   kind: 'passthrough',
   codec: stringCodec,

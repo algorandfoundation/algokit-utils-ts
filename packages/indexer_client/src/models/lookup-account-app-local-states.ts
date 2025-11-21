@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalState } from './application-local-state'
 import { ApplicationLocalStateMeta } from './application-local-state'
@@ -17,7 +17,7 @@ export type LookupAccountAppLocalStates = {
   nextToken?: string
 }
 
-export const LookupAccountAppLocalStatesMeta: ModelMetadata = {
+export const LookupAccountAppLocalStatesMeta: ObjectModelMetadata = {
   name: 'LookupAccountAppLocalStates',
   kind: 'object',
   fields: [

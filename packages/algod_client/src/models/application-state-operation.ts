@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmValue } from './avm-value'
 import { AvmValueMeta } from './avm-value'
@@ -29,7 +29,7 @@ export type ApplicationStateOperation = {
   account?: string
 }
 
-export const ApplicationStateOperationMeta: ModelMetadata = {
+export const ApplicationStateOperationMeta: ObjectModelMetadata = {
   name: 'ApplicationStateOperation',
   kind: 'object',
   fields: [

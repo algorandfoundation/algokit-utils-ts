@@ -3,7 +3,6 @@ import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
   Transaction,
-  TransactionType,
   encodeTransaction,
   encodeTransactionRaw,
   estimateTransactionSize,
@@ -11,6 +10,7 @@ import {
   getTransactionIdRaw,
   validateTransaction,
 } from './transaction'
+import { TransactionType } from './transaction-type'
 
 const VALID_ADDRESS_1 = '424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'
 

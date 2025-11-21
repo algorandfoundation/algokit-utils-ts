@@ -12,57 +12,12 @@ import type { {{ sorted | join(', ') }} } from '../models/index';
 import { {% for t in sorted %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
 {% endif %}
 
-{% macro field_type_meta(type_name) -%}
-{%- if type_name in import_types -%}
-({ kind: 'model', meta: {{ type_name }}Meta } as const)
-{%- elif type_name == 'SignedTransaction' -%}
-({ kind: 'codec', codecKey: 'SignedTransaction' } as const)
-{%- elif type_name == 'Uint8Array' -%}
-({ kind: 'scalar', isBytes: true } as const)
-{%- elif type_name == 'bigint' -%}
-({ kind: 'scalar', isBigint: true } as const)
-{%- else -%}
-null
-{%- endif -%}
-{%- endmacro %}
-
-{% macro array_meta(type_name) -%}
-{%- set inner = type_name.strip() -%}
-{%- if inner.endswith('[]') -%}
-  {%- set base = inner[:-2] -%}
-{%- elif inner.startswith('Array<') and inner.endswith('>') -%}
-  {%- set base = inner[6:-1] -%}
-{%- else -%}
-  {%- set base = None -%}
-{%- endif -%}
-{%- if base is none -%}
-null
-{%- else -%}
-  {%- set item = field_type_meta(base) -%}
-{%- if item == 'null' -%}
-null
-  {%- else -%}
-({ name: '{{ base }}[]', kind: 'array', arrayItems: {{ item }} } as const)
-  {%- endif -%}
-{%- endif -%}
-{%- endmacro %}
-
 {% macro base_meta(type_name) -%}
 {%- set t = type_name.strip() -%}
-{%- if t.endswith('[]') or (t.startswith('Array<') and t.endswith('>')) -%}
-{{ array_meta(type_name) }}
-{%- else -%}
-  {%- if t in import_types -%}
+{%- if t in import_types -%}
 {{ t }}Meta
-  {%- elif t == 'SignedTransaction' -%}
-({ name: 'SignedTransaction', kind: 'passthrough', codecKey: 'SignedTransaction' } as const)
-  {%- elif t == 'Uint8Array' -%}
-({ name: 'Uint8Array', kind: 'passthrough', passThrough: { kind: 'scalar', isBytes: true } as const } as const)
-  {%- elif t == 'bigint' -%}
-({ name: 'bigint', kind: 'passthrough', passThrough: { kind: 'scalar', isBigint: true } as const } as const)
-  {%- else -%}
+{%- else -%}
 null
-  {%- endif -%}
 {%- endif -%}
 {%- endmacro %}
 

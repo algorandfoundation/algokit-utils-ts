@@ -1,49 +1,20 @@
-// Types
-export type { BodyFormat, FieldMetadata, ModelKind, ModelMetadata } from './types'
+export type { ArrayModelMetadata, BodyFormat, FieldMetadata, ModelMetadata, ObjectModelMetadata, PassthroughModelMetadata } from './types'
 
-// Base codec
 export { Codec } from './codec'
 export { ContextualCodec } from './contextual-codec'
 
-// Primitive codecs
-export {
-  AddressCodec,
-  addressCodec,
-  BigIntCodec,
-  bigIntCodec,
-  BooleanCodec,
-  booleanCodec,
-  BytesCodec,
-  bytesCodec,
-  fixedBytes1793Codec,
-  fixedBytes32Codec,
-  fixedBytes64Codec,
-  FixedBytesCodec,
-  NumberCodec,
-  numberCodec,
-  StringCodec,
-  // Singleton instances
-  stringCodec,
-  UnknownCodec,
-  unknownCodec,
-} from './primitives'
+export { addressCodec } from './primitives/address'
+export { bigIntCodec, bigIntWithNoDefaultCodec as requiredBigIntCodec } from './primitives/bigint'
+export { booleanCodec } from './primitives/boolean'
+export { bytesCodec } from './primitives/bytes'
+export { fixedBytes1793Codec, fixedBytes32Codec, fixedBytes64Codec } from './primitives/fixed-bytes'
+export { numberCodec, numberWithNoDefaultCodec } from './primitives/number'
+export { stringCodec } from './primitives/string'
+export { unknownCodec } from './primitives/unknown'
 
-// Composite codecs
-export {
-  addressArrayCodec,
-  ArrayCodec,
-  bigIntArrayCodec,
-  // Array codec instances
-  bytesArrayCodec,
-  MapCodec,
-  NullableCodec,
-  OmitEmptyObjectCodec,
-  OptionalCodec,
-  RecordCodec,
-} from './composite'
+export { addressArrayCodec, ArrayCodec, bigIntArrayCodec, bytesArrayCodec, MapCodec, RecordCodec } from './composite'
 
-// Model codec
-export { ModelCodec } from './model'
+export { ArrayModelCodec, ModelCodec, ObjectModelCodec, PassthroughModelCodec } from './model'
 
-// Model serializer
-export { ModelSerializer } from './model-serializer'
+export { getWireValue, ModelSerializer } from './model-serializer'
+export type { WireBigInt, WireBytes, WireMapKey, WireObject } from './model-serializer'

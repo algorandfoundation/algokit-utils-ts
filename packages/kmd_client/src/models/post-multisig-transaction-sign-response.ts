@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -11,7 +11,7 @@ export type PostMultisigTransactionSignResponse = {
   multisig?: Uint8Array
 }
 
-export const PostMultisigTransactionSignResponseMeta: ModelMetadata = {
+export const PostMultisigTransactionSignResponseMeta: ObjectModelMetadata = {
   name: 'PostMultisigTransactionSignResponse',
   kind: 'object',
   fields: [

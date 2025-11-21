@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { Transaction, TransactionType, validateTransaction } from '../src/transactions/transaction'
+import { Transaction, validateTransaction } from '../src/transactions/transaction'
+import { TransactionType } from '../src/transactions/transaction-type'
 import { testData } from './common'
 import {
   assertAssignFee,

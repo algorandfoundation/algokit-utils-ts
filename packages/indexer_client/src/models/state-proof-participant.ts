@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofVerifier } from './state-proof-verifier'
 import { StateProofVerifierMeta } from './state-proof-verifier'
@@ -12,7 +12,7 @@ export type StateProofParticipant = {
   weight?: bigint
 }
 
-export const StateProofParticipantMeta: ModelMetadata = {
+export const StateProofParticipantMeta: ObjectModelMetadata = {
   name: 'StateProofParticipant',
   kind: 'object',
   fields: [

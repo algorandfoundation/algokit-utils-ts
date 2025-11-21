@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -16,7 +16,7 @@ export type ApplicationLogData = {
   logs: Uint8Array[]
 }
 
-export const ApplicationLogDataMeta: ModelMetadata = {
+export const ApplicationLogDataMeta: ObjectModelMetadata = {
   name: 'ApplicationLogData',
   kind: 'object',
   fields: [

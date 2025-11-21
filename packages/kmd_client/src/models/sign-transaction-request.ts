@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
@@ -20,7 +20,7 @@ export type SignTransactionRequest = {
   walletPassword?: string
 }
 
-export const SignTransactionRequestMeta: ModelMetadata = {
+export const SignTransactionRequestMeta: ObjectModelMetadata = {
   name: 'SignTransactionRequest',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { TealValue } from './teal-value'
 import { TealValueMeta } from './teal-value'
@@ -25,7 +25,7 @@ export type DryrunState = {
   error?: string
 }
 
-export const DryrunStateMeta: ModelMetadata = {
+export const DryrunStateMeta: ObjectModelMetadata = {
   name: 'DryrunState',
   kind: 'object',
   fields: [

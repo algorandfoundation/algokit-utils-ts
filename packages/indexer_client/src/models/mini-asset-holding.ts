@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -25,7 +25,7 @@ export type MiniAssetHolding = {
   optedOutAtRound?: bigint
 }
 
-export const MiniAssetHoldingMeta: ModelMetadata = {
+export const MiniAssetHoldingMeta: ObjectModelMetadata = {
   name: 'MiniAssetHolding',
   kind: 'object',
   fields: [

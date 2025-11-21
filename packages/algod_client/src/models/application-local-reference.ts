@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -16,7 +16,7 @@ export type ApplicationLocalReference = {
   app: bigint
 }
 
-export const ApplicationLocalReferenceMeta: ModelMetadata = {
+export const ApplicationLocalReferenceMeta: ObjectModelMetadata = {
   name: 'ApplicationLocalReference',
   kind: 'object',
   fields: [

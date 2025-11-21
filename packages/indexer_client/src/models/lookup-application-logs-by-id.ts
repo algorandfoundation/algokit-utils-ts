@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLogData } from './application-log-data'
 import { ApplicationLogDataMeta } from './application-log-data'
@@ -21,7 +21,7 @@ export type LookupApplicationLogsById = {
   logData?: ApplicationLogData[]
 }
 
-export const LookupApplicationLogsByIdMeta: ModelMetadata = {
+export const LookupApplicationLogsByIdMeta: ObjectModelMetadata = {
   name: 'LookupApplicationLogsById',
   kind: 'object',
   fields: [

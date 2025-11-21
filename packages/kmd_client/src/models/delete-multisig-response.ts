@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -10,7 +10,7 @@ export type DeleteMultisigResponse = {
   message?: string
 }
 
-export const DeleteMultisigResponseMeta: ModelMetadata = {
+export const DeleteMultisigResponseMeta: ObjectModelMetadata = {
   name: 'DeleteMultisigResponse',
   kind: 'object',
   fields: [

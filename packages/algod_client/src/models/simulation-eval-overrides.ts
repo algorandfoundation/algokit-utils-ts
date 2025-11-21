@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -36,7 +36,7 @@ export type SimulationEvalOverrides = {
   fixSigners?: boolean
 }
 
-export const SimulationEvalOverridesMeta: ModelMetadata = {
+export const SimulationEvalOverridesMeta: ObjectModelMetadata = {
   name: 'SimulationEvalOverrides',
   kind: 'object',
   fields: [

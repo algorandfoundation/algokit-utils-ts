@@ -2,7 +2,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { OnApplicationComplete, Transaction, TransactionType } from '../src'
-import { Reveal, SigslotCommit, StateProof, StateProofTransactionFields } from '../src/transactions/state-proof'
+import { Reveal, SigslotCommit } from '../src/transactions/state-proof'
 
 const jsonString = fs.readFileSync(path.join(__dirname, 'test_data.json'), 'utf-8')
 
@@ -57,32 +57,19 @@ const defaultReviver = (key: string, value: unknown) => {
     return assetFreeze
   }
 
-  if (key === 'stateProof' && typeof value === 'object' && value !== null) {
-    if (Object.keys(value).includes('stateProof')) {
-      const stateProof = value as StateProofTransactionFields
-      if (stateProof.stateProofType === undefined) {
-        stateProof.stateProofType = 0
-      }
-      return stateProof
-    } else if (Object.keys(value).includes('partProofs')) {
-      const stateProof = value as StateProof
-      if (stateProof.merkleSignatureSaltVersion === undefined) {
-        stateProof.merkleSignatureSaltVersion = 0
-      }
-      return stateProof
-    }
-  }
-
   if (key === 'reveals' && Array.isArray(value)) {
-    const reveals = value as Reveal[]
+    const revealsMap = new Map<bigint, Reveal>()
+    const reveals = value as (Reveal & { position: bigint })[]
     reveals.forEach((reveal) => {
+      const { position, ...revealWithoutPosition } = reveal
+      revealsMap.set(BigInt(reveal.position ?? 0n), revealWithoutPosition)
+
       if (reveal.position === undefined) {
         reveal.position = 0n
       }
-      if (typeof reveal.position === 'number') {
-        reveal.position = BigInt(reveal.position)
-      }
     })
+
+    value = revealsMap
   }
 
   if (key === 'sigslot' && typeof value === 'object' && value !== null) {

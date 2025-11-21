@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BlockRewards } from './block-rewards'
 import { BlockRewardsMeta } from './block-rewards'
@@ -112,7 +112,7 @@ export type Block = {
   participationUpdates?: ParticipationUpdates
 }
 
-export const BlockMeta: ModelMetadata = {
+export const BlockMeta: ObjectModelMetadata = {
   name: 'Block',
   kind: 'object',
   fields: [

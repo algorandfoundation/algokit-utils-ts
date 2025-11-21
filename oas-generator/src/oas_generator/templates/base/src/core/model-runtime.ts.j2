@@ -1,21 +1,21 @@
 import { decodeMsgPack, encodeMsgPack } from './codecs';
-import { ModelSerializer, type FieldMetadata, type BodyFormat, type ModelMetadata } from '@algorandfoundation/algokit-common';
+import { ModelSerializer, type FieldMetadata, type BodyFormat, type ModelMetadata, type ObjectModelMetadata, type PassthroughModelMetadata, type ArrayModelMetadata } from '@algorandfoundation/algokit-common';
 
 // Re-export types for convenience
-export type { BodyFormat, FieldMetadata, ModelMetadata };
+export type { BodyFormat, FieldMetadata, ModelMetadata, ObjectModelMetadata, PassthroughModelMetadata, ArrayModelMetadata };
 
 export class AlgorandSerializer {
   static encode(value: Record<string, unknown>, meta: ModelMetadata, format: 'map'): Map<string, unknown>
   static encode(value: Record<string, unknown>, meta: ModelMetadata, format: 'json'): string
   static encode(value: Record<string, unknown>, meta: ModelMetadata, format?: 'msgpack'): Uint8Array
-  static encode(value: Record<string, unknown>, meta: ModelMetadata, format: BodyFormat = 'msgpack'): Uint8Array | string | Map<string, unknown> {
+  static encode(value: Record<string, unknown>, meta: ModelMetadata, format: BodyFormat | 'map' = 'msgpack'): Uint8Array | string | Map<string, unknown> {
     if (format === 'map') {
       // For map format, use msgpack transformation to preserve types like bigint, then convert to nested Maps
-      const wire = ModelSerializer.encode(value as object, meta, 'msgpack');
+      const wire = ModelSerializer.encode(value, meta, 'msgpack');
       return this.convertToNestedMaps(wire) as Map<string, unknown>;
     }
 
-    const wire = ModelSerializer.encode(value as object, meta, format);
+    const wire = ModelSerializer.encode(value, meta, format);
     if (format === 'msgpack') {
       return wire instanceof Uint8Array ? wire : encodeMsgPack(wire);
     }

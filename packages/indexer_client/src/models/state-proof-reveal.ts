@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofParticipant } from './state-proof-participant'
 import { StateProofParticipantMeta } from './state-proof-participant'
@@ -14,7 +14,7 @@ export type StateProofReveal = {
   participant?: StateProofParticipant
 }
 
-export const StateProofRevealMeta: ModelMetadata = {
+export const StateProofRevealMeta: ObjectModelMetadata = {
   name: 'StateProofReveal',
   kind: 'object',
   fields: [

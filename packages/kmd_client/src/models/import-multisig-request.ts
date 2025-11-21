@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
@@ -13,7 +13,7 @@ export type ImportMultisigRequest = {
   walletHandleToken?: string
 }
 
-export const ImportMultisigRequestMeta: ModelMetadata = {
+export const ImportMultisigRequestMeta: ObjectModelMetadata = {
   name: 'ImportMultisigRequest',
   kind: 'object',
   fields: [

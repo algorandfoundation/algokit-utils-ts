@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AccountStateDelta } from './account-state-delta'
 import { AccountStateDeltaMeta } from './account-state-delta'
@@ -178,7 +178,7 @@ export type Transaction = {
   innerTxns?: Transaction[]
 }
 
-export const TransactionMeta: ModelMetadata = {
+export const TransactionMeta: ObjectModelMetadata = {
   name: 'Transaction',
   kind: 'object',
   fields: [

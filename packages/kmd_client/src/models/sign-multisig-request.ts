@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Digest } from './digest'
 import { DigestMeta } from './digest'
@@ -19,7 +19,7 @@ export type SignMultisigRequest = {
   walletPassword?: string
 }
 
-export const SignMultisigRequestMeta: ModelMetadata = {
+export const SignMultisigRequestMeta: ObjectModelMetadata = {
   name: 'SignMultisigRequest',
   kind: 'object',
   fields: [

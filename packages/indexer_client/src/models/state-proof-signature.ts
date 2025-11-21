@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
@@ -14,7 +14,7 @@ export type StateProofSignature = {
   verifyingKey?: Uint8Array
 }
 
-export const StateProofSignatureMeta: ModelMetadata = {
+export const StateProofSignatureMeta: ObjectModelMetadata = {
   name: 'StateProofSignature',
   kind: 'object',
   fields: [

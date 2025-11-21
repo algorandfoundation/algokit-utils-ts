@@ -1,7 +1,8 @@
 import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import {
   numberCodec,
+  numberWithNoDefaultCodec,
   bigIntCodec,
   booleanCodec,
   stringCodec,
@@ -22,7 +23,7 @@ export type BlockEvalDelta = {
   uint?: bigint
 }
 
-export const BlockEvalDeltaMeta: ModelMetadata = {
+export const BlockEvalDeltaMeta: ObjectModelMetadata = {
   name: 'BlockEvalDelta',
   kind: 'object',
   fields: [
@@ -48,7 +49,7 @@ export type BlockAppEvalDelta = {
   logs?: Uint8Array[]
 }
 
-export const BlockAppEvalDeltaMeta: ModelMetadata = {
+export const BlockAppEvalDeltaMeta: ObjectModelMetadata = {
   name: 'BlockAppEvalDelta',
   kind: 'object',
   fields: [
@@ -64,7 +65,7 @@ export const BlockAppEvalDeltaMeta: ModelMetadata = {
       wireKey: 'ld',
       optional: true,
       nullable: false,
-      codec: new MapCodec(numberCodec, new MapCodec(bytesCodec, new ModelCodec(BlockEvalDeltaMeta))),
+      codec: new MapCodec(numberWithNoDefaultCodec, new MapCodec(bytesCodec, new ModelCodec(BlockEvalDeltaMeta))),
     },
     {
       name: 'innerTxns',
@@ -94,7 +95,7 @@ export type BlockStateProofTrackingData = {
   stateProofNextRound?: bigint
 }
 
-export const BlockStateProofTrackingDataMeta: ModelMetadata = {
+export const BlockStateProofTrackingDataMeta: ObjectModelMetadata = {
   name: 'BlockStateProofTrackingData',
   kind: 'object',
   fields: [
@@ -115,7 +116,7 @@ export type ApplyData = {
   applicationId?: bigint
 }
 
-export const ApplyDataMeta: ModelMetadata = {
+export const ApplyDataMeta: ObjectModelMetadata = {
   name: 'SignedTxnInBlock',
   kind: 'object',
   fields: [
@@ -140,7 +141,7 @@ export type SignedTxnWithAD = {
   applyData: ApplyData
 }
 
-export const SignedTxnWithADMeta: ModelMetadata = {
+export const SignedTxnWithADMeta: ObjectModelMetadata = {
   name: 'SignedTxnWithAD',
   kind: 'object',
   fields: [
@@ -170,7 +171,7 @@ export type SignedTxnInBlock = {
   hasGenesisHash?: boolean
 }
 
-export const SignedTxnInBlockMeta: ModelMetadata = {
+export const SignedTxnInBlockMeta: ObjectModelMetadata = {
   name: 'SignedTxnInBlock',
   kind: 'object',
   fields: [
@@ -193,7 +194,7 @@ export type ParticipationUpdates = {
   absentParticipationAccounts?: string[]
 }
 
-export const ParticipationUpdatesMeta: ModelMetadata = {
+export const ParticipationUpdatesMeta: ObjectModelMetadata = {
   name: 'ParticipationUpdates',
   kind: 'object',
   fields: [
@@ -279,7 +280,7 @@ export type BlockHeader = {
   participationUpdates?: ParticipationUpdates
 }
 
-export const BlockHeaderMeta: ModelMetadata = {
+export const BlockHeaderMeta: ObjectModelMetadata = {
   name: 'BlockHeader',
   kind: 'object',
   fields: [
@@ -317,7 +318,7 @@ export const BlockHeaderMeta: ModelMetadata = {
       wireKey: 'spt',
       optional: true,
       nullable: false,
-      codec: new MapCodec(numberCodec, new ModelCodec(BlockStateProofTrackingDataMeta)),
+      codec: new MapCodec(numberWithNoDefaultCodec, new ModelCodec(BlockStateProofTrackingDataMeta)),
     },
     {
       name: 'participationUpdates',
@@ -340,7 +341,7 @@ export type Block = {
   payset?: SignedTxnInBlock[]
 }
 
-export const BlockMeta: ModelMetadata = {
+export const BlockMeta: ObjectModelMetadata = {
   name: 'Block',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -23,7 +23,7 @@ export type SourceMap = {
   mappings: string
 }
 
-export const SourceMapMeta: ModelMetadata = {
+export const SourceMapMeta: ObjectModelMetadata = {
   name: 'SourceMap',
   kind: 'object',
   fields: [

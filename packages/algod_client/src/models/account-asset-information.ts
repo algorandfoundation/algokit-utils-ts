@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetHolding } from './asset-holding'
 import { AssetHoldingMeta } from './asset-holding'
@@ -14,7 +14,7 @@ export type AccountAssetInformation = {
   createdAsset?: AssetParams
 }
 
-export const AccountAssetInformationMeta: ModelMetadata = {
+export const AccountAssetInformationMeta: ObjectModelMetadata = {
   name: 'AccountAssetInformation',
   kind: 'object',
   fields: [

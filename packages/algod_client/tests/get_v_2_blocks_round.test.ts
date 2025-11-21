@@ -22,6 +22,9 @@ describe('GET v2_blocks_ROUND', () => {
 
       const result3 = await client.getBlock(55240407)
       expect(result3).toMatchSnapshot()
+
+      const result4 = await client.getBlock(35600004) // stpf in block
+      expect(result4).toMatchSnapshot()
     })
   })
 })

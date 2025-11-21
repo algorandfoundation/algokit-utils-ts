@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { SourceMap } from './source-map'
 import { SourceMapMeta } from './source-map'
@@ -16,7 +16,7 @@ export type TealCompile = {
   sourcemap?: SourceMap
 }
 
-export const TealCompileMeta: ModelMetadata = {
+export const TealCompileMeta: ObjectModelMetadata = {
   name: 'TealCompile',
   kind: 'object',
   fields: [

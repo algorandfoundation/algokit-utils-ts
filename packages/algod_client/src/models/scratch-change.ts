@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmValue } from './avm-value'
 import { AvmValueMeta } from './avm-value'
@@ -14,7 +14,7 @@ export type ScratchChange = {
   newValue: AvmValue
 }
 
-export const ScratchChangeMeta: ModelMetadata = {
+export const ScratchChangeMeta: ObjectModelMetadata = {
   name: 'ScratchChange',
   kind: 'object',
   fields: [

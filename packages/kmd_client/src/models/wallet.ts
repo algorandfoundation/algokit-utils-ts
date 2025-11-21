@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { TxType } from './tx-type'
 import { TxTypeMeta } from './tx-type'
@@ -15,7 +15,7 @@ export type Wallet = {
   supportedTxs?: TxType[]
 }
 
-export const WalletMeta: ModelMetadata = {
+export const WalletMeta: ObjectModelMetadata = {
   name: 'Wallet',
   kind: 'object',
   fields: [

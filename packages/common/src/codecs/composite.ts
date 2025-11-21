@@ -1,4 +1,7 @@
 import { Codec } from './codec'
+import { addressCodec } from './primitives/address'
+import { bigIntWithNoDefaultCodec } from './primitives/bigint'
+import { bytesCodec } from './primitives/bytes'
 import type { BodyFormat } from './types'
 
 /**
@@ -157,93 +160,7 @@ export class RecordCodec<V, VEncoded = V> extends Codec<Record<string, V>, Recor
   }
 }
 
-/**
- * Optional codec - wraps another codec to handle optional (T | undefined) values
- * Preserves undefined (doesn't convert to default)
- */
-export class OptionalCodec<T, TEncoded = T> extends Codec<T | undefined, TEncoded | undefined> {
-  constructor(private readonly innerCodec: Codec<T, TEncoded>) {
-    super()
-  }
-
-  public defaultValue(): T | undefined {
-    return undefined
-  }
-
-  protected toEncoded(value: T | undefined, format: BodyFormat): TEncoded | undefined {
-    if (value === undefined) return undefined
-    return this.innerCodec.encode(value, format)
-  }
-
-  protected fromEncoded(value: TEncoded | undefined, format: BodyFormat): T | undefined {
-    if (value === undefined) return undefined
-    return this.innerCodec.decode(value, format)
-  }
-
-  protected isDefaultValue(value: T | undefined): boolean {
-    return value === undefined
-  }
-}
-
-/**
- * Nullable codec - wraps another codec to handle nullable (T | null) values
- * Preserves null (doesn't convert to default)
- */
-export class NullableCodec<T, TEncoded = T> extends Codec<T | null, TEncoded | null> {
-  constructor(private readonly innerCodec: Codec<T, TEncoded>) {
-    super()
-  }
-
-  public defaultValue(): T | null {
-    return null
-  }
-
-  protected toEncoded(value: T | null, format: BodyFormat): TEncoded | null {
-    if (value === null) return null
-    const encoded = this.innerCodec.encode(value, format)
-    return encoded !== undefined ? encoded : null
-  }
-
-  protected fromEncoded(value: TEncoded | null, format: BodyFormat): T | null {
-    if (value === null) return null
-    return this.innerCodec.decode(value, format)
-  }
-
-  protected isDefaultValue(value: T | null): boolean {
-    return value === null
-  }
-}
-
-/**
- * OmitEmptyObject codec - omits objects where all fields are undefined
- * Useful for optional nested objects
- */
-export class OmitEmptyObjectCodec<T extends object> extends Codec<T | undefined, T | undefined> {
-  public defaultValue(): T | undefined {
-    return undefined
-  }
-
-  protected toEncoded(value: T | undefined, format: BodyFormat): T | undefined {
-    if (value === undefined) return undefined
-    // Check if all values are undefined
-    const hasDefinedValue = Object.values(value).some((v) => v !== undefined)
-    return hasDefinedValue ? value : undefined
-  }
-
-  protected fromEncoded(value: T | undefined, format: BodyFormat): T | undefined {
-    return value
-  }
-
-  protected isDefaultValue(value: T | undefined): boolean {
-    if (value === undefined) return true
-    return Object.values(value).every((v) => v === undefined)
-  }
-}
-
-// Import primitive codecs for array instances
-import { bytesCodec, addressCodec, bigIntCodec } from './primitives'
-
-// Common array codec instances
+// TODO: NC - We can extend these singletons and share in the model generators
 export const bytesArrayCodec = new ArrayCodec(bytesCodec)
 export const addressArrayCodec = new ArrayCodec(addressCodec)
-export const bigIntArrayCodec = new ArrayCodec(bigIntCodec)
+export const bigIntArrayCodec = new ArrayCodec(bigIntWithNoDefaultCodec)

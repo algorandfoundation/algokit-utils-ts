@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 export type RawTransaction = {
@@ -8,7 +8,7 @@ export type RawTransaction = {
   txId: string
 }
 
-export const RawTransactionMeta: ModelMetadata = {
+export const RawTransactionMeta: ObjectModelMetadata = {
   name: 'RawTransaction',
   kind: 'object',
   fields: [

@@ -11,9 +11,10 @@ export {
   getTransactionId,
   getTransactionIdRaw,
   groupTransactions,
-  TransactionType,
   type Transaction,
 } from './transactions/transaction'
+
+export { TransactionType } from './transactions/transaction-type'
 
 export {
   decodeSignedTransaction,

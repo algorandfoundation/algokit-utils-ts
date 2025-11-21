@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
@@ -15,7 +15,7 @@ export type PostMultisigExportResponse = {
   threshold?: number
 }
 
-export const PostMultisigExportResponseMeta: ModelMetadata = {
+export const PostMultisigExportResponseMeta: ObjectModelMetadata = {
   name: 'PostMultisigExportResponse',
   kind: 'object',
   fields: [

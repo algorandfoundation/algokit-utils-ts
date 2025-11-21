@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
@@ -16,7 +16,7 @@ export type ParticipationUpdates = {
   absentParticipationAccounts?: string[]
 }
 
-export const ParticipationUpdatesMeta: ModelMetadata = {
+export const ParticipationUpdatesMeta: ObjectModelMetadata = {
   name: 'ParticipationUpdates',
   kind: 'object',
   fields: [

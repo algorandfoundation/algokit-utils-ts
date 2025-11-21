@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
@@ -32,7 +32,7 @@ export type ResourceRef = {
   local?: LocalsRef
 }
 
-export const ResourceRefMeta: ModelMetadata = {
+export const ResourceRefMeta: ObjectModelMetadata = {
   name: 'ResourceRef',
   kind: 'object',
   fields: [

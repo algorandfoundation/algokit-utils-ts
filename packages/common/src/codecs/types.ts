@@ -1,37 +1,42 @@
 import { Codec } from './codec'
+import { ArrayCodec } from './composite'
 
 /**
- * Wire format for encoding/decoding
- * - json: JSON string format
- * - msgpack: MessagePack binary format
- * - map: JavaScript Map object (used internally for type preservation)
+ * Encoding format
  */
-export type BodyFormat = 'json' | 'msgpack' | 'map'
+export type BodyFormat = 'json' | 'msgpack' // TODO: NC - Rename to EncodingFormat
 
 /**
  * Metadata for a model field
  */
-export interface FieldMetadata<T = any> {
+export interface FieldMetadata {
   readonly name: string
   readonly wireKey?: string
-  readonly codec: Codec<T, any>
+  readonly codec: Codec<unknown, unknown>
   readonly optional: boolean
   readonly nullable: boolean
   readonly flattened?: boolean
 }
 
 /**
- * Model kind discriminator
- */
-export type ModelKind = 'object' | 'array' | 'passthrough'
-
-/**
  * Metadata for a model
  */
-export interface ModelMetadata {
+export type ModelMetadata = ObjectModelMetadata | PassthroughModelMetadata | ArrayModelMetadata
+
+export type ObjectModelMetadata = {
   readonly name: string
-  readonly kind: ModelKind
-  readonly fields?: readonly FieldMetadata[]
-  readonly arrayCodec?: Codec<any[], any>
-  readonly codec?: Codec<any, any>
+  readonly kind: 'object'
+  readonly fields: readonly FieldMetadata[]
+}
+
+export type PassthroughModelMetadata = {
+  readonly name: string
+  readonly kind: 'passthrough' // TODO: NC - Is there better to be named primitive or scalar?
+  readonly codec: Codec<unknown, unknown>
+}
+
+export type ArrayModelMetadata = {
+  readonly name: string
+  readonly kind: 'array'
+  readonly codec: ArrayCodec<unknown, unknown>
 }

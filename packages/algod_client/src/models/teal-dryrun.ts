@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { DryrunTxnResult } from './dryrun-txn-result'
 import { DryrunTxnResultMeta } from './dryrun-txn-result'
@@ -13,7 +13,7 @@ export type TealDryrun = {
   protocolVersion: string
 }
 
-export const TealDryrunMeta: ModelMetadata = {
+export const TealDryrunMeta: ObjectModelMetadata = {
   name: 'TealDryrun',
   kind: 'object',
   fields: [

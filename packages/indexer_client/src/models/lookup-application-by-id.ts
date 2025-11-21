@@ -1,4 +1,4 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '../core/model-runtime'
 import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
 import type { Application } from './application'
 import { ApplicationMeta } from './application'
@@ -12,7 +12,7 @@ export type LookupApplicationById = {
   currentRound: bigint
 }
 
-export const LookupApplicationByIdMeta: ModelMetadata = {
+export const LookupApplicationByIdMeta: ObjectModelMetadata = {
   name: 'LookupApplicationById',
   kind: 'object',
   fields: [
