@@ -39,12 +39,15 @@ export class ArrayCodec<T, TEncoded = T> extends Codec<T[], TEncoded[] | undefin
 
 /**
  * Map codec - handles Maps with any key type (including Uint8Array, bigint, number)
- * - JSON: Map → array of [key, value] tuples (since JSON can't have non-string keys)
+ * - JSON: Map → plain object with string keys (non-string keys are converted to strings)
  * - Msgpack: Map → Map (native pass-through, preserves binary keys)
  *
  * This is critical for Algorand's msgpack data which uses Maps with Uint8Array and bigint keys
  */
-export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>, Map<KEncoded, VEncoded> | Array<[KEncoded, VEncoded]>> {
+export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<
+  Map<K, V>,
+  Map<KEncoded, VEncoded> | Array<[KEncoded, VEncoded]> | Record<string, VEncoded>
+> {
   constructor(
     private readonly keyCodec: Codec<K, KEncoded>,
     private readonly valueCodec: Codec<V, VEncoded>,
@@ -56,7 +59,10 @@ export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>,
     return new Map()
   }
 
-  protected toEncoded(value: Map<K, V>, format: BodyFormat): Map<KEncoded, VEncoded> | Array<[KEncoded, VEncoded]> {
+  protected toEncoded(
+    value: Map<K, V>,
+    format: BodyFormat,
+  ): Map<KEncoded, VEncoded> | Array<[KEncoded, VEncoded]> | Record<string, VEncoded> {
     const entries: Array<[KEncoded, VEncoded]> = []
 
     for (const [k, v] of value.entries()) {
@@ -67,17 +73,24 @@ export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>,
         entries.push([encodedKey, encodedValue])
       }
     }
-
-    // JSON must use array of tuples (can't have non-string keys in JSON)
+    // JSON: always use plain object, converting keys to strings as needed
     if (format === 'json') {
-      return entries
+      const obj: Record<string, VEncoded> = {}
+      for (const [k, v] of entries) {
+        const keyStr = typeof k === 'string' ? k : String(k)
+        obj[keyStr] = v
+      }
+      return obj
     }
 
     // Msgpack can use native Map (preserves Uint8Array, bigint keys)
     return new Map(entries)
   }
 
-  protected fromEncoded(value: Map<KEncoded, VEncoded> | Array<[KEncoded, VEncoded]>, format: BodyFormat): Map<K, V> {
+  protected fromEncoded(
+    value: Map<KEncoded, VEncoded> | Array<[KEncoded, VEncoded]> | Record<string, VEncoded>,
+    format: BodyFormat,
+  ): Map<K, V> {
     const result = new Map<K, V>()
 
     // Handle undefined/null

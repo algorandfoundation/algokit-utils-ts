@@ -24,6 +24,10 @@ class BigIntCodec extends Codec<bigint, WireBigInt> {
 }
 
 class BigIntWithNoDefaultCodec extends BigIntCodec {
+  protected toEncoded(value: bigint, _format: BodyFormat): WireBigInt {
+    return value
+  }
+
   // This ensures that the default value is never omitted from serialisation
   protected override isDefaultValue(_value: bigint): boolean {
     return false

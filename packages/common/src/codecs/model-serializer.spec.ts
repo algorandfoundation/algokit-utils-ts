@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { ArrayCodec, MapCodec } from './composite'
 import { ArrayModelCodec, ModelCodec } from './model'
 import { ModelSerializer } from './model-serializer'
-import { bigIntCodec } from './primitives/bigint'
+import { bigIntCodec, bigIntWithNoDefaultCodec } from './primitives/bigint'
 import { bytesCodec } from './primitives/bytes'
 import { numberCodec } from './primitives/number'
 import { stringCodec } from './primitives/string'
@@ -24,7 +24,7 @@ describe('ModelSerializer', () => {
   const favouriteNumbersMetadata: ArrayModelMetadata = {
     name: 'FavouriteNumbers',
     kind: 'array',
-    codec: new ArrayCodec(bigIntCodec),
+    codec: new ArrayCodec(bigIntWithNoDefaultCodec),
   }
 
   const userMetadata: ObjectModelMetadata = {
@@ -58,12 +58,6 @@ describe('ModelSerializer', () => {
   }
 
   describe('encode', () => {
-    // TODO: NC - Need to fix to align to these rules
-    // Rules for encoding:
-    // In a map, if the object is empty, the item should be omitted (it's object like)
-    // In a map, the key should never be omitted as a value
-    // In an array, the item should never be omitted as a value. Also bigints should remain bigints
-
     const alice = {
       name: 'Alice',
       age: 30,
@@ -76,7 +70,12 @@ describe('ModelSerializer', () => {
     }
 
     // TODO: NC - Do these
-    // Change array handling to use consistent values for numbers etc
+    // - Remove the *WithNoDefaultCodecs
+    // Rules for encoding:
+    // In a map, if the object is empty, the item should be omitted (it's object like)
+    // In a map, the key should never be omitted as a value
+    // In an array, the item should never be omitted as a value. Also bigints should remain bigints
+    // - Fix types by carrying the WireData types throughout
 
     test('should encode the example model to a json ready model', () => {
       const encoded = ModelSerializer.encode<UserModel>(alice, userMetadata, 'json')
@@ -89,7 +88,7 @@ describe('ModelSerializer', () => {
             "p": 10001,
           },
           "d": {
-            "c29tZWtleQ==": "c29tZXZhbHVl"
+            "c29tZWtleQ==": "c29tZXZhbHVl",
           },
           "fn": [
             0n,
@@ -134,7 +133,7 @@ describe('ModelSerializer', () => {
           },
           "fn": [
             0n,
-            100,
+            100n,
             2147483648n,
           ],
           "n": "Alice",

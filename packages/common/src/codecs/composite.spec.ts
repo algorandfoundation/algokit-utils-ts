@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { ArrayCodec, MapCodec, RecordCodec, addressArrayCodec, bigIntArrayCodec, bytesArrayCodec } from './composite'
+import { bigIntWithNoDefaultCodec } from './primitives/bigint'
 import { bytesCodec } from './primitives/bytes'
 import { numberCodec } from './primitives/number'
 import { stringCodec } from './primitives/string'
@@ -153,6 +154,8 @@ describe('ArrayCodec', () => {
 describe('MapCodec', () => {
   const stringNumberMapCodec = new MapCodec(stringCodec, numberCodec)
   const numberStringMapCodec = new MapCodec(numberCodec, stringCodec)
+  const bytesNumberMapCodec = new MapCodec(bytesCodec, numberCodec)
+  const bigIntStringMapCodec = new MapCodec(bigIntWithNoDefaultCodec, stringCodec)
 
   describe('defaultValue', () => {
     test('should return empty Map', () => {
@@ -174,17 +177,62 @@ describe('MapCodec', () => {
     })
 
     describe('JSON format', () => {
-      test('should encode as array of tuples', () => {
+      test('string keys should encode as object', () => {
         const map = new Map([
           ['key1', 1],
           ['key2', 2],
         ])
         const encoded = stringNumberMapCodec.encode(map, 'json')
-        expect(Array.isArray(encoded)).toBe(true)
-        expect(encoded).toEqual([
-          ['key1', 1],
-          ['key2', 2],
+        expect(encoded).toMatchInlineSnapshot(`
+          {
+            "key1": 1,
+            "key2": 2,
+          }
+        `)
+      })
+
+      test('number keys should encode as object', () => {
+        const map = new Map([
+          [1, '1'],
+          [2, '2'],
         ])
+        const encoded = numberStringMapCodec.encode(map, 'json')
+        expect(encoded).toMatchInlineSnapshot(`
+          {
+            "1": "1",
+            "2": "2",
+          }
+        `)
+      })
+
+      test('bigint keys should encode as object', () => {
+        const map = new Map([
+          [0n, '1'],
+          [1n, '2'],
+          [BigInt(Number.MAX_SAFE_INTEGER + 1), '2'],
+        ])
+        const encoded = bigIntStringMapCodec.encode(map, 'json')
+        expect(encoded).toMatchInlineSnapshot(`
+          {
+            "0": "1",
+            "1": "2",
+            "9007199254740992": "2",
+          }
+        `)
+      })
+
+      test('bytes keys should encode as object', () => {
+        const map = new Map([
+          [new Uint8Array([1, 5]), 1],
+          [new Uint8Array([1, 6]), 2],
+        ])
+        const encoded = bytesNumberMapCodec.encode(map, 'json')
+        expect(encoded).toMatchInlineSnapshot(`
+          {
+            "AQU=": 1,
+            "AQY=": 2,
+          }
+        `)
       })
 
       test('should filter out default values', () => {
@@ -194,7 +242,7 @@ describe('MapCodec', () => {
         ])
         const encoded = stringNumberMapCodec.encode(map, 'json')
         // key2 with value 0 is omitted because it's the default
-        expect(encoded).toEqual([['key1', 1]])
+        expect(encoded).toEqual({ key1: 1 })
       })
     })
 

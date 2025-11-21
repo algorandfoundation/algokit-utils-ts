@@ -62,8 +62,8 @@ describe('BigIntCodec', () => {
         expect(typeof encoded).toBe('bigint')
 
         const encodedJson = bigIntCodec.encode(value, 'json')
-        expect(encodedJson).toBe(value.toString())
-        expect(typeof encodedJson).toBe('string')
+        expect(encodedJson).toBe(value)
+        expect(typeof encodedJson).toBe('bigint')
       })
     })
   })
@@ -182,10 +182,10 @@ describe('BigIntWithNoDefaultCodec', () => {
     describe('zero values', () => {
       test('should not omit 0n when encoding', () => {
         const encodedJson = bigIntWithNoDefaultCodec.encode(0n, 'json')
-        expect(encodedJson).toBe(0)
+        expect(encodedJson).toBe(0n)
 
         const encodedMsgpack = bigIntWithNoDefaultCodec.encode(0n, 'msgpack')
-        expect(encodedMsgpack).toBe(0)
+        expect(encodedMsgpack).toBe(0n)
       })
     })
   })
