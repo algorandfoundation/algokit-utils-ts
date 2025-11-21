@@ -8,9 +8,7 @@ import {
   ProgramSourceInfo,
   argTypeIsAbiType,
   argTypeIsTransaction,
-  decodeABIValue,
   decodeAVMOrABIValue,
-  decodeAVMValue,
   encodeAVMOrABIValue,
   findABIMethod,
   getBoxABIStorageKey,
@@ -19,7 +17,6 @@ import {
   getGlobalABIStorageMaps,
   getLocalABIStorageKeys,
   getLocalABIStorageMaps,
-  isAVMType,
 } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
@@ -1108,7 +1105,7 @@ export class AppClient {
             case 'literal': {
               const bytes = Buffer.from(defaultValue.data, 'base64')
               const type = defaultValue.type ?? arg.type
-              return isAVMType(type) ? decodeAVMValue(type, bytes) : decodeABIValue(type, bytes)
+              return decodeAVMOrABIValue(type, bytes)
             }
             case 'method': {
               const method = this.getABIMethod(defaultValue.data)
@@ -2375,18 +2372,29 @@ export class ApplicationClient {
         method: abiMethod,
         methodArgs: await Promise.all(
           args.methodArgs.map(async (arg, index): Promise<ABIAppCallArg> => {
-            if (arg !== undefined) return arg
+            if (arg !== undefined) {
+              return arg
+            }
             const abiMethodArg = abiMethod.args[index]
             const argName = abiMethodArg
             const defaultValueStrategy = abiMethodArg.defaultValue
-            if (!defaultValueStrategy)
+            // TODO: PD - continue the fix from here
+            if (!defaultValueStrategy && argTypeIsAbiType(abiMethodArg.type)) {
               throw new Error(
                 `Argument at position ${index} with the name ${argName} is undefined and does not have a default value strategy`,
               )
-
+            }
             switch (defaultValueStrategy.source) {
-              case 'literal':
-                return defaultValueStrategy.data
+              case 'literal': {
+                const bytes = Buffer.from(defaultValueStrategy.data, 'base64')
+                const type = defaultValueStrategy.type ?? (argTypeIsAbiType(abiMethodArg.type) ? abiMethodArg.type : undefined)
+                if (!type) {
+                  throw new Error(
+                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: No type information available for decoding`,
+                  )
+                }
+                return decodeAVMOrABIValue(type, bytes)
+              }
               case 'method': {
                 const method = findABIMethod(defaultValueStrategy.data, this.appSpec)
                 const result = await this.callOfType(
@@ -2402,14 +2410,29 @@ export class ApplicationClient {
               case 'local':
               case 'global': {
                 const state = defaultValueStrategy.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
-                const key = defaultValueStrategy.data
-                if (key in state) {
-                  return state[key].value
-                } else {
+                const value = Object.values(state).find((s) => s.keyBase64 === defaultValueStrategy.data)
+                if (!value) {
                   throw new Error(
-                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: The key '${key}' could not be found in ${defaultValueStrategy.source}`,
+                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: The key '${defaultValueStrategy.data}' could not be found in ${defaultValueStrategy.source}`,
                   )
                 }
+                const decodeType = defaultValueStrategy.type ?? (argTypeIsAbiType(abiMethodArg.type) ? abiMethodArg.type : undefined)
+                if (!decodeType) {
+                  throw new Error(
+                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: No type information available for decoding`,
+                  )
+                }
+                return 'valueRaw' in value ? decodeAVMOrABIValue(decodeType, value.valueRaw) : value.value
+              }
+              case 'box': {
+                const value = await this.getBoxValue(Buffer.from(defaultValueStrategy.data, 'base64'))
+                const decodeType = defaultValueStrategy.type ?? (argTypeIsAbiType(abiMethodArg.type) ? abiMethodArg.type : undefined)
+                if (!decodeType) {
+                  throw new Error(
+                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: No type information available for decoding`,
+                  )
+                }
+                return decodeAVMOrABIValue(decodeType, value)
               }
             }
           }),

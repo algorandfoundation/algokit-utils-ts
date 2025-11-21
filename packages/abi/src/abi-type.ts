@@ -361,7 +361,7 @@ export type ABIStringType = {
 }
 
 function encodeString(value: ABIValue): Uint8Array {
-  if (typeof value !== 'string') {
+  if (typeof value !== 'string' && !(value instanceof Uint8Array)) {
     throw new Error(`Encoding Error: Cannot encode value as string: ${value}`)
   }
 
