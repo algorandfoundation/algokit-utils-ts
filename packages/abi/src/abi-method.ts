@@ -1,8 +1,8 @@
 import sha512 from 'js-sha512'
-import { ABIType, getABIStructType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIType, decodeABIValue, getABIStructType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
-import { Arc56Contract, Arc56Method } from './arc56-contract'
+import { AVMType, Arc56Contract, Arc56Method } from './arc56-contract'
 
 export enum ABITransactionType {
   Txn = 'txn',
@@ -19,10 +19,10 @@ export enum ABIReferenceType {
   Asset = 'asset',
 }
 export type ABIMethodArgType = ABIType | ABITransactionType | ABIReferenceType
-export type ABIReturnType = ABIType | 'void'
+export type ABIMethodReturnType = ABIType | 'void'
 
 export type ABIMethodArg = {
-  argType: ABIMethodArgType
+  type: ABIMethodArgType
   name?: string
   desciption?: string
   // TODO: PD - implement default value
@@ -30,7 +30,7 @@ export type ABIMethodArg = {
 }
 
 export type ABIMethodReturn = {
-  type: ABIReturnType
+  type: ABIMethodReturnType
   description?: string
 }
 
@@ -40,7 +40,7 @@ export type ABIDefaultValue = {
   /** Where the default value is coming from */
   source: DefaultValueSource
   /** How the data is encoded. This is the encoding for the data provided here, not the arg type */
-  valueType?: ABIType
+  type?: ABIType | AVMType
 }
 
 export enum DefaultValueSource {
@@ -153,10 +153,10 @@ export function getABIMethod(signature: string): ABIMethod {
   const name = signature.slice(0, argsStart)
   const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
     .map((n: string) => {
-      if (abiTypeIsTransaction(n as ABIMethodArgType) || abiTypeIsReference(n as ABIMethodArgType)) {
-        return { argType: n as ABIMethodArgType } satisfies ABIMethodArg
+      if (argTypeIsTransaction(n as ABIMethodArgType) || argTypeIsReference(n as ABIMethodArgType)) {
+        return { type: n as ABIMethodArgType } satisfies ABIMethodArg
       }
-      return { argType: getABIType(n) } satisfies ABIMethodArg
+      return { type: getABIType(n) } satisfies ABIMethodArg
     })
   const returnType = signature.slice(argsEnd + 1)
   const returns = { type: returnType === 'void' ? ('void' as const) : getABIType(returnType) } satisfies ABIMethodReturn
@@ -176,8 +176,8 @@ export function getABIMethod(signature: string): ABIMethod {
 export function getABIMethodSignature(abiMethod: ABIMethod): string {
   const args = abiMethod.args
     .map((arg) => {
-      if (abiTypeIsTransaction(arg.argType) || abiTypeIsReference(arg.argType)) return arg.argType
-      return getABITypeName(arg.argType)
+      if (argTypeIsTransaction(arg.type) || argTypeIsReference(arg.type)) return arg.type
+      return getABITypeName(arg.type)
     })
     .join(',')
   const returns = abiMethod.returns.type === 'void' ? 'void' : getABITypeName(abiMethod.returns.type)
@@ -200,9 +200,9 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
   }
 
   const args = method.args.map(({ type, name, desc, struct }) => {
-    if (abiTypeIsTransaction(type as ABIMethodArgType) || abiTypeIsReference(type as ABIMethodArgType)) {
+    if (argTypeIsTransaction(type as ABIMethodArgType) || argTypeIsReference(type as ABIMethodArgType)) {
       return {
-        argType: type as ABIMethodArgType,
+        type: type as ABIMethodArgType,
         name,
         desciption: desc,
       } satisfies ABIMethodArg
@@ -210,14 +210,14 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
 
     if (struct) {
       return {
-        argType: getABIStructType(struct, appSpec.structs),
+        type: getABIStructType(struct, appSpec.structs),
         name,
         desciption: desc,
       } satisfies ABIMethodArg
     }
 
     return {
-      argType: getABIType(type),
+      type: getABIType(type),
       name,
       desciption: desc,
     } satisfies ABIMethodArg
@@ -243,7 +243,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
   } satisfies ABIMethod
 }
 
-export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
+export function argTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
   return (
     typeof type === 'string' &&
     (type === ABITransactionType.Txn ||
@@ -256,15 +256,34 @@ export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransac
   )
 }
 
-export function abiTypeIsReference(type: ABIMethodArgType): type is ABIReferenceType {
+export function argTypeIsReference(type: ABIMethodArgType): type is ABIReferenceType {
   return (
     typeof type === 'string' &&
     (type === ABIReferenceType.Account || type === ABIReferenceType.Application || type === ABIReferenceType.Asset)
   )
 }
 
+export function argTypeIsAbiType(type: ABIMethodArgType): type is ABIType {
+  return !argTypeIsTransaction(type) && !argTypeIsReference(type)
+}
+
 function getArc56MethodSignature(method: Arc56Method): string {
   const args = method.args.map((arg) => arg.type).join(',')
   const returns = method.returns.type
   return `${method.name}(${args})${returns}`
+}
+
+export const decodeAVMValue = (avmType: AVMType, bytes: Uint8Array) => {
+  switch (avmType) {
+    case 'AVMString':
+      return Buffer.from(bytes).toString('utf-8')
+    case 'AVMBytes':
+      return bytes
+    case 'AVMUint64':
+      return decodeABIValue(getABIType('uint64'), bytes)
+  }
+}
+
+export function isAVMType(type: unknown): type is AVMType {
+  return typeof type === 'string' && (type === 'AVMString' || type === 'AVMBytes' || type === 'AVMUint64')
 }

@@ -235,7 +235,7 @@ function populateMethodArgsIntoReferenceArrays(
   const apps = appReferences ?? []
 
   methodArgs.forEach((arg, i) => {
-    const argType = method.args[i].argType
+    const argType = method.args[i].type
     if (abiTypeIsReference(argType)) {
       switch (argType) {
         case 'account':
@@ -330,11 +330,11 @@ function encodeMethodArguments(
     const methodArg = method.args[i]
     const argValue = args[i]
 
-    if (abiTypeIsTransaction(methodArg.argType)) {
+    if (abiTypeIsTransaction(methodArg.type)) {
       // Transaction arguments are not ABI encoded - they're handled separately
-    } else if (abiTypeIsReference(methodArg.argType)) {
+    } else if (abiTypeIsReference(methodArg.type)) {
       // Reference types are encoded as uint8 indexes
-      const referenceType = methodArg.argType
+      const referenceType = methodArg.type
       if (typeof argValue === 'string' || typeof argValue === 'bigint') {
         const foreignIndex = calculateMethodArgReferenceArrayIndex(
           argValue,
@@ -353,7 +353,7 @@ function encodeMethodArguments(
       }
     } else if (argValue !== undefined) {
       // Regular ABI value
-      abiTypes.push(methodArg.argType)
+      abiTypes.push(methodArg.type)
       // it's safe to cast to ABIValue here because the abiType must be ABIValue
       abiValues.push(argValue as ABIValue)
     }

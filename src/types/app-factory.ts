@@ -1,4 +1,6 @@
-import { ABIMethod, ABIValue, Arc56Contract, decodeABIValue, findABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIValue, Arc56Contract, decodeABIValue, findABIMethod, isAVMType } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, argTypeIsAbiType } from '@algorandfoundation/algokit-abi/abi-method'
+import { decodeAVMValue } from '@algorandfoundation/algokit-abi/avm-type'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionSignerAccount } from './account'
@@ -647,6 +649,7 @@ export class AppFactory {
     }
   }
 
+  // TODO: PD - confirm why only getCreateABIArgs, and nothing for update/delete
   private getCreateABIArgsWithDefaultValues(
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
@@ -658,10 +661,13 @@ export class AppFactory {
         return a
       }
       const defaultValue = arg.defaultValue
-      if (defaultValue) {
+      if (defaultValue && argTypeIsAbiType(arg.type)) {
         switch (defaultValue.source) {
-          case 'literal':
-            return decodeABIValue(m.args[i].argType, Buffer.from(defaultValue.data, 'base64'))
+          case 'literal': {
+            const bytes = Buffer.from(defaultValue.data, 'base64')
+            const type = defaultValue.type ?? arg.type
+            return isAVMType(type) ? decodeAVMValue(type, bytes) : decodeABIValue(type, bytes)
+          }
           default:
             throw new Error(`Can't provide default value for ${defaultValue.source} for a contract creation call`)
         }

@@ -147,7 +147,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
       }
 
       // Handle transaction args separately to avoid conflicts with ABIStructValue
-      const abiArgumentType = args.method.args.at(index)!.argType
+      const abiArgumentType = args.method.args.at(index)!.type
       if (abiTypeIsTransaction(abiArgumentType)) {
         const t = a as TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult> | SendTransactionResult
         return 'txn' in t

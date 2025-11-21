@@ -1,12 +1,14 @@
 export {
-  abiTypeIsReference,
-  abiTypeIsTransaction,
+  argTypeIsReference,
+  argTypeIsTransaction,
+  decodeAVMValue,
   findABIMethod,
   getABIMethod,
   getABIMethodSelector,
   getABIMethodSignature,
+  isAVMType,
 } from './abi-method'
-export type { ABIMethod, ABIReferenceType, ABIReturn, ABIReturnType } from './abi-method'
+export type { ABIMethod, ABIReferenceType, ABIReturn, ABIMethodReturnType as ABIReturnType } from './abi-method'
 export { ABITypeName, decodeABIValue, encodeABIValue, encodeTuple, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 export type {
   ABIAddressType,
