@@ -9,7 +9,22 @@ import {
   findABIMethod,
   isAVMType,
 } from '@algorandfoundation/algokit-abi'
-import { argTypeIsAbiType } from '@algorandfoundation/algokit-abi/abi-method'
+import {
+  argTypeIsAbiType,
+  argTypeIsTransaction,
+  decodeAVMOrABIValue,
+  encodeAVMOrABIValue,
+} from '@algorandfoundation/algokit-abi/abi-method'
+import {
+  ABIStorageKey,
+  ABIStorageMap,
+  getBoxABIStorageKey,
+  getBoxABIStorageMap,
+  getGlobalABIStorageKeys,
+  getGlobalABIStorageMaps,
+  getLocalABIStorageKeys,
+  getLocalABIStorageMaps,
+} from '@algorandfoundation/algokit-abi/arc56-contract'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -287,28 +302,18 @@ export interface AppClientCompilationResult extends Partial<AppCompilationResult
  * Determines deploy time control (UPDATABLE, DELETABLE) value by inspecting application specification
  * @param approval TEAL Approval program, not the base64 version found on the appSpec
  * @param appSpec Application Specification
- * @param templateVariableName Template variable
- * @param callConfigKey Call config type
+ * @param control Call config type
  * @returns true if applicable call config is found, false if not found or undefined if variable not present
  */
-function getDeployTimeControl(
-  approval: string,
-  appSpec: AppSpec,
-  templateVariableName: string,
-  callConfigKey: 'update_application' | 'delete_application',
-): boolean | undefined {
+function getDeployTimeControl(approval: string, appSpec: Arc56Contract, control: 'updatable' | 'deletable'): boolean | undefined {
   // variable not present, so unknown control value
-  if (!approval.includes(templateVariableName)) return undefined
+  if (!approval || !approval.includes(control === 'updatable' ? UPDATABLE_TEMPLATE_NAME : DELETABLE_TEMPLATE_NAME)) return undefined
 
   // a bare call for specified CallConfig is present and configured
-  const bareCallConfig = appSpec.bare_call_config[callConfigKey]
-  if (!!bareCallConfig && bareCallConfig !== 'NEVER') return true
-
-  // an ABI call for specified CallConfig is present and configured
-  return Object.values(appSpec.hints).some((h) => {
-    const abiCallConfig = h.call_config[callConfigKey]
-    return !!abiCallConfig && abiCallConfig !== 'NEVER'
-  })
+  return (
+    appSpec.bareActions.call.includes(control === 'updatable' ? 'UpdateApplication' : 'DeleteApplication') ||
+    Object.values(appSpec.methods).some((c) => c.actions.call.includes(control === 'updatable' ? 'UpdateApplication' : 'DeleteApplication'))
+  )
 }
 
 /** Parameters to create an app client */
@@ -526,13 +531,13 @@ export class AppClient {
     this._localStateMethods = (address: string | Address) =>
       this.getStateMethods(
         () => this.getLocalState(address),
-        () => this._appSpec.state.keys.local,
-        () => this._appSpec.state.maps.local,
+        () => getLocalABIStorageKeys(this._appSpec),
+        () => getLocalABIStorageMaps(this._appSpec),
       )
     this._globalStateMethods = this.getStateMethods(
       () => this.getGlobalState(),
-      () => this._appSpec.state.keys.global,
-      () => this._appSpec.state.maps.global,
+      () => getGlobalABIStorageKeys(this._appSpec),
+      () => getGlobalABIStorageMaps(this._appSpec),
     )
     this._boxStateMethods = this.getBoxMethods()
 
@@ -1117,11 +1122,11 @@ export class AppClient {
                 sender,
               })
 
-              if (result.return === undefined) {
+              if (result.return?.returnValue === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
               // TODO: PD - confirm that we don't need to convert struct returned value to tuple anymore
-              return result.return
+              return result.return?.returnValue
             }
             case 'local':
             case 'global': {
@@ -1132,25 +1137,15 @@ export class AppClient {
                   `Preparing default value for argument ${arg.name ?? `arg${i + 1}`} resulted in the failure: The key '${defaultValue.data}' could not be found in ${defaultValue.source} storage`,
                 )
               }
-              return 'valueRaw' in value
-                ? (getABIDecodedValue(
-                    value.valueRaw,
-                    m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
-                    this._appSpec.structs,
-                  ) as ABIValue)
-                : value.value
+              return 'valueRaw' in value ? decodeAVMOrABIValue(defaultValue.type ?? arg.type, value.valueRaw) : value.value
             }
             case 'box': {
               const value = await this.getBoxValue(Buffer.from(defaultValue.data, 'base64'))
-              return getABIDecodedValue(
-                value,
-                m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
-                this._appSpec.structs,
-              ) as ABIValue
+              return decodeAVMOrABIValue(defaultValue.type ?? arg.type, value)
             }
           }
         }
-        if (!algosdk.abiTypeIsTransaction(arg.type)) {
+        if (!argTypeIsTransaction(arg.type)) {
           throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
         }
       }) ?? [],
@@ -1594,9 +1589,9 @@ export class AppClient {
        * @returns
        */
       getValue: async (name: string) => {
-        const metadata = that._appSpec.state.keys.box[name]
+        const metadata = getBoxABIStorageKey(that._appSpec, name)
         const value = await that.getBoxValue(Buffer.from(metadata.key, 'base64'))
-        return getABIDecodedValue(value, metadata.valueType, that._appSpec.structs)
+        return decodeAVMOrABIValue(metadata.valueType, value)
       },
       /**
        *
@@ -1607,12 +1602,12 @@ export class AppClient {
        */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getMapValue: async (mapName: string, key: Uint8Array | any) => {
-        const metadata = that._appSpec.state.maps.box[mapName]
+        const metadata = getBoxABIStorageMap(that._appSpec, mapName)
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
+        const encodedKey = Buffer.concat([prefix, encodeAVMOrABIValue(metadata.keyType, key)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = await that.getBoxValue(Buffer.from(base64Key, 'base64'))
-        return getABIDecodedValue(value, metadata.valueType, that._appSpec.structs)
+        return decodeAVMOrABIValue(metadata.valueType, value)
       },
 
       /**
@@ -1624,7 +1619,7 @@ export class AppClient {
        * @param appState
        */
       getMap: async (mapName: string) => {
-        const metadata = that._appSpec.state.maps.box[mapName]
+        const metadata = getBoxABIStorageMap(that._appSpec, mapName)
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
         const boxNames = await that.getBoxNames()
 
@@ -1634,8 +1629,8 @@ export class AppClient {
               .filter((b) => binaryStartsWith(b.nameRaw, prefix))
               .map(async (b) => {
                 return [
-                  getABIDecodedValue(b.nameRaw.slice(prefix.length), metadata.keyType, that._appSpec.structs),
-                  getABIDecodedValue(await that.getBoxValue(b.nameRaw), metadata.valueType, that._appSpec.structs),
+                  decodeAVMOrABIValue(metadata.keyType, b.nameRaw.slice(prefix.length)),
+                  decodeAVMOrABIValue(metadata.valueType, await that.getBoxValue(b.nameRaw)),
                 ] as const
               }),
           ),
@@ -1648,14 +1643,12 @@ export class AppClient {
   private getStateMethods(
     stateGetter: () => Promise<AppState>,
     keyGetter: () => {
-      [name: string]: StorageKey
+      [name: string]: ABIStorageKey
     },
     mapGetter: () => {
-      [name: string]: StorageMap
+      [name: string]: ABIStorageMap
     },
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this
     const stateMethods = {
       /**
        * Returns all single-key state values in a record keyed by the key name and the value a decoded ABI value.
@@ -1681,7 +1674,7 @@ export class AppClient {
         const value = state.find((s) => s.keyBase64 === metadata.key)
 
         if (value && 'valueRaw' in value) {
-          return getABIDecodedValue(value.valueRaw, metadata.valueType, that._appSpec.structs)
+          return decodeAVMOrABIValue(metadata.valueType, value.valueRaw)
         }
 
         return value?.value
@@ -1700,12 +1693,12 @@ export class AppClient {
         const metadata = mapGetter()[mapName]
 
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
+        const encodedKey = Buffer.concat([prefix, encodeAVMOrABIValue(metadata.keyType, key)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = state.find((s) => s.keyBase64 === base64Key)
 
         if (value && 'valueRaw' in value) {
-          return getABIDecodedValue(value.valueRaw, metadata.valueType, that._appSpec.structs)
+          return decodeAVMOrABIValue(metadata.valueType, value.valueRaw)
         }
 
         return value?.value
@@ -1729,8 +1722,8 @@ export class AppClient {
             .map((s) => {
               const key = s.keyRaw.slice(prefix.length)
               return [
-                getABIDecodedValue(key, metadata.keyType, this._appSpec.structs),
-                getABIDecodedValue('valueRaw' in s ? s.valueRaw : s.value, metadata.valueType, this._appSpec.structs),
+                decodeAVMOrABIValue(metadata.keyType, key),
+                'valueRaw' in s ? decodeAVMOrABIValue(metadata.valueType, s.valueRaw) : s.value,
               ] as const
             }),
         )
@@ -1750,7 +1743,7 @@ export class AppClient {
 export class ApplicationClient {
   private algod: AlgodClient
   private indexer?: algosdk.Indexer
-  private appSpec: AppSpec
+  private appSpec: Arc56Contract
   private sender: SendTransactionFrom | undefined
   private params: SuggestedParams | undefined
   private existingDeployments: LegacyAppLookup | undefined
@@ -1777,8 +1770,9 @@ export class ApplicationClient {
   constructor(appDetails: AppSpecAppDetails, algod: AlgodClient) {
     const { app, sender, params, deployTimeParams, ...appIdentifier } = appDetails
     this.algod = algod
-    this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
-    this._appName = appIdentifier.name ?? this.appSpec.contract.name
+    const appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
+    this.appSpec = arc32ToArc56(appSpec)
+    this._appName = appIdentifier.name ?? this.appSpec.name
     this.deployTimeParams = deployTimeParams
 
     if (appIdentifier.resolveBy === 'id') {
@@ -1815,7 +1809,8 @@ export class ApplicationClient {
    */
   async compile(compilation?: AppClientCompilationParams) {
     const { deployTimeParams, updatable, deletable } = compilation ?? {}
-    const approvalTemplate = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
+    // TODO: PD - confirm the ! here, ARC32 says the source is nullable but on main it isn't
+    const approvalTemplate = Buffer.from(this.appSpec.source!.approval, 'base64').toString('utf-8')
     const approval = replaceDeployTimeControlParams(
       performTemplateSubstitution(approvalTemplate, deployTimeParams ?? this.deployTimeParams),
       {
@@ -1825,7 +1820,7 @@ export class ApplicationClient {
     )
     const approvalCompiled = await compileTeal(approval, this.algod)
     this._approvalSourceMap = approvalCompiled?.sourceMap
-    const clearTemplate = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
+    const clearTemplate = Buffer.from(this.appSpec.source!.clear, 'base64').toString('utf-8')
     const clear = performTemplateSubstitution(clearTemplate, deployTimeParams ?? this.deployTimeParams)
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
@@ -1916,18 +1911,12 @@ export class ApplicationClient {
       )
     }
 
-    const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
+    const approval = Buffer.from(this.appSpec.source!.approval, 'base64').toString('utf-8')
 
     const compilation = {
       deployTimeParams: deployArgs.deployTimeParams,
-      updatable:
-        allowUpdate !== undefined
-          ? allowUpdate
-          : getDeployTimeControl(approval, this.appSpec, UPDATABLE_TEMPLATE_NAME, 'update_application'),
-      deletable:
-        allowDelete !== undefined
-          ? allowDelete
-          : getDeployTimeControl(approval, this.appSpec, DELETABLE_TEMPLATE_NAME, 'delete_application'),
+      updatable: allowUpdate !== undefined ? allowUpdate : getDeployTimeControl(approval, this.appSpec, 'updatable'),
+      deletable: allowDelete !== undefined ? allowDelete : getDeployTimeControl(approval, this.appSpec, 'deletable'),
     }
 
     const { approvalCompiled, clearCompiled } = await this.compile(compilation)
@@ -1946,10 +1935,10 @@ export class ApplicationClient {
             deletable: compilation.deletable,
           },
           schema: {
-            globalByteSlices: this.appSpec.state.global.num_byte_slices,
-            globalInts: this.appSpec.state.global.num_uints,
-            localByteSlices: this.appSpec.state.local.num_byte_slices,
-            localInts: this.appSpec.state.local.num_uints,
+            globalByteSlices: this.appSpec.state.schema.global.bytes,
+            globalInts: this.appSpec.state.schema.global.ints,
+            localByteSlices: this.appSpec.state.schema.local.bytes,
+            localInts: this.appSpec.state.schema.local.ints,
             ...schema,
           },
           transactionParams: this.params,
@@ -2023,10 +2012,10 @@ export class ApplicationClient {
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
           schema: {
-            globalByteSlices: this.appSpec.state.global.num_byte_slices,
-            globalInts: this.appSpec.state.global.num_uints,
-            localByteSlices: this.appSpec.state.local.num_byte_slices,
-            localInts: this.appSpec.state.local.num_uints,
+            globalByteSlices: this.appSpec.state.schema.global.bytes,
+            globalInts: this.appSpec.state.schema.global.ints,
+            localByteSlices: this.appSpec.state.schema.local.bytes,
+            localInts: this.appSpec.state.schema.local.ints,
             ...schema,
           },
           onCompleteAction,
@@ -2106,7 +2095,7 @@ export class ApplicationClient {
       // There isn't a composer passed in
       !call.sendParams?.transactionComposer &&
       // The method is readonly
-      this.appSpec.hints?.[this.getABIMethodSignature(this.getABIMethod(call.method)!)]?.read_only
+      findABIMethod(call.method, this.appSpec).readonly
     ) {
       const transactionComposer = new TransactionComposer({
         algod: this.algod,
@@ -2380,12 +2369,10 @@ export class ApplicationClient {
     }
 
     if (args.method) {
-      const abiMethod = this.getABIMethodParams(args.method)
+      const abiMethod = findABIMethod(args.method, this.appSpec)
       if (!abiMethod) {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
-
-      const methodSignature = this.getABIMethodSignature(abiMethod)
 
       return {
         ...args,
@@ -2393,21 +2380,22 @@ export class ApplicationClient {
         methodArgs: await Promise.all(
           args.methodArgs.map(async (arg, index): Promise<ABIAppCallArg> => {
             if (arg !== undefined) return arg
-            const argName = abiMethod.args[index].name
-            const defaultValueStrategy = argName && this.appSpec.hints?.[methodSignature]?.default_arguments?.[argName]
+            const abiMethodArg = abiMethod.args[index]
+            const argName = abiMethodArg
+            const defaultValueStrategy = abiMethodArg.defaultValue
             if (!defaultValueStrategy)
               throw new Error(
                 `Argument at position ${index} with the name ${argName} is undefined and does not have a default value strategy`,
               )
 
             switch (defaultValueStrategy.source) {
-              case 'constant':
+              case 'literal':
                 return defaultValueStrategy.data
-              case 'abi-method': {
-                const method = defaultValueStrategy.data as ABIMethodParams
+              case 'method': {
+                const method = findABIMethod(defaultValueStrategy.data, this.appSpec)
                 const result = await this.callOfType(
                   {
-                    method: this.getABIMethodSignature(method),
+                    method: method.name,
                     methodArgs: method.args.map(() => undefined),
                     sender,
                   },
@@ -2415,10 +2403,9 @@ export class ApplicationClient {
                 )
                 return result.return?.returnValue
               }
-              case 'local-state':
-              case 'global-state': {
-                const state =
-                  defaultValueStrategy.source === 'global-state' ? await this.getGlobalState() : await this.getLocalState(sender)
+              case 'local':
+              case 'global': {
+                const state = defaultValueStrategy.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
                 const key = defaultValueStrategy.data
                 if (key in state) {
                   return state[key].value
@@ -2437,29 +2424,30 @@ export class ApplicationClient {
     }
   }
 
-  /**
-   * @deprecated Use `appClient.getABIMethod` instead.
-   *
-   * Returns the ABI Method parameters for the given method name string for the app represented by this application client instance
-   * @param method Either the name of the method or the ABI method spec definition string
-   * @returns The ABI method params for the given method
-   */
-  getABIMethodParams(method: string): ABIMethodParams | undefined {
-    if (!method.includes('(')) {
-      const methods = this.appSpec.contract.methods.filter((m) => m.name === method)
-      if (methods.length > 1) {
-        throw new Error(
-          `Received a call to method ${method} in contract ${
-            this._appName
-          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods
-            .map(this.getABIMethodSignature)
-            .join(', ')}`,
-        )
-      }
-      return methods[0]
-    }
-    return this.appSpec.contract.methods.find((m) => this.getABIMethodSignature(m) === method)
-  }
+  // TODO: PD - what to do with this?
+  // /**
+  //  * @deprecated Use `appClient.getABIMethod` instead.
+  //  *
+  //  * Returns the ABI Method parameters for the given method name string for the app represented by this application client instance
+  //  * @param method Either the name of the method or the ABI method spec definition string
+  //  * @returns The ABI method params for the given method
+  //  */
+  // getABIMethodParams(method: string): ABIMethodParams | undefined {
+  //   if (!method.includes('(')) {
+  //     const methods = this.appSpec.contract.methods.filter((m) => m.name === method)
+  //     if (methods.length > 1) {
+  //       throw new Error(
+  //         `Received a call to method ${method} in contract ${
+  //           this._appName
+  //         }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods
+  //           .map(this.getABIMethodSignature)
+  //           .join(', ')}`,
+  //       )
+  //     }
+  //     return methods[0]
+  //   }
+  //   return this.appSpec.contract.methods.find((m) => this.getABIMethodSignature(m) === method)
+  // }
 
   /**
    * Returns the ABI Method for the given method name string for the app represented by this application client instance
@@ -2467,8 +2455,7 @@ export class ApplicationClient {
    * @returns The ABI method for the given method
    */
   getABIMethod(method: string): ABIMethod | undefined {
-    const methodParams = this.getABIMethodParams(method)
-    return methodParams ? new ABIMethod(methodParams) : undefined
+    return findABIMethod(method, this.appSpec)
   }
 
   /**
@@ -2516,15 +2503,11 @@ export class ApplicationClient {
     if (errorDetails !== undefined)
       return new LogicError(
         errorDetails,
-        Buffer.from(isClear ? this.appSpec.source.clear : this.appSpec.source.approval, 'base64')
+        Buffer.from(isClear ? this.appSpec.source!.clear : this.appSpec.source!.approval, 'base64')
           .toString()
           .split('\n'),
         (pc: number) => (isClear ? this._clearSourceMap : this._approvalSourceMap)?.getLocationForPc(pc)?.line,
       )
     else return e
-  }
-
-  private getABIMethodSignature(method: ABIMethodParams | ABIMethod) {
-    return 'getSignature' in method ? method.getSignature() : new ABIMethod(method).getSignature()
   }
 }

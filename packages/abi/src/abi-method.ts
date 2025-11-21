@@ -1,5 +1,5 @@
 import sha512 from 'js-sha512'
-import { ABIType, decodeABIValue, getABIStructType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIType, decodeABIValue, encodeABIValue, getABIStructType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { AVMType, Arc56Contract, Arc56Method } from './arc56-contract'
@@ -273,7 +273,7 @@ function getArc56MethodSignature(method: Arc56Method): string {
   return `${method.name}(${args})${returns}`
 }
 
-export const decodeAVMValue = (avmType: AVMType, bytes: Uint8Array) => {
+export function decodeAVMValue(avmType: AVMType, bytes: Uint8Array): ABIValue {
   switch (avmType) {
     case 'AVMString':
       return Buffer.from(bytes).toString('utf-8')
@@ -284,6 +284,29 @@ export const decodeAVMValue = (avmType: AVMType, bytes: Uint8Array) => {
   }
 }
 
+export function encodeAVMValue(avmType: AVMType, value: ABIValue): Uint8Array {
+  switch (avmType) {
+    case 'AVMString':
+      return encodeABIValue(getABIType('string'), value)
+    case 'AVMBytes':
+      if (typeof value === 'string') return Buffer.from(value, 'utf-8')
+      if (typeof value !== 'object' || !(value instanceof Uint8Array))
+        throw new Error(`Expected bytes value for AVMBytes, but got ${value}`)
+      return value
+    case 'AVMUint64':
+      return encodeABIValue(getABIType('uint64'), value)
+  }
+}
+
+// TODO: PD - refactor external usage of this to decodeAVMOrABIValue
 export function isAVMType(type: unknown): type is AVMType {
   return typeof type === 'string' && (type === 'AVMString' || type === 'AVMBytes' || type === 'AVMUint64')
+}
+
+export function decodeAVMOrABIValue(type: AVMType | ABIType, bytes: Uint8Array): ABIValue {
+  return isAVMType(type) ? decodeAVMValue(type, bytes) : decodeABIValue(type, bytes)
+}
+
+export function encodeAVMOrABIValue(type: AVMType | ABIType, value: ABIValue): Uint8Array {
+  return isAVMType(type) ? encodeAVMValue(type, value) : encodeABIValue(type, value)
 }
