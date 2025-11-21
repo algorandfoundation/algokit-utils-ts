@@ -1,4 +1,15 @@
-import { ABIMethod, ABIType, ABIValue, Arc56Contract, ProgramSourceInfo, findABIMethod } from '@algorandfoundation/algokit-abi'
+import {
+  ABIMethod,
+  ABIType,
+  ABIValue,
+  Arc56Contract,
+  ProgramSourceInfo,
+  decodeABIValue,
+  decodeAVMValue,
+  findABIMethod,
+  isAVMType,
+} from '@algorandfoundation/algokit-abi'
+import { argTypeIsAbiType } from '@algorandfoundation/algokit-abi/abi-method'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -1087,20 +1098,17 @@ export class AppClient {
           throw new Error(`Unexpected arg at position ${i}. ${m.name} only expects ${m.args.length} args`)
         }
         if (a !== undefined) {
-          // If a struct then convert to tuple for the underlying call
-          return arg.struct && typeof a === 'object' && !Array.isArray(a)
-            ? getABITupleFromABIStruct(a as ABIStruct, this._appSpec.structs[arg.struct], this._appSpec.structs)
-            : (a as ABIValue | AppMethodCallTransactionArgument)
+          return a
         }
         const defaultValue = arg.defaultValue
-        if (defaultValue) {
+        // TODO: PD - confirm if checking argTypeIsAbiType(arg.type) is correct
+        if (defaultValue && argTypeIsAbiType(arg.type)) {
           switch (defaultValue.source) {
-            case 'literal':
-              return getABIDecodedValue(
-                Buffer.from(defaultValue.data, 'base64'),
-                m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
-                this._appSpec.structs,
-              ) as ABIValue
+            case 'literal': {
+              const bytes = Buffer.from(defaultValue.data, 'base64')
+              const type = defaultValue.type ?? arg.type
+              return isAVMType(type) ? decodeAVMValue(type, bytes) : decodeABIValue(type, bytes)
+            }
             case 'method': {
               const method = this.getABIMethod(defaultValue.data)
               const result = await this.send.call({
@@ -1112,14 +1120,7 @@ export class AppClient {
               if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
-              if (
-                typeof result.return === 'object' &&
-                !(result.return instanceof Uint8Array) &&
-                !Array.isArray(result.return) &&
-                !(result.return instanceof Address)
-              ) {
-                return getABITupleFromABIStruct(result.return, this._appSpec.structs[method.returns.struct!], this._appSpec.structs)
-              }
+              // TODO: PD - confirm that we don't need to convert struct returned value to tuple anymore
               return result.return
             }
             case 'local':

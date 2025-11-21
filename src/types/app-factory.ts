@@ -1,18 +1,10 @@
-import { ABIValue, Arc56Contract, decodeABIValue, findABIMethod, isAVMType } from '@algorandfoundation/algokit-abi'
-import { ABIMethod, argTypeIsAbiType } from '@algorandfoundation/algokit-abi/abi-method'
-import { decodeAVMValue } from '@algorandfoundation/algokit-abi/avm-type'
+import { Arc56Contract, decodeABIValue, findABIMethod, isAVMType } from '@algorandfoundation/algokit-abi'
+import { argTypeIsAbiType, decodeAVMValue } from '@algorandfoundation/algokit-abi/abi-method'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
-import {
-  AppCompilationResult,
-  AppReturn,
-  DELETABLE_TEMPLATE_NAME,
-  SendAppTransactionResult,
-  TealTemplateParams,
-  UPDATABLE_TEMPLATE_NAME,
-} from './app'
+import { AppCompilationResult, DELETABLE_TEMPLATE_NAME, TealTemplateParams, UPDATABLE_TEMPLATE_NAME } from './app'
 import {
   AppClient,
   AppClientBareCallParams,
@@ -307,10 +299,7 @@ export class AppFactory {
       const deployTimeParams = params?.deployTimeParams ?? this._deployTimeParams
       const compiled = await this.compile({ deployTimeParams, updatable, deletable })
       const result = await this.handleCallErrors(async () =>
-        this.parseMethodCallReturn(
-          this._algorand.send.appCreateMethodCall(await this.params.create({ ...params, updatable, deletable, deployTimeParams })),
-          findABIMethod(params.method, this._appSpec),
-        ),
+        this._algorand.send.appCreateMethodCall(await this.params.create({ ...params, updatable, deletable, deployTimeParams })),
       )
       return {
         appClient: this.getAppClientById({
@@ -693,23 +682,5 @@ export class AppFactory {
     signer: TransactionSigner | TransactionSignerAccount | undefined,
   ): TransactionSigner | TransactionSignerAccount | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
-  }
-
-  /**
-   * Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
-   * on the ARC-56 method.
-   *
-   * If the return type is a struct then the struct will be returned.
-   *
-   * @param result The SendAppTransactionResult to be mapped
-   * @param method The method that was called
-   * @returns The smart contract response with an updated return value
-   */
-  async parseMethodCallReturn<
-    TReturn extends Uint8Array | ABIValue | undefined,
-    TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: ABIMethod): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
-    const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) }
   }
 }

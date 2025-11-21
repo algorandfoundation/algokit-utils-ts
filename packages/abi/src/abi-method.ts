@@ -30,7 +30,7 @@ export type ABIMethodArg = {
 }
 
 export type ABIMethodReturn = {
-  type: ABIMethodReturnType
+  type: ABIType | 'void'
   description?: string
 }
 

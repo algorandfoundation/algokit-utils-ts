@@ -1,4 +1,4 @@
-import { ABIValue, abiTypeIsTransaction } from '@algorandfoundation/algokit-abi'
+import { ABIValue, argTypeIsTransaction } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -148,7 +148,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
 
       // Handle transaction args separately to avoid conflicts with ABIStructValue
       const abiArgumentType = args.method.args.at(index)!.type
-      if (abiTypeIsTransaction(abiArgumentType)) {
+      if (argTypeIsTransaction(abiArgumentType)) {
         const t = a as TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult> | SendTransactionResult
         return 'txn' in t
           ? t

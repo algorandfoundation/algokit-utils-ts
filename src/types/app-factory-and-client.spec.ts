@@ -791,6 +791,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     await localnet.newScope()
 
     factory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
       appSpec: arc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
@@ -798,6 +799,7 @@ describe('ARC56: app-factory-and-app-client', () => {
 
   test('ARC56 error messages from inner app error', async () => {
     const innerFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
       appSpec: errorInnerAppArc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
@@ -805,6 +807,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     const { appClient: innerClient } = await innerFactory.deploy({ createParams: { method: 'createApplication' } })
 
     const middleFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
       appSpec: errorMiddleAppArc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
@@ -812,6 +815,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     const { appClient: middleClient } = await middleFactory.deploy({ createParams: { method: 'createApplication' } })
 
     const outerFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
       appSpec: errorOuterAppArc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
@@ -825,6 +829,7 @@ describe('ARC56: app-factory-and-app-client', () => {
 
   test('ARC56 error message on deploy', async () => {
     const deployErrorFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
       appSpec: deployErrorAppArc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
@@ -887,8 +892,11 @@ describe('ARC56: app-factory-and-app-client', () => {
     const appClient = localnet.algorand.client.getAppClientById({
       appId,
       defaultSender: localnet.context.testAccount.addr,
+      // @ts-expect-error TODO: Fix this
       appSpec: arc56Json,
     })
+
+    // TODO: PD - investigate Fix this
 
     try {
       await appClient.send.call({ method: 'tmpl' })

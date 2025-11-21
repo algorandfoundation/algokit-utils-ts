@@ -4,8 +4,8 @@ import {
   ABIType,
   ABITypeName,
   ABIValue,
-  abiTypeIsReference,
-  abiTypeIsTransaction,
+  argTypeIsReference,
+  argTypeIsTransaction,
   encodeABIValue,
   getABIMethodSelector,
 } from '@algorandfoundation/algokit-abi'
@@ -236,7 +236,7 @@ function populateMethodArgsIntoReferenceArrays(
 
   methodArgs.forEach((arg, i) => {
     const argType = method.args[i].type
-    if (abiTypeIsReference(argType)) {
+    if (argTypeIsReference(argType)) {
       switch (argType) {
         case 'account':
           if (typeof arg === 'string' && arg !== sender && !accounts.includes(arg)) {
@@ -330,9 +330,9 @@ function encodeMethodArguments(
     const methodArg = method.args[i]
     const argValue = args[i]
 
-    if (abiTypeIsTransaction(methodArg.type)) {
+    if (argTypeIsTransaction(methodArg.type)) {
       // Transaction arguments are not ABI encoded - they're handled separately
-    } else if (abiTypeIsReference(methodArg.type)) {
+    } else if (argTypeIsReference(methodArg.type)) {
       // Reference types are encoded as uint8 indexes
       const referenceType = methodArg.type
       if (typeof argValue === 'string' || typeof argValue === 'bigint') {

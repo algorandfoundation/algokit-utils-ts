@@ -8,7 +8,7 @@ export {
   getABIMethodSignature,
   isAVMType,
 } from './abi-method'
-export type { ABIMethod, ABIReferenceType, ABIReturn, ABIMethodReturnType as ABIReturnType } from './abi-method'
+export type { ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
 export { ABITypeName, decodeABIValue, encodeABIValue, encodeTuple, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 export type {
   ABIAddressType,
