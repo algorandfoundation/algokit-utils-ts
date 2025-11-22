@@ -73,6 +73,13 @@ function modelMetadataToZodSchemaInternal(meta: ModelMetadata, cache: SchemaCach
     return arraySchema
   }
 
+  // Handle passthrough metadata (e.g., OnCompletion - type aliases)
+  if (meta.kind === 'passthrough') {
+    const passThroughSchema = fieldTypeToZodSchema(meta.passThrough ?? { kind: 'scalar' }, cache)
+    cache.set(modelName, passThroughSchema)
+    return passThroughSchema
+  }
+
   if (meta.kind !== 'object') {
     throw new Error(`Only object and array types supported, got: ${meta.kind}`)
   }
