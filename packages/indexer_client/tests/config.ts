@@ -1,7 +1,7 @@
 import type { ClientConfig } from '../src/core/client-config'
 
 export const config: ClientConfig = {
-  baseUrl: process.env.MOCK_INDEXER_SERVER || 'http://localhost:8001',
+  baseUrl: process.env.MOCK_INDEXER_SERVER || 'http://localhost:8002',
   apiToken: process.env.MOCK_INDEXER_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
 }
 
