@@ -16,6 +16,11 @@ export type WireMapKey = Uint8Array | number | bigint
 export type WireObject = Record<string, unknown> | Map<WireMapKey, unknown>
 
 /**
+ * Wire entry: a key-value pair from wire data
+ */
+type WireEntry = [key: string | WireMapKey, value: unknown]
+
+/**
  * Represents a bigint value coming off the wire.
  *
  * When from msgpack it could be a number or bigint, depending on size.
@@ -30,18 +35,6 @@ export type WireBigInt = number | bigint
  * When from JSON it's a base64-encoded bytes string.
  */
 export type WireBytes = Uint8Array | string
-
-// TODO: NC - These should be removed
-/**
- *
- * Wire data can be a Map (from msgpack) or a plain object (from JSON)
- */
-type WireData = Map<string | Uint8Array, unknown> | Record<string, unknown>
-
-/**
- * Wire entry: a key-value pair from wire data
- */
-type WireEntry = [key: string | Uint8Array, value: unknown]
 
 // TODO: NC - This is pretty inefficient, we can retrieve decoded values, the map, rather than per field we are searching for.
 /**
@@ -115,7 +108,7 @@ export class ModelSerializer {
    * Decode wire format to a model instance
    */
   // TODO: NC - We could call this fromEncoded
-  static decode<T>(wireData: unknown, metadata: ModelMetadata, format: BodyFormat): T {
+  static decode<T>(wireObject: WireObject, metadata: ModelMetadata, format: BodyFormat): T {
     if (metadata.kind !== 'object') {
       throw new Error(`Cannot decode model ${metadata.name}: expected object kind, got ${metadata.kind}`)
     }
@@ -124,7 +117,7 @@ export class ModelSerializer {
     const usedKeys = new Set<string>()
 
     // Convert wire data to entries array
-    const entries = this.getWireEntries(wireData)
+    const entries = this.getWireObjectEntries(wireObject)
 
     // Build a map of wire keys to fields for quick lookup
     const fieldByWireKey = this.buildFieldLookup(metadata.fields)
@@ -136,7 +129,7 @@ export class ModelSerializer {
 
       if (field) {
         usedKeys.add(wireKey)
-        const decodedValue = this.decodeFieldValue(field, wireValue, wireData, format)
+        const decodedValue = this.decodeFieldValue(field, wireValue, wireObject, format)
 
         if (decodedValue !== undefined) {
           result[field.name] = decodedValue
@@ -146,7 +139,7 @@ export class ModelSerializer {
 
     // Second pass: decode required non-flattened fields that were missing from wireData
     // (they were omitted because they had default values)
-    const shouldPopulateDefaults = Object.keys(result).length > 0 || wireData === undefined || wireData === null
+    const shouldPopulateDefaults = Object.keys(result).length > 0 || wireObject === undefined || wireObject === null
 
     if (shouldPopulateDefaults) {
       for (const field of metadata.fields) {
@@ -155,28 +148,28 @@ export class ModelSerializer {
         }
 
         // Decode with undefined to get default value for required field
-        result[field.name] = this.decodeFieldValue(field, undefined, wireData, format)
+        result[field.name] = this.decodeFieldValue(field, undefined, wireObject, format)
       }
     }
 
     // Third pass: reconstruct flattened fields from remaining keys
-    this.decodeFlattenedFields(metadata.fields, wireData, usedKeys, result, format)
+    this.decodeFlattenedFields(metadata.fields, wireObject, usedKeys, result, format)
 
     return result as T
   }
 
   /**
-   * Convert wire data to an array of entries
+   * Convert wire object to an array of entries
    */
-  private static getWireEntries(wireData: unknown): WireEntry[] {
-    if (wireData === undefined || wireData === null) {
+  private static getWireObjectEntries(wireObject: WireObject | undefined | null): WireEntry[] {
+    if (wireObject === undefined || wireObject === null) {
       return []
     }
-    if (wireData instanceof Map) {
-      return Array.from(wireData.entries())
+    if (wireObject instanceof Map) {
+      return Array.from(wireObject.entries())
     }
-    if (typeof wireData === 'object') {
-      return Object.entries(wireData as Record<string, unknown>)
+    if (typeof wireObject === 'object') {
+      return Object.entries(wireObject)
     }
     return []
   }
@@ -184,8 +177,8 @@ export class ModelSerializer {
   /**
    * Normalize a wire key to a string
    */
-  private static normalizeKey(key: string | Uint8Array): string {
-    return key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : String(key)
+  private static normalizeKey(key: string | WireMapKey): string {
+    return key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : typeof key === 'string' ? key : String(key)
   }
 
   /**
@@ -257,11 +250,11 @@ export class ModelSerializer {
   /**
    * Filter wire data to include/exclude specific keys
    */
-  private static filterWireData(
-    wireData: unknown,
+  private static filterWireObject(
+    wireData: WireObject | undefined | null, // TODO: NC - We can probably remove the null?
     usedKeys: Set<string>,
     filterKeys?: Set<string> | null,
-  ): { data: WireData | null; keysConsumed: number } {
+  ): { data: WireObject | null; keysConsumed: number } {
     if (wireData === undefined || wireData === null) {
       return { data: null, keysConsumed: 0 }
     }
@@ -269,7 +262,7 @@ export class ModelSerializer {
     let keysConsumed = 0
 
     if (wireData instanceof Map) {
-      const filteredMap = new Map<string | Uint8Array, unknown>()
+      const filteredMap = new Map<WireMapKey, unknown>()
       for (const [k, v] of wireData.entries()) {
         const keyStr = this.normalizeKey(k)
         const shouldInclude = filterKeys === null || filterKeys === undefined || filterKeys.has(keyStr)
@@ -305,7 +298,7 @@ export class ModelSerializer {
    */
   private static decodeFlattenedFields(
     fields: readonly FieldMetadata[],
-    wireData: unknown,
+    wireObject: WireObject,
     usedKeys: Set<string>,
     result: Record<string, unknown>,
     format: BodyFormat,
@@ -323,7 +316,7 @@ export class ModelSerializer {
 
       const nestedMeta = field.codec.getMetadata()
       const nestedWireKeys = this.collectWireKeys(nestedMeta)
-      const { data: filteredData, keysConsumed } = this.filterWireData(wireData, usedKeys, nestedWireKeys)
+      const { data: filteredData, keysConsumed } = this.filterWireObject(wireObject, usedKeys, nestedWireKeys)
 
       if (filteredData === null) {
         continue
@@ -343,7 +336,7 @@ export class ModelSerializer {
         continue
       }
 
-      const { data: filteredData } = this.filterWireData(wireData, usedKeys)
+      const { data: filteredData } = this.filterWireObject(wireObject, usedKeys)
 
       if (filteredData === null) {
         continue

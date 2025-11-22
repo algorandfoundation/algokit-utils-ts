@@ -5,6 +5,7 @@ import {
   MapCodec,
   ModelCodec,
   ObjectModelCodec,
+  ZERO_ADDRESS,
   addressArrayCodec,
   addressCodec,
   bigIntArrayCodec,
@@ -336,7 +337,6 @@ class AccessReferencesCodec extends ContextualCodec<AccessReference[], AccessWir
     if (!refs || refs.length === 0) return undefined
 
     const accessList: AccessWireEntry[] = []
-    const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ' // TODO: NC - Remove this
 
     // Helper to find or add a simple reference and return its 1-based index
     const ensure = (target: Pick<AccessReference, 'address' | 'assetId' | 'appId'>): number => {
@@ -445,7 +445,6 @@ class AccessReferencesCodec extends ContextualCodec<AccessReference[], AccessWir
     if (!dtoAccessList || dtoAccessList.length === 0) return []
 
     const result: AccessReference[] = []
-    const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
 
     // Process each entry in the access list
     for (const ref of dtoAccessList) {
