@@ -1319,6 +1319,7 @@ export class AppClient {
        * @returns The result of sending the update ABI method call
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
+        // TODO: PD - restore any places with processMethodCallReturn
         const compiled = await this.compile(params)
         const sendTransactionResult = this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
         return {

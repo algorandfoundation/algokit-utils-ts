@@ -297,9 +297,15 @@ export class AppFactory {
       const deletable = params?.deletable ?? this._deletable
       const deployTimeParams = params?.deployTimeParams ?? this._deployTimeParams
       const compiled = await this.compile({ deployTimeParams, updatable, deletable })
-      const result = await this.handleCallErrors(async () =>
-        this._algorand.send.appCreateMethodCall(await this.params.create({ ...params, updatable, deletable, deployTimeParams })),
-      )
+      const result = await this.handleCallErrors(async () => {
+        const result = await this._algorand.send.appCreateMethodCall(
+          await this.params.create({ ...params, updatable, deletable, deployTimeParams }),
+        )
+        return {
+          ...result,
+          return: result.return?.returnValue,
+        }
+      })
       return {
         appClient: this.getAppClientById({
           appId: result.appId,
