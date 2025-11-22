@@ -11,11 +11,11 @@ export class UnknownCodec extends Codec<unknown, unknown> {
     return undefined
   }
 
-  protected toEncoded(value: unknown, format: BodyFormat): unknown {
+  protected toEncoded(value: unknown, _format: BodyFormat): unknown {
     return value
   }
 
-  protected fromEncoded(value: unknown, format: BodyFormat): unknown {
+  protected fromEncoded(value: unknown, _format: BodyFormat): unknown {
     return this.mapToObject(value)
   }
 

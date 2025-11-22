@@ -304,7 +304,7 @@ class BoxReferencesCodec extends ContextualCodec<BoxReference[], BoxReferenceWir
         if (foreignAppId === undefined) {
           throw new Error(`Failed to find the app reference at index ${index - 1}`)
         }
-        appId = bigIntCodec.decode(foreignAppId as string | number | bigint | undefined, format)
+        appId = bigIntCodec.decode(foreignAppId as WireBigInt, format)
       }
 
       return {

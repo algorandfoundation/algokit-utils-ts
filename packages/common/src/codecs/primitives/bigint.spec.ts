@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { WireBigInt } from '../model-serializer'
 import { bigIntCodec, bigIntWithNoDefaultCodec } from './bigint'
 
 describe('BigIntCodec', () => {
@@ -70,10 +71,9 @@ describe('BigIntCodec', () => {
 
   describe('decode', () => {
     describe('default values', () => {
-      test.each<{ value: bigint | number | string | undefined; description: string }>([
+      test.each<{ value: WireBigInt | undefined; description: string }>([
         { value: 0n, description: '0n' },
-        { value: 0, description: '0 (number)' },
-        { value: '0', description: '"0" (string)' },
+        { value: 0, description: '0' },
         { value: undefined, description: 'undefined' },
       ])('should decode $description to 0n', ({ value }) => {
         expect(bigIntCodec.decode(value, 'json')).toBe(0n)
@@ -116,33 +116,13 @@ describe('BigIntCodec', () => {
       })
     })
 
-    describe('from string', () => {
-      test.each<{ value: string; expected: bigint; description: string }>([
-        { value: '1', expected: 1n, description: '"1"' },
-        { value: '42', expected: 42n, description: '"42"' },
-        { value: '-1', expected: -1n, description: '"-1"' },
-        { value: '-42', expected: -42n, description: '"-42"' },
-        { value: '2147483647', expected: 2147483647n, description: '2^31 - 1 as string' },
-        { value: '2147483648', expected: 2147483648n, description: '2^31 as string' },
-        { value: '-2147483648', expected: -2147483648n, description: '-2^31 as string' },
-        { value: Number.MAX_SAFE_INTEGER.toString(), expected: 9007199254740991n, description: 'MAX_SAFE_INTEGER as string' },
-        { value: '18446744073709551615', expected: 18446744073709551615n, description: 'max 64-bit unsigned as string' },
-        { value: '123456789012345678901234567890', expected: 123456789012345678901234567890n, description: 'very large number as string' },
-      ])('should decode string $description to bigint', ({ value, expected }) => {
-        expect(bigIntCodec.decode(value, 'json')).toBe(expected)
-        expect(bigIntCodec.decode(value, 'msgpack')).toBe(expected)
-      })
-    })
-
     describe('format independence', () => {
-      test.each<{ value: bigint | number | string | undefined; description: string }>([
+      test.each<{ value: WireBigInt | undefined; description: string }>([
         { value: undefined, description: 'undefined' },
         { value: 0n, description: '0n' },
-        { value: 0, description: '0 (number)' },
-        { value: '0', description: '"0" (string)' },
+        { value: 0, description: '0' },
         { value: 42n, description: '42n' },
-        { value: 42, description: '42 (number)' },
-        { value: '42', description: '"42" (string)' },
+        { value: 42, description: '42' },
       ])('should produce same result for JSON and msgpack when decoding $description', ({ value }) => {
         expect(bigIntCodec.decode(value, 'json')).toBe(bigIntCodec.decode(value, 'msgpack'))
       })
@@ -155,24 +135,14 @@ describe('BigIntCodec', () => {
       expect(bigIntCodec.decodeOptional(undefined, 'msgpack')).toBeUndefined()
     })
 
-    test.each<{ value: bigint | number | string; expected: bigint; description: string }>([
+    test.each<{ value: WireBigInt; expected: bigint; description: string }>([
       { value: 0n, expected: 0n, description: '0n (not undefined)' },
-      { value: 0, expected: 0n, description: '0 (number)' },
-      { value: '0', expected: 0n, description: '"0" (string)' },
+      { value: 0, expected: 0n, description: '0' },
       { value: 42n, expected: 42n, description: '42n' },
-      { value: 42, expected: 42n, description: '42 (number)' },
-      { value: '42', expected: 42n, description: '"42" (string)' },
+      { value: 42, expected: 42n, description: '42' },
     ])('should decode $description', ({ value, expected }) => {
       expect(bigIntCodec.decodeOptional(value, 'json')).toBe(expected)
       expect(bigIntCodec.decodeOptional(value, 'msgpack')).toBe(expected)
-    })
-  })
-
-  describe('error handling', () => {
-    test('should throw error on invalid string', () => {
-      expect(() => bigIntCodec.decode('not a number', 'json')).toThrow()
-      expect(() => bigIntCodec.decode('12.34', 'json')).toThrow()
-      expect(() => bigIntCodec.decode('NaN', 'json')).toThrow()
     })
   })
 })

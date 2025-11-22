@@ -19,9 +19,9 @@ export type WireObject = Record<string, unknown> | Map<WireMapKey, unknown>
  * Represents a bigint value coming off the wire.
  *
  * When from msgpack it could be a number or bigint, depending on size.
- * When from JSON it could be a number or string, depending on size.
+ * When from JSON it could be a number or bigint (because of how we configure JSONbig), depending on size.
  */
-export type WireBigInt = string | number | bigint
+export type WireBigInt = number | bigint
 
 /**
  * Represents a bytes value coming off the wire.
