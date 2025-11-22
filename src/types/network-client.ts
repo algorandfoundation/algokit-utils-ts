@@ -1,4 +1,4 @@
-import { TokenHeader } from 'algosdk'
+import { TokenHeader } from '@algorandfoundation/sdk'
 
 /** Config for an Algorand SDK client. */
 export interface AlgoClientConfig {

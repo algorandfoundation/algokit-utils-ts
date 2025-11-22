@@ -1,11 +1,10 @@
-import algosdk from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AlgorandClient } from './types/algorand-client'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
 import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
 import { SendTransactionResult } from './types/transaction'
-import Algodv2 = algosdk.Algodv2
 
 /**
  * @deprecated use `algorand.send.assetCreate()` / `algorand.createTransaction.assetCreate()` instead
@@ -22,8 +21,8 @@ import Algodv2 = algosdk.Algodv2
  */
 export async function createAsset(
   create: CreateAssetParams,
-  algod: Algodv2,
-): Promise<SendTransactionResult & { confirmation?: { assetIndex: number | bigint } }> {
+  algod: AlgodClient,
+): Promise<SendTransactionResult & { confirmation?: { assetId: number | bigint } }> {
   const params: AssetCreateParams = {
     sender: getSenderAddress(create.creator),
     total: BigInt(create.total),
@@ -48,7 +47,7 @@ export async function createAsset(
     params,
     (client) => client.assetCreate,
     (client) => client.assetCreate,
-  )) as SendTransactionResult & { confirmation: { assetIndex: number | bigint } }
+  )) as SendTransactionResult & { confirmation: { assetId: number | bigint } }
 }
 
 /**
@@ -64,7 +63,7 @@ export async function createAsset(
  * await algokit.assetOptIn({ account, assetId }, algod)
  * ```
  */
-export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promise<SendTransactionResult> {
+export async function assetOptIn(optIn: AssetOptInParams, algod: AlgodClient): Promise<SendTransactionResult> {
   const params: NewAssetOptInParams = {
     assetId: BigInt(optIn.assetId),
     sender: getSenderAddress(optIn.account),
@@ -95,8 +94,8 @@ export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promi
  * await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
  * ```
  */
-export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const assetCreatorAddress = optOut.assetCreatorAddress ?? (await algod.getAssetByID(optOut.assetId).do()).params.creator
+export async function assetOptOut(optOut: AssetOptOutParams, algod: AlgodClient): Promise<SendTransactionResult> {
+  const assetCreatorAddress = optOut.assetCreatorAddress ?? (await algod.getAssetById(optOut.assetId)).params.creator
 
   const params: NewAssetOptOutParams = {
     assetId: BigInt(optOut.assetId),
@@ -122,12 +121,12 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
  * Opt in to a list of assets on the Algorand blockchain.
  *
  * @param optIn - The bulk opt-in request.
- * @param algod - An instance of the Algodv2 class from the `algosdk` library.
+ * @param algod - An instance of the AlgodClient class.
  * @returns A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
  * @throws If there is an error during the opt-in process.
  * @example algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
  */
-export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
+export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: AlgodClient): Promise<Record<number, string>> {
   const result = await AlgorandClient.fromClients({ algod })
     .setSignerFromAccount(optIn.account)
     .asset.bulkOptIn(getSenderAddress(optIn.account), optIn.assetIds.map(BigInt), {
@@ -149,12 +148,12 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
  * Opt out of multiple assets in Algorand blockchain.
  *
  * @param optOut The bulk opt-out request.
- * @param algod - An instance of the Algodv2 client used to interact with the Algorand blockchain.
+ * @param algod - An instance of the AlgodClient used to interact with the Algorand blockchain.
  * @returns A record object containing asset IDs as keys and their corresponding transaction IDs as values.
  * @throws If there is an error during the opt-out process.
  * @example algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
  */
-export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
+export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: AlgodClient): Promise<Record<number, string>> {
   const result = await AlgorandClient.fromClients({ algod })
     .setSignerFromAccount(optOut.account)
     .asset.bulkOptOut(getSenderAddress(optOut.account), optOut.assetIds.map(BigInt), {

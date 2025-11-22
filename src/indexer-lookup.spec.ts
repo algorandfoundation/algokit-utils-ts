@@ -1,4 +1,5 @@
-import { Address } from 'algosdk'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { Address } from '@algorandfoundation/sdk'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as indexer from './indexer-lookup'
@@ -55,7 +56,9 @@ describe('indexer-lookup', () => {
     )
 
     expect(transactions.currentRound).toBeGreaterThan(0n)
-    expect(transactions.transactions.map((t) => t.id).sort()).toEqual([transaction1.txID(), transaction2.txID()].sort())
+    expect(transactions.transactions.map((t) => t.id).sort()).toEqual(
+      [getTransactionId(transaction1), getTransactionId(transaction2)].sort(),
+    )
   }, 20_000)
 
   test('Application create transactions are found by creator with pagination', async () => {

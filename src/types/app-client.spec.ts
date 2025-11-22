@@ -1,14 +1,7 @@
-import algosdk, {
-  ABIUintType,
-  Account,
-  Address,
-  Algodv2,
-  getApplicationAddress,
-  Indexer,
-  OnApplicationComplete,
-  TransactionSigner,
-  TransactionType,
-} from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { ABIUintType, Account, Address, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
@@ -32,7 +25,7 @@ describe('application-client', () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: Address & Account, algod: Algodv2, indexer: Indexer) => {
+  const deploy = async (account: Address & Account, algod: AlgodClient, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
         resolveBy: 'creatorAndName',
@@ -75,7 +68,7 @@ describe('application-client', () => {
 
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -123,10 +116,10 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptIn)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -178,7 +171,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -210,7 +203,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -288,7 +281,7 @@ describe('application-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -325,8 +318,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -372,8 +365,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })
@@ -541,7 +534,7 @@ describe('application-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call.transaction.appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
@@ -738,7 +731,7 @@ describe('application-client', () => {
     })
 
     expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
-    expect(result.transaction.type).toBe(TransactionType.pay)
+    expect(result.transaction.type).toBe(TransactionType.Payment)
     expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress)
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)
@@ -906,7 +899,7 @@ describe('app-client', () => {
     expect(appClient.appName).toBe('overridden')
     expect(clonedAppClient.appId).toBe(appClient.appId)
     expect(clonedAppClient.appName).toBe(appClient.appName)
-    expect(algosdk.encodeAddress((await clonedAppClient.createTransaction.bare.call()).sender.publicKey)).toBe(testAccount2.addr.toString())
+    expect((await clonedAppClient.createTransaction.bare.call()).sender).toBe(testAccount2.addr.toString())
   })
 
   test('clone overriding appName', async () => {

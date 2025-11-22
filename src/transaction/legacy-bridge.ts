@@ -1,4 +1,7 @@
-import algosdk from 'algosdk'
+import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { ABIMethod } from '@algorandfoundation/sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
@@ -24,15 +27,13 @@ import {
   SendTransactionParams,
   SendTransactionResult,
   TransactionNote,
+  TransactionWrapper,
 } from '../types/transaction'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
-import Algodv2 = algosdk.Algodv2
-import Transaction = algosdk.Transaction
-import ABIMethod = algosdk.ABIMethod
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
 export async function legacySendTransactionBridge<T extends CommonTransactionParams, TResult extends SendSingleTransactionResult>(
-  algod: Algodv2,
+  algod: AlgodClient,
   from: SendTransactionFrom,
   sendParams: SendTransactionParams,
   params: T,
@@ -40,14 +41,14 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
-  suggestedParams?: algosdk.SuggestedParams,
-): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
+  suggestedParams?: SuggestedParams,
+): Promise<(SendTransactionResult | TResult) & { transactions: TransactionWrapper[] }> {
   const appManager = new AppManager(algod)
   const newGroup = () =>
     new TransactionComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(from),
-      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()),
+      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.suggestedParams()),
       appManager,
     })
   const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager)
@@ -78,7 +79,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
         transaction.methodCalls.forEach((m, i) => sendParams.atc!['methodCalls'].set(i + baseIndex, m))
       }
     }
-    return { transaction: txns.at(-1)!, transactions: txns }
+    return { transaction: new TransactionWrapper(txns.at(-1)!), transactions: txns.map((t) => new TransactionWrapper(t)) }
   }
 
   return { ...(await send(transactionSender)({ ...sendParams, ...params })) }
@@ -97,7 +98,7 @@ export async function legacySendAppTransactionBridge<
     | AppCallMethodCall,
   TResult extends SendSingleTransactionResult,
 >(
-  algod: Algodv2,
+  algod: AlgodClient,
   from: SendTransactionFrom,
   appArgs: RawAppCallArgs | ABIAppCallArgs | undefined,
   sendParams: SendTransactionParams & { note?: TransactionNote },
@@ -106,8 +107,8 @@ export async function legacySendAppTransactionBridge<
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
-  suggestedParams?: algosdk.SuggestedParams,
-): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
+  suggestedParams?: SuggestedParams,
+): Promise<(SendTransactionResult | TResult) & { transactions: TransactionWrapper[] }> {
   const encoder = new TextEncoder()
 
   const paramsWithAppArgs = {
@@ -115,7 +116,7 @@ export async function legacySendAppTransactionBridge<
     accountReferences: appArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
     appReferences: appArgs?.apps?.map((a) => BigInt(a)),
     assetReferences: appArgs?.assets?.map((a) => BigInt(a)),
-    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
+    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appId), name: r.name }) satisfies BoxReference),
     lease: appArgs?.lease,
     rekeyTo: appArgs?.rekeyTo ? getSenderAddress(appArgs?.rekeyTo) : undefined,
     args: appArgs
@@ -149,7 +150,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
           ? { txn: (await a).transaction, signer }
           : 'transaction' in a
             ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
-            : 'txID' in a
+            : 'type' in a
               ? { txn: a, signer }
               : a
     }),
@@ -173,21 +174,23 @@ function _getAccountAddress(account: string | algosdk.Address) {
 }
 
 /** @deprecated */
-export function _getBoxReference(box: LegacyBoxIdentifier | LegacyBoxReference | algosdk.BoxReference): algosdk.BoxReference {
+export function _getBoxReference(box: LegacyBoxIdentifier | LegacyBoxReference | TransactBoxReference): TransactBoxReference {
   const encoder = new TextEncoder()
 
-  if (typeof box === 'object' && 'appIndex' in box) {
-    return box
+  const toBytes = (boxIdentifier: string | Uint8Array | SendTransactionFrom): Uint8Array => {
+    return typeof boxIdentifier === 'string'
+      ? encoder.encode(boxIdentifier)
+      : 'length' in boxIdentifier
+        ? boxIdentifier
+        : algosdk.decodeAddress(getSenderAddress(boxIdentifier)).publicKey
   }
 
-  const ref = typeof box === 'object' && 'appId' in box ? box : { appId: 0, name: box }
-  return {
-    appIndex: ref.appId,
-    name:
-      typeof ref.name === 'string'
-        ? encoder.encode(ref.name)
-        : 'length' in ref.name
-          ? ref.name
-          : algosdk.decodeAddress(getSenderAddress(ref.name)).publicKey,
-  } as algosdk.BoxReference
+  if (typeof box === 'object' && 'appId' in box) {
+    return {
+      appId: BigInt(box.appId),
+      name: toBytes(box.name),
+    }
+  }
+
+  return { appId: 0n, name: toBytes(box) }
 }

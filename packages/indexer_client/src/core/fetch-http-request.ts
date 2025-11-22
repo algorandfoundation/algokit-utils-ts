@@ -1,0 +1,120 @@
+import { BaseHttpRequest, type ApiRequestOptions } from './base-http-request'
+import { request } from './request'
+
+const RETRY_STATUS_CODES = [408, 413, 429, 500, 502, 503, 504]
+const RETRY_ERROR_CODES = [
+  'ETIMEDOUT',
+  'ECONNRESET',
+  'EADDRINUSE',
+  'ECONNREFUSED',
+  'EPIPE',
+  'ENOTFOUND',
+  'ENETUNREACH',
+  'EAI_AGAIN',
+  'EPROTO',
+]
+
+const DEFAULT_MAX_TRIES = 5
+const DEFAULT_MAX_BACKOFF_MS = 10_000
+
+const toNumber = (value: unknown): number | undefined => {
+  if (typeof value === 'number') {
+    return Number.isNaN(value) ? undefined : value
+  }
+  if (typeof value === 'string') {
+    const parsed = Number(value)
+    return Number.isNaN(parsed) ? undefined : parsed
+  }
+  return undefined
+}
+
+const extractStatus = (error: unknown): number | undefined => {
+  if (!error || typeof error !== 'object') {
+    return undefined
+  }
+  const candidate = error as { status?: unknown; response?: { status?: unknown } }
+  return toNumber(candidate.status ?? candidate.response?.status)
+}
+
+const extractCode = (error: unknown): string | undefined => {
+  if (!error || typeof error !== 'object') {
+    return undefined
+  }
+  const candidate = error as { code?: unknown; cause?: { code?: unknown } }
+  const raw = candidate.code ?? candidate.cause?.code
+  return typeof raw === 'string' ? raw : undefined
+}
+
+const delay = async (ms: number): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+
+const normalizeTries = (maxRetries?: number): number => {
+  const candidate = maxRetries
+  if (typeof candidate !== 'number' || !Number.isFinite(candidate)) {
+    return DEFAULT_MAX_TRIES
+  }
+  const rounded = Math.floor(candidate)
+  return rounded <= 1 ? 1 : rounded
+}
+
+const normalizeBackoff = (maxBackoffMs?: number): number => {
+  if (typeof maxBackoffMs !== 'number' || !Number.isFinite(maxBackoffMs)) {
+    return DEFAULT_MAX_BACKOFF_MS
+  }
+  const normalized = Math.floor(maxBackoffMs)
+  return normalized <= 0 ? 0 : normalized
+}
+
+export class FetchHttpRequest extends BaseHttpRequest {
+  async request<T>(options: ApiRequestOptions): Promise<T> {
+    const maxTries = normalizeTries(this.config.maxRetries)
+    const maxBackoffMs = normalizeBackoff(this.config.maxBackoffMs)
+
+    let attempt = 1
+    let lastError: unknown
+    while (attempt <= maxTries) {
+      try {
+        return await request(this.config, options)
+      } catch (error) {
+        lastError = error
+        if (!this.shouldRetry(error, attempt, maxTries)) {
+          throw error
+        }
+
+        const backoff = attempt === 1 ? 0 : Math.min(1000 * 2 ** (attempt - 1), maxBackoffMs)
+        if (backoff > 0) {
+          await delay(backoff)
+        }
+        attempt += 1
+      }
+    }
+
+    throw lastError ?? new Error(`Request failed after ${maxTries} attempt(s)`)
+  }
+
+  private shouldRetry(error: unknown, attempt: number, maxTries: number): boolean {
+    if (attempt >= maxTries) {
+      return false
+    }
+
+    const status = extractStatus(error)
+    if (status !== undefined) {
+      const retryStatuses = this.config.retryStatusCodes ?? RETRY_STATUS_CODES
+      if (retryStatuses.includes(status)) {
+        return true
+      }
+    }
+
+    const code = extractCode(error)
+    if (code) {
+      const retryCodes = this.config.retryErrorCodes ?? RETRY_ERROR_CODES
+      if (retryCodes.includes(code)) {
+        return true
+      }
+    }
+
+    return false
+  }
+}
