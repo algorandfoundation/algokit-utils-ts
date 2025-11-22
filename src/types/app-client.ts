@@ -1319,11 +1319,11 @@ export class AppClient {
        * @returns The result of sending the update ABI method call
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
-        // TODO: PD - restore any places with processMethodCallReturn
         const compiled = await this.compile(params)
-        const sendTransactionResult = this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
+        const sendTransactionResult = await this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
         return {
           ...sendTransactionResult,
+          return: sendTransactionResult.return?.returnValue,
           ...(compiled as Partial<AppCompilationResult>),
         }
       },
@@ -1333,7 +1333,11 @@ export class AppClient {
        * @returns The result of sending the opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams & SendParams) => {
-        return this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
+        const sendTransactionResult = await this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
+        return {
+          ...sendTransactionResult,
+          return: sendTransactionResult.return?.returnValue,
+        }
       },
       /**
        * Sign and send transactions for a delete ABI call
@@ -1341,7 +1345,11 @@ export class AppClient {
        * @returns The result of sending the delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams & SendParams) => {
-        return this._algorand.send.appDeleteMethodCall(await this.params.delete(params))
+        const sendTransactionResult = await this._algorand.send.appDeleteMethodCall(await this.params.delete(params))
+        return {
+          ...sendTransactionResult,
+          return: sendTransactionResult.return?.returnValue,
+        }
       },
       /**
        * Sign and send transactions for a close out ABI call
@@ -1349,7 +1357,11 @@ export class AppClient {
        * @returns The result of sending the close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams & SendParams) => {
-        return this._algorand.send.appCallMethodCall(await this.params.closeOut(params))
+        const sendTransactionResult = await this._algorand.send.appCallMethodCall(await this.params.closeOut(params))
+        return {
+          ...sendTransactionResult,
+          return: sendTransactionResult.return?.returnValue,
+        }
       },
       /**
        * Sign and send transactions for a call (defaults to no-op)
