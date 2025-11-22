@@ -59,7 +59,6 @@ import {
   OnSchemaBreak,
   OnUpdate,
   RawAppCallArgs,
-  SendAppTransactionResult,
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
@@ -1116,11 +1115,11 @@ export class AppClient {
                 sender,
               })
 
-              if (result.return?.returnValue === undefined) {
+              if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
               // TODO: PD - confirm that we don't need to convert struct returned value to tuple anymore
-              return result.return?.returnValue
+              return result.return
             }
             case 'local':
             case 'global': {
@@ -1391,9 +1390,8 @@ export class AppClient {
               ...result,
               transaction: result.transactions.at(-1)!,
               confirmation: result.confirmations.at(-1)!,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-              return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
-            } satisfies SendAppTransactionResult
+              return: result.returns && result.returns.length > 0 ? result.returns.at(-1)!.returnValue : undefined,
+            }
           } catch (e) {
             const error = e as Error
             // For read-only calls with max opcode budget, fee issues should be rare
@@ -1404,8 +1402,11 @@ export class AppClient {
             throw e
           }
         }
-
-        return this._algorand.send.appCallMethodCall(await this.params.call(params))
+        const result = await this._algorand.send.appCallMethodCall(await this.params.call(params))
+        return {
+          ...result,
+          return: result.return?.returnValue,
+        }
       },
     }
   }

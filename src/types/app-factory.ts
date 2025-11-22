@@ -394,13 +394,14 @@ export class AppFactory {
           'return' in result
             ? result.operationPerformed === 'update'
               ? params.updateParams && 'method' in params.updateParams
-                ? result.return
+                ? result.return?.returnValue
                 : undefined
               : params.createParams && 'method' in params.createParams
-                ? result.return
+                ? result.return?.returnValue
                 : undefined
             : undefined,
-        deleteReturn: 'deleteReturn' in result && params.deleteParams && 'method' in params.deleteParams ? result.return : undefined,
+        deleteReturn:
+          'deleteReturn' in result && params.deleteParams && 'method' in params.deleteParams ? result.deleteReturn?.returnValue : undefined,
       },
     }
   }
