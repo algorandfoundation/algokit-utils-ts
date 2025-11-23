@@ -1333,7 +1333,7 @@ export class AppClient {
        * @returns The result of sending the opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams & SendParams) => {
-        const sendTransactionResult = await this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
+        const sendTransactionResult = await this._algorand.send.appCallMethodCall(await this.params.optIn(params))
         return {
           ...sendTransactionResult,
           return: sendTransactionResult.return?.returnValue,
