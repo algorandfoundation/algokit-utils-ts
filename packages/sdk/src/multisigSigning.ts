@@ -45,7 +45,7 @@ export function createMultisigTransaction(txn: Transaction, { version, threshold
     pks,
   })
   let authAddress: Address | undefined
-  if (msigAddr.equals(txn.sender)) {
+  if (!msigAddr.equals(txn.sender)) {
     authAddress = msigAddr
   }
 

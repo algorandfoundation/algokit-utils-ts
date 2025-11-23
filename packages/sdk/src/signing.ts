@@ -11,7 +11,7 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
 
   // Convert Address to string for comparison
   let authAddress: Address | undefined
-  if (lsigAddress.equals(txn.sender)) {
+  if (!lsigAddress.equals(txn.sender)) {
     authAddress = lsigAddress
   }
 

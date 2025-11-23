@@ -35,7 +35,7 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
       const signedTxn: SignedTransaction = {
         txn: txn,
         signature,
-        authAddress: authAddress.equals(txn.sender) ? authAddress : undefined,
+        authAddress: !authAddress.equals(txn.sender) ? authAddress : undefined,
       }
 
       signed.push(encodeSignedTransaction(signedTxn))
