@@ -65,7 +65,6 @@ import {
   SimulateRequestMeta,
   SimulateTransactionMeta,
   StateProofMeta,
-  SuggestedParamsMeta,
   TealCompileMeta,
   TealDisassembleMeta,
   TealDryrunMeta,
