@@ -66,3 +66,7 @@ __pycache__/
 env/
 venv/
 ENV/
+
+
+# Polytest
+.polytest_algokit-polytest/
