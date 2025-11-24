@@ -64,7 +64,7 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 #### Defined in
 
-[src/types/app.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L102)
+[src/types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
 
 ___
 
@@ -76,7 +76,7 @@ App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L113)
+[src/types/app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L106)
 
 ___
 
@@ -88,7 +88,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L235)
+[src/types/app.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L228)
 
 ___
 
@@ -102,7 +102,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L124)
+[src/types/app.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L117)
 
 ___
 
@@ -114,7 +114,7 @@ Result from calling an app
 
 #### Defined in
 
-[src/types/app.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L232)
+[src/types/app.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L225)
 
 ___
 
@@ -124,11 +124,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.OnApplicationComplete` directly instead.
+Use `OnApplicationComplete` directly instead.
 
 The type of call / [on-completion action](https://dev.algorand.co/concepts/smart-contracts/overview#smart-contract-lifecycle) for a smart contract call.
 
-Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
+Equivalent of `OnApplicationComplete`, but as a more convenient string enum.
 
 * `no_op`: Normal smart contract call, no special on-complete action
 * `opt_in`: Opt-in to smart contract local storage
@@ -139,7 +139,7 @@ Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string e
 
 #### Defined in
 
-[src/types/app.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L180)
+[src/types/app.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L173)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L340)
+[src/types/app.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L333)
 
 ___
 
@@ -180,7 +180,7 @@ Something that identifies a box name - either a:
 
 #### Defined in
 
-[src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
+[src/types/app.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L63)
 
 ___
 
@@ -192,7 +192,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L357)
+[src/types/app.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L350)
 
 ___
 
@@ -204,7 +204,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L346)
+[src/types/app.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L339)
 
 ___
 
@@ -216,7 +216,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L354)
+[src/types/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L347)
 
 ## Variables
 
@@ -228,7 +228,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L36)
+[src/types/app.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L29)
 
 ___
 
@@ -240,7 +240,7 @@ The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/ma
 
 #### Defined in
 
-[src/types/app.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L30)
+[src/types/app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L23)
 
 ___
 
@@ -252,7 +252,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L33)
+[src/types/app.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L26)
 
 ___
 
@@ -264,7 +264,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L27)
+[src/types/app.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L20)
 
 ___
 
@@ -276,4 +276,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L24)
+[src/types/app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L17)

@@ -8,7 +8,7 @@ The result of preparing and/or sending multiple transactions using an `AtomicTra
 
 ## Hierarchy
 
-- [`SendTransactionResults`](types_transaction.SendTransactionResults.md)
+- `Omit`\<[`SendTransactionResults`](types_transaction.SendTransactionResults.md), ``"confirmations"``\>
 
   ↳ **`SendAtomicTransactionComposerResults`**
 
@@ -26,18 +26,14 @@ The result of preparing and/or sending multiple transactions using an `AtomicTra
 
 ### confirmations
 
-• **confirmations**: `PendingTransactionResponse`[]
+• **confirmations**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction
 
-#### Overrides
-
-[SendTransactionResults](types_transaction.SendTransactionResults.md).[confirmations](types_transaction.SendTransactionResults.md#confirmations)
-
 #### Defined in
 
-[src/types/transaction.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L81)
+[src/types/transaction.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L91)
 
 ___
 
@@ -49,7 +45,7 @@ base64 encoded representation of the group ID of the atomic group
 
 #### Defined in
 
-[src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)
+[src/types/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L83)
 
 ___
 
@@ -61,23 +57,23 @@ If ABI method(s) were called the processed return values
 
 #### Defined in
 
-[src/types/transaction.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L77)
+[src/types/transaction.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L87)
 
 ___
 
 ### transactions
 
-• **transactions**: `Transaction`[]
+• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
 
 The transactions that have been prepared and/or sent
 
 #### Inherited from
 
-[SendTransactionResults](types_transaction.SendTransactionResults.md).[transactions](types_transaction.SendTransactionResults.md#transactions)
+Omit.transactions
 
 #### Defined in
 
-[src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
+[src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)
 
 ___
 
@@ -89,4 +85,4 @@ The transaction IDs that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L75)
+[src/types/transaction.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L85)

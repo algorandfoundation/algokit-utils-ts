@@ -102,7 +102,7 @@ test('My test', async () => {
 
 ```typescript
 const fixture = algorandFixture({
- algod: new Algodv2('localhost', 12345, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+ algod: new AlgodClient({ baseUrl: 'http://localhost:12345', headers: { 'X-Algo-API-Token': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' } }),
  // ...
 })
 

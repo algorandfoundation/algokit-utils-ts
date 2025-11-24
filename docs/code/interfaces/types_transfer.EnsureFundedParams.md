@@ -44,7 +44,7 @@ The account to fund
 
 #### Defined in
 
-[src/types/transfer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L40)
+[src/types/transfer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L39)
 
 ___
 
@@ -60,7 +60,7 @@ An optional `AtomicTransactionComposer` to add the transaction to, if specified 
 
 #### Defined in
 
-[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
+[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
 
 ___
 
@@ -76,7 +76,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 
@@ -88,7 +88,7 @@ The account to use as a funding source, will default to using the dispenser acco
 
 #### Defined in
 
-[src/types/transfer.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L42)
+[src/types/transfer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L41)
 
 ___
 
@@ -100,7 +100,7 @@ An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/
 
 #### Defined in
 
-[src/types/transfer.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L52)
+[src/types/transfer.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L51)
 
 ___
 
@@ -116,7 +116,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L52)
 
 ___
 
@@ -132,7 +132,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L54)
 
 ___
 
@@ -144,7 +144,7 @@ When issuing a funding amount, the minimum amount to transfer (avoids many small
 
 #### Defined in
 
-[src/types/transfer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L46)
+[src/types/transfer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L45)
 
 ___
 
@@ -156,7 +156,7 @@ The minimum balance of Algo that the account should have available to spend (i.e
 
 #### Defined in
 
-[src/types/transfer.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L44)
+[src/types/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L43)
 
 ___
 
@@ -168,7 +168,7 @@ The (optional) transaction note, default: "Funding account to meet minimum requi
 
 #### Defined in
 
-[src/types/transfer.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L50)
+[src/types/transfer.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L49)
 
 ___
 
@@ -184,7 +184,7 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 #### Defined in
 
-[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+[src/types/transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L56)
 
 ___
 
@@ -201,7 +201,7 @@ and instead just return the raw transaction, e.g. so you can add it to a group o
 
 #### Defined in
 
-[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
 
 ___
 
@@ -217,7 +217,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
 
 ___
 
@@ -233,16 +233,29 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
+[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
 
 ___
 
 ### transactionParams
 
-• `Optional` **transactionParams**: `SuggestedParams`
+• `Optional` **transactionParams**: `Object`
 
 Optional transaction parameters
 
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `firstValid` | `bigint` | - |
+| `flatFee` | `boolean` | - |
+| `genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `lastValid` | `bigint` | - |
+| `minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
+
 #### Defined in
 
-[src/types/transfer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L48)
+[src/types/transfer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L47)
