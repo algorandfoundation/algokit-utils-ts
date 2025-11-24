@@ -38,7 +38,7 @@ Parameters for `ensureFunded` call.
 
 ### accountToFund
 
-• **accountToFund**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **accountToFund**: `string` \| `AddressWithSigner`
 
 The account to fund
 
@@ -82,7 +82,7 @@ ___
 
 ### fundingSource
 
-• `Optional` **fundingSource**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) \| [`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
+• `Optional` **fundingSource**: `AddressWithSigner` \| [`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
 
 The account to use as a funding source, will default to using the dispenser account returned by `algokit.getDispenserAccount`
 

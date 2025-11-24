@@ -29,7 +29,7 @@ This function has memoization, so will return the same transaction signer for a 
 
 | Name | Type |
 | :------ | :------ |
-| `val` | `default` \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`SigningAccount`](../classes/types_account.SigningAccount.md) \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) |
+| `val` | `AddressWithSigner` \| `default` \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`SigningAccount`](../classes/types_account.SigningAccount.md) |
 
 #### Returns
 
@@ -45,4 +45,4 @@ const signer = getAccountTransactionSigner(account)
 
 #### Defined in
 
-[src/types/account-manager.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L34)
+[src/types/account-manager.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L35)

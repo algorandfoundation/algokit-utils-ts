@@ -12,13 +12,12 @@
 ### Interfaces
 
 - [AccountConfig](../interfaces/types_account.AccountConfig.md)
-- [Addressable](../interfaces/types_account.Addressable.md)
-- [TransactionSignerAccount](../interfaces/types_account.TransactionSignerAccount.md)
 
 ### Type Aliases
 
 - [AccountAssetInformation](types_account.md#accountassetinformation)
 - [AccountInformation](types_account.md#accountinformation)
+- [TransactionSignerAccount](types_account.md#transactionsigneraccount)
 
 ### Variables
 
@@ -43,7 +42,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L283)
+[src/types/account.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L277)
 
 ___
 
@@ -86,7 +85,21 @@ Account information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L134)
+[src/types/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L128)
+
+___
+
+### TransactionSignerAccount
+
+Ƭ **TransactionSignerAccount**: `AddressWithSigner`
+
+**`Deprecated`**
+
+Use AddressWithSigner
+
+#### Defined in
+
+[src/types/account.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L125)
 
 ## Variables
 

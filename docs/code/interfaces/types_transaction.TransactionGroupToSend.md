@@ -31,7 +31,7 @@ ___
 
 ### signer
 
-• `Optional` **signer**: [`SendingAddress`](../modules/types_composer.md#sendingaddress)
+• `Optional` **signer**: `SendingAddress`
 
 Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise
 

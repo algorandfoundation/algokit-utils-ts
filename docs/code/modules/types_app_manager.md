@@ -23,7 +23,7 @@
 
 ### BoxIdentifier
 
-Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)
+Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`TransactionSignerAccount`](types_account.md#transactionsigneraccount)
 
 Something that identifies an app box name - either a:
  * `Uint8Array` (the actual binary of the box name)

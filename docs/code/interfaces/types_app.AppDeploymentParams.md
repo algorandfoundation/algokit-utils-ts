@@ -148,7 +148,7 @@ ___
 
 ### from
 
-• **from**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **from**: `AddressWithSigner`
 
 The account (with private key loaded) that will send the transaction
 

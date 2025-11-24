@@ -17,7 +17,7 @@ Defines an unsigned transaction that will appear in a group of transactions alon
 
 ### signer
 
-• **signer**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) \| `TransactionSigner`
+• **signer**: `AddressWithSigner` \| `TransactionSigner`
 
 The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account
 

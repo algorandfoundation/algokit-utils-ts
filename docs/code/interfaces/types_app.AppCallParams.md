@@ -103,7 +103,7 @@ ___
 
 ### from
 
-• **from**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **from**: `AddressWithSigner`
 
 The account to make the call from
 

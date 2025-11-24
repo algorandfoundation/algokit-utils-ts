@@ -81,7 +81,7 @@ ___
 
 ### from
 
-• **from**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **from**: `AddressWithSigner`
 
 The account that will send the Algo
 
@@ -214,7 +214,7 @@ ___
 
 ### to
 
-• **to**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **to**: `string` \| `AddressWithSigner`
 
 The account / account address that will receive the Algo
 

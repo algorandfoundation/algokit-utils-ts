@@ -79,7 +79,7 @@ ___
 
 ### clawbackFrom
 
-• `Optional` **clawbackFrom**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• `Optional` **clawbackFrom**: `string` \| `AddressWithSigner`
 
 An address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata.
 
@@ -107,7 +107,7 @@ ___
 
 ### from
 
-• **from**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **from**: `AddressWithSigner`
 
 The account that will send the asset
 
@@ -240,7 +240,7 @@ ___
 
 ### to
 
-• **to**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **to**: `string` \| `AddressWithSigner`
 
 The account / account address that will receive the asset
 

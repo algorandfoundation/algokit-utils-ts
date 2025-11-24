@@ -71,13 +71,13 @@ ___
 
 ### getLocalNetDispenserAccount
 
-▸ **getLocalNetDispenserAccount**(): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **getLocalNetDispenserAccount**(): `Promise`\<`AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
 
 #### Returns
 
-`Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<`AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The default LocalNet dispenser account
 
@@ -95,7 +95,7 @@ ___
 
 ### getOrCreateWalletAccount
 
-▸ **getOrCreateWalletAccount**(`name`, `fundWith?`): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **getOrCreateWalletAccount**(`name`, `fundWith?`): `Promise`\<`AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
 
@@ -114,7 +114,7 @@ If this is used via `mnemonicAccountFromEnvironment`, then you can even use the 
 
 #### Returns
 
-`Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<`AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 An Algorand account with private key loaded - either one that already existed in the given KMD wallet, or a new one that is funded for you
 
@@ -136,7 +136,7 @@ ___
 
 ### getWalletAccount
 
-▸ **getWalletAccount**(`walletName`, `predicate?`, `sender?`): `Promise`\<`undefined` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **getWalletAccount**(`walletName`, `predicate?`, `sender?`): `Promise`\<`undefined` \| `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Returns an Algorand signing account with private key loaded from the given KMD wallet (identified by name).
 
@@ -150,7 +150,7 @@ Returns an Algorand signing account with private key loaded from the given KMD w
 
 #### Returns
 
-`Promise`\<`undefined` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<`undefined` \| `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The signing account (with private key loaded) or undefined if no matching wallet or account was found
 
