@@ -87,7 +87,7 @@ export class Address {
 
   /**
    * Decode an address from a string.
-   * @param address - The address to decode. Must be 58 bytes long.
+   * @param address - The address to decode. Must be 58 characters long.
    * @returns An Address object corresponding to the input string.
    */
   static fromString(address: string): Address {
@@ -121,15 +121,6 @@ export class Address {
   static [Symbol.hasInstance](obj: unknown) {
     return Boolean(obj && typeof obj === 'object' && ADDR_SYMBOL in obj && obj[ADDR_SYMBOL as keyof typeof obj])
   }
-}
-
-/**
- * decodeAddress takes an Algorand address in string form and decodes it into a Uint8Array.
- * @param address - an Algorand address with checksum.
- * @returns the decoded form of the address's public key and checksum
- */
-export function decodeAddress(address: string): Address {
-  return Address.fromString(address)
 }
 
 /**
