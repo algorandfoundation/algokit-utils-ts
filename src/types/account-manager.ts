@@ -511,7 +511,7 @@ export class AccountManager {
         sender: getAddress(account),
         receiver: getAddress(account),
         amount: AlgoAmount.MicroAlgo(0),
-        rekeyTo: getAddress(typeof rekeyTo === 'object' && 'addr' in rekeyTo ? rekeyTo.addr : rekeyTo),
+        rekeyTo: getAddress(rekeyTo),
       })
       .send(options)
 
