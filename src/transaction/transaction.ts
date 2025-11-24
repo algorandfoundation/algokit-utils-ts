@@ -243,8 +243,8 @@ export const sendTransaction = async function (
   composer.addTransaction(transaction, getSenderTransactionSigner(from))
 
   const sendResult = await composer.send({
-    // if skipWaiting to true, do not wait
-    // if skipWaiting to set, wait for maxRoundsToWaitForConfirmation or 5 rounds
+    // if skipWaiting is true, do not wait
+    // if skipWaiting is false, wait for maxRoundsToWaitForConfirmation or 5 rounds
     maxRoundsToWaitForConfirmation: skipWaiting ? 0 : (maxRoundsToWaitForConfirmation ?? 5),
     suppressLog: suppressLog,
   })

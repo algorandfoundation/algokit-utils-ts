@@ -224,7 +224,7 @@ export type TransactionComposerParams = {
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: Transaction[]
+  transactions: TransactionWrapper[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, algosdk.ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
@@ -1379,7 +1379,13 @@ export class TransactionComposer {
       } catch (err: any) {
         throw new BuildComposerTransactionsError(err.message ?? 'Failed to populate transaction and group resources')
       }
-      this.transactionsWithSigners = this.gatherSigners(builtTransactions)
+
+      this.transactionsWithSigners = builtTransactions.transactions.map((txn, index) => {
+        return {
+          txn,
+          signer: builtTransactions.signers.get(index) ?? this.getSigner(txn.sender),
+        }
+      })
     }
 
     return {
@@ -1492,32 +1498,22 @@ export class TransactionComposer {
   }
 
   /**
-   * @deprecated Use `composer.build()` instead
-   * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
+   * Builds all transactions in the composer and returns them along with method calls and signers.
    *
-   * @returns The array of built transactions and any corresponding method calls
+   * Note: This method only builds the transactions as-is without resource population or automatic grouping.
+   * Use this when you need the raw transactions.
+   * @returns An object containing the array of built transactions, method calls, and signers
    * @example
    * ```typescript
    * const { transactions, methodCalls, signers } = await composer.buildTransactions()
    * ```
    */
   public async buildTransactions(): Promise<BuiltTransactions> {
-    const buildResult = await this.build()
-
-    const transactions = buildResult.transactions.map((txnWithSigner) => txnWithSigner.txn)
-    transactions.forEach((txn) => {
-      delete txn.group
-    })
-
-    const signers = new Map<number, TransactionSigner>()
-    buildResult.transactions.forEach((txnWithSigner, index) => {
-      signers.set(index, txnWithSigner.signer)
-    })
-
+    const suggestedParams = await this.getSuggestedParams()
+    const buildResult = await this._buildTransactions(suggestedParams)
     return {
-      transactions,
-      methodCalls: buildResult.methodCalls,
-      signers,
+      ...buildResult,
+      transactions: buildResult.transactions.map((t) => new TransactionWrapper(t)),
     }
   }
 
@@ -1644,15 +1640,6 @@ export class TransactionComposer {
     } else {
       return transactions
     }
-  }
-
-  private gatherSigners(builtTransactions: BuiltTransactions): TransactionWithSigner[] {
-    return builtTransactions.transactions.map((txn, index) => {
-      return {
-        txn,
-        signer: builtTransactions.signers.get(index) ?? this.getSigner(txn.sender),
-      }
-    })
   }
 
   private async analyzeGroupRequirements(

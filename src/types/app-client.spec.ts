@@ -899,9 +899,7 @@ describe('app-client', () => {
     expect(appClient.appName).toBe('overridden')
     expect(clonedAppClient.appId).toBe(appClient.appId)
     expect(clonedAppClient.appName).toBe(appClient.appName)
-    expect((await clonedAppClient.createTransaction.call({ method: 'default_value', args: ['test value'] })).transactions[0].sender).toBe(
-      testAccount2.addr.toString(),
-    )
+    expect((await clonedAppClient.createTransaction.bare.call()).sender).toBe(testAccount2.addr.toString())
   })
 
   test('clone overriding appName', async () => {

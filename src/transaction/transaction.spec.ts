@@ -1138,7 +1138,6 @@ describe('Resource population: meta', () => {
           sender: testAccount,
           receiver: externalClient.appAddress,
           amount: (1).algo(),
-          signer: testAccount,
         }),
       ],
       staticFee: (4_000).microAlgo(),
