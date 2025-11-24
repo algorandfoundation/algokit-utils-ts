@@ -113,7 +113,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 #### Defined in
 
-[src/types/app-client.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L214)
+[src/types/app-client.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L217)
 
 ___
 
@@ -135,7 +135,7 @@ ___
 
 ### rekeyTo
 
-• `Optional` **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **rekeyTo**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 

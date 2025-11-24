@@ -24,7 +24,7 @@ Parameters for `assetBulkOptIn` / `assetBulkOptOut` call.
 
 ### account
 
-• **account**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **account**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The account to opt in/out for
 

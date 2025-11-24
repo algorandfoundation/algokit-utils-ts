@@ -56,13 +56,13 @@ An optional `AtomicTransactionComposer` to add the transaction to, if specified 
 
 #### Defined in
 
-[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 
 ### clawbackAccount
 
-• `Optional` **clawbackAccount**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **clawbackAccount**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The optional account that can clawback holdings of this asset. If empty, clawback is not permitted.
 If not set at asset creation or subsequently set to empty by the manager the field is permanently empty.
@@ -75,7 +75,7 @@ ___
 
 ### creator
 
-• **creator**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **creator**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The account to create the asset.
 
@@ -116,13 +116,13 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
 ___
 
 ### freezeAccount
 
-• `Optional` **freezeAccount**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **freezeAccount**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The optional account that can be used to freeze holdings of this asset. If empty, freezing is not permitted.
 If not set at asset creation or subsequently set to empty by the manager the field is permanently empty.
@@ -159,7 +159,7 @@ ___
 
 ### manager
 
-• `Optional` **manager**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **manager**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The optional account that can manage the configuration of the asset and destroy it.
 If not set at asset creation or subsequently set to empty by the manager the asset becomes immutable.
@@ -182,7 +182,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L52)
+[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
 
 ___
 
@@ -198,7 +198,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L54)
+[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
 
 ___
 
@@ -251,13 +251,13 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 #### Defined in
 
-[src/types/transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L56)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
 ### reserveAccount
 
-• `Optional` **reserveAccount**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **reserveAccount**: `string` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The optional account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself and is informational.
 Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md) rely on this field to hold meaningful data.
@@ -283,7 +283,7 @@ and instead just return the raw transaction, e.g. so you can add it to a group o
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -299,7 +299,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
 
 ___
 
@@ -315,7 +315,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
 ___
 

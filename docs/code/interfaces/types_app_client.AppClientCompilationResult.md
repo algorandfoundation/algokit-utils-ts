@@ -33,7 +33,7 @@ The compiled bytecode of the approval program, ready to deploy to algod
 
 #### Defined in
 
-[src/types/app-client.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L295)
+[src/types/app-client.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L298)
 
 ___
 
@@ -45,7 +45,7 @@ The compiled bytecode of the clear state program, ready to deploy to algod
 
 #### Defined in
 
-[src/types/app-client.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L297)
+[src/types/app-client.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L300)
 
 ___
 

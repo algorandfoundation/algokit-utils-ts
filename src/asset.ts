@@ -1,8 +1,7 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
-import { AlgorandClient } from './types/algorand-client'
-import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
+import { AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
 import {
   AssetCreateParams,
   getOptionalAddress,

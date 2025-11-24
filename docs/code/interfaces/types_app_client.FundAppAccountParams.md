@@ -23,7 +23,7 @@ Parameters for funding an app account
 
 #### Defined in
 
-[src/types/app-client.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L264)
+[src/types/app-client.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L267)
 
 ___
 
@@ -35,7 +35,7 @@ The transaction note for the smart contract call
 
 #### Defined in
 
-[src/types/app-client.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L268)
+[src/types/app-client.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L271)
 
 ___
 
@@ -47,16 +47,16 @@ Parameters to control transaction sending
 
 #### Defined in
 
-[src/types/app-client.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L270)
+[src/types/app-client.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L273)
 
 ___
 
 ### sender
 
-• `Optional` **sender**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **sender**: [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
 
 The optional sender to send the transaction from, will use the application client's default sender by default if specified
 
 #### Defined in
 
-[src/types/app-client.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L266)
+[src/types/app-client.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L269)

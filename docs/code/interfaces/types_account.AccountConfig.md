@@ -28,7 +28,7 @@ Mnemonic for an account
 
 #### Defined in
 
-[src/types/account.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L296)
+[src/types/account.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L299)
 
 ___
 
@@ -40,7 +40,7 @@ Account name used to retrieve config
 
 #### Defined in
 
-[src/types/account.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L300)
+[src/types/account.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L303)
 
 ___
 
@@ -52,7 +52,7 @@ Address of a rekeyed account
 
 #### Defined in
 
-[src/types/account.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L298)
+[src/types/account.ts:301](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L301)
 
 ___
 
@@ -66,4 +66,4 @@ Renamed to senderAddress in 2.3.1
 
 #### Defined in
 
-[src/types/account.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L303)
+[src/types/account.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L306)

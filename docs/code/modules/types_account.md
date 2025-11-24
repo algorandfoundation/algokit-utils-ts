@@ -12,6 +12,7 @@
 ### Interfaces
 
 - [AccountConfig](../interfaces/types_account.AccountConfig.md)
+- [Addressable](../interfaces/types_account.Addressable.md)
 - [TransactionSignerAccount](../interfaces/types_account.TransactionSignerAccount.md)
 
 ### Type Aliases
@@ -42,7 +43,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L280)
+[src/types/account.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L283)
 
 ___
 
@@ -85,7 +86,7 @@ Account information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L131)
+[src/types/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L134)
 
 ## Variables
 

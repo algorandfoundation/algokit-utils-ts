@@ -25,19 +25,19 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L133)
+[src/types/transaction.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L130)
 
 ___
 
 ### signer
 
-• `Optional` **signer**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **signer**: [`SendingAddress`](../modules/types_composer.md#sendingaddress)
 
 Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise
 
 #### Defined in
 
-[src/types/transaction.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L140)
+[src/types/transaction.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L137)
 
 ___
 
@@ -51,4 +51,4 @@ The list of transactions to send, which can either be a raw transaction (in whic
 
 #### Defined in
 
-[src/types/transaction.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L138)
+[src/types/transaction.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L135)

@@ -32,7 +32,7 @@ the index of the confirmation will match the index of the underlying transaction
 
 #### Defined in
 
-[src/types/transaction.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L77)
+[src/types/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L80)
 
 ___
 
@@ -44,4 +44,4 @@ The transactions that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)
+[src/types/transaction.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L76)

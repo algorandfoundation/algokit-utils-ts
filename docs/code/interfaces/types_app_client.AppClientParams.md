@@ -29,7 +29,7 @@ An `AlgorandClient` instance
 
 #### Defined in
 
-[src/types/app-client.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L341)
+[src/types/app-client.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L344)
 
 ___
 
@@ -41,7 +41,7 @@ The ID of the app instance this client should make calls against.
 
 #### Defined in
 
-[src/types/app-client.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L331)
+[src/types/app-client.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L334)
 
 ___
 
@@ -54,7 +54,7 @@ Defaults to the ARC-32/ARC-56 app spec name
 
 #### Defined in
 
-[src/types/app-client.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L347)
+[src/types/app-client.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L350)
 
 ___
 
@@ -69,7 +69,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 #### Defined in
 
-[src/types/app-client.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L338)
+[src/types/app-client.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L341)
 
 ___
 
@@ -81,7 +81,7 @@ Optional source map for the approval program
 
 #### Defined in
 
-[src/types/app-client.ts:353](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L353)
+[src/types/app-client.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L356)
 
 ___
 
@@ -93,19 +93,19 @@ Optional source map for the clear state program
 
 #### Defined in
 
-[src/types/app-client.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L355)
+[src/types/app-client.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L358)
 
 ___
 
 ### defaultSender
 
-• `Optional` **defaultSender**: `string` \| `Address`
+• `Optional` **defaultSender**: [`ReadableAddress`](../modules/types_composer.md#readableaddress)
 
 Optional address to use for the account to use as the default sender for calls.
 
 #### Defined in
 
-[src/types/app-client.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L349)
+[src/types/app-client.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L352)
 
 ___
 
@@ -117,4 +117,4 @@ Optional signer to use as the default signer for default sender calls (if not sp
 
 #### Defined in
 
-[src/types/app-client.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L351)
+[src/types/app-client.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L354)
