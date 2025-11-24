@@ -123,6 +123,29 @@ export class Address {
   }
 }
 
+export interface Addressable {
+  addr: Readonly<Address>
+}
+
+export type ReadableAddress = Addressable | Address | string
+
+export function getAddress(addr: ReadableAddress): Address {
+  if (typeof addr == 'string') {
+    return Address.fromString(addr)
+  } else if ('addr' in addr) {
+    return addr.addr
+  } else {
+    return addr
+  }
+}
+
+export function getOptionalAddress(addr: ReadableAddress | undefined): Address | undefined {
+  if (addr === undefined) {
+    return undefined
+  }
+  return getAddress(addr)
+}
+
 /**
  * isValidAddress checks if a string is a valid Algorand address.
  * @param address - an Algorand address with checksum.

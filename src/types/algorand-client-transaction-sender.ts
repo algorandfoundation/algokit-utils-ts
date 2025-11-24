@@ -17,11 +17,10 @@ import {
   AppUpdateParams,
   AssetCreateParams,
   AssetOptOutParams,
-  getAddress,
-  ReadableAddress,
   TransactionComposer,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>

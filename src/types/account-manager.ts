@@ -7,11 +7,12 @@ import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import { CommonTransactionParams, getAddress, ReadableAddress, TransactionComposer } from './composer'
+import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import { TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {

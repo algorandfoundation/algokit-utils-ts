@@ -13,7 +13,7 @@ import {
   type CompiledTeal,
   type TealTemplateParams,
 } from './app'
-import { getAddress, ReadableAddress } from './composer'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Information about an app. */
 export interface AppInformation {

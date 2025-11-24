@@ -23,12 +23,11 @@ import {
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
-  getAddress,
-  ReadableAddress,
   TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>

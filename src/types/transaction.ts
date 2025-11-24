@@ -6,6 +6,7 @@ import {
   AssetTransferTransactionFields,
   KeyRegistrationTransactionFields,
   PaymentTransactionFields,
+  SendingAddress,
   SignedTransaction,
   Transaction,
   TransactionSigner,
@@ -19,7 +20,6 @@ import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
 import { Address } from '@algorandfoundation/algokit-common'
-import { SendingAddress } from './composer'
 import { TransactionSignerAccount } from './account'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote

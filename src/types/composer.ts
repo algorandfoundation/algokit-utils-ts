@@ -1,5 +1,12 @@
 import { AlgodClient, SimulateRequest, SimulateTransaction, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { AccessReference, OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
+import {
+  AccessReference,
+  OnApplicationComplete,
+  SendingAddress,
+  Transaction,
+  assignFee,
+  getTransactionId,
+} from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -11,7 +18,7 @@ import {
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
-import { Addressable, TransactionSignerAccount } from './account'
+import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
@@ -24,27 +31,7 @@ import {
   TransactionWrapper,
   wrapPendingTransactionResponse,
 } from './transaction'
-import { Address } from '@algorandfoundation/algokit-common'
-
-export type ReadableAddress = Addressable | Address | string
-export type SendingAddress = ReadableAddress | TransactionSignerAccount
-
-export function getAddress(addr: ReadableAddress): Address {
-  if (typeof addr == 'string') {
-    return Address.fromString(addr)
-  } else if ('addr' in addr) {
-    return addr.addr
-  } else {
-    return addr
-  }
-}
-
-export function getOptionalAddress(addr: ReadableAddress | undefined): Address | undefined {
-  if (addr === undefined) {
-    return undefined
-  }
-  return getAddress(addr)
-}
+import { getAddress, getOptionalAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
@@ -70,6 +57,7 @@ export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & Ra
 export type CommonTransactionParams = {
   /** The address of the account sending the transaction. */
   sender: SendingAddress
+
   /**
    * @deprecated Use `TransactionSignerAccount` in the `sender` field instead
    */

@@ -2,13 +2,9 @@ import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
-import {
-  AssetCreateParams,
-  getOptionalAddress,
-  AssetOptInParams as NewAssetOptInParams,
-  AssetOptOutParams as NewAssetOptOutParams,
-} from './types/composer'
+import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
 import { SendTransactionResult } from './types/transaction'
+import { getOptionalAddress } from '@algorandfoundation/algokit-common'
 
 /**
  * @deprecated use `algorand.send.assetCreate()` / `algorand.createTransaction.assetCreate()` instead

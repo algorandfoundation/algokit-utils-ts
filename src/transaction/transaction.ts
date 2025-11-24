@@ -9,7 +9,7 @@ import {
   SimulationTransactionExecTraceMeta,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
-import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
+import type { AppCallTransactionFields, SendingAddress } from '@algorandfoundation/algokit-transact'
 import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, ABIReturnType, Address, AtomicTransactionComposer, TransactionSigner, stringifyJSON } from '@algorandfoundation/sdk'
@@ -32,7 +32,7 @@ import {
 } from '../types/transaction'
 import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
-import { getAddress, SendingAddress } from '../types/composer'
+import { getAddress } from '@algorandfoundation/algokit-common'
 
 // Type aliases for compatibility
 type ApplicationTransactionFields = AppCallTransactionFields

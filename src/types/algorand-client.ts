@@ -10,8 +10,9 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { ErrorTransformer, ReadableAddress, TransactionComposer } from './composer'
+import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
+import { ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /**
  * A client that brokers easy access to Algorand functionality.
