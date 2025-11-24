@@ -127,13 +127,17 @@ export async function createTestMultisig(
   const addresses = await generateMultipleKeys(client, walletHandleToken, keyCount)
 
   const publicKeys = addresses.map((addr) => addressToPublicKey(addr))
+  // Convert to number[] instead of bigint[] - while types say bigint[],
+  // the serializer can't handle BigInt and expects numbers (bytes are 0-255)
+  const publicKeysAsNumbers = publicKeys.map((pk) => Array.from(pk).map((byte) => Number(byte)))
 
   // Import multisig
+  // Types say bigint but runtime expects number - cast to bypass type errors
   const result = await client.importMultisig({
     walletHandleToken,
-    multisigVersion: MULTISIG_VERSION,
-    threshold,
-    pks: publicKeys,
+    multisigVersion: MULTISIG_VERSION as unknown as bigint,
+    threshold: threshold as unknown as bigint,
+    pks: publicKeysAsNumbers as unknown as bigint[][],
   })
 
   return {
