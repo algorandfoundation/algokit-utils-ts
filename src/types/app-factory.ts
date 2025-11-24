@@ -1,4 +1,4 @@
-import { Arc56Contract, argTypeIsAbiType, decodeABIValue, decodeAVMValue, findABIMethod, isAVMType } from '@algorandfoundation/algokit-abi'
+import { Arc56Contract, argTypeIsAbiType, decodeAVMOrABIValue, findABIMethod } from '@algorandfoundation/algokit-abi'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionSignerAccount } from './account'
@@ -661,7 +661,7 @@ export class AppFactory {
           case 'literal': {
             const bytes = Buffer.from(defaultValue.data, 'base64')
             const type = defaultValue.type ?? arg.type
-            return isAVMType(type) ? decodeAVMValue(type, bytes) : decodeABIValue(type, bytes)
+            return decodeAVMOrABIValue(type, bytes)
           }
           default:
             throw new Error(`Can't provide default value for ${defaultValue.source} for a contract creation call`)

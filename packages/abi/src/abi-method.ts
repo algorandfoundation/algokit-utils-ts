@@ -309,7 +309,6 @@ export function encodeAVMValue(avmType: AVMType, value: ABIValue): Uint8Array {
   }
 }
 
-// TODO: PD - refactor external usage of this to decodeAVMOrABIValue
 export function isAVMType(type: unknown): type is AVMType {
   return typeof type === 'string' && (type === 'AVMString' || type === 'AVMBytes' || type === 'AVMUint64')
 }

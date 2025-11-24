@@ -517,7 +517,14 @@ function decodeDynamicArray(type: ABIDynamicArrayType, bytes: Uint8Array): ABIVa
   const view = new DataView(bytes.buffer, 0, LENGTH_ENCODE_BYTE_SIZE)
   const byteLength = view.getUint16(0)
   const convertedTuple = dynamicArrayToABITupleType(type, byteLength)
-  return decodeTuple(convertedTuple, bytes.slice(LENGTH_ENCODE_BYTE_SIZE, bytes.length))
+  const decoded = decodeTuple(convertedTuple, bytes.slice(LENGTH_ENCODE_BYTE_SIZE, bytes.length))
+
+  // Convert byte arrays to Uint8Array
+  if (type.childType.name === ABITypeName.Byte && Array.isArray(decoded)) {
+    return new Uint8Array(decoded as number[])
+  }
+
+  return decoded
 }
 
 function dynamicArrayToABITupleType(type: ABIDynamicArrayType, length: number) {
@@ -555,7 +562,14 @@ function encodeStaticArray(type: ABIStaticArrayType, value: ABIValue): Uint8Arra
 
 function decodeStaticArray(type: ABIStaticArrayType, bytes: Uint8Array): ABIValue {
   const convertedTuple = staticArrayToABITupleType(type)
-  return decodeTuple(convertedTuple, bytes)
+  const decoded = decodeTuple(convertedTuple, bytes)
+
+  // Convert byte arrays to Uint8Array
+  if (type.childType.name === ABITypeName.Byte && Array.isArray(decoded)) {
+    return new Uint8Array(decoded as number[])
+  }
+
+  return decoded
 }
 
 function staticArrayToString(type: ABIStaticArrayType): string {
