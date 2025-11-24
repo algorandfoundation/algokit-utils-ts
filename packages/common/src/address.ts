@@ -1,6 +1,7 @@
 import base32 from 'hi-base32'
 import sha512 from 'js-sha512'
 import { CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH } from './constants'
+import { arrayEqual, concatArrays } from './array'
 
 export const ALGORAND_ADDRESS_BYTE_LENGTH = 36
 export const ALGORAND_CHECKSUM_BYTE_LENGTH = 4
@@ -20,21 +21,6 @@ function genericHash(arr: sha512.Message) {
 
 function bytesToHex(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString('hex')
-}
-
-function arrayEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.length !== b.length) return false
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false
-  }
-  return true
-}
-
-function concatArrays(a: Uint8Array, b: Uint8Array): Uint8Array {
-  const result = new Uint8Array(a.length + b.length)
-  result.set(a)
-  result.set(b, a.length)
-  return result
 }
 
 export function encodeUint64(num: number | bigint) {
