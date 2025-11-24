@@ -32,7 +32,7 @@ function fieldTypeToZodSchema(fieldType: FieldType, cache: SchemaCache): z.ZodTy
     return z.array(itemSchema)
   }
 
-  if (fieldType.kind === 'map' || fieldType.kind === 'record') {
+  if (fieldType.kind === 'record') {
     const valueSchema = fieldTypeToZodSchema(fieldType.value, cache)
     return z.record(z.string(), valueSchema)
   }
@@ -73,8 +73,11 @@ function modelMetadataToZodSchemaInternal(meta: ModelMetadata, cache: SchemaCach
     return arraySchema
   }
 
+  // Handle passthrough and other non-object/array types
   if (meta.kind !== 'object') {
-    throw new Error(`Only object and array types supported, got: ${meta.kind}`)
+    const unknownSchema = z.unknown()
+    cache.set(modelName, unknownSchema)
+    return unknownSchema
   }
 
   if (!meta.fields) {
