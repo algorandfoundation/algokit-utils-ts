@@ -64,7 +64,14 @@ class AddressCodec extends Codec<Address, Uint8Array> {
     return new Uint8Array(PUBLIC_KEY_BYTE_LENGTH)
   }
 
-  protected toEncoded(value: Address): Uint8Array {
+  protected toEncoded(value: string | Address): Uint8Array {
+    // TODO: update the algod clients so they use Address instead of string
+    if (typeof value === 'string') {
+      return Address.fromString(value).publicKey
+    }
+    if (!value || !value.publicKey) {
+      throw new Error(`Invalid Address object: publicKey is ${value?.publicKey}. Address object: ${JSON.stringify(value)}`)
+    }
     return value.publicKey
   }
 

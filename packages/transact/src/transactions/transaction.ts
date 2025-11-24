@@ -660,13 +660,22 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           }
         }
         if (target.address) {
-          accessList.push({ d: addressCodec.encode(target.address) })
+          const encodedAddress = addressCodec.encode(target.address)
+          if (encodedAddress !== undefined) {
+            accessList.push({ d: encodedAddress })
+          }
         }
         if (target.assetId !== undefined) {
-          accessList.push({ s: bigIntCodec.encode(target.assetId) })
+          const encodedAssetId = bigIntCodec.encode(target.assetId)
+          if (encodedAssetId !== undefined) {
+            accessList.push({ s: encodedAssetId })
+          }
         }
         if (target.appId !== undefined) {
-          accessList.push({ p: bigIntCodec.encode(target.appId) })
+          const encodedAppId = bigIntCodec.encode(target.appId)
+          if (encodedAppId !== undefined) {
+            accessList.push({ p: encodedAppId })
+          }
         }
         return accessList.length // length is 1-based position of new element
       }
@@ -680,7 +689,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (accessReferences.holding) {
           const holding = accessReferences.holding
           let addressIndex = 0
-          if (holding.address && holding.address.equals(Address.zeroAddress())) {
+          if (holding.address && !holding.address.equals(Address.zeroAddress())) {
             addressIndex = ensure({ address: holding.address })
           }
           const assetIndex = ensure({ assetId: holding.assetId })
@@ -696,7 +705,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (accessReferences.locals) {
           const locals = accessReferences.locals
           let addressIndex = 0
-          if (locals.address && locals.address.equals(Address.zeroAddress())) {
+          if (locals.address && !locals.address.equals(Address.zeroAddress())) {
             addressIndex = ensure({ address: locals.address })
           }
           let appIndex = 0

@@ -237,8 +237,8 @@ export class AccountManager {
    * @param sender The account / address to look up
    * @returns The account information
    */
-  public async getInformation(sender: string | Address): Promise<AccountInformation> {
-    const senderAddress = typeof sender === 'string' ? sender : sender.toString()
+  public async getInformation(sender: ReadableAddress): Promise<AccountInformation> {
+    const senderAddress = getAddress(sender).toString()
     const {
       round,
       lastHeartbeat = undefined,

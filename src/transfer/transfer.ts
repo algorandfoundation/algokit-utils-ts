@@ -1,77 +1,8 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { Kmd } from '@algorandfoundation/sdk'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
-import { AlgorandClient } from '../types/algorand-client'
-import { TestNetDispenserApiClient } from '../types/dispenser-client'
 import { SendTransactionResult } from '../types/transaction'
-import { AlgoRekeyParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from '../types/transfer'
-
-/**
- * @deprecated Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`
- * / `algorand.account.ensureFundedFromTestNetDispenserApi()` instead
- *
- * Funds a given account using a funding source such that it has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
- *
- * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
- *
- * @param funding The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables.
- * @param algod An instance of the AlgodClient client.
- * @param kmd An optional instance of the Kmd client.
- * @returns
- * - `EnsureFundedReturnType` if funds were transferred.
- * - `undefined` if no funds were needed.
- */
-export async function ensureFunded<T extends EnsureFundedParams>(
-  funding: T,
-  algod: AlgodClient,
-  kmd?: Kmd,
-): Promise<EnsureFundedReturnType | undefined> {
-  const algorand = AlgorandClient.fromClients({ algod, kmd })
-
-  if (funding.fundingSource instanceof TestNetDispenserApiClient) {
-    const result = await algorand.account.ensureFundedFromTestNetDispenserApi(
-      getSenderAddress(funding.accountToFund),
-      funding.fundingSource,
-      funding.minSpendingBalance,
-      {
-        minFundingIncrement: funding.minFundingIncrement,
-      },
-    )
-    if (!result) return undefined
-    return {
-      amount: Number(result.amountFunded.microAlgo),
-      transactionId: result.transactionId,
-    }
-  } else {
-    const sender = funding.fundingSource ?? (await algorand.account.dispenserFromEnvironment())
-    if (funding.fundingSource) {
-      algorand.setSignerFromAccount(funding.fundingSource)
-    }
-
-    const result = await algorand.account.ensureFunded(
-      getSenderAddress(funding.accountToFund),
-      getSenderAddress(sender),
-      funding.minSpendingBalance,
-      {
-        minFundingIncrement: funding.minFundingIncrement,
-        note: encodeTransactionNote(funding.note),
-        staticFee: funding.fee,
-        lease: funding.lease,
-        maxFee: funding.maxFee,
-        maxRoundsToWaitForConfirmation: funding.maxRoundsToWaitForConfirmation,
-        suppressLog: funding.suppressLog,
-      },
-    )
-
-    return result
-      ? {
-          amount: Number(result.amountFunded.microAlgo),
-          transactionId: result.txIds[0],
-        }
-      : undefined
-  }
-}
+import { AlgoRekeyParams, TransferAssetParams } from '../types/transfer'
 
 /**
  * @deprecated Use `algorand.send.assetTransfer()` / `algorand.createTransaction.assetTransfer()` instead

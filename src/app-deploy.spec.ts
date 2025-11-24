@@ -27,7 +27,7 @@ describe('deploy-app', () => {
 
     const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
-    expect(apps.creator).toBe(testAccount)
+    expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
     expect(app.appId).toBe(app1.appId)
@@ -73,7 +73,7 @@ describe('deploy-app', () => {
 
     const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
-    expect(apps.creator).toBe(testAccount)
+    expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
     expect(app1Data.appId).toBe(app1.appId)
