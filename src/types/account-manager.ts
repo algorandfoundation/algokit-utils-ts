@@ -1,7 +1,7 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, LogicSigAccount, TransactionSigner } from '@algorandfoundation/sdk'
+import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -11,6 +11,7 @@ import { CommonTransactionParams, getAddress, ReadableAddress, TransactionCompos
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
+import { TransactionSigner } from '@algorandfoundation/algokit-transact'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -45,7 +46,7 @@ export class AccountManager {
   private _clientManager: ClientManager
   private _kmdAccountManager: KmdAccountManager
   private _accounts: { [address: string]: TransactionSignerAccount } = {}
-  private _defaultSigner?: algosdk.TransactionSigner
+  private _defaultSigner?: TransactionSigner
 
   /**
    * Create a new account manager.
@@ -88,7 +89,7 @@ export class AccountManager {
    * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
    * @example
    * ```typescript
-   * const signer = accountManager.random() // Can be anything that returns a `algosdk.TransactionSigner` or `TransactionSignerAccount`
+   * const signer = accountManager.random() // Can be anything that returns a `TransactionSigner` or `TransactionSignerAccount`
    * accountManager.setDefaultSigner(signer)
    *
    * // When signing a transaction, if there is no signer registered for the sender then the default signer will be used
@@ -96,7 +97,7 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` so method calls can be chained
    */
-  public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AccountManager {
+  public setDefaultSigner(signer: TransactionSigner | TransactionSignerAccount): AccountManager {
     this._defaultSigner = 'signer' in signer ? signer.signer : signer
     return this
   }
@@ -150,9 +151,9 @@ export class AccountManager {
   }
 
   /**
-   * Tracks the given `algosdk.TransactionSigner` against the given sender address for later signing.
+   * Tracks the given `TransactionSigner` against the given sender address for later signing.
    * @param sender The sender address to use this signer for
-   * @param signer The `algosdk.TransactionSigner` to sign transactions with for the given sender
+   * @param signer The `TransactionSigner` to sign transactions with for the given sender
    * @example
    * ```typescript
    * const accountManager = new AccountManager(clientManager)
@@ -160,7 +161,7 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` instance for method chaining
    */
-  public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
+  public setSigner(sender: string | Address, signer: TransactionSigner) {
     this._accounts[getAddress(sender).toString()] = { addr: getAddress(sender), signer }
     return this
   }
@@ -197,7 +198,7 @@ export class AccountManager {
    * ```
    * @returns The `TransactionSigner` or throws an error if not found and no default signer is set
    */
-  public getSigner(sender: ReadableAddress): algosdk.TransactionSigner {
+  public getSigner(sender: ReadableAddress): TransactionSigner {
     const signer = this._accounts[getAddress(sender).toString()]?.signer ?? this._defaultSigner
     if (!signer) throw new Error(`No signer found for address ${sender}`)
     return signer
