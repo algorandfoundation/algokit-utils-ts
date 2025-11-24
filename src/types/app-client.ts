@@ -1,4 +1,18 @@
-import algosdk, { Address } from 'algosdk'
+import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { OnApplicationComplete, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import {
+  ABIMethod,
+  ABIMethodParams,
+  ABIType,
+  ABIValue,
+  Address,
+  AtomicTransactionComposer,
+  Indexer,
+  ProgramSourceMap,
+  TransactionSigner,
+  getApplicationAddress,
+} from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -46,14 +60,14 @@ import {
   ABIStruct,
   Arc56Contract,
   Arc56Method,
+  ProgramSourceInfo,
+  StorageKey,
+  StorageMap,
   getABIDecodedValue,
   getABIEncodedValue,
   getABITupleFromABIStruct,
   getArc56Method,
   getArc56ReturnValue,
-  ProgramSourceInfo,
-  StorageKey,
-  StorageMap,
 } from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
@@ -73,19 +87,15 @@ import {
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
-import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
-import ABIMethod = algosdk.ABIMethod
-import ABIMethodParams = algosdk.ABIMethodParams
-import ABIType = algosdk.ABIType
-import ABIValue = algosdk.ABIValue
-import Algodv2 = algosdk.Algodv2
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import getApplicationAddress = algosdk.getApplicationAddress
-import Indexer = algosdk.Indexer
-import OnApplicationComplete = algosdk.OnApplicationComplete
-import SourceMap = algosdk.ProgramSourceMap
-import SuggestedParams = algosdk.SuggestedParams
-import TransactionSigner = algosdk.TransactionSigner
+import {
+  SendParams,
+  SendTransactionFrom,
+  SendTransactionParams,
+  TransactionNote,
+  TransactionWrapper,
+  wrapPendingTransactionResponse,
+  wrapPendingTransactionResponseOptional,
+} from './transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
@@ -127,7 +137,7 @@ export type AppDetailsBase = {
   /** Default sender to use for transactions issued by this application client */
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
-  params?: SuggestedParams
+  params?: TransactionParams
   /** Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get
    * used in calls to `deploy`, `create` and `update` unless overridden in those calls
    */
@@ -184,7 +194,7 @@ export interface AppClientDeployCallInterfaceParams {
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppClientCallArgs
   /** Override the on-completion action for the create call; defaults to NoOp */
-  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppClientCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
@@ -235,7 +245,7 @@ export interface AppClientCompilationParams {
 /** On-complete action parameter for creating a contract using ApplicationClient */
 export type AppClientCreateOnComplete = {
   /** Override the on-completion action for the create call; defaults to NoOp */
-  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
 }
 
 /** Parameters for creating a contract using ApplicationClient */
@@ -340,9 +350,9 @@ export interface AppClientParams {
   /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
   defaultSigner?: TransactionSigner
   /** Optional source map for the approval program */
-  approvalSourceMap?: SourceMap
+  approvalSourceMap?: ProgramSourceMap
   /** Optional source map for the clear state program */
-  clearSourceMap?: SourceMap
+  clearSourceMap?: ProgramSourceMap
 }
 
 /** Parameters to clone an app client */
@@ -351,7 +361,7 @@ export type CloneAppClientParams = Expand<Partial<Omit<AppClientParams, 'algoran
 /** onComplete parameter for a non-update app call */
 export type CallOnComplete = {
   /** On-complete of the call; defaults to no-op */
-  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
 }
 
 /** AppClient common parameters for a bare app call */
@@ -484,8 +494,8 @@ export class AppClient {
   private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner
 
-  private _approvalSourceMap: SourceMap | undefined
-  private _clearSourceMap: SourceMap | undefined
+  private _approvalSourceMap: ProgramSourceMap | undefined
+  private _clearSourceMap: ProgramSourceMap | undefined
 
   private _localStateMethods: (address: string | Address) => ReturnType<AppClient['getStateMethods']>
   private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
@@ -903,8 +913,8 @@ export class AppClient {
    * @param sourceMaps The source maps to import
    */
   public importSourceMaps(sourceMaps: AppSourceMaps) {
-    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
-    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+    this._approvalSourceMap = new ProgramSourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new ProgramSourceMap(sourceMaps.clearSourceMap)
   }
 
   /**
@@ -975,8 +985,8 @@ export class AppClient {
     appSpec: Arc56Contract,
     details: {
       /** Whether or not the code was running the clear state program (defaults to approval program) */ isClearStateProgram?: boolean
-      /** Approval program source map */ approvalSourceMap?: SourceMap
-      /** Clear state program source map */ clearSourceMap?: SourceMap
+      /** Approval program source map */ approvalSourceMap?: ProgramSourceMap
+      /** Clear state program source map */ clearSourceMap?: ProgramSourceMap
       /** program bytes */ program?: Uint8Array
       /** ARC56 approval source info */ approvalSourceInfo?: ProgramSourceInfo
       /** ARC56 clear source info */ clearSourceInfo?: ProgramSourceInfo
@@ -1198,28 +1208,28 @@ export class AppClient {
             ...params,
             ...(await this.compile(params)),
           },
-          OnApplicationComplete.UpdateApplicationOC,
+          OnApplicationComplete.UpdateApplication,
         ) as AppUpdateParams
       },
       /** Return params for an opt-in call */
       optIn: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.OptInOC) as AppCallParams
+        return this.getBareParams(params, OnApplicationComplete.OptIn) as AppCallParams
       },
       /** Return params for a delete call */
       delete: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteParams
+        return this.getBareParams(params, OnApplicationComplete.DeleteApplication) as AppDeleteParams
       },
       /** Return params for a clear state call */
       clearState: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.ClearStateOC) as AppCallParams
+        return this.getBareParams(params, OnApplicationComplete.ClearState) as AppCallParams
       },
       /** Return params for a close out call */
       closeOut: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.CloseOutOC) as AppCallParams
+        return this.getBareParams(params, OnApplicationComplete.CloseOut) as AppCallParams
       },
       /** Return params for a call (defaults to no-op) */
       call: (params?: AppClientBareCallParams & CallOnComplete) => {
-        return this.getBareParams(params, params?.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallParams
+        return this.getBareParams(params, params?.onComplete ?? OnApplicationComplete.NoOp) as AppCallParams
       },
     }
   }
@@ -1312,7 +1322,7 @@ export class AppClient {
             ...params,
             ...(await this.compile(params)),
           },
-          OnApplicationComplete.UpdateApplicationOC,
+          OnApplicationComplete.UpdateApplication,
         )) satisfies AppUpdateMethodCall
       },
       /**
@@ -1321,7 +1331,7 @@ export class AppClient {
        * @returns The parameters which can be used to create an opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams) => {
-        return (await this.getABIParams(params, OnApplicationComplete.OptInOC)) as AppCallMethodCall
+        return (await this.getABIParams(params, OnApplicationComplete.OptIn)) as AppCallMethodCall
       },
       /**
        * Return params for an delete ABI call
@@ -1329,21 +1339,21 @@ export class AppClient {
        * @returns The parameters which can be used to create a delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams) => {
-        return (await this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC)) as AppDeleteMethodCall
+        return (await this.getABIParams(params, OnApplicationComplete.DeleteApplication)) as AppDeleteMethodCall
       },
       /** Return params for an close out ABI call
        * @param params The parameters for the close out ABI method call
        * @returns The parameters which can be used to create a close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams) => {
-        return (await this.getABIParams(params, OnApplicationComplete.CloseOutOC)) as AppCallMethodCall
+        return (await this.getABIParams(params, OnApplicationComplete.CloseOut)) as AppCallMethodCall
       },
       /** Return params for an ABI call
        * @param params The parameters for the ABI method call
        * @returns The parameters which can be used to create an ABI method call
        */
       call: async (params: AppClientMethodCallParams & CallOnComplete) => {
-        return (await this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC)) as AppCallMethodCall
+        return (await this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOp)) as AppCallMethodCall
       },
     }
   }
@@ -1413,7 +1423,7 @@ export class AppClient {
       call: async (params: AppClientMethodCallParams & CallOnComplete & SendParams) => {
         // Read-only call - do it via simulate
         if (
-          (params.onComplete === OnApplicationComplete.NoOpOC || !params.onComplete) &&
+          (params.onComplete === OnApplicationComplete.NoOp || !params.onComplete) &&
           getArc56Method(params.method, this._appSpec).method.readonly
         ) {
           const readonlyParams = {
@@ -1439,7 +1449,7 @@ export class AppClient {
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
                 // Simulate calls for a readonly method can use the max opcode budget
-                extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
+                extraOpcodeBudget: BigInt(MAX_SIMULATE_OPCODE_BUDGET),
               })
             return this.processMethodCallReturn(
               {
@@ -1578,7 +1588,7 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private handleCallErrors = async (e: Error & { sentTransactions?: algosdk.Transaction[] }) => {
+  private handleCallErrors = async (e: Error & { sentTransactions?: Transaction[] }) => {
     // We can't use the app ID in an error to identify new apps, so instead we check the programs
     // to identify if this is the correct app
     if (this.appId === 0n) {
@@ -1586,7 +1596,7 @@ export class AppClient {
 
       const txns = e.sentTransactions
 
-      const txn = txns.find((t) => e.message.includes(t.txID()))
+      const txn = txns.find((t) => e.message.includes(getTransactionId(t)))
 
       const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
         if (a === undefined || b === undefined) return false
@@ -1600,7 +1610,7 @@ export class AppClient {
       }
 
       if (
-        !programsDefinedAndEqual(txn?.applicationCall?.clearProgram, this._lastCompiled.clear) ||
+        !programsDefinedAndEqual(txn?.applicationCall?.clearStateProgram, this._lastCompiled.clear) ||
         !programsDefinedAndEqual(txn?.applicationCall?.approvalProgram, this._lastCompiled?.approval)
       ) {
         return e
@@ -1797,11 +1807,11 @@ export class AppClient {
  *
  * Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
-  private algod: Algodv2
+  private algod: AlgodClient
   private indexer?: algosdk.Indexer
   private appSpec: AppSpec
   private sender: SendTransactionFrom | undefined
-  private params: SuggestedParams | undefined
+  private params: TransactionParams | undefined
   private existingDeployments: LegacyAppLookup | undefined
   private deployTimeParams?: TealTemplateParams
 
@@ -1810,8 +1820,8 @@ export class ApplicationClient {
   private _creator: string | undefined
   private _appName: string
 
-  private _approvalSourceMap: SourceMap | undefined
-  private _clearSourceMap: SourceMap | undefined
+  private _approvalSourceMap: ProgramSourceMap | undefined
+  private _clearSourceMap: ProgramSourceMap | undefined
 
   /**
    * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
@@ -1823,7 +1833,7 @@ export class ApplicationClient {
    * @param appDetails The details of the app
    * @param algod An algod instance
    */
-  constructor(appDetails: AppSpecAppDetails, algod: Algodv2) {
+  constructor(appDetails: AppSpecAppDetails, algod: AlgodClient) {
     const { app, sender, params, deployTimeParams, ...appIdentifier } = appDetails
     this.algod = algod
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
@@ -1913,8 +1923,8 @@ export class ApplicationClient {
    * @param sourceMaps The source maps to import
    */
   importSourceMaps(sourceMaps: AppSourceMaps) {
-    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
-    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+    this._approvalSourceMap = new ProgramSourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new ProgramSourceMap(sourceMaps.clearSourceMap)
   }
 
   /**
@@ -2088,7 +2098,7 @@ export class ApplicationClient {
       )
 
       if (result.confirmation) {
-        this._appId = result.confirmation.applicationIndex!
+        this._appId = result.confirmation.appId!
         this._appAddress = getApplicationAddress(this._appId).toString()
       }
 
@@ -2165,10 +2175,10 @@ export class ApplicationClient {
       }
       const txns = atc.buildGroup()
       return {
-        transaction: txns[txns.length - 1].txn,
-        confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
-        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
-        transactions: txns.map((t) => t.txn),
+        transaction: new TransactionWrapper(txns[txns.length - 1].txn),
+        confirmation: wrapPendingTransactionResponseOptional(result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult),
+        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+        transactions: txns.map((t) => new TransactionWrapper(t.txn)),
         return: (result.methodResults?.length ?? 0 > 0) ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
       } satisfies AppCallTransactionResult
     }
@@ -2230,7 +2240,7 @@ export class ApplicationClient {
    */
   async callOfType(
     call: AppClientCallParams = {},
-    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>,
+    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>,
   ) {
     const { sender: callSender, note, sendParams, ...args } = call
 

@@ -1,15 +1,17 @@
-import algosdk, { Address } from 'algosdk'
+import {
+  AccountParticipation,
+  Application,
+  ApplicationLocalState,
+  ApplicationStateSchema,
+  Asset,
+  AssetHolding,
+} from '@algorandfoundation/algokit-algod-client'
+import { Transaction } from '@algorandfoundation/algokit-transact'
+import type { Account } from '@algorandfoundation/sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
+import { appendSignMultisigTransaction, signMultisigTransaction } from '@algorandfoundation/sdk/src/multisigSigning'
 import { AlgoAmount } from './amount'
-import ApplicationLocalState = algosdk.modelsv2.ApplicationLocalState
-import ApplicationStateSchema = algosdk.modelsv2.ApplicationStateSchema
-import AssetHolding = algosdk.modelsv2.AssetHolding
-import Application = algosdk.modelsv2.Application
-import Asset = algosdk.modelsv2.Asset
-import AccountParticipation = algosdk.modelsv2.AccountParticipation
-import Account = algosdk.Account
-import MultisigMetadata = algosdk.MultisigMetadata
-import Transaction = algosdk.Transaction
-import TransactionSigner = algosdk.TransactionSigner
 
 /**
  * The account name identifier used for fund dispensing in test environments
@@ -66,9 +68,9 @@ export class MultisigAccount {
     let signedTxn = 'sender' in transaction ? undefined : transaction
     for (const signer of this._signingAccounts) {
       if (signedTxn) {
-        signedTxn = algosdk.appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
+        signedTxn = appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
       } else {
-        signedTxn = algosdk.signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
+        signedTxn = signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
       }
     }
     return signedTxn!

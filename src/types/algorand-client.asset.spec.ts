@@ -25,7 +25,7 @@ describe('Asset capability', () => {
       defaultFrozen: true,
     })
 
-    expect(result.confirmation.assetIndex).toBeGreaterThan(0n)
+    expect(result.confirmation.assetId).toBeGreaterThan(0n)
     const assetData = await algorand.asset.getById(result.assetId)
     expect(assetData.creator).toBe(testAccount.toString())
     expect(assetData.total).toBe(1000n)

@@ -1,0 +1,4 @@
+{% for name, _ in schemas.items() %}
+export type { {{ name | ts_pascal_case }} } from './{{ name | ts_kebab_case }}';
+export { {{ name | ts_pascal_case }}Meta } from './{{ name | ts_kebab_case }}';
+{% endfor %}

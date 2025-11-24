@@ -1,4 +1,5 @@
-import algosdk, { Account, Address } from 'algosdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Account, Address } from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
 import { algorandFixture } from '../testing'
@@ -7,8 +8,9 @@ import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
-  const teal = new Uint8Array(Buffer.from(b64Teal, 'base64'))
-  const result = await algorand.client.algod.compile(teal).do()
+  // Decode the base64-encoded TEAL source code
+  const tealSource = Buffer.from(b64Teal, 'base64').toString('utf-8')
+  const result = await algorand.client.algod.tealCompile(tealSource)
 
   return new Uint8Array(Buffer.from(result.result, 'base64'))
 }
@@ -263,7 +265,7 @@ describe('AlgorandClient', () => {
       sender: alice,
       assetId: assetId,
     })
-    expect(await algod.accountAssetInformation(alice, Number(assetId)).do()).toBeDefined()
+    expect(await algod.accountAssetInformation(alice.toString(), Number(assetId))).toBeDefined()
   })
 
   test('methodCall create', async () => {

@@ -44,7 +44,7 @@ describe('ClientManager', () => {
 
       const response = await Promise.all(
         new Array(150).fill(0).map(async (_) => {
-          return await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
+          return await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
         }),
       )
       expect(response.length).toBe(150)
@@ -121,7 +121,7 @@ describe('ClientManager', () => {
 
     test('Get working LocalNet algod client', async () => {
       const algod = ClientManager.getAlgodClient(ClientManager.getDefaultLocalNetConfig('algod'))
-      await algod.status().do()
+      await algod.getStatus()
     })
 
     test('Get working LocalNet indexer client', async () => {
@@ -136,7 +136,7 @@ describe('ClientManager', () => {
 
     test('Get working MainNet algod client', async () => {
       const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('mainnet', 'algod'))
-      await algod.status().do()
+      await algod.getStatus()
     })
 
     test('Get working MainNet indexer client', async () => {

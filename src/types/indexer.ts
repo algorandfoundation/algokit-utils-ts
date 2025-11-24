@@ -1,5 +1,4 @@
-import algosdk from 'algosdk'
-import indexerModels = algosdk.indexerModels
+import { indexerModels } from '@algorandfoundation/sdk'
 
 /** @deprecated Use `algosdk.indexerModels.TransactionsResponse`. Indexer result for a transaction search, https://dev.algorand.co/reference/rest-apis/indexer#get-v2transactions */
 export type TransactionSearchResults = indexerModels.TransactionsResponse

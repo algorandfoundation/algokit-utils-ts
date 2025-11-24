@@ -1,4 +1,14 @@
-import algosdk, { Address, ProgramSourceMap } from 'algosdk'
+import {
+  AlgodClient,
+  ApplicationLocalReference,
+  AssetHoldingReference,
+  EvalDelta,
+  PendingTransactionResponse,
+  TealValue,
+} from '@algorandfoundation/algokit-algod-client'
+import { ResourceReference, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import {
@@ -10,7 +20,6 @@ import {
   type CompiledTeal,
   type TealTemplateParams,
 } from './app'
-import modelsv2 = algosdk.modelsv2
 
 /** Information about an app. */
 export interface AppInformation {
@@ -95,26 +104,6 @@ export interface BoxValuesRequestParams {
 }
 
 /**
- * Defines a holding by referring to an Address and Asset it belongs to.
- */
-export interface HoldingReference {
-  /** Asset ID for asset in access list. */
-  assetId: bigint
-  /** Address in access list, or the sender of the transaction. */
-  address: string | Address
-}
-
-/**
- * Defines a local state by referring to an Address and App it belongs to.
- */
-export interface LocalsReference {
-  /** Application ID for app in access list, or zero if referring to the called application. */
-  appId: bigint
-  /** Address in access list, or the sender of the transaction. */
-  address: string | Address
-}
-
-/**
  * Names a single resource reference. Only one of the fields should be set.
  */
 export interface AccessReference {
@@ -125,23 +114,23 @@ export interface AccessReference {
   /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
   assetId?: bigint
   /** Defines a holding by referring to an Address and Asset it belongs to. */
-  holding?: HoldingReference
+  holding?: AssetHoldingReference
   /** Defines a local state by referring to an Address and App it belongs to. */
-  locals?: LocalsReference
+  locals?: ApplicationLocalReference
   /** Defines a box by its name and the application ID it belongs to. */
   box?: BoxReference
 }
 
 /** Allows management of application information. */
 export class AppManager {
-  private _algod: algosdk.Algodv2
+  private _algod: AlgodClient
   private _compilationResults: Record<string, CompiledTeal> = {}
 
   /**
    * Creates an `AppManager`
    * @param algod An algod instance
    */
-  constructor(algod: algosdk.Algodv2) {
+  constructor(algod: AlgodClient) {
     this._algod = algod
   }
 
@@ -165,13 +154,13 @@ export class AppManager {
       return this._compilationResults[tealCode]
     }
 
-    const compiled = await this._algod.compile(tealCode).sourcemap(true).do()
+    const compiled = await this._algod.tealCompile(tealCode, { sourcemap: true })
     const result = {
       teal: tealCode,
       compiled: compiled.result,
       compiledHash: compiled.hash,
       compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
-      sourceMap: new ProgramSourceMap(JSON.parse(algosdk.encodeJSON(compiled.sourcemap!))),
+      sourceMap: new ProgramSourceMap(compiled.sourcemap as { version: number; sources: string[]; names: string[]; mappings: string }),
     }
     this._compilationResults[tealCode] = result
 
@@ -238,19 +227,25 @@ export class AppManager {
    * @returns The app information
    */
   public async getById(appId: bigint): Promise<AppInformation> {
-    const app = await this._algod.getApplicationByID(Number(appId)).do()
+    const app = await this._algod.getApplicationById(Number(appId))
+    // Convert global state from new format (key: string) to old format (key: Uint8Array)
+    const convertedGlobalState = (app.params.globalState ?? []).map((kv) => ({
+      key: new Uint8Array(Buffer.from(kv.key, 'base64')),
+      value: kv.value,
+    }))
+
     return {
       appId: BigInt(app.id),
       appAddress: algosdk.getApplicationAddress(app.id),
       approvalProgram: app.params.approvalProgram,
       clearStateProgram: app.params.clearStateProgram,
-      creator: app.params.creator,
+      creator: Address.fromString(app.params.creator),
       localInts: Number(app.params.localStateSchema?.numUint ?? 0),
       localByteSlices: Number(app.params.localStateSchema?.numByteSlice ?? 0),
       globalInts: Number(app.params.globalStateSchema?.numUint ?? 0),
       globalByteSlices: Number(app.params.globalStateSchema?.numByteSlice ?? 0),
       extraProgramPages: Number(app.params.extraProgramPages ?? 0),
-      globalState: AppManager.decodeAppState(app.params.globalState ?? []),
+      globalState: AppManager.decodeAppState(convertedGlobalState),
     }
   }
 
@@ -280,13 +275,24 @@ export class AppManager {
    * ```
    */
   public async getLocalState(appId: bigint, address: Address | string) {
-    const appInfo = await this._algod.accountApplicationInformation(address, appId).do()
+    const addressStr = typeof address === 'string' ? address : address.toString()
+    const appInfo = await this._algod.accountApplicationInformation(addressStr, Number(appId))
 
-    if (!appInfo.appLocalState?.keyValue) {
+    if (!appInfo.appLocalState) {
       throw new Error("Couldn't find local state")
     }
 
-    return AppManager.decodeAppState(appInfo.appLocalState.keyValue)
+    // If keyValue is undefined or empty, return empty state
+    if (!appInfo.appLocalState.keyValue || appInfo.appLocalState.keyValue.length === 0) {
+      return {}
+    }
+
+    const convertedState = appInfo.appLocalState.keyValue.map((kv) => ({
+      key: new Uint8Array(Buffer.from(kv.key, 'base64')),
+      value: kv.value,
+    }))
+
+    return AppManager.decodeAppState(convertedState)
   }
 
   /**
@@ -299,8 +305,8 @@ export class AppManager {
    * ```
    */
   public async getBoxNames(appId: bigint): Promise<BoxName[]> {
-    const boxResult = await this._algod.getApplicationBoxes(appId).do()
-    return boxResult.boxes.map((b) => {
+    const boxResult = await this._algod.getApplicationBoxes(Number(appId))
+    return boxResult.boxes.map((b: { name: Uint8Array }) => {
       return {
         nameRaw: b.name,
         nameBase64: Buffer.from(b.name).toString('base64'),
@@ -321,8 +327,9 @@ export class AppManager {
    */
   public async getBoxValue(appId: bigint, boxName: BoxIdentifier | BoxName): Promise<Uint8Array> {
     const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
-    const name = AppManager.getBoxReference(boxId).name
-    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), name).do()
+    const nameBytes = AppManager.getBoxReference(boxId).name
+    const nameBase64 = Buffer.from(nameBytes).toString('base64')
+    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), { name: `b64:${nameBase64}` })
     return boxResult.value
   }
 
@@ -378,12 +385,12 @@ export class AppManager {
    * const boxRef = AppManager.getBoxReference('boxName');
    * ```
    */
-  public static getBoxReference(boxId: BoxIdentifier | BoxReference): algosdk.BoxReference {
+  public static getBoxReference(boxId: BoxIdentifier | BoxReference): TransactionBoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
       appIndex: ref.appId,
       name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
-    } as algosdk.BoxReference
+    } as TransactionBoxReference
   }
 
   /**
@@ -396,7 +403,7 @@ export class AppManager {
    * const stateValues = AppManager.decodeAppState(state);
    * ```
    */
-  public static decodeAppState(state: { key: Uint8Array; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
+  public static decodeAppState(state: { key: Uint8Array; value: TealValue | EvalDelta }[]): AppState {
     const stateValues = {} as AppState
 
     // Start with empty set
@@ -406,7 +413,7 @@ export class AppManager {
       const key = Buffer.from(stateVal.key).toString('utf-8')
       const tealValue = stateVal.value
 
-      const dataTypeFlag = 'action' in tealValue ? tealValue.action : tealValue.type
+      const dataTypeFlag = Number('action' in tealValue ? tealValue.action : tealValue.type)
       let valueBase64: string
       let valueRaw: Buffer
       switch (dataTypeFlag) {
@@ -450,7 +457,7 @@ export class AppManager {
    * ```
    */
   public static getABIReturn(
-    confirmation: modelsv2.PendingTransactionResponse | undefined,
+    confirmation: PendingTransactionResponse | undefined,
     method: algosdk.ABIMethod | undefined,
   ): ABIReturn | undefined {
     if (!method || !confirmation || method.returns.type === 'void') {
@@ -573,32 +580,38 @@ export class AppManager {
   }
 }
 
-function getHoldingReference(holdingReference: HoldingReference): algosdk.TransactionHoldingReference {
-  return {
-    assetIndex: holdingReference.assetId,
-    address: typeof holdingReference.address === 'string' ? Address.fromString(holdingReference.address) : holdingReference.address!,
-  } satisfies algosdk.TransactionHoldingReference
-}
-
-function getLocalsReference(localsReference: LocalsReference): algosdk.TransactionLocalsReference {
-  return {
-    appIndex: localsReference.appId,
-    address: typeof localsReference.address === 'string' ? Address.fromString(localsReference.address) : localsReference.address!,
-  } satisfies algosdk.TransactionLocalsReference
-}
-
 /**
  * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
  */
-export function getAccessReference(accessReference: AccessReference): algosdk.TransactionResourceReference {
-  return {
-    address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
-    appIndex: accessReference.appId,
-    assetIndex: accessReference.assetId,
-    holding: accessReference.holding ? getHoldingReference(accessReference.holding) : undefined,
-    locals: accessReference.locals ? getLocalsReference(accessReference.locals) : undefined,
-    box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
-  } as algosdk.TransactionResourceReference
+export function getAccessReference(accessReference: AccessReference): ResourceReference {
+  const result: ResourceReference = {}
+
+  if (accessReference.address !== undefined) {
+    result.address = accessReference.address.toString()
+  }
+  if (accessReference.appId !== undefined) {
+    result.appId = accessReference.appId
+  }
+  if (accessReference.assetId !== undefined) {
+    result.assetId = accessReference.assetId
+  }
+  if (accessReference.holding !== undefined) {
+    result.holding = {
+      address: accessReference.holding.account,
+      assetId: accessReference.holding.asset,
+    }
+  }
+  if (accessReference.locals !== undefined) {
+    result.locals = {
+      address: accessReference.locals.account,
+      appId: accessReference.locals.app,
+    }
+  }
+  if (accessReference.box !== undefined) {
+    result.box = AppManager.getBoxReference(accessReference.box)
+  }
+
+  return result
 }
 
 /**

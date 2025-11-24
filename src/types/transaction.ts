@@ -1,13 +1,11 @@
-import algosdk from 'algosdk'
+import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
+import { SignedTransaction, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { type Account, AtomicTransactionComposer, LogicSigAccount } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
-import Account = algosdk.Account
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import LogicSigAccount = algosdk.LogicSigAccount
-import Transaction = algosdk.Transaction
-import modelsv2 = algosdk.modelsv2
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,23 +50,23 @@ export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerRe
 /** The result of sending a transaction */
 export interface SendTransactionResult {
   /** The transaction */
-  transaction: Transaction
+  transaction: TransactionWrapper
   /** The response if the transaction was sent and waited for */
-  confirmation?: modelsv2.PendingTransactionResponse
+  confirmation?: PendingTransactionResponseWrapper
 }
 
 /** The result of preparing and/or sending multiple transactions */
 export interface SendTransactionResults {
   /** The transactions that have been prepared and/or sent */
-  transactions: Transaction[]
+  transactions: TransactionWrapper[]
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations?: modelsv2.PendingTransactionResponse[]
+  confirmations?: PendingTransactionResponseWrapper[]
 }
 
 /** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
-export interface SendAtomicTransactionComposerResults extends SendTransactionResults {
+export interface SendAtomicTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
   /** base64 encoded representation of the group ID of the atomic group */
   groupId: string
   /** The transaction IDs that have been prepared and/or sent */
@@ -78,21 +76,21 @@ export interface SendAtomicTransactionComposerResults extends SendTransactionRes
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: modelsv2.PendingTransactionResponse[]
+  confirmations: PendingTransactionResponseWrapper[]
 }
 
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
-  confirmation: modelsv2.PendingTransactionResponse
+  confirmation: PendingTransactionResponseWrapper
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
 export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
-  confirmation: modelsv2.PendingTransactionResponse
+  confirmation: PendingTransactionResponseWrapper
   /** The response from sending and waiting for the transactions */
-  confirmations: modelsv2.PendingTransactionResponse[]
+  confirmations: PendingTransactionResponseWrapper[]
 }
 
 /** Core account abstraction when signing/sending transactions
@@ -148,7 +146,7 @@ export interface AdditionalAtomicTransactionComposerContext {
   maxFees: Map<number, AlgoAmount>
 
   /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
-  suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
+  suggestedParams: Pick<algosdk.SdkTransactionParams, 'fee' | 'minFee'>
 }
 
 /** An `AtomicTransactionComposer` with transactions to send. */
@@ -165,4 +163,97 @@ export interface AtomicTransactionComposerToSend extends SendParams {
    * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
    **/
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext
+}
+
+/**
+ * A wrapper class for Transaction that adds a txID() method while maintaining
+ * transparent access to all underlying Transaction properties through a Proxy.
+ *
+ * All Transaction properties are accessible directly on instances of this class.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class TransactionWrapper {
+  private _transaction: Transaction
+
+  constructor(transaction: Transaction) {
+    this._transaction = transaction
+
+    // Create a proxy to forward all property accesses to the underlying transaction
+    // The proxy makes all Transaction properties available on this instance
+    return new Proxy(this, {
+      get(target, prop) {
+        // Only intercept the txID method
+        if (prop === 'txID') {
+          return target.txID.bind(target)
+        }
+        // Forward everything else to the underlying transaction
+        const value = Reflect.get(target._transaction, prop)
+        // If it's a function, bind it to the transaction
+        if (typeof value === 'function') {
+          return value.bind(target._transaction)
+        }
+        return value
+      },
+      set(target, prop, value) {
+        // Set on the underlying transaction
+        return Reflect.set(target._transaction, prop, value)
+      },
+      has(target, prop) {
+        return prop === 'txID' || prop in target._transaction
+      },
+      ownKeys(target) {
+        return ['txID', ...Reflect.ownKeys(target._transaction)]
+      },
+      getOwnPropertyDescriptor(target, prop) {
+        if (prop === 'txID') {
+          return { configurable: true, enumerable: true, writable: true }
+        }
+        return Reflect.getOwnPropertyDescriptor(target._transaction, prop)
+      },
+    }) as unknown as TransactionWrapper & Transaction
+  }
+
+  /**
+   * Get the transaction ID
+   * @returns The transaction ID as a base64-encoded string
+   */
+  txID(): string {
+    return getTransactionId(this._transaction)
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export interface TransactionWrapper extends Transaction {}
+
+// TODO: PD - review the names of these wrapper
+export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
+  txn: TransactionWrapper
+}
+
+export type PendingTransactionResponseWrapper = Omit<PendingTransactionResponse, 'txn' | 'innerTxns'> & {
+  txn: SignedTransactionWrapper
+  innerTxns?: PendingTransactionResponseWrapper[]
+}
+
+function wrapSignedTransaction(signedTransaction: SignedTransaction): SignedTransactionWrapper {
+  return {
+    ...signedTransaction,
+    txn: new TransactionWrapper(signedTransaction.txn),
+  }
+}
+
+export function wrapPendingTransactionResponse(response: PendingTransactionResponse): PendingTransactionResponseWrapper {
+  return {
+    ...response,
+    txn: wrapSignedTransaction(response.txn),
+    innerTxns: response.innerTxns?.map(wrapPendingTransactionResponse),
+  }
+}
+
+export function wrapPendingTransactionResponseOptional(
+  response?: PendingTransactionResponse,
+): PendingTransactionResponseWrapper | undefined {
+  if (!response) return undefined
+
+  return wrapPendingTransactionResponse(response)
 }

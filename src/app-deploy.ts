@@ -1,4 +1,7 @@
-import algosdk, { Address } from 'algosdk'
+import { AlgodClient, ApplicationStateSchema } from '@algorandfoundation/algokit-algod-client'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, Indexer } from '@algorandfoundation/sdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
 import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
@@ -27,9 +30,6 @@ import {
   TransactionComposer,
 } from './types/composer'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
-import Algodv2 = algosdk.Algodv2
-import Indexer = algosdk.Indexer
-import modelsv2 = algosdk.modelsv2
 
 /**
  * @deprecated Use `algorand.appDeployer.deploy` instead.
@@ -50,7 +50,7 @@ import modelsv2 = algosdk.modelsv2
  */
 export async function deployApp(
   deployment: AppDeploymentParams,
-  algod: Algodv2,
+  algod: AlgodClient,
   indexer?: Indexer,
 ): Promise<
   Partial<AppCompilationResult> &
@@ -72,7 +72,7 @@ export async function deployApp(
       algod,
       getSigner: () => getSenderTransactionSigner(deployment.from),
       getSuggestedParams: async () =>
-        deployment.transactionParams ? { ...deployment.transactionParams } : await algod.getTransactionParams().do(),
+        deployment.transactionParams ? { ...deployment.transactionParams } : await algod.transactionParams(),
       appManager,
     })
   const deployer = new AppDeployer(
@@ -97,8 +97,8 @@ export async function deployApp(
     maxFee: deployment.maxFee,
     extraProgramPages: deployment.schema.extraPages,
     onComplete: getAppOnCompleteAction(deployment.createOnCompleteAction) as Exclude<
-      algosdk.OnApplicationComplete,
-      algosdk.OnApplicationComplete.ClearStateOC
+      OnApplicationComplete,
+      OnApplicationComplete.ClearState
     >,
     schema: deployment.schema,
   } satisfies Partial<AppCreateParams>
@@ -117,7 +117,7 @@ export async function deployApp(
     rekeyTo: deployment.updateArgs?.rekeyTo ? getSenderAddress(deployment.updateArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,
     maxFee: deployment.maxFee,
-    onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+    onComplete: OnApplicationComplete.UpdateApplication,
   } satisfies Partial<AppUpdateParams>
 
   const deleteParams = {
@@ -132,7 +132,7 @@ export async function deployApp(
     rekeyTo: deployment.deleteArgs?.rekeyTo ? getSenderAddress(deployment.deleteArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,
     maxFee: deployment.maxFee,
-    onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+    onComplete: OnApplicationComplete.DeleteApplication,
   } satisfies Partial<AppDeleteParams>
 
   const encoder = new TextEncoder()
@@ -226,7 +226,7 @@ export async function deployApp(
  * @param after The new schema
  * @returns Whether or not there is a breaking change
  */
-export function isSchemaIsBroken(before: modelsv2.ApplicationStateSchema, after: modelsv2.ApplicationStateSchema) {
+export function isSchemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
   return before.numByteSlice < after.numByteSlice || before.numUint < after.numUint
 }
 
@@ -325,7 +325,7 @@ export function performTemplateSubstitution(tealCode: string, templateParams?: T
  */
 export async function performTemplateSubstitutionAndCompile(
   tealCode: string,
-  algod: Algodv2,
+  algod: AlgodClient,
   templateParams?: TealTemplateParams,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {

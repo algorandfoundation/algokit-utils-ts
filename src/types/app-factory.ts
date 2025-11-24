@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { ABIValue, Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import {
@@ -38,10 +39,6 @@ import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
-import SourceMap = algosdk.ProgramSourceMap
-import OnApplicationComplete = algosdk.OnApplicationComplete
-import ABIValue = algosdk.ABIValue
-import TransactionSigner = algosdk.TransactionSigner
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {
@@ -100,7 +97,7 @@ export interface AppFactoryParams {
 
 /** onComplete parameter for a create app call */
 export type CreateOnComplete = {
-  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
 }
 
 /** Specifies a schema used for creating an app */
@@ -178,8 +175,8 @@ export class AppFactory {
   private _updatable?: boolean
   private _deletable?: boolean
 
-  private _approvalSourceMap: SourceMap | undefined
-  private _clearSourceMap: SourceMap | undefined
+  private _approvalSourceMap: ProgramSourceMap | undefined
+  private _clearSourceMap: ProgramSourceMap | undefined
 
   private _paramsMethods: ReturnType<AppFactory['getParamsMethods']>
 
@@ -516,8 +513,8 @@ export class AppFactory {
    * @param sourceMaps The source maps to import
    */
   importSourceMaps(sourceMaps: AppSourceMaps) {
-    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
-    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+    this._approvalSourceMap = new ProgramSourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new ProgramSourceMap(sourceMaps.clearSourceMap)
   }
 
   private getDeployTimeControl(control: 'updatable' | 'deletable'): boolean | undefined {
@@ -552,16 +549,16 @@ export class AppFactory {
             approvalProgram: compiled.approvalProgram,
             clearStateProgram: compiled.clearStateProgram,
           },
-          params.onComplete ?? OnApplicationComplete.NoOpOC,
+          params.onComplete ?? OnApplicationComplete.NoOp,
         ) satisfies AppCreateMethodCall
       },
       /** Return params for a deployment update ABI call */
       deployUpdate: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateMethodCall
+        return this.getABIParams(params, OnApplicationComplete.UpdateApplication) satisfies DeployAppUpdateMethodCall
       },
       /** Return params for a deployment delete ABI call */
       deployDelete: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC) satisfies DeployAppDeleteMethodCall
+        return this.getABIParams(params, OnApplicationComplete.DeleteApplication) satisfies DeployAppDeleteMethodCall
       },
       bare: {
         /** Return params for a create bare call, including deploy-time TEAL template replacements and compilation if provided */
@@ -578,16 +575,16 @@ export class AppFactory {
               },
               ...(await this.compile({ ...params, deployTimeParams: params?.deployTimeParams ?? this._deployTimeParams })),
             },
-            params?.onComplete ?? OnApplicationComplete.NoOpOC,
+            params?.onComplete ?? OnApplicationComplete.NoOp,
           ) satisfies AppCreateParams
         },
         /** Return params for a deployment update bare call */
         deployUpdate: (params?: AppClientBareCallParams) => {
-          return this.getBareParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateParams
+          return this.getBareParams(params, OnApplicationComplete.UpdateApplication) satisfies DeployAppUpdateParams
         },
         /** Return params for a deployment delete bare call */
         deployDelete: (params?: AppClientBareCallParams) => {
-          return this.getBareParams(params, OnApplicationComplete.DeleteApplicationOC) satisfies DeployAppDeleteParams
+          return this.getBareParams(params, OnApplicationComplete.DeleteApplication) satisfies DeployAppDeleteParams
         },
       },
     }
