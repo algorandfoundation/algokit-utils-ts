@@ -3,7 +3,6 @@ import { Address } from '@algorandfoundation/algokit-common'
 import { expect } from 'vitest'
 import {
   SignedTransaction,
-  Transaction,
   applyMultisigSubsignature,
   assignFee,
   decodeTransaction,
