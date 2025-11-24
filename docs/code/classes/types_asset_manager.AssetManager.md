@@ -51,7 +51,7 @@ const assetManager = new AssetManager(algod, () => new TransactionComposer({algo
 
 #### Defined in
 
-[src/types/asset-manager.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L151)
+[src/types/asset-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L152)
 
 ## Properties
 
@@ -61,7 +61,7 @@ const assetManager = new AssetManager(algod, () => new TransactionComposer({algo
 
 #### Defined in
 
-[src/types/asset-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L139)
+[src/types/asset-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L140)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/types/asset-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L140)
+[src/types/asset-manager.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L141)
 
 ## Methods
 
@@ -116,7 +116,7 @@ assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).micr
 
 #### Defined in
 
-[src/types/asset-manager.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L233)
+[src/types/asset-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L234)
 
 ___
 
@@ -153,7 +153,7 @@ assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance:
 
 #### Defined in
 
-[src/types/asset-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L283)
+[src/types/asset-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L284)
 
 ___
 
@@ -188,7 +188,7 @@ const accountInfo = await assetManager.getAccountInformation(address, assetId);
 
 #### Defined in
 
-[src/types/asset-manager.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L205)
+[src/types/asset-manager.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L206)
 
 ___
 
@@ -218,4 +218,4 @@ const assetInfo = await assetManager.getById(12353n);
 
 #### Defined in
 
-[src/types/asset-manager.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L167)
+[src/types/asset-manager.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L168)

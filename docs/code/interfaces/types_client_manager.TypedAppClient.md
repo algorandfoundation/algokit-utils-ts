@@ -41,7 +41,7 @@ Interface to identify a typed client that can be used to interact with an applic
 
 #### Defined in
 
-[src/types/client-manager.ts:694](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L694)
+[src/types/client-manager.ts:698](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L698)
 
 ## Methods
 
@@ -61,7 +61,7 @@ Interface to identify a typed client that can be used to interact with an applic
 
 #### Defined in
 
-[src/types/client-manager.ts:696](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L696)
+[src/types/client-manager.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L700)
 
 ___
 
@@ -81,4 +81,4 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L695)
+[src/types/client-manager.ts:699](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L699)

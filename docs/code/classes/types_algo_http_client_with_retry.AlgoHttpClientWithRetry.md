@@ -45,7 +45,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 | `tokenHeader` | `TokenHeader` |
 | `baseServer` | `string` |
 | `port?` | `string` \| `number` |
-| `defaultHeaders?` | `Record`\<`string`, `any`\> |
+| `defaultHeaders` | `Record`\<`string`, `any`\> |
 
 #### Returns
 
@@ -57,7 +57,7 @@ URLTokenBaseHTTPClient.constructor
 
 #### Defined in
 
-node_modules/algosdk/dist/types/client/urlTokenBaseHTTPClient.d.ts:27
+[packages/sdk/src/client/urlTokenBaseHTTPClient.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/client/urlTokenBaseHTTPClient.ts#L53)
 
 ## Properties
 

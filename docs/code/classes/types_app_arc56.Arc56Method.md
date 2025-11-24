@@ -64,7 +64,7 @@ algosdk.ABIMethod.constructor
 
 ### args
 
-• `Readonly` **args**: \{ `defaultValue?`: \{ `data`: `string` ; `source`: ``"method"`` \| ``"box"`` \| ``"global"`` \| ``"local"`` \| ``"literal"`` ; `type?`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `ABIArgumentType`  }[]
+• `Readonly` **args**: \{ `defaultValue?`: \{ `data`: `string` ; `source`: ``"method"`` \| ``"box"`` \| ``"local"`` \| ``"global"`` \| ``"literal"`` ; `type?`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `ABIArgumentType`  }[]
 
 #### Overrides
 
@@ -86,7 +86,7 @@ algosdk.ABIMethod.description
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:28
+[packages/sdk/src/abi/method.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L79)
 
 ___
 
@@ -100,7 +100,7 @@ algosdk.ABIMethod.events
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:38
+[packages/sdk/src/abi/method.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L87)
 
 ___
 
@@ -124,7 +124,7 @@ algosdk.ABIMethod.name
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:27
+[packages/sdk/src/abi/method.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L78)
 
 ___
 
@@ -138,7 +138,7 @@ algosdk.ABIMethod.readonly
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:39
+[packages/sdk/src/abi/method.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L88)
 
 ___
 
@@ -178,7 +178,7 @@ algosdk.ABIMethod.getSelector
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:42
+[packages/sdk/src/abi/method.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L134)
 
 ___
 
@@ -196,7 +196,7 @@ algosdk.ABIMethod.getSignature
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:41
+[packages/sdk/src/abi/method.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L128)
 
 ___
 
@@ -232,7 +232,7 @@ algosdk.ABIMethod.txnCount
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:43
+[packages/sdk/src/abi/method.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L139)
 
 ___
 
@@ -256,4 +256,4 @@ algosdk.ABIMethod.fromSignature
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:45
+[packages/sdk/src/abi/method.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/abi/method.ts#L167)

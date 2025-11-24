@@ -4,6 +4,10 @@
 
 ## Table of contents
 
+### Classes
+
+- [TransactionWrapper](../classes/types_transaction.TransactionWrapper.md)
+
 ### Interfaces
 
 - [AdditionalAtomicTransactionComposerContext](../interfaces/types_transaction.AdditionalAtomicTransactionComposerContext.md)
@@ -21,10 +25,17 @@
 ### Type Aliases
 
 - [Arc2TransactionNote](types_transaction.md#arc2transactionnote)
+- [PendingTransactionResponseWrapper](types_transaction.md#pendingtransactionresponsewrapper)
 - [SendSingleTransactionResult](types_transaction.md#sendsingletransactionresult)
 - [SendTransactionFrom](types_transaction.md#sendtransactionfrom)
+- [SignedTransactionWrapper](types_transaction.md#signedtransactionwrapper)
 - [TransactionNote](types_transaction.md#transactionnote)
 - [TransactionNoteData](types_transaction.md#transactionnotedata)
+
+### Functions
+
+- [wrapPendingTransactionResponse](types_transaction.md#wrappendingtransactionresponse)
+- [wrapPendingTransactionResponseOptional](types_transaction.md#wrappendingtransactionresponseoptional)
 
 ## Type Aliases
 
@@ -36,7 +47,17 @@ ARC-0002 compatible transaction note components https://github.com/algorandfound
 
 #### Defined in
 
-[src/types/transaction.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L16)
+[src/types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
+
+___
+
+### PendingTransactionResponseWrapper
+
+Ƭ **PendingTransactionResponseWrapper**: `Omit`\<`PendingTransactionResponse`, ``"txn"`` \| ``"innerTxns"``\> & \{ `innerTxns?`: [`PendingTransactionResponseWrapper`](types_transaction.md#pendingtransactionresponsewrapper)[] ; `txn`: [`SignedTransactionWrapper`](types_transaction.md#signedtransactionwrapper)  }
+
+#### Defined in
+
+[src/types/transaction.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L237)
 
 ___
 
@@ -48,7 +69,7 @@ Result from sending a single transaction.
 
 #### Defined in
 
-[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
+[src/types/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L60)
 
 ___
 
@@ -68,7 +89,17 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L108)
+[src/types/transaction.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L118)
+
+___
+
+### SignedTransactionWrapper
+
+Ƭ **SignedTransactionWrapper**: `Omit`\<`SignedTransaction`, ``"txn"``\> & \{ `txn`: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)  }
+
+#### Defined in
+
+[src/types/transaction.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L233)
 
 ___
 
@@ -78,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L12)
+[src/types/transaction.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L22)
 
 ___
 
@@ -88,4 +119,44 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L14)
+[src/types/transaction.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L24)
+
+## Functions
+
+### wrapPendingTransactionResponse
+
+▸ **wrapPendingTransactionResponse**(`response`): [`PendingTransactionResponseWrapper`](types_transaction.md#pendingtransactionresponsewrapper)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `response` | `PendingTransactionResponse` |
+
+#### Returns
+
+[`PendingTransactionResponseWrapper`](types_transaction.md#pendingtransactionresponsewrapper)
+
+#### Defined in
+
+[src/types/transaction.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L249)
+
+___
+
+### wrapPendingTransactionResponseOptional
+
+▸ **wrapPendingTransactionResponseOptional**(`response?`): [`PendingTransactionResponseWrapper`](types_transaction.md#pendingtransactionresponsewrapper) \| `undefined`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `response?` | `PendingTransactionResponse` |
+
+#### Returns
+
+[`PendingTransactionResponseWrapper`](types_transaction.md#pendingtransactionresponsewrapper) \| `undefined`
+
+#### Defined in
+
+[src/types/transaction.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L257)
