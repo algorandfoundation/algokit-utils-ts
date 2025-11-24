@@ -450,6 +450,176 @@ describe('ABIType encode decode', () => {
     expect(typeof decoded.name).toBe('string')
     expect(decoded.name).toBe('world')
   })
+
+  describe('Basic byte arrays', () => {
+    test('should convert a simple byte array to Uint8Array', () => {
+      // Create a static array of bytes: byte[4]
+      const arrayType = getABIType('byte[4]')
+
+      const value = [1, 2, 3, 4]
+      const encoded = encodeABIValue(arrayType, value)
+      const result = decodeABIValue(arrayType, encoded)
+
+      expect(result).toBeInstanceOf(Uint8Array)
+      expect(Array.from(result as Uint8Array)).toEqual([1, 2, 3, 4])
+    })
+
+    test('should handle dynamic byte arrays', () => {
+      // Create a dynamic array of bytes: byte[]
+      const arrayType = getABIType('byte[]')
+
+      const value = [10, 20, 30, 40, 50]
+      const encoded = encodeABIValue(arrayType, value)
+      const result = decodeABIValue(arrayType, encoded)
+
+      expect(result).toBeInstanceOf(Uint8Array)
+      expect(Array.from(result as Uint8Array)).toEqual([10, 20, 30, 40, 50])
+    })
+
+    test('should return existing Uint8Array as is', () => {
+      const arrayType = getABIType('byte[3]')
+
+      const value = new Uint8Array([5, 6, 7])
+      const encoded = encodeABIValue(arrayType, value)
+      const result = decodeABIValue(arrayType, encoded)
+
+      expect(result).toEqual(value)
+    })
+  })
+
+  describe('Nested arrays', () => {
+    test('should convert byte arrays inside arrays', () => {
+      // Create byte[2][]
+      const outerArrayType = getABIType('byte[2][]')
+
+      const value = [
+        [1, 2],
+        [3, 4],
+        [5, 6],
+      ]
+      const encoded = encodeABIValue(outerArrayType, value)
+      const result = decodeABIValue(outerArrayType, encoded) as ABIValue[]
+
+      expect(Array.isArray(result)).toBe(true)
+      expect(result.length).toBe(3)
+
+      result.forEach((item) => {
+        expect(item).toBeInstanceOf(Uint8Array)
+      })
+
+      expect(Array.from(result[0] as Uint8Array)).toEqual([1, 2])
+      expect(Array.from(result[1] as Uint8Array)).toEqual([3, 4])
+      expect(Array.from(result[2] as Uint8Array)).toEqual([5, 6])
+    })
+
+    test('should not convert non-byte arrays', () => {
+      // Create uint8[3]
+      const arrayType = getABIType('uint8[3]')
+
+      const value = [1, 2, 3]
+      const encoded = encodeABIValue(arrayType, value)
+      const result = decodeABIValue(arrayType, encoded)
+
+      expect(Array.isArray(result)).toBe(true)
+      expect(result).toEqual([1, 2, 3])
+    })
+  })
+
+  describe('Tuple tests', () => {
+    test('should handle tuples with byte arrays', () => {
+      // Create (byte[2],bool,byte[3])
+      const tupleType = getABIType('(byte[2],bool,byte[3])')
+
+      const value = [[1, 2], true, [3, 4, 5]]
+      const encoded = encodeABIValue(tupleType, value)
+      const result = decodeABIValue(tupleType, encoded) as ABIValue[]
+
+      expect(Array.isArray(result)).toBe(true)
+      expect(result.length).toBe(3)
+
+      expect(result[0]).toBeInstanceOf(Uint8Array)
+      expect(result[1]).toBe(true)
+      expect(result[2]).toBeInstanceOf(Uint8Array)
+
+      expect(Array.from(result[0] as Uint8Array)).toEqual([1, 2])
+      expect(Array.from(result[2] as Uint8Array)).toEqual([3, 4, 5])
+    })
+
+    test('should handle nested tuples with byte arrays', () => {
+      // Create (byte[2],(byte[1],bool))
+      const outerTupleType = getABIType('(byte[2],(byte[1],bool))')
+
+      const value = [
+        [1, 2],
+        [[3], true],
+      ]
+      const encoded = encodeABIValue(outerTupleType, value)
+      const result = decodeABIValue(outerTupleType, encoded) as ABIValue[]
+
+      expect(Array.isArray(result)).toBe(true)
+      expect(result.length).toBe(2)
+
+      expect(result[0]).toBeInstanceOf(Uint8Array)
+      expect(Array.from(result[0] as Uint8Array)).toEqual([1, 2])
+
+      const nestedTuple = result[1] as ABIValue[]
+      expect(Array.isArray(nestedTuple)).toBe(true)
+      expect(nestedTuple.length).toBe(2)
+      expect(nestedTuple[0]).toBeInstanceOf(Uint8Array)
+      expect(Array.from(nestedTuple[0] as Uint8Array)).toEqual([3])
+      expect(nestedTuple[1]).toBe(true)
+    })
+  })
+
+  describe('Complex mixed structures', () => {
+    test('should handle complex nested structures', () => {
+      // Create (byte[2][],uint8,(bool,byte[3]))
+      const outerTupleType = getABIType('(byte[2][],uint8,(bool,byte[3]))')
+
+      const value = [
+        [
+          [1, 2],
+          [3, 4],
+          [5, 6],
+        ], // byte[2][]
+        123, // uint8
+        [true, [7, 8, 9]], // (bool,byte[3])
+      ]
+
+      const encoded = encodeABIValue(outerTupleType, value)
+      const result = decodeABIValue(outerTupleType, encoded) as ABIValue[]
+
+      // Check first element (byte[2][])
+      const byteArrays = result[0] as ABIValue[]
+      expect(Array.isArray(byteArrays)).toBe(true)
+      expect(byteArrays.length).toBe(3)
+      byteArrays.forEach((item) => {
+        expect(item).toBeInstanceOf(Uint8Array)
+      })
+
+      // Check second element (uint8)
+      expect(result[1]).toBe(123)
+
+      // Check third element (bool,byte[3])
+      const tuple = result[2] as ABIValue[]
+      expect(tuple[0]).toBe(true)
+      expect(tuple[1]).toBeInstanceOf(Uint8Array)
+      expect(Array.from(tuple[1] as Uint8Array)).toEqual([7, 8, 9])
+    })
+  })
+
+  describe('Edge cases', () => {
+    test('should handle empty byte arrays', () => {
+      const arrayType = getABIType('byte[0]')
+
+      const value: number[] = []
+      const encoded = encodeABIValue(arrayType, value)
+      const result = decodeABIValue(arrayType, encoded)
+
+      expect(result).toBeInstanceOf(Uint8Array)
+      expect((result as Uint8Array).length).toBe(0)
+    })
+  })
 })
 
 // TODO: add failed tests
