@@ -1,4 +1,4 @@
-import { PUBLIC_KEY_BYTE_LENGTH, Address } from '@algorandfoundation/algokit-common'
+import { PUBLIC_KEY_BYTE_LENGTH, Address, arrayEqual } from '@algorandfoundation/algokit-common'
 
 abstract class Codec<T, TEncoded = T> {
   public abstract defaultValue(): TEncoded
@@ -76,18 +76,7 @@ class AddressCodec extends Codec<Address, Uint8Array> {
     const encoded = this.toEncoded(value)
     const defaultValue = this.defaultValue()
 
-    // Compare byte arrays element by element
-    if (encoded.length !== defaultValue.length) {
-      return false
-    }
-
-    for (let i = 0; i < encoded.length; i++) {
-      if (encoded[i] !== defaultValue[i]) {
-        return false
-      }
-    }
-
-    return true
+    return arrayEqual(encoded, defaultValue)
   }
 }
 

@@ -1,6 +1,6 @@
 import type { MultisigSignature, MultisigSubsignature, SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
 import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Address } from '@algorandfoundation/algokit-common'
+import { Address, arrayEqual } from '@algorandfoundation/algokit-common'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'
 import * as utils from './utils/utils.js'
@@ -95,7 +95,7 @@ function createMultisigTransactionWithSignature(
 
   // append the multisig signature to the corresponding public key in the multisig blob
   const updatedSubsigs = signedTxn.multiSignature!.subsignatures.map((subsig) => {
-    if (subsig.address.publicKey.every((byte, idx) => byte === myPk[idx])) {
+    if (arrayEqual(subsig.address.publicKey, myPk)) {
       keyExist = true
       return { ...subsig, signature: rawSig }
     }

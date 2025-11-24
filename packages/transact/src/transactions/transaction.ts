@@ -644,16 +644,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
 
       // Helper function to compare two addresses
       function addressesEqual(a?: Uint8Array, b?: Address): boolean {
-        if (!a && !b) return true
-        if (!a || !b) return false
-        const encodedB = addressCodec.encode(b)!
-
-        if (a.length !== encodedB.length) return false
-        for (let i = 0; i < a.length; i++) {
-          if (a[i] !== encodedB[i]) return false
-        }
-
-        return true
+        return new Address(a ?? new Uint8Array(32)).equals(b ?? Address.zeroAddress())
       }
 
       // Helper function to ensure a reference exists and return its 1-based index
@@ -689,7 +680,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (accessReferences.holding) {
           const holding = accessReferences.holding
           let addressIndex = 0
-          if (holding.address && holding.address.toString() !== Address.zeroAddress().toString()) {
+          if (holding.address && holding.address.equals(Address.zeroAddress())) {
             addressIndex = ensure({ address: holding.address })
           }
           const assetIndex = ensure({ assetId: holding.assetId })
@@ -705,7 +696,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (accessReferences.locals) {
           const locals = accessReferences.locals
           let addressIndex = 0
-          if (locals.address && locals.address.toString() !== Address.zeroAddress().toString()) {
+          if (locals.address && locals.address.equals(Address.zeroAddress())) {
             addressIndex = ensure({ address: locals.address })
           }
           let appIndex = 0
