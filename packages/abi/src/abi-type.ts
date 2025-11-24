@@ -667,7 +667,9 @@ function getABITupleTypeFromABIStructType(struct: ABIStructType): ABITupleType {
 }
 
 function structToString(type: ABIStructType): string {
-  return type.structName
+  // TODO: PD - confirm with Dan about this
+  const tupleType = getABITupleTypeFromABIStructType(type)
+  return tupleToString(tupleType)
 }
 
 function getTupleValueFromStructValue(structType: ABIStructType, structValue: ABIStructValue): ABIValue[] {
