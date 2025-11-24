@@ -173,3 +173,21 @@ export function getApplicationAddress(appID: number | bigint): Address {
   const hash = genericHash(toBeSigned)
   return new Address(Uint8Array.from(hash))
 }
+
+/**
+ * decodeAddress takes an Algorand address in string form and decodes it into a Uint8Array.
+ * @param address - an Algorand address with checksum.
+ * @returns the decoded form of the address's public key and checksum
+ */
+export function decodeAddress(address: string): Address {
+  return Address.fromString(address)
+}
+
+/**
+ * encodeAddress takes an Algorand address as a Uint8Array and encodes it into a string with checksum.
+ * @param address - a raw Algorand address
+ * @returns the address and checksum encoded as a string.
+ */
+export function encodeAddress(address: Uint8Array): string {
+  return new Address(address).toString()
+}
