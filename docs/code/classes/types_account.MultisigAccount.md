@@ -6,6 +6,10 @@
 
 Account wrapper that supports partial or full multisig signing.
 
+## Implements
+
+- `AddressWithSigner`
+
 ## Table of contents
 
 ### Constructors
@@ -17,7 +21,7 @@ Account wrapper that supports partial or full multisig signing.
 - [\_addr](types_account.MultisigAccount.md#_addr)
 - [\_params](types_account.MultisigAccount.md#_params)
 - [\_signer](types_account.MultisigAccount.md#_signer)
-- [\_signingAccounts](types_account.MultisigAccount.md#_signingaccounts)
+- [\_subSigners](types_account.MultisigAccount.md#_subsigners)
 
 ### Accessors
 
@@ -26,22 +30,18 @@ Account wrapper that supports partial or full multisig signing.
 - [signer](types_account.MultisigAccount.md#signer)
 - [signingAccounts](types_account.MultisigAccount.md#signingaccounts)
 
-### Methods
-
-- [sign](types_account.MultisigAccount.md#sign)
-
 ## Constructors
 
 ### constructor
 
-• **new MultisigAccount**(`multisigParams`, `signingAccounts`): [`MultisigAccount`](types_account.MultisigAccount.md)
+• **new MultisigAccount**(`multisigParams`, `subSigners`): [`MultisigAccount`](types_account.MultisigAccount.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `multisigParams` | `MultisigMetadata` |
-| `signingAccounts` | (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[] |
+| `subSigners` | `AddressWithSigner`[] |
 
 #### Returns
 
@@ -83,9 +83,9 @@ ___
 
 ___
 
-### \_signingAccounts
+### \_subSigners
 
-• **\_signingAccounts**: (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[]
+• **\_subSigners**: `AddressWithSigner`[]
 
 #### Defined in
 
@@ -102,6 +102,10 @@ The address of the multisig account
 #### Returns
 
 `Readonly`\<`Address`\>
+
+#### Implementation of
+
+AddressWithSigner.addr
 
 #### Defined in
 
@@ -135,6 +139,10 @@ The transaction signer for the multisig account
 
 `TransactionSigner`
 
+#### Implementation of
+
+AddressWithSigner.signer
+
 #### Defined in
 
 [src/types/account.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L44)
@@ -143,44 +151,14 @@ ___
 
 ### signingAccounts
 
-• `get` **signingAccounts**(): readonly (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[]
+• `get` **signingAccounts**(): readonly `AddressWithSigner`[]
 
 The list of accounts that are present to sign
 
 #### Returns
 
-readonly (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[]
+readonly `AddressWithSigner`[]
 
 #### Defined in
 
 [src/types/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L34)
-
-## Methods
-
-### sign
-
-▸ **sign**(`transaction`): `Uint8Array`
-
-Sign the given transaction
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transaction` | `Uint8Array` \| `Transaction` | Either a transaction object or a raw, partially signed transaction |
-
-#### Returns
-
-`Uint8Array`
-
-The transaction signed by the present signers
-
-**`Example`**
-
-```typescript
-const signedTxn = multisigAccount.sign(myTransaction)
-```
-
-#### Defined in
-
-[src/types/account.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L67)

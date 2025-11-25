@@ -108,7 +108,6 @@
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
-- [multisigAccount](index.md#multisigaccount)
 - [performAtomicTransactionComposerSimulate](index.md#performatomictransactioncomposersimulate)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
@@ -924,7 +923,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L126)
+[src/account/account.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L114)
 
 ___
 
@@ -950,7 +949,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L115)
+[src/account/account.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L103)
 
 ___
 
@@ -990,7 +989,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L168)
+[src/account/account.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L156)
 
 ___
 
@@ -1061,7 +1060,7 @@ const accountInfo = await account.getInformation(address, algod);
 
 #### Defined in
 
-[src/account/account.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L146)
+[src/account/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L134)
 
 ___
 
@@ -2402,36 +2401,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/account/account.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L95)
-
-___
-
-### multisigAccount
-
-▸ **multisigAccount**(`multisigParams`, `signingAccounts`): [`MultisigAccount`](../classes/types_account.MultisigAccount.md)
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `multisigParams` | `MultisigMetadata` | The parameters that define the multisig account |
-| `signingAccounts` | (`default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md))[] | The signers that are currently present |
-
-#### Returns
-
-[`MultisigAccount`](../classes/types_account.MultisigAccount.md)
-
-A multisig account wrapper
-
-**`Deprecated`**
-
-Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
-
-Returns an account wrapper that supports partial or full multisig signing.
-
-#### Defined in
-
-[src/account/account.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L22)
+[src/account/account.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L83)
 
 ___
 
@@ -2627,7 +2597,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L58)
+[src/account/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L46)
 
 ___
 
@@ -2693,7 +2663,7 @@ Returns an account wrapper that supports a rekeyed account.
 
 #### Defined in
 
-[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
+[src/account/account.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L22)
 
 ___
 
@@ -2834,7 +2804,7 @@ Returns an account wrapper that supports a transaction signer with associated se
 
 #### Defined in
 
-[src/account/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L46)
+[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
 
 ___
 

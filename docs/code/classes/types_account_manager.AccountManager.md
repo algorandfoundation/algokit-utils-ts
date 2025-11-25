@@ -624,7 +624,7 @@ ___
 
 ### multisig
 
-▸ **multisig**(`multisigParams`, `signingAccounts`): `Address` & `AddressWithSigner` & \{ `account`: [`MultisigAccount`](types_account.MultisigAccount.md)  }
+▸ **multisig**(`multisigParams`, `subSigners`): `Address` & `AddressWithSigner` & \{ `account`: [`MultisigAccount`](types_account.MultisigAccount.md)  }
 
 Tracks and returns an account that supports partial or full multisig signing.
 
@@ -633,7 +633,7 @@ Tracks and returns an account that supports partial or full multisig signing.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `multisigParams` | `MultisigMetadata` | The parameters that define the multisig account |
-| `signingAccounts` | (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[] | The signers that are currently present |
+| `subSigners` | `AddressWithSigner`[] | The signers that are currently present |
 
 #### Returns
 
