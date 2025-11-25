@@ -389,11 +389,11 @@ export class AccountManager {
    *  [(await accountManager.fromEnvironment('ACCOUNT1')).account])
    * ```
    * @param multisigParams The parameters that define the multisig account
-   * @param signingAccounts The signers that are currently present
+   * @param subSigners The signers that are currently present
    * @returns A multisig account wrapper
    */
-  public multisig(multisigParams: algosdk.MultisigMetadata, signingAccounts: (algosdk.Account | SigningAccount)[]) {
-    return this.signerAccount(new MultisigAccount(multisigParams, signingAccounts))
+  public multisig(multisigParams: algosdk.MultisigMetadata, subSigners: AddressWithSigner[]) {
+    return this.signerAccount(new MultisigAccount(multisigParams, subSigners))
   }
 
   /**

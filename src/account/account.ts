@@ -1,27 +1,15 @@
 import { Account as AccountInformation, AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, Kmd, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
+import { Address, Kmd, TransactionSigner } from '@algorandfoundation/sdk'
 import { getSenderAddress } from '../transaction/transaction'
-import { AccountAssetInformation, MultisigAccount, SigningAccount } from '../types/account'
+import { AccountAssetInformation, SigningAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
-
-/**
- * @deprecated Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
- *
- * Returns an account wrapper that supports partial or full multisig signing.
- * @param multisigParams The parameters that define the multisig account
- * @param signingAccounts The signers that are currently present
- * @returns A multisig account wrapper
- */
-export function multisigAccount(multisigParams: MultisigMetadata, signingAccounts: (Account | SigningAccount)[]) {
-  return new MultisigAccount(multisigParams, signingAccounts)
-}
 
 /**
  * @deprecated Use `algorand.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
