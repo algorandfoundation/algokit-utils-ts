@@ -163,10 +163,6 @@ export interface AdditionalTransactionComposerContext {
 export interface TransactionComposerToSend extends SendParams {
   /** The `TransactionComposer` with transactions loaded to send */
   transactionComposer: TransactionComposer
-  /**
-   * @deprecated - set the parameters at the top level instead
-   * Any parameters to control the semantics of the send to the network */
-  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
 }
 
 export class TransactionWrapper implements Transaction {

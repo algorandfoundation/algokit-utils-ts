@@ -2,6 +2,7 @@ import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import { ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
+import { BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,
@@ -36,32 +37,6 @@ export interface AppReference {
   /** The Algorand address of the account associated with the app */
   appAddress: string
 }
-
-/**
- * @deprecated Use `types/app-manager/BoxReference` instead.
- *
- * A grouping of the app ID and name of the box in an Uint8Array
- */
-export interface BoxReference {
-  /**
-   * A unique application id
-   */
-  appId: number | bigint
-  /**
-   * Name of box to reference
-   */
-  name: BoxIdentifier
-}
-
-/**
- * @deprecated Use `types/app-manager/BoxIdentifier` instead.
- *
- * Something that identifies a box name - either a:
- *  * `Uint8Array`
- *  * `string` (that will be encoded to a Uint8Array)
- *  * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
- */
-export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
 
 /** Common app call arguments for ABI and non-ABI (raw) calls */
 export interface CoreAppCallArgs {
@@ -118,6 +93,7 @@ export type ABIAppCallArgs = CoreAppCallArgs & {
  **/
 export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
+// TODO: PD - how to remove these interfaces?
 /**
  * @deprecated Use `TransactionComposer` to construct create app transactions instead.
  *

@@ -1966,19 +1966,6 @@ export class TransactionComposer {
   }
 
   /**
-   * @deprecated Use `send` instead.
-   *
-   * Compose the transaction group and send it to the network
-   *
-   * An alias for `composer.send(params)`.
-   * @param params The parameters to control execution with
-   * @returns The execution result
-   */
-  async execute(params?: SendParams): Promise<SendTransactionComposerResults> {
-    return this.send(params)
-  }
-
-  /**
    * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
