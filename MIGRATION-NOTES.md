@@ -37,8 +37,8 @@ A collection of random notes pop up during the migration process.
   - how to construct ABIStruct from string
 - Make sure that the python utils also sort resources during resource population
 - migration stratefy for EventType.TxnGroupSimulated in utils-ts-debug
-- create BuildComposerTransactionsError error type
 - TODO: docs for composer simulate workflow
   - without calling `build` first => simulate without resource population
   - call `build` -> resource population into transactions with signers -> simulate will use the transactions with signers
 - review the names of SignedTransactionWrapper
+- TODO: re-export transact under utils/transact folder

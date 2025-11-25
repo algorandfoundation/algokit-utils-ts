@@ -261,6 +261,9 @@ export class TransactionComposer {
 
   private signedTransactions?: SignedTransaction[]
 
+  // Cache the raw transactions before resource population for error handling
+  private rawBuildTransactions?: Transaction[]
+
   // Note: This doesn't need to be a private field of this class
   // It has been done this way so that another process can manipulate this values, i.e. `legacySendTransactionBridge`
   // Once the legacy bridges are removed, this can be calculated on the fly
@@ -1356,6 +1359,9 @@ export class TransactionComposer {
       const suggestedParams = await this.getSuggestedParams()
       const builtTransactions = await this._buildTransactions(suggestedParams)
 
+      // Cache the raw transactions before resource population for error handling
+      this.rawBuildTransactions = builtTransactions.transactions
+
       const groupAnalysis =
         (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
         builtTransactions.transactions.some((txn) => txn.type === TransactionType.AppCall)
@@ -1892,14 +1898,29 @@ export class TransactionComposer {
         err.name = originalError.name
       }
 
-      if (Config.debug && typeof originalError === 'object') {
+      // Resolve transactions for error handling - use transactionsWithSigners if available,
+      // otherwise fall back to rawBuildTransactions
+      let sentTransactions: Transaction[] | undefined
+      if (this.transactionsWithSigners) {
+        sentTransactions = this.transactionsWithSigners.map((t) => t.txn)
+      } else if (this.rawBuildTransactions) {
+        sentTransactions = this.rawBuildTransactions.length > 0 ? groupTransactions(this.rawBuildTransactions) : this.rawBuildTransactions
+      }
+
+      if (Config.debug && typeof originalError === 'object' && sentTransactions) {
         err.traces = []
         Config.getLogger(params?.suppressLog).error(
           'Received error executing Transaction Composer and debug flag enabled; attempting simulation to get more information',
           err,
         )
 
-        const simulateResult = await this.simulate({
+        const transactionsWithEmptySigners: TransactionWithSigner[] = sentTransactions.map((txn) => ({
+          txn,
+          signer: algosdk.makeEmptyTransactionSigner(),
+        }))
+        const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
+        const simulateRequest = {
+          txnGroups: [{ txns: signedTransactions }],
           allowEmptySignatures: true,
           fixSigners: true,
           allowMoreLogging: true,
@@ -1909,9 +1930,8 @@ export class TransactionComposer {
             stackChange: true,
             stateChange: true,
           },
-          throwOnFailure: false,
-        })
-        const simulateResponse = simulateResult.simulateResponse
+        } satisfies SimulateRequest
+        const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
@@ -1939,9 +1959,7 @@ export class TransactionComposer {
       }
 
       // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = (this.transactionsWithSigners ?? []).map(
-        (transactionWithSigner) => new TransactionWrapper(transactionWithSigner.txn),
-      )
+      err.sentTransactions = (sentTransactions ?? []).map((txn) => new TransactionWrapper(txn))
 
       throw await this.transformError(err)
     }
