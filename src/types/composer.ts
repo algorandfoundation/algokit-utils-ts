@@ -25,7 +25,7 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, Address, TransactionSigner } from '@algorandfoundation/sdk'
+import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import {
@@ -264,11 +264,6 @@ export class TransactionComposer {
   // Cache the raw transactions before resource population for error handling
   private rawBuildTransactions?: Transaction[]
 
-  // Note: This doesn't need to be a private field of this class
-  // It has been done this way so that another process can manipulate this values, i.e. `legacySendTransactionBridge`
-  // Once the legacy bridges are removed, this can be calculated on the fly
-  private methodCalls: Map<number, algosdk.ABIMethod> = new Map()
-
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
     if (!(originalError instanceof Error)) {
@@ -436,7 +431,6 @@ export class TransactionComposer {
       newComposer.txns.push(this.cloneTransaction(txn))
     })
 
-    newComposer.methodCalls = new Map(this.methodCalls)
     newComposer.defaultValidityWindowIsExplicit = this.defaultValidityWindowIsExplicit
 
     return newComposer
@@ -493,14 +487,8 @@ export class TransactionComposer {
    * ```
    */
   public addTransactionComposer(composer: TransactionComposer): TransactionComposer {
-    const currentIndex = this.txns.length
     const clonedTxns = composer.txns.map((txn) => this.cloneTransaction(txn))
     this.push(...clonedTxns)
-
-    // Copy methodCalls from the target composer, adjusting indices
-    composer.methodCalls.forEach((method, index) => {
-      this.methodCalls.set(currentIndex + index, method)
-    })
 
     return this
   }
@@ -1029,7 +1017,6 @@ export class TransactionComposer {
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1037,14 +1024,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1098,7 +1077,6 @@ export class TransactionComposer {
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1106,14 +1084,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1165,7 +1135,6 @@ export class TransactionComposer {
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1173,14 +1142,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1232,7 +1193,6 @@ export class TransactionComposer {
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1240,14 +1200,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1378,9 +1330,16 @@ export class TransactionComposer {
       })
     }
 
+    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    this.txns.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        methodCalls.set(index, txn.data.method)
+      }
+    })
+
     return {
       transactions: this.transactionsWithSigners,
-      methodCalls: this.methodCalls,
+      methodCalls,
     }
   }
 
@@ -1484,7 +1443,14 @@ export class TransactionComposer {
       throw new Error(`Transaction group size ${transactions.length} exceeds the maximum limit of ${MAX_TRANSACTION_GROUP_SIZE}`)
     }
 
-    return { transactions, methodCalls: this.methodCalls, signers }
+    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    this.txns.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        methodCalls.set(index, txn.data.method)
+      }
+    })
+
+    return { transactions, methodCalls, signers }
   }
 
   /**
@@ -1878,7 +1844,7 @@ export class TransactionComposer {
         confirmations = await Promise.all(transactionIds.map(async (id) => await waitForConfirmation(id, waitRounds, this.algod)))
       }
 
-      const abiReturns = this.parseAbiReturnValues(confirmations, this.methodCalls)
+      const abiReturns = this.parseAbiReturnValues(confirmations)
 
       return {
         groupId: group ? Buffer.from(group).toString('base64') : undefined,
@@ -2068,10 +2034,7 @@ export class TransactionComposer {
       await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
     }
 
-    const abiReturns = this.parseAbiReturnValues(
-      simulateResult.txnResults.map((t) => t.txnResult),
-      this.methodCalls,
-    )
+    const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
 
     return {
       confirmations: simulateResult.txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
@@ -2151,14 +2114,16 @@ export class TransactionComposer {
     return signedTransactions
   }
 
-  private parseAbiReturnValues(confirmations: PendingTransactionResponse[], methodCalls: Map<number, ABIMethod>): ABIReturn[] {
+  private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
     const abiReturns = new Array<ABIReturn>()
 
     for (let i = 0; i < confirmations.length; i++) {
       const confirmation = confirmations[i]
-      const method = methodCalls.get(i)
+      const txn = this.txns[i]
+      if (txn?.type !== 'methodCall') continue
 
-      if (method && method.returns.type !== 'void') {
+      const method = txn.data.method
+      if (method.returns.type !== 'void') {
         const abiReturn = AppManager.getABIReturn(confirmation, method)
         if (abiReturn !== undefined) {
           abiReturns.push(abiReturn)
