@@ -1,10 +1,10 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
-import { AlgorandClient } from './types/algorand-client'
-import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
+import { AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
 import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
 import { SendTransactionResult } from './types/transaction'
+import { getOptionalAddress } from '@algorandfoundation/algokit-common'
 
 /**
  * @deprecated use `algorand.send.assetCreate()` / `algorand.createTransaction.assetCreate()` instead
@@ -111,61 +111,7 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: AlgodClient)
     optOut,
     params,
     (c) => c.assetOptOut,
-    (c) => (params: NewAssetOptOutParams) => c.assetOptOut({ ...params, ensureZeroBalance: optOut.ensureZeroBalance ?? true }),
+    (c) => (params: NewAssetOptOutParams) =>
+      c.assetOptOut({ ...params, creator: getOptionalAddress(params.creator), ensureZeroBalance: optOut.ensureZeroBalance ?? true }),
   )
-}
-
-/**
- * @deprecated use `algorand.asset.bulkOptIn()` instead
- *
- * Opt in to a list of assets on the Algorand blockchain.
- *
- * @param optIn - The bulk opt-in request.
- * @param algod - An instance of the AlgodClient class.
- * @returns A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
- * @throws If there is an error during the opt-in process.
- * @example algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
- */
-export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: AlgodClient): Promise<Record<number, string>> {
-  const result = await AlgorandClient.fromClients({ algod })
-    .setSignerFromAccount(optIn.account)
-    .asset.bulkOptIn(getSenderAddress(optIn.account), optIn.assetIds.map(BigInt), {
-      note: encodeTransactionNote(optIn.note),
-      maxFee: optIn.maxFee,
-      suppressLog: optIn.suppressLog,
-    })
-
-  const returnResult: Record<number, string> = {}
-  for (const r of result) {
-    returnResult[Number(r.assetId)] = r.transactionId
-  }
-  return returnResult
-}
-
-/**
- * @deprecated use `algorand.asset.bulkOptOut()` instead
- *
- * Opt out of multiple assets in Algorand blockchain.
- *
- * @param optOut The bulk opt-out request.
- * @param algod - An instance of the AlgodClient used to interact with the Algorand blockchain.
- * @returns A record object containing asset IDs as keys and their corresponding transaction IDs as values.
- * @throws If there is an error during the opt-out process.
- * @example algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
- */
-export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: AlgodClient): Promise<Record<number, string>> {
-  const result = await AlgorandClient.fromClients({ algod })
-    .setSignerFromAccount(optOut.account)
-    .asset.bulkOptOut(getSenderAddress(optOut.account), optOut.assetIds.map(BigInt), {
-      ensureZeroBalance: optOut.validateBalances ?? true,
-      note: encodeTransactionNote(optOut.note),
-      maxFee: optOut.maxFee,
-      suppressLog: optOut.suppressLog,
-    })
-
-  const returnResult: Record<number, string> = {}
-  for (const r of result) {
-    returnResult[Number(r.assetId)] = r.transactionId
-  }
-  return returnResult
 }

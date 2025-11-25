@@ -1,5 +1,5 @@
-import { Address } from './encoding/address.js';
-import { Encodable, Schema } from './encoding/encoding.js';
+import { Address } from './encoding/address.js'
+import { Encodable, Schema } from './encoding/encoding.js'
 import {
   AddressSchema,
   Uint64Schema,
@@ -7,7 +7,7 @@ import {
   FixedLengthByteArraySchema,
   NamedMapSchema,
   allOmitEmpty,
-} from './encoding/schema/index.js';
+} from './encoding/schema/index.js'
 
 export class HeartbeatProof implements Encodable {
   public static readonly encodingSchema = new NamedMapSchema(
@@ -32,36 +32,30 @@ export class HeartbeatProof implements Encodable {
         key: 'p2s', // PK2Sig
         valueSchema: new FixedLengthByteArraySchema(64),
       },
-    ])
-  );
+    ]),
+  )
 
-  public sig: Uint8Array;
+  public sig: Uint8Array
 
-  public pk: Uint8Array;
+  public pk: Uint8Array
 
-  public pk2: Uint8Array;
+  public pk2: Uint8Array
 
-  public pk1Sig: Uint8Array;
+  public pk1Sig: Uint8Array
 
-  public pk2Sig: Uint8Array;
+  public pk2Sig: Uint8Array
 
-  public constructor(params: {
-    sig: Uint8Array;
-    pk: Uint8Array;
-    pk2: Uint8Array;
-    pk1Sig: Uint8Array;
-    pk2Sig: Uint8Array;
-  }) {
-    this.sig = params.sig;
-    this.pk = params.pk;
-    this.pk2 = params.pk2;
-    this.pk1Sig = params.pk1Sig;
-    this.pk2Sig = params.pk2Sig;
+  public constructor(params: { sig: Uint8Array; pk: Uint8Array; pk2: Uint8Array; pk1Sig: Uint8Array; pk2Sig: Uint8Array }) {
+    this.sig = params.sig
+    this.pk = params.pk
+    this.pk2 = params.pk2
+    this.pk1Sig = params.pk1Sig
+    this.pk2Sig = params.pk2Sig
   }
 
   // eslint-disable-next-line class-methods-use-this
   public getEncodingSchema(): Schema {
-    return HeartbeatProof.encodingSchema;
+    return HeartbeatProof.encodingSchema
   }
 
   public toEncodingData(): Map<string, unknown> {
@@ -71,12 +65,12 @@ export class HeartbeatProof implements Encodable {
       ['p2', this.pk2],
       ['p1s', this.pk1Sig],
       ['p2s', this.pk2Sig],
-    ]);
+    ])
   }
 
   public static fromEncodingData(data: unknown): HeartbeatProof {
     if (!(data instanceof Map)) {
-      throw new Error(`Invalid decoded HeartbeatProof: ${data}`);
+      throw new Error(`Invalid decoded HeartbeatProof: ${data}`)
     }
     return new HeartbeatProof({
       sig: data.get('s'),
@@ -84,7 +78,7 @@ export class HeartbeatProof implements Encodable {
       pk2: data.get('p2'),
       pk1Sig: data.get('p1s'),
       pk2Sig: data.get('p2s'),
-    });
+    })
   }
 }
 
@@ -111,36 +105,30 @@ export class Heartbeat implements Encodable {
         key: 'kd', // HbKeyDilution
         valueSchema: new Uint64Schema(),
       },
-    ])
-  );
+    ]),
+  )
 
-  public address: Address;
+  public address: Address
 
-  public proof: HeartbeatProof;
+  public proof: HeartbeatProof
 
-  public seed: Uint8Array;
+  public seed: Uint8Array
 
-  public voteID: Uint8Array;
+  public voteID: Uint8Array
 
-  public keyDilution: bigint;
+  public keyDilution: bigint
 
-  public constructor(params: {
-    address: Address;
-    proof: HeartbeatProof;
-    seed: Uint8Array;
-    voteID: Uint8Array;
-    keyDilution: bigint;
-  }) {
-    this.address = params.address;
-    this.proof = params.proof;
-    this.seed = params.seed;
-    this.voteID = params.voteID;
-    this.keyDilution = params.keyDilution;
+  public constructor(params: { address: Address; proof: HeartbeatProof; seed: Uint8Array; voteID: Uint8Array; keyDilution: bigint }) {
+    this.address = params.address
+    this.proof = params.proof
+    this.seed = params.seed
+    this.voteID = params.voteID
+    this.keyDilution = params.keyDilution
   }
 
   // eslint-disable-next-line class-methods-use-this
   public getEncodingSchema(): Schema {
-    return Heartbeat.encodingSchema;
+    return Heartbeat.encodingSchema
   }
 
   public toEncodingData(): Map<string, unknown> {
@@ -150,12 +138,12 @@ export class Heartbeat implements Encodable {
       ['sd', this.seed],
       ['vid', this.voteID],
       ['kd', this.keyDilution],
-    ]);
+    ])
   }
 
   public static fromEncodingData(data: unknown): Heartbeat {
     if (!(data instanceof Map)) {
-      throw new Error(`Invalid decoded Heartbeat: ${data}`);
+      throw new Error(`Invalid decoded Heartbeat: ${data}`)
     }
     return new Heartbeat({
       address: data.get('a'),
@@ -163,6 +151,6 @@ export class Heartbeat implements Encodable {
       seed: data.get('sd'),
       voteID: data.get('vid'),
       keyDilution: data.get('kd'),
-    });
+    })
   }
 }

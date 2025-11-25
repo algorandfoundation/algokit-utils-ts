@@ -29,7 +29,7 @@ import {
   TransactionNote,
   TransactionWrapper,
 } from '../types/transaction'
-import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
+import { encodeLease, encodeTransactionNote, getSenderAddress } from './transaction'
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
 export async function legacySendTransactionBridge<T extends CommonTransactionParams, TResult extends SendSingleTransactionResult>(
@@ -47,7 +47,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   const newGroup = () =>
     new TransactionComposer({
       algod,
-      getSigner: () => getSenderTransactionSigner(from),
+      getSigner: () => from.signer,
       getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.suggestedParams()),
       appManager,
     })
@@ -70,8 +70,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
       txns
         .map((txn, i) => ({
           txn,
-          signer:
-            'signers' in transaction ? (transaction.signers.get(i) ?? getSenderTransactionSigner(from)) : getSenderTransactionSigner(from),
+          signer: 'signers' in transaction ? (transaction.signers.get(i) ?? from.signer) : from.signer,
         }))
         .forEach((t) => sendParams.atc!.addTransaction(t))
       // Populate ATC with method calls
@@ -134,7 +133,7 @@ export async function legacySendAppTransactionBridge<
  * @deprecated
  */
 export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
-  const signer = getSenderTransactionSigner(from)
+  const { signer } = from
   const methodArgs = await Promise.all(
     ('methodArgs' in args ? args.methodArgs : args)?.map(async (a, index) => {
       if (a === undefined) {
@@ -149,7 +148,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
         : a instanceof Promise
           ? { txn: (await a).transaction, signer }
           : 'transaction' in a
-            ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
+            ? { txn: a.transaction, signer: 'signer' in a ? ('signer' in a.signer ? a.signer.signer : a.signer) : signer }
             : 'type' in a
               ? { txn: a, signer }
               : a
@@ -157,7 +156,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
   )
   return {
     method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
-    sender: getSenderAddress(from),
+    sender: from,
     signer: signer,
     boxes: args.boxes?.map(_getBoxReference),
     lease: encodeLease(args.lease),

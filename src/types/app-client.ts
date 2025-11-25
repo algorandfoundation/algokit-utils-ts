@@ -1,5 +1,5 @@
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -30,7 +30,6 @@ import { Config } from '../config'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { asJson, binaryStartsWith } from '../util'
-import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import {
@@ -96,6 +95,7 @@ import {
   wrapPendingTransactionResponse,
   wrapPendingTransactionResponseOptional,
 } from './transaction'
+import { getAddress, getOptionalAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
@@ -103,7 +103,7 @@ const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
   /** The address of the app creator account to resolve the app by */
-  creatorAddress: Address | string
+  creatorAddress: ReadableAddress
   /** The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) */
   name?: string
   /** The mechanism to find an existing app instance metadata for the given creator and name; either:
@@ -346,7 +346,7 @@ export interface AppClientParams {
    */
   appName?: string
   /** Optional address to use for the account to use as the default sender for calls. */
-  defaultSender?: Address | string
+  defaultSender?: ReadableAddress
   /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
   defaultSigner?: TransactionSigner
   /** Optional source map for the approval program */
@@ -368,7 +368,7 @@ export type CallOnComplete = {
 export type AppClientBareCallParams = Expand<
   Omit<CommonAppCallParams, 'appId' | 'sender' | 'onComplete'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
-    sender?: Address | string
+    sender?: ReadableAddress
   }
 >
 
@@ -376,7 +376,7 @@ export type AppClientBareCallParams = Expand<
 export type AppClientMethodCallParams = Expand<
   Omit<CommonAppCallParams, 'appId' | 'sender' | 'method' | 'args'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
-    sender?: Address | string
+    sender?: ReadableAddress
     /** The method name or method signature to call if an ABI call is being emitted
      * @example Method name
      * `my_method`
@@ -402,7 +402,7 @@ export type FundAppParams = Expand<
   Omit<PaymentParams, 'receiver' | 'sender'> &
     SendParams & {
       /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
-      sender?: Address | string
+      sender?: ReadableAddress
     }
 >
 
@@ -410,7 +410,7 @@ export type FundAppParams = Expand<
 export type ResolveAppClientByCreatorAndName = Expand<
   Omit<AppClientParams, 'appId'> & {
     /** The address of the creator account for the app */
-    creatorAddress: Address | string
+    creatorAddress: ReadableAddress
     /** An optional cached app lookup that matches a name to on-chain details;
      * either this is needed or indexer is required to be passed in to this `ClientManager` on construction.
      */
@@ -531,7 +531,7 @@ export class AppClient {
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
     this._algorand.registerErrorTransformer!(this.handleCallErrors)
-    this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
+    this._defaultSender = getOptionalAddress(params.defaultSender)
     this._defaultSigner = params.defaultSigner
     this._lastCompiled = {}
 
@@ -779,8 +779,8 @@ export class AppClient {
    * const localState = await appClient.getLocalState('ACCOUNT_ADDRESS')
    * ```
    */
-  public async getLocalState(address: Address | string): Promise<AppState> {
-    return await this._algorand.app.getLocalState(this.appId, address)
+  public async getLocalState(address: ReadableAddress): Promise<AppState> {
+    return await this._algorand.app.getLocalState(this.appId, getAddress(address))
   }
 
   /**
@@ -1120,7 +1120,7 @@ export class AppClient {
   private async getABIArgsWithDefaultValues(
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
-    sender: Address | string,
+    sender: ReadableAddress,
   ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
     const m = getArc56Method(methodNameOrSignature, this._appSpec)
     return await Promise.all(
@@ -1534,25 +1534,25 @@ export class AppClient {
 
   /** Returns the sender for a call, using the provided sender or using the `defaultSender`
    * if none provided and throws an error if neither provided */
-  private getSender(sender: Address | string | undefined): Address {
+  private getSender(sender: ReadableAddress | undefined): Address {
     if (!sender && !this._defaultSender) {
       throw new Error(`No sender provided and no default sender present in app client for call to app ${this._appName}`)
     }
-    return typeof sender === 'string' ? Address.fromString(sender) : (sender ?? this._defaultSender!)
+    return getAddress(sender ?? this._defaultSender!)
   }
 
   /** Returns the signer for a call, using the provided signer or the `defaultSigner`
    * if no signer was provided and the sender resolves to the default sender, the call will use default signer
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
-    sender: Address | string | undefined,
-    signer: TransactionSigner | TransactionSignerAccount | undefined,
-  ): TransactionSigner | TransactionSignerAccount | undefined {
+    sender: ReadableAddress | undefined,
+    signer: TransactionSigner | AddressWithSigner | undefined,
+  ): TransactionSigner | AddressWithSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 
   private getBareParams<
-    TParams extends { sender?: Address | string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithSigner } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -1567,8 +1567,8 @@ export class AppClient {
   private async getABIParams<
     TParams extends {
       method: string
-      sender?: Address | string
-      signer?: TransactionSigner | TransactionSignerAccount
+      sender?: ReadableAddress
+      signer?: TransactionSigner | AddressWithSigner
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,

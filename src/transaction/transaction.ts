@@ -9,7 +9,7 @@ import {
   SimulationTransactionExecTraceMeta,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
-import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
+import type { AppCallTransactionFields, SendingAddress } from '@algorandfoundation/algokit-transact'
 import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, ABIReturnType, Address, AtomicTransactionComposer, TransactionSigner, stringifyJSON } from '@algorandfoundation/sdk'
@@ -24,9 +24,7 @@ import {
   SendAtomicTransactionComposerResults,
   SendParams,
   SendTransactionFrom,
-  SendTransactionParams,
   SendTransactionResult,
-  TransactionGroupToSend,
   TransactionNote,
   TransactionToSign,
   TransactionWrapper,
@@ -34,6 +32,7 @@ import {
 } from '../types/transaction'
 import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
+import { getAddress } from '@algorandfoundation/algokit-common'
 
 // Type aliases for compatibility
 type ApplicationTransactionFields = AppCallTransactionFields
@@ -46,6 +45,42 @@ export interface TransactionWithSigner {
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
 export const MAX_APP_CALL_ACCOUNT_REFERENCES = 4
+
+/**
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to construct transactions instead or
+ * construct an `algosdk.TransactionWithSigner` manually instead.
+ *
+ * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
+ * AtomicTransactionComposer's addTransaction method.
+ * @param transaction One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the
+ * signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by
+ * one of algokit utils' helpers (signer is obtained from the defaultSender parameter)
+ * @param defaultSender The default sender to be used to obtain a signer where the object provided to the transaction parameter does not
+ * include a signer.
+ * @returns A TransactionWithSigner object.
+ */
+export const getTransactionWithSigner = async (
+  transaction: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
+  defaultSender?: SendTransactionFrom,
+): Promise<TransactionWithSigner> => {
+  if ('txn' in transaction) return transaction
+  if (defaultSender === undefined)
+    throw new Error('Default sender must be provided when passing in a transaction object that does not contain its own signer')
+  return transaction instanceof Promise
+    ? {
+        txn: (await transaction).transaction,
+        signer: defaultSender.signer,
+      }
+    : 'transaction' in transaction
+      ? {
+          txn: transaction.transaction,
+          signer: 'signer' in transaction.signer ? transaction.signer.signer : transaction.signer,
+        }
+      : {
+          txn: transaction,
+          signer: defaultSender.signer,
+        }
+}
 
 /**
  * @deprecated Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `TransactionComposer.arc2Note`.
@@ -116,162 +151,14 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
 
 /**
  * @deprecated Use `algorand.client` to interact with accounts, and use `.addr` to get the address
- * and/or move from using `SendTransactionFrom` to `TransactionSignerAccount` and use `.addr` instead.
+ * and/or move from using `SendTransactionFrom` to `AddressWithSigner` and use `.addr` instead.
  *
  * Returns the public address of the given transaction sender.
  * @param sender A transaction sender
  * @returns The public address
  */
-export const getSenderAddress = function (sender: string | SendTransactionFrom): string {
-  return typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr.toString() : sender.address().toString()
-}
-
-/**
- * @deprecated Use `AlgorandClient` / `TransactionComposer` to construct transactions instead or
- * construct an `algosdk.TransactionWithSigner` manually instead.
- *
- * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
- * AtomicTransactionComposer's addTransaction method.
- * @param transaction One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the
- * signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by
- * one of algokit utils' helpers (signer is obtained from the defaultSender parameter)
- * @param defaultSender The default sender to be used to obtain a signer where the object provided to the transaction parameter does not
- * include a signer.
- * @returns A TransactionWithSigner object.
- */
-export const getTransactionWithSigner = async (
-  transaction: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
-  defaultSender?: SendTransactionFrom,
-): Promise<TransactionWithSigner> => {
-  if ('txn' in transaction) return transaction
-  if (defaultSender === undefined)
-    throw new Error('Default sender must be provided when passing in a transaction object that does not contain its own signer')
-  return transaction instanceof Promise
-    ? {
-        txn: (await transaction).transaction,
-        signer: getSenderTransactionSigner(defaultSender),
-      }
-    : 'transaction' in transaction
-      ? {
-          txn: transaction.transaction,
-          signer: getSenderTransactionSigner(transaction.signer),
-        }
-      : {
-          txn: transaction,
-          signer: getSenderTransactionSigner(defaultSender),
-        }
-}
-
-const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
-  const cache = new Map()
-  const cached = function (this: unknown, val: T) {
-    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
-  }
-  cached.cache = cache
-  return cached as (val: T) => R
-}
-
-/**
- * @deprecated Use `TransactionSignerAccount` instead of `SendTransactionFrom` or use
- * `algosdk.makeBasicAccountTransactionSigner` / `algosdk.makeLogicSigAccountTransactionSigner`.
- *
- * Returns a `TransactionSigner` for the given transaction sender.
- * This function has memoization, so will return the same transaction signer for a given sender.
- * @param sender A transaction sender
- * @returns A transaction signer
- */
-export const getSenderTransactionSigner = memoize(function (sender: SendTransactionFrom): TransactionSigner {
-  return 'signer' in sender
-    ? sender.signer
-    : 'lsig' in sender
-      ? algosdk.makeLogicSigAccountTransactionSigner(sender)
-      : algosdk.makeBasicAccountTransactionSigner(sender)
-})
-
-/**
- * @deprecated Use `AlgorandClient` / `TransactionComposer` to sign transactions
- * or use the relevant underlying `account.signTxn` / `algosdk.signLogicSigTransactionObject`
- * / `multiSigAccount.sign` / `TransactionSigner` methods directly.
- *
- * Signs a single transaction by the given signer.
- * @param transaction The transaction to sign
- * @param signer The signer to sign
- * @returns The signed transaction as a `Uint8Array`
- */
-export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom) => {
-  return 'sk' in signer
-    ? algosdk.signTransaction(transaction, signer.sk).blob
-    : 'lsig' in signer
-      ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
-      : 'sign' in signer
-        ? signer.sign(transaction)
-        : (await signer.signer([transaction], [0]))[0]
-}
-
-/**
- * @deprecated Use `AlgorandClient` / `TransactionComposer` to send transactions.
- *
- * Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
- *
- * @param send The details for the transaction to prepare/send, including:
- *   * `transaction`: The unsigned transaction
- *   * `from`: The account to sign the transaction with: either an account with private key loaded or a logic signature account
- *   * `config`: The sending configuration for this transaction
- * @param algod An algod client
- *
- * @returns An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `undefined`) confirmation (`confirmation`)
- */
-export const sendTransaction = async function (
-  send: {
-    transaction: Transaction
-    from: SendTransactionFrom
-    sendParams?: SendTransactionParams
-  },
-  algod: AlgodClient,
-): Promise<SendTransactionResult> {
-  const { transaction, from, sendParams } = send
-  const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
-
-  controlFees(transaction, { fee, maxFee })
-
-  if (atc) {
-    atc.addTransaction({ txn: transaction, signer: getSenderTransactionSigner(from) })
-    return { transaction: new TransactionWrapper(transaction) }
-  }
-
-  if (skipSending) {
-    return { transaction: new TransactionWrapper(transaction) }
-  }
-
-  let txnToSend = transaction
-
-  const populateAppCallResources = sendParams?.populateAppCallResources ?? Config.populateAppCallResources
-
-  // Populate resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
-  if (txnToSend.type === TransactionType.AppCall && populateAppCallResources) {
-    const newAtc = new AtomicTransactionComposer()
-    newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
-    const atc = await prepareGroupForSending(newAtc, algod, { ...sendParams, populateAppCallResources })
-    txnToSend = atc.buildGroup()[0].txn
-  }
-
-  const signedTransaction = await signTransaction(txnToSend, from)
-
-  await algod.sendRawTransaction(signedTransaction)
-
-  Config.getLogger(suppressLog).verbose(
-    `Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.type} from ${getSenderAddress(from)}`,
-  )
-
-  let confirmation: PendingTransactionResponse | undefined = undefined
-  if (!skipWaiting) {
-    confirmation = await waitForConfirmation(getTransactionId(txnToSend), maxRoundsToWaitForConfirmation ?? 5, algod)
-  }
-
-  return {
-    transaction: new TransactionWrapper(txnToSend),
-    confirmation: confirmation ? wrapPendingTransactionResponse(confirmation) : undefined,
-  }
+export const getSenderAddress = function (addr: SendingAddress): string {
+  return getAddress(addr).toString()
 }
 
 /**
@@ -528,7 +415,7 @@ export async function prepareGroupForSending(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(group[i].txn as any)['appCall'] = {
           ...group[i].txn.appCall,
-          accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])],
+          accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])].map((a) => getAddress(a)),
           appReferences: [...(group[i].txn?.appCall?.appReferences ?? []), ...(r.apps ?? [])],
           assetReferences: [...(group[i].txn?.appCall?.assetReferences ?? []), ...(r.assets ?? [])],
           boxReferences: [...(group[i].txn?.appCall?.boxReferences ?? [])],
@@ -651,7 +538,7 @@ export async function prepareGroupForSending(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['appCall'] = {
             ...txns[txnIndex].txn.appCall,
-            accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+            accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]].map((a) => getAddress(a)),
           } satisfies Partial<ApplicationTransactionFields>
 
           return
@@ -713,7 +600,7 @@ export async function prepareGroupForSending(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[(reference as Address).toString()]],
+          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[reference as Address]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'app') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -745,7 +632,7 @@ export async function prepareGroupForSending(
         ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]].map((a) => getAddress(a)),
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'appLocal') {
         const { app, account } = reference as ApplicationLocalReference
@@ -753,7 +640,7 @@ export async function prepareGroupForSending(
         ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]].map((a) => getAddress(a)),
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'asset') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -993,52 +880,6 @@ export function getABIReturnValue(result: algosdk.ABIResult, type: ABIReturnType
     decodeError: undefined,
     returnValue,
   }
-}
-
-/**
- * @deprecated Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
- *
- * Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transactions/atomic-txn-groups/#create-transactions) transactions to the chain
- *
- * @param groupSend The group details to send, with:
- *   * `transactions`: The array of transactions to send along with their signing account
- *   * `sendParams`: The parameters to dictate how the group is sent
- * @param algod An algod client
- * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
- */
-export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: AlgodClient) {
-  const { transactions, signer, sendParams } = groupSend
-
-  const defaultTransactionSigner = signer ? getSenderTransactionSigner(signer) : undefined
-
-  const transactionsWithSigner = await Promise.all(
-    transactions.map(async (t) => {
-      if ('signer' in t)
-        return {
-          txn: t.transaction,
-          signer: getSenderTransactionSigner(t.signer),
-          sender: t.signer,
-        }
-
-      const txn = 'then' in t ? (await t).transaction : t
-      if (!signer) {
-        throw new Error(
-          `Attempt to send transaction ${getTransactionId(txn)} as part of a group transaction, but no signer parameter was provided.`,
-        )
-      }
-
-      return {
-        txn,
-        signer: defaultTransactionSigner!,
-        sender: signer,
-      }
-    }),
-  )
-
-  const atc = new AtomicTransactionComposer()
-  transactionsWithSigner.forEach((txn) => atc.addTransaction(txn))
-
-  return (await sendAtomicTransactionComposer({ atc, sendParams }, algod)) as Omit<SendAtomicTransactionComposerResults, 'returns'>
 }
 
 /**

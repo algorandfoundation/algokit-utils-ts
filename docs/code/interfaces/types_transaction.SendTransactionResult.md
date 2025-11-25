@@ -33,7 +33,7 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L67)
+[src/types/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L70)
 
 ___
 
@@ -45,4 +45,4 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L65)
+[src/types/transaction.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L68)

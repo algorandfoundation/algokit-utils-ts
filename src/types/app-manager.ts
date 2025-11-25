@@ -1,9 +1,8 @@
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
-import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
-import { TransactionSignerAccount } from './account'
 import {
   BoxName,
   DELETABLE_TEMPLATE_NAME,
@@ -13,6 +12,7 @@ import {
   type CompiledTeal,
   type TealTemplateParams,
 } from './app'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Information about an app. */
 export interface AppInformation {
@@ -53,10 +53,10 @@ export interface AppInformation {
  * Something that identifies an app box name - either a:
  *  * `Uint8Array` (the actual binary of the box name)
  *  * `string` (that will be encoded to a `Uint8Array`)
- *  * `TransactionSignerAccount` (that will be encoded into the
+ *  * `AddressWithSigner` (that will be encoded into the
  *    public key address of the corresponding account)
  */
-export type BoxIdentifier = string | Uint8Array | TransactionSignerAccount
+export type BoxIdentifier = string | Uint8Array | AddressWithSigner
 
 /**
  * A grouping of the app ID and name identifier to reference an app box.
@@ -248,8 +248,8 @@ export class AppManager {
    * const localState = await appManager.getLocalState(12353n, 'ACCOUNTADDRESS');
    * ```
    */
-  public async getLocalState(appId: bigint, address: Address | string) {
-    const appInfo = await this._algod.accountApplicationInformation(address.toString(), Number(appId))
+  public async getLocalState(appId: bigint, address: ReadableAddress) {
+    const appInfo = await this._algod.accountApplicationInformation(getAddress(address).toString(), Number(appId))
 
     if (!appInfo.appLocalState) {
       throw new Error("Couldn't find local state")

@@ -57,7 +57,7 @@ URLTokenBaseHTTPClient.constructor
 
 #### Defined in
 
-[packages/sdk/src/client/urlTokenBaseHTTPClient.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/client/urlTokenBaseHTTPClient.ts#L53)
+[packages/sdk/src/client/urlTokenBaseHTTPClient.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/sdk/src/client/urlTokenBaseHTTPClient.ts#L44)
 
 ## Properties
 

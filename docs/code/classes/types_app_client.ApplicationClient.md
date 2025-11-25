@@ -218,7 +218,7 @@ ___
 
 ### sender
 
-• `Private` **sender**: `undefined` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Private` **sender**: `undefined` \| `AddressWithSigner`
 
 #### Defined in
 
@@ -748,7 +748,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `args` | `undefined` \| [`AppClientCallArgs`](../modules/types_app_client.md#appclientcallargs) | The call args specific to this application client |
-| `sender` | [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) | The sender of this call. Will be used to fetch any default argument values if applicable |
+| `sender` | `AddressWithSigner` | The sender of this call. Will be used to fetch any default argument values if applicable |
 
 #### Returns
 
@@ -796,7 +796,7 @@ Returns local state for the given account / account address.
 
 | Name | Type |
 | :------ | :------ |
-| `account` | `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) |
+| `account` | `string` \| `AddressWithSigner` |
 
 #### Returns
 

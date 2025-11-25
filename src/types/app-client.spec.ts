@@ -1,7 +1,7 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Account, Address, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { ABIUintType, Account, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
@@ -25,7 +25,7 @@ describe('application-client', () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: Address & Account, algod: AlgodClient, indexer: Indexer) => {
+  const deploy = async (account: AddressWithSigner, algod: AlgodClient, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
         resolveBy: 'creatorAndName',
@@ -570,7 +570,7 @@ describe('application-client', () => {
     let indexes: number[] = []
     const signer: TransactionSigner = (group, indxs) => {
       indexes = indxs
-      return algokit.getSenderTransactionSigner(testAccount)(group, indexes)
+      return testAccount.signer(group, indexes)
     }
 
     await client.call({
@@ -899,7 +899,7 @@ describe('app-client', () => {
     expect(appClient.appName).toBe('overridden')
     expect(clonedAppClient.appId).toBe(appClient.appId)
     expect(clonedAppClient.appName).toBe(appClient.appName)
-    expect((await clonedAppClient.createTransaction.bare.call()).sender).toBe(testAccount2.addr.toString())
+    expect((await clonedAppClient.createTransaction.bare.call()).sender.toString()).toBe(testAccount2.addr.toString())
   })
 
   test('clone overriding appName', async () => {

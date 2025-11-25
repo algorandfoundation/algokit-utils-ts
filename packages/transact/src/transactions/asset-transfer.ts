@@ -1,3 +1,4 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
 /**
@@ -28,7 +29,7 @@ export type AssetTransferTransactionFields = {
    *
    * The receiver must have opted-in to the asset before they can receive it.
    */
-  receiver: string
+  receiver: Address
 
   /**
    * Optional address of the account that actually holds the asset being transferred.
@@ -37,7 +38,7 @@ export type AssetTransferTransactionFields = {
    * where the sender is the asset clawback address and is forcibly moving assets
    * from this account to the receiver.
    */
-  assetSender?: string
+  assetSender?: Address
 
   /**
    * Optional address to send all remaining asset units to after the transfer.
@@ -46,7 +47,7 @@ export type AssetTransferTransactionFields = {
    * and all remaining units of this asset owned by the sender will be transferred to this address.
    * This effectively removes the asset from the sender's account.
    */
-  closeRemainderTo?: string
+  closeRemainderTo?: Address
 }
 
 /**

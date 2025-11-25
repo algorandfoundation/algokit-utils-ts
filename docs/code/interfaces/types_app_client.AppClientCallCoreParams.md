@@ -42,7 +42,7 @@ ___
 
 ### sender
 
-• `Optional` **sender**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **sender**: `AddressWithSigner`
 
 The optional sender to send the transaction from, will use the application client's default sender by default if specified
 

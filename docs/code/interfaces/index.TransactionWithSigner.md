@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/transaction/transaction.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L43)
+[src/transaction/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L42)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L42)
+[src/transaction/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L41)

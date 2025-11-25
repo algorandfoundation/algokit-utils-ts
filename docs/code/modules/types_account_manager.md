@@ -29,7 +29,7 @@ This function has memoization, so will return the same transaction signer for a 
 
 | Name | Type |
 | :------ | :------ |
-| `val` | `default` \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`SigningAccount`](../classes/types_account.SigningAccount.md) \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) |
+| `val` | `AddressWithSigner` \| `default` \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`SigningAccount`](../classes/types_account.SigningAccount.md) |
 
 #### Returns
 

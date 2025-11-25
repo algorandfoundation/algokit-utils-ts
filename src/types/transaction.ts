@@ -1,23 +1,26 @@
 import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
+  AddressWithSigner,
   AppCallTransactionFields,
   AssetConfigTransactionFields,
   AssetFreezeTransactionFields,
   AssetTransferTransactionFields,
   KeyRegistrationTransactionFields,
   PaymentTransactionFields,
+  SendingAddress,
   SignedTransaction,
   Transaction,
+  TransactionSigner,
   TransactionType,
   getTransactionId,
 } from '@algorandfoundation/algokit-transact'
 import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
 import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
-import { AtomicTransactionComposer, LogicSigAccount, type Account } from '@algorandfoundation/sdk'
-import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
+import { Address } from '@algorandfoundation/algokit-common'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,24 +108,18 @@ export interface ConfirmedTransactionResults extends SendTransactionResult, Send
   confirmations: PendingTransactionResponseWrapper[]
 }
 
-/** Core account abstraction when signing/sending transactions
- *
- * This type is used across the entire AlgoKit Utils library and allows you to pass through
- * many types of accounts, including:
- * * `Account` - The in-built `algosdk.Account` type for mnemonic accounts
- * * `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
- * * `LogicSigAccount` - The in-built `algosdk.LogicSigAccount` type for logic signatures
- * * `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
- * * `TransactionSignerAccount` - An AlgoKit Utils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
+/**
+ * @deprcated Use `SendingAddress` instead
  */
-export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount
+
+export type SendTransactionFrom = AddressWithSigner
 
 /** Defines an unsigned transaction that will appear in a group of transactions along with its signing information */
 export interface TransactionToSign {
   /** The unsigned transaction to sign and send */
   transaction: Transaction
   /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
-  signer: SendTransactionFrom
+  signer: AddressWithSigner | TransactionSigner
 }
 
 /** A group of transactions to send together as an atomic group
@@ -137,7 +134,7 @@ export interface TransactionGroupToSend {
    **/
   transactions: (TransactionToSign | Transaction | Promise<SendTransactionResult>)[]
   /** Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise */
-  signer?: SendTransactionFrom
+  signer?: SendingAddress
 }
 
 /** Parameters to configure transaction sending. */
@@ -179,14 +176,14 @@ export interface AtomicTransactionComposerToSend extends SendParams {
 
 export class TransactionWrapper implements Transaction {
   type: TransactionType
-  sender: string
+  sender: Address
   fee?: bigint
   firstValid: bigint
   lastValid: bigint
   genesisHash?: Uint8Array
   genesisId?: string
   note?: Uint8Array
-  rekeyTo?: string
+  rekeyTo?: Address
   lease?: Uint8Array
   group?: Uint8Array
   payment?: PaymentTransactionFields

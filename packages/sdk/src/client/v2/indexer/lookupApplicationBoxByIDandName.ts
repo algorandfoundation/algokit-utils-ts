@@ -1,11 +1,11 @@
-import { bytesToBase64 } from '../../../encoding/binarydata.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import JSONRequest from '../jsonrequest.js';
-import { Box } from './models/types.js';
+import { bytesToBase64 } from '../../../encoding/binarydata.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import JSONRequest from '../jsonrequest.js'
+import { Box } from './models/types.js'
 
 export default class LookupApplicationBoxByIDandName extends JSONRequest<Box> {
-  private index: bigint;
+  private index: bigint
 
   /**
    * Returns information about indexed application boxes.
@@ -24,22 +24,22 @@ export default class LookupApplicationBoxByIDandName extends JSONRequest<Box> {
    * @category GET
    */
   constructor(c: HTTPClient, index: number | bigint, boxName: Uint8Array) {
-    super(c);
-    this.index = BigInt(index);
+    super(c)
+    this.index = BigInt(index)
     // Encode query in base64 format and append the encoding prefix.
-    const encodedName = bytesToBase64(boxName);
-    this.query.name = encodeURI(`b64:${encodedName}`);
+    const encodedName = bytesToBase64(boxName)
+    this.query.name = encodeURI(`b64:${encodedName}`)
   }
 
   /**
    * @returns `/v2/applications/${index}/box`
    */
   path() {
-    return `/v2/applications/${this.index}/box`;
+    return `/v2/applications/${this.index}/box`
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): Box {
-    return decodeJSON(response.getJSONText(), Box);
+    return decodeJSON(response.getJSONText(), Box)
   }
 }

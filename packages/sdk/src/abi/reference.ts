@@ -16,9 +16,5 @@ export enum ABIReferenceType {
 }
 
 export function abiTypeIsReference(type: any): type is ABIReferenceType {
-  return (
-    type === ABIReferenceType.account ||
-    type === ABIReferenceType.application ||
-    type === ABIReferenceType.asset
-  );
+  return type === ABIReferenceType.account || type === ABIReferenceType.application || type === ABIReferenceType.asset
 }

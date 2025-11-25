@@ -23,7 +23,7 @@ A map of transaction index in the `AtomicTransactionComposer` to the max fee tha
 
 #### Defined in
 
-[src/types/transaction.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L158)
+[src/types/transaction.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L155)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L161)
+[src/types/transaction.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L158)

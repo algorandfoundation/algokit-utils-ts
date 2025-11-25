@@ -4,7 +4,7 @@ import * as algosdk from '@algorandfoundation/sdk'
 import { Address, Indexer } from '@algorandfoundation/sdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
-import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
+import { getSenderAddress } from './transaction/transaction'
 import { AlgorandClientTransactionSender } from './types/algorand-client-transaction-sender'
 import {
   ABIReturn,
@@ -70,7 +70,7 @@ export async function deployApp(
   const newGroup = () =>
     new TransactionComposer({
       algod,
-      getSigner: () => getSenderTransactionSigner(deployment.from),
+      getSigner: () => deployment.from.signer,
       getSuggestedParams: async () => (deployment.transactionParams ? { ...deployment.transactionParams } : await algod.suggestedParams()),
       appManager,
     })
@@ -120,7 +120,7 @@ export async function deployApp(
   } satisfies Partial<AppUpdateParams>
 
   const deleteParams = {
-    sender: getSenderAddress(deployment.from),
+    sender: deployment.from,
     accountReferences: deployment.deleteArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
     appReferences: deployment.deleteArgs?.apps?.map((a) => BigInt(a)),
     assetReferences: deployment.deleteArgs?.assets?.map((a) => BigInt(a)),

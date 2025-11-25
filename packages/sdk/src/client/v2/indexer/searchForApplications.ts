@@ -1,8 +1,8 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { Address } from '../../../encoding/address.js';
-import { ApplicationsResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { Address } from '../../../encoding/address.js'
+import { ApplicationsResponse } from './models/types.js'
 
 /**
  * Returns information about indexed applications.
@@ -21,7 +21,7 @@ export default class SearchForApplications extends JSONRequest<ApplicationsRespo
    */
   // eslint-disable-next-line class-methods-use-this
   path() {
-    return '/v2/applications';
+    return '/v2/applications'
   }
 
   /**
@@ -40,8 +40,8 @@ export default class SearchForApplications extends JSONRequest<ApplicationsRespo
    * @category query
    */
   index(index: number | bigint) {
-    this.query['application-id'] = index;
-    return this;
+    this.query['application-id'] = index
+    return this
   }
 
   /**
@@ -59,8 +59,8 @@ export default class SearchForApplications extends JSONRequest<ApplicationsRespo
    * @category query
    */
   creator(creator: string | Address) {
-    this.query.creator = creator.toString();
-    return this;
+    this.query.creator = creator.toString()
+    return this
   }
 
   /**
@@ -85,8 +85,8 @@ export default class SearchForApplications extends JSONRequest<ApplicationsRespo
    * @category query
    */
   nextToken(next: string) {
-    this.query.next = next;
-    return this;
+    this.query.next = next
+    return this
   }
 
   /**
@@ -105,8 +105,8 @@ export default class SearchForApplications extends JSONRequest<ApplicationsRespo
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -132,12 +132,12 @@ export default class SearchForApplications extends JSONRequest<ApplicationsRespo
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): ApplicationsResponse {
-    return decodeJSON(response.getJSONText(), ApplicationsResponse);
+    return decodeJSON(response.getJSONText(), ApplicationsResponse)
   }
 }

@@ -94,7 +94,7 @@ CreateOrUpdateAppParams.atc
 
 #### Defined in
 
-[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 
@@ -126,13 +126,13 @@ CreateOrUpdateAppParams.fee
 
 #### Defined in
 
-[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
 ___
 
 ### from
 
-• **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **from**: `AddressWithSigner`
 
 The account (with private key loaded) that will send the transaction
 
@@ -158,7 +158,7 @@ CreateOrUpdateAppParams.maxFee
 
 #### Defined in
 
-[src/types/transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L52)
+[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
 
 ___
 
@@ -174,7 +174,7 @@ CreateOrUpdateAppParams.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[src/types/transaction.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L54)
+[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
 
 ___
 
@@ -206,7 +206,7 @@ CreateOrUpdateAppParams.populateAppCallResources
 
 #### Defined in
 
-[src/types/transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L56)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
@@ -223,7 +223,7 @@ CreateOrUpdateAppParams.skipSending
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -239,7 +239,7 @@ CreateOrUpdateAppParams.skipWaiting
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
 
 ___
 
@@ -255,7 +255,7 @@ CreateOrUpdateAppParams.suppressLog
 
 #### Defined in
 
-[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
 ___
 

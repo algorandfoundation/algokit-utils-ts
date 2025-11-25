@@ -58,7 +58,7 @@ Parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L430)
+[src/types/composer.ts:437](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L437)
 
 ___
 
@@ -70,7 +70,7 @@ Parameters to define an application call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L409)
+[src/types/composer.ts:416](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L416)
 
 ___
 
@@ -82,7 +82,7 @@ Parameters to define an ABI method call create transaction.
 
 #### Defined in
 
-[src/types/composer.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L424)
+[src/types/composer.ts:431](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L431)
 
 ___
 
@@ -94,7 +94,7 @@ Parameters to define an app create transaction
 
 #### Defined in
 
-[src/types/composer.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L372)
+[src/types/composer.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L379)
 
 ___
 
@@ -106,7 +106,7 @@ Parameters to define an ABI method call delete transaction.
 
 #### Defined in
 
-[src/types/composer.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L428)
+[src/types/composer.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L435)
 
 ___
 
@@ -118,7 +118,7 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L419)
+[src/types/composer.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L426)
 
 ___
 
@@ -136,7 +136,7 @@ Parameters to define an ABI method call.
 
 #### Defined in
 
-[src/types/composer.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L443)
+[src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
 
 ___
 
@@ -148,7 +148,7 @@ Common parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L414)
+[src/types/composer.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L421)
 
 ___
 
@@ -160,7 +160,7 @@ Types that can be used to define a transaction argument for an ABI call transact
 
 #### Defined in
 
-[src/types/composer.ts:433](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L433)
+[src/types/composer.ts:440](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L440)
 
 ___
 
@@ -172,7 +172,7 @@ Parameters to define an ABI method call update transaction.
 
 #### Defined in
 
-[src/types/composer.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L426)
+[src/types/composer.ts:433](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L433)
 
 ___
 
@@ -184,13 +184,13 @@ Parameters to define an app update transaction
 
 #### Defined in
 
-[src/types/composer.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L398)
+[src/types/composer.ts:405](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L405)
 
 ___
 
 ### AssetConfigParams
 
-Ƭ **AssetConfigParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: `string` \| `Address` ; `freeze?`: `string` \| `Address` ; `manager`: `string` \| `Address` \| `undefined` ; `reserve?`: `string` \| `Address`  }
+Ƭ **AssetConfigParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: `ReadableAddress` ; `freeze?`: `ReadableAddress` ; `manager`: `ReadableAddress` \| `undefined` ; `reserve?`: `ReadableAddress`  }
 
 Parameters to define an asset reconfiguration transaction.
 
@@ -200,13 +200,13 @@ all fields are immutable from that point forward.
 
 #### Defined in
 
-[src/types/composer.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L223)
+[src/types/composer.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L230)
 
 ___
 
 ### AssetCreateParams
 
-Ƭ **AssetCreateParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetName?`: `string` ; `clawback?`: `string` \| `Address` ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: `string` \| `Address` ; `manager?`: `string` \| `Address` ; `metadataHash?`: `string` \| `Uint8Array` ; `reserve?`: `string` \| `Address` ; `total`: `bigint` ; `unitName?`: `string` ; `url?`: `string`  }
+Ƭ **AssetCreateParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetName?`: `string` ; `clawback?`: `ReadableAddress` ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: `ReadableAddress` ; `manager?`: `ReadableAddress` ; `metadataHash?`: `string` \| `Uint8Array` ; `reserve?`: `ReadableAddress` ; `total`: `bigint` ; `unitName?`: `string` ; `url?`: `string`  }
 
 Parameters to define an asset create transaction.
 
@@ -214,7 +214,7 @@ The account that sends this transaction will automatically be opted in to the as
 
 #### Defined in
 
-[src/types/composer.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L107)
+[src/types/composer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L114)
 
 ___
 
@@ -228,19 +228,19 @@ Created assets can be destroyed only by the asset manager account. All of the as
 
 #### Defined in
 
-[src/types/composer.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L281)
+[src/types/composer.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L288)
 
 ___
 
 ### AssetFreezeParams
 
-Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: `string` \| `Address` ; `assetId`: `bigint` ; `frozen`: `boolean`  }
+Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: `ReadableAddress` ; `assetId`: `bigint` ; `frozen`: `boolean`  }
 
 Parameters to define an asset freeze transaction.
 
 #### Defined in
 
-[src/types/composer.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L268)
+[src/types/composer.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L275)
 
 ___
 
@@ -252,43 +252,43 @@ Parameters to define an asset opt-in transaction.
 
 #### Defined in
 
-[src/types/composer.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L309)
+[src/types/composer.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L316)
 
 ___
 
 ### AssetOptOutParams
 
-Ƭ **AssetOptOutParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `creator`: `string` \| `Address`  }
+Ƭ **AssetOptOutParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `creator`: `ReadableAddress`  }
 
 Parameters to define an asset opt-out transaction.
 
 #### Defined in
 
-[src/types/composer.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L315)
+[src/types/composer.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L322)
 
 ___
 
 ### AssetTransferParams
 
-Ƭ **AssetTransferParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: `string` \| `Address` ; `closeAssetTo?`: `string` \| `Address` ; `receiver`: `string` \| `Address`  }
+Ƭ **AssetTransferParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: `ReadableAddress` ; `closeAssetTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  }
 
 Parameters to define an asset transfer transaction.
 
 #### Defined in
 
-[src/types/composer.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L287)
+[src/types/composer.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L294)
 
 ___
 
 ### CommonAppCallParams
 
-Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete`  }
+Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete`  }
 
 Common parameters for defining an application call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L348)
+[src/types/composer.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L355)
 
 ___
 
@@ -308,15 +308,15 @@ Common parameters for defining a transaction.
 | `lease?` | `Uint8Array` \| `string` | Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios). |
 | `maxFee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. |
 | `note?` | `Uint8Array` \| `string` | Note to attach to the transaction. Max of 1000 bytes. |
-| `rekeyTo?` | `string` \| `Address` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
-| `sender` | `string` \| `Address` | The address of the account sending the transaction. |
-| `signer?` | `algosdk.TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
+| `rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
+| `sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `signer?` | `algosdk.TransactionSigner` \| `AddressWithSigner` | **`Deprecated`** Use `AddressWithSigner` in the `sender` field instead |
 | `staticFee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
 
 #### Defined in
 
-[src/types/composer.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L50)
+[src/types/composer.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L57)
 
 ___
 
@@ -345,7 +345,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L488)
+[src/types/composer.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L495)
 
 ___
 
@@ -357,7 +357,7 @@ Parameters to define an offline key registration transaction.
 
 #### Defined in
 
-[src/types/composer.ts:342](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L342)
+[src/types/composer.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L349)
 
 ___
 
@@ -369,19 +369,19 @@ Parameters to define an online key registration transaction.
 
 #### Defined in
 
-[src/types/composer.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L326)
+[src/types/composer.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L333)
 
 ___
 
 ### PaymentParams
 
-Ƭ **PaymentParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `closeRemainderTo?`: `string` \| `Address` ; `receiver`: `string` \| `Address`  }
+Ƭ **PaymentParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `closeRemainderTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  }
 
 Parameters to define a payment transaction.
 
 #### Defined in
 
-[src/types/composer.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L91)
+[src/types/composer.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L98)
 
 ___
 
@@ -394,7 +394,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L44)
+[src/types/composer.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L51)
 
 ___
 
@@ -406,7 +406,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L47)
+[src/types/composer.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L54)
 
 ___
 
@@ -418,7 +418,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L32)
+[src/types/composer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L39)
 
 ___
 
@@ -436,12 +436,12 @@ Parameters to create an `TransactionComposer`.
 | `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified then an ephemeral one will be created. |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
 | `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)[] | An array of error transformers to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
-| `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
+| `getSigner` | (`address`: `ReadableAddress`) => `algosdk.TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`SuggestedParams`\> | - |
 
 #### Defined in
 
-[src/types/composer.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L503)
+[src/types/composer.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L510)
 
 ___
 
@@ -451,7 +451,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L467)
+[src/types/composer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L474)
 
 ## Variables
 
@@ -461,4 +461,4 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L29)
+[src/types/composer.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L36)

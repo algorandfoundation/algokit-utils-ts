@@ -1,12 +1,12 @@
 export type Query<F> = {
-  format?: F;
-  [key: string]: any;
-};
+  format?: F
+  [key: string]: any
+}
 
 export interface BaseHTTPClientResponse {
-  body: Uint8Array;
-  status: number; // status must always be 200 except when the response is inside an error
-  headers: Record<string, string>;
+  body: Uint8Array
+  status: number // status must always be 200 except when the response is inside an error
+  headers: Record<string, string>
 }
 
 /**
@@ -14,7 +14,7 @@ export interface BaseHTTPClientResponse {
  * by methods of BaseHTTPClient should be using
  */
 export interface BaseHTTPClientError {
-  response: BaseHTTPClientResponse;
+  response: BaseHTTPClientResponse
 }
 
 /**
@@ -45,20 +45,20 @@ export interface BaseHTTPClient {
     relativePath: string,
     query?: Query<string>,
     requestHeaders?: Record<string, string>,
-    customOptions?: Record<string, unknown>
-  ): Promise<BaseHTTPClientResponse>;
+    customOptions?: Record<string, unknown>,
+  ): Promise<BaseHTTPClientResponse>
   post(
     relativePath: string,
     data: Uint8Array,
     query?: Query<string>,
     requestHeaders?: Record<string, string>,
-    customOptions?: Record<string, unknown>
-  ): Promise<BaseHTTPClientResponse>;
+    customOptions?: Record<string, unknown>,
+  ): Promise<BaseHTTPClientResponse>
   delete(
     relativePath: string,
     data?: Uint8Array,
     query?: Query<string>,
     requestHeaders?: Record<string, string>,
-    customOptions?: Record<string, unknown>
-  ): Promise<BaseHTTPClientResponse>;
+    customOptions?: Record<string, unknown>,
+  ): Promise<BaseHTTPClientResponse>
 }

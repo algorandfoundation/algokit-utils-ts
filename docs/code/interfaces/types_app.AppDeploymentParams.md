@@ -142,13 +142,13 @@ Omit.fee
 
 #### Defined in
 
-[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
 ___
 
 ### from
 
-• **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **from**: `AddressWithSigner`
 
 The account (with private key loaded) that will send the transaction
 
@@ -174,7 +174,7 @@ Omit.maxFee
 
 #### Defined in
 
-[src/types/transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L52)
+[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
 
 ___
 
@@ -190,7 +190,7 @@ Omit.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[src/types/transaction.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L54)
+[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
 
 ___
 
@@ -242,7 +242,7 @@ Omit.populateAppCallResources
 
 #### Defined in
 
-[src/types/transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L56)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
@@ -274,7 +274,7 @@ Omit.suppressLog
 
 #### Defined in
 
-[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
 ___
 

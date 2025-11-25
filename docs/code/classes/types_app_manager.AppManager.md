@@ -410,7 +410,7 @@ Returns the current local state values for the given app ID and account address
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appId` | `bigint` | The ID of the app to return local state for |
-| `address` | `string` \| `Address` | The string address of the account to get local state for the given app |
+| `address` | `ReadableAddress` | The string address of the account to get local state for the given app |
 
 #### Returns
 

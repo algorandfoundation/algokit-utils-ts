@@ -1,10 +1,4 @@
-import {
-  Schema,
-  MsgpackEncodingData,
-  MsgpackRawStringProvider,
-  JSONEncodingData,
-  PrepareJSONOptions,
-} from '../encoding.js';
+import { Schema, MsgpackEncodingData, MsgpackRawStringProvider, JSONEncodingData, PrepareJSONOptions } from '../encoding.js'
 
 /* eslint-disable class-methods-use-this */
 
@@ -23,50 +17,44 @@ import {
  */
 export class OptionalSchema extends Schema {
   constructor(public readonly valueSchema: Schema) {
-    super();
+    super()
   }
 
   public defaultValue(): undefined {
-    return undefined;
+    return undefined
   }
 
   public isDefaultValue(data: unknown): boolean {
-    return data === undefined || this.valueSchema.isDefaultValue(data);
+    return data === undefined || this.valueSchema.isDefaultValue(data)
   }
 
   public prepareMsgpack(data: unknown): MsgpackEncodingData {
     if (data === undefined) {
-      return undefined;
+      return undefined
     }
-    return this.valueSchema.prepareMsgpack(data);
+    return this.valueSchema.prepareMsgpack(data)
   }
 
-  public fromPreparedMsgpack(
-    encoded: MsgpackEncodingData,
-    rawStringProvider: MsgpackRawStringProvider
-  ): unknown {
+  public fromPreparedMsgpack(encoded: MsgpackEncodingData, rawStringProvider: MsgpackRawStringProvider): unknown {
     // JS undefined is encoded as msgpack nil, which may be decoded as JS null
     if (encoded === undefined || encoded === null) {
-      return undefined;
+      return undefined
     }
-    return this.valueSchema.fromPreparedMsgpack(encoded, rawStringProvider);
+    return this.valueSchema.fromPreparedMsgpack(encoded, rawStringProvider)
   }
 
-  public prepareJSON(
-    data: unknown,
-    options: PrepareJSONOptions
-  ): JSONEncodingData {
+  public prepareJSON(data: unknown, options: PrepareJSONOptions): JSONEncodingData {
     if (data === undefined) {
       // JSON representation does not have undefined, only null
-      return null;
+      return null
     }
-    return this.valueSchema.prepareJSON(data, options);
+    return this.valueSchema.prepareJSON(data, options)
   }
 
   public fromPreparedJSON(encoded: JSONEncodingData): unknown {
     if (encoded === undefined || encoded === null) {
-      return undefined;
+      return undefined
     }
-    return this.valueSchema.fromPreparedJSON(encoded);
+    return this.valueSchema.fromPreparedJSON(encoded)
   }
 }

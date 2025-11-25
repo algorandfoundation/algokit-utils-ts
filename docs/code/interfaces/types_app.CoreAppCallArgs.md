@@ -87,7 +87,7 @@ ___
 
 ### rekeyTo
 
-• `Optional` **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **rekeyTo**: `string` \| `AddressWithSigner`
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 

@@ -48,13 +48,13 @@ ___
 
 ### generateAccount
 
-• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
+• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & `AddressWithSigner`\>
 
 Generate and fund an additional ephemerally created account
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<`Address` & `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
+▸ (`params`): `Promise`\<`Address` & `default` & `AddressWithSigner`\>
 
 ##### Parameters
 
@@ -64,7 +64,7 @@ Generate and fund an additional ephemerally created account
 
 ##### Returns
 
-`Promise`\<`Address` & `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
+`Promise`\<`Address` & `default` & `AddressWithSigner`\>
 
 #### Defined in
 
@@ -98,7 +98,7 @@ ___
 
 ### testAccount
 
-• **testAccount**: `Address` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) & `default`
+• **testAccount**: `Address` & `AddressWithSigner` & `default`
 
 Default, funded test account that is ephemerally created
 
