@@ -21,13 +21,13 @@ This helps ensure that the provided configuration items won't appear
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| `Address` \| `AddressWithSigner` \| `default` \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`SigningAccount`](../classes/types_account.SigningAccount.md))[]
+• `Optional` **accounts**: (`string` \| `Address` \| `AddressWithSigner` \| `MultisigAccount` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](../classes/types_account.SigningAccount.md))[]
 
 Any accounts/addresses to replace the address for predictably
 
 #### Defined in
 
-[src/types/testing.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L139)
+[src/types/testing.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L140)
 
 ___
 
@@ -39,7 +39,7 @@ Any app IDs to replace predictably
 
 #### Defined in
 
-[src/types/testing.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L141)
+[src/types/testing.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L142)
 
 ___
 
@@ -65,7 +65,7 @@ Optional filter predicate to filter out logs
 
 #### Defined in
 
-[src/types/testing.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L143)
+[src/types/testing.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L144)
 
 ___
 
@@ -77,4 +77,4 @@ Any transaction IDs or transactions to replace the ID for predictably
 
 #### Defined in
 
-[src/types/testing.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L137)
+[src/types/testing.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L138)
