@@ -231,17 +231,6 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-class BuildComposerTransactionsError extends Error {
-  constructor(
-    message: string,
-    public sentTransactions?: Transaction[],
-    public simulateResponse?: SimulateTransaction,
-  ) {
-    super(message)
-    this.name = 'BuildComposerTransactionsError'
-  }
-}
-
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
   /** Transactions that have not yet been composed */
@@ -1373,12 +1362,7 @@ export class TransactionComposer {
           ? await this.analyzeGroupRequirements(builtTransactions.transactions, suggestedParams, this.composerConfig)
           : undefined
 
-      try {
-        this.populateTransactionAndGroupResources(builtTransactions.transactions, groupAnalysis)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        throw new BuildComposerTransactionsError(err.message ?? 'Failed to populate transaction and group resources')
-      }
+      this.populateTransactionAndGroupResources(builtTransactions.transactions, groupAnalysis)
 
       this.transactionsWithSigners = builtTransactions.transactions.map((txn, index) => {
         return {
@@ -1672,7 +1656,7 @@ export class TransactionComposer {
 
     // Check for required max fees on app calls when fee coverage is enabled
     if (analysisParams.coverAppCallInnerTransactionFees && appCallIndexesWithoutMaxFees.length > 0) {
-      throw new BuildComposerTransactionsError(
+      throw new Error(
         `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
       )
     }
@@ -1709,17 +1693,13 @@ export class TransactionComposer {
     // Handle any simulation failures
     if (groupResponse.failureMessage) {
       if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('fee too small')) {
-        throw new BuildComposerTransactionsError(
+        throw new Error(
           'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
-          transactionsToSimulate,
-          response,
         )
       }
 
-      throw new BuildComposerTransactionsError(
+      throw new Error(
         `Error resolving execution info via simulate in transaction ${groupResponse.failedAt?.join(', ')}: ${groupResponse.failureMessage}`,
-        transactionsToSimulate,
-        response,
       )
     }
 
@@ -1849,7 +1829,7 @@ export class TransactionComposer {
       }
 
       if (Config.debug && Config.traceAll) {
-        const simulateResult = await this.simulate({
+        await this.simulate({
           allowEmptySignatures: true,
           fixSigners: true,
           allowMoreLogging: true,
@@ -1860,9 +1840,6 @@ export class TransactionComposer {
             stateChange: true,
           },
           throwOnFailure: false,
-        })
-        await Config.events.emitAsync(EventType.TxnGroupSimulated, {
-          simulateResponse: simulateResult,
         })
       }
 
@@ -1909,19 +1886,11 @@ export class TransactionComposer {
       const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Transaction Composer'
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = new Error(errorMessage) as any
-
-      // Don't include BuildComposerTransactionsError as cause because it can be noisy
-      // If the user needs to, they can enable the debug flag to get traces
-      err.cause = !(originalError instanceof BuildComposerTransactionsError) ? originalError : undefined
+      err.cause = originalError
 
       if (typeof originalError === 'object') {
         err.name = originalError.name
       }
-
-      const sentTransactions =
-        originalError instanceof BuildComposerTransactionsError
-          ? (originalError.sentTransactions ?? [])
-          : (this.transactionsWithSigners ?? []).map((transactionWithSigner) => transactionWithSigner.txn)
 
       if (Config.debug && typeof originalError === 'object') {
         err.traces = []
@@ -1930,24 +1899,19 @@ export class TransactionComposer {
           err,
         )
 
-        let simulateResponse: SimulateTransaction | undefined
-        if (originalError instanceof BuildComposerTransactionsError) {
-          simulateResponse = originalError.simulateResponse
-        } else {
-          const simulateResult = await this.simulate({
-            allowEmptySignatures: true,
-            fixSigners: true,
-            allowMoreLogging: true,
-            execTraceConfig: {
-              enable: true,
-              scratchChange: true,
-              stackChange: true,
-              stateChange: true,
-            },
-            throwOnFailure: false,
-          })
-          simulateResponse = simulateResult.simulateResponse
-        }
+        const simulateResult = await this.simulate({
+          allowEmptySignatures: true,
+          fixSigners: true,
+          allowMoreLogging: true,
+          execTraceConfig: {
+            enable: true,
+            scratchChange: true,
+            stackChange: true,
+            stateChange: true,
+          },
+          throwOnFailure: false,
+        })
+        const simulateResponse = simulateResult.simulateResponse
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
@@ -1975,7 +1939,9 @@ export class TransactionComposer {
       }
 
       // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = sentTransactions.map((t) => new TransactionWrapper(t))
+      err.sentTransactions = (this.transactionsWithSigners ?? []).map(
+        (transactionWithSigner) => new TransactionWrapper(transactionWithSigner.txn),
+      )
 
       throw await this.transformError(err)
     }
@@ -2037,8 +2003,7 @@ export class TransactionComposer {
 
     let transactionsWithSigner: TransactionWithSigner[]
     if (!this.transactionsWithSigners) {
-      const suggestedParams = await this.getSuggestedParams()
-      const builtTransactions = await this._buildTransactions(suggestedParams)
+      const builtTransactions = await this.buildTransactions()
       const transactions =
         builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
 
@@ -2049,8 +2014,6 @@ export class TransactionComposer {
           : (builtTransactions.signers.get(index) ?? algosdk.makeEmptyTransactionSigner()),
       }))
     } else {
-      rawOptions.allowUnnamedResources = true
-
       transactionsWithSigner = this.transactionsWithSigners.map((e) => ({
         txn: e.txn,
         signer: skipSignatures ? algosdk.makeEmptyTransactionSigner() : e.signer,
