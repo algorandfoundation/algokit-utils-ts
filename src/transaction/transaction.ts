@@ -126,10 +126,9 @@ export async function prepareGroupForSending(
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendTransactionComposer = async function (atcSend: TransactionComposerToSend): Promise<SendTransactionComposerResults> {
-  const { transactionComposer: givenComposer, sendParams, ...executeParams } = atcSend
+  const { transactionComposer: givenComposer, ...executeParams } = atcSend
 
   return atcSend.transactionComposer.send({
-    ...sendParams,
     ...executeParams,
   })
 }

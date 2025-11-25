@@ -12,7 +12,7 @@ import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
 import { ABIAppCallArg } from './app'
 import { getABIDecodedValue } from './app-arc56'
-import { AppClient, ApplicationClient } from './app-client'
+import { AppClient } from './app-client'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
 
