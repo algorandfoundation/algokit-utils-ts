@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  booleanCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { AssetParams } from './asset-params'
 import { AssetParamsMeta } from './asset-params'
 
@@ -37,36 +41,31 @@ export const AssetMeta: ObjectModelMetadata = {
       name: 'id',
       wireKey: 'index',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'createdAtRound',
       wireKey: 'created-at-round',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'destroyedAtRound',
       wireKey: 'destroyed-at-round',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(AssetParamsMeta),
+      codec: new ObjectModelCodec(AssetParamsMeta),
     },
   ],
 }

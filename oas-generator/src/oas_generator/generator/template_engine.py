@@ -9,7 +9,7 @@ from typing import Any
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from oas_generator import constants
-from oas_generator.generator.codec_processor import CodecProcessor
+from oas_generator.generator.codec_processor import CodecProcessor, register_model_kind
 from oas_generator.generator.filters import (
     FILTERS,
     ts_camel_case,
@@ -89,7 +89,20 @@ class SchemaProcessor:
         models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
         files: FileMap = {}
 
-        # Generate individual model files
+        # First pass: Register all model kinds for the codec processor
+        for name, schema in schemas.items():
+            descriptor = self._build_model_descriptor(name, schema, schemas)
+            model_name = ts_pascal_case(name)
+
+            # Determine and register the model kind
+            if descriptor.is_array:
+                register_model_kind(model_name, "array")
+            elif descriptor.is_object:
+                register_model_kind(model_name, "object")
+            else:
+                register_model_kind(model_name, "primitive")
+
+        # Second pass: Generate individual model files
         for name, schema in schemas.items():
             descriptor = self._build_model_descriptor(name, schema, schemas)
             context = self._create_model_context(name, schema, schemas, descriptor)
@@ -171,8 +184,13 @@ class SchemaProcessor:
                 ref = items["$ref"].split("/")[-1]
                 ref_model = ts_pascal_case(ref)
             fmt = items.get(constants.SchemaKey.FORMAT)
+            item_type = items.get(constants.SchemaKey.TYPE)
+            algorand_format = items.get(constants.X_ALGORAND_FORMAT)
             is_bytes = fmt == "byte" or items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
             is_bigint = bool(items.get(constants.X_ALGOKIT_BIGINT) is True)
+            is_address = algorand_format == "Address"
+            is_number = item_type in ("number", "integer") and not is_bigint
+            is_boolean = item_type == "boolean"
             is_signed_txn = bool(items.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
             return ModelDescriptor(
                 model_name=model_name,
@@ -182,6 +200,9 @@ class SchemaProcessor:
                 array_item_ref=ref_model,
                 array_item_is_bytes=is_bytes,
                 array_item_is_bigint=is_bigint,
+                array_item_is_number=is_number,
+                array_item_is_boolean=is_boolean,
+                array_item_is_address=is_address,
                 array_item_is_signed_txn=is_signed_txn,
             )
 
@@ -202,14 +223,22 @@ class SchemaProcessor:
             signed_txn = False
             bytes_flag = False
             bigint_flag = False
+            number_flag = False
+            boolean_flag = False
+            address_flag = False
             inline_object_schema = None
 
             if is_array and isinstance(items, dict):
                 if "$ref" in items:
                     ref_model = ts_pascal_case(items["$ref"].split("/")[-1])
                 fmt = items.get(constants.SchemaKey.FORMAT)
+                item_type = items.get(constants.SchemaKey.TYPE)
+                algorand_format = items.get(constants.X_ALGORAND_FORMAT)
                 bytes_flag = fmt == "byte" or items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
                 bigint_flag = bool(items.get(constants.X_ALGOKIT_BIGINT) is True)
+                address_flag = algorand_format == "Address"
+                number_flag = item_type in ("number", "integer") and not bigint_flag
+                boolean_flag = item_type == "boolean"
                 signed_txn = bool(items.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
             else:
                 if "$ref" in (prop_schema or {}):
@@ -222,17 +251,41 @@ class SchemaProcessor:
                       "properties" in prop_schema and
                       "$ref" not in prop_schema and
                       prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is not True):
-                    # Store the inline object schema for metadata generation
-                    inline_object_schema = prop_schema
+                    # Check if it's an empty object (no properties or empty properties dict)
+                    props = prop_schema.get(constants.SchemaKey.PROPERTIES, {})
+                    if not props or (isinstance(props, dict) and len(props) == 0):
+                        # Empty object - treat as Record<string, unknown>
+                        # Don't set inline_object_schema, but mark as empty object
+                        pass  # Will be handled by is_empty_object flag
+                    else:
+                        # Store the inline object schema for metadata generation
+                        inline_object_schema = prop_schema
                 else:
                     fmt = prop_schema.get(constants.SchemaKey.FORMAT)
+                    prop_type = prop_schema.get(constants.SchemaKey.TYPE)
+                    algorand_format = prop_schema.get(constants.X_ALGORAND_FORMAT)
                     bytes_flag = fmt == "byte" or prop_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
                     bigint_flag = bool(prop_schema.get(constants.X_ALGOKIT_BIGINT) is True)
+                    address_flag = algorand_format == "Address"
+                    number_flag = prop_type in ("number", "integer") and not bigint_flag
+                    boolean_flag = prop_type == "boolean"
                     signed_txn = bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
             is_nullable = bool(prop_schema.get(constants.SchemaKey.NULLABLE) is True)
+
+            # Check if this is an empty object type (no properties and no special x-algokit-* or x-algorand-* attributes)
+            has_special_attributes = any(
+                key.startswith("x-algokit-") or key.startswith("x-algorand-")
+                for key in prop_schema.keys()
+            )
+            is_empty_object = (
+                prop_schema.get(constants.SchemaKey.TYPE) == "object" and
+                "properties" in prop_schema and
+                not prop_schema.get(constants.SchemaKey.PROPERTIES, {}) and
+                not has_special_attributes
+            )
 
             # Generate inline metadata name for nested objects
             inline_meta_name = None
@@ -248,11 +301,15 @@ class SchemaProcessor:
                     ref_model=ref_model,
                     is_bytes=bytes_flag,
                     is_bigint=bigint_flag,
+                    is_number=number_flag,
+                    is_boolean=boolean_flag,
+                    is_address=address_flag,
                     is_signed_txn=signed_txn,
                     is_optional=is_optional,
                     is_nullable=is_nullable,
                     inline_object_schema=inline_object_schema,
                     inline_meta_name=inline_meta_name,
+                    is_empty_object=is_empty_object,
                 )
             )
 
@@ -942,7 +999,6 @@ class CodeGenerator:
             core_dir / "fetch-http-request.ts": ("base/src/core/fetch-http-request.ts.j2", context),
             core_dir / "api-error.ts": ("base/src/core/api-error.ts.j2", context),
             core_dir / "request.ts": ("base/src/core/request.ts.j2", context),
-            core_dir / "codecs.ts": ("base/src/core/codecs.ts.j2", context),
             core_dir / "model-runtime.ts": ("base/src/core/model-runtime.ts.j2", context),
             # Project files
             src_dir / "index.ts": ("base/src/index.ts.j2", context),

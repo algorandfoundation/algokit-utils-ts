@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { AssetHolding } from './asset-holding'
 import { AssetHoldingMeta } from './asset-holding'
 import type { AssetParams } from './asset-params'
@@ -22,22 +25,19 @@ export const AccountAssetInformationMeta: ObjectModelMetadata = {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'assetHolding',
       wireKey: 'asset-holding',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(AssetHoldingMeta),
+      codec: new ObjectModelCodec(AssetHoldingMeta),
     },
     {
       name: 'createdAsset',
       wireKey: 'created-asset',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(AssetParamsMeta),
+      codec: new ObjectModelCodec(AssetParamsMeta),
     },
   ],
 }

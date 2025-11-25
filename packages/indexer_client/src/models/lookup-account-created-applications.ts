@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { Application } from './application'
 import { ApplicationMeta } from './application'
 
@@ -25,21 +30,18 @@ export const LookupAccountCreatedApplicationsMeta: ObjectModelMetadata = {
       name: 'applications',
       wireKey: 'applications',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ApplicationMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationMeta)),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

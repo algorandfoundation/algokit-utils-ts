@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationLogData } from './application-log-data'
 import { ApplicationLogDataMeta } from './application-log-data'
 
@@ -29,29 +34,25 @@ export const LookupApplicationLogsByIdMeta: ObjectModelMetadata = {
       name: 'applicationId',
       wireKey: 'application-id',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'logData',
       wireKey: 'log-data',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ApplicationLogDataMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLogDataMeta)),
     },
   ],
 }

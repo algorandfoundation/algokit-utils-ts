@@ -1,9 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
 import type { Block } from './block'
 import { BlockMeta } from './block'
 import {
   numberCodec,
-  numberWithNoDefaultCodec,
   bigIntCodec,
   booleanCodec,
   stringCodec,
@@ -11,7 +9,8 @@ import {
   addressCodec,
   ArrayCodec,
   MapCodec,
-  ModelCodec,
+  ObjectModelCodec,
+  type ObjectModelMetadata,
 } from '@algorandfoundation/algokit-common'
 
 /**
@@ -34,9 +33,9 @@ export const LedgerTealValueMeta: ObjectModelMetadata = {
   name: 'LedgerTealValue',
   kind: 'object',
   fields: [
-    { name: 'type', wireKey: 'tt', optional: false, nullable: false, codec: numberCodec },
-    { name: 'bytes', wireKey: 'tb', optional: true, nullable: false, codec: bytesCodec },
-    { name: 'uint', wireKey: 'ui', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'type', wireKey: 'tt', optional: false, codec: numberCodec },
+    { name: 'bytes', wireKey: 'tb', optional: true, codec: bytesCodec },
+    { name: 'uint', wireKey: 'ui', optional: true, codec: bigIntCodec },
   ],
 }
 
@@ -54,8 +53,8 @@ export const LedgerStateSchemaMeta: ObjectModelMetadata = {
   name: 'LedgerStateSchema',
   kind: 'object',
   fields: [
-    { name: 'numUints', wireKey: 'nui', optional: true, nullable: false, codec: bigIntCodec },
-    { name: 'numByteSlices', wireKey: 'nbs', optional: true, nullable: false, codec: bigIntCodec },
+    { name: 'numUints', wireKey: 'nui', optional: true, codec: bigIntCodec },
+    { name: 'numByteSlices', wireKey: 'nbs', optional: true, codec: bigIntCodec },
   ],
 }
 
@@ -77,19 +76,18 @@ export const LedgerAppParamsMeta: ObjectModelMetadata = {
   name: 'LedgerAppParams',
   kind: 'object',
   fields: [
-    { name: 'approvalProgram', wireKey: 'approv', optional: false, nullable: false, codec: bytesCodec },
-    { name: 'clearStateProgram', wireKey: 'clearp', optional: false, nullable: false, codec: bytesCodec },
-    { name: 'localStateSchema', wireKey: 'lsch', optional: false, nullable: false, codec: new ModelCodec(LedgerStateSchemaMeta) },
-    { name: 'globalStateSchema', wireKey: 'gsch', optional: false, nullable: false, codec: new ModelCodec(LedgerStateSchemaMeta) },
-    { name: 'extraProgramPages', wireKey: 'epp', optional: false, nullable: false, codec: numberCodec },
-    { name: 'version', wireKey: 'v', optional: true, nullable: false, codec: numberCodec },
-    { name: 'sizeSponsor', wireKey: 'ss', optional: true, nullable: false, codec: addressCodec },
+    { name: 'approvalProgram', wireKey: 'approv', optional: false, codec: bytesCodec },
+    { name: 'clearStateProgram', wireKey: 'clearp', optional: false, codec: bytesCodec },
+    { name: 'localStateSchema', wireKey: 'lsch', optional: false, codec: new ObjectModelCodec(LedgerStateSchemaMeta) },
+    { name: 'globalStateSchema', wireKey: 'gsch', optional: false, codec: new ObjectModelCodec(LedgerStateSchemaMeta) },
+    { name: 'extraProgramPages', wireKey: 'epp', optional: false, codec: numberCodec },
+    { name: 'version', wireKey: 'v', optional: true, codec: numberCodec },
+    { name: 'sizeSponsor', wireKey: 'ss', optional: true, codec: addressCodec },
     {
       name: 'globalState',
       wireKey: 'gs',
       optional: true,
-      nullable: false,
-      codec: new MapCodec(bytesCodec, new ModelCodec(LedgerTealValueMeta)),
+      codec: new MapCodec(bytesCodec, new ObjectModelCodec(LedgerTealValueMeta)),
     },
   ],
 }
@@ -106,13 +104,12 @@ export const LedgerAppLocalStateMeta: ObjectModelMetadata = {
   name: 'LedgerAppLocalState',
   kind: 'object',
   fields: [
-    { name: 'schema', wireKey: 'hsch', optional: false, nullable: false, codec: new ModelCodec(LedgerStateSchemaMeta) },
+    { name: 'schema', wireKey: 'hsch', optional: false, codec: new ObjectModelCodec(LedgerStateSchemaMeta) },
     {
       name: 'keyValue',
       wireKey: 'tkv',
       optional: true,
-      nullable: false,
-      codec: new MapCodec(bytesCodec, new ModelCodec(LedgerTealValueMeta)),
+      codec: new MapCodec(bytesCodec, new ObjectModelCodec(LedgerTealValueMeta)),
     },
   ],
 }
@@ -129,8 +126,8 @@ export const LedgerAppLocalStateDeltaMeta: ObjectModelMetadata = {
   name: 'LedgerAppLocalStateDelta',
   kind: 'object',
   fields: [
-    { name: 'deleted', wireKey: 'Deleted', optional: false, nullable: false, codec: booleanCodec },
-    { name: 'localState', wireKey: 'LocalState', optional: true, nullable: false, codec: new ModelCodec(LedgerAppLocalStateMeta) },
+    { name: 'deleted', wireKey: 'Deleted', optional: false, codec: booleanCodec },
+    { name: 'localState', wireKey: 'LocalState', optional: true, codec: new ObjectModelCodec(LedgerAppLocalStateMeta) },
   ],
 }
 
@@ -146,8 +143,8 @@ export const LedgerAppParamsDeltaMeta: ObjectModelMetadata = {
   name: 'LedgerAppParamsDelta',
   kind: 'object',
   fields: [
-    { name: 'deleted', wireKey: 'Deleted', optional: false, nullable: false, codec: booleanCodec },
-    { name: 'params', wireKey: 'Params', optional: true, nullable: false, codec: new ModelCodec(LedgerAppParamsMeta) },
+    { name: 'deleted', wireKey: 'Deleted', optional: false, codec: booleanCodec },
+    { name: 'params', wireKey: 'Params', optional: true, codec: new ObjectModelCodec(LedgerAppParamsMeta) },
   ],
 }
 
@@ -165,10 +162,10 @@ export const LedgerAppResourceRecordMeta: ObjectModelMetadata = {
   name: 'LedgerAppResourceRecord',
   kind: 'object',
   fields: [
-    { name: 'appId', wireKey: 'Aidx', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'address', wireKey: 'Addr', optional: false, nullable: false, codec: addressCodec },
-    { name: 'params', wireKey: 'Params', optional: false, nullable: false, codec: new ModelCodec(LedgerAppParamsDeltaMeta) },
-    { name: 'state', wireKey: 'State', optional: false, nullable: false, codec: new ModelCodec(LedgerAppLocalStateDeltaMeta) },
+    { name: 'appId', wireKey: 'Aidx', optional: false, codec: bigIntCodec },
+    { name: 'address', wireKey: 'Addr', optional: false, codec: addressCodec },
+    { name: 'params', wireKey: 'Params', optional: false, codec: new ObjectModelCodec(LedgerAppParamsDeltaMeta) },
+    { name: 'state', wireKey: 'State', optional: false, codec: new ObjectModelCodec(LedgerAppLocalStateDeltaMeta) },
   ],
 }
 
@@ -184,8 +181,8 @@ export const LedgerAssetHoldingMeta: ObjectModelMetadata = {
   name: 'LedgerAssetHolding',
   kind: 'object',
   fields: [
-    { name: 'amount', wireKey: 'a', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'frozen', wireKey: 'f', optional: false, nullable: false, codec: booleanCodec },
+    { name: 'amount', wireKey: 'a', optional: false, codec: bigIntCodec },
+    { name: 'frozen', wireKey: 'f', optional: false, codec: booleanCodec },
   ],
 }
 
@@ -201,8 +198,8 @@ export const LedgerAssetHoldingDeltaMeta: ObjectModelMetadata = {
   name: 'LedgerAssetHoldingDelta',
   kind: 'object',
   fields: [
-    { name: 'deleted', wireKey: 'Deleted', optional: false, nullable: false, codec: booleanCodec },
-    { name: 'holding', wireKey: 'Holding', optional: true, nullable: false, codec: new ModelCodec(LedgerAssetHoldingMeta) },
+    { name: 'deleted', wireKey: 'Deleted', optional: false, codec: booleanCodec },
+    { name: 'holding', wireKey: 'Holding', optional: true, codec: new ObjectModelCodec(LedgerAssetHoldingMeta) },
   ],
 }
 
@@ -263,17 +260,17 @@ export const LedgerAssetParamsMeta: ObjectModelMetadata = {
   name: 'LedgerAssetParams',
   kind: 'object',
   fields: [
-    { name: 'total', wireKey: 't', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'decimals', wireKey: 'dc', optional: false, nullable: false, codec: numberCodec },
-    { name: 'defaultFrozen', wireKey: 'df', optional: false, nullable: false, codec: booleanCodec },
-    { name: 'unitName', wireKey: 'un', optional: true, nullable: false, codec: stringCodec },
-    { name: 'assetName', wireKey: 'an', optional: true, nullable: false, codec: stringCodec },
-    { name: 'url', wireKey: 'au', optional: true, nullable: false, codec: stringCodec },
-    { name: 'metadataHash', wireKey: 'am', optional: true, nullable: false, codec: bytesCodec },
-    { name: 'manager', wireKey: 'm', optional: true, nullable: false, codec: addressCodec },
-    { name: 'reserve', wireKey: 'r', optional: true, nullable: false, codec: addressCodec },
-    { name: 'freeze', wireKey: 'f', optional: true, nullable: false, codec: addressCodec },
-    { name: 'clawback', wireKey: 'c', optional: true, nullable: false, codec: addressCodec },
+    { name: 'total', wireKey: 't', optional: false, codec: bigIntCodec },
+    { name: 'decimals', wireKey: 'dc', optional: false, codec: numberCodec },
+    { name: 'defaultFrozen', wireKey: 'df', optional: false, codec: booleanCodec },
+    { name: 'unitName', wireKey: 'un', optional: true, codec: stringCodec },
+    { name: 'assetName', wireKey: 'an', optional: true, codec: stringCodec },
+    { name: 'url', wireKey: 'au', optional: true, codec: stringCodec },
+    { name: 'metadataHash', wireKey: 'am', optional: true, codec: bytesCodec },
+    { name: 'manager', wireKey: 'm', optional: true, codec: addressCodec },
+    { name: 'reserve', wireKey: 'r', optional: true, codec: addressCodec },
+    { name: 'freeze', wireKey: 'f', optional: true, codec: addressCodec },
+    { name: 'clawback', wireKey: 'c', optional: true, codec: addressCodec },
   ],
 }
 
@@ -289,8 +286,8 @@ export const LedgerAssetParamsDeltaMeta: ObjectModelMetadata = {
   name: 'LedgerAssetParamsDelta',
   kind: 'object',
   fields: [
-    { name: 'deleted', wireKey: 'Deleted', optional: false, nullable: false, codec: booleanCodec },
-    { name: 'params', wireKey: 'Params', optional: true, nullable: false, codec: new ModelCodec(LedgerAssetParamsMeta) },
+    { name: 'deleted', wireKey: 'Deleted', optional: false, codec: booleanCodec },
+    { name: 'params', wireKey: 'Params', optional: true, codec: new ObjectModelCodec(LedgerAssetParamsMeta) },
   ],
 }
 
@@ -308,10 +305,10 @@ export const LedgerAssetResourceRecordMeta: ObjectModelMetadata = {
   name: 'LedgerAssetResourceRecord',
   kind: 'object',
   fields: [
-    { name: 'assetId', wireKey: 'Aidx', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'address', wireKey: 'Addr', optional: false, nullable: false, codec: addressCodec },
-    { name: 'params', wireKey: 'Params', optional: false, nullable: false, codec: new ModelCodec(LedgerAssetParamsDeltaMeta) },
-    { name: 'holding', wireKey: 'Holding', optional: false, nullable: false, codec: new ModelCodec(LedgerAssetHoldingDeltaMeta) },
+    { name: 'assetId', wireKey: 'Aidx', optional: false, codec: bigIntCodec },
+    { name: 'address', wireKey: 'Addr', optional: false, codec: addressCodec },
+    { name: 'params', wireKey: 'Params', optional: false, codec: new ObjectModelCodec(LedgerAssetParamsDeltaMeta) },
+    { name: 'holding', wireKey: 'Holding', optional: false, codec: new ObjectModelCodec(LedgerAssetHoldingDeltaMeta) },
   ],
 }
 
@@ -331,12 +328,12 @@ export const LedgerVotingDataMeta: ObjectModelMetadata = {
   name: 'LedgerVotingData',
   kind: 'object',
   fields: [
-    { name: 'voteId', wireKey: 'VoteID', optional: false, nullable: false, codec: bytesCodec },
-    { name: 'selectionId', wireKey: 'SelectionID', optional: false, nullable: false, codec: bytesCodec },
-    { name: 'stateProofId', wireKey: 'StateProofID', optional: false, nullable: false, codec: bytesCodec },
-    { name: 'voteFirstValid', wireKey: 'VoteFirstValid', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'voteLastValid', wireKey: 'VoteLastValid', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'voteKeyDilution', wireKey: 'VoteKeyDilution', optional: false, nullable: false, codec: bigIntCodec },
+    { name: 'voteId', wireKey: 'VoteID', optional: false, codec: bytesCodec },
+    { name: 'selectionId', wireKey: 'SelectionID', optional: false, codec: bytesCodec },
+    { name: 'stateProofId', wireKey: 'StateProofID', optional: false, codec: bytesCodec },
+    { name: 'voteFirstValid', wireKey: 'VoteFirstValid', optional: false, codec: bigIntCodec },
+    { name: 'voteLastValid', wireKey: 'VoteLastValid', optional: false, codec: bigIntCodec },
+    { name: 'voteKeyDilution', wireKey: 'VoteKeyDilution', optional: false, codec: bigIntCodec },
   ],
 }
 
@@ -402,34 +399,32 @@ export const LedgerAccountBaseDataMeta: ObjectModelMetadata = {
   name: 'LedgerAccountBaseData',
   kind: 'object',
   fields: [
-    { name: 'status', wireKey: 'Status', optional: false, nullable: false, codec: numberCodec },
-    { name: 'microAlgos', wireKey: 'MicroAlgos', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'rewardsBase', wireKey: 'RewardsBase', optional: false, nullable: false, codec: bigIntCodec },
+    { name: 'status', wireKey: 'Status', optional: false, codec: numberCodec },
+    { name: 'microAlgos', wireKey: 'MicroAlgos', optional: false, codec: bigIntCodec },
+    { name: 'rewardsBase', wireKey: 'RewardsBase', optional: false, codec: bigIntCodec },
     {
       name: 'rewardedMicroAlgos',
       wireKey: 'RewardedMicroAlgos',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
-    { name: 'authAddress', wireKey: 'AuthAddr', optional: false, nullable: false, codec: addressCodec },
-    { name: 'incentiveEligible', wireKey: 'IncentiveEligible', optional: false, nullable: false, codec: booleanCodec },
+    { name: 'authAddress', wireKey: 'AuthAddr', optional: false, codec: addressCodec },
+    { name: 'incentiveEligible', wireKey: 'IncentiveEligible', optional: false, codec: booleanCodec },
     {
       name: 'totalAppSchema',
       wireKey: 'TotalAppSchema',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(LedgerStateSchemaMeta),
+      codec: new ObjectModelCodec(LedgerStateSchemaMeta),
     },
-    { name: 'totalExtraAppPages', wireKey: 'TotalExtraAppPages', optional: false, nullable: false, codec: numberCodec },
-    { name: 'totalAppParams', wireKey: 'TotalAppParams', optional: false, nullable: false, codec: numberCodec },
-    { name: 'totalAppLocalStates', wireKey: 'TotalAppLocalStates', optional: false, nullable: false, codec: numberCodec },
-    { name: 'totalAssetParams', wireKey: 'TotalAssetParams', optional: false, nullable: false, codec: numberCodec },
-    { name: 'totalAssets', wireKey: 'TotalAssets', optional: false, nullable: false, codec: numberCodec },
-    { name: 'totalBoxes', wireKey: 'TotalBoxes', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'totalBoxBytes', wireKey: 'TotalBoxBytes', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'lastProposed', wireKey: 'LastProposed', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'lastHeartbeat', wireKey: 'LastHeartbeat', optional: false, nullable: false, codec: bigIntCodec },
+    { name: 'totalExtraAppPages', wireKey: 'TotalExtraAppPages', optional: false, codec: numberCodec },
+    { name: 'totalAppParams', wireKey: 'TotalAppParams', optional: false, codec: numberCodec },
+    { name: 'totalAppLocalStates', wireKey: 'TotalAppLocalStates', optional: false, codec: numberCodec },
+    { name: 'totalAssetParams', wireKey: 'TotalAssetParams', optional: false, codec: numberCodec },
+    { name: 'totalAssets', wireKey: 'TotalAssets', optional: false, codec: numberCodec },
+    { name: 'totalBoxes', wireKey: 'TotalBoxes', optional: false, codec: bigIntCodec },
+    { name: 'totalBoxBytes', wireKey: 'TotalBoxBytes', optional: false, codec: bigIntCodec },
+    { name: 'lastProposed', wireKey: 'LastProposed', optional: false, codec: bigIntCodec },
+    { name: 'lastHeartbeat', wireKey: 'LastHeartbeat', optional: false, codec: bigIntCodec },
   ],
 }
 
@@ -449,10 +444,9 @@ export const LedgerAccountDataMeta: ObjectModelMetadata = {
       name: 'accountBaseData',
       flattened: true,
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(LedgerAccountBaseDataMeta),
+      codec: new ObjectModelCodec(LedgerAccountBaseDataMeta),
     },
-    { name: 'votingData', flattened: true, optional: false, nullable: false, codec: new ModelCodec(LedgerVotingDataMeta) },
+    { name: 'votingData', flattened: true, optional: false, codec: new ObjectModelCodec(LedgerVotingDataMeta) },
   ],
 }
 
@@ -465,8 +459,8 @@ export const LedgerBalanceRecordMeta: ObjectModelMetadata = {
   name: 'LedgerBalanceRecord',
   kind: 'object',
   fields: [
-    { name: 'address', wireKey: 'Addr', optional: false, nullable: false, codec: addressCodec },
-    { name: 'accountData', flattened: true, optional: false, nullable: false, codec: new ModelCodec(LedgerAccountDataMeta) },
+    { name: 'address', wireKey: 'Addr', optional: false, codec: addressCodec },
+    { name: 'accountData', flattened: true, optional: false, codec: new ObjectModelCodec(LedgerAccountDataMeta) },
   ],
 }
 
@@ -484,22 +478,19 @@ export const LedgerAccountDeltasMeta: ObjectModelMetadata = {
       name: 'accounts',
       wireKey: 'Accts',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(LedgerBalanceRecordMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(LedgerBalanceRecordMeta)),
     },
     {
       name: 'appResources',
       wireKey: 'AppResources',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(LedgerAppResourceRecordMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(LedgerAppResourceRecordMeta)),
     },
     {
       name: 'assetResources',
       wireKey: 'AssetResources',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(LedgerAssetResourceRecordMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(LedgerAssetResourceRecordMeta)),
     },
   ],
 }
@@ -522,8 +513,8 @@ export const LedgerKvValueDeltaMeta: ObjectModelMetadata = {
   name: 'LedgerKvValueDelta',
   kind: 'object',
   fields: [
-    { name: 'data', wireKey: 'Data', optional: true, nullable: false, codec: bytesCodec },
-    { name: 'oldData', wireKey: 'OldData', optional: true, nullable: false, codec: bytesCodec },
+    { name: 'data', wireKey: 'Data', optional: true, codec: bytesCodec },
+    { name: 'oldData', wireKey: 'OldData', optional: true, codec: bytesCodec },
   ],
 }
 
@@ -542,8 +533,8 @@ export const LedgerIncludedTransactionsMeta: ObjectModelMetadata = {
   name: 'LedgerIncludedTransactions',
   kind: 'object',
   fields: [
-    { name: 'lastValid', wireKey: 'LastValid', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'intra', wireKey: 'Intra', optional: false, nullable: false, codec: numberCodec },
+    { name: 'lastValid', wireKey: 'LastValid', optional: false, codec: bigIntCodec },
+    { name: 'intra', wireKey: 'Intra', optional: false, codec: numberCodec },
   ],
 }
 
@@ -575,10 +566,10 @@ export const LedgerModifiedCreatableMeta: ObjectModelMetadata = {
   name: 'LedgerModifiedCreatable',
   kind: 'object',
   fields: [
-    { name: 'creatableType', wireKey: 'Ctype', optional: false, nullable: false, codec: numberCodec },
-    { name: 'created', wireKey: 'Created', optional: false, nullable: false, codec: booleanCodec },
-    { name: 'creator', wireKey: 'Creator', optional: false, nullable: false, codec: addressCodec },
-    { name: 'ndeltas', wireKey: 'Ndeltas', optional: false, nullable: false, codec: numberCodec },
+    { name: 'creatableType', wireKey: 'Ctype', optional: false, codec: numberCodec },
+    { name: 'created', wireKey: 'Created', optional: false, codec: booleanCodec },
+    { name: 'creator', wireKey: 'Creator', optional: false, codec: addressCodec },
+    { name: 'ndeltas', wireKey: 'Ndeltas', optional: false, codec: numberCodec },
   ],
 }
 
@@ -600,8 +591,8 @@ export const LedgerAlgoCountMeta: ObjectModelMetadata = {
   name: 'LedgerAlgoCount',
   kind: 'object',
   fields: [
-    { name: 'money', wireKey: 'mon', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'rewardUnits', wireKey: 'rwd', optional: false, nullable: false, codec: bigIntCodec },
+    { name: 'money', wireKey: 'mon', optional: false, codec: bigIntCodec },
+    { name: 'rewardUnits', wireKey: 'rwd', optional: false, codec: bigIntCodec },
   ],
 }
 
@@ -622,10 +613,10 @@ export const LedgerAccountTotalsMeta: ObjectModelMetadata = {
   name: 'LedgerAccountTotals',
   kind: 'object',
   fields: [
-    { name: 'online', wireKey: 'online', optional: false, nullable: false, codec: new ModelCodec(LedgerAlgoCountMeta) },
-    { name: 'offline', wireKey: 'offline', optional: false, nullable: false, codec: new ModelCodec(LedgerAlgoCountMeta) },
-    { name: 'notParticipating', wireKey: 'notpart', optional: false, nullable: false, codec: new ModelCodec(LedgerAlgoCountMeta) },
-    { name: 'rewardsLevel', wireKey: 'rwdlvl', optional: false, nullable: false, codec: bigIntCodec },
+    { name: 'online', wireKey: 'online', optional: false, codec: new ObjectModelCodec(LedgerAlgoCountMeta) },
+    { name: 'offline', wireKey: 'offline', optional: false, codec: new ObjectModelCodec(LedgerAlgoCountMeta) },
+    { name: 'notParticipating', wireKey: 'notpart', optional: false, codec: new ObjectModelCodec(LedgerAlgoCountMeta) },
+    { name: 'rewardsLevel', wireKey: 'rwdlvl', optional: false, codec: bigIntCodec },
   ],
 }
 
@@ -673,31 +664,28 @@ export const LedgerStateDeltaMeta: ObjectModelMetadata = {
   name: 'LedgerStateDelta',
   kind: 'object',
   fields: [
-    { name: 'accounts', wireKey: 'Accts', optional: false, nullable: false, codec: new ModelCodec(LedgerAccountDeltasMeta) },
-    { name: 'block', wireKey: 'Hdr', optional: false, nullable: false, codec: new ModelCodec(BlockMeta) },
-    { name: 'stateProofNext', wireKey: 'StateProofNext', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'prevTimestamp', wireKey: 'PrevTimestamp', optional: false, nullable: false, codec: bigIntCodec },
-    { name: 'totals', wireKey: 'Totals', optional: false, nullable: false, codec: new ModelCodec(LedgerAccountTotalsMeta) },
+    { name: 'accounts', wireKey: 'Accts', optional: false, codec: new ObjectModelCodec(LedgerAccountDeltasMeta) },
+    { name: 'block', wireKey: 'Hdr', optional: false, codec: new ObjectModelCodec(BlockMeta) },
+    { name: 'stateProofNext', wireKey: 'StateProofNext', optional: false, codec: bigIntCodec },
+    { name: 'prevTimestamp', wireKey: 'PrevTimestamp', optional: false, codec: bigIntCodec },
+    { name: 'totals', wireKey: 'Totals', optional: false, codec: new ObjectModelCodec(LedgerAccountTotalsMeta) },
     {
       name: 'kvMods',
       wireKey: 'KvMods',
       optional: true,
-      nullable: false,
-      codec: new MapCodec(bytesCodec, new ModelCodec(LedgerKvValueDeltaMeta)),
+      codec: new MapCodec(bytesCodec, new ObjectModelCodec(LedgerKvValueDeltaMeta)),
     },
     {
       name: 'txIds',
       wireKey: 'Txids',
       optional: true,
-      nullable: false,
-      codec: new MapCodec(bytesCodec, new ModelCodec(LedgerIncludedTransactionsMeta)),
+      codec: new MapCodec(bytesCodec, new ObjectModelCodec(LedgerIncludedTransactionsMeta)),
     },
     {
       name: 'creatables',
       wireKey: 'Creatables',
       optional: true,
-      nullable: false,
-      codec: new MapCodec(numberWithNoDefaultCodec, new ModelCodec(LedgerModifiedCreatableMeta)),
+      codec: new MapCodec(numberCodec, new ObjectModelCodec(LedgerModifiedCreatableMeta)),
     },
   ],
 }

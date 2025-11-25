@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
-import type { BodyFormat } from '../core/model-runtime'
+import type { EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   CreateWalletRequest,
   DeleteKeyRequest,
@@ -93,11 +93,11 @@ import {
 export class KmdApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: BodyFormat): string {
+  private static acceptFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
   }
 
-  private static mediaFor(format: BodyFormat): string {
+  private static mediaFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
   }
 
@@ -106,7 +106,7 @@ export class KmdApi {
    */
   async createWallet(body: CreateWalletRequest): Promise<PostWalletResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = CreateWalletRequestMeta
@@ -132,7 +132,7 @@ export class KmdApi {
    */
   async deleteKey(body: DeleteKeyRequest): Promise<DeleteKeyResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = DeleteKeyRequestMeta
@@ -158,7 +158,7 @@ export class KmdApi {
    */
   async deleteMultisig(body: DeleteMultisigRequest): Promise<DeleteMultisigResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = DeleteMultisigRequestMeta
@@ -184,7 +184,7 @@ export class KmdApi {
    */
   async exportKey(body: ExportKeyRequest): Promise<PostKeyExportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ExportKeyRequestMeta
@@ -210,7 +210,7 @@ export class KmdApi {
    */
   async exportMasterKey(body: ExportMasterKeyRequest): Promise<PostMasterKeyExportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ExportMasterKeyRequestMeta
@@ -236,7 +236,7 @@ export class KmdApi {
    */
   async exportMultisig(body: ExportMultisigRequest): Promise<PostMultisigExportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ExportMultisigRequestMeta
@@ -262,7 +262,7 @@ export class KmdApi {
    */
   async generateKey(body: GenerateKeyRequest): Promise<PostKeyResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = GenerateKeyRequestMeta
@@ -285,7 +285,7 @@ export class KmdApi {
 
   async getVersion(): Promise<VersionsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -306,7 +306,7 @@ export class KmdApi {
    */
   async getWalletInfo(body: WalletInfoRequest): Promise<PostWalletInfoResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = WalletInfoRequestMeta
@@ -332,7 +332,7 @@ export class KmdApi {
    */
   async importKey(body: ImportKeyRequest): Promise<PostKeyImportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ImportKeyRequestMeta
@@ -358,7 +358,7 @@ export class KmdApi {
    */
   async importMultisig(body: ImportMultisigRequest): Promise<PostMultisigImportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ImportMultisigRequestMeta
@@ -384,7 +384,7 @@ export class KmdApi {
    */
   async initWalletHandleToken(body: InitWalletHandleTokenRequest): Promise<PostWalletInitResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = InitWalletHandleTokenRequestMeta
@@ -410,7 +410,7 @@ export class KmdApi {
    */
   async listKeysInWallet(body: ListKeysRequest): Promise<PostKeyListResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ListKeysRequestMeta
@@ -434,9 +434,9 @@ export class KmdApi {
   /**
    * Lists all of the multisig accounts whose preimages this wallet stores
    */
-  async listMultisg(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
+  async listMultisig(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ListMultisigRequestMeta
@@ -462,7 +462,7 @@ export class KmdApi {
    */
   async listWallets(): Promise<GetWalletsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -483,7 +483,7 @@ export class KmdApi {
    */
   async releaseWalletHandleToken(body: ReleaseWalletHandleTokenRequest): Promise<PostWalletReleaseResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = ReleaseWalletHandleTokenRequestMeta
@@ -509,7 +509,7 @@ export class KmdApi {
    */
   async renameWallet(body: RenameWalletRequest): Promise<PostWalletRenameResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = RenameWalletRequestMeta
@@ -535,7 +535,7 @@ export class KmdApi {
    */
   async renewWalletHandleToken(body: RenewWalletHandleTokenRequest): Promise<PostWalletRenewResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = RenewWalletHandleTokenRequestMeta
@@ -561,7 +561,7 @@ export class KmdApi {
    */
   async signMultisigProgram(body: SignProgramMultisigRequest): Promise<PostMultisigProgramSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = SignProgramMultisigRequestMeta
@@ -587,7 +587,7 @@ export class KmdApi {
    */
   async signMultisigTransaction(body: SignMultisigRequest): Promise<PostMultisigTransactionSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = SignMultisigRequestMeta
@@ -613,7 +613,7 @@ export class KmdApi {
    */
   async signProgram(body: SignProgramRequest): Promise<PostProgramSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = SignProgramRequestMeta
@@ -639,7 +639,7 @@ export class KmdApi {
    */
   async signTransaction(body: SignTransactionRequest): Promise<PostTransactionSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const bodyMeta = SignTransactionRequestMeta
@@ -665,7 +665,7 @@ export class KmdApi {
    */
   async swaggerHandler(): Promise<string> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({

@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+} from '@algorandfoundation/algokit-common'
 
 export type TealDisassemble = {
   /**
@@ -16,7 +18,6 @@ export const TealDisassembleMeta: ObjectModelMetadata = {
       name: 'result',
       wireKey: 'result',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
   ],

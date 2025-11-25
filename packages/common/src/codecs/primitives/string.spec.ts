@@ -10,12 +10,13 @@ describe('StringCodec', () => {
 
   describe('encode', () => {
     describe('default values', () => {
-      test.each<{ value: string | undefined; description: string }>([
+      test.each<{ value: string | undefined | null; description: string }>([
         { value: '', description: 'empty string (default value)' },
         { value: undefined, description: 'undefined' },
-      ])('should omit $description when encoding', ({ value }) => {
-        expect(stringCodec.encode(value, 'json')).toBeUndefined()
-        expect(stringCodec.encode(value, 'msgpack')).toBeUndefined()
+        { value: null, description: 'null' },
+      ])('should encode $description to empty string', ({ value }) => {
+        expect(stringCodec.encode(value, 'json')).toBe('')
+        expect(stringCodec.encode(value, 'msgpack')).toBe('')
       })
     })
 
@@ -54,6 +55,66 @@ describe('StringCodec', () => {
     })
 
     describe('format independence', () => {
+      test.each<{ value: string | undefined | null; description: string }>([
+        { value: undefined, description: 'undefined' },
+        { value: null, description: 'null' },
+        { value: '', description: 'empty string' },
+        { value: 'hello', description: 'simple string' },
+        { value: 'Hello World', description: 'string with space' },
+        { value: '你好', description: 'Unicode string' },
+        { value: '🎉', description: 'emoji' },
+      ])('should produce same result for JSON and msgpack when encoding $description', ({ value }) => {
+        expect(stringCodec.encode(value, 'json')).toBe(stringCodec.encode(value, 'msgpack'))
+      })
+    })
+  })
+
+  describe('encodeOptional', () => {
+    describe('default values', () => {
+      test.each<{ value: string | undefined; description: string }>([
+        { value: '', description: 'empty string (default value)' },
+        { value: undefined, description: 'undefined' },
+      ])('should omit $description when encoding', ({ value }) => {
+        expect(stringCodec.encodeOptional(value, 'json')).toBeUndefined()
+        expect(stringCodec.encodeOptional(value, 'msgpack')).toBeUndefined()
+      })
+    })
+
+    describe('non-empty strings', () => {
+      test.each<{ value: string; description: string }>([
+        // Simple strings
+        { value: 'a', description: 'single character' },
+        { value: 'hello', description: 'simple word' },
+        { value: 'Hello World', description: 'string with space' },
+        { value: 'The quick brown fox jumps over the lazy dog', description: 'long sentence' },
+        // Special characters
+        { value: '!@#$%^&*()', description: 'special characters' },
+        { value: 'line1\nline2', description: 'string with newline' },
+        { value: 'tab\there', description: 'string with tab' },
+        { value: '"quoted"', description: 'string with quotes' },
+        { value: "it's", description: 'string with apostrophe' },
+        { value: '\\backslash\\', description: 'string with backslashes' },
+        // Unicode
+        { value: 'café', description: 'string with accents' },
+        { value: '你好', description: 'Chinese characters' },
+        { value: '🎉🎊', description: 'emojis' },
+        { value: 'Ω≈ç√', description: 'mathematical symbols' },
+        // Whitespace
+        { value: ' ', description: 'single space' },
+        { value: '  ', description: 'multiple spaces' },
+        { value: '\t', description: 'tab character' },
+        { value: '\n', description: 'newline character' },
+        // Numbers as strings
+        { value: '0', description: 'zero as string' },
+        { value: '123', description: 'number as string' },
+        { value: '3.14', description: 'decimal as string' },
+      ])('should encode $description', ({ value }) => {
+        expect(stringCodec.encodeOptional(value, 'json')).toBe(value)
+        expect(stringCodec.encodeOptional(value, 'msgpack')).toBe(value)
+      })
+    })
+
+    describe('format independence', () => {
       test.each<{ value: string | undefined; description: string }>([
         { value: undefined, description: 'undefined' },
         { value: '', description: 'empty string' },
@@ -62,7 +123,7 @@ describe('StringCodec', () => {
         { value: '你好', description: 'Unicode string' },
         { value: '🎉', description: 'emoji' },
       ])('should produce same result for JSON and msgpack when encoding $description', ({ value }) => {
-        expect(stringCodec.encode(value, 'json')).toBe(stringCodec.encode(value, 'msgpack'))
+        expect(stringCodec.encodeOptional(value, 'json')).toBe(stringCodec.encodeOptional(value, 'msgpack'))
       })
     })
   })
@@ -148,9 +209,12 @@ describe('StringCodec', () => {
   })
 
   describe('decodeOptional', () => {
-    test('should preserve undefined', () => {
-      expect(stringCodec.decodeOptional(undefined, 'json')).toBeUndefined()
-      expect(stringCodec.decodeOptional(undefined, 'msgpack')).toBeUndefined()
+    test.each<{ value: string | null | undefined; description: string }>([
+      { value: null, description: 'null' },
+      { value: undefined, description: 'undefined' },
+    ])('should decode $description to undefined', ({ value }) => {
+      expect(stringCodec.decodeOptional(value, 'json')).toBeUndefined()
+      expect(stringCodec.decodeOptional(value, 'msgpack')).toBeUndefined()
     })
 
     test.each<{ value: string; description: string }>([

@@ -1,7 +1,7 @@
-import type { ModelMetadata } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   ArrayCodec,
-  ModelCodec,
+  ObjectModelCodec,
   addressCodec,
   bytesArrayCodec,
   bytesCodec,
@@ -10,51 +10,48 @@ import {
 } from '@algorandfoundation/algokit-common'
 import { TransactionMeta } from './transaction-meta'
 
-const MultisigSubsignatureMeta: ModelMetadata = {
+const MultisigSubsignatureMeta: ObjectModelMetadata = {
   name: 'MultisigSubsignature',
   kind: 'object',
   fields: [
-    { name: 'address', wireKey: 'pk', optional: false, nullable: false, codec: addressCodec },
-    { name: 'signature', wireKey: 's', optional: true, nullable: false, codec: fixedBytes64Codec },
+    { name: 'address', wireKey: 'pk', optional: false, codec: addressCodec },
+    { name: 'signature', wireKey: 's', optional: true, codec: fixedBytes64Codec },
   ],
 }
 
-const MultisigSignatureMeta: ModelMetadata = {
+const MultisigSignatureMeta: ObjectModelMetadata = {
   name: 'MultisigSignature',
   kind: 'object',
   fields: [
-    { name: 'version', wireKey: 'v', optional: false, nullable: false, codec: numberCodec },
-    { name: 'threshold', wireKey: 'thr', optional: false, nullable: false, codec: numberCodec },
+    { name: 'version', wireKey: 'v', optional: false, codec: numberCodec },
+    { name: 'threshold', wireKey: 'thr', optional: false, codec: numberCodec },
     {
       name: 'subsignatures',
       wireKey: 'subsig',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(MultisigSubsignatureMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(MultisigSubsignatureMeta)),
     },
   ],
 }
 
-const LogicSignatureMeta: ModelMetadata = {
+const LogicSignatureMeta: ObjectModelMetadata = {
   name: 'LogicSignature',
   kind: 'object',
   fields: [
-    { name: 'logic', wireKey: 'l', optional: false, nullable: false, codec: bytesCodec },
-    { name: 'args', wireKey: 'arg', optional: true, nullable: false, codec: bytesArrayCodec },
-    { name: 'signature', wireKey: 'sig', optional: true, nullable: false, codec: fixedBytes64Codec },
+    { name: 'logic', wireKey: 'l', optional: false, codec: bytesCodec },
+    { name: 'args', wireKey: 'arg', optional: true, codec: bytesArrayCodec },
+    { name: 'signature', wireKey: 'sig', optional: true, codec: fixedBytes64Codec },
     {
       name: 'multiSignature',
       wireKey: 'msig',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(MultisigSignatureMeta),
+      codec: new ObjectModelCodec(MultisigSignatureMeta),
     },
     {
       name: 'logicMultiSignature',
       wireKey: 'lmsig',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(MultisigSignatureMeta),
+      codec: new ObjectModelCodec(MultisigSignatureMeta),
     },
   ],
 }
@@ -62,7 +59,7 @@ const LogicSignatureMeta: ModelMetadata = {
 /**
  * Metadata for SignedTransaction
  */
-export const SignedTransactionMeta: ModelMetadata = {
+export const SignedTransactionMeta: ObjectModelMetadata = {
   name: 'SignedTransaction',
   kind: 'object',
   fields: [
@@ -70,24 +67,21 @@ export const SignedTransactionMeta: ModelMetadata = {
       name: 'txn',
       wireKey: 'txn',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(TransactionMeta),
+      codec: new ObjectModelCodec(TransactionMeta),
     },
-    { name: 'signature', wireKey: 'sig', optional: true, nullable: false, codec: fixedBytes64Codec },
+    { name: 'signature', wireKey: 'sig', optional: true, codec: fixedBytes64Codec },
     {
       name: 'multiSignature',
       wireKey: 'msig',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(MultisigSignatureMeta),
+      codec: new ObjectModelCodec(MultisigSignatureMeta),
     },
     {
       name: 'logicSignature',
       wireKey: 'lsig',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(LogicSignatureMeta),
+      codec: new ObjectModelCodec(LogicSignatureMeta),
     },
-    { name: 'authAddress', wireKey: 'sgnr', optional: true, nullable: false, codec: addressCodec },
+    { name: 'authAddress', wireKey: 'sgnr', optional: true, codec: addressCodec },
   ],
 }

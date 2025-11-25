@@ -1,12 +1,10 @@
 import {
   AlgodClient,
-  AlgorandSerializer,
   ApplicationLocalReference,
   AssetHoldingReference,
   BoxReference,
   PendingTransactionResponse,
   SimulateRequest,
-  SimulationTransactionExecTraceMeta,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
@@ -947,7 +945,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
           err.traces.push({
-            trace: txn.execTrace ? AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map') : undefined,
+            trace: txn.execTrace,
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
             logs: txn.txnResult.logs,

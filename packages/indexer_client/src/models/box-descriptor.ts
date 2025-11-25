@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Box descriptor describes an app box without a value.
@@ -19,7 +21,6 @@ export const BoxDescriptorMeta: ObjectModelMetadata = {
       name: 'name',
       wireKey: 'name',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
   ],

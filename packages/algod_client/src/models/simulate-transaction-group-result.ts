@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  ArrayCodec,
+  numberArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SimulateTransactionResult } from './simulate-transaction-result'
 import { SimulateTransactionResultMeta } from './simulate-transaction-result'
 import type { SimulateUnnamedResourcesAccessed } from './simulate-unnamed-resources-accessed'
@@ -44,43 +50,37 @@ export const SimulateTransactionGroupResultMeta: ObjectModelMetadata = {
       name: 'txnResults',
       wireKey: 'txn-results',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SimulateTransactionResultMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SimulateTransactionResultMeta)),
     },
     {
       name: 'failureMessage',
       wireKey: 'failure-message',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'failedAt',
       wireKey: 'failed-at',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: numberArrayCodec,
     },
     {
       name: 'appBudgetAdded',
       wireKey: 'app-budget-added',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'appBudgetConsumed',
       wireKey: 'app-budget-consumed',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'unnamedResourcesAccessed',
       wireKey: 'unnamed-resources-accessed',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulateUnnamedResourcesAccessedMeta),
+      codec: new ObjectModelCodec(SimulateUnnamedResourcesAccessedMeta),
     },
   ],
 }

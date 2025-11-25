@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringArrayCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * VersionsResponse is the response to `GET /versions`
@@ -17,8 +19,7 @@ export const VersionsResponseMeta: ObjectModelMetadata = {
       name: 'versions',
       wireKey: 'versions',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
   ],
 }

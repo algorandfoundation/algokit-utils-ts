@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Represents the message that the state proofs are attesting to.
@@ -39,35 +42,30 @@ export const StateProofMessageMeta: ObjectModelMetadata = {
       name: 'blockHeadersCommitment',
       wireKey: 'BlockHeadersCommitment',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'votersCommitment',
       wireKey: 'VotersCommitment',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'lnProvenWeight',
       wireKey: 'LnProvenWeight',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'firstAttestedRound',
       wireKey: 'FirstAttestedRound',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'lastAttestedRound',
       wireKey: 'LastAttestedRound',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

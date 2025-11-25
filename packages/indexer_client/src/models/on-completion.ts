@@ -1,5 +1,7 @@
-import type { PassthroughModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { PrimitiveModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * \[apan\] defines the what additional actions occur with the transaction.
@@ -14,8 +16,8 @@ import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from 
  */
 export type OnCompletion = 'noop' | 'optin' | 'closeout' | 'clear' | 'update' | 'delete'
 
-export const OnCompletionMeta: PassthroughModelMetadata = {
+export const OnCompletionMeta: PrimitiveModelMetadata = {
   name: 'OnCompletion',
-  kind: 'passthrough',
+  kind: 'primitive',
   codec: stringCodec,
 }

@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * References a box of an application.
@@ -24,14 +27,12 @@ export const BoxReferenceMeta: ObjectModelMetadata = {
       name: 'app',
       wireKey: 'app',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'name',
       wireKey: 'name',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
   ],

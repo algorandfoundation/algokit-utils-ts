@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request';
 import { AlgorandSerializer } from '../core/model-runtime';
-import type { BodyFormat } from '../core/model-runtime';
+import type { EncodingFormat } from '@algorandfoundation/algokit-common';
 {% if custom_imports %}
 {% for import_statement in custom_imports %}
 {{ import_statement }}
@@ -33,11 +33,11 @@ undefined
 export class {{ service_class_name }} {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: BodyFormat): string {
+  private static acceptFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack';
   }
 
-  private static mediaFor(format: BodyFormat): string {
+  private static mediaFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack';
   }
 
@@ -61,7 +61,7 @@ export class {{ service_class_name }} {
   ): Promise<{{ op.responseTsType }}> {
     const headers: Record<string, string> = {};
     {% set body_format = 'msgpack' if op.forceMsgpackQuery else 'json' %}
-    const responseFormat: BodyFormat = '{{ body_format }}'
+    const responseFormat: EncodingFormat = '{{ body_format }}'
     headers['Accept'] = {{ service_class_name }}.acceptFor(responseFormat);
 
     {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}

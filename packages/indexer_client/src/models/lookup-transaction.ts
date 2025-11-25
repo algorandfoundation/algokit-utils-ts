@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { Transaction } from './transaction'
 import { TransactionMeta } from './transaction'
 
@@ -20,14 +23,12 @@ export const LookupTransactionMeta: ObjectModelMetadata = {
       name: 'transaction',
       wireKey: 'transaction',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(TransactionMeta),
+      codec: new ObjectModelCodec(TransactionMeta),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

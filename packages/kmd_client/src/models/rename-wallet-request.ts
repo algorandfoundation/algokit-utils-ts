@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTWalletRenameRequest is the request for `POST /v1/wallet/rename`
@@ -18,21 +20,18 @@ export const RenameWalletRequestMeta: ObjectModelMetadata = {
       name: 'walletId',
       wireKey: 'wallet_id',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'walletName',
       wireKey: 'wallet_name',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

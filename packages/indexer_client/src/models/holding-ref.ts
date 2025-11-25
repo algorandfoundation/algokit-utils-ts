@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  addressCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * HoldingRef names a holding by referring to an Address and Asset it belongs to.
@@ -24,14 +27,12 @@ export const HoldingRefMeta: ObjectModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: false,
-      nullable: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
     {
       name: 'asset',
       wireKey: 'asset',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalState } from './application-local-state'
 import { ApplicationLocalStateMeta } from './application-local-state'
 
@@ -25,21 +30,18 @@ export const LookupAccountAppLocalStatesMeta: ObjectModelMetadata = {
       name: 'appsLocalStates',
       wireKey: 'apps-local-states',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ApplicationLocalStateMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLocalStateMeta)),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

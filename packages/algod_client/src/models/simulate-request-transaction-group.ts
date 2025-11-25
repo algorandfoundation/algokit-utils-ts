@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 
@@ -21,8 +24,7 @@ export const SimulateRequestTransactionGroupMeta: ObjectModelMetadata = {
       name: 'txns',
       wireKey: 'txns',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SignedTransactionMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SignedTransactionMeta)),
     },
   ],
 }

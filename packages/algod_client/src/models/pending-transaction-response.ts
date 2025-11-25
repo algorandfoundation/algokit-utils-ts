@@ -1,5 +1,12 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  bytesArrayCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import type { AccountStateDelta } from './account-state-delta'
@@ -86,99 +93,85 @@ export const PendingTransactionResponseMeta: ObjectModelMetadata = {
       name: 'assetId',
       wireKey: 'asset-index',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'appId',
       wireKey: 'application-index',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'closeRewards',
       wireKey: 'close-rewards',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'closingAmount',
       wireKey: 'closing-amount',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'assetClosingAmount',
       wireKey: 'asset-closing-amount',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'confirmedRound',
       wireKey: 'confirmed-round',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'poolError',
       wireKey: 'pool-error',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'receiverRewards',
       wireKey: 'receiver-rewards',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'senderRewards',
       wireKey: 'sender-rewards',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'localStateDelta',
       wireKey: 'local-state-delta',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AccountStateDeltaMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AccountStateDeltaMeta)),
     },
     {
       name: 'globalStateDelta',
       wireKey: 'global-state-delta',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(StateDeltaMeta),
+      codec: new ArrayModelCodec(StateDeltaMeta),
     },
     {
       name: 'logs',
       wireKey: 'logs',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(bytesCodec),
+      codec: bytesArrayCodec,
     },
     {
       name: 'innerTxns',
       wireKey: 'inner-txns',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(() => PendingTransactionResponseMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(() => PendingTransactionResponseMeta)),
     },
     {
       name: 'txn',
       wireKey: 'txn',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(SignedTransactionMeta),
+      codec: new ObjectModelCodec(SignedTransactionMeta),
     },
   ],
 }

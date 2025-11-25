@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bytesCodec,
+  addressCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { AvmValue } from './avm-value'
 import { AvmValueMeta } from './avm-value'
 
@@ -37,36 +42,31 @@ export const ApplicationStateOperationMeta: ObjectModelMetadata = {
       name: 'operation',
       wireKey: 'operation',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'appStateType',
       wireKey: 'app-state-type',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'key',
       wireKey: 'key',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'newValue',
       wireKey: 'new-value',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(AvmValueMeta),
+      codec: new ObjectModelCodec(AvmValueMeta),
     },
     {
       name: 'account',
       wireKey: 'account',
       optional: true,
-      nullable: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
   ],
 }

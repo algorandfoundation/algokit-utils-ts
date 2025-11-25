@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { Account } from './account'
 import { AccountMeta } from './account'
 
@@ -25,21 +30,18 @@ export const SearchForAccountsMeta: ObjectModelMetadata = {
       name: 'accounts',
       wireKey: 'accounts',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AccountMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AccountMeta)),
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

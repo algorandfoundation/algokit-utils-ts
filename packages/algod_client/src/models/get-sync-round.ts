@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+} from '@algorandfoundation/algokit-common'
 
 export type GetSyncRound = {
   /**
@@ -16,7 +18,6 @@ export const GetSyncRoundMeta: ObjectModelMetadata = {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

@@ -34,4 +34,10 @@ export enum TransactionType {
    * Heartbeat transaction
    */
   Heartbeat = 'hb',
+  /**
+   * Unknown transaction type
+   * Used when decoding transactions with unrecognized type values.
+   * This should not be used when creating new transactions.
+   */
+  Unknown = 'unknown',
 }

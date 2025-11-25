@@ -1,7 +1,6 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
 import type { Block } from './block'
 import { BlockMeta } from './block'
-import { ModelCodec, RecordCodec, unknownCodec } from '@algorandfoundation/algokit-common'
+import { ObjectModelCodec, RecordCodec, unknownCodec, type ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 
 export type GetBlock = {
   /** Block data including header and transactions. */
@@ -14,7 +13,7 @@ export const GetBlockMeta: ObjectModelMetadata = {
   name: 'GetBlock',
   kind: 'object',
   fields: [
-    { name: 'block', wireKey: 'block', optional: false, nullable: false, codec: new ModelCodec(BlockMeta) },
-    { name: 'cert', wireKey: 'cert', optional: true, nullable: false, codec: new RecordCodec(unknownCodec) },
+    { name: 'block', wireKey: 'block', optional: false, codec: new ObjectModelCodec(BlockMeta) },
+    { name: 'cert', wireKey: 'cert', optional: true, codec: new RecordCodec(unknownCodec) },
   ],
 }

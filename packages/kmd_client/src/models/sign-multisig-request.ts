@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bytesCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+  PrimitiveModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { Digest } from './digest'
 import { DigestMeta } from './digest'
 import type { MultisigSig } from './multisig-sig'
@@ -27,42 +33,36 @@ export const SignMultisigRequestMeta: ObjectModelMetadata = {
       name: 'partialMultisig',
       wireKey: 'partial_multisig',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(MultisigSigMeta),
+      codec: new ObjectModelCodec(MultisigSigMeta),
     },
     {
       name: 'publicKey',
       wireKey: 'public_key',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(PublicKeyMeta),
+      codec: new PrimitiveModelCodec(PublicKeyMeta),
     },
     {
       name: 'signer',
       wireKey: 'signer',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(DigestMeta),
+      codec: new ArrayModelCodec(DigestMeta),
     },
     {
       name: 'transaction',
       wireKey: 'transaction',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

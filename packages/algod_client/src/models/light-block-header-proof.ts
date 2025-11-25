@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Proof of membership and position of a light block header.
@@ -29,21 +32,18 @@ export const LightBlockHeaderProofMeta: ObjectModelMetadata = {
       name: 'index',
       wireKey: 'index',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'treedepth',
       wireKey: 'treedepth',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'proof',
       wireKey: 'proof',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
   ],

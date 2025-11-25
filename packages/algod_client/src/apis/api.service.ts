@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
-import type { BodyFormat } from '../core/model-runtime'
+import type { EncodingFormat } from '@algorandfoundation/algokit-common'
 import { concatArrays } from '@algorandfoundation/algokit-common'
 import type {
   Account,
@@ -65,7 +65,6 @@ import {
   SimulateRequestMeta,
   SimulateTransactionMeta,
   StateProofMeta,
-  SuggestedParamsMeta,
   TealCompileMeta,
   TealDisassembleMeta,
   TealDryrunMeta,
@@ -78,11 +77,11 @@ import {
 export class AlgodApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: BodyFormat): string {
+  private static acceptFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
   }
 
-  private static mediaFor(format: BodyFormat): string {
+  private static mediaFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
   }
 
@@ -91,7 +90,7 @@ export class AlgodApi {
    */
   async accountApplicationInformation(address: string, applicationId: number | bigint): Promise<AccountApplicationInformation> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -112,7 +111,7 @@ export class AlgodApi {
    */
   async accountAssetInformation(address: string, assetId: number | bigint): Promise<AccountAssetInformation> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -133,7 +132,7 @@ export class AlgodApi {
    */
   async accountInformation(address: string, params?: { exclude?: 'all' | 'none' }): Promise<Account> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -154,7 +153,7 @@ export class AlgodApi {
    */
   private async _getApplicationBoxByName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -175,7 +174,7 @@ export class AlgodApi {
    */
   async getApplicationBoxes(applicationId: number | bigint, params?: { max?: number }): Promise<GetApplicationBoxes> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -196,7 +195,7 @@ export class AlgodApi {
    */
   async getApplicationById(applicationId: number | bigint): Promise<Application> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -217,7 +216,7 @@ export class AlgodApi {
    */
   async getAssetById(assetId: number | bigint): Promise<Asset> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -235,7 +234,7 @@ export class AlgodApi {
 
   async getBlock(round: number | bigint, params?: { headerOnly?: boolean }): Promise<GetBlock> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -253,7 +252,7 @@ export class AlgodApi {
 
   async getBlockHash(round: number | bigint): Promise<GetBlockHash> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -274,7 +273,7 @@ export class AlgodApi {
    */
   async getBlockTimeStampOffset(): Promise<GetBlockTimeStampOffset> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -292,7 +291,7 @@ export class AlgodApi {
 
   async getBlockTxIds(round: number | bigint): Promise<GetBlockTxIds> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -313,7 +312,7 @@ export class AlgodApi {
    */
   async getGenesis(): Promise<Genesis> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -334,7 +333,7 @@ export class AlgodApi {
    */
   async getLedgerStateDelta(round: number | bigint): Promise<LedgerStateDelta> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -355,7 +354,7 @@ export class AlgodApi {
    */
   async getLedgerStateDeltaForTransactionGroup(id: string): Promise<LedgerStateDelta> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -373,7 +372,7 @@ export class AlgodApi {
 
   async getLightBlockHeaderProof(round: number | bigint): Promise<LightBlockHeaderProof> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -394,7 +393,7 @@ export class AlgodApi {
    */
   async getPendingTransactions(params?: { max?: number }): Promise<GetPendingTransactions> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -415,7 +414,7 @@ export class AlgodApi {
    */
   async getPendingTransactionsByAddress(address: string, params?: { max?: number }): Promise<GetPendingTransactionsByAddress> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -433,7 +432,7 @@ export class AlgodApi {
 
   async getReady(): Promise<void> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     await this.httpRequest.request<void>({
@@ -449,7 +448,7 @@ export class AlgodApi {
 
   async getStateProof(round: number | bigint): Promise<StateProof> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -467,7 +466,7 @@ export class AlgodApi {
 
   async getStatus(): Promise<GetStatus> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -485,7 +484,7 @@ export class AlgodApi {
 
   async getSupply(): Promise<GetSupply> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -506,7 +505,7 @@ export class AlgodApi {
    */
   async getSyncRound(): Promise<GetSyncRound> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -527,7 +526,7 @@ export class AlgodApi {
    */
   async getTransactionGroupLedgerStateDeltasForRound(round: number | bigint): Promise<GetTransactionGroupLedgerStateDeltasForRound> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -549,7 +548,7 @@ export class AlgodApi {
     params?: { hashtype?: 'sha512_256' | 'sha256' },
   ): Promise<TransactionProof> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -570,7 +569,7 @@ export class AlgodApi {
    */
   async getVersion(): Promise<Version> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -588,7 +587,7 @@ export class AlgodApi {
 
   async healthCheck(): Promise<void> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     await this.httpRequest.request<void>({
@@ -611,7 +610,7 @@ export class AlgodApi {
    */
   async pendingTransactionInformation(txid: string): Promise<PendingTransactionResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<Uint8Array>({
@@ -629,7 +628,7 @@ export class AlgodApi {
 
   private async _rawTransaction(body: Uint8Array): Promise<RawTransaction> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const serializedBody = body ?? undefined
@@ -654,7 +653,7 @@ export class AlgodApi {
    */
   async setBlockTimeStampOffset(offset: number): Promise<void> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     await this.httpRequest.request<void>({
@@ -673,7 +672,7 @@ export class AlgodApi {
    */
   async setSyncRound(round: number | bigint): Promise<void> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     await this.httpRequest.request<void>({
@@ -689,7 +688,7 @@ export class AlgodApi {
 
   async simulateTransaction(body: SimulateRequest): Promise<SimulateTransaction> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const bodyMeta = SimulateRequestMeta
@@ -715,7 +714,7 @@ export class AlgodApi {
    */
   async tealCompile(body: string, params?: { sourcemap?: boolean }): Promise<TealCompile> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const bodyMeta = undefined
@@ -741,7 +740,7 @@ export class AlgodApi {
    */
   async tealDisassemble(body: Uint8Array): Promise<TealDisassemble> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const serializedBody = body ?? undefined
@@ -766,7 +765,7 @@ export class AlgodApi {
    */
   async tealDryrun(body?: DryrunRequest): Promise<TealDryrun> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const bodyMeta = DryrunRequestMeta
@@ -789,7 +788,7 @@ export class AlgodApi {
 
   private async _transactionParams(): Promise<TransactionParams> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -810,7 +809,7 @@ export class AlgodApi {
    */
   async unsetSyncRound(): Promise<void> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     await this.httpRequest.request<void>({
@@ -829,7 +828,7 @@ export class AlgodApi {
    */
   async waitForBlock(round: number | bigint): Promise<WaitForBlock> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({

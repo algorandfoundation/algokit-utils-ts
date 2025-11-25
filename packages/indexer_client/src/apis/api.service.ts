@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
-import type { BodyFormat } from '../core/model-runtime'
+import type { EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   Block,
   Box,
@@ -51,11 +51,11 @@ import {
 export class IndexerApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: BodyFormat): string {
+  private static acceptFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
   }
 
-  private static mediaFor(format: BodyFormat): string {
+  private static mediaFor(format: EncodingFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
   }
 
@@ -67,7 +67,7 @@ export class IndexerApi {
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountAppLocalStates> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -96,7 +96,7 @@ export class IndexerApi {
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountAssets> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -129,7 +129,7 @@ export class IndexerApi {
     },
   ): Promise<LookupAccountById> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -157,7 +157,7 @@ export class IndexerApi {
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountCreatedApplications> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -186,7 +186,7 @@ export class IndexerApi {
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountCreatedAssets> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -231,7 +231,7 @@ export class IndexerApi {
     },
   ): Promise<LookupAccountTransactions> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -272,7 +272,7 @@ export class IndexerApi {
    */
   async lookupApplicationBoxByIdAndName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -293,7 +293,7 @@ export class IndexerApi {
    */
   async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupApplicationById> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -324,7 +324,7 @@ export class IndexerApi {
     },
   ): Promise<LookupApplicationLogsById> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -361,7 +361,7 @@ export class IndexerApi {
     },
   ): Promise<LookupAssetBalances> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -392,7 +392,7 @@ export class IndexerApi {
    */
   async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupAssetById> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -434,7 +434,7 @@ export class IndexerApi {
     },
   ): Promise<LookupAssetTransactions> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -477,7 +477,7 @@ export class IndexerApi {
    */
   async lookupBlock(roundNumber: number | bigint, params?: { headerOnly?: boolean }): Promise<Block> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -498,7 +498,7 @@ export class IndexerApi {
    */
   async lookupTransaction(txid: string): Promise<LookupTransaction> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -516,7 +516,7 @@ export class IndexerApi {
 
   async makeHealthCheck(): Promise<HealthCheck> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -549,7 +549,7 @@ export class IndexerApi {
     onlineOnly?: boolean
   }): Promise<SearchForAccounts> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -589,7 +589,7 @@ export class IndexerApi {
     params?: { limit?: number; next?: string },
   ): Promise<SearchForApplicationBoxes> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -616,7 +616,7 @@ export class IndexerApi {
     next?: string
   }): Promise<SearchForApplications> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -651,7 +651,7 @@ export class IndexerApi {
     assetId?: number | bigint
   }): Promise<SearchForAssets> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -690,7 +690,7 @@ export class IndexerApi {
     absent?: string[]
   }): Promise<SearchForBlockHeaders> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
@@ -742,7 +742,7 @@ export class IndexerApi {
     applicationId?: number | bigint
   }): Promise<SearchForTransactions> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
+    const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({

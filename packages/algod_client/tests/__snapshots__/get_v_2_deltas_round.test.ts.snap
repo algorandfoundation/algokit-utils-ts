@@ -1800,19 +1800,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "appId": 3307475755n,
         "params": {
           "deleted": true,
-          "params": {
-            "approvalProgram": Uint8Array [],
-            "clearStateProgram": Uint8Array [],
-            "extraProgramPages": 0,
-            "globalStateSchema": {},
-            "localStateSchema": {},
-          },
         },
         "state": {
           "deleted": false,
-          "localState": {
-            "schema": {},
-          },
         },
       },
       {
@@ -1820,19 +1810,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "appId": 3307475766n,
         "params": {
           "deleted": true,
-          "params": {
-            "approvalProgram": Uint8Array [],
-            "clearStateProgram": Uint8Array [],
-            "extraProgramPages": 0,
-            "globalStateSchema": {},
-            "localStateSchema": {},
-          },
         },
         "state": {
           "deleted": false,
-          "localState": {
-            "schema": {},
-          },
         },
       },
     ],
@@ -1842,18 +1822,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "assetId": 31566704n,
         "holding": {
           "deleted": true,
-          "holding": {
-            "amount": 0n,
-            "frozen": false,
-          },
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
       {
@@ -1868,11 +1839,6 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
       {
@@ -1880,18 +1846,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "assetId": 3135301021n,
         "holding": {
           "deleted": true,
-          "holding": {
-            "amount": 0n,
-            "frozen": false,
-          },
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
       {
@@ -1899,18 +1856,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "assetId": 3135301022n,
         "holding": {
           "deleted": true,
-          "holding": {
-            "amount": 0n,
-            "frozen": false,
-          },
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
       {
@@ -1918,18 +1866,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "assetId": 31566704n,
         "holding": {
           "deleted": true,
-          "holding": {
-            "amount": 0n,
-            "frozen": false,
-          },
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
       {
@@ -1937,18 +1876,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "assetId": 3135301021n,
         "holding": {
           "deleted": true,
-          "holding": {
-            "amount": 0n,
-            "frozen": false,
-          },
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
       {
@@ -1956,18 +1886,9 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         "assetId": 3135301022n,
         "holding": {
           "deleted": true,
-          "holding": {
-            "amount": 0n,
-            "frozen": false,
-          },
         },
         "params": {
           "deleted": false,
-          "params": {
-            "decimals": 0,
-            "defaultFrozen": false,
-            "total": 0n,
-          },
         },
       },
     ],
@@ -2310,7 +2231,6 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
       "ndeltas": 0,
     },
   },
-  "kvMods": Map {},
   "prevTimestamp": 1762257974n,
   "stateProofNext": 0n,
   "totals": {

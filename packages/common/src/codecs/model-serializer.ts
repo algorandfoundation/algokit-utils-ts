@@ -1,7 +1,6 @@
 import { Buffer } from 'buffer'
-import { ContextualCodec } from './contextual-codec'
 import { ModelCodec } from './model'
-import type { BodyFormat, FieldMetadata, ModelMetadata } from './types'
+import type { EncodingFormat, FieldMetadata, ModelMetadata } from './types'
 /**
  * Represents a map key coming off the wire.
  */
@@ -16,11 +15,6 @@ export type WireMapKey = Uint8Array | number | bigint
 export type WireObject = Record<string, unknown> | Map<WireMapKey, unknown>
 
 /**
- * Wire entry: a key-value pair from wire data
- */
-type WireEntry = [key: string | WireMapKey, value: unknown]
-
-/**
  * Represents a bigint value coming off the wire.
  *
  * When from msgpack it could be a number or bigint, depending on size.
@@ -29,12 +23,16 @@ type WireEntry = [key: string | WireMapKey, value: unknown]
 export type WireBigInt = number | bigint
 
 /**
- * Represents a bytes value coming off the wire.
+ * Represents either a bytes or string value coming off the wire.
  *
- * When from msgpack it's a Uint8Array.
- * When from JSON it's a base64-encoded bytes string.
+ * When from msgpack it's a Uint8Array for both bytes or string values.
+ * When from JSON it's a base64-encoded bytes string or regular string.
  */
-export type WireBytes = Uint8Array | string
+export type WireStringOrBytes = Uint8Array | string
+
+export function normalizeKey(key: string | WireMapKey): string {
+  return key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : typeof key === 'string' ? key : String(key)
+}
 
 // TODO: NC - This is pretty inefficient, we can retrieve decoded values, the map, rather than per field we are searching for.
 /**
@@ -42,7 +40,7 @@ export type WireBytes = Uint8Array | string
  */
 export function getWireValue<T = unknown>(value: WireObject, key: string | WireMapKey): T | undefined {
   if (value instanceof Map) {
-    const decodedKey = key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : key
+    const decodedKey = normalizeKey(key)
     // Try direct key lookup
     if (typeof decodedKey !== 'string' && value.has(decodedKey)) {
       return value.get(decodedKey) as T | undefined
@@ -64,6 +62,22 @@ export function getWireValue<T = unknown>(value: WireObject, key: string | WireM
   return undefined
 }
 
+function normalizeWireObject(wireObject: WireObject): Record<string, unknown> {
+  const normalized: Record<string, unknown> = {}
+
+  if (wireObject instanceof Map) {
+    for (const [key, value] of wireObject.entries()) {
+      normalized[normalizeKey(key)] = value
+    }
+  } else if (typeof wireObject === 'object') {
+    for (const [key, value] of Object.entries(wireObject)) {
+      normalized[key] = value
+    }
+  }
+
+  return normalized
+}
+
 /**
  * Model serializer using codec-based metadata system
  * Handles encoding/decoding of models with codec-based field definitions
@@ -74,22 +88,21 @@ export class ModelSerializer {
    */
 
   // TODO: NC - We could call this toEncoded
-  static encode<T extends Record<string, unknown>>(value: T, metadata: ModelMetadata, format: BodyFormat): Record<string, unknown> {
+  static encode<T extends Record<string, unknown>>(value: T, metadata: ModelMetadata, format: EncodingFormat): Record<string, unknown> {
     if (metadata.kind !== 'object') {
-      throw new Error(`Cannot encode model ${metadata.name}: expected object kind, got ${metadata.kind}`)
+      throw new Error(`Cannot encode model ${metadata.name}: expected 'object' kind, got '${metadata.kind}'`)
     }
 
     const result: Record<string, unknown> = {}
 
     for (const field of metadata.fields) {
-      if (!field.codec) {
-        throw new Error(`Field ${field.name} in ${metadata.name} does not have a codec`)
-      }
-
       const fieldValue = value[field.name]
 
       if (field.flattened) {
-        this.encodeFlattenedField(field, fieldValue, result, format)
+        const encoded = this.encodeFlattenedField(field, fieldValue, format)
+        if (encoded !== undefined) {
+          Object.assign(result, encoded)
+        }
         continue
       }
 
@@ -108,283 +121,84 @@ export class ModelSerializer {
    * Decode wire format to a model instance
    */
   // TODO: NC - We could call this fromEncoded
-  static decode<T>(wireObject: WireObject, metadata: ModelMetadata, format: BodyFormat): T {
+  static decode<T>(wireObject: WireObject, metadata: ModelMetadata, format: EncodingFormat): T {
     if (metadata.kind !== 'object') {
-      throw new Error(`Cannot decode model ${metadata.name}: expected object kind, got ${metadata.kind}`)
+      throw new Error(`Cannot decode model ${metadata.name}: expected 'object' kind, got '${metadata.kind}'`)
     }
 
+    const normalizedWireObject = normalizeWireObject(wireObject) // TODO: NC - Does this need to be used inside the codecs (object model codec)?
+    // TODO: NC - If we can remove the need for codecs to think in terms of decoding the bytes wire key, that's big
+
     const result: Record<string, unknown> = {}
-    const usedKeys = new Set<string>()
 
-    // Convert wire data to entries array
-    const entries = this.getWireObjectEntries(wireObject)
-
-    // Build a map of wire keys to fields for quick lookup
-    const fieldByWireKey = this.buildFieldLookup(metadata.fields)
-
-    // First pass: decode non-flattened fields
-    for (const [key, wireValue] of entries) {
-      const wireKey = this.normalizeKey(key)
-      const field = fieldByWireKey.get(wireKey)
-
-      if (field) {
-        usedKeys.add(wireKey)
-        const decodedValue = this.decodeFieldValue(field, wireValue, wireObject, format)
-
+    for (const field of metadata.fields) {
+      if (field.flattened) {
+        // TODO: NC - This has lots of room for simplification
+        let decoded: unknown
+        if (field.codec instanceof ModelCodec) {
+          // const nestedMeta = field.codec.getMetadata()
+          // const decoded = this.decode(wireObject, nestedMeta, format) // TODO: NC - Trying the below
+          // decoded = field.optional ? field.codec.decodeOptional(wireObject, format) : field.codec.decode(wireObject, format)
+          decoded = this.decodeFieldValue(field, normalizedWireObject, format)
+        } else {
+          // decoded = field.codec.decode(wireObject, format)
+          // decoded = field.optional ? field.codec.decodeOptional(wireObject, format) : field.codec.decode(wireObject, format)
+          decoded = this.decodeFieldValue(field, normalizedWireObject, format)
+        }
+        // Only set optional fields if they have content
+        if (decoded !== undefined && (!field.optional || !this.isEmptyObject(decoded))) {
+          result[field.name] = decoded
+        }
+      } else {
+        const wireKey = field.wireKey || field.name
+        const wireValue = normalizedWireObject[wireKey]
+        const decodedValue = this.decodeFieldValue(field, wireValue, format)
         if (decodedValue !== undefined) {
           result[field.name] = decodedValue
         }
       }
     }
 
-    // Second pass: decode required non-flattened fields that were missing from wireData
-    // (they were omitted because they had default values)
-    const shouldPopulateDefaults = Object.keys(result).length > 0 || wireObject === undefined || wireObject === null
-
-    if (shouldPopulateDefaults) {
-      for (const field of metadata.fields) {
-        if (!field.codec || field.flattened || field.optional || result[field.name] !== undefined) {
-          continue
-        }
-
-        // Decode with undefined to get default value for required field
-        result[field.name] = this.decodeFieldValue(field, undefined, wireObject, format)
-      }
-    }
-
-    // Third pass: reconstruct flattened fields from remaining keys
-    this.decodeFlattenedFields(metadata.fields, wireObject, usedKeys, result, format)
-
     return result as T
   }
 
-  /**
-   * Convert wire object to an array of entries
-   */
-  private static getWireObjectEntries(wireObject: WireObject | undefined | null): WireEntry[] {
-    if (wireObject === undefined || wireObject === null) {
-      return []
-    }
-    if (wireObject instanceof Map) {
-      return Array.from(wireObject.entries())
-    }
-    if (typeof wireObject === 'object') {
-      return Object.entries(wireObject)
-    }
-    return []
-  }
-
-  /**
-   * Normalize a wire key to a string
-   */
-  private static normalizeKey(key: string | WireMapKey): string {
-    return key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : typeof key === 'string' ? key : String(key)
-  }
-
-  /**
-   * Build a lookup map from wire keys to field metadata
-   */
-  private static buildFieldLookup(fields: readonly FieldMetadata[]): Map<string, FieldMetadata> {
-    const lookup = new Map<string, FieldMetadata>()
-    for (const field of fields) {
-      if (field.codec && !field.flattened && field.wireKey) {
-        lookup.set(field.wireKey, field)
-      }
-    }
-    return lookup
-  }
-
-  private static encodeFieldValue(field: FieldMetadata, fieldValue: unknown, parent: Record<string, unknown>, format: BodyFormat): unknown {
-    const codec = field.codec
-    if (codec instanceof ContextualCodec) {
-      return codec.encodeWithContext(fieldValue, parent, format)
-    }
-    return codec.encode(fieldValue, format)
+  private static encodeFieldValue(
+    field: FieldMetadata,
+    fieldValue: unknown,
+    parent: Record<string, unknown>,
+    format: EncodingFormat,
+  ): unknown {
+    return field.codec.encodeOptional(fieldValue, format)
   }
 
   private static encodeFlattenedField(
     field: FieldMetadata,
     fieldValue: unknown,
-    result: Record<string, unknown>,
-    format: BodyFormat,
-  ): void {
-    if (fieldValue === undefined) {
-      return
-    }
-
-    const encoded = field.codec!.encode(fieldValue, format)
+    format: EncodingFormat,
+  ): Record<string, unknown> | undefined {
+    const encoded = field.codec.encodeOptional(fieldValue, format)
 
     if (encoded !== undefined && typeof encoded === 'object' && !Array.isArray(encoded)) {
-      // Merge the encoded properties into the result
-      Object.assign(result, encoded)
+      if (encoded instanceof Map) {
+        const result: Record<string, unknown> = {}
+        for (const [key, value] of encoded.entries()) {
+          result[normalizeKey(key)] = value
+        }
+        // Only return if the Map had entries
+        return Object.keys(result).length > 0 ? result : undefined
+      }
+      // Only return non-empty objects
+      return Object.keys(encoded as Record<string, unknown>).length > 0 ? (encoded as Record<string, unknown>) : undefined
     }
+
+    return undefined
   }
 
   /**
    * Decode a single field value, handling optional fields and contextual codecs
    */
-  private static decodeFieldValue(field: FieldMetadata, wireValue: unknown, wireData: unknown, format: BodyFormat): unknown {
-    if (!field.codec) {
-      return undefined
-    }
-
-    // Use decodeOptional for optional fields to preserve undefined
-    const codec = field.codec
-
-    if (codec instanceof ContextualCodec) {
-      return field.optional
-        ? codec.decodeOptionalWithContext(wireValue, wireData, format)
-        : codec.decodeWithContext(wireValue, wireData, format)
-    }
-
-    const decoded = field.optional ? codec.decodeOptional(wireValue, format) : codec.decode(wireValue, format)
-
-    // Handle non-nullable fields: convert null to undefined
-    if (decoded === null && !field.nullable) {
-      return undefined
-    }
-
-    return decoded
-  }
-
-  /**
-   * Filter wire data to include/exclude specific keys
-   */
-  private static filterWireObject(
-    wireData: WireObject | undefined | null, // TODO: NC - We can probably remove the null?
-    usedKeys: Set<string>,
-    filterKeys?: Set<string> | null,
-  ): { data: WireObject | null; keysConsumed: number } {
-    if (wireData === undefined || wireData === null) {
-      return { data: null, keysConsumed: 0 }
-    }
-
-    let keysConsumed = 0
-
-    if (wireData instanceof Map) {
-      const filteredMap = new Map<WireMapKey, unknown>()
-      for (const [k, v] of wireData.entries()) {
-        const keyStr = this.normalizeKey(k)
-        const shouldInclude = filterKeys === null || filterKeys === undefined || filterKeys.has(keyStr)
-
-        if (shouldInclude && !usedKeys.has(keyStr)) {
-          filteredMap.set(k, v)
-          usedKeys.add(keyStr)
-          keysConsumed++
-        }
-      }
-      return { data: filteredMap.size > 0 ? filteredMap : null, keysConsumed }
-    }
-
-    if (typeof wireData === 'object') {
-      const filteredData: Record<string, unknown> = {}
-      for (const [k, v] of Object.entries(wireData as Record<string, unknown>)) {
-        const shouldInclude = filterKeys === null || filterKeys === undefined || filterKeys.has(k)
-
-        if (shouldInclude && !usedKeys.has(k)) {
-          filteredData[k] = v
-          usedKeys.add(k)
-          keysConsumed++
-        }
-      }
-      return { data: Object.keys(filteredData).length > 0 ? filteredData : null, keysConsumed }
-    }
-
-    return { data: null, keysConsumed: 0 }
-  }
-
-  /**
-   * Decode flattened fields
-   */
-  private static decodeFlattenedFields(
-    fields: readonly FieldMetadata[],
-    wireObject: WireObject,
-    usedKeys: Set<string>,
-    result: Record<string, unknown>,
-    format: BodyFormat,
-  ): void {
-    const flattenedFields = fields.filter((f) => f.flattened && f.codec)
-    if (flattenedFields.length === 0) {
-      return
-    }
-
-    // First pass: process flattened ModelCodec fields
-    for (const field of flattenedFields) {
-      if (!(field.codec instanceof ModelCodec) || result[field.name] !== undefined) {
-        continue
-      }
-
-      const nestedMeta = field.codec.getMetadata()
-      const nestedWireKeys = this.collectWireKeys(nestedMeta)
-      const { data: filteredData, keysConsumed } = this.filterWireObject(wireObject, usedKeys, nestedWireKeys)
-
-      if (filteredData === null) {
-        continue
-      }
-
-      const decoded = this.decode(filteredData, nestedMeta, format)
-
-      // Only set optional fields if they have content or consumed keys
-      if (!field.optional || keysConsumed > 0 || !this.isEmptyObject(decoded)) {
-        result[field.name] = decoded
-      }
-    }
-
-    // Second pass: process flattened non-ModelCodec fields (get all remaining keys)
-    for (const field of flattenedFields) {
-      if (field.codec instanceof ModelCodec || result[field.name] !== undefined) {
-        continue
-      }
-
-      const { data: filteredData } = this.filterWireObject(wireObject, usedKeys)
-
-      if (filteredData === null) {
-        continue
-      }
-
-      const decoded = field.codec.decode(filteredData, format)
-
-      // Only set optional fields if they have content
-      if (decoded !== undefined && (!field.optional || !this.isEmptyObject(decoded))) {
-        result[field.name] = decoded
-      }
-    }
-  }
-
-  /**
-   * Collect all wire keys used by a model (including nested models)
-   * Returns null if the model has a flattened non-ModelCodec field (meaning we can't determine all keys)
-   */
-  private static collectWireKeys(meta: ModelMetadata): Set<string> | null {
-    const wireKeys = new Set<string>()
-    if (meta.kind !== 'object') return wireKeys
-
-    for (const field of meta.fields) {
-      if (field.codec) {
-        if (field.wireKey && !field.flattened) {
-          wireKeys.add(field.wireKey)
-        }
-        if (field.flattened) {
-          if (field.codec instanceof ModelCodec) {
-            // Recursively collect keys from flattened nested models
-            const nestedMeta = field.codec.getMetadata()
-            const nestedKeys = this.collectWireKeys(nestedMeta)
-            if (nestedKeys === null) {
-              // Nested model has external codec - can't determine all keys
-              return null
-            }
-            for (const key of nestedKeys) {
-              wireKeys.add(key)
-            }
-          } else {
-            // Flattened non-ModelCodec field - we don't know what keys it uses
-            return null
-          }
-        }
-      }
-    }
-
-    return wireKeys
+  private static decodeFieldValue(field: FieldMetadata, wireValue: unknown, format: EncodingFormat): unknown {
+    return field.optional ? field.codec.decodeOptional(wireValue, format) : field.codec.decode(wireValue, format)
   }
 
   /**

@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bytesCodec,
+  addressCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
 import type { TealKeyValueStore } from './teal-key-value-store'
@@ -46,56 +52,48 @@ export const ApplicationParamsMeta: ObjectModelMetadata = {
       name: 'creator',
       wireKey: 'creator',
       optional: true,
-      nullable: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
     {
       name: 'approvalProgram',
       wireKey: 'approval-program',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'clearStateProgram',
       wireKey: 'clear-state-program',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'extraProgramPages',
       wireKey: 'extra-program-pages',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'localStateSchema',
       wireKey: 'local-state-schema',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(ApplicationStateSchemaMeta),
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'globalStateSchema',
       wireKey: 'global-state-schema',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(ApplicationStateSchemaMeta),
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'globalState',
       wireKey: 'global-state',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(TealKeyValueStoreMeta),
+      codec: new ArrayModelCodec(TealKeyValueStoreMeta),
     },
     {
       name: 'version',
       wireKey: 'version',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
   ],

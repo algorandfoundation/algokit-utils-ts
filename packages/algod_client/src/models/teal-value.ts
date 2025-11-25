@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bigIntCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a TEAL value.
@@ -29,21 +33,18 @@ export const TealValueMeta: ObjectModelMetadata = {
       name: 'type',
       wireKey: 'type',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'bytes',
       wireKey: 'bytes',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'uint',
       wireKey: 'uint',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

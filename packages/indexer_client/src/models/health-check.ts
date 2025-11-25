@@ -1,7 +1,12 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
-
-const HealthCheckDataMeta: ObjectModelMetadata = { name: 'HealthCheckDataMeta', kind: 'object', fields: [] }
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  booleanCodec,
+  stringArrayCodec,
+  RecordCodec,
+  unknownCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * A health check response.
@@ -27,50 +32,43 @@ export const HealthCheckMeta: ObjectModelMetadata = {
       name: 'version',
       wireKey: 'version',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'data',
       wireKey: 'data',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(HealthCheckDataMeta),
+      codec: new RecordCodec(unknownCodec),
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'isMigrating',
       wireKey: 'is-migrating',
       optional: false,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'dbAvailable',
       wireKey: 'db-available',
       optional: false,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'errors',
       wireKey: 'errors',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
   ],
 }

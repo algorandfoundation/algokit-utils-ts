@@ -314,7 +314,7 @@
       "post": {
         "summary": "List multisig accounts",
         "description": "Lists all of the multisig accounts whose preimages this wallet stores",
-        "operationId": "ListMultisg",
+        "operationId": "ListMultisig",
         "requestBody": {
           "content": {
             "application/json": {

@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringArrayCodec,
+} from '@algorandfoundation/algokit-common'
 
 export type GetBlockTxIds = {
   /**
@@ -16,8 +18,7 @@ export const GetBlockTxIdsMeta: ObjectModelMetadata = {
       name: 'blockTxIds',
       wireKey: 'blockTxids',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
   ],
 }

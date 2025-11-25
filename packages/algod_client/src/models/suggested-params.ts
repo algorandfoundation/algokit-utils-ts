@@ -11,4 +11,4 @@ export type SuggestedParams = Expand<
 >
 
 // This is never used, just to satisfy the import generator pattern
-export type SuggestedParamsMeta = undefined
+export type SuggestedParamsMeta = never

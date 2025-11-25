@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  booleanCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTMultisigImportResponse is the response to `POST /v1/multisig/import`
@@ -19,21 +22,18 @@ export const PostMultisigImportResponseMeta: ObjectModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  addressCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
 import type { HoldingRef } from './holding-ref'
@@ -40,43 +44,37 @@ export const ResourceRefMeta: ObjectModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
     {
       name: 'applicationId',
       wireKey: 'application-id',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'box',
       wireKey: 'box',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(BoxReferenceMeta),
+      codec: new ObjectModelCodec(BoxReferenceMeta),
     },
     {
       name: 'holding',
       wireKey: 'holding',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(HoldingRefMeta),
+      codec: new ObjectModelCodec(HoldingRefMeta),
     },
     {
       name: 'local',
       wireKey: 'local',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(LocalsRefMeta),
+      codec: new ObjectModelCodec(LocalsRefMeta),
     },
   ],
 }

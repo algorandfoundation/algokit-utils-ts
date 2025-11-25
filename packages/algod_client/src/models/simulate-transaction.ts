@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SimulateInitialStates } from './simulate-initial-states'
 import { SimulateInitialStatesMeta } from './simulate-initial-states'
 import type { SimulateTraceConfig } from './simulate-trace-config'
@@ -37,43 +42,37 @@ export const SimulateTransactionMeta: ObjectModelMetadata = {
       name: 'version',
       wireKey: 'version',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'lastRound',
       wireKey: 'last-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'txnGroups',
       wireKey: 'txn-groups',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SimulateTransactionGroupResultMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SimulateTransactionGroupResultMeta)),
     },
     {
       name: 'evalOverrides',
       wireKey: 'eval-overrides',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulationEvalOverridesMeta),
+      codec: new ObjectModelCodec(SimulationEvalOverridesMeta),
     },
     {
       name: 'execTraceConfig',
       wireKey: 'exec-trace-config',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulateTraceConfigMeta),
+      codec: new ObjectModelCodec(SimulateTraceConfigMeta),
     },
     {
       name: 'initialStates',
       wireKey: 'initial-states',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulateInitialStatesMeta),
+      codec: new ObjectModelCodec(SimulateInitialStatesMeta),
     },
   ],
 }

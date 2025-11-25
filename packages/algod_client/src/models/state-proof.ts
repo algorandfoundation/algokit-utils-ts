@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bytesCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { StateProofMessage } from './state-proof-message'
 import { StateProofMessageMeta } from './state-proof-message'
 
@@ -23,14 +26,12 @@ export const StateProofMeta: ObjectModelMetadata = {
       name: 'message',
       wireKey: 'Message',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(StateProofMessageMeta),
+      codec: new ObjectModelCodec(StateProofMessageMeta),
     },
     {
       name: 'stateProof',
       wireKey: 'StateProof',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
   ],

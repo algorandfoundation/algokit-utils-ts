@@ -1,5 +1,12 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bigIntCodec,
+  bytesCodec,
+  ArrayCodec,
+  bigIntArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
 import type { StateProofReveal } from './state-proof-reveal'
@@ -48,50 +55,43 @@ export const StateProofFieldsMeta: ObjectModelMetadata = {
       name: 'sigCommit',
       wireKey: 'sig-commit',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'signedWeight',
       wireKey: 'signed-weight',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'sigProofs',
       wireKey: 'sig-proofs',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(MerkleArrayProofMeta),
+      codec: new ObjectModelCodec(MerkleArrayProofMeta),
     },
     {
       name: 'partProofs',
       wireKey: 'part-proofs',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(MerkleArrayProofMeta),
+      codec: new ObjectModelCodec(MerkleArrayProofMeta),
     },
     {
       name: 'saltVersion',
       wireKey: 'salt-version',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'reveals',
       wireKey: 'reveals',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(StateProofRevealMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(StateProofRevealMeta)),
     },
     {
       name: 'positionsToReveal',
       wireKey: 'positions-to-reveal',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(bigIntCodec),
+      codec: bigIntArrayCodec,
     },
   ],
 }

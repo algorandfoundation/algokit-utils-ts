@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalState } from './application-local-state'
 import { ApplicationLocalStateMeta } from './application-local-state'
 import type { ApplicationParams } from './application-params'
@@ -22,22 +25,19 @@ export const AccountApplicationInformationMeta: ObjectModelMetadata = {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'appLocalState',
       wireKey: 'app-local-state',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(ApplicationLocalStateMeta),
+      codec: new ObjectModelCodec(ApplicationLocalStateMeta),
     },
     {
       name: 'createdApp',
       wireKey: 'created-app',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(ApplicationParamsMeta),
+      codec: new ObjectModelCodec(ApplicationParamsMeta),
     },
   ],
 }

@@ -119,11 +119,15 @@ class FieldDescriptor:
     ref_model: str | None
     is_bytes: bool
     is_bigint: bool
+    is_number: bool
+    is_boolean: bool
+    is_address: bool
     is_signed_txn: bool
     is_optional: bool
     is_nullable: bool
     inline_object_schema: dict | None = None
     inline_meta_name: str | None = None
+    is_empty_object: bool = False
 
 
 @dataclass
@@ -149,4 +153,7 @@ class ModelDescriptor:
     array_item_ref: str | None = None
     array_item_is_bytes: bool = False
     array_item_is_bigint: bool = False
+    array_item_is_number: bool = False
+    array_item_is_boolean: bool = False
+    array_item_is_address: bool = False
     array_item_is_signed_txn: bool = False

@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a \[apls\] local-state or \[apgs\] global-state schema. These schemas determine how much storage may be used in a local-state or global-state for an application. The more space used, the larger minimum balance must be maintained in the account holding the data.
@@ -24,14 +26,12 @@ export const StateSchemaMeta: ObjectModelMetadata = {
       name: 'numUint',
       wireKey: 'num-uint',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'numByteSlice',
       wireKey: 'num-byte-slice',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
   ],

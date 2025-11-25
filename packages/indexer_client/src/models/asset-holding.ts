@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  booleanCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Describes an asset held by an account.
@@ -47,42 +50,36 @@ export const AssetHoldingMeta: ObjectModelMetadata = {
       name: 'amount',
       wireKey: 'amount',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'isFrozen',
       wireKey: 'is-frozen',
       optional: false,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'optedInAtRound',
       wireKey: 'opted-in-at-round',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'optedOutAtRound',
       wireKey: 'opted-out-at-round',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

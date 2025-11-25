@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bigIntCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 export type StateProofTracking = {
   /**
@@ -31,28 +35,24 @@ export const StateProofTrackingMeta: ObjectModelMetadata = {
       name: 'type',
       wireKey: 'type',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'votersCommitment',
       wireKey: 'voters-commitment',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'onlineTotalWeight',
       wireKey: 'online-total-weight',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'nextRound',
       wireKey: 'next-round',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
   ],

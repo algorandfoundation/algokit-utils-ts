@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  ArrayCodec,
+  bigIntArrayCodec,
+  addressArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalReference } from './application-local-reference'
 import { ApplicationLocalReferenceMeta } from './application-local-reference'
 import type { AssetHoldingReference } from './asset-holding-reference'
@@ -55,50 +61,43 @@ export const SimulateUnnamedResourcesAccessedMeta: ObjectModelMetadata = {
       name: 'accounts',
       wireKey: 'accounts',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: addressArrayCodec,
     },
     {
       name: 'assets',
       wireKey: 'assets',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(bigIntCodec),
+      codec: bigIntArrayCodec,
     },
     {
       name: 'apps',
       wireKey: 'apps',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(bigIntCodec),
+      codec: bigIntArrayCodec,
     },
     {
       name: 'boxes',
       wireKey: 'boxes',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(BoxReferenceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(BoxReferenceMeta)),
     },
     {
       name: 'extraBoxRefs',
       wireKey: 'extra-box-refs',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'assetHoldings',
       wireKey: 'asset-holdings',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AssetHoldingReferenceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AssetHoldingReferenceMeta)),
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ApplicationLocalReferenceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLocalReferenceMeta)),
     },
   ],
 }

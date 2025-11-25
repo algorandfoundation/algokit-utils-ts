@@ -1,5 +1,12 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  ArrayCodec,
+  bytesArrayCodec,
+  stringArrayCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { AccountStateDelta } from './account-state-delta'
 import { AccountStateDeltaMeta } from './account-state-delta'
 import type { DryrunState } from './dryrun-state'
@@ -47,77 +54,66 @@ export const DryrunTxnResultMeta: ObjectModelMetadata = {
       name: 'disassembly',
       wireKey: 'disassembly',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
     {
       name: 'logicSigDisassembly',
       wireKey: 'logic-sig-disassembly',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
     {
       name: 'logicSigTrace',
       wireKey: 'logic-sig-trace',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(DryrunStateMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(DryrunStateMeta)),
     },
     {
       name: 'logicSigMessages',
       wireKey: 'logic-sig-messages',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
     {
       name: 'appCallTrace',
       wireKey: 'app-call-trace',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(DryrunStateMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(DryrunStateMeta)),
     },
     {
       name: 'appCallMessages',
       wireKey: 'app-call-messages',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
     {
       name: 'globalDelta',
       wireKey: 'global-delta',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(StateDeltaMeta),
+      codec: new ArrayModelCodec(StateDeltaMeta),
     },
     {
       name: 'localDeltas',
       wireKey: 'local-deltas',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AccountStateDeltaMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AccountStateDeltaMeta)),
     },
     {
       name: 'logs',
       wireKey: 'logs',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(bytesCodec),
+      codec: bytesArrayCodec,
     },
     {
       name: 'budgetAdded',
       wireKey: 'budget-added',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'budgetConsumed',
       wireKey: 'budget-consumed',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
   ],

@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 
@@ -26,14 +30,12 @@ export const GetPendingTransactionsMeta: ObjectModelMetadata = {
       name: 'topTransactions',
       wireKey: 'top-transactions',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SignedTransactionMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SignedTransactionMeta)),
     },
     {
       name: 'totalTransactions',
       wireKey: 'total-transactions',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
   ],

@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { DryrunTxnResult } from './dryrun-txn-result'
 import { DryrunTxnResultMeta } from './dryrun-txn-result'
 
@@ -21,21 +25,18 @@ export const TealDryrunMeta: ObjectModelMetadata = {
       name: 'txns',
       wireKey: 'txns',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(DryrunTxnResultMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(DryrunTxnResultMeta)),
     },
     {
       name: 'error',
       wireKey: 'error',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'protocolVersion',
       wireKey: 'protocol-version',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
   ],

@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for an asset transfer transaction.
@@ -47,42 +50,36 @@ export const TransactionAssetTransferMeta: ObjectModelMetadata = {
       name: 'amount',
       wireKey: 'amount',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'closeAmount',
       wireKey: 'close-amount',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'closeTo',
       wireKey: 'close-to',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'receiver',
       wireKey: 'receiver',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'sender',
       wireKey: 'sender',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

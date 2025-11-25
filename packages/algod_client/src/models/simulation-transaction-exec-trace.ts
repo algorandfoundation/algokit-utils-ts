@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  booleanCodec,
+  bytesCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SimulationOpcodeTraceUnit } from './simulation-opcode-trace-unit'
 import { SimulationOpcodeTraceUnitMeta } from './simulation-opcode-trace-unit'
 
@@ -61,64 +67,55 @@ export const SimulationTransactionExecTraceMeta: ObjectModelMetadata = {
       name: 'approvalProgramTrace',
       wireKey: 'approval-program-trace',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SimulationOpcodeTraceUnitMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SimulationOpcodeTraceUnitMeta)),
     },
     {
       name: 'approvalProgramHash',
       wireKey: 'approval-program-hash',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'clearStateProgramTrace',
       wireKey: 'clear-state-program-trace',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SimulationOpcodeTraceUnitMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SimulationOpcodeTraceUnitMeta)),
     },
     {
       name: 'clearStateProgramHash',
       wireKey: 'clear-state-program-hash',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'clearStateRollback',
       wireKey: 'clear-state-rollback',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'clearStateRollbackError',
       wireKey: 'clear-state-rollback-error',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'logicSigTrace',
       wireKey: 'logic-sig-trace',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SimulationOpcodeTraceUnitMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SimulationOpcodeTraceUnitMeta)),
     },
     {
       name: 'logicSigHash',
       wireKey: 'logic-sig-hash',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'innerTrace',
       wireKey: 'inner-trace',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(() => SimulationTransactionExecTraceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(() => SimulationTransactionExecTraceMeta)),
     },
   ],
 }

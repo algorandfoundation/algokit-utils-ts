@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  addressCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { AvmKeyValue } from './avm-key-value'
 import { AvmKeyValueMeta } from './avm-key-value'
 
@@ -26,15 +30,13 @@ export const ApplicationKvStorageMeta: ObjectModelMetadata = {
       name: 'kvs',
       wireKey: 'kvs',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AvmKeyValueMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AvmKeyValueMeta)),
     },
     {
       name: 'account',
       wireKey: 'account',
       optional: true,
-      nullable: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
   ],
 }

@@ -1,10 +1,10 @@
 import { Codec } from './codec'
-import { ArrayCodec } from './composite'
+import { ArrayCodec } from './composite/array'
 
 /**
  * Encoding format
  */
-export type BodyFormat = 'json' | 'msgpack' // TODO: NC - Rename to EncodingFormat
+export type EncodingFormat = 'json' | 'msgpack'
 
 /**
  * Metadata for a model field
@@ -14,14 +14,8 @@ export interface FieldMetadata {
   readonly wireKey?: string
   readonly codec: Codec<unknown, unknown>
   readonly optional: boolean
-  readonly nullable: boolean
   readonly flattened?: boolean
 }
-
-/**
- * Metadata for a model
- */
-export type ModelMetadata = ObjectModelMetadata | PassthroughModelMetadata | ArrayModelMetadata
 
 export type ObjectModelMetadata = {
   readonly name: string
@@ -29,9 +23,9 @@ export type ObjectModelMetadata = {
   readonly fields: readonly FieldMetadata[]
 }
 
-export type PassthroughModelMetadata = {
+export type PrimitiveModelMetadata = {
   readonly name: string
-  readonly kind: 'passthrough' // TODO: NC - Is there better to be named primitive or scalar?
+  readonly kind: 'primitive'
   readonly codec: Codec<unknown, unknown>
 }
 

@@ -1,9 +1,11 @@
 import { Buffer } from 'buffer'
 import { describe, expect, test } from 'vitest'
-import { ArrayCodec, MapCodec } from './composite'
-import { ArrayModelCodec, ModelCodec } from './model'
+import { ArrayCodec } from './composite/array'
+import { MapCodec } from './composite/map'
 import { ModelSerializer } from './model-serializer'
-import { bigIntCodec, bigIntWithNoDefaultCodec } from './primitives/bigint'
+import { ArrayModelCodec } from './models/array-model'
+import { ModelCodec } from './models/model'
+import { bigIntCodec } from './primitives/bigint'
 import { bytesCodec } from './primitives/bytes'
 import { numberCodec } from './primitives/number'
 import { stringCodec } from './primitives/string'
@@ -14,33 +16,32 @@ describe('ModelSerializer', () => {
     name: 'Address',
     kind: 'object',
     fields: [
-      { name: 'number', wireKey: 'n', codec: bigIntCodec, optional: false, nullable: false },
-      { name: 'street', wireKey: 's', codec: stringCodec, optional: false, nullable: false },
-      { name: 'city', wireKey: 'c', codec: stringCodec, optional: false, nullable: false },
-      { name: 'postcode', wireKey: 'p', codec: numberCodec, optional: false, nullable: false },
+      { name: 'number', wireKey: 'n', codec: bigIntCodec, optional: false },
+      { name: 'street', wireKey: 's', codec: stringCodec, optional: false },
+      { name: 'city', wireKey: 'c', codec: stringCodec, optional: false },
+      { name: 'postcode', wireKey: 'p', codec: numberCodec, optional: false },
     ],
   }
 
   const favouriteNumbersMetadata: ArrayModelMetadata = {
     name: 'FavouriteNumbers',
     kind: 'array',
-    codec: new ArrayCodec(bigIntWithNoDefaultCodec),
+    codec: new ArrayCodec(bigIntCodec),
   }
 
   const userMetadata: ObjectModelMetadata = {
     name: 'UserModel',
     kind: 'object',
     fields: [
-      { name: 'name', wireKey: 'n', codec: stringCodec, optional: false, nullable: false },
-      { name: 'age', wireKey: 'a', codec: numberCodec, optional: true, nullable: false },
-      { name: 'address', wireKey: 'ad', codec: new ModelCodec(addressMetadata), optional: false, nullable: false },
-      { name: 'data', wireKey: 'd', codec: new MapCodec(bytesCodec, bytesCodec), optional: true, nullable: false },
+      { name: 'name', wireKey: 'n', codec: stringCodec, optional: false },
+      { name: 'age', wireKey: 'a', codec: numberCodec, optional: true },
+      { name: 'address', wireKey: 'ad', codec: new ModelCodec(addressMetadata), optional: false },
+      { name: 'data', wireKey: 'd', codec: new MapCodec(bytesCodec, bytesCodec), optional: true },
       {
         name: 'favouriteNumbers',
         wireKey: 'fn',
         codec: new ArrayModelCodec(favouriteNumbersMetadata),
         optional: true,
-        nullable: false,
       },
     ],
   }
@@ -57,7 +58,7 @@ describe('ModelSerializer', () => {
     favouriteNumbers?: bigint[]
   }
 
-  describe('encode', () => {
+  describe('encodeOptional', () => {
     const alice = {
       name: 'Alice',
       age: 30,
@@ -70,11 +71,6 @@ describe('ModelSerializer', () => {
     }
 
     // TODO: NC - Do these
-    // - Remove the *WithNoDefaultCodecs
-    // Rules for encoding:
-    // In a map, if the object is empty, the item should be omitted (it's object like)
-    // In a map, the key should never be omitted as a value
-    // In an array, the item should never be omitted as a value. Also bigints should remain bigints
     // - Fix types by carrying the WireData types throughout
 
     test('should encode the example model to a json ready model', () => {
@@ -84,7 +80,7 @@ describe('ModelSerializer', () => {
           "a": 30,
           "ad": {
             "c": "New York",
-            "n": 10,
+            "n": 10n,
             "p": 10001,
           },
           "d": {
@@ -107,7 +103,7 @@ describe('ModelSerializer', () => {
           "a": 30,
           "ad": {
             "c": "New York",
-            "n": 10,
+            "n": 10n,
             "p": 10001,
           },
           "d": Map {

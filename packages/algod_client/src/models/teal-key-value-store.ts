@@ -1,5 +1,8 @@
-import type { ArrayModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ArrayModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { TealKeyValue } from './teal-key-value'
 import { TealKeyValueMeta } from './teal-key-value'
 
@@ -11,5 +14,5 @@ export type TealKeyValueStore = TealKeyValue[]
 export const TealKeyValueStoreMeta: ArrayModelMetadata = {
   name: 'TealKeyValueStore',
   kind: 'array',
-  codec: new ArrayCodec(new ModelCodec(TealKeyValueMeta)),
+  codec: new ArrayCodec(new ObjectModelCodec(TealKeyValueMeta)),
 }

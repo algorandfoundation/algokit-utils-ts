@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  addressCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { PendingTransactionResponse } from './pending-transaction-response'
 import { PendingTransactionResponseMeta } from './pending-transaction-response'
 import type { SimulateUnnamedResourcesAccessed } from './simulate-unnamed-resources-accessed'
@@ -39,43 +43,37 @@ export const SimulateTransactionResultMeta: ObjectModelMetadata = {
       name: 'txnResult',
       wireKey: 'txn-result',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(PendingTransactionResponseMeta),
+      codec: new ObjectModelCodec(PendingTransactionResponseMeta),
     },
     {
       name: 'appBudgetConsumed',
       wireKey: 'app-budget-consumed',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'logicSigBudgetConsumed',
       wireKey: 'logic-sig-budget-consumed',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'execTrace',
       wireKey: 'exec-trace',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulationTransactionExecTraceMeta),
+      codec: new ObjectModelCodec(SimulationTransactionExecTraceMeta),
     },
     {
       name: 'unnamedResourcesAccessed',
       wireKey: 'unnamed-resources-accessed',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulateUnnamedResourcesAccessedMeta),
+      codec: new ObjectModelCodec(SimulateUnnamedResourcesAccessedMeta),
     },
     {
       name: 'fixedSigner',
       wireKey: 'fixed-signer',
       optional: true,
-      nullable: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
   ],
 }

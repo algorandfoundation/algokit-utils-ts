@@ -30,3 +30,4 @@ A collection of random notes pop up during the migration process.
 - SourceMap was renamed to ProgramSourceMap
 - OnApplicationComplete.UpdateApplicationOC was renamed to OnApplicationComplete.UpdateApplication
 - ResourceReference (algod) vs AccessReference (utils)
+- trace field at err.traces[].trace is now a typed value, rather than a map.

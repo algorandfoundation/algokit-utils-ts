@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  stringArrayCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Source map for the program
@@ -31,28 +35,24 @@ export const SourceMapMeta: ObjectModelMetadata = {
       name: 'version',
       wireKey: 'version',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'sources',
       wireKey: 'sources',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
     {
       name: 'names',
       wireKey: 'names',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
     {
       name: 'mappings',
       wireKey: 'mappings',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
   ],

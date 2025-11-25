@@ -7,21 +7,34 @@
 {% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
+{% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
 {% set has_arrays = descriptor.is_array or descriptor.fields | selectattr('is_array') | list | length > 0 %}
-{% set has_models = refTypes | length > 0 or descriptor.fields | selectattr('inline_meta_name') | list | length > 0 or uses_signed_txn %}
+{% set has_models = refTypes | length > 0 or descriptor.fields | selectattr('inline_meta_name') | list | length > 0 or uses_signed_txn or schemaSignedTxn %}
+{% set has_empty_objects = descriptor.fields | selectattr('is_empty_object') | list | length > 0 %}
 
-import type { {% if isObject %}ObjectModelMetadata{% elif isArray %}ArrayModelMetadata{% else %}PassthroughModelMetadata{% endif %}{% if descriptor.is_object and descriptor.fields | selectattr('inline_object_schema') | list | length > 0 %}{% if not isObject %}, ObjectModelMetadata{% endif %}{% endif %} } from '../core/model-runtime';
+import type { {% if isObject %}ObjectModelMetadata{% elif isArray %}ArrayModelMetadata{% else %}PrimitiveModelMetadata{% endif %}{% if descriptor.is_object and descriptor.fields | selectattr('inline_object_schema') | list | length > 0 %}{% if not isObject %}, ObjectModelMetadata{% endif %}{% endif %} } from '@algorandfoundation/algokit-common';
 import {
   stringCodec,
   numberCodec,
   bigIntCodec,
   booleanCodec,
   bytesCodec,
-{%- if has_arrays %}
+  addressCodec,
   ArrayCodec,
-{%- endif %}
+  bytesArrayCodec,
+  bigIntArrayCodec,
+  addressArrayCodec,
+  numberArrayCodec,
+  booleanArrayCodec,
+  stringArrayCodec,
 {%- if has_models %}
-  ModelCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+  PrimitiveModelCodec,
+{%- endif %}
+{%- if has_empty_objects %}
+  RecordCodec,
+  unknownCodec,
 {%- endif %}
 } from '@algorandfoundation/algokit-common';
 {% if uses_signed_txn %}
@@ -55,7 +68,6 @@ import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
       name: '{{ prop_name | ts_camel_case }}',
       wireKey: '{{ prop_name }}',
       optional: {{ 'false' if prop_name in required_fields else 'true' }},
-      nullable: {{ 'true' if prop_schema.get('nullable') else 'false' }},
       codec: {%- if prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64') -%}
         bytesCodec
       {%- elif prop_schema.get('x-algokit-bigint') -%}
@@ -92,9 +104,9 @@ export interface {{ modelName }} {
 export type {{ modelName }} = {{ schema | ts_type(schemas) }};
 {% endif %}
 
-export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata{% elif isArray %}ArrayModelMetadata{% else %}PassthroughModelMetadata{% endif %} = {
+export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata{% elif isArray %}ArrayModelMetadata{% else %}PrimitiveModelMetadata{% endif %} = {
   name: '{{ modelName }}',
-  kind: {% if isObject %}'object'{% elif isArray %}'array'{% else %}'passthrough'{% endif %},
+  kind: {% if isObject %}'object'{% elif isArray %}'array'{% else %}'primitive'{% endif %},
 {% if isObject %}
   fields: [
 {%   for f in descriptor.fields %}
@@ -102,16 +114,15 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata{% elif is
       name: '{{ f.name }}',
       wireKey: '{{ f.wire_name }}',
       optional: {{ 'true' if f.is_optional else 'false' }},
-      nullable: {{ 'true' if f.is_nullable else 'false' }},
       codec: {{ f | field_codec_expr(modelName) }},
     },
 {%   endfor %}
   ],
 {% elif isArray %}
-  codec: new ArrayCodec({{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint) }}),
+  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address) }},
 {% else %}
 {%   if schemaSignedTxn %}
-  codec: new ModelCodec(SignedTransactionMeta),
+  codec: new ObjectModelCodec(SignedTransactionMeta),
 {%   elif schemaBytes %}
   codec: bytesCodec,
 {%   elif schemaBigint %}

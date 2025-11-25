@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  ArrayCodec,
+  numberArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationStateOperation } from './application-state-operation'
 import { ApplicationStateOperationMeta } from './application-state-operation'
 import type { AvmValue } from './avm-value'
@@ -50,43 +55,37 @@ export const SimulationOpcodeTraceUnitMeta: ObjectModelMetadata = {
       name: 'pc',
       wireKey: 'pc',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'scratchChanges',
       wireKey: 'scratch-changes',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ScratchChangeMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ScratchChangeMeta)),
     },
     {
       name: 'stateChanges',
       wireKey: 'state-changes',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ApplicationStateOperationMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationStateOperationMeta)),
     },
     {
       name: 'spawnedInners',
       wireKey: 'spawned-inners',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: numberArrayCodec,
     },
     {
       name: 'stackPopCount',
       wireKey: 'stack-pop-count',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'stackAdditions',
       wireKey: 'stack-additions',
       optional: true,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AvmValueMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AvmValueMeta)),
     },
   ],
 }

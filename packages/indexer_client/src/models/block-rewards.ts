@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Fields relating to rewards,
@@ -44,42 +47,36 @@ export const BlockRewardsMeta: ObjectModelMetadata = {
       name: 'feeSink',
       wireKey: 'fee-sink',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'rewardsCalculationRound',
       wireKey: 'rewards-calculation-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'rewardsLevel',
       wireKey: 'rewards-level',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'rewardsPool',
       wireKey: 'rewards-pool',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'rewardsRate',
       wireKey: 'rewards-rate',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'rewardsResidue',
       wireKey: 'rewards-residue',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

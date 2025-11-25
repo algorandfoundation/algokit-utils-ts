@@ -6,9 +6,42 @@ It maps field descriptors to codec singleton references or codec constructors.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Literal
 
 from oas_generator.generator.models import FieldDescriptor
+
+# Type alias for model metadata kinds
+ModelKind = Literal["object", "array", "primitive"]
+
+# Global registry tracking model kinds (populated during schema processing)
+_MODEL_KIND_REGISTRY: dict[str, ModelKind] = {}
+
+
+def register_model_kind(model_name: str, kind: ModelKind) -> None:
+    """Register a model's metadata kind.
+
+    Args:
+        model_name: Name of the model
+        kind: The kind of model metadata (object/array/primitive)
+    """
+    _MODEL_KIND_REGISTRY[model_name] = kind
+
+
+def get_model_kind(model_name: str) -> ModelKind | None:
+    """Get the registered kind for a model.
+
+    Args:
+        model_name: Name of the model
+
+    Returns:
+        The model's kind, or None if not registered
+    """
+    return _MODEL_KIND_REGISTRY.get(model_name)
+
+
+def clear_model_registry() -> None:
+    """Clear the model kind registry (useful for testing)."""
+    _MODEL_KIND_REGISTRY.clear()
 
 
 class CodecProcessor:
@@ -23,16 +56,37 @@ class CodecProcessor:
             model_name: Name of the parent model (for self-referential types)
 
         Returns:
-            TypeScript codec expression (e.g., "stringCodec", "new ArrayCodec(...)")
+            TypeScript codec expression (e.g., "stringCodec", "bytesArrayCodec")
         """
+        # Handle empty object types (object with no properties)
+        if field.is_empty_object:
+            return "new RecordCodec(unknownCodec)"
+
         if field.is_array:
+            # Return singleton array codec names instead of new ArrayCodec(...)
+            array_codec = CodecProcessor._get_array_codec_singleton(
+                ref_model=field.ref_model,
+                is_signed_txn=field.is_signed_txn,
+                is_bytes=field.is_bytes,
+                is_bigint=field.is_bigint,
+                is_number=field.is_number,
+                is_boolean=field.is_boolean,
+                is_address=field.is_address,
+            )
+            if array_codec:
+                return array_codec
+
+            # Fallback for model references that don't have singletons
             item_codec = CodecProcessor._base_codec_expr(
                 ref_model=field.ref_model,
                 is_signed_txn=field.is_signed_txn,
                 is_bytes=field.is_bytes,
                 is_bigint=field.is_bigint,
+                is_number=field.is_number,
+                is_boolean=field.is_boolean,
+                is_address=field.is_address,
                 model_name=model_name,
-                inline_meta_name=None,  # Arrays don't have inline objects as items in current schema
+                inline_meta_name=None,
                 ts_type=field.ts_type,
             )
             return f"new ArrayCodec({item_codec})"
@@ -42,6 +96,9 @@ class CodecProcessor:
             is_signed_txn=field.is_signed_txn,
             is_bytes=field.is_bytes,
             is_bigint=field.is_bigint,
+            is_number=field.is_number,
+            is_boolean=field.is_boolean,
+            is_address=field.is_address,
             model_name=model_name,
             inline_meta_name=field.inline_meta_name,
             ts_type=field.ts_type,
@@ -53,6 +110,9 @@ class CodecProcessor:
         is_signed_txn: bool,
         is_bytes: bool,
         is_bigint: bool,
+        is_number: bool,
+        is_boolean: bool,
+        is_address: bool,
         model_name: str,
         inline_meta_name: str | None,
         ts_type: str = "",
@@ -64,6 +124,9 @@ class CodecProcessor:
             is_signed_txn: Whether this is a SignedTransaction
             is_bytes: Whether this is a byte array (Uint8Array)
             is_bigint: Whether this is a bigint
+            is_number: Whether this is a number
+            is_boolean: Whether this is a boolean
+            is_address: Whether this is an address
             model_name: Name of the parent model (for self-referential types)
             inline_meta_name: Name of inline object metadata if applicable
             ts_type: TypeScript type string for fallback inference
@@ -73,24 +136,43 @@ class CodecProcessor:
         """
         # SignedTransaction uses metadata-based codec
         if is_signed_txn:
-            return "new ModelCodec(SignedTransactionMeta)"
+            return "new ObjectModelCodec(SignedTransactionMeta)"
 
         # Model references
         if ref_model:
+            # Determine the specific codec type based on the model's registered kind
+            model_kind = get_model_kind(ref_model)
+
+            if model_kind == "object":
+                codec_class = "ObjectModelCodec"
+            elif model_kind == "array":
+                codec_class = "ArrayModelCodec"
+            elif model_kind == "primitive":
+                codec_class = "PrimitiveModelCodec"
+            else:
+                # Fallback to generic ModelCodec if kind is unknown
+                codec_class = "ModelCodec"
+
             # Self-referential types need lazy evaluation
             if ref_model == model_name:
-                return f"new ModelCodec(() => {ref_model}Meta)"
-            return f"new ModelCodec({ref_model}Meta)"
+                return f"new {codec_class}(() => {ref_model}Meta)"
+            return f"new {codec_class}({ref_model}Meta)"
 
-        # Inline object schemas
+        # Inline object schemas - these are always objects
         if inline_meta_name:
-            return f"new ModelCodec({inline_meta_name})"
+            return f"new ObjectModelCodec({inline_meta_name})"
 
         # Primitive codecs based on flags
         if is_bytes:
             return "bytesCodec"
         if is_bigint:
             return "bigIntCodec"
+        if is_address:
+            return "addressCodec"
+        if is_number:
+            return "numberCodec"
+        if is_boolean:
+            return "booleanCodec"
 
         # Fallback to type inference from TypeScript type
         if ts_type:
@@ -125,13 +207,6 @@ class CodecProcessor:
         if ts_type == "Uint8Array":
             return "bytesCodec"
 
-        # Check for union types that might include null
-        if " | null" in ts_type:
-            # Strip null and try again
-            base_type = ts_type.replace(" | null", "").strip()
-            inner_codec = CodecProcessor.infer_primitive_codec(base_type)
-            return f"new NullableCodec({inner_codec})"
-
         # Default to string for unknown types
         return "stringCodec"
 
@@ -141,6 +216,9 @@ class CodecProcessor:
         array_item_is_signed_txn: bool,
         array_item_is_bytes: bool,
         array_item_is_bigint: bool,
+        array_item_is_number: bool,
+        array_item_is_boolean: bool,
+        array_item_is_address: bool,
     ) -> str:
         """Generate codec expression for array items (used for top-level array schemas).
 
@@ -149,18 +227,82 @@ class CodecProcessor:
             array_item_is_signed_txn: Whether items are SignedTransactions
             array_item_is_bytes: Whether items are byte arrays
             array_item_is_bigint: Whether items are bigints
+            array_item_is_number: Whether items are numbers
+            array_item_is_boolean: Whether items are booleans
+            array_item_is_address: Whether items are addresses
 
         Returns:
-            Codec expression string
+            Codec expression string (singleton array codec name or new ArrayCodec(...))
         """
-        return CodecProcessor._base_codec_expr(
+        # Try to get singleton array codec first
+        array_codec = CodecProcessor._get_array_codec_singleton(
             ref_model=array_item_ref,
             is_signed_txn=array_item_is_signed_txn,
             is_bytes=array_item_is_bytes,
             is_bigint=array_item_is_bigint,
+            is_number=array_item_is_number,
+            is_boolean=array_item_is_boolean,
+            is_address=array_item_is_address,
+        )
+        if array_codec:
+            return array_codec
+
+        # Fallback for model references - wrap in new ArrayCodec(...)
+        item_codec = CodecProcessor._base_codec_expr(
+            ref_model=array_item_ref,
+            is_signed_txn=array_item_is_signed_txn,
+            is_bytes=array_item_is_bytes,
+            is_bigint=array_item_is_bigint,
+            is_number=array_item_is_number,
+            is_boolean=array_item_is_boolean,
+            is_address=array_item_is_address,
             model_name="",  # Top-level arrays don't have a parent model
             inline_meta_name=None,
         )
+        return f"new ArrayCodec({item_codec})"
+
+    @staticmethod
+    def _get_array_codec_singleton(
+        ref_model: str | None,
+        is_signed_txn: bool,
+        is_bytes: bool,
+        is_bigint: bool,
+        is_number: bool,
+        is_boolean: bool,
+        is_address: bool,
+    ) -> str | None:
+        """Get singleton array codec name for primitive types.
+
+        Args:
+            ref_model: Referenced model name (returns None if set)
+            is_signed_txn: Whether items are SignedTransactions
+            is_bytes: Whether items are byte arrays
+            is_bigint: Whether items are bigints
+            is_number: Whether items are numbers
+            is_boolean: Whether items are booleans
+            is_address: Whether items are addresses
+
+        Returns:
+            Singleton array codec name or None if not a primitive array
+        """
+        # Model references and signed transactions don't have singleton array codecs
+        if ref_model or is_signed_txn:
+            return None
+
+        # Return singleton array codec names
+        if is_bytes:
+            return "bytesArrayCodec"
+        if is_bigint:
+            return "bigIntArrayCodec"
+        if is_address:
+            return "addressArrayCodec"
+        if is_number:
+            return "numberArrayCodec"
+        if is_boolean:
+            return "booleanArrayCodec"
+
+        # String is the default
+        return "stringArrayCodec"
 
 
 def get_codec_imports(has_arrays: bool = False, has_models: bool = False) -> list[str]:
@@ -168,7 +310,7 @@ def get_codec_imports(has_arrays: bool = False, has_models: bool = False) -> lis
 
     Args:
         has_arrays: Whether ArrayCodec is used
-        has_models: Whether ModelCodec is used
+        has_models: Whether model codecs (Object/Array/Primitive) are used
 
     Returns:
         List of import items to include
@@ -179,7 +321,7 @@ def get_codec_imports(has_arrays: bool = False, has_models: bool = False) -> lis
     imports.extend([
         "stringCodec",
         "numberCodec",
-        "bigintCodec",
+        "bigIntCodec",
         "booleanCodec",
         "bytesCodec",
     ])
@@ -188,6 +330,11 @@ def get_codec_imports(has_arrays: bool = False, has_models: bool = False) -> lis
         imports.append("ArrayCodec")
 
     if has_models:
-        imports.append("ModelCodec")
+        # Import all three specific model codec types instead of generic ModelCodec
+        imports.extend([
+            "ObjectModelCodec",
+            "ArrayModelCodec",
+            "PrimitiveModelCodec",
+        ])
 
     return imports

@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SourceMap } from './source-map'
 import { SourceMapMeta } from './source-map'
 
@@ -24,22 +27,19 @@ export const TealCompileMeta: ObjectModelMetadata = {
       name: 'hash',
       wireKey: 'hash',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'result',
       wireKey: 'result',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'sourcemap',
       wireKey: 'sourcemap',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SourceMapMeta),
+      codec: new ObjectModelCodec(SourceMapMeta),
     },
   ],
 }

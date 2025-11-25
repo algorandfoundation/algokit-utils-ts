@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * AccountParticipation describes the parameters used by this account in consensus protocol.
@@ -44,42 +47,36 @@ export const AccountParticipationMeta: ObjectModelMetadata = {
       name: 'selectionParticipationKey',
       wireKey: 'selection-participation-key',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'voteFirstValid',
       wireKey: 'vote-first-valid',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'voteKeyDilution',
       wireKey: 'vote-key-dilution',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'voteLastValid',
       wireKey: 'vote-last-valid',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'voteParticipationKey',
       wireKey: 'vote-participation-key',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'stateProofKey',
       wireKey: 'state-proof-key',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
   ],

@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 export type TransactionSignatureMultisigSubsignature = {
   /**
@@ -21,14 +23,12 @@ export const TransactionSignatureMultisigSubsignatureMeta: ObjectModelMetadata =
       name: 'publicKey',
       wireKey: 'public-key',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'signature',
       wireKey: 'signature',
       optional: true,
-      nullable: false,
       codec: bytesCodec,
     },
   ],

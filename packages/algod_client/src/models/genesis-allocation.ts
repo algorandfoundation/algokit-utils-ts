@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 
 const GenesisAllocationStateMeta: ObjectModelMetadata = {
   name: 'GenesisAllocationStateMeta',
@@ -9,56 +14,48 @@ const GenesisAllocationStateMeta: ObjectModelMetadata = {
       name: 'algo',
       wireKey: 'algo',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'onl',
       wireKey: 'onl',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'sel',
       wireKey: 'sel',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'stprf',
       wireKey: 'stprf',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'vote',
       wireKey: 'vote',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'voteKd',
       wireKey: 'voteKD',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'voteFst',
       wireKey: 'voteFst',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'voteLst',
       wireKey: 'voteLst',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],
@@ -87,22 +84,19 @@ export const GenesisAllocationMeta: ObjectModelMetadata = {
       name: 'addr',
       wireKey: 'addr',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'comment',
       wireKey: 'comment',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'state',
       wireKey: 'state',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(GenesisAllocationStateMeta),
+      codec: new ObjectModelCodec(GenesisAllocationStateMeta),
     },
   ],
 }

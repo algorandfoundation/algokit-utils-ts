@@ -13,13 +13,18 @@ describe('BytesCodec', () => {
 
   describe('encode', () => {
     describe('default values', () => {
-      test.each<{ value: Uint8Array | undefined; description: string }>([
+      test.each<{ value: Uint8Array | undefined | null; description: string }>([
         { value: new Uint8Array(0), description: 'empty Uint8Array (default value)' },
         { value: new Uint8Array([]), description: 'empty Uint8Array literal' },
         { value: undefined, description: 'undefined' },
-      ])('should omit $description when encoding', ({ value }) => {
-        expect(bytesCodec.encode(value, 'json')).toBeUndefined()
-        expect(bytesCodec.encode(value, 'msgpack')).toBeUndefined()
+        { value: null, description: 'null' },
+      ])('should encode $description to empty Uint8Array/base64', ({ value }) => {
+        const encoded = bytesCodec.encode(value, 'json')
+        expect(encoded).toBe('')
+
+        const encodedMsgpack = bytesCodec.encode(value, 'msgpack')
+        expect(encodedMsgpack).toBeInstanceOf(Uint8Array)
+        expect(encodedMsgpack.length).toBe(0)
       })
     })
 
@@ -54,6 +59,56 @@ describe('BytesCodec', () => {
       ])('should encode $description as Uint8Array (pass-through)', ({ bytes }) => {
         const uint8Array = new Uint8Array(bytes)
         const encoded = bytesCodec.encode(uint8Array, 'msgpack')
+        expect(encoded).toBeInstanceOf(Uint8Array)
+        expect(encoded).toEqual(uint8Array)
+        expect(encoded).toBe(uint8Array)
+      })
+    })
+  })
+
+  describe('encodeOptional', () => {
+    describe('default values', () => {
+      test.each<{ value: Uint8Array | undefined; description: string }>([
+        { value: new Uint8Array(0), description: 'empty Uint8Array (default value)' },
+        { value: new Uint8Array([]), description: 'empty Uint8Array literal' },
+        { value: undefined, description: 'undefined' },
+      ])('should omit $description when encoding', ({ value }) => {
+        expect(bytesCodec.encodeOptional(value, 'json')).toBeUndefined()
+        expect(bytesCodec.encodeOptional(value, 'msgpack')).toBeUndefined()
+      })
+    })
+
+    describe('JSON format', () => {
+      test.each<{ bytes: number[]; expectedBase64: string; description: string }>([
+        { bytes: [72, 101, 108, 108, 111], expectedBase64: 'SGVsbG8=', description: '"Hello" in ASCII' },
+        { bytes: [0, 1, 2, 3, 4], expectedBase64: 'AAECAwQ=', description: 'small byte sequence' },
+        { bytes: [255, 254, 253, 252], expectedBase64: '//79/A==', description: 'high byte values' },
+        { bytes: [0], expectedBase64: 'AA==', description: 'single zero byte' },
+        { bytes: [255], expectedBase64: '/w==', description: 'single max byte' },
+        {
+          bytes: Array.from({ length: 32 }, (_, i) => i),
+          expectedBase64: 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=',
+          description: '32-byte sequence (0-31)',
+        },
+      ])('should encode $description as base64 string', ({ bytes, expectedBase64 }) => {
+        const uint8Array = new Uint8Array(bytes)
+        const encoded = bytesCodec.encodeOptional(uint8Array, 'json')
+        expect(encoded).toBe(expectedBase64)
+        expect(typeof encoded).toBe('string')
+      })
+    })
+
+    describe('msgpack format', () => {
+      test.each<{ bytes: number[]; description: string }>([
+        { bytes: [72, 101, 108, 108, 111], description: '"Hello" in ASCII' },
+        { bytes: [0, 1, 2, 3, 4], description: 'small byte sequence' },
+        { bytes: [255, 254, 253, 252], description: 'high byte values' },
+        { bytes: [0], description: 'single zero byte' },
+        { bytes: [255], description: 'single max byte' },
+        { bytes: Array.from({ length: 100 }, (_, i) => i % 256), description: '100-byte sequence' },
+      ])('should encode $description as Uint8Array (pass-through)', ({ bytes }) => {
+        const uint8Array = new Uint8Array(bytes)
+        const encoded = bytesCodec.encodeOptional(uint8Array, 'msgpack')
         expect(encoded).toBeInstanceOf(Uint8Array)
         expect(encoded).toEqual(uint8Array)
         expect(encoded).toBe(uint8Array)
@@ -135,13 +190,16 @@ describe('BytesCodec', () => {
   })
 
   describe('decodeOptional', () => {
-    test('should preserve undefined', () => {
-      expect(bytesCodec.decodeOptional(undefined, 'json')).toBeUndefined()
-      expect(bytesCodec.decodeOptional(undefined, 'msgpack')).toBeUndefined()
+    test.each<{ value: Uint8Array | null | undefined; description: string }>([
+      { value: undefined, description: 'undefined' },
+      { value: null, description: 'null' },
+    ])('should decode $description to undefined', ({ value }) => {
+      expect(bytesCodec.decodeOptional(value, 'json')).toBeUndefined()
+      expect(bytesCodec.decodeOptional(value, 'msgpack')).toBeUndefined()
     })
 
     test.each<{ bytes: number[]; description: string }>([
-      { bytes: [], description: 'empty Uint8Array (not undefined)' },
+      { bytes: [], description: 'empty Uint8Array' },
       { bytes: [72, 101, 108, 108, 111], description: 'Hello bytes' },
       { bytes: [0, 1, 2, 3, 4], description: 'small byte sequence' },
     ])('should decode Uint8Array $description', ({ bytes }) => {
@@ -164,7 +222,6 @@ describe('BytesCodec', () => {
   describe('error handling', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     test.each<{ value: any; description: string }>([
-      { value: null, description: 'null' },
       { value: 123, description: 'number' },
       { value: true, description: 'boolean' },
       { value: {}, description: 'object' },

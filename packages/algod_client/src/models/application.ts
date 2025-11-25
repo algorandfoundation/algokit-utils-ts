@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { ApplicationParams } from './application-params'
 import { ApplicationParamsMeta } from './application-params'
 
@@ -22,15 +25,13 @@ export const ApplicationMeta: ObjectModelMetadata = {
       name: 'id',
       wireKey: 'id',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(ApplicationParamsMeta),
+      codec: new ObjectModelCodec(ApplicationParamsMeta),
     },
   ],
 }

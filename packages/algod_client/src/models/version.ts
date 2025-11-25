@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bytesCodec,
+  stringArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { BuildVersion } from './build-version'
 import { BuildVersionMeta } from './build-version'
 
@@ -21,29 +26,25 @@ export const VersionMeta: ObjectModelMetadata = {
       name: 'build',
       wireKey: 'build',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(BuildVersionMeta),
+      codec: new ObjectModelCodec(BuildVersionMeta),
     },
     {
       name: 'genesisHashB64',
       wireKey: 'genesis_hash_b64',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'genesisId',
       wireKey: 'genesis_id',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'versions',
       wireKey: 'versions',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(stringCodec),
+      codec: stringArrayCodec,
     },
   ],
 }

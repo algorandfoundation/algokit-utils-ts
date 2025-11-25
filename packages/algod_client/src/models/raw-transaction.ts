@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+} from '@algorandfoundation/algokit-common'
 
 export type RawTransaction = {
   /**
@@ -16,7 +18,6 @@ export const RawTransactionMeta: ObjectModelMetadata = {
       name: 'txId',
       wireKey: 'txId',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
   ],

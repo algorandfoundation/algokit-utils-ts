@@ -1,5 +1,4 @@
-import { ModelSerializer } from '@algorandfoundation/algokit-common'
-import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
+import { ModelSerializer, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { SignedTransactionMeta } from './signed-transaction-meta'
 import { Transaction, validateTransaction } from './transaction'
 

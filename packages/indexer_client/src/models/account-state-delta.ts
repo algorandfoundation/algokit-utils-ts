@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  ArrayModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { StateDelta } from './state-delta'
 import { StateDeltaMeta } from './state-delta'
 
@@ -19,15 +22,13 @@ export const AccountStateDeltaMeta: ObjectModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'delta',
       wireKey: 'delta',
       optional: false,
-      nullable: false,
-      codec: new ModelCodec(StateDeltaMeta),
+      codec: new ArrayModelCodec(StateDeltaMeta),
     },
   ],
 }

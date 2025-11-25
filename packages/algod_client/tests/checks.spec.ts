@@ -1,4 +1,11 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import {
+  encodeTransactionRaw,
+  getTransactionId,
+  OnApplicationComplete,
+  Transaction,
+  TransactionType,
+} from '@algorandfoundation/algokit-transact'
 import { describe, expect, test } from 'vitest'
 
 describe('Check', () => {
@@ -50036,5 +50043,29 @@ describe('Check', () => {
         },
       }
     `)
+  })
+
+  test('', () => {
+    const txn = {
+      type: TransactionType.AppCall,
+      sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+      fee: 1000n,
+      firstValid: 1000000n,
+      lastValid: 1001000n,
+      genesisHash: Buffer.from('ZIkPs8pTDxbRJsFB1yJ7gvnpDu0Q85FRkl2NCkEAQLU=', 'base64'),
+      genesisId: 'testnet-v1.0',
+      appCall: {
+        appId: 12345n,
+        onComplete: OnApplicationComplete.NoOp,
+        args: [new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])],
+        assetReferences: [0n, 654321n, BigInt(Number.MAX_SAFE_INTEGER + 10)],
+      },
+    } satisfies Transaction
+
+    const temp = encodeTransactionRaw(txn)
+    console.log(Buffer.from(temp).toString('base64'))
+
+    // D5N4QTR473XH66763DQB7JTCWDLSHQKZEMQTV4X7DVCP725WKU2A
+    console.log(getTransactionId(txn))
   })
 })

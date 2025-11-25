@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { Block } from './block'
 import { BlockMeta } from './block'
 
@@ -24,22 +29,19 @@ export const SearchForBlockHeadersMeta: ObjectModelMetadata = {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'blocks',
       wireKey: 'blocks',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(BlockMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(BlockMeta)),
     },
   ],
 }

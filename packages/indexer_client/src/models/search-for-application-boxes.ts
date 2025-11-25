@@ -1,5 +1,10 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { BoxDescriptor } from './box-descriptor'
 import { BoxDescriptorMeta } from './box-descriptor'
 
@@ -24,21 +29,18 @@ export const SearchForApplicationBoxesMeta: ObjectModelMetadata = {
       name: 'applicationId',
       wireKey: 'application-id',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'boxes',
       wireKey: 'boxes',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(BoxDescriptorMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(BoxDescriptorMeta)),
     },
     {
       name: 'nextToken',
       wireKey: 'next-token',
       optional: true,
-      nullable: false,
       codec: stringCodec,
     },
   ],

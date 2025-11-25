@@ -1,5 +1,7 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * Supply represents the current supply of MicroAlgos in the system
@@ -29,21 +31,18 @@ export const GetSupplyMeta: ObjectModelMetadata = {
       name: 'currentRound',
       wireKey: 'current_round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'onlineMoney',
       wireKey: 'online-money',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'totalMoney',
       wireKey: 'total-money',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

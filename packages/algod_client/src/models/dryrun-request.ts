@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import type { Account } from './account'
@@ -42,50 +48,43 @@ export const DryrunRequestMeta: ObjectModelMetadata = {
       name: 'txns',
       wireKey: 'txns',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SignedTransactionMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SignedTransactionMeta)),
     },
     {
       name: 'accounts',
       wireKey: 'accounts',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(AccountMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(AccountMeta)),
     },
     {
       name: 'apps',
       wireKey: 'apps',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(ApplicationMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationMeta)),
     },
     {
       name: 'protocolVersion',
       wireKey: 'protocol-version',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'latestTimestamp',
       wireKey: 'latest-timestamp',
       optional: false,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'sources',
       wireKey: 'sources',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(DryrunSourceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(DryrunSourceMeta)),
     },
   ],
 }

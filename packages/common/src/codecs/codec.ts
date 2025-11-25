@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { BodyFormat } from './types'
+/* eslint-disable unused-imports/no-unused-vars */
+import type { EncodingFormat } from './types'
 
 /**
  * A bidirectional codec that transforms between application types and wire formats.
@@ -15,13 +15,24 @@ export abstract class Codec<T, TEncoded = T> {
   public abstract defaultValue(): T
 
   /**
-   * Encode a value to wire format
+   * Encode a value that is required in the wire format
+   * @param value - The application value
+   * @param format - The wire format (json or msgpack)
+   * @returns The encoded value, or the default if it is undefined or null
+   */
+  public encode(value: T | undefined | null, format: EncodingFormat): TEncoded {
+    if (value === undefined || value === null || this.isDefaultValue(value)) return this.toEncoded(this.defaultValue(), format)
+    return this.toEncoded(value, format)
+  }
+
+  /**
+   * Encode a value that is optional in the wire format
    * @param value - The application value
    * @param format - The wire format (json or msgpack)
    * @returns The encoded value, or undefined if it equals the default (will be omitted)
    */
-  public encode(value: T | undefined, format: BodyFormat): TEncoded | undefined {
-    if (value === undefined) return undefined
+  public encodeOptional(value: T | undefined | null, format: EncodingFormat): TEncoded | undefined {
+    if (value === undefined || value === null) return undefined
     if (this.isDefaultValue(value)) return undefined
     return this.toEncoded(value, format)
   }
@@ -32,21 +43,23 @@ export abstract class Codec<T, TEncoded = T> {
    * @param format - The wire format (json or msgpack)
    * @returns The decoded application value
    */
-  public decode(value: TEncoded | undefined, format: BodyFormat): T {
-    if (value === undefined) return this.defaultValue()
+  public decode(value: TEncoded | undefined | null, format: EncodingFormat): T {
+    // undefined is encoded as msgpack nil, which may be decoded as JS null. Treat null and undefined the same.
+    if (value === undefined || value === null) return this.defaultValue()
     const decoded = this.fromEncoded(value, format)
     if (this.isDefaultValue(decoded)) return this.defaultValue()
     return decoded
   }
 
   /**
-   * Decode an optional value (preserves undefined vs default distinction)
+   * Decode an optional value from wire format (preserves undefined vs default distinction)
    * @param value - The wire value
    * @param format - The wire format (json or msgpack)
    * @returns The decoded application value, or undefined if wire value was undefined
    */
-  public decodeOptional(value: TEncoded | undefined, format: BodyFormat): T | undefined {
-    if (value === undefined) return undefined
+  public decodeOptional(value: TEncoded | undefined | null, format: EncodingFormat): T | undefined {
+    // undefined is encoded as msgpack nil, which may be decoded as JS null. Treat null and undefined the same.
+    if (value === undefined || value === null) return undefined
     return this.fromEncoded(value, format)
   }
 
@@ -57,7 +70,7 @@ export abstract class Codec<T, TEncoded = T> {
    * @param format - The wire format
    * @returns The encoded value
    */
-  protected toEncoded(value: T, format: BodyFormat): TEncoded {
+  protected toEncoded(value: T, format: EncodingFormat): TEncoded {
     return value as unknown as TEncoded
   }
 
@@ -68,7 +81,7 @@ export abstract class Codec<T, TEncoded = T> {
    * @param format - The wire format
    * @returns The decoded value
    */
-  protected fromEncoded(value: TEncoded, format: BodyFormat): T {
+  protected fromEncoded(value: TEncoded, format: EncodingFormat): T {
     return value as unknown as T
   }
 

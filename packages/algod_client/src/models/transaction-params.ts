@@ -1,5 +1,9 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  bytesCodec,
+} from '@algorandfoundation/algokit-common'
 
 /**
  * TransactionParams contains the parameters that help a client construct
@@ -50,42 +54,36 @@ export const TransactionParamsMeta: ObjectModelMetadata = {
       name: 'consensusVersion',
       wireKey: 'consensus-version',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'fee',
       wireKey: 'fee',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'genesisHash',
       wireKey: 'genesis-hash',
       optional: false,
-      nullable: false,
       codec: bytesCodec,
     },
     {
       name: 'genesisId',
       wireKey: 'genesis-id',
       optional: false,
-      nullable: false,
       codec: stringCodec,
     },
     {
       name: 'lastRound',
       wireKey: 'last-round',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'minFee',
       wireKey: 'min-fee',
       optional: false,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

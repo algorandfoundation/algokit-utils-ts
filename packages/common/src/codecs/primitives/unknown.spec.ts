@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { ADDRESS_LENGTH, PUBLIC_KEY_BYTE_LENGTH, SIGNATURE_BYTE_LENGTH } from '../../constants'
 import { unknownCodec } from './unknown'
 
 describe('UnknownCodec', () => {
@@ -9,404 +10,303 @@ describe('UnknownCodec', () => {
   })
 
   describe('encode', () => {
-    describe('all values pass through (no encoding)', () => {
-      test.each<{ value: unknown; description: string }>([
-        { value: undefined, description: 'undefined' },
-        { value: null, description: 'null' },
-        { value: true, description: 'boolean true' },
-        { value: false, description: 'boolean false' },
-        { value: 0, description: 'number 0' },
-        { value: 42, description: 'number 42' },
-        { value: 3.14, description: 'number 3.14' },
-        { value: -100, description: 'negative number' },
-        { value: '', description: 'empty string' },
-        { value: 'hello', description: 'string' },
-        { value: 0n, description: 'bigint 0n' },
-        { value: 42n, description: 'bigint 42n' },
-        { value: new Uint8Array([1, 2, 3]), description: 'Uint8Array' },
-        { value: [1, 2, 3], description: 'array' },
-        { value: { foo: 'bar' }, description: 'object' },
-        { value: new Map([['key', 'value']]), description: 'Map' },
-      ])('should pass through $description unchanged', ({ value }) => {
-        const encoded = unknownCodec.encode(value, 'json')
-        expect(encoded).toBe(value)
-
-        const encodedMsgpack = unknownCodec.encode(value, 'msgpack')
-        expect(encodedMsgpack).toBe(value)
-      })
+    test('should throw error', () => {
+      expect(() => unknownCodec.encode('test', 'json')).toThrow('UnknownCodec does not support encoding')
+      expect(() => unknownCodec.encode('test', 'msgpack')).toThrow('UnknownCodec does not support encoding')
     })
+  })
 
-    describe('format independence', () => {
-      test.each<{ value: unknown; description: string }>([
-        { value: undefined, description: 'undefined' },
-        { value: 42, description: 'number' },
-        { value: 'hello', description: 'string' },
-        { value: true, description: 'boolean' },
-        { value: null, description: 'null' },
-      ])('should produce same result for JSON and msgpack when encoding $description', ({ value }) => {
-        expect(unknownCodec.encode(value, 'json')).toBe(unknownCodec.encode(value, 'msgpack'))
-      })
+  describe('encodeOptional', () => {
+    test('should throw error', () => {
+      expect(() => unknownCodec.encodeOptional('test', 'json')).toThrow('UnknownCodec does not support encoding')
+      expect(() => unknownCodec.encodeOptional('test', 'msgpack')).toThrow('UnknownCodec does not support encoding')
     })
   })
 
   describe('decode', () => {
-    describe('primitives pass through unchanged', () => {
+    describe('default values', () => {
       test.each<{ value: unknown; description: string }>([
         { value: undefined, description: 'undefined' },
         { value: null, description: 'null' },
+      ])('should encode $description to empty object/map', ({ value }) => {
+        expect(unknownCodec.decode(value, 'json')).toBeUndefined()
+        expect(unknownCodec.decode(value, 'msgpack')).toBeUndefined()
+      })
+    })
+
+    describe('primitive values', () => {
+      test.each<{ value: unknown; description: string }>([
+        { value: 42, description: 'number' },
+        { value: 0, description: 'zero' },
+        { value: -10, description: 'negative number' },
+        { value: 'hello', description: 'string' },
+        { value: '', description: 'empty string' },
         { value: true, description: 'boolean true' },
         { value: false, description: 'boolean false' },
-        { value: 0, description: 'number 0' },
-        { value: 42, description: 'number 42' },
-        { value: -100, description: 'negative number' },
-        { value: '', description: 'empty string' },
-        { value: 'hello', description: 'string' },
-        { value: 0n, description: 'bigint 0n' },
-        { value: 42n, description: 'bigint 42n' },
-        { value: new Uint8Array([1, 2, 3]), description: 'Uint8Array' },
+        { value: 123n, description: 'bigint' },
       ])('should pass through $description unchanged', ({ value }) => {
         expect(unknownCodec.decode(value, 'json')).toBe(value)
         expect(unknownCodec.decode(value, 'msgpack')).toBe(value)
       })
     })
 
-    describe('arrays are processed recursively', () => {
-      test('should process simple array', () => {
-        const arr = [1, 2, 3]
-        const decoded = unknownCodec.decode(arr, 'json')
-        expect(decoded).toEqual([1, 2, 3])
-        expect(Array.isArray(decoded)).toBe(true)
+    describe('Uint8Array handling', () => {
+      test('should decode UTF-8 encoded bytes as string', () => {
+        const bytes = new TextEncoder().encode('hello world')
+        const result = unknownCodec.decode(bytes, 'msgpack')
+        expect(result).toBe('hello world')
       })
 
-      test('should process nested array', () => {
-        const arr = [1, [2, [3, 4]], 5]
-        const decoded = unknownCodec.decode(arr, 'json')
-        expect(decoded).toEqual([1, [2, [3, 4]], 5])
+      test('should return invalid UTF-8 bytes unchanged', () => {
+        const invalidUtf8 = new Uint8Array([0xff, 0xfe, 0xfd])
+        const result = unknownCodec.decode(invalidUtf8, 'msgpack')
+        expect(result).toBeInstanceOf(Uint8Array)
+        expect(result).toEqual(invalidUtf8)
       })
 
-      test('should process array with Maps', () => {
-        const map = new Map([
-          ['key1', 'value1'],
-          ['key2', 'value2'],
-        ])
-        const arr = [1, map, 3]
-        const decoded = unknownCodec.decode(arr, 'json')
-        expect(decoded).toEqual([1, { key1: 'value1', key2: 'value2' }, 3])
+      test('should return ADDRESS_LENGTH bytes with all zeros unchanged', () => {
+        const zeroAddress = new Uint8Array(ADDRESS_LENGTH).fill(0)
+        const result = unknownCodec.decode(zeroAddress, 'msgpack')
+        expect(result).toBeInstanceOf(Uint8Array)
+        expect(result).toEqual(zeroAddress)
       })
 
-      test('should process array with mixed types', () => {
-        const arr = [1, 'hello', true, null, 42n, new Uint8Array([1, 2])]
-        const decoded = unknownCodec.decode(arr, 'json')
-        expect(decoded).toEqual([1, 'hello', true, null, 42n, new Uint8Array([1, 2])])
+      test('should return PUBLIC_KEY_BYTE_LENGTH bytes with all zeros unchanged', () => {
+        const zeroPublicKey = new Uint8Array(PUBLIC_KEY_BYTE_LENGTH).fill(0)
+        const result = unknownCodec.decode(zeroPublicKey, 'msgpack')
+        expect(result).toBeInstanceOf(Uint8Array)
+        expect(result).toEqual(zeroPublicKey)
+      })
+
+      test('should return SIGNATURE_BYTE_LENGTH bytes with all zeros unchanged', () => {
+        const zeroSignature = new Uint8Array(SIGNATURE_BYTE_LENGTH).fill(0)
+        const result = unknownCodec.decode(zeroSignature, 'msgpack')
+        expect(result).toBeInstanceOf(Uint8Array)
+        expect(result).toEqual(zeroSignature)
+      })
+
+      test('should decode ADDRESS_LENGTH bytes with non-zero values as UTF-8 if possible', () => {
+        // Create a valid UTF-8 string of ADDRESS_LENGTH
+        const text = 'a'.repeat(ADDRESS_LENGTH)
+        const bytes = new TextEncoder().encode(text)
+        expect(bytes.length).toBe(ADDRESS_LENGTH)
+        const result = unknownCodec.decode(bytes, 'msgpack')
+        expect(result).toBe(text)
+      })
+
+      test('should return ADDRESS_LENGTH bytes with invalid UTF-8 unchanged', () => {
+        const invalidBytes = new Uint8Array(ADDRESS_LENGTH).fill(0xff)
+        const result = unknownCodec.decode(invalidBytes, 'msgpack')
+        expect(result).toBeInstanceOf(Uint8Array)
+        expect(result).toEqual(invalidBytes)
       })
     })
 
-    describe('Maps are converted to objects', () => {
-      test('should convert simple Map to object', () => {
-        const map = new Map([
-          ['key1', 'value1'],
-          ['key2', 'value2'],
-        ])
-        const decoded = unknownCodec.decode(map, 'json')
-        expect(decoded).toEqual({ key1: 'value1', key2: 'value2' })
+    describe('array handling', () => {
+      test('should decode empty array', () => {
+        const result = unknownCodec.decode([], 'json')
+        expect(result).toEqual([])
+        expect(Array.isArray(result)).toBe(true)
       })
 
-      test('should convert Map with number keys to object', () => {
-        const map = new Map([
-          [1, 'one'],
-          [2, 'two'],
+      test('should recursively decode array elements', () => {
+        const input = [1, 'hello', true, null]
+        const result = unknownCodec.decode(input, 'json')
+        expect(result).toEqual([1, 'hello', true, undefined])
+      })
+
+      test('should decode nested arrays', () => {
+        const input = [1, [2, [3, 4]], 5]
+        const result = unknownCodec.decode(input, 'json')
+        expect(result).toEqual([1, [2, [3, 4]], 5])
+      })
+
+      test('should decode Uint8Array elements in array', () => {
+        const bytes = new TextEncoder().encode('test')
+        const input = ['before', bytes, 'after']
+        const result = unknownCodec.decode(input, 'msgpack') as unknown[]
+        expect(result[0]).toBe('before')
+        expect(result[1]).toBe('test')
+        expect(result[2]).toBe('after')
+      })
+    })
+
+    describe('Map handling', () => {
+      test('should convert empty Map to empty object', () => {
+        const input = new Map()
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({})
+      })
+
+      test('should convert Map with string keys to object', () => {
+        const input = new Map<string, unknown>([
+          ['key1', 'value1'],
+          ['key2', 42],
+          ['key3', true],
         ])
-        const decoded = unknownCodec.decode(map, 'json')
-        expect(decoded).toEqual({ '1': 'one', '2': 'two' })
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({
+          key1: 'value1',
+          key2: 42,
+          key3: true,
+        })
       })
 
       test('should convert Map with Uint8Array keys to object with string keys', () => {
-        const key1 = new Uint8Array([72, 101, 108, 108, 111]) // "Hello" in UTF-8
-        const key2 = new Uint8Array([87, 111, 114, 108, 100]) // "World" in UTF-8
-        const map = new Map([
+        const key1 = new TextEncoder().encode('key1')
+        const key2 = new TextEncoder().encode('key2')
+        const input = new Map([
           [key1, 'value1'],
           [key2, 'value2'],
         ])
-        const decoded = unknownCodec.decode(map, 'json') as Record<string, unknown>
-        expect(decoded).toHaveProperty('Hello')
-        expect(decoded).toHaveProperty('World')
-        expect(decoded.Hello).toBe('value1')
-        expect(decoded.World).toBe('value2')
-      })
-
-      test('should convert nested Maps recursively', () => {
-        const innerMap = new Map([
-          ['inner1', 'innerValue1'],
-          ['inner2', 'innerValue2'],
-        ])
-        const outerMap = new Map<string, unknown>([
-          ['outer1', 'outerValue1'],
-          ['outer2', innerMap],
-        ])
-        const decoded = unknownCodec.decode(outerMap, 'json')
-        expect(decoded).toEqual({
-          outer1: 'outerValue1',
-          outer2: {
-            inner1: 'innerValue1',
-            inner2: 'innerValue2',
-          },
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({
+          key1: 'value1',
+          key2: 'value2',
         })
       })
 
-      test('should handle Map with array values', () => {
-        const map = new Map([
-          ['key1', [1, 2, 3]],
-          ['key2', ['a', 'b', 'c']],
+      test('should convert Map with number keys to object with string keys', () => {
+        const input = new Map([
+          [1, 'one'],
+          [2, 'two'],
+          [3, 'three'],
         ])
-        const decoded = unknownCodec.decode(map, 'json')
-        expect(decoded).toEqual({
-          key1: [1, 2, 3],
-          key2: ['a', 'b', 'c'],
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({
+          '1': 'one',
+          '2': 'two',
+          '3': 'three',
         })
       })
 
-      test('should handle Map with object values', () => {
-        const map = new Map([
-          ['key1', { nested: 'object1' }],
-          ['key2', { nested: 'object2' }],
+      test('should recursively decode Map values', () => {
+        const nestedMap = new Map([['nested', 'value']])
+        const input = new Map<string, unknown>([
+          ['key1', 'simple'],
+          ['key2', nestedMap],
+          ['key3', [1, 2, 3]],
         ])
-        const decoded = unknownCodec.decode(map, 'json')
-        expect(decoded).toEqual({
-          key1: { nested: 'object1' },
-          key2: { nested: 'object2' },
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({
+          key1: 'simple',
+          key2: { nested: 'value' },
+          key3: [1, 2, 3],
         })
       })
     })
 
-    describe('objects are processed recursively', () => {
-      test('should process simple object', () => {
-        const obj = { foo: 'bar', baz: 42 }
-        const decoded = unknownCodec.decode(obj, 'json')
-        expect(decoded).toEqual({ foo: 'bar', baz: 42 })
+    describe('object handling', () => {
+      test('should decode empty object', () => {
+        const result = unknownCodec.decode({}, 'json')
+        expect(result).toEqual({})
       })
 
-      test('should process nested object', () => {
-        const obj = {
+      test('should recursively decode object properties', () => {
+        const input = {
+          prop1: 'value1',
+          prop2: 42,
+          prop3: true,
+        }
+        const result = unknownCodec.decode(input, 'json')
+        expect(result).toEqual(input)
+      })
+
+      test('should recursively decode nested objects', () => {
+        const input = {
           level1: {
             level2: {
-              level3: 'deep',
+              level3: 'deep value',
             },
           },
         }
-        const decoded = unknownCodec.decode(obj, 'json')
-        expect(decoded).toEqual({
-          level1: {
-            level2: {
-              level3: 'deep',
-            },
-          },
-        })
+        const result = unknownCodec.decode(input, 'json')
+        expect(result).toEqual(input)
       })
 
-      test('should process object with Map values', () => {
-        const map = new Map([
-          ['mapKey1', 'mapValue1'],
-          ['mapKey2', 'mapValue2'],
-        ])
-        const obj = {
-          regularKey: 'regularValue',
-          mapKey: map,
+      test('should decode object with array values', () => {
+        const input = {
+          numbers: [1, 2, 3],
+          strings: ['a', 'b', 'c'],
         }
-        const decoded = unknownCodec.decode(obj, 'json')
-        expect(decoded).toEqual({
-          regularKey: 'regularValue',
-          mapKey: {
-            mapKey1: 'mapValue1',
-            mapKey2: 'mapValue2',
-          },
-        })
-      })
-
-      test('should process object with array values', () => {
-        const obj = {
-          arr1: [1, 2, 3],
-          arr2: ['a', 'b', 'c'],
-        }
-        const decoded = unknownCodec.decode(obj, 'json')
-        expect(decoded).toEqual({
-          arr1: [1, 2, 3],
-          arr2: ['a', 'b', 'c'],
-        })
+        const result = unknownCodec.decode(input, 'json')
+        expect(result).toEqual(input)
       })
     })
 
     describe('complex nested structures', () => {
-      test('should handle deeply nested structure with Maps, arrays, and objects', () => {
-        const innerMap = new Map([['mapKey', 'mapValue']])
-        const middleMap = new Map<string, unknown>([
-          ['inner', innerMap],
-          ['array', [1, 2, new Map([['nested', 'value']])]],
+      test('should handle deeply nested mixed structures', () => {
+        const bytes = new TextEncoder().encode('encoded')
+        const nestedMap = new Map<string, unknown>([
+          ['mapKey', 'mapValue'],
+          ['number', 123],
         ])
-        const outerObj = {
-          topLevel: 'value',
-          map: middleMap,
-          array: [1, new Map([['key', 'val']]), { nested: 'obj' }],
-        }
-
-        const decoded = unknownCodec.decode(outerObj, 'json')
-        expect(decoded).toEqual({
-          topLevel: 'value',
-          map: {
-            inner: { mapKey: 'mapValue' },
-            array: [1, 2, { nested: 'value' }],
+        const input = {
+          array: [1, 'two', bytes],
+          map: nestedMap,
+          nested: {
+            deep: {
+              value: true,
+            },
           },
-          array: [1, { key: 'val' }, { nested: 'obj' }],
+        }
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({
+          array: [1, 'two', 'encoded'],
+          map: {
+            mapKey: 'mapValue',
+            number: 123,
+          },
+          nested: {
+            deep: {
+              value: true,
+            },
+          },
         })
       })
-    })
 
-    describe('format independence', () => {
-      test.each<{ value: unknown; description: string }>([
-        { value: undefined, description: 'undefined' },
-        { value: 42, description: 'number' },
-        { value: 'hello', description: 'string' },
-        { value: [1, 2, 3], description: 'array' },
-        { value: { foo: 'bar' }, description: 'object' },
-      ])('should produce same result for JSON and msgpack when decoding $description', ({ value }) => {
-        expect(unknownCodec.decode(value, 'json')).toEqual(unknownCodec.decode(value, 'msgpack'))
+      test('should handle array of maps', () => {
+        const map1 = new Map([['a', 1]])
+        const map2 = new Map([['b', 2]])
+        const input = [map1, map2]
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual([{ a: 1 }, { b: 2 }])
       })
 
-      test('should produce same result for JSON and msgpack when decoding Map', () => {
-        const map = new Map([
-          ['key1', 'value1'],
-          ['key2', 'value2'],
+      test('should handle map of arrays', () => {
+        const input = new Map([
+          ['arr1', [1, 2, 3]],
+          ['arr2', ['a', 'b', 'c']],
         ])
-        expect(unknownCodec.decode(map, 'json')).toEqual(unknownCodec.decode(map, 'msgpack'))
+        const result = unknownCodec.decode(input, 'msgpack')
+        expect(result).toEqual({
+          arr1: [1, 2, 3],
+          arr2: ['a', 'b', 'c'],
+        })
       })
     })
   })
 
   describe('decodeOptional', () => {
-    test('should preserve undefined', () => {
-      expect(unknownCodec.decodeOptional(undefined, 'json')).toBeUndefined()
-      expect(unknownCodec.decodeOptional(undefined, 'msgpack')).toBeUndefined()
-    })
-
-    test.each<{ value: unknown; description: string }>([
-      { value: null, description: 'null (not undefined)' },
-      { value: 0, description: '0' },
-      { value: '', description: 'empty string' },
-      { value: false, description: 'false' },
-      { value: 42, description: '42' },
-      { value: 'hello', description: 'string' },
-    ])('should decode $description', ({ value }) => {
-      expect(unknownCodec.decodeOptional(value, 'json')).toBe(value)
-      expect(unknownCodec.decodeOptional(value, 'msgpack')).toBe(value)
-    })
-
-    test('should convert Map in optional mode', () => {
-      const map = new Map([['key', 'value']])
-      const decoded = unknownCodec.decodeOptional(map, 'json')
-      expect(decoded).toEqual({ key: 'value' })
-    })
-  })
-
-  describe('edge cases', () => {
-    test('should handle empty Map', () => {
-      const map = new Map()
-      const decoded = unknownCodec.decode(map, 'json')
-      expect(decoded).toEqual({})
-    })
-
-    test('should handle empty array', () => {
-      const arr: unknown[] = []
-      const decoded = unknownCodec.decode(arr, 'json')
-      expect(decoded).toEqual([])
-    })
-
-    test('should handle empty object', () => {
-      const obj = {}
-      const decoded = unknownCodec.decode(obj, 'json')
-      expect(decoded).toEqual({})
-    })
-
-    test('should handle Map with undefined values', () => {
-      const map = new Map([
-        ['key1', undefined],
-        ['key2', 'value2'],
-      ])
-      const decoded = unknownCodec.decode(map, 'json')
-      expect(decoded).toEqual({
-        key1: undefined,
-        key2: 'value2',
+    describe('default values', () => {
+      test.each<{ value: unknown; description: string }>([
+        { value: undefined, description: 'undefined' },
+        { value: null, description: 'null' },
+      ])('should encode $description to empty object/map', ({ value }) => {
+        expect(unknownCodec.decodeOptional(value, 'json')).toBeUndefined()
+        expect(unknownCodec.decodeOptional(value, 'msgpack')).toBeUndefined()
       })
     })
 
-    test('should handle Map with null values', () => {
-      const map = new Map([
-        ['key1', null],
-        ['key2', 'value2'],
-      ])
-      const decoded = unknownCodec.decode(map, 'json')
-      expect(decoded).toEqual({
-        key1: null,
-        key2: 'value2',
-      })
+    test('should decode non-undefined values', () => {
+      expect(unknownCodec.decodeOptional('test', 'json')).toBe('test')
+      expect(unknownCodec.decodeOptional(42, 'json')).toBe(42)
     })
 
-    test('should throw on circular references (expected limitation)', () => {
-      // Circular references cause stack overflow due to recursive processing
-      // This is an expected limitation - circular references should be avoided
-      const obj: { self?: unknown } = {}
-      obj.self = obj
-
-      // The codec will throw due to stack overflow on circular references
-      expect(() => unknownCodec.decode(obj, 'json')).toThrow()
-    })
-
-    test('should handle Uint8Array keys with different encodings', () => {
-      // UTF-8 encoded strings
-      const key1 = new Uint8Array([0xc3, 0xa9]) // "é" in UTF-8
-      const key2 = new Uint8Array([0xe2, 0x82, 0xac]) // "€" in UTF-8
-      const map = new Map([
-        [key1, 'value1'],
-        [key2, 'value2'],
-      ])
-      const decoded = unknownCodec.decode(map, 'json') as Record<string, unknown>
-      expect(decoded).toHaveProperty('é')
-      expect(decoded).toHaveProperty('€')
-    })
-  })
-
-  describe('round-trip encoding/decoding', () => {
-    test('should round-trip primitive values', () => {
-      const values = [undefined, null, true, 42, 'hello', 0n, new Uint8Array([1, 2, 3])]
-      values.forEach((value) => {
-        const encoded = unknownCodec.encode(value, 'json')
-        const decoded = unknownCodec.decode(encoded, 'json')
-        expect(decoded).toBe(value)
-      })
-    })
-
-    test('should round-trip arrays', () => {
-      const arr = [1, 'hello', true, null]
-      const encoded = unknownCodec.encode(arr, 'json')
-      const decoded = unknownCodec.decode(encoded, 'json')
-      expect(decoded).toEqual(arr)
-    })
-
-    test('should round-trip objects', () => {
-      const obj = { foo: 'bar', baz: 42, nested: { key: 'value' } }
-      const encoded = unknownCodec.encode(obj, 'json')
-      const decoded = unknownCodec.decode(encoded, 'json')
-      expect(decoded).toEqual(obj)
-    })
-
-    test('should convert Map to object (one-way transformation)', () => {
-      const map = new Map([
-        ['key1', 'value1'],
-        ['key2', 'value2'],
-      ])
-      const encoded = unknownCodec.encode(map, 'json')
-      const decoded = unknownCodec.decode(encoded, 'json')
-      // Map is converted to object during decode
-      expect(decoded).toEqual({ key1: 'value1', key2: 'value2' })
-      expect(decoded).not.toBeInstanceOf(Map)
+    test('should decode complex structures', () => {
+      const input = new Map([['key', 'value']])
+      const result = unknownCodec.decodeOptional(input, 'msgpack')
+      expect(result).toEqual({ key: 'value' })
     })
   })
 })

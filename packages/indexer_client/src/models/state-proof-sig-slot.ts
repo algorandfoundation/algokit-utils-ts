@@ -1,5 +1,8 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  bigIntCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { StateProofSignature } from './state-proof-signature'
 import { StateProofSignatureMeta } from './state-proof-signature'
 
@@ -20,14 +23,12 @@ export const StateProofSigSlotMeta: ObjectModelMetadata = {
       name: 'signature',
       wireKey: 'signature',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(StateProofSignatureMeta),
+      codec: new ObjectModelCodec(StateProofSignatureMeta),
     },
     {
       name: 'lowerSigWeight',
       wireKey: 'lower-sig-weight',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
   ],

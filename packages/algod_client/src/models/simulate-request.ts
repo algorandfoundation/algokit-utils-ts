@@ -1,5 +1,11 @@
-import type { ObjectModelMetadata } from '../core/model-runtime'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, ArrayCodec, ModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bigIntCodec,
+  booleanCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SimulateRequestTransactionGroup } from './simulate-request-transaction-group'
 import { SimulateRequestTransactionGroupMeta } from './simulate-request-transaction-group'
 import type { SimulateTraceConfig } from './simulate-trace-config'
@@ -54,56 +60,48 @@ export const SimulateRequestMeta: ObjectModelMetadata = {
       name: 'txnGroups',
       wireKey: 'txn-groups',
       optional: false,
-      nullable: false,
-      codec: new ArrayCodec(new ModelCodec(SimulateRequestTransactionGroupMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(SimulateRequestTransactionGroupMeta)),
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: true,
-      nullable: false,
       codec: bigIntCodec,
     },
     {
       name: 'allowEmptySignatures',
       wireKey: 'allow-empty-signatures',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'allowMoreLogging',
       wireKey: 'allow-more-logging',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'allowUnnamedResources',
       wireKey: 'allow-unnamed-resources',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
     {
       name: 'extraOpcodeBudget',
       wireKey: 'extra-opcode-budget',
       optional: true,
-      nullable: false,
       codec: numberCodec,
     },
     {
       name: 'execTraceConfig',
       wireKey: 'exec-trace-config',
       optional: true,
-      nullable: false,
-      codec: new ModelCodec(SimulateTraceConfigMeta),
+      codec: new ObjectModelCodec(SimulateTraceConfigMeta),
     },
     {
       name: 'fixSigners',
       wireKey: 'fix-signers',
       optional: true,
-      nullable: false,
       codec: booleanCodec,
     },
   ],

@@ -1,7 +1,6 @@
-import { parseJson, stringifyJson } from '@algorandfoundation/algokit-common'
+import { parseJson, stringifyJson, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import type { ClientConfig } from './client-config'
 import { ApiError } from './api-error'
-import { decodeMsgPack, encodeMsgPack } from './codecs'
 import type { QueryParams, BodyValue } from './base-http-request'
 
 const encodeURIPath = (path: string): string => encodeURI(path).replace(/%5B/g, '[').replace(/%5D/g, ']')
@@ -66,7 +65,7 @@ export async function request<T>(
     } else if (typeof options.body === 'string') {
       bodyPayload = options.body
     } else if (options.mediaType?.includes('msgpack')) {
-      bodyPayload = encodeMsgPack(options.body as Record<string, unknown>).slice().buffer
+      bodyPayload = encodeMsgpack(options.body as Record<string, unknown>).slice().buffer
     } else if (options.mediaType?.includes('json')) {
       bodyPayload = stringifyJson(options.body)
     } else {
@@ -86,7 +85,7 @@ export async function request<T>(
     try {
       const ct = response.headers.get('content-type') ?? ''
       if (ct.includes('application/msgpack')) {
-        errorBody = decodeMsgPack(new Uint8Array(await response.arrayBuffer()), {
+        errorBody = decodeMsgpack(new Uint8Array(await response.arrayBuffer()), {
           useMap: false,
           rawBinaryStringKeys: false,
           rawBinaryStringValues: false,
