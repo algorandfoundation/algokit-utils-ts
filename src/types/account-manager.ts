@@ -4,7 +4,7 @@ import * as algosdk from '@algorandfoundation/sdk'
 import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
-import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount } from './account'
+import { AccountInformation, DISPENSER_ACCOUNT, SigningAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
@@ -13,6 +13,7 @@ import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { MultisigAccount } from '@algorandfoundation/algokit-transact/multisig'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {

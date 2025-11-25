@@ -6,76 +6,16 @@ import {
   Asset,
   AssetHolding,
 } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithSigner, decodeSignedTransaction, getTransactionId, Transaction } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
-import { appendSignRawMultisigSignature, createMultisigTransaction } from '@algorandfoundation/sdk/src/multisigSigning'
+import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 
 /**
  * The account name identifier used for fund dispensing in test environments
  */
 export const DISPENSER_ACCOUNT = 'DISPENSER'
-
-/** Account wrapper that supports partial or full multisig signing. */
-export class MultisigAccount implements AddressWithSigner {
-  _params: algosdk.MultisigMetadata
-  _subSigners: AddressWithSigner[]
-  _addr: Address
-  _signer: TransactionSigner
-
-  /** The parameters for the multisig account */
-  get params(): Readonly<algosdk.MultisigMetadata> {
-    return this._params
-  }
-
-  /** The list of accounts that are present to sign */
-  get signingAccounts(): Readonly<AddressWithSigner[]> {
-    return this._subSigners
-  }
-
-  /** The address of the multisig account */
-  get addr(): Readonly<Address> {
-    return this._addr
-  }
-
-  /** The transaction signer for the multisig account */
-  get signer(): TransactionSigner {
-    return this._signer
-  }
-
-  constructor(multisigParams: MultisigMetadata, subSigners: AddressWithSigner[]) {
-    this._params = multisigParams
-    this._subSigners = subSigners
-    this._addr = algosdk.multisigAddress(multisigParams)
-    this._signer = async (txns: Transaction[], indexesToSign: number[]): Promise<Uint8Array[]> => {
-      const txnsToSign = txns.filter((_, index) => indexesToSign.includes(index))
-      const signedMsigTxns: Uint8Array[] = []
-
-      for (const txn of txnsToSign) {
-        let signedMsigTxn = createMultisigTransaction(txn, this._params)
-
-        for (const subSigner of this._subSigners) {
-          const stxn = (await subSigner.signer([txn], [0]))[0]
-          const sig = decodeSignedTransaction(stxn).signature
-
-          if (!sig) {
-            throw new Error(
-              `Signer for address ${subSigner.addr.toString()} did not produce a valid signature when signing ${getTransactionId(txn)} for multisig account ${this._addr.toString()}`,
-            )
-          }
-
-          signedMsigTxn = appendSignRawMultisigSignature(signedMsigTxn, this._params, subSigner.addr, sig).blob
-        }
-
-        signedMsigTxns.push(signedMsigTxn)
-      }
-
-      return signedMsigTxns
-    }
-  }
-}
 
 /** Account wrapper that supports a rekeyed account */
 export class SigningAccount implements Account {

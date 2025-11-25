@@ -2,7 +2,7 @@ import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
-import { MultisigAccount, SigningAccount } from './account'
+import { SigningAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
@@ -14,6 +14,7 @@ import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import { ReadableAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
+import { MultisigAccount } from '@algorandfoundation/algokit-transact/multisig'
 
 /**
  * A client that brokers easy access to Algorand functionality.

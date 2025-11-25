@@ -6,9 +6,10 @@ import { Address, Indexer, Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
-import { MultisigAccount, SigningAccount } from './account'
+import { SigningAccount } from './account'
 import { AlgorandClient } from './algorand-client'
 import { AlgoConfig } from './network-client'
+import { MultisigAccount } from '@algorandfoundation/algokit-transact/multisig'
 
 /**
  * Test automation context.
