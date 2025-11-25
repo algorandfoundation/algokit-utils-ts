@@ -367,6 +367,7 @@ export class AppFactory {
    * ```
    */
   public async deploy(params: AppFactoryDeployParams) {
+    // TODO: PD - review the docs here, `metadata` isn't available anymore
     const updatable = params.updatable ?? this._updatable ?? this.getDeployTimeControl('updatable')
     const deletable = params.deletable ?? this._deletable ?? this.getDeployTimeControl('deletable')
     const deployTimeParams = params.deployTimeParams ?? this._deployTimeParams
