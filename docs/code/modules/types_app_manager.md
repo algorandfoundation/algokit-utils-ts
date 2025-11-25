@@ -23,14 +23,14 @@
 
 ### BoxIdentifier
 
-Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`TransactionSignerAccount`](types_account.md#transactionsigneraccount)
+Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| `AddressWithSigner`
 
 Something that identifies an app box name - either a:
  * `Uint8Array` (the actual binary of the box name)
  * `string` (that will be encoded to a `Uint8Array`)
- * `TransactionSignerAccount` (that will be encoded into the
+ * `AddressWithSigner` (that will be encoded into the
    public key address of the corresponding account)
 
 #### Defined in
 
-[src/types/app-manager.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L60)
+[src/types/app-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L59)

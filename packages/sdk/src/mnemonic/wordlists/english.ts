@@ -2047,6 +2047,6 @@ const english = [
   'zero',
   'zone',
   'zoo',
-];
+]
 
-export default english;
+export default english

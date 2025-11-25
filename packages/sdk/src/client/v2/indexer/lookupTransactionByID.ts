@@ -1,7 +1,7 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { TransactionResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { TransactionResponse } from './models/types.js'
 
 export default class LookupTransactionByID extends JSONRequest<TransactionResponse> {
   /**
@@ -19,20 +19,20 @@ export default class LookupTransactionByID extends JSONRequest<TransactionRespon
    */
   constructor(
     c: HTTPClient,
-    private txID: string
+    private txID: string,
   ) {
-    super(c);
+    super(c)
   }
 
   /**
    * @returns `/v2/transactions/${txID}`
    */
   path() {
-    return `/v2/transactions/${this.txID}`;
+    return `/v2/transactions/${this.txID}`
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): TransactionResponse {
-    return decodeJSON(response.getJSONText(), TransactionResponse);
+    return decodeJSON(response.getJSONText(), TransactionResponse)
   }
 }

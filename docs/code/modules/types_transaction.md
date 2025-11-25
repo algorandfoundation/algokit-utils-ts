@@ -75,7 +75,7 @@ ___
 
 ### SendTransactionFrom
 
-Ƭ **SendTransactionFrom**: [`TransactionSignerAccount`](types_account.md#transactionsigneraccount)
+Ƭ **SendTransactionFrom**: `AddressWithSigner`
 
 **`Deprcated`**
 

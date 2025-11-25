@@ -310,7 +310,7 @@ Common parameters for defining a transaction.
 | `note?` | `Uint8Array` \| `string` | Note to attach to the transaction. Max of 1000 bytes. |
 | `rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
 | `sender` | `SendingAddress` | The address of the account sending the transaction. |
-| `signer?` | `algosdk.TransactionSigner` \| [`TransactionSignerAccount`](types_account.md#transactionsigneraccount) | **`Deprecated`** Use `TransactionSignerAccount` in the `sender` field instead |
+| `signer?` | `algosdk.TransactionSigner` \| `AddressWithSigner` | **`Deprecated`** Use `AddressWithSigner` in the `sender` field instead |
 | `staticFee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
 

@@ -3,12 +3,13 @@ import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, Kmd, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
 import { getSenderAddress } from '../transaction/transaction'
-import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountAssetInformation, MultisigAccount, SigningAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 
 /**
  * @deprecated Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
@@ -42,7 +43,7 @@ export function rekeyedAccount(signer: Account, sender: string) {
  * @param sender The address of sender account
  * @returns The SigningAccount wrapper
  */
-export function transactionSignerAccount(signer: TransactionSigner, sender: string): TransactionSignerAccount {
+export function transactionSignerAccount(signer: TransactionSigner, sender: string): AddressWithSigner {
   return { addr: Address.fromString(sender), signer }
 }
 

@@ -151,7 +151,7 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
 
 /**
  * @deprecated Use `algorand.client` to interact with accounts, and use `.addr` to get the address
- * and/or move from using `SendTransactionFrom` to `TransactionSignerAccount` and use `.addr` instead.
+ * and/or move from using `SendTransactionFrom` to `AddressWithSigner` and use `.addr` instead.
  *
  * Returns the public address of the given transaction sender.
  * @param sender A transaction sender

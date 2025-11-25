@@ -1,8 +1,8 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { Address } from '../../../encoding/address.js';
-import { BlockHeadersResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { Address } from '../../../encoding/address.js'
+import { BlockHeadersResponse } from './models/types.js'
 
 /**
  * Returns information about indexed block headers.
@@ -21,7 +21,7 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    */
   // eslint-disable-next-line class-methods-use-this
   path() {
-    return '/v2/block-headers';
+    return '/v2/block-headers'
   }
 
   /**
@@ -41,8 +41,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   absent(absent: (string | Address)[]) {
-    this.query.absent = absent;
-    return this;
+    this.query.absent = absent
+    return this
   }
 
   /**
@@ -61,9 +61,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   afterTime(after: string | Date) {
-    this.query['after-time'] =
-      after instanceof Date ? after.toISOString() : after;
-    return this;
+    this.query['after-time'] = after instanceof Date ? after.toISOString() : after
+    return this
   }
 
   /**
@@ -82,9 +81,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   beforeTime(before: string | Date) {
-    this.query['before-time'] =
-      before instanceof Date ? before.toISOString() : before;
-    return this;
+    this.query['before-time'] = before instanceof Date ? before.toISOString() : before
+    return this
   }
 
   /**
@@ -104,8 +102,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   expired(expired: (string | Address)[]) {
-    this.query.expired = expired;
-    return this;
+    this.query.expired = expired
+    return this
   }
 
   /**
@@ -124,8 +122,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -144,8 +142,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   maxRound(round: number | bigint) {
-    this.query['max-round'] = round;
-    return this;
+    this.query['max-round'] = round
+    return this
   }
 
   /**
@@ -164,8 +162,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   minRound(round: number | bigint) {
-    this.query['min-round'] = round;
-    return this;
+    this.query['min-round'] = round
+    return this
   }
 
   /**
@@ -191,8 +189,8 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -212,12 +210,12 @@ export default class SearchForBlockHeaders extends JSONRequest<BlockHeadersRespo
    * @category query
    */
   proposers(proposers: (string | Address)[]) {
-    this.query.proposers = proposers;
-    return this;
+    this.query.proposers = proposers
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): BlockHeadersResponse {
-    return decodeJSON(response.getJSONText(), BlockHeadersResponse);
+    return decodeJSON(response.getJSONText(), BlockHeadersResponse)
   }
 }

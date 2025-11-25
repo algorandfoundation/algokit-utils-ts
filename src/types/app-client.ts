@@ -1,5 +1,5 @@
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -30,7 +30,6 @@ import { Config } from '../config'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { asJson, binaryStartsWith } from '../util'
-import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import {
@@ -1547,13 +1546,13 @@ export class AppClient {
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
     sender: ReadableAddress | undefined,
-    signer: TransactionSigner | TransactionSignerAccount | undefined,
-  ): TransactionSigner | TransactionSignerAccount | undefined {
+    signer: TransactionSigner | AddressWithSigner | undefined,
+  ): TransactionSigner | AddressWithSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 
   private getBareParams<
-    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithSigner } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -1569,7 +1568,7 @@ export class AppClient {
     TParams extends {
       method: string
       sender?: ReadableAddress
-      signer?: TransactionSigner | TransactionSignerAccount
+      signer?: TransactionSigner | AddressWithSigner
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,

@@ -1,6 +1,5 @@
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { ABIValue, Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
-import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import {
   AppCompilationResult,
@@ -629,7 +628,7 @@ export class AppFactory {
   }
 
   private getBareParams<
-    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithSigner } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -644,7 +643,7 @@ export class AppFactory {
     TParams extends {
       method: string
       sender?: ReadableAddress
-      signer?: TransactionSigner | TransactionSignerAccount
+      signer?: TransactionSigner | AddressWithSigner
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,
@@ -699,8 +698,8 @@ export class AppFactory {
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
     sender: ReadableAddress | undefined,
-    signer: TransactionSigner | TransactionSignerAccount | undefined,
-  ): TransactionSigner | TransactionSignerAccount | undefined {
+    signer: TransactionSigner | AddressWithSigner | undefined,
+  ): TransactionSigner | AddressWithSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 

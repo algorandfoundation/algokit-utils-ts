@@ -1,4 +1,4 @@
-import { Address } from '../encoding/address.js';
+import { Address } from '../encoding/address.js'
 
 /**
  * An Algorand account object.
@@ -9,10 +9,10 @@ export default interface Account {
   /**
    * Algorand address
    */
-  addr: Address;
+  addr: Address
 
   /**
    * Secret key belonging to the Algorand address
    */
-  sk: Uint8Array;
+  sk: Uint8Array
 }

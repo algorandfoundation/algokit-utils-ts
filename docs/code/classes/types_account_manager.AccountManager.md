@@ -85,7 +85,7 @@ const accountManager = new AccountManager(clientManager)
 
 #### Index signature
 
-▪ [address: `string`]: [`TransactionSignerAccount`](../modules/types_account.md#transactionsigneraccount)
+▪ [address: `string`]: `AddressWithSigner`
 
 #### Defined in
 
@@ -470,7 +470,7 @@ ___
 
 ▸ **getAccount**(`sender`): `AddressWithSigner`
 
-Returns the `TransactionSignerAccount` for the given sender address.
+Returns the `AddressWithSigner` for the given sender address.
 
 If no signer has been registered for that address then an error is thrown.
 
@@ -484,14 +484,14 @@ If no signer has been registered for that address then an error is thrown.
 
 `AddressWithSigner`
 
-The `TransactionSignerAccount` or throws an error if not found
+The `AddressWithSigner` or throws an error if not found
 
 **`Example`**
 
 ```typescript
 const sender = accountManager.random()
 // ...
-// Returns the `TransactionSignerAccount` for `sender` that has previously been registered
+// Returns the `AddressWithSigner` for `sender` that has previously been registered
 const account = accountManager.getAccount(sender)
 ```
 
@@ -783,7 +783,7 @@ then an error will be thrown from `getSigner` / `getAccount`.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `signer` | `AddressWithSigner` \| `TransactionSigner` | The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount` |
+| `signer` | `AddressWithSigner` \| `TransactionSigner` | The signer to use, either a `TransactionSigner` or a `AddressWithSigner` |
 
 #### Returns
 
@@ -794,7 +794,7 @@ The `AccountManager` so method calls can be chained
 **`Example`**
 
 ```typescript
-const signer = accountManager.random() // Can be anything that returns a `TransactionSigner` or `TransactionSignerAccount`
+const signer = accountManager.random() // Can be anything that returns a `TransactionSigner` or `AddressWithSigner`
 accountManager.setDefaultSigner(signer)
 
 // When signing a transaction, if there is no signer registered for the sender then the default signer will be used
@@ -852,7 +852,7 @@ Note: If you are generating accounts via the various methods on `AccountManager`
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `AddressWithSigner` \| `default` \| `LogicSigAccount` \| [`MultisigAccount`](types_account.MultisigAccount.md) \| [`SigningAccount`](types_account.SigningAccount.md) | The account to register, which can be a `TransactionSignerAccount` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
+| `account` | `AddressWithSigner` \| `default` \| `LogicSigAccount` \| [`MultisigAccount`](types_account.MultisigAccount.md) \| [`SigningAccount`](types_account.SigningAccount.md) | The account to register, which can be a `AddressWithSigner` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
 
 #### Returns
 
@@ -915,7 +915,7 @@ ___
 ▸ **signerAccount**\<`T`\>(`account`): `Address` & `AddressWithSigner` & \{ `account`: `T`  }
 
 Records the given account (that can sign) against the address of the provided account for later
-retrieval and returns a `TransactionSignerAccount` along with the original account in an `account` property.
+retrieval and returns a `AddressWithSigner` along with the original account in an `account` property.
 
 #### Type parameters
 

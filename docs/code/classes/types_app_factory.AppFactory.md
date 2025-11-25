@@ -87,7 +87,7 @@ const appFactory = new AppFactory({
 
 #### Defined in
 
-[src/types/app-factory.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L195)
+[src/types/app-factory.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L194)
 
 ## Properties
 
@@ -97,7 +97,7 @@ const appFactory = new AppFactory({
 
 #### Defined in
 
-[src/types/app-factory.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L171)
+[src/types/app-factory.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L170)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L170)
+[src/types/app-factory.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L169)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L169)
+[src/types/app-factory.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L168)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L179)
+[src/types/app-factory.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L178)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L180)
+[src/types/app-factory.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L179)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L173)
+[src/types/app-factory.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L172)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L174)
+[src/types/app-factory.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L173)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L177)
+[src/types/app-factory.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L176)
 
 ___
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L175)
+[src/types/app-factory.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L174)
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L182)
+[src/types/app-factory.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L181)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L176)
+[src/types/app-factory.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L175)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L172)
+[src/types/app-factory.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L171)
 
 ___
 
@@ -239,7 +239,7 @@ Create transactions for the current app
 
 #### Defined in
 
-[src/types/app-factory.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L243)
+[src/types/app-factory.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L242)
 
 ___
 
@@ -259,7 +259,7 @@ Send transactions to the current app
 
 #### Defined in
 
-[src/types/app-factory.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L271)
+[src/types/app-factory.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L270)
 
 ## Accessors
 
@@ -275,7 +275,7 @@ Return the algorand client this factory is using.
 
 #### Defined in
 
-[src/types/app-factory.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L219)
+[src/types/app-factory.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L218)
 
 ___
 
@@ -291,7 +291,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
 #### Defined in
 
-[src/types/app-factory.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L209)
+[src/types/app-factory.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L208)
 
 ___
 
@@ -307,7 +307,7 @@ The ARC-56 app spec being used
 
 #### Defined in
 
-[src/types/app-factory.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L214)
+[src/types/app-factory.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L213)
 
 ___
 
@@ -350,7 +350,7 @@ await appClient.send.call({method: 'my_method', args: [createAppParams]})
 
 #### Defined in
 
-[src/types/app-factory.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L238)
+[src/types/app-factory.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L237)
 
 ## Methods
 
@@ -386,7 +386,7 @@ const result = await factory.compile()
 
 #### Defined in
 
-[src/types/app-factory.ts:618](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L618)
+[src/types/app-factory.ts:617](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L617)
 
 ___
 
@@ -458,7 +458,7 @@ const { appClient, result } = await factory.deploy({
 
 #### Defined in
 
-[src/types/app-factory.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L370)
+[src/types/app-factory.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L369)
 
 ___
 
@@ -476,7 +476,7 @@ The source maps
 
 #### Defined in
 
-[src/types/app-factory.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L499)
+[src/types/app-factory.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L498)
 
 ___
 
@@ -502,7 +502,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-factory.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L487)
+[src/types/app-factory.ts:486](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L486)
 
 ___
 
@@ -530,7 +530,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:643](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L643)
+[src/types/app-factory.ts:642](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L642)
 
 ___
 
@@ -572,7 +572,7 @@ const appClient = factory.getAppClientByCreatorAndName({ creatorAddress: 'CREATO
 
 #### Defined in
 
-[src/types/app-factory.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L468)
+[src/types/app-factory.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L467)
 
 ___
 
@@ -611,7 +611,7 @@ const appClient = factory.getAppClientById({ appId: 12345n })
 
 #### Defined in
 
-[src/types/app-factory.ts:442](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L442)
+[src/types/app-factory.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L441)
 
 ___
 
@@ -639,7 +639,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:631](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L631)
+[src/types/app-factory.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L630)
 
 ___
 
@@ -660,7 +660,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:662](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L662)
+[src/types/app-factory.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L661)
 
 ___
 
@@ -680,7 +680,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:521](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L521)
+[src/types/app-factory.ts:520](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L520)
 
 ___
 
@@ -704,7 +704,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L535)
+[src/types/app-factory.ts:534](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L534)
 
 ___
 
@@ -727,7 +727,7 @@ if none provided and throws an error if neither provided
 
 #### Defined in
 
-[src/types/app-factory.ts:690](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L690)
+[src/types/app-factory.ts:689](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L689)
 
 ___
 
@@ -752,7 +752,7 @@ or `undefined` otherwise (so the signer is resolved from `AlgorandClient`)
 
 #### Defined in
 
-[src/types/app-factory.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L700)
+[src/types/app-factory.ts:699](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L699)
 
 ___
 
@@ -780,7 +780,7 @@ Make the given call and catch any errors, augmenting with debugging information 
 
 #### Defined in
 
-[src/types/app-factory.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L595)
+[src/types/app-factory.ts:594](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L594)
 
 ___
 
@@ -802,7 +802,7 @@ Import source maps for the app.
 
 #### Defined in
 
-[src/types/app-factory.ts:516](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L516)
+[src/types/app-factory.ts:515](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L515)
 
 ___
 
@@ -837,4 +837,4 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-factory.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L717)
+[src/types/app-factory.ts:716](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L716)

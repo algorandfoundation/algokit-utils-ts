@@ -1,7 +1,7 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { HealthCheck } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { HealthCheck } from './models/types.js'
 
 /**
  * Returns the health object for the service.
@@ -21,11 +21,11 @@ export default class MakeHealthCheck extends JSONRequest<HealthCheck> {
    */
   // eslint-disable-next-line class-methods-use-this
   path() {
-    return '/health';
+    return '/health'
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): HealthCheck {
-    return decodeJSON(response.getJSONText(), HealthCheck);
+    return decodeJSON(response.getJSONText(), HealthCheck)
   }
 }

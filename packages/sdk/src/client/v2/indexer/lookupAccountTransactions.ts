@@ -1,9 +1,9 @@
-import { bytesToBase64 } from '../../../encoding/binarydata.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import JSONRequest from '../jsonrequest.js';
-import { Address } from '../../../encoding/address.js';
-import { TransactionsResponse } from './models/types.js';
+import { bytesToBase64 } from '../../../encoding/binarydata.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import JSONRequest from '../jsonrequest.js'
+import { Address } from '../../../encoding/address.js'
+import { TransactionsResponse } from './models/types.js'
 
 /**
  * Accept base64 string or Uint8Array and output base64 string
@@ -12,13 +12,13 @@ import { TransactionsResponse } from './models/types.js';
  */
 export function base64StringFunnel(data: Uint8Array | string) {
   if (typeof data === 'string') {
-    return data;
+    return data
   }
-  return bytesToBase64(data);
+  return bytesToBase64(data)
 }
 
 export default class LookupAccountTransactions extends JSONRequest<TransactionsResponse> {
-  private account: string;
+  private account: string
 
   /**
    * Returns transactions relating to the given account.
@@ -33,15 +33,15 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @param account - The address of the account.
    */
   constructor(c: HTTPClient, account: string | Address) {
-    super(c);
-    this.account = account.toString();
+    super(c)
+    this.account = account.toString()
   }
 
   /**
    * @returns `/v2/accounts/${account}/transactions`
    */
   path() {
-    return `/v2/accounts/${this.account}/transactions`;
+    return `/v2/accounts/${this.account}/transactions`
   }
 
   /**
@@ -61,8 +61,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   notePrefix(prefix: Uint8Array | string) {
-    this.query['note-prefix'] = base64StringFunnel(prefix);
-    return this;
+    this.query['note-prefix'] = base64StringFunnel(prefix)
+    return this
   }
 
   /**
@@ -81,8 +81,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   txType(type: string) {
-    this.query['tx-type'] = type;
-    return this;
+    this.query['tx-type'] = type
+    return this
   }
 
   /**
@@ -104,8 +104,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   sigType(type: string) {
-    this.query['sig-type'] = type;
-    return this;
+    this.query['sig-type'] = type
+    return this
   }
 
   /**
@@ -125,8 +125,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   txid(txid: string) {
-    this.query.txid = txid;
-    return this;
+    this.query.txid = txid
+    return this
   }
 
   /**
@@ -146,8 +146,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   round(round: number | bigint) {
-    this.query.round = round;
-    return this;
+    this.query.round = round
+    return this
   }
 
   /**
@@ -167,8 +167,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   minRound(round: number | bigint) {
-    this.query['min-round'] = round;
-    return this;
+    this.query['min-round'] = round
+    return this
   }
 
   /**
@@ -188,8 +188,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   maxRound(round: number | bigint) {
-    this.query['max-round'] = round;
-    return this;
+    this.query['max-round'] = round
+    return this
   }
 
   /**
@@ -209,8 +209,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   assetID(id: number | bigint) {
-    this.query['asset-id'] = id;
-    return this;
+    this.query['asset-id'] = id
+    return this
   }
 
   /**
@@ -230,8 +230,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -251,9 +251,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   beforeTime(before: string | Date) {
-    this.query['before-time'] =
-      before instanceof Date ? before.toISOString() : before;
-    return this;
+    this.query['before-time'] = before instanceof Date ? before.toISOString() : before
+    return this
   }
 
   /**
@@ -273,9 +272,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   afterTime(after: string | Date) {
-    this.query['after-time'] =
-      after instanceof Date ? after.toISOString() : after;
-    return this;
+    this.query['after-time'] = after instanceof Date ? after.toISOString() : after
+    return this
   }
 
   /**
@@ -308,8 +306,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    */
   currencyGreaterThan(greater: number | bigint) {
     // We convert the following to a string for now to correctly include zero values in request parameters.
-    this.query['currency-greater-than'] = greater.toString();
-    return this;
+    this.query['currency-greater-than'] = greater.toString()
+    return this
   }
 
   /**
@@ -341,8 +339,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   currencyLessThan(lesser: number | bigint) {
-    this.query['currency-less-than'] = lesser;
-    return this;
+    this.query['currency-less-than'] = lesser
+    return this
   }
 
   /**
@@ -369,8 +367,8 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -389,12 +387,12 @@ export default class LookupAccountTransactions extends JSONRequest<TransactionsR
    * @category query
    */
   rekeyTo(rekeyTo: boolean) {
-    this.query['rekey-to'] = rekeyTo;
-    return this;
+    this.query['rekey-to'] = rekeyTo
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): TransactionsResponse {
-    return decodeJSON(response.getJSONText(), TransactionsResponse);
+    return decodeJSON(response.getJSONText(), TransactionsResponse)
   }
 }

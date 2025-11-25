@@ -1,5 +1,6 @@
 import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
+  AddressWithSigner,
   AppCallTransactionFields,
   AssetConfigTransactionFields,
   AssetFreezeTransactionFields,
@@ -20,7 +21,6 @@ import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
 import { Address } from '@algorandfoundation/algokit-common'
-import { TransactionSignerAccount } from './account'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,14 +112,14 @@ export interface ConfirmedTransactionResults extends SendTransactionResult, Send
  * @deprcated Use `SendingAddress` instead
  */
 
-export type SendTransactionFrom = TransactionSignerAccount
+export type SendTransactionFrom = AddressWithSigner
 
 /** Defines an unsigned transaction that will appear in a group of transactions along with its signing information */
 export interface TransactionToSign {
   /** The unsigned transaction to sign and send */
   transaction: Transaction
   /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
-  signer: TransactionSignerAccount | TransactionSigner
+  signer: AddressWithSigner | TransactionSigner
 }
 
 /** A group of transactions to send together as an atomic group

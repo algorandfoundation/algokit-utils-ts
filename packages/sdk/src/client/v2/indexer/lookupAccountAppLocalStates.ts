@@ -1,11 +1,11 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { Address } from '../../../encoding/address.js';
-import { ApplicationLocalStatesResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { Address } from '../../../encoding/address.js'
+import { ApplicationLocalStatesResponse } from './models/types.js'
 
 export default class LookupAccountAppLocalStates extends JSONRequest<ApplicationLocalStatesResponse> {
-  private account: string | Address;
+  private account: string | Address
 
   /**
    * Returns application local state about the given account.
@@ -21,15 +21,15 @@ export default class LookupAccountAppLocalStates extends JSONRequest<Application
    * @category GET
    */
   constructor(c: HTTPClient, account: string | Address) {
-    super(c);
-    this.account = account.toString();
+    super(c)
+    this.account = account.toString()
   }
 
   /**
    * @returns `/v2/accounts/${account}/apps-local-state`
    */
   path() {
-    return `/v2/accounts/${this.account}/apps-local-state`;
+    return `/v2/accounts/${this.account}/apps-local-state`
   }
 
   /**
@@ -49,8 +49,8 @@ export default class LookupAccountAppLocalStates extends JSONRequest<Application
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -69,8 +69,8 @@ export default class LookupAccountAppLocalStates extends JSONRequest<Application
    * @category query
    */
   round(round: number | bigint) {
-    this.query.round = round;
-    return this;
+    this.query.round = round
+    return this
   }
 
   /**
@@ -95,8 +95,8 @@ export default class LookupAccountAppLocalStates extends JSONRequest<Application
    * @param nextToken - provided by the previous results.
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -114,8 +114,8 @@ export default class LookupAccountAppLocalStates extends JSONRequest<Application
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   /**
@@ -134,12 +134,12 @@ export default class LookupAccountAppLocalStates extends JSONRequest<Application
    * @category query
    */
   applicationID(index: number | bigint) {
-    this.query['application-id'] = index;
-    return this;
+    this.query['application-id'] = index
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): ApplicationLocalStatesResponse {
-    return decodeJSON(response.getJSONText(), ApplicationLocalStatesResponse);
+    return decodeJSON(response.getJSONText(), ApplicationLocalStatesResponse)
   }
 }

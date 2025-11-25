@@ -1,6 +1,5 @@
-const MICROALGOS_TO_ALGOS_RATIO = 1e6;
-export const INVALID_MICROALGOS_ERROR_MSG =
-  'Microalgos should be positive and less than 2^53 - 1.';
+const MICROALGOS_TO_ALGOS_RATIO = 1e6
+export const INVALID_MICROALGOS_ERROR_MSG = 'Microalgos should be positive and less than 2^53 - 1.'
 
 /**
  * microalgosToAlgos converts microalgos to algos
@@ -9,9 +8,9 @@ export const INVALID_MICROALGOS_ERROR_MSG =
  */
 export function microalgosToAlgos(microalgos: number) {
   if (microalgos < 0 || !Number.isSafeInteger(microalgos)) {
-    throw new Error(INVALID_MICROALGOS_ERROR_MSG);
+    throw new Error(INVALID_MICROALGOS_ERROR_MSG)
   }
-  return microalgos / MICROALGOS_TO_ALGOS_RATIO;
+  return microalgos / MICROALGOS_TO_ALGOS_RATIO
 }
 
 /**
@@ -20,6 +19,6 @@ export function microalgosToAlgos(microalgos: number) {
  * @returns number
  */
 export function algosToMicroalgos(algos: number) {
-  const microalgos = algos * MICROALGOS_TO_ALGOS_RATIO;
-  return Math.round(microalgos);
+  const microalgos = algos * MICROALGOS_TO_ALGOS_RATIO
+  return Math.round(microalgos)
 }
