@@ -132,7 +132,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the asset will become permanently immutable.
    */
-  manager: ReadableAddress | undefined
+  manager?: ReadableAddress
   /**
    * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
    *
