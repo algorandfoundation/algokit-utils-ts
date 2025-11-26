@@ -1,9 +1,8 @@
-import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { encodeLease } from '../transaction'
 import { TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
-import { FeeDelta } from './fee-coverage'
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
@@ -88,36 +87,4 @@ export const buildTransactionCommonData = (
       (commonParams.validityWindow !== undefined ? firstValid + BigInt(commonParams.validityWindow) : firstValid + defaultValidityWindow),
     group: undefined,
   } satisfies TransactionCommonData
-}
-
-export function calculateInnerFeeDelta(
-  innerTransactions?: PendingTransactionResponse[],
-  minTransactionFee: bigint = 1000n,
-  acc?: FeeDelta,
-): FeeDelta | undefined {
-  if (!innerTransactions) {
-    return acc
-  }
-
-  // Surplus inner transaction fees do not pool up to the parent transaction.
-  // Additionally surplus inner transaction fees only pool from sibling transactions
-  // that are sent prior to a given inner transaction, hence why we iterate in reverse order.
-  return innerTransactions.reduceRight((acc, innerTxn) => {
-    const recursiveDelta = calculateInnerFeeDelta(innerTxn.innerTxns, minTransactionFee, acc)
-
-    // Inner transactions don't require per byte fees
-    const txnFeeDelta = FeeDelta.fromBigInt(minTransactionFee - (innerTxn.txn.txn.fee ?? 0n))
-
-    const currentFeeDelta = FeeDelta.fromBigInt(
-      (recursiveDelta ? FeeDelta.toBigInt(recursiveDelta) : 0n) + (txnFeeDelta ? FeeDelta.toBigInt(txnFeeDelta) : 0n),
-    )
-
-    // If after the recursive inner fee calculations we have a surplus,
-    // return undefined to avoid pooling up surplus fees, which is not allowed.
-    if (currentFeeDelta && FeeDelta.isSurplus(currentFeeDelta)) {
-      return undefined
-    }
-
-    return currentFeeDelta
-  }, acc)
 }

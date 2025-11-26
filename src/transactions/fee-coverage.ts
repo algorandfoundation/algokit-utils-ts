@@ -1,3 +1,5 @@
+import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
+
 export enum FeeDeltaType {
   Deficit,
   Surplus,
@@ -132,3 +134,35 @@ export const FeePriority = {
     return new ImmutableDeficitPriority(deficit)
   },
 } as const
+
+export function calculateInnerFeeDelta(
+  innerTransactions?: PendingTransactionResponse[],
+  minTransactionFee: bigint = 1000n,
+  acc?: FeeDelta,
+): FeeDelta | undefined {
+  if (!innerTransactions) {
+    return acc
+  }
+
+  // Surplus inner transaction fees do not pool up to the parent transaction.
+  // Additionally surplus inner transaction fees only pool from sibling transactions
+  // that are sent prior to a given inner transaction, hence why we iterate in reverse order.
+  return innerTransactions.reduceRight((acc, innerTxn) => {
+    const recursiveDelta = calculateInnerFeeDelta(innerTxn.innerTxns, minTransactionFee, acc)
+
+    // Inner transactions don't require per byte fees
+    const txnFeeDelta = FeeDelta.fromBigInt(minTransactionFee - (innerTxn.txn.txn.fee ?? 0n))
+
+    const currentFeeDelta = FeeDelta.fromBigInt(
+      (recursiveDelta ? FeeDelta.toBigInt(recursiveDelta) : 0n) + (txnFeeDelta ? FeeDelta.toBigInt(txnFeeDelta) : 0n),
+    )
+
+    // If after the recursive inner fee calculations we have a surplus,
+    // return undefined to avoid pooling up surplus fees, which is not allowed.
+    if (currentFeeDelta && FeeDelta.isSurplus(currentFeeDelta)) {
+      return undefined
+    }
+
+    return currentFeeDelta
+  }, acc)
+}

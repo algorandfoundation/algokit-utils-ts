@@ -58,8 +58,7 @@ import {
   type AssetDestroyParams,
   type AssetFreezeParams,
 } from '../transactions/asset-config'
-import { calculateInnerFeeDelta } from '../transactions/common'
-import { FeeDelta, FeePriority } from '../transactions/fee-coverage'
+import { FeeDelta, FeePriority, calculateInnerFeeDelta } from '../transactions/fee-coverage'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
   AsyncTransactionParams,

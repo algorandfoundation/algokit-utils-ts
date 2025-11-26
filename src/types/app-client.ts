@@ -10,7 +10,6 @@ import { type AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import {
   ABIAppCallArgs,
-  AppCallType,
   AppCompilationResult,
   AppReturn,
   AppState,
@@ -153,7 +152,7 @@ export interface AppClientDeployCallInterfaceParams {
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppClientCallArgs
   /** Override the on-completion action for the create call; defaults to NoOp */
-  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
+  createOnCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppClientCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
@@ -204,7 +203,7 @@ export interface AppClientCompilationParams {
 /** On-complete action parameter for creating a contract using ApplicationClient */
 export type AppClientCreateOnComplete = {
   /** Override the on-completion action for the create call; defaults to NoOp */
-  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
+  onCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
 }
 
 /** Parameters for creating a contract using ApplicationClient */
