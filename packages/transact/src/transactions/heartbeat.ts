@@ -1,9 +1,11 @@
+import { Address } from '@algorandfoundation/algokit-common'
+
 /**
  * Heartbeat transaction specific fields
  */
 export type HeartbeatTransactionFields = {
   /** Heartbeat address */
-  address: string
+  address: Address
 
   /** Heartbeat proof */
   proof: HeartbeatProof

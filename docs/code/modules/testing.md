@@ -102,7 +102,7 @@ test('My test', async () => {
 
 ```typescript
 const fixture = algorandFixture({
- algod: new Algodv2('localhost', 12345, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+ algod: new AlgodClient({ baseUrl: 'http://localhost:12345', headers: { 'X-Algo-API-Token': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' } }),
  // ...
 })
 
@@ -151,7 +151,7 @@ ___
 
 ### getTestAccount
 
-▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
+▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Address` & `Account` & `AddressWithSigner`\>
 
 #### Parameters
 
@@ -163,7 +163,7 @@ ___
 
 #### Returns
 
-`Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
+`Promise`\<`Address` & `Account` & `AddressWithSigner`\>
 
 The account, with private key loaded
 
@@ -180,7 +180,7 @@ Note: By default this will log the mnemonic of the account.
 
 [src/testing/account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L21)
 
-▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
+▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Address` & `Account` & `AddressWithSigner`\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -196,7 +196,7 @@ Note: By default this will log the mnemonic of the account.
 
 #### Returns
 
-`Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
+`Promise`\<`Address` & `Account` & `AddressWithSigner`\>
 
 The account, with private key loaded
 

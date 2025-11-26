@@ -1,6 +1,5 @@
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { ABIValue, Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
-import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import {
   AppCompilationResult,
@@ -39,6 +38,7 @@ import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
+import { getAddress, getOptionalAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {
@@ -59,7 +59,7 @@ export interface AppFactoryParams {
   appName?: string
 
   /** Optional address to use for the account to use as the default sender for calls. */
-  defaultSender?: Address | string
+  defaultSender?: ReadableAddress
 
   /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
   defaultSigner?: TransactionSigner
@@ -196,7 +196,7 @@ export class AppFactory {
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
     this._version = params.version ?? '1.0'
-    this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
+    this._defaultSender = getOptionalAddress(params.defaultSender)
     this._defaultSigner = params.defaultSigner
     this._deployTimeParams = params.deployTimeParams
     this._updatable = params.updatable
@@ -627,7 +627,7 @@ export class AppFactory {
   }
 
   private getBareParams<
-    TParams extends { sender?: Address | string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithSigner } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -641,8 +641,8 @@ export class AppFactory {
   private getABIParams<
     TParams extends {
       method: string
-      sender?: Address | string
-      signer?: TransactionSigner | TransactionSignerAccount
+      sender?: ReadableAddress
+      signer?: TransactionSigner | AddressWithSigner
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,
@@ -685,20 +685,20 @@ export class AppFactory {
 
   /** Returns the sender for a call, using the `defaultSender`
    * if none provided and throws an error if neither provided */
-  private getSender(sender: string | Address | undefined): Address {
+  private getSender(sender: ReadableAddress | undefined): Address {
     if (!sender && !this._defaultSender) {
       throw new Error(`No sender provided and no default sender present in app factory for call to app ${this._appName}`)
     }
-    return typeof sender === 'string' ? Address.fromString(sender) : (sender ?? this._defaultSender!)
+    return getAddress(sender ?? this._defaultSender!)
   }
 
   /** Returns the signer for a call, using the provided signer or the `defaultSigner`
    * if no signer was provided and the sender resolves to the default sender, the call will use default signer
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
-    sender: Address | string | undefined,
-    signer: TransactionSigner | TransactionSignerAccount | undefined,
-  ): TransactionSigner | TransactionSignerAccount | undefined {
+    sender: ReadableAddress | undefined,
+    signer: TransactionSigner | AddressWithSigner | undefined,
+  ): TransactionSigner | AddressWithSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 

@@ -1,11 +1,7 @@
-import * as nacl from './nacl/naclWrappers.js';
-import {
-  Address,
-  ALGORAND_ADDRESS_BYTE_LENGTH,
-  ALGORAND_CHECKSUM_BYTE_LENGTH,
-} from './encoding/address.js';
-import * as utils from './utils/utils.js';
-import { EncodedMultisig } from './types/transactions/encoded.js';
+import * as nacl from './nacl/naclWrappers.js'
+import { Address, ALGORAND_ADDRESS_BYTE_LENGTH, ALGORAND_CHECKSUM_BYTE_LENGTH } from './encoding/address.js'
+import * as utils from './utils/utils.js'
+import { EncodedMultisig } from './types/transactions/encoded.js'
 
 /**
  Utilities for manipulating multisig transaction blobs.
@@ -20,37 +16,35 @@ export interface MultisigMetadata {
   /**
    * Multisig version
    */
-  version: number;
+  version: number
 
   /**
    * Multisig threshold value. Authorization requires a subset of signatures,
    * equal to or greater than the threshold value.
    */
-  threshold: number;
+  threshold: number
 
   /**
    * A list of Algorand addresses representing possible signers for this multisig. Order is important.
    */
-  addrs: Array<string | Address>;
+  addrs: Array<string | Address>
 }
 
 // Convert "MultisigAddr" UTF-8 to byte array
-const MULTISIG_PREIMG2ADDR_PREFIX = new Uint8Array([
-  77, 117, 108, 116, 105, 115, 105, 103, 65, 100, 100, 114,
-]);
+const MULTISIG_PREIMG2ADDR_PREFIX = new Uint8Array([77, 117, 108, 116, 105, 115, 105, 103, 65, 100, 100, 114])
 
-const INVALID_MSIG_VERSION_ERROR_MSG = 'invalid multisig version';
-const INVALID_MSIG_THRESHOLD_ERROR_MSG = 'bad multisig threshold';
-const INVALID_MSIG_PK_ERROR_MSG = 'bad multisig public key - wrong length';
-const UNEXPECTED_PK_LEN_ERROR_MSG = 'nacl public key length is not 32 bytes';
+const INVALID_MSIG_VERSION_ERROR_MSG = 'invalid multisig version'
+const INVALID_MSIG_THRESHOLD_ERROR_MSG = 'bad multisig threshold'
+const INVALID_MSIG_PK_ERROR_MSG = 'bad multisig public key - wrong length'
+const UNEXPECTED_PK_LEN_ERROR_MSG = 'nacl public key length is not 32 bytes'
 
 export function pksFromAddresses(addrs: Array<string | Address>): Uint8Array[] {
   return addrs.map((addr) => {
     if (typeof addr === 'string') {
-      return Address.fromString(addr).publicKey;
+      return Address.fromString(addr).publicKey
     }
-    return addr.publicKey;
-  });
+    return addr.publicKey
+  })
 }
 
 /**
@@ -67,37 +61,30 @@ export function addressFromMultisigPreImg({
   threshold,
   pks,
 }: Omit<MultisigMetadata, 'addrs'> & {
-  pks: Uint8Array[];
+  pks: Uint8Array[]
 }): Address {
   if (version !== 1 || version > 255 || version < 0) {
     // ^ a tad redundant, but in case in the future version != 1, still check for uint8
-    throw new Error(INVALID_MSIG_VERSION_ERROR_MSG);
+    throw new Error(INVALID_MSIG_VERSION_ERROR_MSG)
   }
-  if (
-    threshold === 0 ||
-    pks.length === 0 ||
-    threshold > pks.length ||
-    threshold > 255
-  ) {
-    throw new Error(INVALID_MSIG_THRESHOLD_ERROR_MSG);
+  if (threshold === 0 || pks.length === 0 || threshold > pks.length || threshold > 255) {
+    throw new Error(INVALID_MSIG_THRESHOLD_ERROR_MSG)
   }
-  const pkLen = ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH;
+  const pkLen = ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH
   if (pkLen !== nacl.PUBLIC_KEY_LENGTH) {
-    throw new Error(UNEXPECTED_PK_LEN_ERROR_MSG);
+    throw new Error(UNEXPECTED_PK_LEN_ERROR_MSG)
   }
-  const merged = new Uint8Array(
-    MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + pkLen * pks.length
-  );
-  merged.set(MULTISIG_PREIMG2ADDR_PREFIX, 0);
-  merged.set([version], MULTISIG_PREIMG2ADDR_PREFIX.length);
-  merged.set([threshold], MULTISIG_PREIMG2ADDR_PREFIX.length + 1);
+  const merged = new Uint8Array(MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + pkLen * pks.length)
+  merged.set(MULTISIG_PREIMG2ADDR_PREFIX, 0)
+  merged.set([version], MULTISIG_PREIMG2ADDR_PREFIX.length)
+  merged.set([threshold], MULTISIG_PREIMG2ADDR_PREFIX.length + 1)
   for (let i = 0; i < pks.length; i++) {
     if (pks[i].length !== pkLen) {
-      throw new Error(INVALID_MSIG_PK_ERROR_MSG);
+      throw new Error(INVALID_MSIG_PK_ERROR_MSG)
     }
-    merged.set(pks[i], MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + i * pkLen);
+    merged.set(pks[i], MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + i * pkLen)
   }
-  return new Address(Uint8Array.from(nacl.genericHash(merged)));
+  return new Address(Uint8Array.from(nacl.genericHash(merged)))
 }
 
 /**
@@ -107,64 +94,56 @@ export function addressFromMultisigPreImg({
  * @param threshold - multisig threshold
  * @param addrs - array of encoded addresses
  */
-export function addressFromMultisigPreImgAddrs({
-  version,
-  threshold,
-  addrs,
-}: MultisigMetadata): Address {
-  const pks = pksFromAddresses(addrs);
-  return addressFromMultisigPreImg({ version, threshold, pks });
+export function addressFromMultisigPreImgAddrs({ version, threshold, addrs }: MultisigMetadata): Address {
+  const pks = pksFromAddresses(addrs)
+  return addressFromMultisigPreImg({ version, threshold, pks })
 }
 
-export function verifyMultisig(
-  toBeVerified: Uint8Array,
-  msig: EncodedMultisig,
-  publicKey: Uint8Array
-) {
-  const version = msig.v;
-  const threshold = msig.thr;
-  const subsigs = msig.subsig;
+export function verifyMultisig(toBeVerified: Uint8Array, msig: EncodedMultisig, publicKey: Uint8Array) {
+  const version = msig.v
+  const threshold = msig.thr
+  const subsigs = msig.subsig
 
-  const pks = subsigs.map((subsig) => subsig.pk);
+  const pks = subsigs.map((subsig) => subsig.pk)
   if (msig.subsig.length < threshold) {
-    return false;
+    return false
   }
 
-  let pk: Uint8Array;
+  let pk: Uint8Array
   try {
-    pk = addressFromMultisigPreImg({ version, threshold, pks }).publicKey;
+    pk = addressFromMultisigPreImg({ version, threshold, pks }).publicKey
   } catch (e) {
-    return false;
+    return false
   }
 
   if (!utils.arrayEqual(pk, publicKey)) {
-    return false;
+    return false
   }
 
-  let counter = 0;
+  let counter = 0
   for (const subsig of subsigs) {
     if (subsig.s !== undefined) {
-      counter += 1;
+      counter += 1
     }
   }
   if (counter < threshold) {
-    return false;
+    return false
   }
 
-  let verifiedCounter = 0;
+  let verifiedCounter = 0
   for (const subsig of subsigs) {
     if (subsig.s !== undefined) {
       if (nacl.verify(toBeVerified, subsig.s, subsig.pk)) {
-        verifiedCounter += 1;
+        verifiedCounter += 1
       }
     }
   }
 
   if (verifiedCounter < threshold) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 /**
@@ -173,10 +152,6 @@ export function verifyMultisig(
  * @param threshold - multisig threshold
  * @param addrs - list of Algorand addresses
  */
-export function multisigAddress({
-  version,
-  threshold,
-  addrs,
-}: MultisigMetadata): Address {
-  return addressFromMultisigPreImgAddrs({ version, threshold, addrs });
+export function multisigAddress({ version, threshold, addrs }: MultisigMetadata): Address {
+  return addressFromMultisigPreImgAddrs({ version, threshold, addrs })
 }

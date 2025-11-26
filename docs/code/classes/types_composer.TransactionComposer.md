@@ -94,7 +94,7 @@ The `TransactionComposer` instance
 
 #### Defined in
 
-[src/types/composer.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L610)
+[src/types/composer.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L619)
 
 ## Properties
 
@@ -106,7 +106,7 @@ The algod client used by the composer.
 
 #### Defined in
 
-[src/types/composer.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L565)
+[src/types/composer.ts:574](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L574)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:579](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L579)
+[src/types/composer.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L588)
 
 ___
 
@@ -128,7 +128,7 @@ The ATC used to compose the group
 
 #### Defined in
 
-[src/types/composer.ts:554](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L554)
+[src/types/composer.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L563)
 
 ___
 
@@ -140,7 +140,7 @@ The default transaction validity window
 
 #### Defined in
 
-[src/types/composer.ts:574](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L574)
+[src/types/composer.ts:583](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L583)
 
 ___
 
@@ -152,7 +152,7 @@ Whether the validity window was explicitly set on construction
 
 #### Defined in
 
-[src/types/composer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L577)
+[src/types/composer.ts:586](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L586)
 
 ___
 
@@ -162,13 +162,13 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:581](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L581)
+[src/types/composer.ts:590](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L590)
 
 ___
 
 ### getSigner
 
-• `Private` **getSigner**: (`address`: `string` \| `Address`) => `TransactionSigner`
+• `Private` **getSigner**: (`address`: `ReadableAddress`) => `TransactionSigner`
 
 A function that takes in an address and return a signer function for that address.
 
@@ -180,7 +180,7 @@ A function that takes in an address and return a signer function for that addres
 
 | Name | Type |
 | :------ | :------ |
-| `address` | `string` \| `Address` |
+| `address` | `ReadableAddress` |
 
 ##### Returns
 
@@ -188,27 +188,27 @@ A function that takes in an address and return a signer function for that addres
 
 #### Defined in
 
-[src/types/composer.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L571)
+[src/types/composer.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L580)
 
 ___
 
 ### getSuggestedParams
 
-• `Private` **getSuggestedParams**: () => `Promise`\<`SuggestedParams`\>
+• `Private` **getSuggestedParams**: () => `Promise`\<\{ `consensusVersion`: `string` ; `fee`: `bigint` ; `firstValid`: `bigint` ; `flatFee`: `boolean` ; `genesisHash`: `Uint8Array` ; `genesisId`: `string` ; `lastValid`: `bigint` ; `minFee`: `bigint`  }\>
 
 An async function that will return suggested params for the transaction.
 
 #### Type declaration
 
-▸ (): `Promise`\<`SuggestedParams`\>
+▸ (): `Promise`\<\{ `consensusVersion`: `string` ; `fee`: `bigint` ; `firstValid`: `bigint` ; `flatFee`: `boolean` ; `genesisHash`: `Uint8Array` ; `genesisId`: `string` ; `lastValid`: `bigint` ; `minFee`: `bigint`  }\>
 
 ##### Returns
 
-`Promise`\<`SuggestedParams`\>
+`Promise`\<\{ `consensusVersion`: `string` ; `fee`: `bigint` ; `firstValid`: `bigint` ; `flatFee`: `boolean` ; `genesisHash`: `Uint8Array` ; `genesisId`: `string` ; `lastValid`: `bigint` ; `minFee`: `bigint`  }\>
 
 #### Defined in
 
-[src/types/composer.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L568)
+[src/types/composer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L577)
 
 ___
 
@@ -221,7 +221,7 @@ This is set using the value of either maxFee or staticFee.
 
 #### Defined in
 
-[src/types/composer.ts:559](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L559)
+[src/types/composer.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L568)
 
 ___
 
@@ -233,7 +233,7 @@ Transactions that have not yet been composed
 
 #### Defined in
 
-[src/types/composer.ts:562](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L562)
+[src/types/composer.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L571)
 
 ___
 
@@ -245,7 +245,7 @@ Signer used to represent a lack of signer
 
 #### Defined in
 
-[src/types/composer.ts:551](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L551)
+[src/types/composer.ts:560](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L560)
 
 ## Methods
 
@@ -282,7 +282,7 @@ composer.addAppCall({ sender: 'CREATORADDRESS' })
 ```typescript
 composer.addAppCall({
  sender: 'CREATORADDRESS',
- onComplete: algosdk.OnApplicationComplete.OptInOC,
+ onComplete: OnApplicationComplete.OptIn,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -304,7 +304,7 @@ composer.addAppCall({
 
 #### Defined in
 
-[src/types/composer.ts:1112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1112)
+[src/types/composer.ts:1121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1121)
 
 ___
 
@@ -351,7 +351,7 @@ composer.addAppCallMethodCall({
  sender: 'CREATORADDRESS',
  method: method,
  args: ["arg1_value"],
- onComplete: algosdk.OnApplicationComplete.OptInOC,
+ onComplete: OnApplicationComplete.OptIn,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -373,7 +373,7 @@ composer.addAppCallMethodCall({
 
 #### Defined in
 
-[src/types/composer.ts:1328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1328)
+[src/types/composer.ts:1337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1337)
 
 ___
 
@@ -390,8 +390,8 @@ Note: we recommend using app clients to make it easier to make app calls.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The application create transaction parameters |
-| `params.accessReferences?` | [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] | Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. |
-| `params.accountReferences?` | (`string` \| `Address`)[] | Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
+| `params.accessReferences?` | `AccessReference`[] | Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. |
+| `params.accountReferences?` | `ReadableAddress`[] | Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.appReferences?` | `bigint`[] | The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.approvalProgram` | `string` \| `Uint8Array` | The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). |
 | `params.args?` | `Uint8Array`[] | Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). |
@@ -405,15 +405,15 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.lease?` | `string` \| `Uint8Array` | Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios). |
 | `params.maxFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. |
 | `params.note?` | `string` \| `Uint8Array` | Note to attach to the transaction. Max of 1000 bytes. |
-| `params.onComplete?` | `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
-| `params.rekeyTo?` | `string` \| `Address` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
+| `params.onComplete?` | `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
+| `params.rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
 | `params.schema?` | `Object` | The state schema for the app. This is immutable once the app is created. |
 | `params.schema.globalByteSlices` | `number` | The number of byte slices saved in global state. |
 | `params.schema.globalInts` | `number` | The number of integers saved in global state. |
 | `params.schema.localByteSlices` | `number` | The number of byte slices saved in local state. |
 | `params.schema.localInts` | `number` | The number of integers saved in local state. |
-| `params.sender` | `string` \| `Address` | The address of the account sending the transaction. |
-| `params.signer?` | `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
+| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.signer?` | `AddressWithSigner` \| `TransactionSigner` | **`Deprecated`** Use `AddressWithSigner` in the `sender` field instead |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
 
@@ -443,7 +443,7 @@ composer.addAppCreate({
    localByteSlices: 4
  },
  extraProgramPages: 1,
- onComplete: algosdk.OnApplicationComplete.OptInOC,
+ onComplete: OnApplicationComplete.OptIn,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -471,7 +471,7 @@ composer.addAppCreate({
 
 #### Defined in
 
-[src/types/composer.ts:988](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L988)
+[src/types/composer.ts:997](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L997)
 
 ___
 
@@ -527,7 +527,7 @@ composer.addAppCreateMethodCall({
    localByteSlices: 4
  },
  extraProgramPages: 1,
- onComplete: algosdk.OnApplicationComplete.OptInOC,
+ onComplete: OnApplicationComplete.OptIn,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -549,7 +549,7 @@ composer.addAppCreateMethodCall({
 
 #### Defined in
 
-[src/types/composer.ts:1173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1173)
+[src/types/composer.ts:1182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1182)
 
 ___
 
@@ -584,7 +584,7 @@ composer.addAppDelete({ sender: 'CREATORADDRESS' })
 ```typescript
 composer.addAppDelete({
  sender: 'CREATORADDRESS',
- onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+ onComplete: OnApplicationComplete.DeleteApplication,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -606,7 +606,7 @@ composer.addAppDelete({
 
 #### Defined in
 
-[src/types/composer.ts:1070](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1070)
+[src/types/composer.ts:1079](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1079)
 
 ___
 
@@ -653,7 +653,7 @@ composer.addAppDeleteMethodCall({
  sender: 'CREATORADDRESS',
  method: method,
  args: ["arg1_value"],
- onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+ onComplete: OnApplicationComplete.DeleteApplication,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -675,7 +675,7 @@ composer.addAppDeleteMethodCall({
 
 #### Defined in
 
-[src/types/composer.ts:1277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1277)
+[src/types/composer.ts:1286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1286)
 
 ___
 
@@ -692,8 +692,8 @@ Note: we recommend using app clients to make it easier to make app calls.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The application update transaction parameters |
-| `params.accessReferences?` | [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] | Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. |
-| `params.accountReferences?` | (`string` \| `Address`)[] | Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
+| `params.accessReferences?` | `AccessReference`[] | Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. |
+| `params.accountReferences?` | `ReadableAddress`[] | Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.appId` | `bigint` | ID of the application; 0 if the application is being created. |
 | `params.appReferences?` | `bigint`[] | The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.approvalProgram` | `string` \| `Uint8Array` | The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) |
@@ -707,10 +707,10 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.lease?` | `string` \| `Uint8Array` | Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios). |
 | `params.maxFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. |
 | `params.note?` | `string` \| `Uint8Array` | Note to attach to the transaction. Max of 1000 bytes. |
-| `params.onComplete?` | `UpdateApplicationOC` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
-| `params.rekeyTo?` | `string` \| `Address` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
-| `params.sender` | `string` \| `Address` | The address of the account sending the transaction. |
-| `params.signer?` | `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
+| `params.onComplete?` | `UpdateApplication` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
+| `params.rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
+| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.signer?` | `AddressWithSigner` \| `TransactionSigner` | **`Deprecated`** Use `AddressWithSigner` in the `sender` field instead |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
 
@@ -733,7 +733,7 @@ composer.addAppUpdate({
  sender: 'CREATORADDRESS',
  approvalProgram: "TEALCODE",
  clearStateProgram: "TEALCODE",
- onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+ onComplete: OnApplicationComplete.UpdateApplication,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -755,7 +755,7 @@ composer.addAppUpdate({
 
 #### Defined in
 
-[src/types/composer.ts:1030](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1030)
+[src/types/composer.ts:1039](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1039)
 
 ___
 
@@ -804,7 +804,7 @@ composer.addAppUpdateMethodCall({
  args: ["arg1_value"],
  approvalProgram: "TEALCODE",
  clearStateProgram: "TEALCODE",
- onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+ onComplete: OnApplicationComplete.UpdateApplication,
  args: [new Uint8Array(1, 2, 3, 4)]
  accountReferences: ["ACCOUNT_1"]
  appReferences: [123n, 1234n]
@@ -826,7 +826,7 @@ composer.addAppUpdateMethodCall({
 
 #### Defined in
 
-[src/types/composer.ts:1226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1226)
+[src/types/composer.ts:1235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1235)
 
 ___
 
@@ -878,7 +878,7 @@ composer.addAssetConfig({
 
 #### Defined in
 
-[src/types/composer.ts:760](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L760)
+[src/types/composer.ts:769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L769)
 
 ___
 
@@ -936,7 +936,7 @@ composer.addAssetCreate({
 
 #### Defined in
 
-[src/types/composer.ts:725](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L725)
+[src/types/composer.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L734)
 
 ___
 
@@ -985,7 +985,7 @@ composer.addAssetDestroy({
 
 #### Defined in
 
-[src/types/composer.ts:826](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L826)
+[src/types/composer.ts:835](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L835)
 
 ___
 
@@ -1036,7 +1036,7 @@ composer.addAssetFreeze({
 
 #### Defined in
 
-[src/types/composer.ts:794](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L794)
+[src/types/composer.ts:803](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L803)
 
 ___
 
@@ -1085,7 +1085,7 @@ composer.addAssetOptIn({
 
 #### Defined in
 
-[src/types/composer.ts:895](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L895)
+[src/types/composer.ts:904](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L904)
 
 ___
 
@@ -1142,7 +1142,7 @@ composer.addAssetOptOut({
 
 #### Defined in
 
-[src/types/composer.ts:933](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L933)
+[src/types/composer.ts:942](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L942)
 
 ___
 
@@ -1196,7 +1196,7 @@ composer.addAssetTransfer({
 
 #### Defined in
 
-[src/types/composer.ts:863](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L863)
+[src/types/composer.ts:872](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L872)
 
 ___
 
@@ -1228,7 +1228,7 @@ composer.addAtc(atc)
 
 #### Defined in
 
-[src/types/composer.ts:1426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1426)
+[src/types/composer.ts:1435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1435)
 
 ___
 
@@ -1280,7 +1280,7 @@ composer.addOfflineKeyRegistration({
 
 #### Defined in
 
-[src/types/composer.ts:1409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1409)
+[src/types/composer.ts:1418](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1418)
 
 ___
 
@@ -1344,7 +1344,7 @@ composer.addOnlineKeyRegistration({
 
 #### Defined in
 
-[src/types/composer.ts:1374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1374)
+[src/types/composer.ts:1383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1383)
 
 ___
 
@@ -1400,7 +1400,7 @@ composer.addPayment({
 
 #### Defined in
 
-[src/types/composer.ts:684](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L684)
+[src/types/composer.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L693)
 
 ___
 
@@ -1431,13 +1431,13 @@ composer.addTransaction(txn)
 
 #### Defined in
 
-[src/types/composer.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L641)
+[src/types/composer.ts:650](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L650)
 
 ___
 
 ### build
 
-▸ **build**(): `Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `any` ; `transactions`: `TransactionWithSigner`[]  }\>
+▸ **build**(): `Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `Map`\<`number`, `ABIMethod`\> ; `transactions`: `TransactionWithSigner`[]  }\>
 
 Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
 
@@ -1448,7 +1448,7 @@ You can safely call this method multiple times to get the same result.
 
 #### Returns
 
-`Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `any` ; `transactions`: `TransactionWithSigner`[]  }\>
+`Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `Map`\<`number`, `ABIMethod`\> ; `transactions`: `TransactionWithSigner`[]  }\>
 
 The built atomic transaction composer, the transactions and any corresponding method calls
 
@@ -1460,7 +1460,7 @@ const { atc, transactions, methodCalls } = await composer.build()
 
 #### Defined in
 
-[src/types/composer.ts:1965](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1965)
+[src/types/composer.ts:1993](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1993)
 
 ___
 
@@ -1470,10 +1470,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | \{ `accessReferences?`: [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` \| `Address` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `string` \| `Address` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } \| \{ `accessReferences?`: [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplicationOC` ; `rekeyTo?`: `string` \| `Address` ; `sender`: `string` \| `Address` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } \| [`AppCallParams`](../modules/types_composer.md#appcallparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rekeyTo?`: `ReadableAddress` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `SendingAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } \| \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `SendingAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } \| [`AppCallParams`](../modules/types_composer.md#appcallparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1481,7 +1489,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1773](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1773)
+[src/types/composer.ts:1795](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1795)
 
 ___
 
@@ -1491,10 +1499,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`AssetConfigParams`](../modules/types_composer.md#assetconfigparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`AssetConfigParams`](../modules/types_composer.md#assetconfigparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1502,7 +1518,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1730](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1730)
+[src/types/composer.ts:1752](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1752)
 
 ___
 
@@ -1512,10 +1528,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`AssetCreateParams`](../modules/types_composer.md#assetcreateparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`AssetCreateParams`](../modules/types_composer.md#assetcreateparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1523,7 +1547,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1712)
+[src/types/composer.ts:1734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1734)
 
 ___
 
@@ -1533,10 +1557,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`AssetDestroyParams`](../modules/types_composer.md#assetdestroyparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`AssetDestroyParams`](../modules/types_composer.md#assetdestroyparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1544,7 +1576,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1743](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1743)
+[src/types/composer.ts:1765](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1765)
 
 ___
 
@@ -1554,10 +1586,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`AssetFreezeParams`](../modules/types_composer.md#assetfreezeparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`AssetFreezeParams`](../modules/types_composer.md#assetfreezeparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1565,7 +1605,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1751](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1751)
+[src/types/composer.ts:1773](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1773)
 
 ___
 
@@ -1575,10 +1615,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`AssetTransferParams`](../modules/types_composer.md#assettransferparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`AssetTransferParams`](../modules/types_composer.md#assettransferparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1586,7 +1634,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1761](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1761)
+[src/types/composer.ts:1783](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1783)
 
 ___
 
@@ -1608,7 +1656,7 @@ Build an ATC and return transactions ready to be incorporated into a broader set
 
 #### Defined in
 
-[src/types/composer.ts:1432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1432)
+[src/types/composer.ts:1441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1441)
 
 ___
 
@@ -1618,10 +1666,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams) \| [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams) \| [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1629,7 +1685,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1825](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1825)
+[src/types/composer.ts:1853](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1853)
 
 ___
 
@@ -1644,7 +1700,15 @@ Builds an ABI method call transaction and any other associated transactions repr
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | [`AppCreateMethodCall`](../modules/types_composer.md#appcreatemethodcall) \| [`AppUpdateMethodCall`](../modules/types_composer.md#appupdatemethodcall) \| [`AppCallMethodCall`](../modules/types_composer.md#appcallmethodcall) | - |
-| `suggestedParams` | `SuggestedParams` | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 | `includeSigner` | `boolean` | Whether to include the actual signer for the transactions. If you are just building transactions without signers yet then set this to `false`. |
 
 #### Returns
@@ -1653,7 +1717,7 @@ Builds an ABI method call transaction and any other associated transactions repr
 
 #### Defined in
 
-[src/types/composer.ts:1512](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1512)
+[src/types/composer.ts:1522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1522)
 
 ___
 
@@ -1663,10 +1727,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`PaymentParams`](../modules/types_composer.md#paymentparams) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`PaymentParams`](../modules/types_composer.md#paymentparams) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1674,7 +1746,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1702](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1702)
+[src/types/composer.ts:1724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1724)
 
 ___
 
@@ -1698,7 +1770,7 @@ const { transactions, methodCalls, signers } = await composer.buildTransactions(
 
 #### Defined in
 
-[src/types/composer.ts:1907](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1907)
+[src/types/composer.ts:1935](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1935)
 
 ___
 
@@ -1710,10 +1782,18 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `txn` | [`Txn`](../modules/types_composer.md#txn) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `txn` | [`Txn`](../modules/types_composer.md#txn) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1721,7 +1801,7 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 
 #### Defined in
 
-[src/types/composer.ts:1848](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1848)
+[src/types/composer.ts:1876](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1876)
 
 ___
 
@@ -1731,10 +1811,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `txn` | [`Txn`](../modules/types_composer.md#txn) |
-| `suggestedParams` | `SuggestedParams` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `txn` | [`Txn`](../modules/types_composer.md#txn) | - |
+| `suggestedParams` | `Object` | - |
+| `suggestedParams.consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `suggestedParams.fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `suggestedParams.firstValid` | `bigint` | - |
+| `suggestedParams.flatFee` | `boolean` | - |
+| `suggestedParams.genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `suggestedParams.genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `suggestedParams.lastValid` | `bigint` | - |
+| `suggestedParams.minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
 
 #### Returns
 
@@ -1742,7 +1830,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1875](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1875)
+[src/types/composer.ts:1903](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1903)
 
 ___
 
@@ -1770,7 +1858,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1454](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1454)
+[src/types/composer.ts:1463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1463)
 
 ___
 
@@ -1788,7 +1876,7 @@ The number of transactions currently added to this composer
 
 #### Defined in
 
-[src/types/composer.ts:1948](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1948)
+[src/types/composer.ts:1976](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1976)
 
 ___
 
@@ -1818,20 +1906,20 @@ An alias for `composer.send(params)`.
 
 #### Defined in
 
-[src/types/composer.ts:2063](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2063)
+[src/types/composer.ts:2090](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2090)
 
 ___
 
 ### rebuild
 
-▸ **rebuild**(): `Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `any` ; `transactions`: `TransactionWithSigner`[]  }\>
+▸ **rebuild**(): `Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `Map`\<`number`, `ABIMethod`\> ; `transactions`: `TransactionWithSigner`[]  }\>
 
 Rebuild the group, discarding any previously built transactions.
 This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
 
 #### Returns
 
-`Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `any` ; `transactions`: `TransactionWithSigner`[]  }\>
+`Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `Map`\<`number`, `ABIMethod`\> ; `transactions`: `TransactionWithSigner`[]  }\>
 
 The newly built atomic transaction composer and the transactions
 
@@ -1843,7 +1931,7 @@ const { atc, transactions, methodCalls } = await composer.rebuild()
 
 #### Defined in
 
-[src/types/composer.ts:2004](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2004)
+[src/types/composer.ts:2031](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2031)
 
 ___
 
@@ -1867,7 +1955,7 @@ The composer so you can chain method calls
 
 #### Defined in
 
-[src/types/composer.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L626)
+[src/types/composer.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L635)
 
 ___
 
@@ -1897,19 +1985,19 @@ const result = await composer.send()
 
 #### Defined in
 
-[src/types/composer.ts:2018](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2018)
+[src/types/composer.ts:2045](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2045)
 
 ___
 
 ### simulate
 
-▸ **simulate**(): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+▸ **simulate**(): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateTransaction`  }\>
 
 Compose the atomic transaction group and simulate sending it to the network
 
 #### Returns
 
-`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateTransaction`  }\>
 
 The simulation result
 
@@ -1921,9 +2009,9 @@ const result = await composer.simulate()
 
 #### Defined in
 
-[src/types/composer.ts:2075](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2075)
+[src/types/composer.ts:2102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2102)
 
-▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateTransaction`  }\>
 
 Compose the atomic transaction group and simulate sending it to the network
 
@@ -1932,16 +2020,16 @@ Compose the atomic transaction group and simulate sending it to the network
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.allowMoreLogging?` | `boolean` | - |
-| `options.allowUnnamedResources?` | `boolean` | - |
+| `options.allowMoreLogging?` | `boolean` | Lifts limits on log opcode usage during simulation. |
+| `options.allowUnnamedResources?` | `boolean` | Allows access to unnamed resources during simulation. |
 | `options.execTraceConfig?` | `SimulateTraceConfig` | - |
-| `options.extraOpcodeBudget?` | `number` \| `bigint` | - |
-| `options.round?` | `number` \| `bigint` | - |
+| `options.extraOpcodeBudget?` | `number` | Applies extra opcode budget during simulation for each transaction group. |
+| `options.round?` | `bigint` | If provided, specifies the round preceding the simulation. State changes through this round will be used to run this simulation. Usually only the 4 most recent rounds will be available (controlled by the node config value MaxAcctLookback). If not specified, defaults to the latest available round. |
 | `options.skipSignatures` | `boolean` | Whether or not to skip signatures for all built transactions and use an empty signer instead. This will set `fixSigners` and `allowEmptySignatures` when sending the request to the algod API. |
 
 #### Returns
 
-`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateTransaction`  }\>
 
 The simulation result
 
@@ -1955,28 +2043,28 @@ const result = await composer.simulate({
 
 #### Defined in
 
-[src/types/composer.ts:2086](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2086)
+[src/types/composer.ts:2113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2113)
 
-▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateTransaction`  }\>
 
 Compose the atomic transaction group and simulate sending it to the network
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `options` | `Object` |
-| `options.allowEmptySignatures?` | `boolean` |
-| `options.allowMoreLogging?` | `boolean` |
-| `options.allowUnnamedResources?` | `boolean` |
-| `options.execTraceConfig?` | `SimulateTraceConfig` |
-| `options.extraOpcodeBudget?` | `number` \| `bigint` |
-| `options.fixSigners?` | `boolean` |
-| `options.round?` | `number` \| `bigint` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.allowEmptySignatures?` | `boolean` | Allows transactions without signatures to be simulated as if they had correct signatures. |
+| `options.allowMoreLogging?` | `boolean` | Lifts limits on log opcode usage during simulation. |
+| `options.allowUnnamedResources?` | `boolean` | Allows access to unnamed resources during simulation. |
+| `options.execTraceConfig?` | `SimulateTraceConfig` | - |
+| `options.extraOpcodeBudget?` | `number` | Applies extra opcode budget during simulation for each transaction group. |
+| `options.fixSigners?` | `boolean` | If true, signers for transactions that are missing signatures will be fixed during evaluation. |
+| `options.round?` | `bigint` | If provided, specifies the round preceding the simulation. State changes through this round will be used to run this simulation. Usually only the 4 most recent rounds will be available (controlled by the node config value MaxAcctLookback). If not specified, defaults to the latest available round. |
 
 #### Returns
 
-`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateTransaction`  }\>
 
 The simulation result
 
@@ -1990,7 +2078,7 @@ const result = await composer.simulate({
 
 #### Defined in
 
-[src/types/composer.ts:2099](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2099)
+[src/types/composer.ts:2126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2126)
 
 ___
 
@@ -2010,7 +2098,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:583](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L583)
+[src/types/composer.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L592)
 
 ___
 
@@ -2036,4 +2124,4 @@ The binary encoded transaction note
 
 #### Defined in
 
-[src/types/composer.ts:2175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2175)
+[src/types/composer.ts:2199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2199)

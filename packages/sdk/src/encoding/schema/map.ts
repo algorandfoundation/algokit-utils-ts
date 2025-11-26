@@ -1,18 +1,7 @@
-import { RawBinaryString } from 'algorand-msgpack';
-import {
-  Schema,
-  MsgpackEncodingData,
-  MsgpackRawStringProvider,
-  JSONEncodingData,
-  PrepareJSONOptions,
-} from '../encoding.js';
-import { ensureUint64, arrayEqual } from '../../utils/utils.js';
-import {
-  bytesToString,
-  coerceToBytes,
-  bytesToBase64,
-  base64ToBytes,
-} from '../binarydata.js';
+import { RawBinaryString } from 'algorand-msgpack'
+import { Schema, MsgpackEncodingData, MsgpackRawStringProvider, JSONEncodingData, PrepareJSONOptions } from '../encoding.js'
+import { ensureUint64, arrayEqual } from '../../utils/utils.js'
+import { bytesToString, coerceToBytes, bytesToBase64, base64ToBytes } from '../binarydata.js'
 
 /* eslint-disable class-methods-use-this */
 
@@ -23,15 +12,15 @@ export interface NamedMapEntry {
   /**
    * Key of the entry. Must be unique for this map.
    */
-  key: string;
+  key: string
   /**
    * The Schema for the entry's value.
    */
-  valueSchema: Schema;
+  valueSchema: Schema
   /**
    * If true, the entry will be omitted from the encoding if the value is the default value.
    */
-  omitEmpty: boolean;
+  omitEmpty: boolean
   /**
    * If true, valueSchema must be a NamedMapSchema and key must be the empty string. The fields of
    * valueSchema will be embedded directly in the parent map.
@@ -39,7 +28,7 @@ export interface NamedMapEntry {
    * omitEmpty is ignored for embedded entries. Instead, the individual omitEmpty values of the
    * embedded fields are used.
    */
-  embedded?: boolean;
+  embedded?: boolean
 }
 
 /**
@@ -47,22 +36,20 @@ export interface NamedMapEntry {
  * @param entries - The entries to apply the flag to.
  * @returns A new array with the omitEmpty flag applied to all entries.
  */
-export function allOmitEmpty(
-  entries: Array<Omit<NamedMapEntry, 'omitEmpty'>>
-): NamedMapEntry[] {
-  return entries.map((entry) => ({ ...entry, omitEmpty: true }));
+export function allOmitEmpty(entries: Array<Omit<NamedMapEntry, 'omitEmpty'>>): NamedMapEntry[] {
+  return entries.map((entry) => ({ ...entry, omitEmpty: true }))
 }
 
 /**
  * Schema for a map/struct with a fixed set of known string fields.
  */
 export class NamedMapSchema extends Schema {
-  private readonly entries: NamedMapEntry[];
+  private readonly entries: NamedMapEntry[]
 
   constructor(entries: NamedMapEntry[]) {
-    super();
-    this.entries = entries;
-    this.checkEntries();
+    super()
+    this.entries = entries
+    this.checkEntries()
   }
 
   /**
@@ -72,30 +59,28 @@ export class NamedMapSchema extends Schema {
    * @param entries - The entries to add.
    */
   public pushEntries(...entries: NamedMapEntry[]) {
-    this.entries.push(...entries);
-    this.checkEntries();
+    this.entries.push(...entries)
+    this.checkEntries()
   }
 
   private checkEntries() {
     for (const entry of this.entries) {
       if (entry.embedded) {
         if (entry.key !== '') {
-          throw new Error('Embedded entries must have an empty key');
+          throw new Error('Embedded entries must have an empty key')
         }
         if (!(entry.valueSchema instanceof NamedMapSchema)) {
-          throw new Error(
-            'Embedded entry valueSchema must be a NamedMapSchema'
-          );
+          throw new Error('Embedded entry valueSchema must be a NamedMapSchema')
         }
       }
     }
 
-    const keys = new Set<string>();
+    const keys = new Set<string>()
     for (const entry of this.getEntries()) {
       if (keys.has(entry.key)) {
-        throw new Error(`Duplicate key: ${entry.key}`);
+        throw new Error(`Duplicate key: ${entry.key}`)
       }
-      keys.add(entry.key);
+      keys.add(entry.key)
     }
   }
 
@@ -104,119 +89,98 @@ export class NamedMapSchema extends Schema {
    * @returns An array of all top-level entries for this map.
    */
   public getEntries(): NamedMapEntry[] {
-    const entries: NamedMapEntry[] = [];
+    const entries: NamedMapEntry[] = []
     for (const entry of this.entries) {
       if (entry.embedded) {
-        const embeddedMapSchema = entry.valueSchema as NamedMapSchema;
-        entries.push(...embeddedMapSchema.getEntries());
+        const embeddedMapSchema = entry.valueSchema as NamedMapSchema
+        entries.push(...embeddedMapSchema.getEntries())
       } else {
-        entries.push(entry);
+        entries.push(entry)
       }
     }
-    return entries;
+    return entries
   }
 
   public defaultValue(): Map<string, unknown> {
-    const map = new Map<string, unknown>();
+    const map = new Map<string, unknown>()
     for (const entry of this.getEntries()) {
-      map.set(entry.key, entry.valueSchema.defaultValue());
+      map.set(entry.key, entry.valueSchema.defaultValue())
     }
-    return map;
+    return map
   }
 
   public isDefaultValue(data: unknown): boolean {
-    if (!(data instanceof Map)) return false;
+    if (!(data instanceof Map)) return false
     for (const entry of this.getEntries()) {
       if (!entry.valueSchema.isDefaultValue(data.get(entry.key))) {
-        return false;
+        return false
       }
     }
-    return true;
+    return true
   }
 
   public prepareMsgpack(data: unknown): MsgpackEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `NamedMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`NamedMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const map = new Map<string, MsgpackEncodingData>();
+    const map = new Map<string, MsgpackEncodingData>()
     for (const entry of this.getEntries()) {
-      const value = data.get(entry.key);
+      const value = data.get(entry.key)
       if (entry.omitEmpty && entry.valueSchema.isDefaultValue(value)) {
-        continue;
+        continue
       }
-      map.set(entry.key, entry.valueSchema.prepareMsgpack(value));
+      map.set(entry.key, entry.valueSchema.prepareMsgpack(value))
     }
-    return map;
+    return map
   }
 
-  public fromPreparedMsgpack(
-    encoded: MsgpackEncodingData,
-    rawStringProvider: MsgpackRawStringProvider
-  ): Map<string, unknown> {
+  public fromPreparedMsgpack(encoded: MsgpackEncodingData, rawStringProvider: MsgpackRawStringProvider): Map<string, unknown> {
     if (!(encoded instanceof Map)) {
-      throw new Error('NamedMapSchema data must be a Map');
+      throw new Error('NamedMapSchema data must be a Map')
     }
-    const map = new Map<string, unknown>();
+    const map = new Map<string, unknown>()
     for (const entry of this.getEntries()) {
       if (encoded.has(entry.key)) {
-        map.set(
-          entry.key,
-          entry.valueSchema.fromPreparedMsgpack(
-            encoded.get(entry.key),
-            rawStringProvider.withMapValue(entry.key)
-          )
-        );
+        map.set(entry.key, entry.valueSchema.fromPreparedMsgpack(encoded.get(entry.key), rawStringProvider.withMapValue(entry.key)))
       } else if (entry.omitEmpty) {
-        map.set(entry.key, entry.valueSchema.defaultValue());
+        map.set(entry.key, entry.valueSchema.defaultValue())
       } else {
-        throw new Error(`Missing key: ${entry.key}`);
+        throw new Error(`Missing key: ${entry.key}`)
       }
     }
-    return map;
+    return map
   }
 
-  public prepareJSON(
-    data: unknown,
-    options: PrepareJSONOptions
-  ): JSONEncodingData {
+  public prepareJSON(data: unknown, options: PrepareJSONOptions): JSONEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error('NamedMapSchema data must be a Map');
+      throw new Error('NamedMapSchema data must be a Map')
     }
-    const obj: { [key: string]: JSONEncodingData } = {};
+    const obj: { [key: string]: JSONEncodingData } = {}
     for (const entry of this.getEntries()) {
-      const value = data.get(entry.key);
+      const value = data.get(entry.key)
       if (entry.omitEmpty && entry.valueSchema.isDefaultValue(value)) {
-        continue;
+        continue
       }
-      obj[entry.key] = entry.valueSchema.prepareJSON(value, options);
+      obj[entry.key] = entry.valueSchema.prepareJSON(value, options)
     }
-    return obj;
+    return obj
   }
 
   public fromPreparedJSON(encoded: JSONEncodingData): Map<string, unknown> {
-    if (
-      encoded == null ||
-      typeof encoded !== 'object' ||
-      Array.isArray(encoded)
-    ) {
-      throw new Error('NamedMapSchema data must be an object');
+    if (encoded == null || typeof encoded !== 'object' || Array.isArray(encoded)) {
+      throw new Error('NamedMapSchema data must be an object')
     }
-    const map = new Map<string, unknown>();
+    const map = new Map<string, unknown>()
     for (const entry of this.getEntries()) {
       if (Object.prototype.hasOwnProperty.call(encoded, entry.key)) {
-        map.set(
-          entry.key,
-          entry.valueSchema.fromPreparedJSON(encoded[entry.key])
-        );
+        map.set(entry.key, entry.valueSchema.fromPreparedJSON(encoded[entry.key]))
       } else if (entry.omitEmpty) {
-        map.set(entry.key, entry.valueSchema.defaultValue());
+        map.set(entry.key, entry.valueSchema.defaultValue())
       } else {
-        throw new Error(`Missing key: ${entry.key}`);
+        throw new Error(`Missing key: ${entry.key}`)
       }
     }
-    return map;
+    return map
   }
 }
 
@@ -226,16 +190,16 @@ export class NamedMapSchema extends Schema {
  * @returns A new map with all the entries from the input maps.
  */
 export function combineMaps<K, V>(...maps: Array<Map<K, V>>): Map<K, V> {
-  const combined = new Map<K, V>();
+  const combined = new Map<K, V>()
   for (const map of maps) {
     for (const [key, value] of map) {
       if (combined.has(key)) {
-        throw new Error(`Duplicate key: ${key}`);
+        throw new Error(`Duplicate key: ${key}`)
       }
-      combined.set(key, value);
+      combined.set(key, value)
     }
   }
-  return combined;
+  return combined
 }
 
 /**
@@ -244,16 +208,13 @@ export function combineMaps<K, V>(...maps: Array<Map<K, V>>): Map<K, V> {
  * @param func - The function to convert each entry.
  * @returns A new map with the converted entries.
  */
-export function convertMap<K1, V1, K2, V2>(
-  map: Map<K1, V1>,
-  func: (k: K1, v: V1) => [K2, V2]
-): Map<K2, V2> {
-  const mapped = new Map<K2, V2>();
+export function convertMap<K1, V1, K2, V2>(map: Map<K1, V1>, func: (k: K1, v: V1) => [K2, V2]): Map<K2, V2> {
+  const mapped = new Map<K2, V2>()
   for (const [key, value] of map) {
-    const [newKey, newValue] = func(key, value);
-    mapped.set(newKey, newValue);
+    const [newKey, newValue] = func(key, value)
+    mapped.set(newKey, newValue)
   }
-  return mapped;
+  return mapped
 }
 
 /**
@@ -261,100 +222,80 @@ export function convertMap<K1, V1, K2, V2>(
  */
 export class Uint64MapSchema extends Schema {
   constructor(public readonly valueSchema: Schema) {
-    super();
+    super()
   }
 
   public defaultValue(): Map<bigint, unknown> {
-    return new Map();
+    return new Map()
   }
 
   public isDefaultValue(data: unknown): boolean {
-    return data instanceof Map && data.size === 0;
+    return data instanceof Map && data.size === 0
   }
 
   public prepareMsgpack(data: unknown): MsgpackEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `Uint64MapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`Uint64MapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<bigint, MsgpackEncodingData>();
+    const prepared = new Map<bigint, MsgpackEncodingData>()
     for (const [key, value] of data) {
-      const bigintKey = ensureUint64(key);
+      const bigintKey = ensureUint64(key)
       if (prepared.has(bigintKey)) {
-        throw new Error(`Duplicate key: ${bigintKey}`);
+        throw new Error(`Duplicate key: ${bigintKey}`)
       }
-      prepared.set(bigintKey, this.valueSchema.prepareMsgpack(value));
+      prepared.set(bigintKey, this.valueSchema.prepareMsgpack(value))
     }
-    return prepared;
+    return prepared
   }
 
-  public fromPreparedMsgpack(
-    encoded: MsgpackEncodingData,
-    rawStringProvider: MsgpackRawStringProvider
-  ): Map<bigint, unknown> {
+  public fromPreparedMsgpack(encoded: MsgpackEncodingData, rawStringProvider: MsgpackRawStringProvider): Map<bigint, unknown> {
     if (!(encoded instanceof Map)) {
-      throw new Error('Uint64MapSchema data must be a Map');
+      throw new Error('Uint64MapSchema data must be a Map')
     }
-    const map = new Map<bigint, unknown>();
+    const map = new Map<bigint, unknown>()
     for (const [key, value] of encoded) {
-      const bigintKey = ensureUint64(key);
+      const bigintKey = ensureUint64(key)
       if (map.has(bigintKey)) {
-        throw new Error(`Duplicate key: ${bigintKey}`);
+        throw new Error(`Duplicate key: ${bigintKey}`)
       }
-      map.set(
-        bigintKey,
-        this.valueSchema.fromPreparedMsgpack(
-          value,
-          rawStringProvider.withMapValue(key)
-        )
-      );
+      map.set(bigintKey, this.valueSchema.fromPreparedMsgpack(value, rawStringProvider.withMapValue(key)))
     }
-    return map;
+    return map
   }
 
-  public prepareJSON(
-    data: unknown,
-    options: PrepareJSONOptions
-  ): JSONEncodingData {
+  public prepareJSON(data: unknown, options: PrepareJSONOptions): JSONEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `Uint64MapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`Uint64MapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<bigint, JSONEncodingData>();
+    const prepared = new Map<bigint, JSONEncodingData>()
     for (const [key, value] of data) {
-      const bigintKey = ensureUint64(key);
+      const bigintKey = ensureUint64(key)
       if (prepared.has(bigintKey)) {
-        throw new Error(`Duplicate key: ${bigintKey}`);
+        throw new Error(`Duplicate key: ${bigintKey}`)
       }
-      prepared.set(bigintKey, this.valueSchema.prepareJSON(value, options));
+      prepared.set(bigintKey, this.valueSchema.prepareJSON(value, options))
     }
     // Convert map to object
-    const obj: { [key: string]: JSONEncodingData } = {};
+    const obj: { [key: string]: JSONEncodingData } = {}
     for (const [key, value] of prepared) {
-      obj[key.toString()] = value;
+      obj[key.toString()] = value
     }
-    return obj;
+    return obj
   }
 
   public fromPreparedJSON(encoded: JSONEncodingData): Map<bigint, unknown> {
-    if (
-      encoded == null ||
-      typeof encoded !== 'object' ||
-      Array.isArray(encoded)
-    ) {
-      throw new Error('Uint64MapSchema data must be an object');
+    if (encoded == null || typeof encoded !== 'object' || Array.isArray(encoded)) {
+      throw new Error('Uint64MapSchema data must be an object')
     }
-    const map = new Map<bigint, unknown>();
+    const map = new Map<bigint, unknown>()
     for (const [key, value] of Object.entries(encoded)) {
-      const bigintKey = BigInt(key);
+      const bigintKey = BigInt(key)
       if (map.has(bigintKey)) {
-        throw new Error(`Duplicate key: ${bigintKey}`);
+        throw new Error(`Duplicate key: ${bigintKey}`)
       }
-      map.set(bigintKey, this.valueSchema.fromPreparedJSON(value));
+      map.set(bigintKey, this.valueSchema.fromPreparedJSON(value))
     }
-    return map;
+    return map
   }
 }
 
@@ -363,105 +304,85 @@ export class Uint64MapSchema extends Schema {
  */
 export class StringMapSchema extends Schema {
   constructor(public readonly valueSchema: Schema) {
-    super();
+    super()
   }
 
   public defaultValue(): Map<string, unknown> {
-    return new Map();
+    return new Map()
   }
 
   public isDefaultValue(data: unknown): boolean {
-    return data instanceof Map && data.size === 0;
+    return data instanceof Map && data.size === 0
   }
 
   public prepareMsgpack(data: unknown): MsgpackEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `StringMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`StringMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<string, MsgpackEncodingData>();
+    const prepared = new Map<string, MsgpackEncodingData>()
     for (const [key, value] of data) {
       if (typeof key !== 'string') {
-        throw new Error(`Invalid key: ${key}`);
+        throw new Error(`Invalid key: ${key}`)
       }
       if (prepared.has(key)) {
-        throw new Error(`Duplicate key: ${key}`);
+        throw new Error(`Duplicate key: ${key}`)
       }
-      prepared.set(key, this.valueSchema.prepareMsgpack(value));
+      prepared.set(key, this.valueSchema.prepareMsgpack(value))
     }
-    return prepared;
+    return prepared
   }
 
-  public fromPreparedMsgpack(
-    encoded: MsgpackEncodingData,
-    rawStringProvider: MsgpackRawStringProvider
-  ): Map<string, unknown> {
+  public fromPreparedMsgpack(encoded: MsgpackEncodingData, rawStringProvider: MsgpackRawStringProvider): Map<string, unknown> {
     if (!(encoded instanceof Map)) {
-      throw new Error('StringMapSchema data must be a Map');
+      throw new Error('StringMapSchema data must be a Map')
     }
-    const map = new Map<string, unknown>();
+    const map = new Map<string, unknown>()
     for (const [key, value] of encoded) {
       if (typeof key !== 'string') {
-        throw new Error(`Invalid key: ${key}`);
+        throw new Error(`Invalid key: ${key}`)
       }
       if (map.has(key)) {
-        throw new Error(`Duplicate key: ${key}`);
+        throw new Error(`Duplicate key: ${key}`)
       }
-      map.set(
-        key,
-        this.valueSchema.fromPreparedMsgpack(
-          value,
-          rawStringProvider.withMapValue(key)
-        )
-      );
+      map.set(key, this.valueSchema.fromPreparedMsgpack(value, rawStringProvider.withMapValue(key)))
     }
-    return map;
+    return map
   }
 
-  public prepareJSON(
-    data: unknown,
-    options: PrepareJSONOptions
-  ): JSONEncodingData {
+  public prepareJSON(data: unknown, options: PrepareJSONOptions): JSONEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `StringMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`StringMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<string, JSONEncodingData>();
+    const prepared = new Map<string, JSONEncodingData>()
     for (const [key, value] of data) {
       if (typeof key !== 'string') {
-        throw new Error(`Invalid key: ${key}`);
+        throw new Error(`Invalid key: ${key}`)
       }
       if (prepared.has(key)) {
-        throw new Error(`Duplicate key: ${key}`);
+        throw new Error(`Duplicate key: ${key}`)
       }
-      prepared.set(key, this.valueSchema.prepareJSON(value, options));
+      prepared.set(key, this.valueSchema.prepareJSON(value, options))
     }
     // Convert map to object
-    const obj: { [key: string]: JSONEncodingData } = {};
+    const obj: { [key: string]: JSONEncodingData } = {}
     for (const [key, value] of prepared) {
-      obj[key] = value;
+      obj[key] = value
     }
-    return obj;
+    return obj
   }
 
   public fromPreparedJSON(encoded: JSONEncodingData): Map<string, unknown> {
-    if (
-      encoded == null ||
-      typeof encoded !== 'object' ||
-      Array.isArray(encoded)
-    ) {
-      throw new Error('StringMapSchema data must be an object');
+    if (encoded == null || typeof encoded !== 'object' || Array.isArray(encoded)) {
+      throw new Error('StringMapSchema data must be an object')
     }
-    const map = new Map<string, unknown>();
+    const map = new Map<string, unknown>()
     for (const [key, value] of Object.entries(encoded)) {
       if (map.has(key)) {
-        throw new Error(`Duplicate key: ${key}`);
+        throw new Error(`Duplicate key: ${key}`)
       }
-      map.set(key, this.valueSchema.fromPreparedJSON(value));
+      map.set(key, this.valueSchema.fromPreparedJSON(value))
     }
-    return map;
+    return map
   }
 }
 
@@ -470,97 +391,77 @@ export class StringMapSchema extends Schema {
  */
 export class ByteArrayMapSchema extends Schema {
   constructor(public readonly valueSchema: Schema) {
-    super();
+    super()
   }
 
   public defaultValue(): Map<Uint8Array, unknown> {
-    return new Map();
+    return new Map()
   }
 
   public isDefaultValue(data: unknown): boolean {
-    return data instanceof Map && data.size === 0;
+    return data instanceof Map && data.size === 0
   }
 
   public prepareMsgpack(data: unknown): MsgpackEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `ByteArrayMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`ByteArrayMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<Uint8Array, MsgpackEncodingData>();
+    const prepared = new Map<Uint8Array, MsgpackEncodingData>()
     for (const [key, value] of data) {
       if (!(key instanceof Uint8Array)) {
-        throw new Error(`Invalid key: ${key} (${typeof key})`);
+        throw new Error(`Invalid key: ${key} (${typeof key})`)
       }
-      prepared.set(key, this.valueSchema.prepareMsgpack(value));
+      prepared.set(key, this.valueSchema.prepareMsgpack(value))
     }
-    return prepared;
+    return prepared
   }
 
-  public fromPreparedMsgpack(
-    encoded: MsgpackEncodingData,
-    rawStringProvider: MsgpackRawStringProvider
-  ): Map<Uint8Array, unknown> {
+  public fromPreparedMsgpack(encoded: MsgpackEncodingData, rawStringProvider: MsgpackRawStringProvider): Map<Uint8Array, unknown> {
     if (!(encoded instanceof Map)) {
-      throw new Error('ByteArrayMapSchema data must be a Map');
+      throw new Error('ByteArrayMapSchema data must be a Map')
     }
-    const map = new Map<Uint8Array, unknown>();
+    const map = new Map<Uint8Array, unknown>()
     for (const [key, value] of encoded) {
       if (!(key instanceof Uint8Array)) {
-        throw new Error(`Invalid key: ${key} (${typeof key})`);
+        throw new Error(`Invalid key: ${key} (${typeof key})`)
       }
-      map.set(
-        key,
-        this.valueSchema.fromPreparedMsgpack(
-          value,
-          rawStringProvider.withMapValue(key)
-        )
-      );
+      map.set(key, this.valueSchema.fromPreparedMsgpack(value, rawStringProvider.withMapValue(key)))
     }
-    return map;
+    return map
   }
 
-  public prepareJSON(
-    data: unknown,
-    options: PrepareJSONOptions
-  ): JSONEncodingData {
+  public prepareJSON(data: unknown, options: PrepareJSONOptions): JSONEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `ByteArrayMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`ByteArrayMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<string, JSONEncodingData>();
+    const prepared = new Map<string, JSONEncodingData>()
     for (const [key, value] of data) {
       if (!(key instanceof Uint8Array)) {
-        throw new Error(`Invalid key: ${key} (${typeof key})`);
+        throw new Error(`Invalid key: ${key} (${typeof key})`)
       }
-      const b64Encoded = bytesToBase64(key);
+      const b64Encoded = bytesToBase64(key)
       if (prepared.has(b64Encoded)) {
-        throw new Error(`Duplicate key (base64): ${b64Encoded}`);
+        throw new Error(`Duplicate key (base64): ${b64Encoded}`)
       }
-      prepared.set(b64Encoded, this.valueSchema.prepareJSON(value, options));
+      prepared.set(b64Encoded, this.valueSchema.prepareJSON(value, options))
     }
     // Convert map to object
-    const obj: { [key: string]: JSONEncodingData } = {};
+    const obj: { [key: string]: JSONEncodingData } = {}
     for (const [key, value] of prepared) {
-      obj[key] = value;
+      obj[key] = value
     }
-    return obj;
+    return obj
   }
 
   public fromPreparedJSON(encoded: JSONEncodingData): Map<Uint8Array, unknown> {
-    if (
-      encoded == null ||
-      typeof encoded !== 'object' ||
-      Array.isArray(encoded)
-    ) {
-      throw new Error('ByteArrayMapSchema data must be an object');
+    if (encoded == null || typeof encoded !== 'object' || Array.isArray(encoded)) {
+      throw new Error('ByteArrayMapSchema data must be an object')
     }
-    const map = new Map<Uint8Array, unknown>();
+    const map = new Map<Uint8Array, unknown>()
     for (const [key, value] of Object.entries(encoded)) {
-      map.set(base64ToBytes(key), this.valueSchema.fromPreparedJSON(value));
+      map.set(base64ToBytes(key), this.valueSchema.fromPreparedJSON(value))
     }
-    return map;
+    return map
   }
 }
 
@@ -571,33 +472,21 @@ export class ByteArrayMapSchema extends Schema {
  *
  * @returns A new object with RawBinaryString values converted to strings.
  */
-function convertRawStringsInMsgpackValue(
-  value: MsgpackEncodingData
-): MsgpackEncodingData {
+function convertRawStringsInMsgpackValue(value: MsgpackEncodingData): MsgpackEncodingData {
   if (value instanceof RawBinaryString) {
-    return bytesToString(value.rawBinaryValue as Uint8Array);
+    return bytesToString(value.rawBinaryValue as Uint8Array)
   }
   if (value instanceof Map) {
-    const newMap = new Map<
-      string | number | bigint | Uint8Array,
-      MsgpackEncodingData
-    >();
+    const newMap = new Map<string | number | bigint | Uint8Array, MsgpackEncodingData>()
     for (const [key, val] of value) {
-      newMap.set(
-        convertRawStringsInMsgpackValue(key) as
-          | string
-          | number
-          | bigint
-          | Uint8Array,
-        convertRawStringsInMsgpackValue(val)
-      );
+      newMap.set(convertRawStringsInMsgpackValue(key) as string | number | bigint | Uint8Array, convertRawStringsInMsgpackValue(val))
     }
-    return newMap;
+    return newMap
   }
   if (Array.isArray(value)) {
-    return value.map(convertRawStringsInMsgpackValue);
+    return value.map(convertRawStringsInMsgpackValue)
   }
-  return value;
+  return value
 }
 
 /**
@@ -607,107 +496,81 @@ function convertRawStringsInMsgpackValue(
  */
 export class SpecialCaseBinaryStringMapSchema extends Schema {
   constructor(public readonly valueSchema: Schema) {
-    super();
+    super()
   }
 
   public defaultValue(): Map<Uint8Array, unknown> {
-    return new Map();
+    return new Map()
   }
 
   public isDefaultValue(data: unknown): boolean {
-    return data instanceof Map && data.size === 0;
+    return data instanceof Map && data.size === 0
   }
 
   public prepareMsgpack(data: unknown): MsgpackEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `SpecialCaseBinaryStringMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`SpecialCaseBinaryStringMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<RawBinaryString, MsgpackEncodingData>();
+    const prepared = new Map<RawBinaryString, MsgpackEncodingData>()
     for (const [key, value] of data) {
       if (!(key instanceof Uint8Array)) {
-        throw new Error(`Invalid key: ${key} (${typeof key})`);
+        throw new Error(`Invalid key: ${key} (${typeof key})`)
       }
-      prepared.set(
-        new RawBinaryString(key),
-        this.valueSchema.prepareMsgpack(value)
-      );
+      prepared.set(new RawBinaryString(key), this.valueSchema.prepareMsgpack(value))
     }
     // Cast is needed because RawBinaryString is not part of the standard MsgpackEncodingData
-    return prepared as unknown as Map<Uint8Array, MsgpackEncodingData>;
+    return prepared as unknown as Map<Uint8Array, MsgpackEncodingData>
   }
 
-  public fromPreparedMsgpack(
-    _encoded: MsgpackEncodingData,
-    rawStringProvider: MsgpackRawStringProvider
-  ): Map<Uint8Array, unknown> {
-    const map = new Map<Uint8Array, unknown>();
-    const keysAndValues =
-      rawStringProvider.getRawStringKeysAndValuesAtCurrentLocation();
+  public fromPreparedMsgpack(_encoded: MsgpackEncodingData, rawStringProvider: MsgpackRawStringProvider): Map<Uint8Array, unknown> {
+    const map = new Map<Uint8Array, unknown>()
+    const keysAndValues = rawStringProvider.getRawStringKeysAndValuesAtCurrentLocation()
     for (const [key, value] of keysAndValues) {
       map.set(
         key,
         this.valueSchema.fromPreparedMsgpack(
           convertRawStringsInMsgpackValue(value),
-          rawStringProvider.withMapValue(new RawBinaryString(key))
-        )
-      );
+          rawStringProvider.withMapValue(new RawBinaryString(key)),
+        ),
+      )
     }
-    return map;
+    return map
   }
 
-  public prepareJSON(
-    data: unknown,
-    options: PrepareJSONOptions
-  ): JSONEncodingData {
+  public prepareJSON(data: unknown, options: PrepareJSONOptions): JSONEncodingData {
     if (!(data instanceof Map)) {
-      throw new Error(
-        `SpecialCaseBinaryStringMapSchema data must be a Map. Got (${typeof data}) ${data}`
-      );
+      throw new Error(`SpecialCaseBinaryStringMapSchema data must be a Map. Got (${typeof data}) ${data}`)
     }
-    const prepared = new Map<string, JSONEncodingData>();
+    const prepared = new Map<string, JSONEncodingData>()
     for (const [key, value] of data) {
       if (!(key instanceof Uint8Array)) {
-        throw new Error(`Invalid key: ${key}`);
+        throw new Error(`Invalid key: ${key}`)
       }
       // Not safe to convert to string for all binary data
-      const keyStringValue = bytesToString(key);
-      if (
-        !options.lossyBinaryStringConversion &&
-        !arrayEqual(coerceToBytes(keyStringValue), key)
-      ) {
+      const keyStringValue = bytesToString(key)
+      if (!options.lossyBinaryStringConversion && !arrayEqual(coerceToBytes(keyStringValue), key)) {
         throw new Error(
-          `Invalid UTF-8 byte array encountered. Encode with lossyBinaryStringConversion enabled to bypass this check. Base64 value: ${bytesToBase64(key)}`
-        );
+          `Invalid UTF-8 byte array encountered. Encode with lossyBinaryStringConversion enabled to bypass this check. Base64 value: ${bytesToBase64(key)}`,
+        )
       }
-      prepared.set(
-        keyStringValue,
-        this.valueSchema.prepareJSON(value, options)
-      );
+      prepared.set(keyStringValue, this.valueSchema.prepareJSON(value, options))
     }
     // Convert map to object
-    const obj: { [key: string]: JSONEncodingData } = {};
+    const obj: { [key: string]: JSONEncodingData } = {}
     for (const [key, value] of prepared) {
-      obj[key] = value;
+      obj[key] = value
     }
-    return obj;
+    return obj
   }
 
   public fromPreparedJSON(encoded: JSONEncodingData): Map<Uint8Array, unknown> {
-    if (
-      encoded == null ||
-      typeof encoded !== 'object' ||
-      Array.isArray(encoded)
-    ) {
-      throw new Error(
-        'SpecialCaseBinaryStringMapSchema data must be an object'
-      );
+    if (encoded == null || typeof encoded !== 'object' || Array.isArray(encoded)) {
+      throw new Error('SpecialCaseBinaryStringMapSchema data must be an object')
     }
-    const map = new Map<Uint8Array, unknown>();
+    const map = new Map<Uint8Array, unknown>()
     for (const [key, value] of Object.entries(encoded)) {
-      map.set(coerceToBytes(key), this.valueSchema.fromPreparedJSON(value));
+      map.set(coerceToBytes(key), this.valueSchema.fromPreparedJSON(value))
     }
-    return map;
+    return map
   }
 }

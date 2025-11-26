@@ -25,7 +25,7 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, TransactionSigner } from '@algorandfoundation/sdk'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import {
@@ -48,6 +48,7 @@ import {
   type AssetTransferParams,
 } from '../transactions/asset-transfer'
 
+import { ReadableAddress } from '@algorandfoundation/algokit-common'
 import {
   buildAssetConfig,
   buildAssetCreate,
@@ -200,7 +201,7 @@ export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: AlgodClient
   /** The function used to get the TransactionSigner for a given address */
-  getSigner: (address: string | Address) => algosdk.TransactionSigner
+  getSigner: (address: ReadableAddress) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
   getSuggestedParams?: () => Promise<SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
@@ -242,7 +243,7 @@ export class TransactionComposer {
   private getSuggestedParams: () => Promise<SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
-  private getSigner: (address: string | Address) => algosdk.TransactionSigner
+  private getSigner: (address: ReadableAddress) => algosdk.TransactionSigner
 
   /** The default transaction validity window */
   private defaultValidityWindow = 10n

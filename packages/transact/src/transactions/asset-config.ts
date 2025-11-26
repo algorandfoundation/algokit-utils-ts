@@ -3,6 +3,7 @@ import {
   MAX_ASSET_NAME_LENGTH,
   MAX_ASSET_UNIT_NAME_LENGTH,
   MAX_ASSET_URL_LENGTH,
+  Address,
 } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
@@ -99,7 +100,7 @@ export type AssetConfigTransactionFields = {
    *
    * If not set or set to the Zero address the asset becomes permanently immutable.
    */
-  manager?: string
+  manager?: Address
 
   /**
    * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
@@ -114,7 +115,7 @@ export type AssetConfigTransactionFields = {
    *
    * If not set or set to the Zero address the field is permanently empty.
    */
-  reserve?: string
+  reserve?: Address
 
   /**
    * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
@@ -123,7 +124,7 @@ export type AssetConfigTransactionFields = {
    *
    * If not set or set to the Zero address the field is permanently empty.
    */
-  freeze?: string
+  freeze?: Address
 
   /**
    * The address of the optional account that can clawback holdings of this asset from any account.
@@ -134,7 +135,7 @@ export type AssetConfigTransactionFields = {
    *
    * If not set or set to the Zero address the field is permanently empty.
    */
-  clawback?: string
+  clawback?: Address
 }
 
 /**

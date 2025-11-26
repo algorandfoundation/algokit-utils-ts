@@ -1,6 +1,5 @@
 import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'
@@ -22,6 +21,7 @@ import {
   TransactionComposerConfig,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
@@ -514,7 +514,7 @@ export class AlgorandClientTransactionSender {
   assetOptOut = async (
     params: Omit<AssetOptOutParams, 'creator'> & {
       /** Optional asset creator account address; if not specified it will be retrieved from algod */
-      creator?: string | Address
+      creator?: ReadableAddress
       /** Whether or not to check if the account has a zero balance first or not.
        *
        * If this is set to `true` and the account has an asset balance it will throw an error.
@@ -527,7 +527,7 @@ export class AlgorandClientTransactionSender {
     if (params.ensureZeroBalance) {
       let balance = 0n
       try {
-        const accountAssetInfo = await this._assetManager.getAccountInformation(params.sender, params.assetId)
+        const accountAssetInfo = await this._assetManager.getAccountInformation(getAddress(params.sender), params.assetId)
         balance = accountAssetInfo.balance
       } catch {
         throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)

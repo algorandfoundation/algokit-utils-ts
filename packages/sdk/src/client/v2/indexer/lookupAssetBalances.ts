@@ -1,10 +1,10 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { AssetBalancesResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { AssetBalancesResponse } from './models/types.js'
 
 export default class LookupAssetBalances extends JSONRequest<AssetBalancesResponse> {
-  private index: bigint;
+  private index: bigint
 
   /**
    * Returns the list of accounts which hold the given asset and their balance.
@@ -19,15 +19,15 @@ export default class LookupAssetBalances extends JSONRequest<AssetBalancesRespon
    * @param index - The asset ID to look up.
    */
   constructor(c: HTTPClient, index: number | bigint) {
-    super(c);
-    this.index = BigInt(index);
+    super(c)
+    this.index = BigInt(index)
   }
 
   /**
    * @returns `/v2/assets/${index}/balances`
    */
   path() {
-    return `/v2/assets/${this.index}/balances`;
+    return `/v2/assets/${this.index}/balances`
   }
 
   /**
@@ -47,8 +47,8 @@ export default class LookupAssetBalances extends JSONRequest<AssetBalancesRespon
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -68,8 +68,8 @@ export default class LookupAssetBalances extends JSONRequest<AssetBalancesRespon
    */
   currencyGreaterThan(greater: number | bigint) {
     // We convert the following to a string for now to correctly include zero values in request parameters.
-    this.query['currency-greater-than'] = greater.toString();
-    return this;
+    this.query['currency-greater-than'] = greater.toString()
+    return this
   }
 
   /**
@@ -88,8 +88,8 @@ export default class LookupAssetBalances extends JSONRequest<AssetBalancesRespon
    * @category query
    */
   currencyLessThan(lesser: number | bigint) {
-    this.query['currency-less-than'] = lesser;
-    return this;
+    this.query['currency-less-than'] = lesser
+    return this
   }
 
   /**
@@ -115,8 +115,8 @@ export default class LookupAssetBalances extends JSONRequest<AssetBalancesRespon
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -144,12 +144,12 @@ export default class LookupAssetBalances extends JSONRequest<AssetBalancesRespon
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): AssetBalancesResponse {
-    return decodeJSON(response.getJSONText(), AssetBalancesResponse);
+    return decodeJSON(response.getJSONText(), AssetBalancesResponse)
   }
 }

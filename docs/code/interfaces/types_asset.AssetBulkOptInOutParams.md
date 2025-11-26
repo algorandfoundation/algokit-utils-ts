@@ -24,13 +24,13 @@ Parameters for `assetBulkOptIn` / `assetBulkOptOut` call.
 
 ### account
 
-• **account**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **account**: `AddressWithSigner`
 
 The account to opt in/out for
 
 #### Defined in
 
-[src/types/asset.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L94)
+[src/types/asset.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L93)
 
 ___
 
@@ -42,7 +42,7 @@ The IDs of the assets to opt in for / out of
 
 #### Defined in
 
-[src/types/asset.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L96)
+[src/types/asset.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L95)
 
 ___
 
@@ -54,7 +54,7 @@ The maximum fee that you are happy to pay per transaction (default: unbounded) -
 
 #### Defined in
 
-[src/types/asset.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L104)
+[src/types/asset.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L103)
 
 ___
 
@@ -66,7 +66,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/asset.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L102)
+[src/types/asset.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L101)
 
 ___
 
@@ -78,19 +78,32 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/asset.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L106)
+[src/types/asset.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L105)
 
 ___
 
 ### transactionParams
 
-• `Optional` **transactionParams**: `SuggestedParams`
+• `Optional` **transactionParams**: `Object`
 
 Optional transaction parameters
 
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `firstValid` | `bigint` | - |
+| `flatFee` | `boolean` | - |
+| `genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `lastValid` | `bigint` | - |
+| `minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
+
 #### Defined in
 
-[src/types/asset.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L100)
+[src/types/asset.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L99)
 
 ___
 
@@ -102,4 +115,4 @@ Whether or not to validate the opt-in/out is valid before issuing transactions; 
 
 #### Defined in
 
-[src/types/asset.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L98)
+[src/types/asset.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L97)

@@ -1,12 +1,12 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { base64StringFunnel } from './lookupAccountTransactions.js';
-import { Address } from '../../../encoding/address.js';
-import { TransactionsResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { base64StringFunnel } from './lookupAccountTransactions.js'
+import { Address } from '../../../encoding/address.js'
+import { TransactionsResponse } from './models/types.js'
 
 export default class LookupAssetTransactions extends JSONRequest<TransactionsResponse> {
-  private index: bigint;
+  private index: bigint
 
   /**
    * Returns transactions relating to the given asset.
@@ -21,15 +21,15 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @param index - The asset ID to look up.
    */
   constructor(c: HTTPClient, index: number | bigint) {
-    super(c);
-    this.index = BigInt(index);
+    super(c)
+    this.index = BigInt(index)
   }
 
   /**
    * @returns `/v2/assets/${index}/transactions`
    */
   path() {
-    return `/v2/assets/${this.index}/transactions`;
+    return `/v2/assets/${this.index}/transactions`
   }
 
   /**
@@ -49,8 +49,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   notePrefix(prefix: Uint8Array | string) {
-    this.query['note-prefix'] = base64StringFunnel(prefix);
-    return this;
+    this.query['note-prefix'] = base64StringFunnel(prefix)
+    return this
   }
 
   /**
@@ -69,8 +69,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   txType(type: string) {
-    this.query['tx-type'] = type;
-    return this;
+    this.query['tx-type'] = type
+    return this
   }
 
   /**
@@ -92,8 +92,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   sigType(type: string) {
-    this.query['sig-type'] = type;
-    return this;
+    this.query['sig-type'] = type
+    return this
   }
 
   /**
@@ -113,8 +113,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   txid(txid: string) {
-    this.query.txid = txid;
-    return this;
+    this.query.txid = txid
+    return this
   }
 
   /**
@@ -134,8 +134,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   round(round: number | bigint) {
-    this.query.round = round;
-    return this;
+    this.query.round = round
+    return this
   }
 
   /**
@@ -155,8 +155,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   minRound(round: number | bigint) {
-    this.query['min-round'] = round;
-    return this;
+    this.query['min-round'] = round
+    return this
   }
 
   /**
@@ -176,8 +176,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   maxRound(round: number | bigint) {
-    this.query['max-round'] = round;
-    return this;
+    this.query['max-round'] = round
+    return this
   }
 
   /**
@@ -197,8 +197,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -218,9 +218,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   beforeTime(before: string | Date) {
-    this.query['before-time'] =
-      before instanceof Date ? before.toISOString() : before;
-    return this;
+    this.query['before-time'] = before instanceof Date ? before.toISOString() : before
+    return this
   }
 
   /**
@@ -240,9 +239,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   afterTime(after: string | Date) {
-    this.query['after-time'] =
-      after instanceof Date ? after.toISOString() : after;
-    return this;
+    this.query['after-time'] = after instanceof Date ? after.toISOString() : after
+    return this
   }
 
   /**
@@ -263,8 +261,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    */
   currencyGreaterThan(greater: number | bigint) {
     // We convert the following to a string for now to correctly include zero values in request parameters.
-    this.query['currency-greater-than'] = greater.toString();
-    return this;
+    this.query['currency-greater-than'] = greater.toString()
+    return this
   }
 
   /**
@@ -284,8 +282,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   currencyLessThan(lesser: number | bigint) {
-    this.query['currency-less-than'] = lesser;
-    return this;
+    this.query['currency-less-than'] = lesser
+    return this
   }
 
   /**
@@ -307,8 +305,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   addressRole(role: string) {
-    this.query['address-role'] = role;
-    return this;
+    this.query['address-role'] = role
+    return this
   }
 
   /**
@@ -328,8 +326,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   address(address: string | Address) {
-    this.query.address = address.toString();
-    return this;
+    this.query.address = address.toString()
+    return this
   }
 
   /**
@@ -348,8 +346,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   excludeCloseTo(exclude: boolean) {
-    this.query['exclude-close-to'] = exclude;
-    return this;
+    this.query['exclude-close-to'] = exclude
+    return this
   }
 
   /**
@@ -376,8 +374,8 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -396,12 +394,12 @@ export default class LookupAssetTransactions extends JSONRequest<TransactionsRes
    * @category query
    */
   rekeyTo(rekeyTo: boolean) {
-    this.query['rekey-to'] = rekeyTo;
-    return this;
+    this.query['rekey-to'] = rekeyTo
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): TransactionsResponse {
-    return decodeJSON(response.getJSONText(), TransactionsResponse);
+    return decodeJSON(response.getJSONText(), TransactionsResponse)
   }
 }

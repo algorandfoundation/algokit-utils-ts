@@ -1,12 +1,12 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { Transaction } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, Indexer, Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
-import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import { MultisigAccount, SigningAccount } from './account'
 import { AlgorandClient } from './algorand-client'
 import { AlgoConfig } from './network-client'
 
@@ -25,9 +25,9 @@ export interface AlgorandTestAutomationContext {
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
-  testAccount: Address & TransactionSignerAccount & Account
+  testAccount: Address & AddressWithSigner & Account
   /** Generate and fund an additional ephemerally created account */
-  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & TransactionSignerAccount>
+  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & AddressWithSigner>
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
@@ -136,7 +136,7 @@ export interface LogSnapshotConfig {
   /** Any transaction IDs or transactions to replace the ID for predictably */
   transactions?: (string | Transaction)[]
   /** Any accounts/addresses to replace the address for predictably */
-  accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
+  accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | AddressWithSigner)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
   /** Optional filter predicate to filter out logs */

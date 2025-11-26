@@ -1,6 +1,7 @@
-import { PUBLIC_KEY_BYTE_LENGTH, ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
+import { PUBLIC_KEY_BYTE_LENGTH } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { OmitEmptyObjectCodec, addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, stringCodec } from './codecs'
+import { Address } from '@algorandfoundation/algokit-common'
 
 describe('Codecs', () => {
   describe('AddressCodec', () => {
@@ -16,12 +17,12 @@ describe('Codecs', () => {
       })
 
       test('should omit zero address when encoding', () => {
-        const encoded = addressCodec.encode(ZERO_ADDRESS)
+        const encoded = addressCodec.encode(Address.zeroAddress())
         expect(encoded).toBeUndefined()
       })
 
       test('should not omit non-zero address when encoding', () => {
-        const nonZeroAddress = 'VCMJKWOY5P5P7SKMZFFOCEROPJCZOTIJMNIYNUCKH7LRO45JMJP6UYBIJA'
+        const nonZeroAddress = Address.fromString('VCMJKWOY5P5P7SKMZFFOCEROPJCZOTIJMNIYNUCKH7LRO45JMJP6UYBIJA')
         const encoded = addressCodec.encode(nonZeroAddress)
         expect(encoded).toMatchInlineSnapshot(`
           Uint8Array [
@@ -65,7 +66,7 @@ describe('Codecs', () => {
         const decoded = addressCodec.decode(undefined)
         const optionallyDecoded = addressCodec.decodeOptional(undefined)
 
-        expect(decoded).toBe(ZERO_ADDRESS)
+        expect(decoded).toStrictEqual(Address.zeroAddress())
         expect(optionallyDecoded).toBe(undefined)
       })
 
@@ -73,19 +74,19 @@ describe('Codecs', () => {
         const decoded = addressCodec.decode(new Uint8Array(PUBLIC_KEY_BYTE_LENGTH))
         const optionallyDecoded = addressCodec.decodeOptional(new Uint8Array(PUBLIC_KEY_BYTE_LENGTH))
 
-        expect(decoded).toBe(ZERO_ADDRESS)
-        expect(optionallyDecoded).toBe(ZERO_ADDRESS)
+        expect(decoded).toStrictEqual(Address.zeroAddress())
+        expect(optionallyDecoded).toStrictEqual(Address.zeroAddress())
       })
 
       test('should correctly decode non-zero address', () => {
-        const nonZeroAddress = 'VCMJKWOY5P5P7SKMZFFOCEROPJCZOTIJMNIYNUCKH7LRO45JMJP6UYBIJA'
+        const nonZeroAddress = Address.fromString('VCMJKWOY5P5P7SKMZFFOCEROPJCZOTIJMNIYNUCKH7LRO45JMJP6UYBIJA')
         const encoded = addressCodec.encode(nonZeroAddress)
 
         const decoded = addressCodec.decode(encoded)
         const optionallyDecoded = addressCodec.decodeOptional(encoded)
 
-        expect(decoded).toBe(nonZeroAddress)
-        expect(optionallyDecoded).toBe(nonZeroAddress)
+        expect(decoded).toStrictEqual(nonZeroAddress)
+        expect(optionallyDecoded).toStrictEqual(nonZeroAddress)
       })
     })
   })

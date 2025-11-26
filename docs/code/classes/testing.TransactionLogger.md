@@ -4,7 +4,7 @@
 
 [testing](../modules/testing.md).TransactionLogger
 
-Allows you to keep track of Algorand transaction IDs by wrapping an `Algodv2` in a proxy.
+Allows you to keep track of Algorand transaction IDs by wrapping an `AlgodClient` in a proxy.
 Useful for automated tests.
 
 ## Table of contents
@@ -48,7 +48,7 @@ Useful for automated tests.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L14)
+[src/testing/transaction-logger.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L13)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L13)
+[src/testing/transaction-logger.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L12)
 
 ## Accessors
 
@@ -74,7 +74,7 @@ readonly `string`[]
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L27)
+[src/testing/transaction-logger.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L26)
 
 ## Methods
 
@@ -94,7 +94,7 @@ readonly `string`[]
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L16)
+[src/testing/transaction-logger.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L15)
 
 ___
 
@@ -102,23 +102,23 @@ ___
 
 ▸ **capture**(`algod`): `AlgodClient`
 
-Return a proxy that wraps the given Algodv2 with this transaction logger.
+Return a proxy that wraps the given AlgodClient with this transaction logger.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algod` | `AlgodClient` | The `Algodv2` to wrap |
+| `algod` | `AlgodClient` | The `AlgodClient` to wrap |
 
 #### Returns
 
 `AlgodClient`
 
-The wrapped `Algodv2`, any transactions sent using this algod instance will be logged by this transaction logger
+The wrapped `AlgodClient`, any transactions sent using this algod instance will be logged by this transaction logger
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L54)
+[src/testing/transaction-logger.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L53)
 
 ___
 
@@ -134,7 +134,7 @@ Clear all logged IDs.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L34)
+[src/testing/transaction-logger.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L33)
 
 ___
 
@@ -156,7 +156,7 @@ The method that captures raw transactions and stores the transaction IDs.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L41)
+[src/testing/transaction-logger.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L40)
 
 ___
 
@@ -178,4 +178,4 @@ Wait until all logged transactions IDs appear in the given `Indexer`.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L59)
+[src/testing/transaction-logger.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L58)

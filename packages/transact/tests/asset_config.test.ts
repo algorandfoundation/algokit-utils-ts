@@ -13,6 +13,7 @@ import {
   assertMultisigExample,
   assertTransactionId,
 } from './transaction_asserts'
+import { Address, ALGORAND_ZERO_ADDRESS_STRING } from '@algorandfoundation/algokit-common'
 
 const txnTestData = Object.entries({
   ['asset create']: testData.assetCreate,
@@ -74,7 +75,7 @@ describe('AssetConfig', () => {
       test('should throw error when total is missing for asset creation', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -92,7 +93,7 @@ describe('AssetConfig', () => {
       test('should throw error when decimals exceed maximum', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -112,7 +113,7 @@ describe('AssetConfig', () => {
       test('should throw error when unit name is too long', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -131,7 +132,7 @@ describe('AssetConfig', () => {
         const longName = 'A'.repeat(33) // Maximum is 32 bytes
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -150,7 +151,7 @@ describe('AssetConfig', () => {
         const longUrl = `https://${'a'.repeat(90)}` // Total > 96 bytes
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -171,7 +172,7 @@ describe('AssetConfig', () => {
         const longUrl = `https://${'a'.repeat(90)}`
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -200,7 +201,7 @@ describe('AssetConfig', () => {
       test('should validate valid asset creation transaction', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -212,10 +213,10 @@ describe('AssetConfig', () => {
             unitName: 'TA',
             url: 'https://example.com',
             metadataHash: new Uint8Array(32),
-            manager: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-            reserve: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-            freeze: 'CNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-            clawback: 'DNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+            manager: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+            reserve: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+            freeze: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+            clawback: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           },
         }
 
@@ -225,7 +226,7 @@ describe('AssetConfig', () => {
       test('should validate asset creation with minimum valid values', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -244,7 +245,7 @@ describe('AssetConfig', () => {
         const maxUrl = `https://${'a'.repeat(88)}` // 96 bytes total (7 + 89 = 96)
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -263,7 +264,7 @@ describe('AssetConfig', () => {
       test('should validate asset creation with default frozen true', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -271,7 +272,7 @@ describe('AssetConfig', () => {
             total: 1000000n,
             decimals: 2,
             defaultFrozen: true, // Frozen by default
-            freeze: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Required for frozen assets
+            freeze: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Required for frozen assets
           },
         }
 
@@ -283,7 +284,7 @@ describe('AssetConfig', () => {
       test('should throw error when trying to modify immutable field (total)', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -298,7 +299,7 @@ describe('AssetConfig', () => {
       test('should throw error when trying to modify immutable field (decimals)', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -315,7 +316,7 @@ describe('AssetConfig', () => {
       test('should throw multiple errors when trying to modify multiple immutable fields', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -348,15 +349,15 @@ describe('AssetConfig', () => {
       test('should validate valid asset reconfiguration', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
             assetId: 123n, // Existing asset
-            manager: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Can modify
-            reserve: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Can modify
-            freeze: 'CNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Can modify
-            clawback: 'DNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Can modify
+            manager: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Can modify
+            reserve: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Can modify
+            freeze: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Can modify
+            clawback: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Can modify
           },
         }
 
@@ -366,7 +367,7 @@ describe('AssetConfig', () => {
       test('should validate valid asset destruction (no params)', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
@@ -381,15 +382,15 @@ describe('AssetConfig', () => {
       test('should validate asset reconfiguration removing all special addresses', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
             assetId: 123n, // Existing asset
-            manager: '', // Remove manager (set to zero address)
-            reserve: '', // Remove reserve
-            freeze: '', // Remove freeze
-            clawback: '', // Remove clawback
+            manager: Address.fromString(ALGORAND_ZERO_ADDRESS_STRING), // Remove manager (set to zero address)
+            reserve: Address.fromString(ALGORAND_ZERO_ADDRESS_STRING), // Remove reserve
+            freeze: Address.fromString(ALGORAND_ZERO_ADDRESS_STRING), // Remove freeze
+            clawback: Address.fromString(ALGORAND_ZERO_ADDRESS_STRING), // Remove clawback
           },
         }
 
@@ -399,12 +400,12 @@ describe('AssetConfig', () => {
       test('should validate asset reconfiguration with single field change', () => {
         const transaction: Transaction = {
           type: TransactionType.AssetConfig,
-          sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+          sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           firstValid: 1000n,
           lastValid: 2000n,
           assetConfig: {
             assetId: 123n, // Existing asset
-            manager: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Only changing manager
+            manager: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Only changing manager
           },
         }
 

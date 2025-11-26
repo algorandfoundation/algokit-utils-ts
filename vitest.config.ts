@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     projects: ['.', 'packages/*'],
     include: ['**/*.spec.ts', '**/*.test.ts'],
-    exclude: ['node_modules'],
+    exclude: ['node_modules', '.polytest*/**/*'],
     // Sometimes indexer catchup is slowwwww...
     testTimeout: 20_000,
     coverage: {

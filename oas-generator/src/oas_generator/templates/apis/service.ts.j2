@@ -9,7 +9,7 @@ import type { BodyFormat } from '../core/model-runtime';
 {% if import_types and import_types|length > 0 %}
 {% set sorted = import_types | sort %}
 import type { {{ sorted | join(', ') }} } from '../models/index';
-import { {% for t in sorted %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
+import { {% for t in sorted | reject('equalto', 'SuggestedParams') %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
 {% endif %}
 
 {% macro field_type_meta(type_name) -%}

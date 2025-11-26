@@ -1,16 +1,10 @@
-import {
-  MULTISIG_DOMAIN_SEPARATOR,
-  PUBLIC_KEY_BYTE_LENGTH,
-  addressFromPublicKey,
-  hash,
-  publicKeyFromAddress,
-} from '@algorandfoundation/algokit-common'
+import { Address, MULTISIG_DOMAIN_SEPARATOR, PUBLIC_KEY_BYTE_LENGTH, hash } from '@algorandfoundation/algokit-common'
 import { MultisigSignature, MultisigSubsignature } from './transactions/signed-transaction'
 
 /**
  * Creates an empty multisignature signature from a list of participant addresses.
  */
-export function newMultisigSignature(version: number, threshold: number, participants: string[]): MultisigSignature {
+export function newMultisigSignature(version: number, threshold: number, participants: Address[]): MultisigSignature {
   if (version === 0) {
     throw new Error('Version cannot be zero')
   }
@@ -31,14 +25,14 @@ export function newMultisigSignature(version: number, threshold: number, partici
 /**
  * Returns the list of participant addresses from a multisignature signature.
  */
-export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): string[] {
+export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): Address[] {
   return multisigSignature.subsignatures.map((subsig) => subsig.address)
 }
 
 /**
  * Returns the address of the multisignature account.
  */
-export function addressFromMultisigSignature(multisigSignature: MultisigSignature): string {
+export function addressFromMultisigSignature(multisigSignature: MultisigSignature): Address {
   const prefixBytes = new TextEncoder().encode(MULTISIG_DOMAIN_SEPARATOR)
   const participantAddresses = multisigSignature.subsignatures.map((subsig) => subsig.address)
 
@@ -59,12 +53,12 @@ export function addressFromMultisigSignature(multisigSignature: MultisigSignatur
 
   // Add participant public keys (extracted from their addresses)
   for (const address of participantAddresses) {
-    const publicKey = publicKeyFromAddress(address)
+    const publicKey = address.publicKey
     addressBytes.set(publicKey, offset)
     offset += PUBLIC_KEY_BYTE_LENGTH
   }
 
-  return addressFromPublicKey(hash(addressBytes))
+  return new Address(hash(addressBytes))
 }
 
 /**
@@ -75,12 +69,12 @@ export function addressFromMultisigSignature(multisigSignature: MultisigSignatur
  */
 export function applyMultisigSubsignature(
   multisigSignature: MultisigSignature,
-  participant: string,
+  participant: Address,
   signature: Uint8Array,
 ): MultisigSignature {
   let found = false
   const newSubsignatures = multisigSignature.subsignatures.map((subsig) => {
-    if (subsig.address === participant) {
+    if (subsig.address.equals(participant)) {
       found = true
       return { ...subsig, signature }
     }

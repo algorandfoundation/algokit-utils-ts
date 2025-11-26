@@ -101,7 +101,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 #### Defined in
 
-[src/types/client-manager.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L74)
+[src/types/client-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L73)
 
 ## Properties
 
@@ -111,7 +111,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 #### Defined in
 
-[src/types/client-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L49)
+[src/types/client-manager.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L48)
 
 ___
 
@@ -121,17 +121,17 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L52)
+[src/types/client-manager.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L51)
 
 ___
 
 ### \_getNetworkPromise
 
-• `Private` **\_getNetworkPromise**: `undefined` \| `Promise`\<`SuggestedParams`\>
+• `Private` **\_getNetworkPromise**: `undefined` \| `Promise`\<\{ `consensusVersion`: `string` ; `fee`: `bigint` ; `firstValid`: `bigint` ; `flatFee`: `boolean` ; `genesisHash`: `Uint8Array` ; `genesisId`: `string` ; `lastValid`: `bigint` ; `minFee`: `bigint`  }\>
 
 #### Defined in
 
-[src/types/client-manager.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L125)
+[src/types/client-manager.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L124)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L50)
+[src/types/client-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L49)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L51)
+[src/types/client-manager.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L50)
 
 ## Accessors
 
@@ -169,7 +169,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L93)
+[src/types/client-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L92)
 
 ___
 
@@ -191,7 +191,7 @@ Error if no Indexer client is configured
 
 #### Defined in
 
-[src/types/client-manager.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L102)
+[src/types/client-manager.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L101)
 
 ___
 
@@ -209,7 +209,7 @@ The Indexer client or `undefined`
 
 #### Defined in
 
-[src/types/client-manager.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L111)
+[src/types/client-manager.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L110)
 
 ___
 
@@ -231,7 +231,7 @@ Error if no KMD client is configured
 
 #### Defined in
 
-[src/types/client-manager.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L120)
+[src/types/client-manager.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L119)
 
 ## Methods
 
@@ -253,8 +253,8 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
-| `params.creatorAddress` | `string` \| `Address` | The address of the creator account for the app |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.creatorAddress` | `ReadableAddress` | The address of the creator account for the app |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
 
@@ -276,7 +276,7 @@ const appClient = clientManager.getAppClientByCreatorAndName({
 
 #### Defined in
 
-[src/types/client-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L284)
+[src/types/client-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L283)
 
 ___
 
@@ -296,7 +296,7 @@ Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
@@ -316,7 +316,7 @@ const appClient = clientManager.getAppClientById({
 
 #### Defined in
 
-[src/types/client-manager.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L307)
+[src/types/client-manager.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L306)
 
 ___
 
@@ -339,7 +339,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
@@ -359,7 +359,7 @@ const appClient = clientManager.getAppClientByNetwork({
 
 #### Defined in
 
-[src/types/client-manager.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L330)
+[src/types/client-manager.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L329)
 
 ___
 
@@ -376,7 +376,7 @@ Returns a new `AppFactory` client
 | `params` | `Object` | The parameters to create the app factory |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name. |
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.deletable?` | `boolean` | Whether or not the contract should have deploy-time permanence control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
 | `params.deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optional deploy-time TEAL template replacement parameters. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
@@ -413,7 +413,7 @@ const factory = clientManager.getAppFactory({
 
 #### Defined in
 
-[src/types/client-manager.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L261)
+[src/types/client-manager.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L260)
 
 ___
 
@@ -450,7 +450,7 @@ const client = clientManager.getTestNetDispenser(
 
 #### Defined in
 
-[src/types/client-manager.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L215)
+[src/types/client-manager.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L214)
 
 ___
 
@@ -486,7 +486,7 @@ const client = clientManager.getTestNetDispenserFromEnvironment(
 
 #### Defined in
 
-[src/types/client-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L234)
+[src/types/client-manager.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L233)
 
 ___
 
@@ -512,8 +512,8 @@ Returns a new typed client, resolving the app by creator address and name.
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
-| `params.creatorAddress` | `string` \| `Address` | The address of the creator account for the app |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.creatorAddress` | `ReadableAddress` | The address of the creator account for the app |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
 
@@ -544,7 +544,7 @@ const appClient = clientManager.getTypedAppClientByCreatorAndName(MyContractClie
 
 #### Defined in
 
-[src/types/client-manager.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L358)
+[src/types/client-manager.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L357)
 
 ___
 
@@ -570,7 +570,7 @@ Returns a new typed client, resolving the app by app ID.
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
@@ -590,7 +590,7 @@ const appClient = clientManager.getTypedAppClientById(MyContractClient, {
 
 #### Defined in
 
-[src/types/client-manager.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L382)
+[src/types/client-manager.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L381)
 
 ___
 
@@ -618,7 +618,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
@@ -637,7 +637,7 @@ const appClient = clientManager.getTypedAppClientByNetwork(MyContractClient, {
 
 #### Defined in
 
-[src/types/client-manager.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L408)
+[src/types/client-manager.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L407)
 
 ___
 
@@ -660,7 +660,7 @@ Returns a new typed app factory.
 | `typedFactory` | [`TypedAppFactory`](../interfaces/types_client_manager.TypedAppFactory.md)\<`TClient`\> | The typed factory type to use |
 | `params?` | `Object` | The params to resolve the factory by |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name. |
-| `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.deletable?` | `boolean` | Whether or not the contract should have deploy-time permanence control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
 | `params.deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optional deploy-time TEAL template replacement parameters. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
@@ -683,7 +683,7 @@ const appFactory = clientManager.getTypedAppFactory(MyContractClient, {
 
 #### Defined in
 
-[src/types/client-manager.ts:431](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L431)
+[src/types/client-manager.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L430)
 
 ___
 
@@ -707,7 +707,7 @@ const isLocalNet = await clientManager.isLocalNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L171)
+[src/types/client-manager.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L170)
 
 ___
 
@@ -731,7 +731,7 @@ const isMainNet = await clientManager.isMainNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L195)
+[src/types/client-manager.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L194)
 
 ___
 
@@ -755,7 +755,7 @@ const isTestNet = await clientManager.isTestNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L183)
+[src/types/client-manager.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L182)
 
 ___
 
@@ -780,7 +780,7 @@ const genesisId = network.genesisId
 
 #### Defined in
 
-[src/types/client-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L135)
+[src/types/client-manager.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L134)
 
 ___
 
@@ -810,7 +810,7 @@ const isLocalNet = ClientManager.genesisIdIsLocalNet('testnet-v1.0')
 
 #### Defined in
 
-[src/types/client-manager.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L159)
+[src/types/client-manager.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L158)
 
 ___
 
@@ -841,7 +841,7 @@ const config = ClientManager.getAlgoNodeConfig('testnet', 'algod')
 
 #### Defined in
 
-[src/types/client-manager.ts:545](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L545)
+[src/types/client-manager.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L544)
 
 ___
 
@@ -886,7 +886,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:590](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L590)
+[src/types/client-manager.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L589)
 
 ___
 
@@ -912,7 +912,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:608](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L608)
+[src/types/client-manager.ts:612](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L612)
 
 ___
 
@@ -942,7 +942,7 @@ const config = ClientManager.getAlgodConfigFromEnvironment()
 
 #### Defined in
 
-[src/types/client-manager.ts:492](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L492)
+[src/types/client-manager.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L491)
 
 ___
 
@@ -975,7 +975,7 @@ const config = ClientManager.getConfigFromEnvironmentOrLocalNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L456)
+[src/types/client-manager.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L455)
 
 ___
 
@@ -1005,7 +1005,7 @@ const config = ClientManager.getDefaultLocalNetConfig('algod')
 
 #### Defined in
 
-[src/types/client-manager.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L561)
+[src/types/client-manager.ts:560](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L560)
 
 ___
 
@@ -1050,7 +1050,7 @@ The Indexer client
 
 #### Defined in
 
-[src/types/client-manager.ts:633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L633)
+[src/types/client-manager.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L637)
 
 ___
 
@@ -1076,7 +1076,7 @@ The Indexer client
 
 #### Defined in
 
-[src/types/client-manager.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L652)
+[src/types/client-manager.ts:656](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L656)
 
 ___
 
@@ -1106,7 +1106,7 @@ const config = ClientManager.getIndexerConfigFromEnvironment()
 
 #### Defined in
 
-[src/types/client-manager.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L519)
+[src/types/client-manager.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L518)
 
 ___
 
@@ -1138,7 +1138,7 @@ The KMD client
 
 #### Defined in
 
-[src/types/client-manager.ts:668](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L668)
+[src/types/client-manager.ts:672](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L672)
 
 ___
 
@@ -1163,4 +1163,4 @@ The KMD client
 
 #### Defined in
 
-[src/types/client-manager.ts:683](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L683)
+[src/types/client-manager.ts:687](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L687)

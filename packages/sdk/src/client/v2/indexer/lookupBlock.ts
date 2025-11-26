@@ -1,10 +1,10 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { Block } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { Block } from './models/types.js'
 
 export default class LookupBlock extends JSONRequest<Block> {
-  private round: bigint;
+  private round: bigint
 
   /**
    * Returns the block for the passed round.
@@ -20,15 +20,15 @@ export default class LookupBlock extends JSONRequest<Block> {
    * @category GET
    */
   constructor(c: HTTPClient, round: number | bigint) {
-    super(c);
-    this.round = BigInt(round);
+    super(c)
+    this.round = BigInt(round)
   }
 
   /**
    * @returns `/v2/blocks/${round}`
    */
   path() {
-    return `/v2/blocks/${this.round}`;
+    return `/v2/blocks/${this.round}`
   }
 
   /**
@@ -36,12 +36,12 @@ export default class LookupBlock extends JSONRequest<Block> {
    * transactions.
    */
   headerOnly(headerOnly: boolean) {
-    this.query['header-only'] = headerOnly;
-    return this;
+    this.query['header-only'] = headerOnly
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): Block {
-    return decodeJSON(response.getJSONText(), Block);
+    return decodeJSON(response.getJSONText(), Block)
   }
 }

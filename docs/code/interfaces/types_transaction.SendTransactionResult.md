@@ -27,22 +27,22 @@ The result of sending a transaction
 
 ### confirmation
 
-• `Optional` **confirmation**: `PendingTransactionResponse`
+• `Optional` **confirmation**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)
 
 The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
+[src/types/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L70)
 
 ___
 
 ### transaction
 
-• **transaction**: `Transaction`
+• **transaction**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)
 
 The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
+[src/types/transaction.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L68)

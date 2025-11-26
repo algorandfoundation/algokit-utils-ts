@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { OnApplicationComplete, Transaction, TransactionType } from '../src'
 import { Reveal, SigslotCommit, StateProof, StateProofTransactionFields } from '../src/transactions/state-proof'
+import { Address } from '@algorandfoundation/algokit-common'
 
 const jsonString = fs.readFileSync(path.join(__dirname, 'test_data.json'), 'utf-8')
 
@@ -39,6 +40,26 @@ const defaultReviver = (key: string, value: unknown) => {
     }
 
     return new Uint8Array(value)
+  }
+
+  const addrKeys = [
+    'sender',
+    'receiver',
+    'closeRemainderTo',
+    'rekeyTo',
+    'address',
+    'freezeTarget',
+    'manager',
+    'reserve',
+    'clawback',
+    'freeze',
+  ]
+  if (addrKeys.includes(key)) {
+    return Address.fromString(value as string)
+  }
+
+  if (key == 'accountReferences') {
+    return (value as string[]).map((addr: string) => Address.fromString(addr))
   }
 
   if (typeof value === 'number' && BIGINT_FIELDS.includes(key)) {

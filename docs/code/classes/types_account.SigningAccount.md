@@ -48,7 +48,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[src/types/account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L115)
+[src/types/account.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L117)
 
 ## Properties
 
@@ -58,7 +58,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[src/types/account.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L80)
+[src/types/account.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L82)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L82)
+[src/types/account.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L84)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L81)
+[src/types/account.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L83)
 
 ## Accessors
 
@@ -98,7 +98,7 @@ Account.addr
 
 #### Defined in
 
-[src/types/account.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L87)
+[src/types/account.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L89)
 
 ___
 
@@ -114,7 +114,7 @@ Algorand account of the sender address and signer private key
 
 #### Defined in
 
-[src/types/account.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L108)
+[src/types/account.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L110)
 
 ___
 
@@ -130,7 +130,7 @@ Transaction signer for the underlying signing account
 
 #### Defined in
 
-[src/types/account.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L101)
+[src/types/account.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L103)
 
 ___
 
@@ -150,4 +150,4 @@ Account.sk
 
 #### Defined in
 
-[src/types/account.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L94)
+[src/types/account.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L96)

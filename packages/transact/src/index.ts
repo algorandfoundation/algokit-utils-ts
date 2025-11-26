@@ -32,8 +32,7 @@ export * from './transactions/asset-freeze'
 export * from './transactions/asset-transfer'
 export * from './transactions/key-registration'
 export * from './transactions/payment'
-
-export { addressFromPublicKey, publicKeyFromAddress } from '@algorandfoundation/algokit-common'
+export * from './signer'
 
 export {
   addressFromMultisigSignature,

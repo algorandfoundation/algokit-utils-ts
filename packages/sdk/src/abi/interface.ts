@@ -1,24 +1,24 @@
-import { ABIMethod, ABIMethodParams, getMethodByName } from './method.js';
+import { ABIMethod, ABIMethodParams, getMethodByName } from './method.js'
 
 export interface ABIInterfaceParams {
-  name: string;
-  desc?: string;
-  methods: ABIMethodParams[];
+  name: string
+  desc?: string
+  methods: ABIMethodParams[]
 }
 
 export class ABIInterface {
-  public readonly name: string;
-  public readonly description?: string;
-  public readonly methods: ABIMethod[];
+  public readonly name: string
+  public readonly description?: string
+  public readonly methods: ABIMethod[]
 
   constructor(params: ABIInterfaceParams) {
     if (typeof params.name !== 'string' || !Array.isArray(params.methods)) {
-      throw new Error('Invalid ABIInterface parameters');
+      throw new Error('Invalid ABIInterface parameters')
     }
 
-    this.name = params.name;
-    this.description = params.desc;
-    this.methods = params.methods.map((method) => new ABIMethod(method));
+    this.name = params.name
+    this.description = params.desc
+    this.methods = params.methods.map((method) => new ABIMethod(method))
   }
 
   toJSON(): ABIInterfaceParams {
@@ -26,10 +26,10 @@ export class ABIInterface {
       name: this.name,
       desc: this.description,
       methods: this.methods.map((method) => method.toJSON()),
-    };
+    }
   }
 
   getMethodByName(name: string): ABIMethod {
-    return getMethodByName(this.methods, name);
+    return getMethodByName(this.methods, name)
   }
 }

@@ -1,4 +1,13 @@
-import { ABIArrayDynamicType, ABIArrayStaticType, ABIByteType, ABIReturnType, ABITupleType, ABIType, ABIUintType, ABIValue } from '@algorandfoundation/sdk'
+import {
+  ABIArrayDynamicType,
+  ABIArrayStaticType,
+  ABIByteType,
+  ABIReturnType,
+  ABITupleType,
+  ABIType,
+  ABIUintType,
+  ABIValue,
+} from '@algorandfoundation/sdk'
 import { APP_PAGE_MAX_SIZE } from './types/app'
 
 /**

@@ -1,3 +1,5 @@
+import { Address } from '@algorandfoundation/algokit-common'
+
 /**
  * Represents a payment transaction that transfers ALGO between accounts.
  *
@@ -7,7 +9,7 @@ export type PaymentTransactionFields = {
   /**
    * The address of the account receiving the ALGO payment.
    */
-  receiver: string
+  receiver: Address
 
   /**
    * The amount of microALGO to send.
@@ -23,5 +25,5 @@ export type PaymentTransactionFields = {
    * and all remaining funds (minus fees) should be transferred to the specified address.
    * This effectively removes the sender account from the ledger.
    */
-  closeRemainderTo?: string
+  closeRemainderTo?: Address
 }
