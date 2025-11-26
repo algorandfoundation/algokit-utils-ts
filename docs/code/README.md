@@ -29,7 +29,6 @@
 - [types/app-factory-and-client.spec](modules/types_app_factory_and_client_spec.md)
 - [types/app-manager](modules/types_app_manager.md)
 - [types/app-spec](modules/types_app_spec.md)
-- [types/asset](modules/types_asset.md)
 - [types/asset-manager](modules/types_asset_manager.md)
 - [types/async-event-emitter](modules/types_async_event_emitter.md)
 - [types/async-event-emitter.spec](modules/types_async_event_emitter_spec.md)
@@ -51,4 +50,3 @@
 - [types/network-client](modules/types_network_client.md)
 - [types/testing](modules/types_testing.md)
 - [types/transaction](modules/types_transaction.md)
-- [types/transfer](modules/types_transfer.md)

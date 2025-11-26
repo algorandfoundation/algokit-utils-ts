@@ -4,7 +4,7 @@
 
 [types/transaction](../modules/types_transaction.md).TransactionGroupToSend
 
-A group of transactions to send together as an atomic group
+A group of transactions to send together as an group
 https://dev.algorand.co/concepts/transactions/atomic-txn-groups/
 
 ## Table of contents

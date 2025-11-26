@@ -10,15 +10,15 @@
 
 ### Interfaces
 
-- [AdditionalAtomicTransactionComposerContext](../interfaces/types_transaction.AdditionalAtomicTransactionComposerContext.md)
-- [AtomicTransactionComposerToSend](../interfaces/types_transaction.AtomicTransactionComposerToSend.md)
+- [AdditionalTransactionComposerContext](../interfaces/types_transaction.AdditionalTransactionComposerContext.md)
 - [ConfirmedTransactionResult](../interfaces/types_transaction.ConfirmedTransactionResult.md)
 - [ConfirmedTransactionResults](../interfaces/types_transaction.ConfirmedTransactionResults.md)
-- [SendAtomicTransactionComposerResults](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)
 - [SendParams](../interfaces/types_transaction.SendParams.md)
+- [SendTransactionComposerResults](../interfaces/types_transaction.SendTransactionComposerResults.md)
 - [SendTransactionParams](../interfaces/types_transaction.SendTransactionParams.md)
 - [SendTransactionResult](../interfaces/types_transaction.SendTransactionResult.md)
 - [SendTransactionResults](../interfaces/types_transaction.SendTransactionResults.md)
+- [TransactionComposerToSend](../interfaces/types_transaction.TransactionComposerToSend.md)
 - [TransactionGroupToSend](../interfaces/types_transaction.TransactionGroupToSend.md)
 - [TransactionToSign](../interfaces/types_transaction.TransactionToSign.md)
 
@@ -57,13 +57,13 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L234)
+[src/types/transaction.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L220)
 
 ___
 
 ### SendSingleTransactionResult
 
-Ƭ **SendSingleTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md)\>
+Ƭ **SendSingleTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendTransactionComposerResults`](../interfaces/types_transaction.SendTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md)\>
 
 Result from sending a single transaction.
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L230)
+[src/types/transaction.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L216)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L246)
+[src/types/transaction.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L232)
 
 ___
 
@@ -153,4 +153,4 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L254)
+[src/types/transaction.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L240)
