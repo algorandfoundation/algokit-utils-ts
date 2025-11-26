@@ -1870,7 +1870,7 @@ export class TransactionComposer {
       if (this.transactionsWithSigners) {
         sentTransactions = this.transactionsWithSigners.map((t) => t.txn)
       } else if (this.rawBuildTransactions) {
-        sentTransactions = this.rawBuildTransactions.length > 0 ? groupTransactions(this.rawBuildTransactions) : this.rawBuildTransactions
+        sentTransactions = this.rawBuildTransactions.length > 1 ? groupTransactions(this.rawBuildTransactions) : this.rawBuildTransactions
       }
 
       if (Config.debug && typeof originalError === 'object' && sentTransactions) {
