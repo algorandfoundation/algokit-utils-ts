@@ -1,6 +1,6 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { Address } from '@algorandfoundation/sdk'
 import { CommonTransactionParams, buildTransactionCommonData, ensureString } from './common'
 
 /** Parameters to define an asset create transaction.
@@ -79,7 +79,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the `manager` the asset becomes permanently immutable.
    */
-  manager?: string | Address
+  manager?: ReadableAddress
 
   /**
    * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
@@ -94,7 +94,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
-  reserve?: string | Address
+  reserve?: ReadableAddress
 
   /**
    * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
@@ -103,7 +103,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
-  freeze?: string | Address
+  freeze?: ReadableAddress
 
   /**
    * The address of the optional account that can clawback holdings of this asset from any account.
@@ -114,7 +114,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
-  clawback?: string | Address
+  clawback?: ReadableAddress
 }
 
 /** Parameters to define an asset reconfiguration transaction.
@@ -132,7 +132,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the asset will become permanently immutable.
    */
-  manager: string | Address | undefined
+  manager?: ReadableAddress
   /**
    * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
    *
@@ -146,7 +146,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the field will become permanently empty.
    */
-  reserve?: string | Address
+  reserve?: ReadableAddress
   /**
    * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
    *
@@ -154,7 +154,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the field will become permanently empty.
    */
-  freeze?: string | Address
+  freeze?: ReadableAddress
   /**
    * The address of the optional account that can clawback holdings of this asset from any account.
    *
@@ -164,7 +164,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the field will become permanently empty.
    */
-  clawback?: string | Address
+  clawback?: ReadableAddress
 }
 
 /** Parameters to define an asset freeze transaction. */
@@ -172,7 +172,7 @@ export type AssetFreezeParams = CommonTransactionParams & {
   /** The ID of the asset to freeze/unfreeze */
   assetId: bigint
   /** The address of the account to freeze or unfreeze */
-  account: string | Address
+  account: ReadableAddress
   /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
@@ -204,10 +204,10 @@ export const buildAssetCreate = (
       unitName: params.unitName,
       url: params.url,
       metadataHash: ensureString(params.metadataHash),
-      manager: params.manager?.toString(),
-      reserve: params.reserve?.toString(),
-      freeze: params.freeze?.toString(),
-      clawback: params.clawback?.toString(),
+      manager: getOptionalAddress(params.manager),
+      reserve: getOptionalAddress(params.reserve),
+      freeze: getOptionalAddress(params.freeze),
+      clawback: getOptionalAddress(params.clawback),
     },
   }
 }
@@ -223,10 +223,10 @@ export const buildAssetConfig = (
     type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: params.assetId,
-      manager: params.manager?.toString(),
-      reserve: params.reserve?.toString(),
-      freeze: params.freeze?.toString(),
-      clawback: params.clawback?.toString(),
+      manager: getOptionalAddress(params.manager),
+      reserve: getOptionalAddress(params.reserve),
+      freeze: getOptionalAddress(params.freeze),
+      clawback: getOptionalAddress(params.clawback),
     },
   }
 }
@@ -242,7 +242,7 @@ export const buildAssetFreeze = (
     type: TransactionType.AssetFreeze,
     assetFreeze: {
       assetId: params.assetId,
-      freezeTarget: params.account.toString(),
+      freezeTarget: getAddress(params.account),
       frozen: params.frozen,
     },
   }

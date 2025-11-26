@@ -1,4 +1,4 @@
-import { addressFromPublicKey, PUBLIC_KEY_BYTE_LENGTH, publicKeyFromAddress } from '@algorandfoundation/algokit-common'
+import { PUBLIC_KEY_BYTE_LENGTH, Address, arrayEqual } from '@algorandfoundation/algokit-common'
 
 abstract class Codec<T, TEncoded = T> {
   public abstract defaultValue(): TEncoded
@@ -59,35 +59,31 @@ class StringCodec extends Codec<string> {
   }
 }
 
-class AddressCodec extends Codec<string, Uint8Array> {
+class AddressCodec extends Codec<Address, Uint8Array> {
   public defaultValue(): Uint8Array {
     return new Uint8Array(PUBLIC_KEY_BYTE_LENGTH)
   }
 
-  protected toEncoded(value: string): Uint8Array {
-    return publicKeyFromAddress(value)
+  protected toEncoded(value: string | Address): Uint8Array {
+    // TODO: update the algod clients so they use Address instead of string
+    if (typeof value === 'string') {
+      return Address.fromString(value).publicKey
+    }
+    if (!value || !value.publicKey) {
+      throw new Error(`Invalid Address object: publicKey is ${value?.publicKey}. Address object: ${JSON.stringify(value)}`)
+    }
+    return value.publicKey
   }
 
-  protected fromEncoded(value: Uint8Array): string {
-    return addressFromPublicKey(value)
+  protected fromEncoded(value: Uint8Array): Address {
+    return new Address(value)
   }
 
-  protected isDefaultValue(value: string): boolean {
+  protected isDefaultValue(value: Address): boolean {
     const encoded = this.toEncoded(value)
     const defaultValue = this.defaultValue()
 
-    // Compare byte arrays element by element
-    if (encoded.length !== defaultValue.length) {
-      return false
-    }
-
-    for (let i = 0; i < encoded.length; i++) {
-      if (encoded[i] !== defaultValue[i]) {
-        return false
-      }
-    }
-
-    return true
+    return arrayEqual(encoded, defaultValue)
   }
 }
 

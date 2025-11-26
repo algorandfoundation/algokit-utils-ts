@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 import type { ABIStructType } from './abi-type'
 import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
 import { ABIStructValue, ABIValue } from './abi-value'
+import { Address } from '@algorandfoundation/algokit-common'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -43,7 +44,7 @@ describe('ABIType encode decode', () => {
     {
       description: 'address',
       abiType: { name: ABITypeName.Address } as ABIType,
-      abiValue: 'MO2H6ZU47Q36GJ6GVHUKGEBEQINN7ZWVACMWZQGIYUOE3RBSRVYHV4ACJI',
+      abiValue: Address.fromString('MO2H6ZU47Q36GJ6GVHUKGEBEQINN7ZWVACMWZQGIYUOE3RBSRVYHV4ACJI'),
       expectedBytes: [
         99, 180, 127, 102, 156, 252, 55, 227, 39, 198, 169, 232, 163, 16, 36, 130, 26, 223, 230, 213, 0, 153, 108, 192, 200, 197, 28, 77,
         196, 50, 141, 112,
@@ -257,7 +258,7 @@ describe('ABIType encode decode', () => {
     {
       description: 'nested tuple (uint16, (byte, address))',
       typeString: '(uint16,(byte,address))',
-      abiValue: [42, [234, 'MO2H6ZU47Q36GJ6GVHUKGEBEQINN7ZWVACMWZQGIYUOE3RBSRVYHV4ACJI']],
+      abiValue: [42, [234, Address.fromString('MO2H6ZU47Q36GJ6GVHUKGEBEQINN7ZWVACMWZQGIYUOE3RBSRVYHV4ACJI')]],
       expectedBytes: [
         0, 42, 234, 99, 180, 127, 102, 156, 252, 55, 227, 39, 198, 169, 232, 163, 16, 36, 130, 26, 223, 230, 213, 0, 153, 108, 192, 200,
         197, 28, 77, 196, 50, 141, 112,
@@ -398,7 +399,7 @@ describe('ABIType encode decode', () => {
       123,
       [65432, 'hello', ['world 1', 'world 2', 'world 3']],
       [false, 88],
-      [222, 'BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE'],
+      [222, Address.fromString('BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE')],
     ] satisfies ABIValue[]
 
     const structValue = {
@@ -412,7 +413,7 @@ describe('ABIType encode decode', () => {
         'field 3 child 1': false,
         'field 3 child 2': 88,
       },
-      'field 4': [222, 'BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE'],
+      'field 4': [222, Address.fromString('BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE')],
     } satisfies ABIStructValue
 
     const encodedTuple = encodeABIValue(tupleType, tupleValue)

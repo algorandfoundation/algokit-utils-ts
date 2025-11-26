@@ -4,7 +4,13 @@ import {
   SimulateUnnamedResourcesAccessed,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
-import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
+import {
+  MAX_ACCOUNT_REFERENCES,
+  MAX_OVERALL_REFERENCES,
+  ReadableAddress,
+  getAddress,
+  getApplicationAddress,
+} from '@algorandfoundation/algokit-common'
 import {
   AccessReference,
   OnApplicationComplete,
@@ -12,7 +18,6 @@ import {
   Transaction,
   TransactionType,
 } from '@algorandfoundation/algokit-transact'
-import { Address } from '@algorandfoundation/sdk'
 import { AppManager, BoxIdentifier, BoxReference as UtilsBoxReference } from '../types/app-manager'
 import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
@@ -27,7 +32,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
   args?: Uint8Array[]
   /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
-  accountReferences?: (string | Address)[]
+  accountReferences?: ReadableAddress[]
   /** The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   appReferences?: bigint[]
   /** The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
@@ -146,7 +151,7 @@ export const buildAppCreate = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
             appReferences: params.appReferences,
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
@@ -187,7 +192,7 @@ export const buildAppUpdate = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
             appReferences: params.appReferences,
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
@@ -216,7 +221,7 @@ export const buildAppCall = (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
             appReferences: params.appReferences,
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
@@ -258,8 +263,9 @@ export function populateTransactionResources(
   if (resourcesAccessed.accounts) {
     transaction.appCall.accountReferences = transaction.appCall.accountReferences ?? []
     for (const account of resourcesAccessed.accounts) {
-      if (!transaction.appCall.accountReferences.includes(account)) {
-        transaction.appCall.accountReferences.push(account)
+      const address = getAddress(account)
+      if (!transaction.appCall.accountReferences.some((a) => a.equals(address))) {
+        transaction.appCall.accountReferences.push(address)
       }
     }
     accountsCount = transaction.appCall.accountReferences.length
@@ -411,7 +417,7 @@ function populateGroupResource(
 ): void {
   // For asset holdings and app locals, first try to find a transaction that already has the account available
   if (resource.type === GroupResourceType.AssetHolding || resource.type === GroupResourceType.AppLocal) {
-    const account = resource.data.account
+    const address = getAddress(resource.data.account)
 
     // Try to find a transaction that already has the account available
     const groupIndex1 = transactions.findIndex((txn) => {
@@ -422,21 +428,21 @@ function populateGroupResource(
       const appCall = txn.appCall!
 
       // Check if account is in foreign accounts array
-      if (appCall.accountReferences?.includes(account)) {
+      if (appCall.accountReferences?.some((a) => a.equals(address))) {
         return true
       }
 
       // Check if account is available as an app account
       if (appCall.appReferences) {
         for (const appId of appCall.appReferences) {
-          if (account === getAppAddress(appId)) {
+          if (address === getApplicationAddress(appId)) {
             return true
           }
         }
       }
 
       // Check if account appears in any app call transaction fields
-      if (txn.sender === account) {
+      if (txn.sender.equals(address)) {
         return true
       }
 
@@ -480,8 +486,8 @@ function populateGroupResource(
     if (groupIndex2 !== -1) {
       const appCall = transactions[groupIndex2].appCall!
       appCall.accountReferences = appCall.accountReferences ?? []
-      if (!appCall.accountReferences.includes(account)) {
-        appCall.accountReferences.push(account)
+      if (!appCall.accountReferences.includes(address)) {
+        appCall.accountReferences.push(address)
       }
       return
     }
@@ -553,12 +559,14 @@ function populateGroupResource(
   const appCall = transactions[groupIndex].appCall!
 
   switch (resource.type) {
-    case GroupResourceType.Account:
+    case GroupResourceType.Account: {
       appCall.accountReferences = appCall.accountReferences ?? []
-      if (!appCall.accountReferences.includes(resource.data)) {
-        appCall.accountReferences.push(resource.data)
+      const address = getAddress(resource.data)
+      if (!appCall.accountReferences.some((a) => a.equals(address))) {
+        appCall.accountReferences.push(address)
       }
       break
+    }
     case GroupResourceType.App:
       appCall.appReferences = appCall.appReferences ?? []
       if (!appCall.appReferences.includes(resource.data)) {
@@ -588,26 +596,30 @@ function populateGroupResource(
       appCall.boxReferences = appCall.boxReferences ?? []
       appCall.boxReferences.push({ appId: 0n, name: new Uint8Array(0) })
       break
-    case GroupResourceType.AssetHolding:
+    case GroupResourceType.AssetHolding: {
       appCall.assetReferences = appCall.assetReferences ?? []
       if (!appCall.assetReferences.includes(resource.data.asset)) {
         appCall.assetReferences.push(resource.data.asset)
       }
+      const address = getAddress(resource.data.account)
       appCall.accountReferences = appCall.accountReferences ?? []
-      if (!appCall.accountReferences.includes(resource.data.account)) {
-        appCall.accountReferences.push(resource.data.account)
+      if (!appCall.accountReferences.some((a) => a.equals(address))) {
+        appCall.accountReferences.push(address)
       }
       break
-    case GroupResourceType.AppLocal:
+    }
+    case GroupResourceType.AppLocal: {
       appCall.appReferences = appCall.appReferences ?? []
       if (!appCall.appReferences.includes(resource.data.app)) {
         appCall.appReferences.push(resource.data.app)
       }
+      const address = getAddress(resource.data.account)
       appCall.accountReferences = appCall.accountReferences ?? []
-      if (!appCall.accountReferences.includes(resource.data.account)) {
-        appCall.accountReferences.push(resource.data.account)
+      if (!appCall.accountReferences.some((a) => a.equals(address))) {
+        appCall.accountReferences.push(address)
       }
       break
+    }
     case GroupResourceType.Asset:
       appCall.assetReferences = appCall.assetReferences ?? []
       if (!appCall.assetReferences.includes(resource.data)) {

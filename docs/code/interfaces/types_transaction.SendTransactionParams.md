@@ -12,23 +12,10 @@ The sending configuration for a transaction
 
   ↳ [`AppCallParams`](types_app.AppCallParams.md)
 
-  ↳ [`CreateAssetParams`](types_asset.CreateAssetParams.md)
-
-  ↳ [`AssetOptInParams`](types_asset.AssetOptInParams.md)
-
-  ↳ [`AlgoTransferParams`](types_transfer.AlgoTransferParams.md)
-
-  ↳ [`AlgoRekeyParams`](types_transfer.AlgoRekeyParams.md)
-
-  ↳ [`EnsureFundedParams`](types_transfer.EnsureFundedParams.md)
-
-  ↳ [`TransferAssetParams`](types_transfer.TransferAssetParams.md)
-
 ## Table of contents
 
 ### Properties
 
-- [atc](types_transaction.SendTransactionParams.md#atc)
 - [fee](types_transaction.SendTransactionParams.md#fee)
 - [maxFee](types_transaction.SendTransactionParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transaction.SendTransactionParams.md#maxroundstowaitforconfirmation)
@@ -36,20 +23,9 @@ The sending configuration for a transaction
 - [skipSending](types_transaction.SendTransactionParams.md#skipsending)
 - [skipWaiting](types_transaction.SendTransactionParams.md#skipwaiting)
 - [suppressLog](types_transaction.SendTransactionParams.md#suppresslog)
+- [transactionComposer](types_transaction.SendTransactionParams.md#transactioncomposer)
 
 ## Properties
-
-### atc
-
-• `Optional` **atc**: `AtomicTransactionComposer`
-
-An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
-
-#### Defined in
-
-[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
-
-___
 
 ### fee
 
@@ -59,7 +35,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
 ___
 
@@ -71,7 +47,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
 
 ___
 
@@ -83,7 +59,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
 
 ___
 
@@ -95,7 +71,7 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 #### Defined in
 
-[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
@@ -108,7 +84,7 @@ and instead just return the raw transaction, e.g. so you can add it to a group o
 
 #### Defined in
 
-[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -120,7 +96,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
 
 ___
 
@@ -132,4 +108,16 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
+
+___
+
+### transactionComposer
+
+• `Optional` **transactionComposer**: [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+An optional `TransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)

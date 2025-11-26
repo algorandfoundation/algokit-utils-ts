@@ -10,6 +10,7 @@ import {
   getABIMethodSelector,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { getAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
@@ -222,14 +223,14 @@ const isAbiValue = (x: unknown): x is ABIValue => {
  * Populate reference arrays from processed ABI method call arguments
  */
 function populateMethodArgsIntoReferenceArrays(
-  sender: string,
+  sender: Address,
   appId: bigint,
   method: ABIMethod,
   methodArgs: AppMethodCallArg[],
-  accountReferences?: string[],
+  accountReferences?: Address[],
   appReferences?: bigint[],
   assetReferences?: bigint[],
-): { accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
+): { accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
   const accounts = accountReferences ?? []
   const assets = assetReferences ?? []
   const apps = appReferences ?? []
@@ -239,8 +240,8 @@ function populateMethodArgsIntoReferenceArrays(
     if (argTypeIsReference(argType)) {
       switch (argType) {
         case 'account':
-          if (typeof arg === 'string' && arg !== sender && !accounts.includes(arg)) {
-            accounts.push(arg)
+          if (typeof arg === 'string' && arg !== sender.toString() && !accounts.some((a) => a.toString() === arg)) {
+            accounts.push(getAddress(arg))
           }
           break
         case 'asset':
@@ -266,9 +267,9 @@ function populateMethodArgsIntoReferenceArrays(
 function calculateMethodArgReferenceArrayIndex(
   refValue: string | bigint,
   referenceType: ABIReferenceType,
-  sender: string,
+  sender: Address,
   appId: bigint,
-  accountReferences: string[],
+  accountReferences: Address[],
   appReferences: bigint[],
   assetReferences: bigint[],
 ): number {
@@ -276,8 +277,8 @@ function calculateMethodArgReferenceArrayIndex(
     case 'account':
       if (typeof refValue === 'string') {
         // If address is the same as sender, use index 0
-        if (refValue === sender) return 0
-        const index = accountReferences.indexOf(refValue)
+        if (refValue === sender.toString()) return 0
+        const index = accountReferences.findIndex((a) => a.toString() === refValue)
         if (index === -1) throw new Error(`Account ${refValue} not found in reference array`)
         return index + 1
       }
@@ -310,9 +311,9 @@ function calculateMethodArgReferenceArrayIndex(
 function encodeMethodArguments(
   method: ABIMethod,
   args: (ABIValue | undefined)[],
-  sender: string,
+  sender: Address,
   appId: bigint,
-  accountReferences: string[],
+  accountReferences: Address[],
   appReferences: bigint[],
   assetReferences: bigint[],
 ): Uint8Array[] {
@@ -425,14 +426,14 @@ function buildMethodCallCommon(
     appId: bigint
     method: ABIMethod
     args: (ABIValue | undefined)[]
-    accountReferences?: string[]
+    accountReferences?: Address[]
     appReferences?: bigint[]
     assetReferences?: bigint[]
   },
-  header: TransactionCommonData,
-): { args: Uint8Array[]; accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
+  commonData: TransactionCommonData,
+): { args: Uint8Array[]; accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
   const { accountReferences, appReferences, assetReferences } = populateMethodArgsIntoReferenceArrays(
-    header.sender,
+    commonData.sender,
     params.appId,
     params.method,
     params.args ?? [],
@@ -444,7 +445,7 @@ function buildMethodCallCommon(
   const encodedArgs = encodeMethodArguments(
     params.method,
     params.args,
-    header.sender,
+    commonData.sender,
     params.appId,
     accountReferences,
     appReferences,
@@ -490,7 +491,7 @@ export const buildAppCreateMethodCall = async (
       : undefined
   const extraProgramPages =
     params.extraProgramPages !== undefined ? params.extraProgramPages : calculateExtraProgramPages(approvalProgram!, clearStateProgram!)
-  const accountReferences = params.accountReferences?.map((a) => a.toString())
+  const accountReferences = params.accountReferences?.map((a) => getAddress(a))
   const common = buildMethodCallCommon(
     {
       appId: 0n,
@@ -521,7 +522,7 @@ export const buildAppCreateMethodCall = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
             appReferences: params.appReferences,
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
@@ -546,7 +547,7 @@ export const buildAppUpdateMethodCall = async (
     typeof params.clearStateProgram === 'string'
       ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
       : params.clearStateProgram
-  const accountReferences = params.accountReferences?.map((a) => a.toString())
+  const accountReferences = params.accountReferences?.map((a) => getAddress(a))
   const common = buildMethodCallCommon(
     {
       appId: params.appId,
@@ -574,7 +575,7 @@ export const buildAppUpdateMethodCall = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
             appReferences: params.appReferences,
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
@@ -590,7 +591,7 @@ export const buildAppCallMethodCall = async (
   defaultValidityWindow: bigint,
 ): Promise<Transaction> => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  const accountReferences = params.accountReferences?.map((a) => a.toString())
+  const accountReferences = params.accountReferences?.map((a) => getAddress(a))
   const common = buildMethodCallCommon(
     {
       appId: params.appId,
@@ -616,7 +617,7 @@ export const buildAppCallMethodCall = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
             appReferences: params.appReferences,
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),

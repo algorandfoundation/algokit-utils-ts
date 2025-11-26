@@ -1,10 +1,10 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { BoxesResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { BoxesResponse } from './models/types.js'
 
 export default class SearchForApplicationBoxes extends JSONRequest<BoxesResponse> {
-  private index: bigint;
+  private index: bigint
 
   /**
    * Returns information about indexed application boxes.
@@ -33,15 +33,15 @@ export default class SearchForApplicationBoxes extends JSONRequest<BoxesResponse
    * @category GET
    */
   constructor(c: HTTPClient, index: number | bigint) {
-    super(c);
-    this.index = BigInt(index);
+    super(c)
+    this.index = BigInt(index)
   }
 
   /**
    * @returns `/v2/applications/${index}/boxes`
    */
   path() {
-    return `/v2/applications/${this.index}/boxes`;
+    return `/v2/applications/${this.index}/boxes`
   }
 
   /**
@@ -69,8 +69,8 @@ export default class SearchForApplicationBoxes extends JSONRequest<BoxesResponse
    * @category query
    */
   nextToken(next: string) {
-    this.query.next = next;
-    return this;
+    this.query.next = next
+    return this
   }
 
   /**
@@ -89,12 +89,12 @@ export default class SearchForApplicationBoxes extends JSONRequest<BoxesResponse
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): BoxesResponse {
-    return decodeJSON(response.getJSONText(), BoxesResponse);
+    return decodeJSON(response.getJSONText(), BoxesResponse)
   }
 }

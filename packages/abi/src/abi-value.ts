@@ -1,11 +1,9 @@
-export type ABIValue = boolean | number | bigint | string | Uint8Array | ABIValue[] | ABIStructValue | ABIAddressValue
+import { Address } from '@algorandfoundation/algokit-common'
+
+export type ABIValue = boolean | number | bigint | string | Uint8Array | ABIValue[] | ABIStructValue | Address
 
 export type ABIStructValue = {
   [key: string]: ABIValue
 }
 
 export type ABIReferenceValue = string | bigint
-
-export interface ABIAddressValue {
-  readonly publicKey: Uint8Array
-}

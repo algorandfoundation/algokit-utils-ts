@@ -26,4 +26,4 @@ enum IntDecoding {
   BIGINT = 'bigint',
 }
 
-export default IntDecoding;
+export default IntDecoding

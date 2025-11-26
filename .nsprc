@@ -1,1 +1,6 @@
-{}
+{
+  "1109842": {
+    "active": true,
+    "notes": "glob CLI vulnerability - not exploitable in this context as we don't use glob CLI"
+  }
+}

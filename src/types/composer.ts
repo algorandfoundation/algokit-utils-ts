@@ -15,6 +15,7 @@ import {
   OnApplicationComplete,
   SignedTransaction,
   Transaction,
+  TransactionSigner,
   TransactionType,
   assignFee,
   calculateFee,
@@ -26,7 +27,6 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import {
@@ -49,6 +49,7 @@ import {
   type AssetTransferParams,
 } from '../transactions/asset-transfer'
 
+import { ReadableAddress } from '@algorandfoundation/algokit-common'
 import {
   buildAssetConfig,
   buildAssetCreate,
@@ -59,8 +60,7 @@ import {
   type AssetDestroyParams,
   type AssetFreezeParams,
 } from '../transactions/asset-config'
-import { calculateInnerFeeDelta } from '../transactions/common'
-import { FeeDelta, FeePriority } from '../transactions/fee-coverage'
+import { FeeDelta, FeePriority, calculateInnerFeeDelta } from '../transactions/fee-coverage'
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
   AsyncTransactionParams,
@@ -135,8 +135,8 @@ export type SkipSignaturesSimulateOptions = Expand<
  * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
 export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>> & {
-  /** Whether or not to throw error on simulation failure */
-  throwOnFailure?: boolean
+  /** Whether or not to return the result on simulation failure instead of throwing an error */
+  resultOnFailure?: boolean
 }
 
 /** All options to control a simulate request */
@@ -201,7 +201,7 @@ export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: AlgodClient
   /** The function used to get the TransactionSigner for a given address */
-  getSigner: (address: string | Address) => algosdk.TransactionSigner
+  getSigner: (address: ReadableAddress) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
   getSuggestedParams?: () => Promise<SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
@@ -224,22 +224,11 @@ export type TransactionComposerParams = {
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: Transaction[]
+  transactions: TransactionWrapper[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
   signers: Map<number, algosdk.TransactionSigner>
-}
-
-class BuildComposerTransactionsError extends Error {
-  constructor(
-    message: string,
-    public sentTransactions?: Transaction[],
-    public simulateResponse?: SimulateTransaction,
-  ) {
-    super(message)
-    this.name = 'BuildComposerTransactionsError'
-  }
 }
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
@@ -254,7 +243,7 @@ export class TransactionComposer {
   private getSuggestedParams: () => Promise<SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
-  private getSigner: (address: string | Address) => algosdk.TransactionSigner
+  private getSigner: (address: ReadableAddress) => algosdk.TransactionSigner
 
   /** The default transaction validity window */
   private defaultValidityWindow = 10n
@@ -272,10 +261,8 @@ export class TransactionComposer {
 
   private signedTransactions?: SignedTransaction[]
 
-  // Note: This doesn't need to be a private field of this class
-  // It has been done this way so that another process can manipulate this values, i.e. `legacySendTransactionBridge`
-  // Once the legacy bridges are removed, this can be calculated on the fly
-  private methodCalls: Map<number, ABIMethod> = new Map()
+  // Cache the raw transactions before resource population for error handling
+  private rawBuildTransactions?: Transaction[]
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -444,7 +431,6 @@ export class TransactionComposer {
       newComposer.txns.push(this.cloneTransaction(txn))
     })
 
-    newComposer.methodCalls = new Map(this.methodCalls)
     newComposer.defaultValidityWindowIsExplicit = this.defaultValidityWindowIsExplicit
 
     return newComposer
@@ -501,14 +487,8 @@ export class TransactionComposer {
    * ```
    */
   public addTransactionComposer(composer: TransactionComposer): TransactionComposer {
-    const currentIndex = this.txns.length
     const clonedTxns = composer.txns.map((txn) => this.cloneTransaction(txn))
     this.push(...clonedTxns)
-
-    // Copy methodCalls from the target composer, adjusting indices
-    composer.methodCalls.forEach((method, index) => {
-      this.methodCalls.set(currentIndex + index, method)
-    })
 
     return this
   }
@@ -1037,7 +1017,6 @@ export class TransactionComposer {
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1045,14 +1024,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1106,7 +1077,6 @@ export class TransactionComposer {
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1114,14 +1084,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1173,7 +1135,6 @@ export class TransactionComposer {
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1181,14 +1142,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1240,7 +1193,6 @@ export class TransactionComposer {
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
-    const currentIndex = this.txns.length
 
     // Push all transaction arguments and the method call itself
     this.push(...txnArgs, {
@@ -1248,14 +1200,6 @@ export class TransactionComposer {
       type: 'methodCall',
     })
 
-    // Set method calls for any method call arguments
-    txnArgs.forEach((txn, index) => {
-      if (txn.type === 'methodCall') {
-        this.methodCalls.set(currentIndex + index, txn.data.method)
-      }
-    })
-    // Set method call for the main transaction
-    this.methodCalls.set(currentIndex + txnArgs.length, params.method)
     return this
   }
 
@@ -1367,24 +1311,35 @@ export class TransactionComposer {
       const suggestedParams = await this.getSuggestedParams()
       const builtTransactions = await this._buildTransactions(suggestedParams)
 
+      // Cache the raw transactions before resource population for error handling
+      this.rawBuildTransactions = builtTransactions.transactions
+
       const groupAnalysis =
         (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
         builtTransactions.transactions.some((txn) => txn.type === TransactionType.AppCall)
           ? await this.analyzeGroupRequirements(builtTransactions.transactions, suggestedParams, this.composerConfig)
           : undefined
 
-      try {
-        this.populateTransactionAndGroupResources(builtTransactions.transactions, groupAnalysis)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        throw new BuildComposerTransactionsError(err.message ?? 'Failed to populate transaction and group resources')
-      }
-      this.transactionsWithSigners = this.gatherSigners(builtTransactions)
+      this.populateTransactionAndGroupResources(builtTransactions.transactions, groupAnalysis)
+
+      this.transactionsWithSigners = builtTransactions.transactions.map((txn, index) => {
+        return {
+          txn,
+          signer: builtTransactions.signers.get(index) ?? this.getSigner(txn.sender),
+        }
+      })
     }
+
+    const methodCalls = new Map<number, ABIMethod>()
+    this.txns.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        methodCalls.set(index, txn.data.method)
+      }
+    })
 
     return {
       transactions: this.transactionsWithSigners,
-      methodCalls: this.methodCalls,
+      methodCalls,
     }
   }
 
@@ -1488,36 +1443,33 @@ export class TransactionComposer {
       throw new Error(`Transaction group size ${transactions.length} exceeds the maximum limit of ${MAX_TRANSACTION_GROUP_SIZE}`)
     }
 
-    return { transactions, methodCalls: this.methodCalls, signers }
+    const methodCalls = new Map<number, ABIMethod>()
+    this.txns.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        methodCalls.set(index, txn.data.method)
+      }
+    })
+
+    return { transactions, methodCalls, signers }
   }
 
   /**
-   * @deprecated Use `composer.build()` instead
-   * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
+   * Builds all transactions in the composer and returns them along with method calls and signers.
    *
-   * @returns The array of built transactions and any corresponding method calls
+   * Note: This method only builds the transactions as-is without resource population or automatic grouping.
+   * Use this when you need the raw transactions.
+   * @returns An object containing the array of built transactions, method calls, and signers
    * @example
    * ```typescript
    * const { transactions, methodCalls, signers } = await composer.buildTransactions()
    * ```
    */
   public async buildTransactions(): Promise<BuiltTransactions> {
-    const buildResult = await this.build()
-
-    const transactions = buildResult.transactions.map((txnWithSigner) => txnWithSigner.txn)
-    transactions.forEach((txn) => {
-      delete txn.group
-    })
-
-    const signers = new Map<number, TransactionSigner>()
-    buildResult.transactions.forEach((txnWithSigner, index) => {
-      signers.set(index, txnWithSigner.signer)
-    })
-
+    const suggestedParams = await this.getSuggestedParams()
+    const buildResult = await this._buildTransactions(suggestedParams)
     return {
-      transactions,
-      methodCalls: buildResult.methodCalls,
-      signers,
+      ...buildResult,
+      transactions: buildResult.transactions.map((t) => new TransactionWrapper(t)),
     }
   }
 
@@ -1646,15 +1598,6 @@ export class TransactionComposer {
     }
   }
 
-  private gatherSigners(builtTransactions: BuiltTransactions): TransactionWithSigner[] {
-    return builtTransactions.transactions.map((txn, index) => {
-      return {
-        txn,
-        signer: builtTransactions.signers.get(index) ?? this.getSigner(txn.sender),
-      }
-    })
-  }
-
   private async analyzeGroupRequirements(
     transactions: Transaction[],
     suggestedParams: SuggestedParams,
@@ -1685,7 +1628,7 @@ export class TransactionComposer {
 
     // Check for required max fees on app calls when fee coverage is enabled
     if (analysisParams.coverAppCallInnerTransactionFees && appCallIndexesWithoutMaxFees.length > 0) {
-      throw new BuildComposerTransactionsError(
+      throw new Error(
         `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
       )
     }
@@ -1722,17 +1665,13 @@ export class TransactionComposer {
     // Handle any simulation failures
     if (groupResponse.failureMessage) {
       if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('fee too small')) {
-        throw new BuildComposerTransactionsError(
+        throw new Error(
           'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
-          transactionsToSimulate,
-          response,
         )
       }
 
-      throw new BuildComposerTransactionsError(
+      throw new Error(
         `Error resolving execution info via simulate in transaction ${groupResponse.failedAt?.join(', ')}: ${groupResponse.failureMessage}`,
-        transactionsToSimulate,
-        response,
       )
     }
 
@@ -1808,8 +1747,13 @@ export class TransactionComposer {
    * ```
    */
   async rebuild() {
-    this.transactionsWithSigners = undefined
+    this.reset()
     return await this.build()
+  }
+
+  private reset() {
+    this.signedTransactions = undefined
+    this.transactionsWithSigners = undefined
   }
 
   /**
@@ -1833,8 +1777,7 @@ export class TransactionComposer {
         populateAppCallResources: params?.populateAppCallResources ?? true,
       }
 
-      this.transactionsWithSigners = undefined
-      this.signedTransactions = undefined
+      this.reset()
     }
 
     try {
@@ -1862,7 +1805,7 @@ export class TransactionComposer {
       }
 
       if (Config.debug && Config.traceAll) {
-        const simulateResult = await this.simulate({
+        await this.simulate({
           allowEmptySignatures: true,
           fixSigners: true,
           allowMoreLogging: true,
@@ -1872,10 +1815,7 @@ export class TransactionComposer {
             stackChange: true,
             stateChange: true,
           },
-          throwOnFailure: false,
-        })
-        await Config.events.emitAsync(EventType.TxnGroupSimulated, {
-          simulateResponse: simulateResult,
+          resultOnFailure: true,
         })
       }
 
@@ -1908,7 +1848,7 @@ export class TransactionComposer {
         confirmations = await Promise.all(transactionIds.map(async (id) => await waitForConfirmation(id, waitRounds, this.algod)))
       }
 
-      const abiReturns = this.parseAbiReturnValues(confirmations, this.methodCalls)
+      const abiReturns = this.parseAbiReturnValues(confirmations)
 
       return {
         groupId: group ? Buffer.from(group).toString('base64') : undefined,
@@ -1922,45 +1862,45 @@ export class TransactionComposer {
       const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Transaction Composer'
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = new Error(errorMessage) as any
-
-      // Don't include BuildComposerTransactionsError as cause because it can be noisy
-      // If the user needs to, they can enable the debug flag to get traces
-      err.cause = !(originalError instanceof BuildComposerTransactionsError) ? originalError : undefined
+      err.cause = originalError
 
       if (typeof originalError === 'object') {
         err.name = originalError.name
       }
 
-      const sentTransactions =
-        originalError instanceof BuildComposerTransactionsError
-          ? (originalError.sentTransactions ?? [])
-          : (this.transactionsWithSigners ?? []).map((transactionWithSigner) => transactionWithSigner.txn)
+      // Resolve transactions for error handling - use transactionsWithSigners if available,
+      // otherwise fall back to rawBuildTransactions
+      let sentTransactions: Transaction[] | undefined
+      if (this.transactionsWithSigners) {
+        sentTransactions = this.transactionsWithSigners.map((t) => t.txn)
+      } else if (this.rawBuildTransactions) {
+        sentTransactions = this.rawBuildTransactions.length > 1 ? groupTransactions(this.rawBuildTransactions) : this.rawBuildTransactions
+      }
 
-      if (Config.debug && typeof originalError === 'object') {
+      if (Config.debug && typeof originalError === 'object' && sentTransactions) {
         err.traces = []
         Config.getLogger(params?.suppressLog).error(
           'Received error executing Transaction Composer and debug flag enabled; attempting simulation to get more information',
           err,
         )
 
-        let simulateResponse: SimulateTransaction | undefined
-        if (originalError instanceof BuildComposerTransactionsError) {
-          simulateResponse = originalError.simulateResponse
-        } else {
-          const simulateResult = await this.simulate({
-            allowEmptySignatures: true,
-            fixSigners: true,
-            allowMoreLogging: true,
-            execTraceConfig: {
-              enable: true,
-              scratchChange: true,
-              stackChange: true,
-              stateChange: true,
-            },
-            throwOnFailure: false,
-          })
-          simulateResponse = simulateResult.simulateResponse
-        }
+        const transactionsWithEmptySigners: TransactionWithSigner[] = sentTransactions.map((txn) => ({
+          txn,
+          signer: algosdk.makeEmptyTransactionSigner(),
+        }))
+        const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
+        const simulateResponse = await this.algod.simulateTransaction({
+          txnGroups: [{ txns: signedTransactions }],
+          allowEmptySignatures: true,
+          fixSigners: true,
+          allowMoreLogging: true,
+          execTraceConfig: {
+            enable: true,
+            scratchChange: true,
+            stackChange: true,
+            stateChange: true,
+          },
+        })
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
@@ -1988,23 +1928,10 @@ export class TransactionComposer {
       }
 
       // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = sentTransactions.map((t) => new TransactionWrapper(t))
+      err.sentTransactions = (sentTransactions ?? []).map((txn) => new TransactionWrapper(txn))
 
       throw await this.transformError(err)
     }
-  }
-
-  /**
-   * @deprecated Use `send` instead.
-   *
-   * Compose the transaction group and send it to the network
-   *
-   * An alias for `composer.send(params)`.
-   * @param params The parameters to control execution with
-   * @returns The execution result
-   */
-  async execute(params?: SendParams): Promise<SendTransactionComposerResults> {
-    return this.send(params)
   }
 
   /**
@@ -2041,7 +1968,7 @@ export class TransactionComposer {
    */
   async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
-    const { skipSignatures = false, throwOnFailure = true, ...rawOptions } = options ?? {}
+    const { skipSignatures = false, resultOnFailure = false, ...rawOptions } = options ?? {}
 
     if (skipSignatures) {
       rawOptions.allowEmptySignatures = true
@@ -2050,8 +1977,7 @@ export class TransactionComposer {
 
     let transactionsWithSigner: TransactionWithSigner[]
     if (!this.transactionsWithSigners) {
-      const suggestedParams = await this.getSuggestedParams()
-      const builtTransactions = await this._buildTransactions(suggestedParams)
+      const builtTransactions = await this.buildTransactions()
       const transactions =
         builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
 
@@ -2062,8 +1988,6 @@ export class TransactionComposer {
           : (builtTransactions.signers.get(index) ?? algosdk.makeEmptyTransactionSigner()),
       }))
     } else {
-      rawOptions.allowUnnamedResources = true
-
       transactionsWithSigner = this.transactionsWithSigners.map((e) => ({
         txn: e.txn,
         signer: skipSignatures ? algosdk.makeEmptyTransactionSigner() : e.signer,
@@ -2098,7 +2022,7 @@ export class TransactionComposer {
     const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
     const simulateResult = simulateResponse.txnGroups[0]
 
-    if (simulateResult?.failureMessage && throwOnFailure) {
+    if (simulateResult?.failureMessage && !resultOnFailure) {
       const errorMessage = `Transaction failed at transaction(s) ${simulateResult.failedAt?.join(', ') || 'unknown'} in the group. ${simulateResult.failureMessage}`
       const error = new Error(errorMessage)
 
@@ -2113,10 +2037,7 @@ export class TransactionComposer {
       await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
     }
 
-    const abiReturns = this.parseAbiReturnValues(
-      simulateResult.txnResults.map((t) => t.txnResult),
-      this.methodCalls,
-    )
+    const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
 
     return {
       confirmations: simulateResult.txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
@@ -2196,14 +2117,16 @@ export class TransactionComposer {
     return signedTransactions
   }
 
-  private parseAbiReturnValues(confirmations: PendingTransactionResponse[], methodCalls: Map<number, ABIMethod>): ABIReturn[] {
+  private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
     const abiReturns = new Array<ABIReturn>()
 
     for (let i = 0; i < confirmations.length; i++) {
       const confirmation = confirmations[i]
-      const method = methodCalls.get(i)
+      const txn = this.txns[i]
+      if (txn?.type !== 'methodCall') continue
 
-      if (method && method.returns.type !== 'void') {
+      const method = txn.data.method
+      if (method.returns.type !== 'void') {
         const abiReturn = AppManager.getABIReturn(confirmation, method)
         if (abiReturn !== undefined) {
           abiReturns.push(abiReturn)

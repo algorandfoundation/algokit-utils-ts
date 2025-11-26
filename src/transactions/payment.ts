@@ -1,20 +1,20 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { Address } from '@algorandfoundation/sdk'
 import { AlgoAmount } from '../types/amount'
 import { CommonTransactionParams, buildTransactionCommonData } from './common'
 
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
   /** The address of the account that will receive the Algo */
-  receiver: string | Address
+  receiver: ReadableAddress
   /** Amount to send */
   amount: AlgoAmount
   /** If given, close the sender account and send the remaining balance to this address
    *
    * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
    */
-  closeRemainderTo?: string | Address
+  closeRemainderTo?: ReadableAddress
 }
 
 export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
@@ -23,9 +23,9 @@ export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedPa
     ...commonData,
     type: TransactionType.Payment,
     payment: {
-      receiver: params.receiver.toString(),
+      receiver: getAddress(params.receiver),
       amount: params.amount.microAlgos,
-      closeRemainderTo: params.closeRemainderTo?.toString(),
+      closeRemainderTo: getOptionalAddress(params.closeRemainderTo),
     },
   }
 }

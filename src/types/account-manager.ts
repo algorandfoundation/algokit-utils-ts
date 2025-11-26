@@ -1,18 +1,18 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, LogicSigAccount, TransactionSigner } from '@algorandfoundation/sdk'
+import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
-import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-
-const address = (address: string | Address) => (typeof address === 'string' ? Address.fromString(address) : address)
+import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -33,7 +33,7 @@ export interface EnsureFundedResult {
  * ```
  */
 export const getAccountTransactionSigner = memoize(function (
-  account: TransactionSignerAccount | Account | SigningAccount | LogicSigAccount | MultisigAccount,
+  account: AddressWithSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount,
 ): TransactionSigner {
   return 'signer' in account
     ? account.signer
@@ -46,8 +46,8 @@ export const getAccountTransactionSigner = memoize(function (
 export class AccountManager {
   private _clientManager: ClientManager
   private _kmdAccountManager: KmdAccountManager
-  private _accounts: { [address: string]: TransactionSignerAccount } = {}
-  private _defaultSigner?: algosdk.TransactionSigner
+  private _accounts: { [address: string]: AddressWithSigner } = {}
+  private _defaultSigner?: TransactionSigner
 
   /**
    * Create a new account manager.
@@ -87,10 +87,10 @@ export class AccountManager {
    *
    * If this isn't set an a transaction needs signing for a given sender
    * then an error will be thrown from `getSigner` / `getAccount`.
-   * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
+   * @param signer The signer to use, either a `TransactionSigner` or a `AddressWithSigner`
    * @example
    * ```typescript
-   * const signer = accountManager.random() // Can be anything that returns a `algosdk.TransactionSigner` or `TransactionSignerAccount`
+   * const signer = accountManager.random() // Can be anything that returns a `TransactionSigner` or `AddressWithSigner`
    * accountManager.setDefaultSigner(signer)
    *
    * // When signing a transaction, if there is no signer registered for the sender then the default signer will be used
@@ -98,30 +98,30 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` so method calls can be chained
    */
-  public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AccountManager {
+  public setDefaultSigner(signer: TransactionSigner | AddressWithSigner): AccountManager {
     this._defaultSigner = 'signer' in signer ? signer.signer : signer
     return this
   }
 
   /**
    * Records the given account (that can sign) against the address of the provided account for later
-   * retrieval and returns a `TransactionSignerAccount` along with the original account in an `account` property.
+   * retrieval and returns a `AddressWithSigner` along with the original account in an `account` property.
    */
 
-  private signerAccount<T extends TransactionSignerAccount | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
+  private signerAccount<T extends AddressWithSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
     account: T,
   ): Address &
-    TransactionSignerAccount & {
+    AddressWithSigner & {
       /* The underlying account that specified this address. */ account: T
     } {
     const signer = getAccountTransactionSigner(account)
-    const acc: TransactionSignerAccount = {
+    const acc: AddressWithSigner = {
       addr: 'addr' in account ? account.addr : account.address(),
       signer: signer,
     }
     this._accounts[acc.addr.toString()] = acc
 
-    const addressWithAccount = Address.fromString(acc.addr.toString()) as Address & TransactionSignerAccount & { account: T }
+    const addressWithAccount = Address.fromString(acc.addr.toString()) as Address & AddressWithSigner & { account: T }
     addressWithAccount.account = account
     addressWithAccount.addr = acc.addr
     addressWithAccount.signer = signer
@@ -133,7 +133,7 @@ export class AccountManager {
    *
    * Note: If you are generating accounts via the various methods on `AccountManager`
    * (like `random`, `fromMnemonic`, `logicsig`, etc.) then they automatically get tracked.
-   * @param account The account to register, which can be a `TransactionSignerAccount` or
+   * @param account The account to register, which can be a `AddressWithSigner` or
    *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
    * @example
    * ```typescript
@@ -146,15 +146,15 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` instance for method chaining
    */
-  public setSignerFromAccount(account: TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
+  public setSignerFromAccount(account: AddressWithSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
     this.signerAccount(account)
     return this
   }
 
   /**
-   * Tracks the given `algosdk.TransactionSigner` against the given sender address for later signing.
+   * Tracks the given `TransactionSigner` against the given sender address for later signing.
    * @param sender The sender address to use this signer for
-   * @param signer The `algosdk.TransactionSigner` to sign transactions with for the given sender
+   * @param signer The `TransactionSigner` to sign transactions with for the given sender
    * @example
    * ```typescript
    * const accountManager = new AccountManager(clientManager)
@@ -162,8 +162,8 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` instance for method chaining
    */
-  public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
-    this._accounts[address(sender).toString()] = { addr: address(sender), signer }
+  public setSigner(sender: string | Address, signer: TransactionSigner) {
+    this._accounts[getAddress(sender).toString()] = { addr: getAddress(sender), signer }
     return this
   }
 
@@ -199,14 +199,14 @@ export class AccountManager {
    * ```
    * @returns The `TransactionSigner` or throws an error if not found and no default signer is set
    */
-  public getSigner(sender: string | Address): algosdk.TransactionSigner {
-    const signer = this._accounts[address(sender).toString()]?.signer ?? this._defaultSigner
+  public getSigner(sender: ReadableAddress): TransactionSigner {
+    const signer = this._accounts[getAddress(sender).toString()]?.signer ?? this._defaultSigner
     if (!signer) throw new Error(`No signer found for address ${sender}`)
     return signer
   }
 
   /**
-   * Returns the `TransactionSignerAccount` for the given sender address.
+   * Returns the `AddressWithSigner` for the given sender address.
    *
    * If no signer has been registered for that address then an error is thrown.
    * @param sender The sender address
@@ -214,13 +214,13 @@ export class AccountManager {
    * ```typescript
    * const sender = accountManager.random()
    * // ...
-   * // Returns the `TransactionSignerAccount` for `sender` that has previously been registered
+   * // Returns the `AddressWithSigner` for `sender` that has previously been registered
    * const account = accountManager.getAccount(sender)
    * ```
-   * @returns The `TransactionSignerAccount` or throws an error if not found
+   * @returns The `AddressWithSigner` or throws an error if not found
    */
-  public getAccount(sender: string | Address): TransactionSignerAccount {
-    const account = this._accounts[address(sender).toString()]
+  public getAccount(sender: ReadableAddress): AddressWithSigner {
+    const account = this._accounts[getAddress(sender).toString()]
     if (!account) throw new Error(`No signer found for address ${sender}`)
     return account
   }
@@ -238,8 +238,8 @@ export class AccountManager {
    * @param sender The account / address to look up
    * @returns The account information
    */
-  public async getInformation(sender: string | Address): Promise<AccountInformation> {
-    const senderAddress = typeof sender === 'string' ? sender : sender.toString()
+  public async getInformation(sender: ReadableAddress): Promise<AccountInformation> {
+    const senderAddress = getAddress(sender).toString()
     const {
       round,
       lastHeartbeat = undefined,
@@ -302,8 +302,8 @@ export class AccountManager {
    * @param sender The sender address to use as the new sender
    * @returns The account
    */
-  public rekeyed(sender: string | Address, account: TransactionSignerAccount) {
-    return this.signerAccount({ addr: address(sender), signer: account.signer })
+  public rekeyed(sender: string | Address, account: AddressWithSigner) {
+    return this.signerAccount({ addr: getAddress(sender), signer: account.signer })
   }
 
   /**
@@ -504,16 +504,16 @@ export class AccountManager {
    */
   async rekeyAccount(
     account: string | Address,
-    rekeyTo: string | Address | TransactionSignerAccount,
+    rekeyTo: string | Address | AddressWithSigner,
     options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<SendSingleTransactionResult> {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: address(account),
-        receiver: address(account),
+        sender: getAddress(account),
+        receiver: getAddress(account),
         amount: AlgoAmount.MicroAlgo(0),
-        rekeyTo: address(typeof rekeyTo === 'object' && 'addr' in rekeyTo ? rekeyTo.addr : rekeyTo),
+        rekeyTo: getAddress(rekeyTo),
       })
       .send(options)
 
@@ -569,7 +569,7 @@ export class AccountManager {
     } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
-    const addressToFund = address(accountToFund)
+    const addressToFund = getAddress(accountToFund)
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined
@@ -577,7 +577,7 @@ export class AccountManager {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: address(dispenserAccount),
+        sender: getAddress(dispenserAccount),
         receiver: addressToFund,
         amount: amountFunded,
       })
@@ -630,7 +630,7 @@ export class AccountManager {
     } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
-    const addressToFund = address(accountToFund)
+    const addressToFund = getAddress(accountToFund)
     const dispenserAccount = await this.dispenserFromEnvironment()
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
@@ -690,7 +690,7 @@ export class AccountManager {
       throw new Error('Attempt to fund using TestNet dispenser API on non TestNet network.')
     }
 
-    const addressToFund = address(accountToFund)
+    const addressToFund = getAddress(accountToFund)
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined

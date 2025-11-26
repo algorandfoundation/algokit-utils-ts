@@ -1,10 +1,10 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { AssetResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { AssetResponse } from './models/types.js'
 
 export default class LookupAssetByID extends JSONRequest<AssetResponse> {
-  private index: bigint;
+  private index: bigint
 
   /**
    * Returns asset information of the queried asset.
@@ -19,15 +19,15 @@ export default class LookupAssetByID extends JSONRequest<AssetResponse> {
    * @param index - The asset ID to look up.
    */
   constructor(c: HTTPClient, index: number | bigint) {
-    super(c);
-    this.index = BigInt(index);
+    super(c)
+    this.index = BigInt(index)
   }
 
   /**
    * @returns `/v2/assets/${index}`
    */
   path() {
-    return `/v2/assets/${this.index}`;
+    return `/v2/assets/${this.index}`
   }
 
   /**
@@ -55,12 +55,12 @@ export default class LookupAssetByID extends JSONRequest<AssetResponse> {
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): AssetResponse {
-    return decodeJSON(response.getJSONText(), AssetResponse);
+    return decodeJSON(response.getJSONText(), AssetResponse)
   }
 }

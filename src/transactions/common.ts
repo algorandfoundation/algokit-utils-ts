@@ -1,24 +1,24 @@
-import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import { Address, TransactionSigner } from '@algorandfoundation/sdk'
 import { encodeLease } from '../transaction'
-import { TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
-import { FeeDelta } from './fee-coverage'
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
   /** The address of the account sending the transaction. */
-  sender: string | Address
+  sender: ReadableAddress
   /** The function used to sign transaction(s); if not specified then
    *  an attempt will be made to find a registered signer for the
    *  given `sender` or use a default signer (if configured).
    */
-  signer?: TransactionSigner | TransactionSignerAccount
+  signer?: TransactionSigner | AddressWithSigner
   /** Change the signing key of the sender to the given address.
    *
    * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
    */
-  rekeyTo?: string | Address
+  rekeyTo?: ReadableAddress
   /** Note to attach to the transaction. Max of 1000 bytes. */
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window.
@@ -47,14 +47,14 @@ export type CommonTransactionParams = {
 }
 
 export type TransactionCommonData = {
-  sender: string
+  sender: Address
   fee?: bigint
   firstValid: bigint
   lastValid: bigint
   genesisHash?: Uint8Array
   genesisId?: string
   note?: Uint8Array
-  rekeyTo?: string
+  rekeyTo?: Address
   lease?: Uint8Array
   group?: Uint8Array
 }
@@ -75,8 +75,8 @@ export const buildTransactionCommonData = (
   const note = ensureString(commonParams.note)
 
   return {
-    sender: commonParams.sender.toString(),
-    rekeyTo: commonParams.rekeyTo?.toString(),
+    sender: getAddress(commonParams.sender),
+    rekeyTo: getOptionalAddress(commonParams.rekeyTo),
     note: note,
     lease: lease,
     fee: commonParams.staticFee?.microAlgos,
@@ -88,36 +88,4 @@ export const buildTransactionCommonData = (
       (commonParams.validityWindow !== undefined ? firstValid + BigInt(commonParams.validityWindow) : firstValid + defaultValidityWindow),
     group: undefined,
   } satisfies TransactionCommonData
-}
-
-export function calculateInnerFeeDelta(
-  innerTransactions?: PendingTransactionResponse[],
-  minTransactionFee: bigint = 1000n,
-  acc?: FeeDelta,
-): FeeDelta | undefined {
-  if (!innerTransactions) {
-    return acc
-  }
-
-  // Surplus inner transaction fees do not pool up to the parent transaction.
-  // Additionally surplus inner transaction fees only pool from sibling transactions
-  // that are sent prior to a given inner transaction, hence why we iterate in reverse order.
-  return innerTransactions.reduceRight((acc, innerTxn) => {
-    const recursiveDelta = calculateInnerFeeDelta(innerTxn.innerTxns, minTransactionFee, acc)
-
-    // Inner transactions don't require per byte fees
-    const txnFeeDelta = FeeDelta.fromBigInt(minTransactionFee - (innerTxn.txn.txn.fee ?? 0n))
-
-    const currentFeeDelta = FeeDelta.fromBigInt(
-      (recursiveDelta ? FeeDelta.toBigInt(recursiveDelta) : 0n) + (txnFeeDelta ? FeeDelta.toBigInt(txnFeeDelta) : 0n),
-    )
-
-    // If after the recursive inner fee calculations we have a surplus,
-    // return undefined to avoid pooling up surplus fees, which is not allowed.
-    if (currentFeeDelta && FeeDelta.isSurplus(currentFeeDelta)) {
-      return undefined
-    }
-
-    return currentFeeDelta
-  }, acc)
 }

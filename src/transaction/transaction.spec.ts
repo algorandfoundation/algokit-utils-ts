@@ -1,5 +1,5 @@
 import { decodeABIValue, encodeABIValue, getABIType } from '@algorandfoundation/algokit-abi'
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -12,7 +12,6 @@ import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/Res
 import { algo, microAlgo } from '../amount'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
-import { TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import { PaymentParams, TransactionComposer } from '../types/composer'
@@ -1046,7 +1045,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: algosdk.Address & algosdk.Account & TransactionSignerAccount
+  let testAccount: algosdk.Address & algosdk.Account & AddressWithSigner
 
   beforeEach(fixture.newScope)
 
@@ -1134,14 +1133,7 @@ describe('Resource population: meta', () => {
 
     const result = await externalClient.send.call({
       method: 'createBoxInNewApp',
-      args: [
-        algorand.createTransaction.payment({
-          sender: testAccount,
-          receiver: externalClient.appAddress,
-          amount: (1).algo(),
-          signer: testAccount,
-        }),
-      ],
+      args: [algorand.createTransaction.payment({ sender: testAccount, receiver: externalClient.appAddress, amount: (1).algo() })],
       staticFee: (4_000).microAlgo(),
     })
 
@@ -1358,7 +1350,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice.toString() }],
+      accessReferences: [{ address: alice }],
     })
   })
 
@@ -1387,7 +1379,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(15)).map((a) => ({ address: a.toString() }))],
+      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
     })
   })
 
@@ -1397,7 +1389,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(16)).map((a) => ({ address: a.toString() }))],
+        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1438,7 +1430,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { address: alice.toString(), assetId: assetId } }],
+      accessReferences: [{ holding: { address: alice, assetId: assetId } }],
     })
   })
 
@@ -1451,7 +1443,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { address: alice.toString(), appId: externalClient.appId } }],
+      accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
     })
   })
 })

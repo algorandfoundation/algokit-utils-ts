@@ -6,7 +6,7 @@ import {
   Asset,
   AssetHolding,
 } from '@algorandfoundation/algokit-algod-client'
-import { Transaction } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
@@ -121,11 +121,8 @@ export class SigningAccount implements Account {
   }
 }
 
-/** A wrapper around `TransactionSigner` that also has the sender address. */
-export interface TransactionSignerAccount {
-  addr: Readonly<Address>
-  signer: TransactionSigner
-}
+/** @deprecated Use AddressWithSigner */
+export type TransactionSignerAccount = AddressWithSigner
 
 /** Account information at a given round. */
 export type AccountInformation = {
@@ -286,19 +283,4 @@ export type AccountAssetInformation = {
   frozen: boolean
   /** The round as at which the holding was correct. */
   round: bigint
-}
-
-/**
- * @deprecated The methods that use this can be achieved using `AccountManager` instead.
- * Config for an account config */
-export interface AccountConfig {
-  /** Mnemonic for an account */
-  accountMnemonic: string
-  /** Address of a rekeyed account */
-  senderAddress?: string
-  /** Account name used to retrieve config */
-  accountName: string
-
-  /** @deprecated Renamed to senderAddress in 2.3.1 */
-  senderMnemonic?: string
 }

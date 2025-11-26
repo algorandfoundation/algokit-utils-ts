@@ -24,7 +24,7 @@ Results should have a decimal units amount greater than this value.
 
 #### Defined in
 
-[src/types/indexer.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L27)
+[src/types/indexer.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L6)
 
 ___
 
@@ -36,7 +36,7 @@ Results should have a decimal units amount less than this value.
 
 #### Defined in
 
-[src/types/indexer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L25)
+[src/types/indexer.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L4)
 
 ___
 
@@ -48,4 +48,4 @@ Include all items including closed accounts and opted-out asset holdings.
 
 #### Defined in
 
-[src/types/indexer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L29)
+[src/types/indexer.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L8)

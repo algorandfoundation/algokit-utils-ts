@@ -18,7 +18,6 @@ Parameters representing a call to an app.
 
 - [appId](types_app.AppCallParams.md#appid)
 - [args](types_app.AppCallParams.md#args)
-- [atc](types_app.AppCallParams.md#atc)
 - [callType](types_app.AppCallParams.md#calltype)
 - [fee](types_app.AppCallParams.md#fee)
 - [from](types_app.AppCallParams.md#from)
@@ -29,6 +28,7 @@ Parameters representing a call to an app.
 - [skipSending](types_app.AppCallParams.md#skipsending)
 - [skipWaiting](types_app.AppCallParams.md#skipwaiting)
 - [suppressLog](types_app.AppCallParams.md#suppresslog)
+- [transactionComposer](types_app.AppCallParams.md#transactioncomposer)
 - [transactionParams](types_app.AppCallParams.md#transactionparams)
 
 ## Properties
@@ -41,7 +41,7 @@ The id of the app to call
 
 #### Defined in
 
-[src/types/app.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L185)
+[src/types/app.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L99)
 
 ___
 
@@ -53,35 +53,19 @@ The arguments passed in to the app call
 
 #### Defined in
 
-[src/types/app.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L195)
-
-___
-
-### atc
-
-• `Optional` **atc**: `AtomicTransactionComposer`
-
-An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
-
-#### Inherited from
-
-[SendTransactionParams](types_transaction.SendTransactionParams.md).[atc](types_transaction.SendTransactionParams.md#atc)
-
-#### Defined in
-
-[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
+[src/types/app.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L109)
 
 ___
 
 ### callType
 
-• **callType**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `ClearStateOC` \| `DeleteApplicationOC`
+• **callType**: `NoOp` \| `OptIn` \| `CloseOut` \| `ClearState` \| `DeleteApplication`
 
 The type of call, everything except create (see `createApp`) and update (see `updateApp`)
 
 #### Defined in
 
-[src/types/app.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L187)
+[src/types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)
 
 ___
 
@@ -97,19 +81,19 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
 ___
 
 ### from
 
-• **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **from**: `AddressWithSigner`
 
 The account to make the call from
 
 #### Defined in
 
-[src/types/app.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L189)
+[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
 
 ___
 
@@ -125,7 +109,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
 
 ___
 
@@ -141,7 +125,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
 
 ___
 
@@ -153,7 +137,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/app.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L193)
+[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)
 
 ___
 
@@ -169,7 +153,7 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 #### Defined in
 
-[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
@@ -186,7 +170,7 @@ and instead just return the raw transaction, e.g. so you can add it to a group o
 
 #### Defined in
 
-[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -202,7 +186,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
 
 ___
 
@@ -218,16 +202,45 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
+
+___
+
+### transactionComposer
+
+• `Optional` **transactionComposer**: [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+An optional `TransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[transactionComposer](types_transaction.SendTransactionParams.md#transactioncomposer)
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 
 ### transactionParams
 
-• `Optional` **transactionParams**: `SuggestedParams`
+• `Optional` **transactionParams**: `Object`
 
 Optional transaction parameters
 
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `consensusVersion` | `string` | ConsensusVersion indicates the consensus protocol version as of LastRound. |
+| `fee` | `bigint` | Fee is the suggested transaction fee Fee is in units of micro-Algos per byte. Fee may fall to zero but transactions must still have a fee of at least MinTxnFee for the current network protocol. |
+| `firstValid` | `bigint` | - |
+| `flatFee` | `boolean` | - |
+| `genesisHash` | `Uint8Array` | GenesisHash is the hash of the genesis block. |
+| `genesisId` | `string` | GenesisID is an ID listed in the genesis block. |
+| `lastValid` | `bigint` | - |
+| `minFee` | `bigint` | The minimum transaction fee (not per byte) required for the txn to validate for the current network protocol. |
+
 #### Defined in
 
-[src/types/app.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L191)
+[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
