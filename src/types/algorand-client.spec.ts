@@ -6,7 +6,6 @@ import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/e
 import { algorandFixture } from '../testing'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
-import { arc32ToArc56 } from './app-spec'
 import { AppCallMethodCall } from './composer'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
@@ -150,7 +149,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(txnRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
   })
 
   test('method with method call arg', async () => {
@@ -193,7 +192,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr.toString())
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.addr.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
@@ -225,7 +224,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
     expect(nestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
@@ -256,8 +255,8 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
-    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.toString()).toBe(alice.toString())
     expect(doubleNestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
@@ -273,13 +272,11 @@ describe('AlgorandClient', () => {
   })
 
   test('methodCall create', async () => {
-    const arc56Contract = arc32ToArc56(APP_SPEC)
-
     await algorand.send.appCreateMethodCall({
       sender: alice,
-      method: findABIMethod('createApplication', arc56Contract),
-      approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
-      clearStateProgram: await compileProgram(algorand, APP_SPEC.source.clear),
+      method: findABIMethod('createApplication', APP_SPEC),
+      approvalProgram: await compileProgram(algorand, APP_SPEC.source!.approval),
+      clearStateProgram: await compileProgram(algorand, APP_SPEC.source!.clear),
     })
   })
 
