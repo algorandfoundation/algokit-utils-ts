@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import nacl from 'tweetnacl'
-import { generateSigners } from './signer'
+import { generateAddressWithSigners } from './signer'
 
 describe('signer', () => {
   test('generateSigners', async () => {
@@ -9,7 +9,7 @@ describe('signer', () => {
       return nacl.sign.detached(bytesToSign, keypair.secretKey)
     }
 
-    const addressWithSigners = generateSigners(keypair.publicKey, rawSigner)
+    const addressWithSigners = generateAddressWithSigners(keypair.publicKey, rawSigner)
 
     expect(addressWithSigners.addr.publicKey).toEqual(keypair.publicKey)
     expect(addressWithSigners.signer).toBeDefined()

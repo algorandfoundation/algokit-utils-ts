@@ -26,7 +26,7 @@ export interface AddressWithProgramDataSigner extends Addressable {
 export type AddressWithSigners = Addressable & AddressWithTransactionSigner & AddressWithDelegatedLsigSigner & AddressWithProgramDataSigner
 
 /** Generate type-safe domain-separated signer callbacks given an ed25519 pubkey and a signing callback */
-export function generateSigners(
+export function generateAddressWithSigners(
   ed25519Pubkey: Uint8Array,
   rawEd25519Signer: (bytesToSign: Uint8Array) => Promise<Uint8Array>,
 ): AddressWithSigners {
