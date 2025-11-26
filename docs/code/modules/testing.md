@@ -180,7 +180,7 @@ Note: By default this will log the mnemonic of the account.
 
 [src/testing/account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L21)
 
-▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Address` & `Account` & `AddressWithTransactionSigner`\>
+▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Address` & `Account` & `AddressWithSigners`\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -196,7 +196,7 @@ Note: By default this will log the mnemonic of the account.
 
 #### Returns
 
-`Promise`\<`Address` & `Account` & `AddressWithTransactionSigner`\>
+`Promise`\<`Address` & `Account` & `AddressWithSigners`\>
 
 The account, with private key loaded
 

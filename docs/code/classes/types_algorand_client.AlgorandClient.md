@@ -566,7 +566,7 @@ Tracks the given account (object that encapsulates an address and a signer) for 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `AddressWithTransactionSigner` \| `MultisigAccount` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](types_account.SigningAccount.md) | The account to register, which can be a `AddressWithSigner` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
+| `account` | `MultisigAccount` \| `AddressWithTransactionSigner` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](types_account.SigningAccount.md) | The account to register, which can be a `AddressWithSigner` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
 
 #### Returns
 

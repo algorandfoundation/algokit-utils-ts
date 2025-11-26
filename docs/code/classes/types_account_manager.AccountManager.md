@@ -633,7 +633,7 @@ Tracks and returns an account that supports partial or full multisig signing.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `multisigParams` | `MultisigMetadata` | The parameters that define the multisig account |
-| `subSigners` | `AddressWithTransactionSigner`[] | The signers that are currently present |
+| `subSigners` | `AddressWithSigners`[] | The signers that are currently present |
 
 #### Returns
 
@@ -852,7 +852,7 @@ Note: If you are generating accounts via the various methods on `AccountManager`
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `AddressWithTransactionSigner` \| `MultisigAccount` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](types_account.SigningAccount.md) | The account to register, which can be a `AddressWithSigner` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
+| `account` | `MultisigAccount` \| `AddressWithTransactionSigner` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](types_account.SigningAccount.md) | The account to register, which can be a `AddressWithSigner` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
 
 #### Returns
 
@@ -921,7 +921,7 @@ retrieval and returns a `AddressWithSigner` along with the original account in a
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `AddressWithTransactionSigner` \| `MultisigAccount` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](types_account.SigningAccount.md) |
+| `T` | extends `MultisigAccount` \| `AddressWithTransactionSigner` \| `default` \| `LogicSigAccount` \| [`SigningAccount`](types_account.SigningAccount.md) |
 
 #### Parameters
 
