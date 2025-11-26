@@ -1,5 +1,5 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithTransactionSigner, Transaction } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigners, AddressWithTransactionSigner, Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, Indexer, Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
@@ -26,9 +26,9 @@ export interface AlgorandTestAutomationContext {
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
-  testAccount: Address & AddressWithTransactionSigner & Account
+  testAccount: Address & AddressWithSigners & Account
   /** Generate and fund an additional ephemerally created account */
-  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & AddressWithTransactionSigner>
+  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & AddressWithSigners>
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */

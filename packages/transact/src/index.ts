@@ -34,10 +34,4 @@ export * from './transactions/key-registration'
 export * from './transactions/payment'
 export * from './signer'
 
-export {
-  addressFromMultisigSignature,
-  applyMultisigSubsignature,
-  mergeMultisignatures,
-  newMultisigSignature,
-  participantsFromMultisigSignature,
-} from './multisig'
+export * from './multisig'

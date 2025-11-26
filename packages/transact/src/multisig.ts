@@ -9,6 +9,7 @@ import {
   SIGNATURE_BYTE_LENGTH,
 } from '@algorandfoundation/algokit-common'
 import {
+  AddressWithDelegatedLsigSigner,
   AddressWithTransactionSigner,
   decodeSignedTransaction,
   encodeSignedTransaction,
@@ -396,9 +397,9 @@ export function addressFromMultisigPreImg({
 }: Omit<MultisigMetadata, 'addrs'> & {
   pks: Uint8Array[]
 }): Address {
-  if (version !== 1 || version > 255 || version < 0) {
+  if (version > 255 || version < 0) {
     // ^ a tad redundant, but in case in the future version != 1, still check for uint8
-    throw new Error(INVALID_MSIG_VERSION_ERROR_MSG)
+    throw new Error(`${INVALID_MSIG_VERSION_ERROR_MSG}: ${version}`)
   }
   if (threshold === 0 || pks.length === 0 || threshold > pks.length || threshold > 255) {
     throw new Error(INVALID_MSIG_THRESHOLD_ERROR_MSG)
@@ -458,13 +459,13 @@ export interface MultisigMetadata {
   /**
    * A list of Algorand addresses representing possible signers for this multisig. Order is important.
    */
-  addrs: Array<string | Address>
+  addrs: Array<Address>
 }
 
 /** Account wrapper that supports partial or full multisig signing. */
 export class MultisigAccount implements AddressWithTransactionSigner {
   _params: MultisigMetadata
-  _subSigners: AddressWithTransactionSigner[]
+  _subSigners: (AddressWithTransactionSigner & AddressWithDelegatedLsigSigner)[]
   _addr: Address
   _signer: TransactionSigner
 
@@ -473,8 +474,8 @@ export class MultisigAccount implements AddressWithTransactionSigner {
     return this._params
   }
 
-  /** The list of accounts that are present to sign */
-  get signingAccounts(): Readonly<AddressWithTransactionSigner[]> {
+  /** The list of accounts that are present to sign transactions or lsigs */
+  get subSigners() {
     return this._subSigners
   }
 
@@ -488,7 +489,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
     return this._signer
   }
 
-  constructor(multisigParams: MultisigMetadata, subSigners: AddressWithTransactionSigner[]) {
+  constructor(multisigParams: MultisigMetadata, subSigners: (AddressWithTransactionSigner & AddressWithDelegatedLsigSigner)[]) {
     this._params = multisigParams
     this._subSigners = subSigners
     this._addr = multisigAddress(multisigParams)
@@ -499,7 +500,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
       for (const txn of txnsToSign) {
         let signedMsigTxn = createMultisigTransaction(txn, this._params)
 
-        for (const subSigner of this._subSigners) {
+        for (const subSigner of this.subSigners) {
           const stxn = (await subSigner.signer([txn], [0]))[0]
           const sig = decodeSignedTransaction(stxn).signature
 

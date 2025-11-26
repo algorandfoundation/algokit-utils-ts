@@ -11,9 +11,9 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import { AddressWithTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigners, AddressWithTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
-import { MultisigAccount } from '@algorandfoundation/algokit-transact/multisig'
+import { MultisigAccount, MultisigMetadata } from '@algorandfoundation/algokit-transact'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -393,7 +393,7 @@ export class AccountManager {
    * @param subSigners The signers that are currently present
    * @returns A multisig account wrapper
    */
-  public multisig(multisigParams: algosdk.MultisigMetadata, subSigners: AddressWithTransactionSigner[]) {
+  public multisig(multisigParams: MultisigMetadata, subSigners: AddressWithSigners[]) {
     return this.signerAccount(new MultisigAccount(multisigParams, subSigners))
   }
 
