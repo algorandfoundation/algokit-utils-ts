@@ -37,7 +37,7 @@ describe('AlgorandClient', () => {
       defaultSender: alice,
     })
 
-    const deployResult = await appFactory.deploy()
+    const deployResult = await appFactory.deploy({ createParams: { method: 'createApplication', args: [] } })
     appClient = deployResult.appClient
     appId = BigInt(deployResult.result.appId)
   }, 10_000)
