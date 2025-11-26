@@ -48,13 +48,13 @@ ___
 
 ### generateAccount
 
-• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner`\>
+• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner`\>
 
 Generate and fund an additional ephemerally created account
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner`\>
+▸ (`params`): `Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner`\>
 
 ##### Parameters
 
@@ -64,7 +64,7 @@ Generate and fund an additional ephemerally created account
 
 ##### Returns
 
-`Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner`\>
+`Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner`\>
 
 #### Defined in
 
@@ -98,7 +98,7 @@ ___
 
 ### testAccount
 
-• **testAccount**: `Address` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `default`
+• **testAccount**: `Address` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner` & `default`
 
 Default, funded test account that is ephemerally created
 
