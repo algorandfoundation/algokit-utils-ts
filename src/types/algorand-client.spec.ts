@@ -1,3 +1,4 @@
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/example-contracts/client/TestContractClient'
@@ -5,7 +6,6 @@ import { algorandFixture } from '../testing'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   // Decode the base64-encoded TEAL source code
