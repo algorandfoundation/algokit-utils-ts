@@ -135,8 +135,8 @@ export type SkipSignaturesSimulateOptions = Expand<
  * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
 export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>> & {
-  /** Whether or not to throw error on simulation failure */
-  throwOnFailure?: boolean
+  /** Whether or not to return the result on simulation failure instead of throwing an error */
+  resultOnFailure?: boolean
 }
 
 /** All options to control a simulate request */
@@ -1815,7 +1815,7 @@ export class TransactionComposer {
             stackChange: true,
             stateChange: true,
           },
-          throwOnFailure: false,
+          resultOnFailure: true,
         })
       }
 
@@ -1968,7 +1968,7 @@ export class TransactionComposer {
    */
   async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
-    const { skipSignatures = false, throwOnFailure = true, ...rawOptions } = options ?? {}
+    const { skipSignatures = false, resultOnFailure = false, ...rawOptions } = options ?? {}
 
     if (skipSignatures) {
       rawOptions.allowEmptySignatures = true
@@ -2022,7 +2022,7 @@ export class TransactionComposer {
     const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
     const simulateResult = simulateResponse.txnGroups[0]
 
-    if (simulateResult?.failureMessage && throwOnFailure) {
+    if (simulateResult?.failureMessage && !resultOnFailure) {
       const errorMessage = `Transaction failed at transaction(s) ${simulateResult.failedAt?.join(', ') || 'unknown'} in the group. ${simulateResult.failureMessage}`
       const error = new Error(errorMessage)
 

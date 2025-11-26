@@ -82,7 +82,7 @@ describe('TransactionComposer', () => {
         composer.registerErrorTransformer(errorTransformer)
       })
 
-      const simulateResult = await composer.simulate({ throwOnFailure: false })
+      const simulateResult = await composer.simulate({ resultOnFailure: true })
       expect(simulateResult).toBeDefined()
     })
   })

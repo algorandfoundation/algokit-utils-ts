@@ -3,7 +3,7 @@ import { RawSimulateOptions, SimulateOptions, TransactionComposer } from '../typ
 /**
  * @deprecated Use `composer.simulate` with
  *  - `allowEmptySignatures` flag set to true
- *  - `throwOnFailure` flag set to false
+ *  - `resultOnFailure` flag set to true
  *
  * Performs a simulation of the transactions loaded into the given TransactionComposer.
  * Uses empty transaction signers for all transactions.
@@ -24,7 +24,7 @@ export async function performTransactionComposerSimulate(composer: TransactionCo
         stackChange: true,
         stateChange: true,
       },
-      throwOnFailure: false,
+      resultOnFailure: true,
     }),
   } satisfies SimulateOptions
 
