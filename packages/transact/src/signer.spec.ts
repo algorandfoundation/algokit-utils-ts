@@ -15,5 +15,6 @@ describe('signer', () => {
     expect(addressWithSigners.signer).toBeDefined()
     expect(addressWithSigners.lsigSigner).toBeDefined()
     expect(addressWithSigners.programDataSigner).toBeDefined()
+    expect(addressWithSigners.mxBytesSigner).toBeDefined()
   })
 })

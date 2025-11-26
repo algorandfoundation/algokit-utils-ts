@@ -1,4 +1,4 @@
-import { Address, Addressable, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { Address, Addressable, concatArrays, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { encodeTransaction, Transaction } from './transactions/transaction'
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
 import { encodeSignedTransaction, SignedTransaction } from './transactions/signed-transaction'
@@ -23,7 +23,19 @@ export interface AddressWithProgramDataSigner extends Addressable {
   programDataSigner: ProgramDataSigner
 }
 
-export type AddressWithSigners = Addressable & AddressWithTransactionSigner & AddressWithDelegatedLsigSigner & AddressWithProgramDataSigner
+export type MxBytesSigner = (bytesToSign: Uint8Array) => Promise<Uint8Array>
+
+export interface AddressWithMxBytesSigner extends Addressable {
+  mxBytesSigner: MxBytesSigner
+}
+
+export type AddressWithSigners = Addressable &
+  AddressWithTransactionSigner &
+  AddressWithDelegatedLsigSigner &
+  AddressWithProgramDataSigner &
+  AddressWithMxBytesSigner
+
+const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
 /** Generate type-safe domain-separated signer callbacks given an ed25519 pubkey and a signing callback */
 export function generateAddressWithSigners(
@@ -59,9 +71,14 @@ export function generateAddressWithSigners(
   }
 
   const programDataSigner: ProgramDataSigner = async (data, lsig) => {
-    const toBeSigned = lsig.programDataToSign(data)
-    return await rawEd25519Signer(toBeSigned)
+    const bytesToSign = lsig.programDataToSign(data)
+    return await rawEd25519Signer(bytesToSign)
   }
 
-  return { addr, signer, lsigSigner, programDataSigner }
+  const mxBytesSigner: MxBytesSigner = async (bytes: Uint8Array) => {
+    const bytesToSign = concatArrays(SIGN_BYTES_PREFIX, bytes)
+    return await rawEd25519Signer(bytesToSign)
+  }
+
+  return { addr, signer, lsigSigner, programDataSigner, mxBytesSigner }
 }
