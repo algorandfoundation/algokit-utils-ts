@@ -66,8 +66,8 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
  * app call resources populated into it
  *
  * @param algod The algod client to use for the simulation
- * @param atc The ATC containing the txn group
- * @returns A new ATC with the resources populated into the transactions
+ * @param composer The composer containing the txn group
+ * @returns A new composer with the resources populated into the transactions
  *
  * @privateRemarks
  *

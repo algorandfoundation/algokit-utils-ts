@@ -1746,8 +1746,13 @@ export class TransactionComposer {
    * ```
    */
   async rebuild() {
-    this.transactionsWithSigners = undefined
+    this.reset()
     return await this.build()
+  }
+
+  private reset() {
+    this.signedTransactions = undefined
+    this.transactionsWithSigners = undefined
   }
 
   /**
@@ -1771,8 +1776,7 @@ export class TransactionComposer {
         populateAppCallResources: params?.populateAppCallResources ?? true,
       }
 
-      this.transactionsWithSigners = undefined
-      this.signedTransactions = undefined
+      this.reset()
     }
 
     try {
