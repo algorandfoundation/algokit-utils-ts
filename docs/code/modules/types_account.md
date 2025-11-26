@@ -90,7 +90,7 @@ ___
 
 ### TransactionSignerAccount
 
-Ƭ **TransactionSignerAccount**: `AddressWithSigner`
+Ƭ **TransactionSignerAccount**: `AddressWithTransactionSigner`
 
 **`Deprecated`**
 

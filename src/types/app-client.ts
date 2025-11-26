@@ -1,5 +1,5 @@
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -1546,13 +1546,13 @@ export class AppClient {
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
     sender: ReadableAddress | undefined,
-    signer: TransactionSigner | AddressWithSigner | undefined,
-  ): TransactionSigner | AddressWithSigner | undefined {
+    signer: TransactionSigner | AddressWithTransactionSigner | undefined,
+  ): TransactionSigner | AddressWithTransactionSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 
   private getBareParams<
-    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithSigner } | undefined,
+    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithTransactionSigner } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -1568,7 +1568,7 @@ export class AppClient {
     TParams extends {
       method: string
       sender?: ReadableAddress
-      signer?: TransactionSigner | AddressWithSigner
+      signer?: TransactionSigner | AddressWithTransactionSigner
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,

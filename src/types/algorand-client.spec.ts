@@ -5,7 +5,7 @@ import { algorandFixture } from '../testing'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   // Decode the base64-encoded TEAL source code
@@ -17,8 +17,8 @@ async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
 
 describe('AlgorandClient', () => {
   let algorand: AlgorandClient
-  let alice: AddressWithSigner
-  let bob: AddressWithSigner
+  let alice: AddressWithTransactionSigner
+  let bob: AddressWithTransactionSigner
   let appClient: TestContractClient
   let appId: bigint
 

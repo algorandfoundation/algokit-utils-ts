@@ -1,5 +1,5 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithSigner, OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIUintType, Account, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -25,7 +25,7 @@ describe('application-client', () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: AddressWithSigner, algod: AlgodClient, indexer: Indexer) => {
+  const deploy = async (account: AddressWithTransactionSigner, algod: AlgodClient, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
         resolveBy: 'creatorAndName',

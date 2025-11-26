@@ -9,7 +9,7 @@ import {
   SIGNATURE_BYTE_LENGTH,
 } from '@algorandfoundation/algokit-common'
 import {
-  AddressWithSigner,
+  AddressWithTransactionSigner,
   decodeSignedTransaction,
   encodeSignedTransaction,
   getTransactionId,
@@ -462,9 +462,9 @@ export interface MultisigMetadata {
 }
 
 /** Account wrapper that supports partial or full multisig signing. */
-export class MultisigAccount implements AddressWithSigner {
+export class MultisigAccount implements AddressWithTransactionSigner {
   _params: MultisigMetadata
-  _subSigners: AddressWithSigner[]
+  _subSigners: AddressWithTransactionSigner[]
   _addr: Address
   _signer: TransactionSigner
 
@@ -474,7 +474,7 @@ export class MultisigAccount implements AddressWithSigner {
   }
 
   /** The list of accounts that are present to sign */
-  get signingAccounts(): Readonly<AddressWithSigner[]> {
+  get signingAccounts(): Readonly<AddressWithTransactionSigner[]> {
     return this._subSigners
   }
 
@@ -488,7 +488,7 @@ export class MultisigAccount implements AddressWithSigner {
     return this._signer
   }
 
-  constructor(multisigParams: MultisigMetadata, subSigners: AddressWithSigner[]) {
+  constructor(multisigParams: MultisigMetadata, subSigners: AddressWithTransactionSigner[]) {
     this._params = multisigParams
     this._subSigners = subSigners
     this._addr = multisigAddress(multisigParams)

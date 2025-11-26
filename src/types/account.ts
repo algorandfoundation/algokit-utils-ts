@@ -6,7 +6,7 @@ import {
   Asset,
   AssetHolding,
 } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, TransactionSigner } from '@algorandfoundation/sdk'
@@ -62,7 +62,7 @@ export class SigningAccount implements Account {
 }
 
 /** @deprecated Use AddressWithSigner */
-export type TransactionSignerAccount = AddressWithSigner
+export type TransactionSignerAccount = AddressWithTransactionSigner
 
 /** Account information at a given round. */
 export type AccountInformation = {

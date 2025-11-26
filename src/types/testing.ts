@@ -1,5 +1,5 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithSigner, Transaction } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, Indexer, Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
@@ -26,9 +26,9 @@ export interface AlgorandTestAutomationContext {
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
-  testAccount: Address & AddressWithSigner & Account
+  testAccount: Address & AddressWithTransactionSigner & Account
   /** Generate and fund an additional ephemerally created account */
-  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & AddressWithSigner>
+  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & AddressWithTransactionSigner>
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
@@ -137,7 +137,7 @@ export interface LogSnapshotConfig {
   /** Any transaction IDs or transactions to replace the ID for predictably */
   transactions?: (string | Transaction)[]
   /** Any accounts/addresses to replace the address for predictably */
-  accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | AddressWithSigner)[]
+  accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | AddressWithTransactionSigner)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
   /** Optional filter predicate to filter out logs */

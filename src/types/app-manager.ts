@@ -1,5 +1,5 @@
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
@@ -56,7 +56,7 @@ export interface AppInformation {
  *  * `AddressWithSigner` (that will be encoded into the
  *    public key address of the corresponding account)
  */
-export type BoxIdentifier = string | Uint8Array | AddressWithSigner
+export type BoxIdentifier = string | Uint8Array | AddressWithTransactionSigner
 
 /**
  * A grouping of the app ID and name identifier to reference an app box.

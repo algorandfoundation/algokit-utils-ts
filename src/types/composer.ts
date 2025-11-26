@@ -1,7 +1,7 @@
 import { AlgodClient, SimulateRequest, SimulateTransaction, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
   AccessReference,
-  AddressWithSigner,
+  AddressWithTransactionSigner,
   OnApplicationComplete,
   SendingAddress,
   Transaction,
@@ -61,7 +61,7 @@ export type CommonTransactionParams = {
   /**
    * @deprecated Use `AddressWithSigner` in the `sender` field instead
    */
-  signer?: algosdk.TransactionSigner | AddressWithSigner
+  signer?: algosdk.TransactionSigner | AddressWithTransactionSigner
   /** Change the signing key of the sender to the given address.
    *
    * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).

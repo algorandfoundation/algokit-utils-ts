@@ -132,7 +132,7 @@ ___
 
 ### from
 
-• **from**: `AddressWithSigner`
+• **from**: `AddressWithTransactionSigner`
 
 The account (with private key loaded) that will send the transaction
 

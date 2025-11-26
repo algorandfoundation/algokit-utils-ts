@@ -24,7 +24,7 @@ Parameters for `assetBulkOptIn` / `assetBulkOptOut` call.
 
 ### account
 
-• **account**: `AddressWithSigner`
+• **account**: `AddressWithTransactionSigner`
 
 The account to opt in/out for
 

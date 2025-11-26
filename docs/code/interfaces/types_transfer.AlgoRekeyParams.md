@@ -68,7 +68,7 @@ ___
 
 ### from
 
-• **from**: `AddressWithSigner`
+• **from**: `AddressWithTransactionSigner`
 
 The account that will be rekeyed
 
@@ -152,7 +152,7 @@ ___
 
 ### rekeyTo
 
-• **rekeyTo**: `string` \| `AddressWithSigner`
+• **rekeyTo**: `string` \| `AddressWithTransactionSigner`
 
 The account / account address that will have the private key that is authorised to transact on behalf of the from account from now on
 

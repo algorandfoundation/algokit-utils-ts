@@ -135,7 +135,7 @@ ___
 
 ### rekeyTo
 
-• `Optional` **rekeyTo**: `string` \| `AddressWithSigner`
+• `Optional` **rekeyTo**: `string` \| `AddressWithTransactionSigner`
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 

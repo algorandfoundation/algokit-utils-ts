@@ -935,7 +935,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| `AddressWithSigner` | Either an account (with private key loaded) or the string address of an account |
+| `account` | `string` \| `AddressWithTransactionSigner` | Either an account (with private key loaded) or the string address of an account |
 
 #### Returns
 
@@ -961,7 +961,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| `AddressWithSigner` | The address of the sender/account to look up |
+| `sender` | `string` \| `AddressWithTransactionSigner` | The address of the sender/account to look up |
 | `assetId` | `number` \| `bigint` | The ID of the asset to return a holding for |
 | `algod` | `AlgodClient` | The algod instance |
 
@@ -1034,7 +1034,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| `AddressWithSigner` | The address of the sender/account to look up |
+| `sender` | `string` \| `AddressWithTransactionSigner` | The address of the sender/account to look up |
 | `algod` | `AlgodClient` | The algod instance |
 
 #### Returns
@@ -1265,18 +1265,18 @@ ___
 
 ### getAppArgsForABICall
 
-▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `Address` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `AddressWithSigner` = from; `signer`: `TransactionSigner` = signer }\>
+▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `Address` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `AddressWithTransactionSigner` = from; `signer`: `TransactionSigner` = signer }\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `args` | [`ABIAppCallArgs`](types_app.md#abiappcallargs) | The ABI app call args |
-| `from` | `AddressWithSigner` | The transaction signer |
+| `from` | `AddressWithTransactionSigner` | The transaction signer |
 
 #### Returns
 
-`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `Address` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `AddressWithSigner` = from; `signer`: `TransactionSigner` = signer }\>
+`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `Address` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `AddressWithTransactionSigner` = from; `signer`: `TransactionSigner` = signer }\>
 
 The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
 
@@ -1709,7 +1709,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appId` | `number` \| `bigint` | The ID of the app return global state for |
-| `account` | `string` \| `AddressWithSigner` | Either the string address of an account or an account object for the account to get local state for the given app |
+| `account` | `string` \| `AddressWithTransactionSigner` | Either the string address of an account or an account object for the account to get local state for the given app |
 | `algod` | `AlgodClient` | An algod client instance |
 
 #### Returns
@@ -1846,7 +1846,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `creatorAccount` | `string` \| `AddressWithSigner` | The account (with private key loaded) or string address of an account that is the creator of the apps you want to search for |
+| `creatorAccount` | `string` \| `AddressWithTransactionSigner` | The account (with private key loaded) or string address of an account that is the creator of the apps you want to search for |
 | `indexer` | `IndexerClient` | An indexer client |
 
 #### Returns
@@ -1897,7 +1897,7 @@ ___
 
 ### getDispenserAccount
 
-▸ **getDispenserAccount**(`algod`, `kmd?`): `Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](../classes/types_account.SigningAccount.md)  }\>
+▸ **getDispenserAccount**(`algod`, `kmd?`): `Promise`\<`Address` & `AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](../classes/types_account.SigningAccount.md)  }\>
 
 #### Parameters
 
@@ -1908,7 +1908,7 @@ ___
 
 #### Returns
 
-`Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](../classes/types_account.SigningAccount.md)  }\>
+`Promise`\<`Address` & `AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](../classes/types_account.SigningAccount.md)  }\>
 
 **`Deprecated`**
 
@@ -2156,7 +2156,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `transaction` | `Transaction` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) | One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils' helpers (signer is obtained from the defaultSender parameter) |
-| `defaultSender?` | `AddressWithSigner` | The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer. |
+| `defaultSender?` | `AddressWithTransactionSigner` | The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer. |
 
 #### Returns
 
@@ -2781,7 +2781,7 @@ ___
 
 ### transactionSignerAccount
 
-▸ **transactionSignerAccount**(`signer`, `sender`): `AddressWithSigner`
+▸ **transactionSignerAccount**(`signer`, `sender`): `AddressWithTransactionSigner`
 
 #### Parameters
 
@@ -2792,7 +2792,7 @@ ___
 
 #### Returns
 
-`AddressWithSigner`
+`AddressWithTransactionSigner`
 
 The SigningAccount wrapper
 

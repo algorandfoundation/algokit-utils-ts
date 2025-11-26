@@ -62,7 +62,7 @@ ___
 
 ### clawbackAccount
 
-• `Optional` **clawbackAccount**: `string` \| `AddressWithSigner`
+• `Optional` **clawbackAccount**: `string` \| `AddressWithTransactionSigner`
 
 The optional account that can clawback holdings of this asset. If empty, clawback is not permitted.
 If not set at asset creation or subsequently set to empty by the manager the field is permanently empty.
@@ -75,7 +75,7 @@ ___
 
 ### creator
 
-• **creator**: `AddressWithSigner`
+• **creator**: `AddressWithTransactionSigner`
 
 The account to create the asset.
 
@@ -122,7 +122,7 @@ ___
 
 ### freezeAccount
 
-• `Optional` **freezeAccount**: `string` \| `AddressWithSigner`
+• `Optional` **freezeAccount**: `string` \| `AddressWithTransactionSigner`
 
 The optional account that can be used to freeze holdings of this asset. If empty, freezing is not permitted.
 If not set at asset creation or subsequently set to empty by the manager the field is permanently empty.
@@ -159,7 +159,7 @@ ___
 
 ### manager
 
-• `Optional` **manager**: `string` \| `AddressWithSigner`
+• `Optional` **manager**: `string` \| `AddressWithTransactionSigner`
 
 The optional account that can manage the configuration of the asset and destroy it.
 If not set at asset creation or subsequently set to empty by the manager the asset becomes immutable.
@@ -257,7 +257,7 @@ ___
 
 ### reserveAccount
 
-• `Optional` **reserveAccount**: `string` \| `AddressWithSigner`
+• `Optional` **reserveAccount**: `string` \| `AddressWithTransactionSigner`
 
 The optional account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself and is informational.
 Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md) rely on this field to hold meaningful data.

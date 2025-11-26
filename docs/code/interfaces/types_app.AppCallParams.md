@@ -103,7 +103,7 @@ ___
 
 ### from
 
-• **from**: `AddressWithSigner`
+• **from**: `AddressWithTransactionSigner`
 
 The account to make the call from
 

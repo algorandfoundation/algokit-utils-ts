@@ -9,7 +9,7 @@ import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 
 /**
  * @deprecated Use `algorand.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
@@ -31,7 +31,7 @@ export function rekeyedAccount(signer: Account, sender: string) {
  * @param sender The address of sender account
  * @returns The SigningAccount wrapper
  */
-export function transactionSignerAccount(signer: TransactionSigner, sender: string): AddressWithSigner {
+export function transactionSignerAccount(signer: TransactionSigner, sender: string): AddressWithTransactionSigner {
   return { addr: Address.fromString(sender), signer }
 }
 

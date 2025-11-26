@@ -13,7 +13,7 @@ import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import { ReadableAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { MultisigAccount } from '@algorandfoundation/algokit-transact/multisig'
 
 /**
@@ -75,7 +75,7 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
    * ```
    */
-  public setDefaultSigner(signer: algosdk.TransactionSigner | AddressWithSigner): AlgorandClient {
+  public setDefaultSigner(signer: algosdk.TransactionSigner | AddressWithTransactionSigner): AlgorandClient {
     this._accountManager.setDefaultSigner(signer)
     return this
   }
@@ -95,7 +95,7 @@ export class AlgorandClient {
    * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(account: AddressWithSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
+  public setSignerFromAccount(account: AddressWithTransactionSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }

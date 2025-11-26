@@ -38,7 +38,7 @@ Parameters for `assetOptOut` call.
 
 ### account
 
-• **account**: `AddressWithSigner`
+• **account**: `AddressWithTransactionSigner`
 
 The account to opt in/out for
 
