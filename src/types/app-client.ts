@@ -30,6 +30,7 @@ import { AlgoAmount } from './amount'
 import {
   ABIAppCallArgs,
   AppCompilationResult,
+  AppReturn,
   AppState,
   AppStorageSchema,
   BoxName,
@@ -37,6 +38,7 @@ import {
   OnSchemaBreak,
   OnUpdate,
   RawAppCallArgs,
+  SendAppTransactionResult,
   TealTemplateParams,
 } from './app'
 import { AppLookup } from './app-deployer'
@@ -862,6 +864,24 @@ export class AppClient {
   }
 
   /**
+   * Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
+   * on the ARC-56 method, replacing the `return` property with the decoded type.
+   *
+   * If the return type is an ARC-56 struct then the struct will be returned.
+   *
+   * @param result The SendAppTransactionResult to be mapped
+   * @param method The method that was called
+   * @returns The smart contract response with an updated return value
+   */
+  public async processMethodCallReturn<
+    TReturn extends ABIValue | undefined,
+    TResult extends SendAppTransactionResult = SendAppTransactionResult,
+  >(result: Promise<TResult> | TResult): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
+    const resultValue = await result
+    return { ...resultValue, return: resultValue.return?.returnValue as TReturn }
+  }
+
+  /**
    * Compiles the approval and clear state programs (if TEAL templates provided),
    * performing any provided deploy-time parameter replacement and stores
    * the source maps.
@@ -1271,10 +1291,8 @@ export class AppClient {
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
         const compiled = await this.compile(params)
-        const sendTransactionResult = await this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params }))
         return {
-          ...sendTransactionResult,
-          return: sendTransactionResult.return?.returnValue,
+          ...(await this.processMethodCallReturn(this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })))),
           ...(compiled as Partial<AppCompilationResult>),
         }
       },
@@ -1284,11 +1302,7 @@ export class AppClient {
        * @returns The result of sending the opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams & SendParams) => {
-        const sendTransactionResult = await this._algorand.send.appCallMethodCall(await this.params.optIn(params))
-        return {
-          ...sendTransactionResult,
-          return: sendTransactionResult.return?.returnValue,
-        }
+        return this.processMethodCallReturn(this._algorand.send.appCallMethodCall(await this.params.optIn(params)))
       },
       /**
        * Sign and send transactions for a delete ABI call
@@ -1296,11 +1310,7 @@ export class AppClient {
        * @returns The result of sending the delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams & SendParams) => {
-        const sendTransactionResult = await this._algorand.send.appDeleteMethodCall(await this.params.delete(params))
-        return {
-          ...sendTransactionResult,
-          return: sendTransactionResult.return?.returnValue,
-        }
+        return this.processMethodCallReturn(this._algorand.send.appDeleteMethodCall(await this.params.delete(params)))
       },
       /**
        * Sign and send transactions for a close out ABI call
@@ -1308,11 +1318,7 @@ export class AppClient {
        * @returns The result of sending the close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams & SendParams) => {
-        const sendTransactionResult = await this._algorand.send.appCallMethodCall(await this.params.closeOut(params))
-        return {
-          ...sendTransactionResult,
-          return: sendTransactionResult.return?.returnValue,
-        }
+        return this.processMethodCallReturn(this._algorand.send.appCallMethodCall(await this.params.closeOut(params)))
       },
       /**
        * Sign and send transactions for a call (defaults to no-op)
@@ -1350,12 +1356,12 @@ export class AppClient {
                 // Simulate calls for a readonly method can use the max opcode budget
                 extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
-            return {
+            return this.processMethodCallReturn({
               ...result,
               transaction: result.transactions.at(-1)!,
               confirmation: result.confirmations.at(-1)!,
-              return: result.returns && result.returns.length > 0 ? result.returns.at(-1)!.returnValue : undefined,
-            }
+              return: result.returns && result.returns.length > 0 ? result.returns.at(-1)! : undefined,
+            })
           } catch (e) {
             const error = e as Error
             // For read-only calls with max opcode budget, fee issues should be rare
@@ -1366,11 +1372,7 @@ export class AppClient {
             throw e
           }
         }
-        const result = await this._algorand.send.appCallMethodCall(await this.params.call(params))
-        return {
-          ...result,
-          return: result.return?.returnValue,
-        }
+        return this.processMethodCallReturn(this._algorand.send.appCallMethodCall(await this.params.call(params)))
       },
     }
   }
