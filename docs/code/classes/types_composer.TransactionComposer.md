@@ -1950,9 +1950,9 @@ Compose the transaction group and simulate sending it to the network
 | `options.allowUnnamedResources?` | `boolean` | Allows access to unnamed resources during simulation. |
 | `options.execTraceConfig?` | `SimulateTraceConfig` | - |
 | `options.extraOpcodeBudget?` | `number` | Applies extra opcode budget during simulation for each transaction group. |
+| `options.resultOnFailure?` | `boolean` | Whether or not to return the result on simulation failure instead of throwing an error |
 | `options.round?` | `bigint` | If provided, specifies the round preceding the simulation. State changes through this round will be used to run this simulation. Usually only the 4 most recent rounds will be available (controlled by the node config value MaxAcctLookback). If not specified, defaults to the latest available round. |
 | `options.skipSignatures` | `boolean` | Whether or not to skip signatures for all built transactions and use an empty signer instead. This will set `fixSigners` and `allowEmptySignatures` when sending the request to the algod API. |
-| `options.throwOnFailure?` | `boolean` | Whether or not to throw error on simulation failure |
 
 #### Returns
 

@@ -342,7 +342,7 @@ The simulation result, which includes various details about how the transactions
 
 Use `composer.simulate` with
  - `allowEmptySignatures` flag set to true
- - `throwOnFailure` flag set to false
+ - `resultOnFailure` flag set to true
 
 Performs a simulation of the transactions loaded into the given TransactionComposer.
 Uses empty transaction signers for all transactions.

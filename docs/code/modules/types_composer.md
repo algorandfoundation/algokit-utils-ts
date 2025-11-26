@@ -420,7 +420,7 @@ ___
 
 ### RawSimulateOptions
 
-Ƭ **RawSimulateOptions**: [`Expand`](types_expand.md#expand)\<`Omit`\<`SimulateRequest`, ``"txnGroups"``\>\> & \{ `throwOnFailure?`: `boolean`  }
+Ƭ **RawSimulateOptions**: [`Expand`](types_expand.md#expand)\<`Omit`\<`SimulateRequest`, ``"txnGroups"``\>\> & \{ `resultOnFailure?`: `boolean`  }
 
 The raw API options to control a simulate request.
 See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
