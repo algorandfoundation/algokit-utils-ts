@@ -1885,7 +1885,7 @@ export class TransactionComposer {
           signer: algosdk.makeEmptyTransactionSigner(),
         }))
         const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
-        const simulateRequest = {
+        const simulateResponse = await this.algod.simulateTransaction({
           txnGroups: [{ txns: signedTransactions }],
           allowEmptySignatures: true,
           fixSigners: true,
@@ -1896,8 +1896,7 @@ export class TransactionComposer {
             stackChange: true,
             stateChange: true,
           },
-        } satisfies SimulateRequest
-        const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
+        })
 
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
