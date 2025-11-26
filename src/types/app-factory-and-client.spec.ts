@@ -1,4 +1,4 @@
-import { ABIValue, Arc56Contract, encodeABIValue, findABIMethod, getABIType } from '@algorandfoundation/algokit-abi'
+import { ABIType, ABIValue, Arc56Contract, findABIMethod } from '@algorandfoundation/algokit-abi'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
@@ -716,11 +716,11 @@ describe('ARC32: app-factory-and-app-client', () => {
     const expectedValue = 1234524352
     await client.send.call({
       method: 'set_box',
-      args: [boxName1, encodeABIValue(getABIType('uint32'), expectedValue)],
+      args: [boxName1, ABIType.from('uint32').encode(expectedValue)],
       boxReferences: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(getABIType('uint32'), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, getABIType('uint32'))
+    const boxes = await client.getBoxValuesFromABIType(ABIType.from('uint32'), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, ABIType.from('uint32'))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)

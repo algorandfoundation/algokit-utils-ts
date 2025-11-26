@@ -2,7 +2,7 @@
 /** ARC-56 spec */
 /****************/
 
-import { ABIType, getABIStructType, getABIType } from './abi-type'
+import { ABIStructType, ABIType } from './abi-type'
 
 /** Describes a single key in app storage with parsed ABI types */
 export type ABIStorageKey = {
@@ -323,12 +323,12 @@ function resolveStorageType(typeStr: string, structs: Record<string, StructField
 
   // Check if it's a struct type
   if (structs[typeStr]) {
-    return getABIStructType(typeStr, structs)
+    return ABIStructType.fromStruct(typeStr, structs)
   }
 
   // Otherwise parse as ABI type
   try {
-    return getABIType(typeStr)
+    return ABIType.from(typeStr)
   } catch (error) {
     throw new Error(`Failed to parse storage type '${typeStr}': ${error}`)
   }

@@ -1,4 +1,4 @@
-import { decodeABIValue, encodeABIValue, getABIType } from '@algorandfoundation/algokit-abi'
+import { ABIType } from '@algorandfoundation/algokit-abi'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Account, Address } from '@algorandfoundation/sdk'
@@ -1226,9 +1226,9 @@ describe('Resource population: meta', () => {
 describe('abi return', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const encodeThenDecodeValue = (type: string, value: any) => {
-    const abiType = getABIType(type)
-    const encoded = encodeABIValue(abiType, value)
-    return decodeABIValue(abiType, encoded)
+    const abiType = ABIType.from(type)
+    const encoded = abiType.encode(value)
+    return abiType.decode(encoded)
   }
 
   test('uint32', () => {

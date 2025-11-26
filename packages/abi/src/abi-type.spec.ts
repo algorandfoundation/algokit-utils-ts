@@ -1,27 +1,38 @@
-import { describe, expect, test } from 'vitest'
-import type { ABIStructType } from './abi-type'
-import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
-import { ABIStructValue, ABIValue } from './abi-value'
 import { Address } from '@algorandfoundation/algokit-common'
+import { describe, expect, test } from 'vitest'
+import {
+  ABIAddressType,
+  ABIBoolType,
+  ABIByteType,
+  ABIDynamicArrayType,
+  ABIStaticArrayType,
+  ABIStringType,
+  ABIStructType,
+  ABITupleType,
+  ABIType,
+  ABIUfixedType,
+  ABIUintType,
+} from './abi-type'
+import { ABIStructValue, ABIValue } from './abi-value'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
     // Uint tests
     {
       description: 'uint8 with value 0',
-      abiType: { name: ABITypeName.Uint, bitSize: 8 } as ABIType,
+      abiType: new ABIUintType(8),
       abiValue: 0,
       expectedBytes: [0],
     },
     {
       description: 'uint16 with value 3',
-      abiType: { name: ABITypeName.Uint, bitSize: 16 } as ABIType,
+      abiType: new ABIUintType(16),
       abiValue: 3,
       expectedBytes: [0, 3],
     },
     {
       description: 'uint64 with value 256',
-      abiType: { name: ABITypeName.Uint, bitSize: 64 } as ABIType,
+      abiType: new ABIUintType(64),
       abiValue: 256n,
       expectedBytes: [0, 0, 0, 0, 0, 0, 1, 0],
     },
@@ -29,13 +40,13 @@ describe('ABIType encode decode', () => {
     // Ufixed tests
     {
       description: 'ufixed8x30 with value 255',
-      abiType: { name: ABITypeName.Ufixed, bitSize: 8, precision: 30 } as ABIType,
+      abiType: new ABIUfixedType(8, 30),
       abiValue: 255,
       expectedBytes: [255],
     },
     {
       description: 'ufixed32x10 with value 33',
-      abiType: { name: ABITypeName.Ufixed, bitSize: 32, precision: 10 } as ABIType,
+      abiType: new ABIUfixedType(32, 10),
       abiValue: 33,
       expectedBytes: [0, 0, 0, 33],
     },
@@ -43,7 +54,7 @@ describe('ABIType encode decode', () => {
     // Address tests
     {
       description: 'address',
-      abiType: { name: ABITypeName.Address } as ABIType,
+      abiType: new ABIAddressType(),
       abiValue: Address.fromString('MO2H6ZU47Q36GJ6GVHUKGEBEQINN7ZWVACMWZQGIYUOE3RBSRVYHV4ACJI'),
       expectedBytes: [
         99, 180, 127, 102, 156, 252, 55, 227, 39, 198, 169, 232, 163, 16, 36, 130, 26, 223, 230, 213, 0, 153, 108, 192, 200, 197, 28, 77,
@@ -54,19 +65,19 @@ describe('ABIType encode decode', () => {
     // String tests
     {
       description: 'string with unicode',
-      abiType: { name: ABITypeName.String } as ABIType,
+      abiType: new ABIStringType(),
       abiValue: 'What’s new',
       expectedBytes: [0, 12, 87, 104, 97, 116, 226, 128, 153, 115, 32, 110, 101, 119],
     },
     {
       description: 'string with emoji',
-      abiType: { name: ABITypeName.String } as ABIType,
+      abiType: new ABIStringType(),
       abiValue: '😅🔨',
       expectedBytes: [0, 8, 240, 159, 152, 133, 240, 159, 148, 168],
     },
     {
       description: 'simple string',
-      abiType: { name: ABITypeName.String } as ABIType,
+      abiType: new ABIStringType(),
       abiValue: 'asdf',
       expectedBytes: [0, 4, 97, 115, 100, 102],
     },
@@ -74,13 +85,13 @@ describe('ABIType encode decode', () => {
     // Byte tests
     {
       description: 'byte with value 10',
-      abiType: { name: ABITypeName.Byte } as ABIType,
+      abiType: new ABIByteType(),
       abiValue: 10,
       expectedBytes: [10],
     },
     {
       description: 'byte with value 255',
-      abiType: { name: ABITypeName.Byte } as ABIType,
+      abiType: new ABIByteType(),
       abiValue: 255,
       expectedBytes: [255],
     },
@@ -88,13 +99,13 @@ describe('ABIType encode decode', () => {
     // Bool tests
     {
       description: 'bool true',
-      abiType: { name: ABITypeName.Bool } as ABIType,
+      abiType: new ABIBoolType(),
       abiValue: true,
       expectedBytes: [128],
     },
     {
       description: 'bool false',
-      abiType: { name: ABITypeName.Bool } as ABIType,
+      abiType: new ABIBoolType(),
       abiValue: false,
       expectedBytes: [0],
     },
@@ -102,31 +113,31 @@ describe('ABIType encode decode', () => {
     // Static array tests
     {
       description: 'bool[3] array',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 3 } as ABIType,
+      abiType: new ABIStaticArrayType(new ABIBoolType(), 3),
       abiValue: [true, true, false],
       expectedBytes: [192],
     },
     {
       description: 'bool[8] array with 01000000',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 8 } as ABIType,
+      abiType: new ABIStaticArrayType(new ABIBoolType(), 8),
       abiValue: [false, true, false, false, false, false, false, false],
       expectedBytes: [64],
     },
     {
       description: 'bool[8] array with all true',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 8 } as ABIType,
+      abiType: new ABIStaticArrayType(new ABIBoolType(), 8),
       abiValue: [true, true, true, true, true, true, true, true],
       expectedBytes: [255],
     },
     {
       description: 'bool[9] array',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 9 } as ABIType,
+      abiType: new ABIStaticArrayType(new ABIBoolType(), 9),
       abiValue: [true, false, false, true, false, false, true, false, true],
       expectedBytes: [146, 128],
     },
     {
       description: 'uint64[3] array',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Uint, bitSize: 64 }, length: 3 } as ABIType,
+      abiType: new ABIStaticArrayType(new ABIUintType(64), 3),
       abiValue: [1n, 2n, 3n],
       expectedBytes: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3],
     },
@@ -134,25 +145,25 @@ describe('ABIType encode decode', () => {
     // Dynamic array tests
     {
       description: 'empty bool[] array',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: new ABIDynamicArrayType(new ABIBoolType()),
       abiValue: [],
       expectedBytes: [0, 0],
     },
     {
       description: 'bool[] array with 3 elements',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: new ABIDynamicArrayType(new ABIBoolType()),
       abiValue: [true, true, false],
       expectedBytes: [0, 3, 192],
     },
     {
       description: 'bool[] array with 8 elements',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: new ABIDynamicArrayType(new ABIBoolType()),
       abiValue: [false, true, false, false, false, false, false, false],
       expectedBytes: [0, 8, 64],
     },
     {
       description: 'bool[] array with 9 elements',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: new ABIDynamicArrayType(new ABIBoolType()),
       abiValue: [true, false, false, true, false, false, true, false, true],
       expectedBytes: [0, 9, 146, 128],
     },
@@ -161,46 +172,31 @@ describe('ABIType encode decode', () => {
   const simpleTupleCases = [
     {
       description: 'tuple (uint8, uint16)',
-      abiType: {
-        name: ABITypeName.Tuple,
-        childTypes: [
-          { name: ABITypeName.Uint, bitSize: 8 },
-          { name: ABITypeName.Uint, bitSize: 16 },
-        ],
-      } as ABIType,
+      abiType: new ABITupleType([new ABIUintType(8), new ABIUintType(16)]),
       abiValue: [1, 2],
       expectedBytes: [1, 0, 2],
     },
     {
       description: 'tuple (uint32, uint32)',
-      abiType: {
-        name: ABITypeName.Tuple,
-        childTypes: [
-          { name: ABITypeName.Uint, bitSize: 32 },
-          { name: ABITypeName.Uint, bitSize: 32 },
-        ],
-      } as ABIType,
+      abiType: new ABITupleType([new ABIUintType(32), new ABIUintType(32)]),
       abiValue: [1, 2],
       expectedBytes: [0, 0, 0, 1, 0, 0, 0, 2],
     },
     {
       description: 'tuple (uint32, string)',
-      abiType: { name: ABITypeName.Tuple, childTypes: [{ name: ABITypeName.Uint, bitSize: 32 }, { name: ABITypeName.String }] } as ABIType,
+      abiType: new ABITupleType([new ABIUintType(32), new ABIStringType()]),
       abiValue: [42, 'hello'],
       expectedBytes: [0, 0, 0, 42, 0, 6, 0, 5, 104, 101, 108, 108, 111],
     },
     {
       description: 'tuple (uint16, bool)',
-      abiType: { name: ABITypeName.Tuple, childTypes: [{ name: ABITypeName.Uint, bitSize: 16 }, { name: ABITypeName.Bool }] } as ABIType,
+      abiType: new ABITupleType([new ABIUintType(16), new ABIBoolType()]),
       abiValue: [1234, false],
       expectedBytes: [4, 210, 0],
     },
     {
       description: 'tuple (uint32, string, bool)',
-      abiType: {
-        name: ABITypeName.Tuple,
-        childTypes: [{ name: ABITypeName.Uint, bitSize: 32 }, { name: ABITypeName.String }, { name: ABITypeName.Bool }],
-      } as ABIType,
+      abiType: new ABITupleType([new ABIUintType(32), new ABIStringType(), new ABIBoolType()]),
       abiValue: [42, 'test', false],
       expectedBytes: [0, 0, 0, 42, 0, 7, 0, 0, 4, 116, 101, 115, 116],
     },
@@ -269,42 +265,42 @@ describe('ABIType encode decode', () => {
   test.each(basicTypeCases)('should encode and decode $description', ({ abiType, abiValue, expectedBytes }) => {
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encodeABIValue(abiType, abiValue)
+    const encoded = abiType.encode(abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decodeABIValue(abiType, encoded)
+    const decoded = abiType.decode(encoded)
     expect(decoded).toEqual(abiValue)
   })
 
   test.each(simpleTupleCases)('should encode and decode $description', ({ abiType, abiValue, expectedBytes }) => {
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encodeABIValue(abiType, abiValue)
+    const encoded = abiType.encode(abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decodeABIValue(abiType, encoded)
+    const decoded = abiType.decode(encoded)
     expect(decoded).toEqual(abiValue)
   })
 
   test.each(complexTupleCases)('should encode and decode $description using type string', ({ typeString, abiValue, expectedBytes }) => {
-    const abiType = getABIType(typeString)
+    const abiType = ABIType.from(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encodeABIValue(abiType, abiValue)
+    const encoded = abiType.encode(abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decodeABIValue(abiType, encoded)
+    const decoded = abiType.decode(encoded)
     expect(decoded).toEqual(abiValue)
   })
 
   test.each(nestedTupleCases)('should encode and decode $description using type string', ({ typeString, abiValue, expectedBytes }) => {
-    const abiType = getABIType(typeString)
+    const abiType = ABIType.from(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encodeABIValue(abiType, abiValue)
+    const encoded = abiType.encode(abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decodeABIValue(abiType, encoded)
+    const decoded = abiType.decode(encoded)
     expect(decoded).toEqual(abiValue)
   })
 
@@ -312,8 +308,9 @@ describe('ABIType encode decode', () => {
     // Generate all valid ABI uint bit lengths
     Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
   )('correctly decodes a uint%i', (bitLength) => {
-    const encoded = encodeABIValue({ name: ABITypeName.Uint, bitSize: bitLength }, 1)
-    const decoded = decodeABIValue(getABIType(`uint${bitLength}`), encoded)
+    const abiType = new ABIUintType(bitLength)
+    const encoded = abiType.encode(1)
+    const decoded = abiType.decode(encoded)
 
     if (bitLength < 53) {
       expect(typeof decoded).toBe('number')
@@ -325,75 +322,47 @@ describe('ABIType encode decode', () => {
   })
 
   test('Struct and tuple encode decode should match', () => {
-    const tupleType = getABIType('(uint8,(uint16,string,string[]),(bool,byte),(byte,address))')
-    const structType = {
-      name: ABITypeName.Struct,
-      structName: 'Struct 1',
-      structFields: [
-        {
-          name: 'field 1',
-          type: {
-            name: ABITypeName.Uint,
-            bitSize: 8,
+    const tupleType = ABIType.from('(uint8,(uint16,string,string[]),(bool,byte),(byte,address))')
+    const structType = new ABIStructType('Struct 1', [
+      {
+        name: 'field 1',
+        type: new ABIUintType(8),
+      },
+      {
+        name: 'field 2',
+        type: new ABIStructType('Struct 2', [
+          {
+            name: 'Struct 2 field 1',
+            type: new ABIUintType(16),
           },
-        },
-        {
-          name: 'field 2',
-          type: {
-            name: ABITypeName.Struct,
-            structName: 'Struct 2',
-            structFields: [
-              {
-                name: 'Struct 2 field 1',
-                type: {
-                  name: ABITypeName.Uint,
-                  bitSize: 16,
-                },
-              },
-              {
-                name: 'Struct 2 field 2',
-                type: {
-                  name: ABITypeName.String,
-                },
-              },
-              {
-                name: 'Struct 2 field 3',
-                type: {
-                  name: ABITypeName.DynamicArray,
-                  childType: {
-                    name: ABITypeName.String,
-                  },
-                },
-              },
-            ],
+          {
+            name: 'Struct 2 field 2',
+            type: new ABIStringType(),
           },
-        },
-        {
-          name: 'field 3',
-          type: [
-            {
-              name: 'field 3 child 1',
-              type: {
-                name: ABITypeName.Bool,
-              },
-            },
-            {
-              name: 'field 3 child 2',
-              type: {
-                name: ABITypeName.Byte,
-              },
-            },
-          ],
-        },
-        {
-          name: 'field 4',
-          type: {
-            name: ABITypeName.Tuple,
-            childTypes: [{ name: ABITypeName.Byte }, { name: ABITypeName.Address }],
+          {
+            name: 'Struct 2 field 3',
+            type: new ABIDynamicArrayType(new ABIStringType()),
           },
-        },
-      ],
-    } satisfies ABIStructType
+        ]),
+      },
+      {
+        name: 'field 3',
+        type: [
+          {
+            name: 'field 3 child 1',
+            type: new ABIBoolType(),
+          },
+          {
+            name: 'field 3 child 2',
+            type: new ABIByteType(),
+          },
+        ],
+      },
+      {
+        name: 'field 4',
+        type: new ABITupleType([new ABIByteType(), new ABIAddressType()]),
+      },
+    ])
 
     const tupleValue = [
       123,
@@ -416,32 +385,28 @@ describe('ABIType encode decode', () => {
       'field 4': [222, Address.fromString('BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE')],
     } satisfies ABIStructValue
 
-    const encodedTuple = encodeABIValue(tupleType, tupleValue)
-    const encodedStruct = encodeABIValue(structType, structValue)
+    const encodedTuple = tupleType.encode(tupleValue)
+    const encodedStruct = structType.encode(structValue)
 
     expect(encodedTuple).toEqual(encodedStruct)
 
-    const decodedTuple = decodeABIValue(tupleType, encodedTuple)
+    const decodedTuple = tupleType.decode(encodedTuple)
     expect(decodedTuple).toEqual(tupleValue)
 
-    const decodedStruct = decodeABIValue(structType, encodedTuple)
+    const decodedStruct = structType.decode(encodedTuple)
     expect(decodedStruct).toEqual(structValue)
   })
 
   test('correctly decodes a struct containing a uint16', () => {
-    const userStruct = {
-      name: ABITypeName.Struct,
-      structName: 'User',
-      structFields: [
-        {
-          name: 'userId',
-          type: getABIType('uint16'),
-        },
-        { name: 'name', type: getABIType('string') },
-      ],
-    } satisfies ABIStructType
+    const userStruct = new ABIStructType('User', [
+      {
+        name: 'userId',
+        type: ABIType.from('uint16'),
+      },
+      { name: 'name', type: ABIType.from('string') },
+    ])
 
-    const decoded = decodeABIValue(userStruct, new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100])) as {
+    const decoded = userStruct.decode(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100])) as {
       userId: number
       name: string
     }
@@ -455,11 +420,11 @@ describe('ABIType encode decode', () => {
   describe('Basic byte arrays', () => {
     test('should convert a simple byte array to Uint8Array', () => {
       // Create a static array of bytes: byte[4]
-      const arrayType = getABIType('byte[4]')
+      const arrayType = ABIType.from('byte[4]')
 
       const value = [1, 2, 3, 4]
-      const encoded = encodeABIValue(arrayType, value)
-      const result = decodeABIValue(arrayType, encoded)
+      const encoded = arrayType.encode(value)
+      const result = arrayType.decode(encoded)
 
       expect(result).toBeInstanceOf(Uint8Array)
       expect(Array.from(result as Uint8Array)).toEqual([1, 2, 3, 4])
@@ -467,22 +432,22 @@ describe('ABIType encode decode', () => {
 
     test('should handle dynamic byte arrays', () => {
       // Create a dynamic array of bytes: byte[]
-      const arrayType = getABIType('byte[]')
+      const arrayType = ABIType.from('byte[]')
 
       const value = [10, 20, 30, 40, 50]
-      const encoded = encodeABIValue(arrayType, value)
-      const result = decodeABIValue(arrayType, encoded)
+      const encoded = arrayType.encode(value)
+      const result = arrayType.decode(encoded)
 
       expect(result).toBeInstanceOf(Uint8Array)
       expect(Array.from(result as Uint8Array)).toEqual([10, 20, 30, 40, 50])
     })
 
     test('should return existing Uint8Array as is', () => {
-      const arrayType = getABIType('byte[3]')
+      const arrayType = ABIType.from('byte[3]')
 
       const value = new Uint8Array([5, 6, 7])
-      const encoded = encodeABIValue(arrayType, value)
-      const result = decodeABIValue(arrayType, encoded)
+      const encoded = arrayType.encode(value)
+      const result = arrayType.decode(encoded)
 
       expect(result).toEqual(value)
     })
@@ -491,15 +456,15 @@ describe('ABIType encode decode', () => {
   describe('Nested arrays', () => {
     test('should convert byte arrays inside arrays', () => {
       // Create byte[2][]
-      const outerArrayType = getABIType('byte[2][]')
+      const outerArrayType = ABIType.from('byte[2][]')
 
       const value = [
         [1, 2],
         [3, 4],
         [5, 6],
       ]
-      const encoded = encodeABIValue(outerArrayType, value)
-      const result = decodeABIValue(outerArrayType, encoded) as ABIValue[]
+      const encoded = outerArrayType.encode(value)
+      const result = outerArrayType.decode(encoded) as ABIValue[]
 
       expect(Array.isArray(result)).toBe(true)
       expect(result.length).toBe(3)
@@ -515,11 +480,11 @@ describe('ABIType encode decode', () => {
 
     test('should not convert non-byte arrays', () => {
       // Create uint8[3]
-      const arrayType = getABIType('uint8[3]')
+      const arrayType = ABIType.from('uint8[3]')
 
       const value = [1, 2, 3]
-      const encoded = encodeABIValue(arrayType, value)
-      const result = decodeABIValue(arrayType, encoded)
+      const encoded = arrayType.encode(value)
+      const result = arrayType.decode(encoded)
 
       expect(Array.isArray(result)).toBe(true)
       expect(result).toEqual([1, 2, 3])
@@ -529,11 +494,11 @@ describe('ABIType encode decode', () => {
   describe('Tuple tests', () => {
     test('should handle tuples with byte arrays', () => {
       // Create (byte[2],bool,byte[3])
-      const tupleType = getABIType('(byte[2],bool,byte[3])')
+      const tupleType = ABIType.from('(byte[2],bool,byte[3])')
 
       const value = [[1, 2], true, [3, 4, 5]]
-      const encoded = encodeABIValue(tupleType, value)
-      const result = decodeABIValue(tupleType, encoded) as ABIValue[]
+      const encoded = tupleType.encode(value)
+      const result = tupleType.decode(encoded) as ABIValue[]
 
       expect(Array.isArray(result)).toBe(true)
       expect(result.length).toBe(3)
@@ -548,14 +513,14 @@ describe('ABIType encode decode', () => {
 
     test('should handle nested tuples with byte arrays', () => {
       // Create (byte[2],(byte[1],bool))
-      const outerTupleType = getABIType('(byte[2],(byte[1],bool))')
+      const outerTupleType = ABIType.from('(byte[2],(byte[1],bool))')
 
       const value = [
         [1, 2],
         [[3], true],
       ]
-      const encoded = encodeABIValue(outerTupleType, value)
-      const result = decodeABIValue(outerTupleType, encoded) as ABIValue[]
+      const encoded = outerTupleType.encode(value)
+      const result = outerTupleType.decode(encoded) as ABIValue[]
 
       expect(Array.isArray(result)).toBe(true)
       expect(result.length).toBe(2)
@@ -575,7 +540,7 @@ describe('ABIType encode decode', () => {
   describe('Complex mixed structures', () => {
     test('should handle complex nested structures', () => {
       // Create (byte[2][],uint8,(bool,byte[3]))
-      const outerTupleType = getABIType('(byte[2][],uint8,(bool,byte[3]))')
+      const outerTupleType = ABIType.from('(byte[2][],uint8,(bool,byte[3]))')
 
       const value = [
         [
@@ -587,8 +552,8 @@ describe('ABIType encode decode', () => {
         [true, [7, 8, 9]], // (bool,byte[3])
       ]
 
-      const encoded = encodeABIValue(outerTupleType, value)
-      const result = decodeABIValue(outerTupleType, encoded) as ABIValue[]
+      const encoded = outerTupleType.encode(value)
+      const result = outerTupleType.decode(encoded) as ABIValue[]
 
       // Check first element (byte[2][])
       const byteArrays = result[0] as ABIValue[]
@@ -611,11 +576,11 @@ describe('ABIType encode decode', () => {
 
   describe('Edge cases', () => {
     test('should handle empty byte arrays', () => {
-      const arrayType = getABIType('byte[0]')
+      const arrayType = ABIType.from('byte[0]')
 
       const value: number[] = []
-      const encoded = encodeABIValue(arrayType, value)
-      const result = decodeABIValue(arrayType, encoded)
+      const encoded = arrayType.encode(value)
+      const result = arrayType.decode(encoded)
 
       expect(result).toBeInstanceOf(Uint8Array)
       expect((result as Uint8Array).length).toBe(0)

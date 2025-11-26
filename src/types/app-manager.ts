@@ -1,4 +1,4 @@
-import { ABIMethod, ABIReturn, ABIType, ABIValue, decodeABIValue } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
 import { ReadableAddress, getAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
@@ -331,7 +331,7 @@ export class AppManager {
   public async getBoxValueFromABIType(request: BoxValueRequestParams): Promise<ABIValue> {
     const { appId, boxName, type } = request
     const value = await this.getBoxValue(appId, boxName)
-    return decodeABIValue(type, value)
+    return type.decode(value)
   }
 
   /**
@@ -449,7 +449,7 @@ export class AppManager {
         method: method,
         rawReturnValue,
         decodeError: undefined,
-        returnValue: decodeABIValue(method.returns.type, rawReturnValue),
+        returnValue: method.returns.type.decode(rawReturnValue),
       }
     } catch (err) {
       return {

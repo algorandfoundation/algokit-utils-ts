@@ -1,5 +1,5 @@
 import sha512 from 'js-sha512'
-import { ABIType, decodeABIValue, encodeABIValue, getABIStructType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIStructType, ABIType, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { AVMType, Arc56Contract, Arc56Method } from './arc56-contract'
@@ -156,10 +156,10 @@ export function getABIMethod(signature: string): ABIMethod {
       if (argTypeIsTransaction(n as ABIMethodArgType) || argTypeIsReference(n as ABIMethodArgType)) {
         return { type: n as ABIMethodArgType } satisfies ABIMethodArg
       }
-      return { type: getABIType(n) } satisfies ABIMethodArg
+      return { type: ABIType.from(n) } satisfies ABIMethodArg
     })
   const returnType = signature.slice(argsEnd + 1)
-  const returns = { type: returnType === 'void' ? ('void' as const) : getABIType(returnType) } satisfies ABIMethodReturn
+  const returns = { type: returnType === 'void' ? ('void' as const) : ABIType.from(returnType) } satisfies ABIMethodReturn
 
   return {
     name,
@@ -177,10 +177,10 @@ export function getABIMethodSignature(abiMethod: ABIMethod): string {
   const args = abiMethod.args
     .map((arg) => {
       if (argTypeIsTransaction(arg.type) || argTypeIsReference(arg.type)) return arg.type
-      return getABITypeName(arg.type)
+      return arg.type.toString()
     })
     .join(',')
-  const returns = abiMethod.returns.type === 'void' ? 'void' : getABITypeName(abiMethod.returns.type)
+  const returns = abiMethod.returns.type === 'void' ? 'void' : abiMethod.returns.type.toString()
   return `${abiMethod.name}(${args})${returns}`
 }
 
@@ -204,7 +204,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
       ? {
           data: defaultValue.data,
           source: defaultValue.source as DefaultValueSource,
-          type: defaultValue.type ? (isAVMType(defaultValue.type) ? defaultValue.type : getABIType(defaultValue.type)) : undefined,
+          type: defaultValue.type ? (isAVMType(defaultValue.type) ? defaultValue.type : ABIType.from(defaultValue.type)) : undefined,
         }
       : undefined
 
@@ -219,7 +219,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
 
     if (struct) {
       return {
-        type: getABIStructType(struct, appSpec.structs),
+        type: ABIStructType.fromStruct(struct, appSpec.structs),
         name,
         desciption: desc,
         defaultValue: convertedDefaultValue,
@@ -227,7 +227,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
     }
 
     return {
-      type: getABIType(type),
+      type: ABIType.from(type),
       name,
       desciption: desc,
       defaultValue: convertedDefaultValue,
@@ -239,8 +239,8 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
       method.returns.type === ('void' as const)
         ? ('void' as const)
         : method.returns.struct
-          ? getABIStructType(method.returns.struct, appSpec.structs)
-          : getABIType(method.returns.type),
+          ? ABIStructType.fromStruct(method.returns.struct, appSpec.structs)
+          : ABIType.from(method.returns.type),
     desc: method.returns.desc,
   }
 
@@ -291,21 +291,21 @@ export function decodeAVMValue(avmType: AVMType, bytes: Uint8Array): ABIValue {
     case 'AVMBytes':
       return bytes
     case 'AVMUint64':
-      return decodeABIValue(getABIType('uint64'), bytes)
+      return ABIType.from('uint64').decode(bytes)
   }
 }
 
 export function encodeAVMValue(avmType: AVMType, value: ABIValue): Uint8Array {
   switch (avmType) {
     case 'AVMString':
-      return encodeABIValue(getABIType('string'), value)
+      return ABIType.from('string').encode(value)
     case 'AVMBytes':
       if (typeof value === 'string') return Buffer.from(value, 'utf-8')
       if (typeof value !== 'object' || !(value instanceof Uint8Array))
         throw new Error(`Expected bytes value for AVMBytes, but got ${value}`)
       return value
     case 'AVMUint64':
-      return encodeABIValue(getABIType('uint64'), value)
+      return ABIType.from('uint64').encode(value)
   }
 }
 
@@ -314,9 +314,9 @@ export function isAVMType(type: unknown): type is AVMType {
 }
 
 export function decodeAVMOrABIValue(type: AVMType | ABIType, bytes: Uint8Array): ABIValue {
-  return isAVMType(type) ? decodeAVMValue(type, bytes) : decodeABIValue(type, bytes)
+  return isAVMType(type) ? decodeAVMValue(type, bytes) : type.decode(bytes)
 }
 
 export function encodeAVMOrABIValue(type: AVMType | ABIType, value: ABIValue): Uint8Array {
-  return isAVMType(type) ? encodeAVMValue(type, value) : encodeABIValue(type, value)
+  return isAVMType(type) ? encodeAVMValue(type, value) : type.encode(value)
 }

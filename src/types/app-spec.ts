@@ -1,12 +1,11 @@
 import {
   ABIMethod,
+  ABIType as ABITypeClass,
   ARC28Event,
   Arc56Contract,
   Arc56Method,
   StorageKey,
   StructField,
-  encodeABIValue,
-  getABIType,
 } from '@algorandfoundation/algokit-abi'
 
 /**
@@ -59,7 +58,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
     return {
       source: defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local',
       data: Buffer.from(
-        typeof defaultArg.data === 'number' ? encodeABIValue(getABIType('uint64'), defaultArg.data) : defaultArg.data,
+        typeof defaultArg.data === 'number' ? ABITypeClass.from('uint64').encode(defaultArg.data) : defaultArg.data,
       ).toString('base64'),
       type: type === 'string' ? 'AVMString' : type,
     }

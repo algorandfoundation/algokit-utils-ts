@@ -13,16 +13,6 @@ export {
 } from './abi-method'
 export type { ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
 export {
-  ABITypeName,
-  decodeABIValue,
-  encodeABIValue,
-  encodeTuple,
-  getABIStructType,
-  getABIType,
-  getABITypeName,
-  parseTupleContent,
-} from './abi-type'
-export type {
   ABIAddressType,
   ABIBoolType,
   ABIByteType,
@@ -32,9 +22,12 @@ export type {
   ABIStructType,
   ABITupleType,
   ABIType,
+  ABITypeName,
   ABIUfixedType,
   ABIUintType,
+  parseTupleContent,
 } from './abi-type'
+export type { ABIStructField } from './abi-type'
 export type { ABIReferenceValue, ABIValue } from './abi-value'
 export type { ARC28Event } from './arc28-event'
 export {

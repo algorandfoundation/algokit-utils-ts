@@ -1,12 +1,12 @@
 import {
   ABIMethod,
   ABIReferenceType,
+  ABITupleType,
   ABIType,
-  ABITypeName,
+  ABIUintType,
   ABIValue,
   argTypeIsReference,
   argTypeIsTransaction,
-  encodeABIValue,
   getABIMethodSelector,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
@@ -347,7 +347,7 @@ function encodeMethodArguments(
           assetReferences,
         )
 
-        abiTypes.push({ name: ABITypeName.Uint, bitSize: 8 })
+        abiTypes.push(new ABIUintType(8))
         abiValues.push(foreignIndex)
       } else {
         throw new Error(`Invalid reference value for ${referenceType}: ${argValue}`)
@@ -386,7 +386,7 @@ function encodeArgsIndividually(abiTypes: ABIType[], abiValues: ABIValue[]): Uin
   for (let i = 0; i < abiTypes.length; i++) {
     const abiType = abiTypes[i]
     const abiValue = abiValues[i]
-    const encoded = encodeABIValue(abiType, abiValue)
+    const encoded = abiType.encode(abiValue)
     encodedArgs.push(encoded)
   }
 
@@ -409,9 +409,9 @@ function encodeArgsWithTuplePacking(abiTypes: ABIType[], abiValues: ABIValue[]):
   const remainingAbiValues = abiValues.slice(ARGS_TUPLE_PACKING_THRESHOLD)
 
   if (remainingAbiTypes.length > 0) {
-    const tupleType = { name: ABITypeName.Tuple as const, childTypes: remainingAbiTypes }
+    const tupleType = new ABITupleType(remainingAbiTypes)
     const tupleValue = remainingAbiValues
-    const tupleEncoded = encodeABIValue(tupleType, tupleValue)
+    const tupleEncoded = tupleType.encode(tupleValue)
     encodedArgs.push(tupleEncoded)
   }
 
