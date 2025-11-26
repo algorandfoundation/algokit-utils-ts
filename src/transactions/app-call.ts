@@ -442,7 +442,7 @@ function populateGroupResource(
       }
 
       // Check if account appears in any app call transaction fields
-      if (txn.sender === address) {
+      if (txn.sender.equals(address)) {
         return true
       }
 
