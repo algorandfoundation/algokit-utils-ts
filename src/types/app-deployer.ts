@@ -367,7 +367,7 @@ export class AppDeployer {
     const existingAppRecord = await this._appManager.getById(existingApp.appId)
     const existingApproval = Buffer.from(existingAppRecord.approvalProgram).toString('base64')
     const existingClear = Buffer.from(existingAppRecord.clearStateProgram).toString('base64')
-    const existingExtraPages = calculateExtraProgramPages(existingAppRecord.approvalProgram, existingAppRecord.clearStateProgram)
+    const extraPages = existingAppRecord.extraProgramPages ?? 0
 
     const newApprovalBytes = Buffer.from(approvalProgram)
     const newClearBytes = Buffer.from(clearStateProgram)
@@ -383,7 +383,7 @@ export class AppDeployer {
       existingAppRecord.globalInts < (createParams.schema?.globalInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0) ||
       existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0) ||
-      existingExtraPages < newExtraPages
+      extraPages < newExtraPages
 
     if (isSchemaBreak) {
       Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
@@ -392,7 +392,7 @@ export class AppDeployer {
           globalByteSlices: existingAppRecord.globalByteSlices,
           localInts: existingAppRecord.localInts,
           localByteSlices: existingAppRecord.localByteSlices,
-          extraProgramPages: existingExtraPages,
+          extraProgramPages: extraPages,
         },
         to: { ...createParams.schema, extraProgramPages: newExtraPages },
       })

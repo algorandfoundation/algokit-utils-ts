@@ -1,26 +1,26 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/transaction](../modules/types_transaction.md) / SendAtomicTransactionComposerResults
+[@algorandfoundation/algokit-utils](../README.md) / [types/transaction](../modules/types_transaction.md) / SendTransactionComposerResults
 
-# Interface: SendAtomicTransactionComposerResults
+# Interface: SendTransactionComposerResults
 
-[types/transaction](../modules/types_transaction.md).SendAtomicTransactionComposerResults
+[types/transaction](../modules/types_transaction.md).SendTransactionComposerResults
 
-The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer`
+The result of preparing and/or sending multiple transactions using an `TransactionComposer`
 
 ## Hierarchy
 
 - `Omit`\<[`SendTransactionResults`](types_transaction.SendTransactionResults.md), ``"confirmations"``\>
 
-  ↳ **`SendAtomicTransactionComposerResults`**
+  ↳ **`SendTransactionComposerResults`**
 
 ## Table of contents
 
 ### Properties
 
-- [confirmations](types_transaction.SendAtomicTransactionComposerResults.md#confirmations)
-- [groupId](types_transaction.SendAtomicTransactionComposerResults.md#groupid)
-- [returns](types_transaction.SendAtomicTransactionComposerResults.md#returns)
-- [transactions](types_transaction.SendAtomicTransactionComposerResults.md#transactions)
-- [txIds](types_transaction.SendAtomicTransactionComposerResults.md#txids)
+- [confirmations](types_transaction.SendTransactionComposerResults.md#confirmations)
+- [groupId](types_transaction.SendTransactionComposerResults.md#groupid)
+- [returns](types_transaction.SendTransactionComposerResults.md#returns)
+- [transactions](types_transaction.SendTransactionComposerResults.md#transactions)
+- [txIds](types_transaction.SendTransactionComposerResults.md#txids)
 
 ## Properties
 
@@ -39,9 +39,9 @@ ___
 
 ### groupId
 
-• **groupId**: `string`
+• **groupId**: `undefined` \| `string`
 
-base64 encoded representation of the group ID of the atomic group
+base64 encoded representation of the group ID of the group
 
 #### Defined in
 

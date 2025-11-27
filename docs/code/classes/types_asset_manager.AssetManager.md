@@ -37,7 +37,7 @@ Create a new asset manager.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `algod` | `AlgodClient` | An algod client |
-| `newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | A function that creates a new `TransactionComposer` transaction group |
+| `newGroup` | (`config?`: [`TransactionComposerConfig`](../modules/types_composer.md#transactioncomposerconfig)) => [`TransactionComposer`](types_composer.TransactionComposer.md) | A function that creates a new `TransactionComposer` transaction group |
 
 #### Returns
 

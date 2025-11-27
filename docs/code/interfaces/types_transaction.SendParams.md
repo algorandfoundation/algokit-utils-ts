@@ -10,7 +10,7 @@ Parameters to configure transaction sending.
 
 - **`SendParams`**
 
-  ↳ [`AtomicTransactionComposerToSend`](types_transaction.AtomicTransactionComposerToSend.md)
+  ↳ [`TransactionComposerToSend`](types_transaction.TransactionComposerToSend.md)
 
 ## Table of contents
 

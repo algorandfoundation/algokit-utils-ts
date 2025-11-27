@@ -10,7 +10,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { ErrorTransformer, TransactionComposer } from './composer'
+import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './composer'
 import { AlgoConfig } from './network-client'
 import { ReadableAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
@@ -44,9 +44,9 @@ export class AlgorandClient {
     this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)
     this._appManager = new AppManager(this._clientManager.algod)
-    this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
-    this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
+    this._assetManager = new AssetManager(this._clientManager.algod, (config) => this.newGroup(config))
+    this._transactionSender = new AlgorandClientTransactionSender((config) => this.newGroup(config), this._assetManager, this._appManager)
+    this._transactionCreator = new AlgorandClientTransactionCreator((config) => this.newGroup(config))
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
@@ -234,7 +234,7 @@ export class AlgorandClient {
    * const composer = AlgorandClient.mainNet().newGroup();
    * const result = await composer.addTransaction(payment).send()
    */
-  public newGroup() {
+  public newGroup(composerConfig?: TransactionComposerConfig) {
     return new TransactionComposer({
       algod: this.client.algod,
       getSigner: (addr: ReadableAddress) => this.account.getSigner(addr),
@@ -242,6 +242,7 @@ export class AlgorandClient {
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
       errorTransformers: [...this._errorTransformers],
+      composerConfig: composerConfig,
     })
   }
 

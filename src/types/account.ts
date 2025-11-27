@@ -284,18 +284,3 @@ export type AccountAssetInformation = {
   /** The round as at which the holding was correct. */
   round: bigint
 }
-
-/**
- * @deprecated The methods that use this can be achieved using `AccountManager` instead.
- * Config for an account config */
-export interface AccountConfig {
-  /** Mnemonic for an account */
-  accountMnemonic: string
-  /** Address of a rekeyed account */
-  senderAddress?: string
-  /** Account name used to retrieve config */
-  accountName: string
-
-  /** @deprecated Renamed to senderAddress in 2.3.1 */
-  senderMnemonic?: string
-}

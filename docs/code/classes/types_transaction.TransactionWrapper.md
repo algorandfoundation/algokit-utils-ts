@@ -58,7 +58,7 @@
 
 #### Defined in
 
-[src/types/transaction.ts:198](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L198)
+[src/types/transaction.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L185)
 
 ## Properties
 
@@ -72,7 +72,7 @@ Transaction.appCall
 
 #### Defined in
 
-[src/types/transaction.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L192)
+[src/types/transaction.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L179)
 
 ___
 
@@ -86,7 +86,7 @@ Transaction.assetConfig
 
 #### Defined in
 
-[src/types/transaction.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L191)
+[src/types/transaction.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L178)
 
 ___
 
@@ -100,7 +100,7 @@ Transaction.assetFreeze
 
 #### Defined in
 
-[src/types/transaction.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L194)
+[src/types/transaction.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L181)
 
 ___
 
@@ -114,7 +114,7 @@ Transaction.assetTransfer
 
 #### Defined in
 
-[src/types/transaction.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L190)
+[src/types/transaction.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L177)
 
 ___
 
@@ -128,7 +128,7 @@ Transaction.fee
 
 #### Defined in
 
-[src/types/transaction.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L180)
+[src/types/transaction.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L167)
 
 ___
 
@@ -142,7 +142,7 @@ Transaction.firstValid
 
 #### Defined in
 
-[src/types/transaction.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L181)
+[src/types/transaction.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L168)
 
 ___
 
@@ -156,7 +156,7 @@ Transaction.genesisHash
 
 #### Defined in
 
-[src/types/transaction.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L183)
+[src/types/transaction.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L170)
 
 ___
 
@@ -170,7 +170,7 @@ Transaction.genesisId
 
 #### Defined in
 
-[src/types/transaction.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L184)
+[src/types/transaction.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L171)
 
 ___
 
@@ -184,7 +184,7 @@ Transaction.group
 
 #### Defined in
 
-[src/types/transaction.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L188)
+[src/types/transaction.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L175)
 
 ___
 
@@ -198,7 +198,7 @@ Transaction.heartbeat
 
 #### Defined in
 
-[src/types/transaction.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L195)
+[src/types/transaction.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L182)
 
 ___
 
@@ -212,7 +212,7 @@ Transaction.keyRegistration
 
 #### Defined in
 
-[src/types/transaction.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L193)
+[src/types/transaction.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L180)
 
 ___
 
@@ -226,7 +226,7 @@ Transaction.lastValid
 
 #### Defined in
 
-[src/types/transaction.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L182)
+[src/types/transaction.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L169)
 
 ___
 
@@ -240,7 +240,7 @@ Transaction.lease
 
 #### Defined in
 
-[src/types/transaction.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L187)
+[src/types/transaction.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L174)
 
 ___
 
@@ -254,7 +254,7 @@ Transaction.note
 
 #### Defined in
 
-[src/types/transaction.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L185)
+[src/types/transaction.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L172)
 
 ___
 
@@ -268,7 +268,7 @@ Transaction.payment
 
 #### Defined in
 
-[src/types/transaction.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L189)
+[src/types/transaction.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L176)
 
 ___
 
@@ -282,7 +282,7 @@ Transaction.rekeyTo
 
 #### Defined in
 
-[src/types/transaction.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L186)
+[src/types/transaction.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L173)
 
 ___
 
@@ -296,7 +296,7 @@ Transaction.sender
 
 #### Defined in
 
-[src/types/transaction.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L179)
+[src/types/transaction.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L166)
 
 ___
 
@@ -310,7 +310,7 @@ Transaction.stateProof
 
 #### Defined in
 
-[src/types/transaction.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L196)
+[src/types/transaction.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L183)
 
 ___
 
@@ -324,7 +324,7 @@ Transaction.type
 
 #### Defined in
 
-[src/types/transaction.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L178)
+[src/types/transaction.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L165)
 
 ## Methods
 
@@ -342,4 +342,4 @@ The transaction ID as a base64-encoded string
 
 #### Defined in
 
-[src/types/transaction.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L224)
+[src/types/transaction.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L211)

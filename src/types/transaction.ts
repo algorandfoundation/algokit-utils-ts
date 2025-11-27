@@ -1,4 +1,5 @@
-import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
+import { Address } from '@algorandfoundation/algokit-common'
 import {
   AddressWithSigner,
   AppCallTransactionFields,
@@ -16,11 +17,10 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
 import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
-import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
+import { TransactionComposer } from './composer'
 import { Expand } from './expand'
-import { Address } from '@algorandfoundation/algokit-common'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,8 +45,8 @@ export interface SendTransactionParams {
   skipSending?: boolean
   /** Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) */
   skipWaiting?: boolean
-  /** An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true` */
-  atc?: AtomicTransactionComposer
+  /** An optional `TransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true` */
+  transactionComposer?: TransactionComposer
   /** Whether to suppress log messages from transaction send, default: do not suppress */
   suppressLog?: boolean
   /** The flat fee you want to pay, useful for covering extra fees in a transaction group or app call */
@@ -60,7 +60,7 @@ export interface SendTransactionParams {
 }
 
 /** Result from sending a single transaction. */
-export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerResults & ConfirmedTransactionResult>
+export type SendSingleTransactionResult = Expand<SendTransactionComposerResults & ConfirmedTransactionResult>
 
 /** The result of sending a transaction */
 export interface SendTransactionResult {
@@ -80,10 +80,10 @@ export interface SendTransactionResults {
   confirmations?: PendingTransactionResponseWrapper[]
 }
 
-/** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
-export interface SendAtomicTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
-  /** base64 encoded representation of the group ID of the atomic group */
-  groupId: string
+/** The result of preparing and/or sending multiple transactions using an `TransactionComposer` */
+export interface SendTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
+  /** base64 encoded representation of the group ID of the group */
+  groupId: string | undefined
   /** The transaction IDs that have been prepared and/or sent */
   txIds: string[]
   /** If ABI method(s) were called the processed return values */
@@ -122,7 +122,7 @@ export interface TransactionToSign {
   signer: AddressWithSigner | TransactionSigner
 }
 
-/** A group of transactions to send together as an atomic group
+/** A group of transactions to send together as an group
  * https://dev.algorand.co/concepts/transactions/atomic-txn-groups/
  */
 export interface TransactionGroupToSend {
@@ -149,29 +149,16 @@ export interface SendParams {
   coverAppCallInnerTransactionFees?: boolean
 }
 
-/** Additional context about the `AtomicTransactionComposer`. */
-export interface AdditionalAtomicTransactionComposerContext {
-  /** A map of transaction index in the `AtomicTransactionComposer` to the max fee that can be calculated for a transaction in the group */
+/** Additional context about the `TransactionComposer`. */
+export interface AdditionalTransactionComposerContext {
+  /** A map of transaction index in the `TransactionComposer` to the max fee that can be calculated for a transaction in the group */
   maxFees: Map<number, AlgoAmount>
-
-  /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
-  suggestedParams: Pick<SuggestedParams, 'fee' | 'minFee'>
 }
 
-/** An `AtomicTransactionComposer` with transactions to send. */
-export interface AtomicTransactionComposerToSend extends SendParams {
-  /** The `AtomicTransactionComposer` with transactions loaded to send */
-  atc: AtomicTransactionComposer
-  /**
-   * @deprecated - set the parameters at the top level instead
-   * Any parameters to control the semantics of the send to the network */
-  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
-
-  /**
-   * Additional `AtomicTransactionComposer` context used when building the transaction group that is sent.
-   * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
-   **/
-  additionalAtcContext?: AdditionalAtomicTransactionComposerContext
+/** An `TransactionComposer` with transactions to send. */
+export interface TransactionComposerToSend extends SendParams {
+  /** The `TransactionComposer` with transactions loaded to send */
+  transactionComposer: TransactionComposer
 }
 
 export class TransactionWrapper implements Transaction {
@@ -226,7 +213,6 @@ export class TransactionWrapper implements Transaction {
   }
 }
 
-// TODO: PD - review the names of these wrapper
 export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
   txn: TransactionWrapper
 }

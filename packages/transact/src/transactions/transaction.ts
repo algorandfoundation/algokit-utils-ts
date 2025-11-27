@@ -740,6 +740,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
 
       txDto.al = accessList
     }
+
+    txDto.aprv = numberCodec.encode(transaction.appCall.rejectVersion)
     txDto.apep = numberCodec.encode(transaction.appCall.extraProgramPages)
   }
 
@@ -990,6 +992,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
               return result
             })()
           : undefined,
+        rejectVersion: numberCodec.decodeOptional(transactionDto.aprv),
         extraProgramPages: numberCodec.decodeOptional(transactionDto.apep),
         ...(transactionDto.apgs !== undefined
           ? {

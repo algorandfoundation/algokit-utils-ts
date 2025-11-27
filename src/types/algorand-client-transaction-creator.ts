@@ -1,4 +1,4 @@
-import { BuiltTransactions, TransactionComposer } from './composer'
+import { BuiltTransactions, TransactionComposer, TransactionComposerConfig } from './composer'
 import { Expand } from './expand'
 import { TransactionWrapper } from './transaction'
 
@@ -14,7 +14,7 @@ export class AlgorandClientTransactionCreator {
    * const transactionCreator = new AlgorandClientTransactionCreator(() => new TransactionComposer())
    * ```
    */
-  constructor(newGroup: () => TransactionComposer) {
+  constructor(newGroup: (config?: TransactionComposerConfig) => TransactionComposer) {
     this._newGroup = newGroup
   }
 

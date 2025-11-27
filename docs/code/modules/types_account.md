@@ -9,10 +9,6 @@
 - [MultisigAccount](../classes/types_account.MultisigAccount.md)
 - [SigningAccount](../classes/types_account.SigningAccount.md)
 
-### Interfaces
-
-- [AccountConfig](../interfaces/types_account.AccountConfig.md)
-
 ### Type Aliases
 
 - [AccountAssetInformation](types_account.md#accountassetinformation)

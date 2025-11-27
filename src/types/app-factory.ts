@@ -360,7 +360,6 @@ export class AppFactory {
    *   deleteParams: {
    *     sender: 'SENDER_ADDRESS'
    *   },
-   *   metadata: { name: 'my_app', version: '2.0', updatable: false, deletable: false },
    *   onSchemaBreak: 'append',
    *   onUpdate: 'append'
    *  })

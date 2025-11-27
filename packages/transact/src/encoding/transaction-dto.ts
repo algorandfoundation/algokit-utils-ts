@@ -122,6 +122,9 @@ export type TransactionDto = {
   /** Extra program pages */
   apep?: number
 
+  /**  Reject version */
+  aprv?: number
+
   // Key registration fields (type: 'keyreg')
   /** Vote key */
   votekey?: Uint8Array

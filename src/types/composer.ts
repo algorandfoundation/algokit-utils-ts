@@ -1,39 +1,125 @@
-import { AlgodClient, SimulateRequest, SimulateTransaction, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
-  AccessReference,
-  AddressWithSigner,
+  AlgodClient,
+  AlgorandSerializer,
+  PendingTransactionResponse,
+  SimulateRequest,
+  SimulateTransaction,
+  SimulateUnnamedResourcesAccessed,
+  SimulationTransactionExecTraceMeta,
+  SuggestedParams,
+  toBase64,
+} from '@algorandfoundation/algokit-algod-client'
+import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import {
   OnApplicationComplete,
-  SendingAddress,
+  SignedTransaction,
   Transaction,
+  TransactionType,
   assignFee,
+  calculateFee,
+  decodeSignedTransaction,
+  decodeTransaction,
+  encodeSignedTransactions,
+  encodeTransactionRaw,
   getTransactionId,
+  groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import {
-  ABIMethod,
-  AtomicTransactionComposer,
-  TransactionSigner,
-  TransactionWithSigner,
-  isTransactionWithSigner,
-} from '@algorandfoundation/sdk'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
-import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
-import { asJson, calculateExtraProgramPages } from '../util'
+import { TransactionWithSigner, waitForConfirmation } from '../transaction'
+import {
+  buildAppCall,
+  buildAppCreate,
+  buildAppUpdate,
+  populateGroupResources,
+  populateTransactionResources,
+  type AppCallParams,
+  type AppCreateParams,
+  type AppDeleteParams,
+  type AppUpdateParams,
+} from '../transactions/app-call'
+import {
+  buildAssetOptIn,
+  buildAssetOptOut,
+  buildAssetTransfer,
+  type AssetOptInParams,
+  type AssetOptOutParams,
+  type AssetTransferParams,
+} from '../transactions/asset-transfer'
+
+import { ReadableAddress } from '@algorandfoundation/algokit-common'
+import {
+  buildAssetConfig,
+  buildAssetCreate,
+  buildAssetDestroy,
+  buildAssetFreeze,
+  type AssetConfigParams,
+  type AssetCreateParams,
+  type AssetDestroyParams,
+  type AssetFreezeParams,
+} from '../transactions/asset-config'
+import { FeeDelta, FeePriority, calculateInnerFeeDelta } from '../transactions/fee-coverage'
+import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
+import {
+  AsyncTransactionParams,
+  TransactionParams,
+  buildAppCallMethodCall,
+  buildAppCreateMethodCall,
+  buildAppUpdateMethodCall,
+  extractComposerTransactionsFromAppMethodCallParams,
+  processAppMethodCallArgs,
+  type AppCallMethodCall,
+  type AppCreateMethodCall,
+  type AppDeleteMethodCall,
+  type AppUpdateMethodCall,
+  type ProcessedAppCallMethodCall,
+  type ProcessedAppCreateMethodCall,
+  type ProcessedAppUpdateMethodCall,
+} from '../transactions/method-call'
+import { buildPayment, type PaymentParams } from '../transactions/payment'
+import { asJson } from '../util'
 import { AlgoAmount } from './amount'
-import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
+import { ABIReturn } from './app'
+import { AppManager } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import {
   Arc2TransactionNote,
-  SendAtomicTransactionComposerResults,
   SendParams,
+  SendTransactionComposerResults,
   TransactionWrapper,
   wrapPendingTransactionResponse,
 } from './transaction'
-import { getAddress, getOptionalAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
+
+// Re-export transaction parameter types
+export type {
+  AppCallParams,
+  AppCreateParams,
+  AppDeleteParams,
+  AppMethodCallParams,
+  AppUpdateParams,
+  CommonAppCallParams,
+} from '../transactions/app-call'
+export type { AssetConfigParams, AssetCreateParams, AssetDestroyParams, AssetFreezeParams } from '../transactions/asset-config'
+export type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from '../transactions/asset-transfer'
+export type { CommonTransactionParams } from '../transactions/common'
+export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
+export type {
+  AppCallMethodCall,
+  AppCreateMethodCall,
+  AppDeleteMethodCall,
+  AppMethodCall,
+  AppMethodCallTransactionArgument,
+  AppUpdateMethodCall,
+  ProcessedAppCallMethodCall,
+  ProcessedAppCreateMethodCall,
+  ProcessedAppUpdateMethodCall,
+} from '../transactions/method-call'
+export type { PaymentParams } from '../transactions/payment'
 
 /** Options to control a simulate request, that does not require transaction signing */
 export type SkipSignaturesSimulateOptions = Expand<
@@ -48,443 +134,28 @@ export type SkipSignaturesSimulateOptions = Expand<
 /** The raw API options to control a simulate request.
  * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
-export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
+export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>> & {
+  /** Whether or not to return the result on simulation failure instead of throwing an error */
+  resultOnFailure?: boolean
+}
 
 /** All options to control a simulate request */
 export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
 
-/** Common parameters for defining a transaction. */
-export type CommonTransactionParams = {
-  /** The address of the account sending the transaction. */
-  sender: SendingAddress
-
-  /**
-   * @deprecated Use `AddressWithSigner` in the `sender` field instead
-   */
-  signer?: algosdk.TransactionSigner | AddressWithSigner
-  /** Change the signing key of the sender to the given address.
-   *
-   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
-   */
-  rekeyTo?: ReadableAddress
-  /** Note to attach to the transaction. Max of 1000 bytes. */
-  note?: Uint8Array | string
-  /** Prevent multiple transactions with the same lease being included within the validity window.
-   *
-   * A [lease](https://dev.algorand.co/concepts/transactions/leases)
-   *  enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).
-   */
-  lease?: Uint8Array | string
-  /** The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. */
-  staticFee?: AlgoAmount
-  /** The fee to pay IN ADDITION to the suggested fee. Useful for manually covering inner transaction fees. */
-  extraFee?: AlgoAmount
-  /** Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. */
-  maxFee?: AlgoAmount
-  /** How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. */
-  validityWindow?: number | bigint
-  /**
-   * Set the first round this transaction is valid.
-   * If left undefined, the value from algod will be used.
-   *
-   * We recommend you only set this when you intentionally want this to be some time in the future.
-   */
-  firstValidRound?: bigint
-  /** The last round this transaction is valid. It is recommended to use `validityWindow` instead. */
-  lastValidRound?: bigint
-}
-
-/** Parameters to define a payment transaction. */
-export type PaymentParams = CommonTransactionParams & {
-  /** The address of the account that will receive the Algo */
-  receiver: ReadableAddress
-  /** Amount to send */
-  amount: AlgoAmount
-  /** If given, close the sender account and send the remaining balance to this address
-   *
-   * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
-   */
-  closeRemainderTo?: ReadableAddress
-}
-
-/** Parameters to define an asset create transaction.
- *
- * The account that sends this transaction will automatically be opted in to the asset and will hold all units after creation.
- */
-export type AssetCreateParams = CommonTransactionParams & {
-  /** The total amount of the smallest divisible (decimal) unit to create.
-   *
-   * For example, if `decimals` is, say, 2, then for every 100 `total` there would be 1 whole unit.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  total: bigint
-
-  /** The amount of decimal places the asset should have.
-   *
-   * If unspecified then the asset will be in whole units (i.e. `0`).
-   *
-   * * If 0, the asset is not divisible;
-   * * If 1, the base unit of the asset is in tenths;
-   * * If 2, the base unit of the asset is in hundredths;
-   * * If 3, the base unit of the asset is in thousandths;
-   * * and so on up to 19 decimal places.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  decimals?: number
-
-  /** The optional name of the asset.
-   *
-   * Max size is 32 bytes.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  assetName?: string
-
-  /** The optional name of the unit of this asset (e.g. ticker name).
-   *
-   * Max size is 8 bytes.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  unitName?: string
-
-  /** Specifies an optional URL where more information about the asset can be retrieved (e.g. metadata).
-   *
-   * Max size is 96 bytes.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  url?: string
-
-  /** 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
-   *
-   * The format of this metadata is up to the application.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  metadataHash?: string | Uint8Array
-
-  /** Whether the asset is frozen by default for all accounts.
-   * Defaults to `false`.
-   *
-   * If `true` then for anyone apart from the creator to hold the
-   * asset it needs to be unfrozen per account using an asset freeze
-   * transaction from the `freeze` account, which must be set on creation.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  defaultFrozen?: boolean
-
-  /** The address of the optional account that can manage the configuration of the asset and destroy it.
-   *
-   * The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`.
-   *
-   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the `manager` the asset becomes permanently immutable.
-   */
-  manager?: ReadableAddress
-
-  /**
-   * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
-   *
-   * This address has no specific authority in the protocol itself and is informational only.
-   *
-   * Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md)
-   * rely on this field to hold meaningful data.
-   *
-   * It can be used in the case where you want to signal to holders of your asset that the uncirculated units
-   * of the asset reside in an account that is different from the default creator account.
-   *
-   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
-   */
-  reserve?: ReadableAddress
-
-  /**
-   * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
-   *
-   * If empty, freezing is not permitted.
-   *
-   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
-   */
-  freeze?: ReadableAddress
-
-  /**
-   * The address of the optional account that can clawback holdings of this asset from any account.
-   *
-   * **This field should be used with caution** as the clawback account has the ability to **unconditionally take assets from any account**.
-   *
-   * If empty, clawback is not permitted.
-   *
-   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
-   */
-  clawback?: ReadableAddress
-}
-
-/** Parameters to define an asset reconfiguration transaction.
- *
- * **Note:** The manager, reserve, freeze, and clawback addresses
- * are immutably empty if they are not set. If manager is not set then
- * all fields are immutable from that point forward.
- */
-export type AssetConfigParams = CommonTransactionParams & {
-  /** ID of the asset to reconfigure */
-  assetId: bigint
-  /** The address of the optional account that can manage the configuration of the asset and destroy it.
-   *
-   * The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`.
-   *
-   * If not set (`undefined` or `""`) the asset will become permanently immutable.
-   */
-  manager: ReadableAddress | undefined
-  /**
-   * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
-   *
-   * This address has no specific authority in the protocol itself and is informational only.
-   *
-   * Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md)
-   * rely on this field to hold meaningful data.
-   *
-   * It can be used in the case where you want to signal to holders of your asset that the uncirculated units
-   * of the asset reside in an account that is different from the default creator account.
-   *
-   * If not set (`undefined` or `""`) the field will become permanently empty.
-   */
-  reserve?: ReadableAddress
-  /**
-   * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
-   *
-   * If empty, freezing is not permitted.
-   *
-   * If not set (`undefined` or `""`) the field will become permanently empty.
-   */
-  freeze?: ReadableAddress
-  /**
-   * The address of the optional account that can clawback holdings of this asset from any account.
-   *
-   * **This field should be used with caution** as the clawback account has the ability to **unconditionally take assets from any account**.
-   *
-   * If empty, clawback is not permitted.
-   *
-   * If not set (`undefined` or `""`) the field will become permanently empty.
-   */
-  clawback?: ReadableAddress
-}
-
-/** Parameters to define an asset freeze transaction. */
-export type AssetFreezeParams = CommonTransactionParams & {
-  /** The ID of the asset to freeze/unfreeze */
-  assetId: bigint
-  /** The address of the account to freeze or unfreeze */
-  account: ReadableAddress
-  /** Whether the assets in the account should be frozen */
-  frozen: boolean
-}
-
-/** Parameters to define an asset destroy transaction.
- *
- * Created assets can be destroyed only by the asset manager account. All of the assets must be owned by the creator of the asset before the asset can be deleted.
- */
-export type AssetDestroyParams = CommonTransactionParams & {
-  /** ID of the asset to destroy */
-  assetId: bigint
-}
-
-/** Parameters to define an asset transfer transaction. */
-export type AssetTransferParams = CommonTransactionParams & {
-  /** ID of the asset to transfer. */
-  assetId: bigint
-  /** Amount of the asset to transfer (in smallest divisible (decimal) units). */
-  amount: bigint
-  /** The address of the account that will receive the asset unit(s). */
-  receiver: ReadableAddress
-  /** Optional address of an account to clawback the asset from.
-   *
-   * Requires the sender to be the clawback account.
-   *
-   * **Warning:** Be careful with this parameter as it can lead to unexpected loss of funds if not used correctly.
-   */
-  clawbackTarget?: ReadableAddress
-  /** Optional address of an account to close the asset position to.
-   *
-   * **Warning:** Be careful with this parameter as it can lead to loss of funds if not used correctly.
-   */
-  closeAssetTo?: ReadableAddress
-}
-
-/** Parameters to define an asset opt-in transaction. */
-export type AssetOptInParams = CommonTransactionParams & {
-  /** ID of the asset that will be opted-in to. */
-  assetId: bigint
-}
-
-/** Parameters to define an asset opt-out transaction. */
-export type AssetOptOutParams = CommonTransactionParams & {
-  /** ID of the asset that will be opted-out of. */
-  assetId: bigint
-  /**
-   * The address of the asset creator account to close the asset
-   *   position to (any remaining asset units will be sent to this account).
-   */
-  creator: ReadableAddress
-}
-
-/** Parameters to define an online key registration transaction. */
-export type OnlineKeyRegistrationParams = CommonTransactionParams & {
-  /** The root participation public key */
-  voteKey: Uint8Array
-  /** The VRF public key */
-  selectionKey: Uint8Array
-  /** The first round that the participation key is valid. Not to be confused with the `firstValid` round of the keyreg transaction */
-  voteFirst: bigint
-  /** The last round that the participation key is valid. Not to be confused with the `lastValid` round of the keyreg transaction */
-  voteLast: bigint
-  /** This is the dilution for the 2-level participation key. It determines the interval (number of rounds) for generating new ephemeral keys */
-  voteKeyDilution: bigint
-  /** The 64 byte state proof public key commitment */
-  stateProofKey?: Uint8Array
-}
-
-/** Parameters to define an offline key registration transaction. */
-export type OfflineKeyRegistrationParams = CommonTransactionParams & {
-  /** Prevent this account from ever participating again. The account will also no longer earn rewards */
-  preventAccountFromEverParticipatingAgain?: boolean
-}
-
-/** Common parameters for defining an application call transaction. */
-export type CommonAppCallParams = CommonTransactionParams & {
-  /** ID of the application; 0 if the application is being created. */
-  appId: bigint
-  /** The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. */
-  onComplete?: OnApplicationComplete
-  /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
-  args?: Uint8Array[]
-  /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
-  accountReferences?: ReadableAddress[]
-  /** The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
-  appReferences?: bigint[]
-  /** The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
-  assetReferences?: bigint[]
-  /** Any boxes to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
-   *
-   * Either the name identifier (which will be set against app ID of `0` i.e.
-   *  the current app), or a box identifier with the name identifier and app ID.
-   */
-  boxReferences?: (BoxReference | BoxIdentifier)[]
-  /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
-  accessReferences?: AccessReference[]
-}
-
-/** Parameters to define an app create transaction */
-export type AppCreateParams = Expand<
-  Omit<CommonAppCallParams, 'appId'> & {
-    onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
-    /** The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
-    approvalProgram: string | Uint8Array
-    /** The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
-    clearStateProgram: string | Uint8Array
-    /** The state schema for the app. This is immutable once the app is created. */
-    schema?: {
-      /** The number of integers saved in global state. */
-      globalInts: number
-      /** The number of byte slices saved in global state. */
-      globalByteSlices: number
-      /** The number of integers saved in local state. */
-      localInts: number
-      /** The number of byte slices saved in local state. */
-      localByteSlices: number
-    }
-    /** Number of extra pages required for the programs.
-     * Defaults to the number needed for the programs in this call if not specified.
-     * This is immutable once the app is created. */
-    extraProgramPages?: number
-  }
->
-
-/** Parameters to define an app update transaction */
-export type AppUpdateParams = Expand<
-  CommonAppCallParams & {
-    onComplete?: OnApplicationComplete.UpdateApplication
-    /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
-    approvalProgram: string | Uint8Array
-    /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
-    clearStateProgram: string | Uint8Array
-  }
->
-
-/** Parameters to define an application call transaction. */
-export type AppCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
-}
-
-/** Common parameters to define an ABI method call transaction. */
-export type AppMethodCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication | OnApplicationComplete.ClearState>
-}
-
-/** Parameters to define an application delete call transaction. */
-export type AppDeleteParams = CommonAppCallParams & {
-  onComplete?: OnApplicationComplete.DeleteApplication
-}
-
-/** Parameters to define an ABI method call create transaction. */
-export type AppCreateMethodCall = AppMethodCall<AppCreateParams>
-/** Parameters to define an ABI method call update transaction. */
-export type AppUpdateMethodCall = AppMethodCall<AppUpdateParams>
-/** Parameters to define an ABI method call delete transaction. */
-export type AppDeleteMethodCall = AppMethodCall<AppDeleteParams>
-/** Parameters to define an ABI method call transaction. */
-export type AppCallMethodCall = AppMethodCall<AppMethodCallParams>
-
-/** Types that can be used to define a transaction argument for an ABI call transaction. */
-export type AppMethodCallTransactionArgument =
-  // The following should match the partial `args` types from `AppMethodCall<T>` below
-  | TransactionWithSigner
-  | Transaction
-  | Promise<Transaction>
-  | AppMethodCall<AppCreateParams>
-  | AppMethodCall<AppUpdateParams>
-  | AppMethodCall<AppMethodCallParams>
-
-/** Parameters to define an ABI method call. */
-export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
-  /** The ABI method to call */
-  method: algosdk.ABIMethod
-  /** Arguments to the ABI method, either:
-   * * An ABI value
-   * * A transaction with explicit signer
-   * * A transaction (where the signer will be automatically assigned)
-   * * An unawaited transaction (e.g. from algorand.createTransaction.{transactionType}())
-   * * Another method call (via method call params object)
-   * * undefined (this represents a placeholder transaction argument that is fulfilled by another method call argument)
-   */
-  args?: (
-    | algosdk.ABIValue
-    // The following should match the above `AppMethodCallTransactionArgument` type above
-    | TransactionWithSigner
-    | Transaction
-    | Promise<Transaction>
-    | AppMethodCall<AppCreateParams>
-    | AppMethodCall<AppUpdateParams>
-    | AppMethodCall<AppMethodCallParams>
-    | undefined
-  )[]
-}
-
-export type Txn =
-  | (PaymentParams & { type: 'pay' })
-  | (AssetCreateParams & { type: 'assetCreate' })
-  | (AssetConfigParams & { type: 'assetConfig' })
-  | (AssetFreezeParams & { type: 'assetFreeze' })
-  | (AssetDestroyParams & { type: 'assetDestroy' })
-  | (AssetTransferParams & { type: 'assetTransfer' })
-  | (AssetOptInParams & { type: 'assetOptIn' })
-  | (AssetOptOutParams & { type: 'assetOptOut' })
-  | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
-  | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
-  | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
-  | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
-  | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
+type Txn =
+  | { data: PaymentParams; type: 'pay' }
+  | { data: AssetCreateParams; type: 'assetCreate' }
+  | { data: AssetConfigParams; type: 'assetConfig' }
+  | { data: AssetFreezeParams; type: 'assetFreeze' }
+  | { data: AssetDestroyParams; type: 'assetDestroy' }
+  | { data: AssetTransferParams; type: 'assetTransfer' }
+  | { data: AssetOptInParams; type: 'assetOptIn' }
+  | { data: AssetOptOutParams; type: 'assetOptOut' }
+  | { data: AppCallParams | AppCreateParams | AppUpdateParams; type: 'appCall' }
+  | { data: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams; type: 'keyReg' }
+  | { data: TransactionParams; type: 'txn' }
+  | { data: AsyncTransactionParams; type: 'asyncTxn' }
+  | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
 
 /**
  * A function that transforms an error into a new error.
@@ -504,6 +175,25 @@ class ErrorTransformerError extends Error {
   constructor(originalError: Error, cause: unknown) {
     super(`An error transformer threw an error: ${cause}. The original error before any transformation: ${originalError} `, { cause })
   }
+}
+
+export type TransactionComposerConfig = {
+  coverAppCallInnerTransactionFees: boolean
+  populateAppCallResources: boolean
+}
+
+type TransactionAnalysis = {
+  /** The fee difference required for this transaction */
+  requiredFeeDelta?: FeeDelta
+  /** Resources accessed by this transaction but not declared */
+  unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
+}
+
+type GroupAnalysis = {
+  /** Analysis of each transaction in the group */
+  transactions: TransactionAnalysis[]
+  /** Resources accessed by the group that qualify for group resource sharing */
+  unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
 }
 
 /** Parameters to create an `TransactionComposer`. */
@@ -528,26 +218,13 @@ export type TransactionComposerParams = {
    * callbacks can later be registered with `registerErrorTransformer`
    */
   errorTransformers?: ErrorTransformer[]
+  composerConfig?: TransactionComposerConfig
 }
-
-/** Represents a Transaction with additional context that was used to build that transaction. */
-interface TransactionWithContext {
-  txn: Transaction
-  context: {
-    /* The logical max fee for the transaction, if one was supplied. */
-    maxFee?: AlgoAmount
-    /* The ABI method, if the app call transaction is an ABI method call. */
-    abiMethod?: algosdk.ABIMethod
-  }
-}
-
-/** Represents a TransactionWithSigner with additional context that was used to build that transaction. */
-type TransactionWithSignerAndContext = algosdk.TransactionWithSigner & TransactionWithContext
 
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: Transaction[]
+  transactions: TransactionWrapper[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, algosdk.ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
@@ -556,17 +233,6 @@ export interface BuiltTransactions {
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
-  /** Signer used to represent a lack of signer */
-  private static NULL_SIGNER: algosdk.TransactionSigner = algosdk.makeEmptyTransactionSigner()
-
-  /** The ATC used to compose the group */
-  private atc = new algosdk.AtomicTransactionComposer()
-
-  /** Map of transaction index in the atc to a max logical fee.
-   * This is set using the value of either maxFee or staticFee.
-   */
-  private txnMaxFees: Map<number, AlgoAmount> = new Map()
-
   /** Transactions that have not yet been composed */
   private txns: Txn[] = []
 
@@ -588,6 +254,15 @@ export class TransactionComposer {
   private appManager: AppManager
 
   private errorTransformers: ErrorTransformer[]
+
+  private composerConfig: TransactionComposerConfig
+
+  private transactionsWithSigners?: TransactionWithSigner[]
+
+  private signedTransactions?: SignedTransaction[]
+
+  // Cache the raw transactions before resource population for error handling
+  private rawBuildTransactions?: Transaction[]
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -625,6 +300,140 @@ export class TransactionComposer {
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
     this.errorTransformers = params.errorTransformers ?? []
+    this.composerConfig = params.composerConfig ?? {
+      coverAppCallInnerTransactionFees: false,
+      populateAppCallResources: true,
+    }
+  }
+
+  private cloneTransaction(txn: Txn): Txn {
+    // The transaction params aren't meant to be mutated therefore a shallow clone is ok here
+    // Only exceptions are txn and asyncTxn where they are encoded, then decoded
+    switch (txn.type) {
+      case 'pay':
+        return {
+          type: 'pay',
+          data: { ...txn.data },
+        }
+      case 'assetCreate':
+        return {
+          type: 'assetCreate',
+          data: { ...txn.data },
+        }
+      case 'assetConfig':
+        return {
+          type: 'assetConfig',
+          data: { ...txn.data },
+        }
+      case 'assetFreeze':
+        return {
+          type: 'assetFreeze',
+          data: { ...txn.data },
+        }
+      case 'assetDestroy':
+        return {
+          type: 'assetDestroy',
+          data: { ...txn.data },
+        }
+      case 'assetTransfer':
+        return {
+          type: 'assetTransfer',
+          data: { ...txn.data },
+        }
+      case 'assetOptIn':
+        return {
+          type: 'assetOptIn',
+          data: { ...txn.data },
+        }
+      case 'assetOptOut':
+        return {
+          type: 'assetOptOut',
+          data: { ...txn.data },
+        }
+      case 'appCall':
+        return {
+          type: 'appCall',
+          data: { ...txn.data },
+        }
+      case 'keyReg':
+        return {
+          type: 'keyReg',
+          data: { ...txn.data },
+        }
+      case 'txn': {
+        const { txn: transaction, signer, maxFee } = txn.data
+        const encoded = encodeTransactionRaw(transaction)
+        const clonedTxn = decodeTransaction(encoded)
+        delete clonedTxn.group
+        return {
+          type: 'txn',
+          data: {
+            txn: clonedTxn,
+            signer,
+            maxFee,
+          },
+        }
+      }
+      case 'asyncTxn': {
+        const { txn: txnPromise, signer, maxFee } = txn.data
+        // Create a new promise that resolves to a deep cloned transaction without the group field
+        const newTxnPromise = txnPromise.then((resolvedTxn) => {
+          const encoded = encodeTransactionRaw(resolvedTxn)
+          const clonedTxn = decodeTransaction(encoded)
+          delete clonedTxn.group
+          return clonedTxn
+        })
+        return {
+          type: 'asyncTxn',
+          data: {
+            txn: newTxnPromise,
+            signer,
+            maxFee: maxFee,
+          },
+        }
+      }
+      case 'methodCall':
+        return {
+          type: 'methodCall',
+          data: { ...txn.data },
+        }
+    }
+  }
+
+  private push(...txns: Txn[]): void {
+    if (this.transactionsWithSigners) {
+      throw new Error('Cannot add new transactions after building')
+    }
+    const newSize = this.txns.length + txns.length
+    if (newSize > MAX_TRANSACTION_GROUP_SIZE) {
+      throw new Error(
+        `Adding ${txns.length} transaction(s) would exceed the maximum group size. Current: ${this.txns.length}, Maximum: ${MAX_TRANSACTION_GROUP_SIZE}`,
+      )
+    }
+    this.txns.push(...txns)
+  }
+
+  public clone(composerConfig?: TransactionComposerConfig) {
+    const newComposer = new TransactionComposer({
+      algod: this.algod,
+      getSuggestedParams: this.getSuggestedParams,
+      getSigner: this.getSigner,
+      defaultValidityWindow: this.defaultValidityWindow,
+      appManager: this.appManager,
+      errorTransformers: this.errorTransformers,
+      composerConfig: {
+        ...this.composerConfig,
+        ...composerConfig,
+      },
+    })
+
+    this.txns.forEach((txn) => {
+      newComposer.txns.push(this.cloneTransaction(txn))
+    })
+
+    newComposer.defaultValidityWindowIsExplicit = this.defaultValidityWindowIsExplicit
+
+    return newComposer
   }
 
   /**
@@ -648,11 +457,38 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
-    this.txns.push({
-      txn: transaction,
-      signer: signer ?? this.getSigner(transaction.sender),
-      type: 'txnWithSigner',
+    if (transaction.group) {
+      throw new Error('Cannot add a transaction to the composer because it is already in a group')
+    }
+    this.push({
+      data: {
+        txn: transaction,
+        signer: signer ?? this.getSigner(transaction.sender),
+      },
+      type: 'txn',
     })
+
+    return this
+  }
+
+  /**
+   * Add another transaction composer to the current transaction composer.
+   * The transaction params of the input transaction composer will be added.
+   * If the input transaction composer is updated, it won't affect the current transaction composer.
+   * @param composer The transaction composer to add
+   * @returns The composer so you can chain method calls
+   * @example
+   * ```typescript
+   * const innerComposer = algorand.newGroup()
+   *   .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (1).algo() })
+   *   .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (2).algo() })
+   *
+   * composer.addTransactionComposer(innerComposer)
+   * ```
+   */
+  public addTransactionComposer(composer: TransactionComposer): TransactionComposer {
+    const clonedTxns = composer.txns.map((txn) => this.cloneTransaction(txn))
+    this.push(...clonedTxns)
 
     return this
   }
@@ -691,7 +527,7 @@ export class TransactionComposer {
    * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'pay' })
+    this.push({ data: params, type: 'pay' })
 
     return this
   }
@@ -732,7 +568,7 @@ export class TransactionComposer {
    * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetCreate' })
+    this.push({ data: params, type: 'assetCreate' })
 
     return this
   }
@@ -767,7 +603,7 @@ export class TransactionComposer {
    * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetConfig' })
+    this.push({ data: params, type: 'assetConfig' })
 
     return this
   }
@@ -801,7 +637,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetFreeze' })
+    this.push({ data: params, type: 'assetFreeze' })
 
     return this
   }
@@ -833,7 +669,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetDestroy' })
+    this.push({ data: params, type: 'assetDestroy' })
 
     return this
   }
@@ -870,7 +706,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetTransfer' })
+    this.push({ data: params, type: 'assetTransfer' })
 
     return this
   }
@@ -902,7 +738,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetOptIn' })
+    this.push({ data: params, type: 'assetOptIn' })
 
     return this
   }
@@ -940,7 +776,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetOptOut' })
+    this.push({ data: params, type: 'assetOptOut' })
 
     return this
   }
@@ -995,7 +831,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall' })
+    this.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1037,7 +873,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.UpdateApplication })
+    this.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
 
     return this
   }
@@ -1077,7 +913,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.DeleteApplication })
+    this.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
 
     return this
   }
@@ -1119,7 +955,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall' })
+    this.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1180,7 +1016,14 @@ export class TransactionComposer {
    * ```
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall' })
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
+
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
+      data: { ...params, args: processAppMethodCallArgs(params.args) },
+      type: 'methodCall',
+    })
+
     return this
   }
 
@@ -1233,7 +1076,14 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.UpdateApplication })
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
+
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
+      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
+      type: 'methodCall',
+    })
+
     return this
   }
 
@@ -1284,7 +1134,14 @@ export class TransactionComposer {
    * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.DeleteApplication })
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
+
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
+      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
+      type: 'methodCall',
+    })
+
     return this
   }
 
@@ -1335,7 +1192,14 @@ export class TransactionComposer {
    * ```
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall' })
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
+
+    // Push all transaction arguments and the method call itself
+    this.push(...txnArgs, {
+      data: { ...params, args: processAppMethodCallArgs(params.args) },
+      type: 'methodCall',
+    })
+
     return this
   }
 
@@ -1381,7 +1245,7 @@ export class TransactionComposer {
    * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'keyReg' })
+    this.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1416,625 +1280,484 @@ export class TransactionComposer {
    * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'keyReg' })
+    this.push({ data: params, type: 'keyReg' })
 
     return this
-  }
-
-  /**
-   * Add the transactions within an `AtomicTransactionComposer` to the transaction group.
-   * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
-   * @returns The composer so you can chain method calls
-   * @example
-   * ```typescript
-   * const atc = new AtomicTransactionComposer()
-   *   .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: 1000n })
-   * composer.addAtc(atc)
-   * ```
-   */
-  addAtc(atc: algosdk.AtomicTransactionComposer): TransactionComposer {
-    this.txns.push({ atc, type: 'atc' })
-    return this
-  }
-
-  /** Build an ATC and return transactions ready to be incorporated into a broader set of transactions this composer is composing */
-  private buildAtc(atc: algosdk.AtomicTransactionComposer): TransactionWithSignerAndContext[] {
-    const group = atc.buildGroup()
-
-    const txnWithSigners = group.map((ts, idx) => {
-      // Remove underlying group ID from the transaction since it will be re-grouped when this TransactionComposer is built
-      ts.txn.group = undefined
-      // If this was a method call return the ABIMethod for later
-      if (atc['methodCalls'].get(idx)) {
-        return {
-          ...ts,
-          context: { abiMethod: atc['methodCalls'].get(idx) as algosdk.ABIMethod },
-        }
-      }
-      return {
-        ...ts,
-        context: {},
-      }
-    })
-
-    return txnWithSigners
-  }
-
-  private commonTxnBuildStep<TParams extends algosdk.CommonTransactionParams>(
-    buildTxn: (params: TParams) => Transaction,
-    params: CommonTransactionParams,
-    txnParams: TParams,
-  ): TransactionWithContext {
-    // We are going to mutate suggested params, let's create a clone first
-    txnParams.suggestedParams = { ...txnParams.suggestedParams }
-
-    if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies Transaction['lease']
-    if (params.rekeyTo) txnParams.rekeyTo = getAddress(params.rekeyTo)
-    const encoder = new TextEncoder()
-    if (params.note)
-      txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies Transaction['note']
-
-    if (params.firstValidRound) {
-      txnParams.suggestedParams.firstValid = params.firstValidRound
-    }
-
-    if (params.lastValidRound) {
-      txnParams.suggestedParams.lastValid = params.lastValidRound
-    } else {
-      // If the validity window isn't set in this transaction or by default and we are pointing at
-      //  LocalNet set a bigger window to avoid dead transactions
-      const window = params.validityWindow
-        ? BigInt(params.validityWindow)
-        : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisId ?? 'unknown')
-          ? 1000n
-          : this.defaultValidityWindow
-      txnParams.suggestedParams.lastValid = BigInt(txnParams.suggestedParams.firstValid) + window
-    }
-
-    if (params.staticFee !== undefined && params.extraFee !== undefined) {
-      throw Error('Cannot set both staticFee and extraFee')
-    }
-
-    let txn = buildTxn(txnParams)
-
-    if (params.staticFee !== undefined) {
-      txn.fee = params.staticFee.microAlgos
-    } else {
-      txn = assignFee(txn, {
-        feePerByte: txnParams.suggestedParams.fee,
-        minFee: txnParams.suggestedParams.minFee,
-        extraFee: params.extraFee?.microAlgos,
-        maxFee: params.maxFee?.microAlgos,
-      })
-    }
-
-    const logicalMaxFee =
-      params.maxFee !== undefined && params.maxFee.microAlgo > (params.staticFee?.microAlgo ?? 0n) ? params.maxFee : params.staticFee
-
-    return { txn, context: { maxFee: logicalMaxFee } }
-  }
-
-  /**
-   * Builds an ABI method call transaction and any other associated transactions represented in the ABI args.
-   * @param includeSigner Whether to include the actual signer for the transactions.
-   *  If you are just building transactions without signers yet then set this to `false`.
-   */
-  private async buildMethodCall(
-    params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
-    suggestedParams: SuggestedParams,
-    includeSigner: boolean,
-  ): Promise<TransactionWithSignerAndContext[]> {
-    const methodArgs: (algosdk.ABIArgument | TransactionWithSignerAndContext)[] = []
-    const transactionsForGroup: TransactionWithSignerAndContext[] = []
-
-    const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
-      if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
-
-      return (
-        typeof x === 'bigint' ||
-        typeof x === 'boolean' ||
-        typeof x === 'number' ||
-        typeof x === 'string' ||
-        x instanceof Uint8Array ||
-        x instanceof algosdk.Address
-      )
-    }
-
-    for (let i = (params.args ?? []).length - 1; i >= 0; i--) {
-      const arg = params.args![i]
-      if (arg === undefined) {
-        // An undefined transaction argument signals that the value will be supplied by a method call argument
-        if (algosdk.abiTypeIsTransaction(params.method.args[i].type) && transactionsForGroup.length > 0) {
-          // Move the last transaction from the group to the method call arguments to appease algosdk
-          const placeholderTransaction = transactionsForGroup.splice(-1, 1)[0]
-          methodArgs.push(placeholderTransaction)
-          continue
-        }
-
-        throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
-      }
-
-      if (isAbiValue(arg)) {
-        methodArgs.push(arg)
-        continue
-      }
-
-      if (isTransactionWithSigner(arg)) {
-        methodArgs.push(arg)
-        continue
-      }
-
-      if ('method' in arg) {
-        const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        // If there is any transaction args, add to the atc
-        // Everything else should be added as method args
-
-        methodArgs.push(...tempTxnWithSigners.slice(-1)) // Add the method call itself as a method arg
-        transactionsForGroup.push(...tempTxnWithSigners.slice(0, -1).reverse()) // Add any transaction arguments to the atc
-        continue
-      }
-
-      const txn = await arg
-      methodArgs.push({
-        txn,
-        signer: includeSigner
-          ? params.signer
-            ? 'signer' in params.signer
-              ? params.signer.signer
-              : params.signer
-            : this.getSigner(txn.sender)
-          : TransactionComposer.NULL_SIGNER,
-      })
-    }
-
-    const methodAtc = new algosdk.AtomicTransactionComposer()
-    const maxFees = new Map<number, AlgoAmount>()
-
-    transactionsForGroup.reverse().forEach(({ context, ...txnWithSigner }) => {
-      methodAtc.addTransaction(txnWithSigner)
-      const atcIndex = methodAtc.count() - 1
-      if (context.abiMethod) {
-        methodAtc['methodCalls'].set(atcIndex, context.abiMethod)
-      }
-      if (context.maxFee !== undefined) {
-        maxFees.set(atcIndex, context.maxFee)
-      }
-    })
-
-    // If any of the args are method call transactions, add that info to the methodAtc
-    methodArgs
-      .filter((arg) => {
-        if (typeof arg === 'object' && 'context' in arg) {
-          const { context, ...txnWithSigner } = arg
-          return isTransactionWithSigner(txnWithSigner)
-        }
-        return isTransactionWithSigner(arg)
-      })
-      .reverse()
-      .forEach((arg, idx) => {
-        if (typeof arg === 'object' && 'context' in arg && arg.context) {
-          const atcIndex = methodAtc.count() + idx
-          if (arg.context.abiMethod) {
-            methodAtc['methodCalls'].set(atcIndex, arg.context.abiMethod)
-          }
-          if (arg.context.maxFee !== undefined) {
-            maxFees.set(atcIndex, arg.context.maxFee)
-          }
-        }
-      })
-
-    const appId = Number('appId' in params ? params.appId : 0n)
-    const approvalProgram =
-      'approvalProgram' in params
-        ? typeof params.approvalProgram === 'string'
-          ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
-          : params.approvalProgram
-        : undefined
-    const clearStateProgram =
-      'clearStateProgram' in params
-        ? typeof params.clearStateProgram === 'string'
-          ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
-          : params.clearStateProgram
-        : undefined
-
-    // If accessReferences is provided, we should not pass legacy foreign arrays
-    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
-
-    const txnParams = {
-      appID: appId,
-      sender: getAddress(params.sender),
-      suggestedParams,
-      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
-      ...(hasAccessReferences
-        ? { access: params.accessReferences }
-        : {
-            appAccounts: params.accountReferences?.map((x) => getAddress(x)),
-            appForeignApps: params.appReferences?.map((x) => Number(x)),
-            appForeignAssets: params.assetReferences?.map((x) => Number(x)),
-            boxes: params.boxReferences?.map(AppManager.getBoxReference),
-          }),
-      approvalProgram,
-      clearProgram: clearStateProgram,
-      extraPages:
-        appId === 0
-          ? 'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : approvalProgram
-              ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
-              : 0
-          : undefined,
-      numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
-      numLocalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.localByteSlices ?? 0) : 0) : undefined,
-      numGlobalInts: appId === 0 ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
-      numGlobalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
-      method: params.method,
-      signer: includeSigner
-        ? params.signer
-          ? 'signer' in params.signer
-            ? params.signer.signer
-            : params.signer
-          : this.getSigner(params.sender)
-        : TransactionComposer.NULL_SIGNER,
-      methodArgs: methodArgs
-        .map((arg) => {
-          if (typeof arg === 'object' && 'context' in arg) {
-            const { context, ...txnWithSigner } = arg
-            return txnWithSigner
-          }
-          return arg
-        })
-        .reverse(),
-      // note, lease, and rekeyTo are set in the common build step
-      note: undefined,
-      lease: undefined,
-      rekeyTo: undefined,
-    }
-
-    // Build the transaction
-    const result = this.commonTxnBuildStep(
-      (txnParams) => {
-        methodAtc.addMethodCall(txnParams)
-        return methodAtc.buildGroup()[methodAtc.count() - 1].txn
-      },
-      params,
-      txnParams,
-    )
-
-    // Process the ATC to get a set of transactions ready for broader grouping
-    return this.buildAtc(methodAtc).map(({ context: _context, ...txnWithSigner }, idx) => {
-      const maxFee = idx === methodAtc.count() - 1 ? result.context.maxFee : maxFees.get(idx)
-      // TODO: PD - review this way of assigning fee
-      const fee = idx === methodAtc.count() - 1 ? result.txn.fee : txnWithSigner.txn.fee
-      const context = {
-        ..._context, // Adds method context info
-        maxFee,
-      }
-
-      return {
-        signer: txnWithSigner.signer,
-        txn: {
-          ...txnWithSigner.txn,
-          fee: fee,
-        },
-        context,
-      }
-    })
-  }
-
-  private buildPayment(params: PaymentParams, suggestedParams: SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      receiver: getAddress(params.receiver),
-      amount: params.amount.microAlgo,
-      closeRemainderTo: getOptionalAddress(params.closeRemainderTo),
-      suggestedParams,
-    })
-  }
-
-  private buildAssetCreate(params: AssetCreateParams, suggestedParams: SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      total: params.total,
-      decimals: params.decimals ?? 0,
-      assetName: params.assetName,
-      unitName: params.unitName,
-      assetURL: params.url,
-      defaultFrozen: params.defaultFrozen ?? false,
-      assetMetadataHash: typeof params.metadataHash === 'string' ? Buffer.from(params.metadataHash, 'utf-8') : params.metadataHash,
-      manager: getOptionalAddress(params.manager),
-      reserve: getOptionalAddress(params.reserve),
-      freeze: getOptionalAddress(params.freeze),
-      clawback: getOptionalAddress(params.clawback),
-      suggestedParams,
-    })
-  }
-
-  private buildAssetConfig(params: AssetConfigParams, suggestedParams: SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      assetIndex: params.assetId,
-      suggestedParams,
-      manager: getOptionalAddress(params.manager),
-      reserve: getOptionalAddress(params.reserve),
-      freeze: getOptionalAddress(params.freeze),
-      clawback: getOptionalAddress(params.clawback),
-      strictEmptyAddressChecking: false,
-    })
-  }
-
-  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      assetIndex: params.assetId,
-      suggestedParams,
-    })
-  }
-
-  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      assetIndex: params.assetId,
-      freezeTarget: getAddress(params.account),
-      frozen: params.frozen,
-      suggestedParams,
-    })
-  }
-
-  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      receiver: getAddress(params.receiver),
-      assetIndex: params.assetId,
-      amount: params.amount,
-      suggestedParams,
-      closeRemainderTo: getOptionalAddress(params.closeAssetTo),
-      assetSender: getOptionalAddress(params.clawbackTarget),
-    })
-  }
-
-  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: SuggestedParams) {
-    const appId = 'appId' in params ? params.appId : 0n
-    const approvalProgram =
-      'approvalProgram' in params
-        ? typeof params.approvalProgram === 'string'
-          ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
-          : params.approvalProgram
-        : undefined
-    const clearStateProgram =
-      'clearStateProgram' in params
-        ? typeof params.clearStateProgram === 'string'
-          ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
-          : params.clearStateProgram
-        : undefined
-
-    // If accessReferences is provided, we should not pass legacy foreign arrays
-    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
-
-    const sdkParams = {
-      sender: getAddress(params.sender),
-      suggestedParams,
-      appArgs: params.args,
-      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
-      ...(hasAccessReferences
-        ? { access: params.accessReferences }
-        : {
-            accounts: params.accountReferences?.map((x) => getAddress(x)),
-            foreignApps: params.appReferences?.map((x) => Number(x)),
-            foreignAssets: params.assetReferences?.map((x) => Number(x)),
-            boxes: params.boxReferences?.map(AppManager.getBoxReference),
-          }),
-      approvalProgram,
-      clearProgram: clearStateProgram,
-    }
-
-    if (appId === 0n) {
-      if (sdkParams.approvalProgram === undefined || sdkParams.clearProgram === undefined) {
-        throw new Error('approvalProgram and clearStateProgram are required for application creation')
-      }
-
-      return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
-        ...sdkParams,
-        extraPages:
-          'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
-        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
-        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
-        numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
-        numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
-        approvalProgram: approvalProgram!,
-        clearProgram: clearStateProgram!,
-      })
-    } else {
-      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
-    }
-  }
-
-  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: SuggestedParams) {
-    if ('voteKey' in params) {
-      return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
-        sender: getAddress(params.sender),
-        voteKey: params.voteKey,
-        selectionKey: params.selectionKey,
-        voteFirst: params.voteFirst,
-        voteLast: params.voteLast,
-        voteKeyDilution: params.voteKeyDilution,
-        suggestedParams,
-        nonParticipation: false,
-        stateProofKey: params.stateProofKey,
-      })
-    }
-
-    return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
-      sender: getAddress(params.sender),
-      suggestedParams,
-      nonParticipation: params.preventAccountFromEverParticipatingAgain,
-    })
-  }
-
-  /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithContext[]> {
-    switch (txn.type) {
-      case 'pay':
-        return [this.buildPayment(txn, suggestedParams)]
-      case 'assetCreate':
-        return [this.buildAssetCreate(txn, suggestedParams)]
-      case 'appCall':
-        return [await this.buildAppCall(txn, suggestedParams)]
-      case 'assetConfig':
-        return [this.buildAssetConfig(txn, suggestedParams)]
-      case 'assetDestroy':
-        return [this.buildAssetDestroy(txn, suggestedParams)]
-      case 'assetFreeze':
-        return [this.buildAssetFreeze(txn, suggestedParams)]
-      case 'assetTransfer':
-        return [this.buildAssetTransfer(txn, suggestedParams)]
-      case 'assetOptIn':
-        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)]
-      case 'assetOptOut':
-        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator }, suggestedParams)]
-      case 'keyReg':
-        return [this.buildKeyReg(txn, suggestedParams)]
-      default:
-        throw Error(`Unsupported txn type`)
-    }
-  }
-
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
-    if (txn.type === 'txnWithSigner') {
-      return [
-        {
-          ...txn,
-          context: {},
-        },
-      ]
-    }
-
-    if (txn.type === 'atc') {
-      return this.buildAtc(txn.atc)
-    }
-
-    if (txn.type === 'methodCall') {
-      return await this.buildMethodCall(txn, suggestedParams, true)
-    }
-
-    const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
-
-    return (await this.buildTxn(txn, suggestedParams)).map(({ txn, context }) => ({ txn, signer, context }))
-  }
-
-  /**
-   * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
-   *
-   * @returns The array of built transactions and any corresponding method calls
-   * @example
-   * ```typescript
-   * const { transactions, methodCalls, signers } = await composer.buildTransactions()
-   * ```
-   */
-  async buildTransactions(): Promise<BuiltTransactions> {
-    const suggestedParams = await this.getSuggestedParams()
-
-    const transactions: Transaction[] = []
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
-    const signers = new Map<number, algosdk.TransactionSigner>()
-
-    for (const txn of this.txns) {
-      if (!['txnWithSigner', 'atc', 'methodCall'].includes(txn.type)) {
-        transactions.push(...(await this.buildTxn(txn, suggestedParams)).map((txn) => txn.txn))
-      } else {
-        const transactionsWithSigner =
-          txn.type === 'txnWithSigner'
-            ? [txn]
-            : txn.type === 'atc'
-              ? this.buildAtc(txn.atc)
-              : txn.type === 'methodCall'
-                ? await this.buildMethodCall(txn, suggestedParams, false)
-                : []
-
-        transactionsWithSigner.forEach((ts) => {
-          transactions.push(ts.txn)
-          const groupIdx = transactions.length - 1
-
-          if (ts.signer && ts.signer !== TransactionComposer.NULL_SIGNER) {
-            signers.set(groupIdx, ts.signer)
-          }
-          if ('context' in ts && ts.context.abiMethod) {
-            methodCalls.set(groupIdx, ts.context.abiMethod)
-          }
-        })
-      }
-    }
-
-    return { transactions, methodCalls, signers }
   }
 
   /**
    * Get the number of transactions currently added to this composer.
    * @returns The number of transactions currently added to this composer
    */
-  async count() {
-    return (await this.buildTransactions()).transactions.length
+  count() {
+    return this.txns.length
   }
 
   /**
-   * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
+   * Build the transaction composer.
    *
-   * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
+   * This method performs resource population and inner transaction fee coverage if these options are set in the composer.
    *
    * Once this method is called, no further transactions will be able to be added.
    * You can safely call this method multiple times to get the same result.
-   * @returns The built atomic transaction composer, the transactions and any corresponding method calls
+   * @returns The built transaction composer, the transactions and any corresponding method calls
    * @example
    * ```typescript
-   * const { atc, transactions, methodCalls } = await composer.build()
+   * const { transactions, methodCalls } = await composer.build()
    * ```
    */
-  async build() {
-    if (this.atc.getStatus() === algosdk.AtomicTransactionComposerStatus.BUILDING) {
+  public async build() {
+    if (!this.transactionsWithSigners) {
       const suggestedParams = await this.getSuggestedParams()
-      // Build all of the transactions
-      const txnWithSigners: TransactionWithSignerAndContext[] = []
-      for (const txn of this.txns) {
-        txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
-      }
+      const builtTransactions = await this._buildTransactions(suggestedParams)
 
-      // Add all of the transactions to the underlying ATC
-      const methodCalls = new Map<number, algosdk.ABIMethod>()
-      txnWithSigners.forEach(({ context, ...ts }, idx) => {
-        this.atc.addTransaction(ts)
+      // Cache the raw transactions before resource population for error handling
+      this.rawBuildTransactions = builtTransactions.transactions
 
-        // Populate consolidated set of all ABI method calls
-        if (context.abiMethod) {
-          methodCalls.set(idx, context.abiMethod)
-        }
+      const groupAnalysis =
+        (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
+        builtTransactions.transactions.some((txn) => txn.type === TransactionType.AppCall)
+          ? await this.analyzeGroupRequirements(builtTransactions.transactions, suggestedParams, this.composerConfig)
+          : undefined
 
-        if (context.maxFee !== undefined) {
-          this.txnMaxFees.set(idx, context.maxFee)
+      this.populateTransactionAndGroupResources(builtTransactions.transactions, groupAnalysis)
+
+      this.transactionsWithSigners = builtTransactions.transactions.map((txn, index) => {
+        return {
+          txn,
+          signer: builtTransactions.signers.get(index) ?? this.getSigner(txn.sender),
         }
       })
-      this.atc['methodCalls'] = methodCalls
     }
 
-    return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
+    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    this.txns.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        methodCalls.set(index, txn.data.method)
+      }
+    })
+
+    return {
+      transactions: this.transactionsWithSigners,
+      methodCalls,
+    }
+  }
+
+  private async _buildTransactions(suggestedParams: SuggestedParams) {
+    const defaultValidityWindow =
+      !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisId ?? 'unknown')
+        ? 1000n
+        : this.defaultValidityWindow
+    const signers = new Map<number, algosdk.TransactionSigner>()
+    const transactions = new Array<Transaction>()
+
+    let transactionIndex = 0
+    for (const ctxn of this.txns) {
+      if (ctxn.type === 'txn') {
+        transactions.push(ctxn.data.txn)
+        if (ctxn.data.signer) {
+          signers.set(transactionIndex, ctxn.data.signer)
+        }
+        transactionIndex++
+      } else if (ctxn.type === 'asyncTxn') {
+        transactions.push(await ctxn.data.txn)
+        if (ctxn.data.signer) {
+          signers.set(transactionIndex, ctxn.data.signer)
+        }
+        transactionIndex++
+      } else {
+        let transaction: Transaction
+
+        switch (ctxn.type) {
+          case 'pay':
+            transaction = buildPayment(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetCreate':
+            transaction = buildAssetCreate(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetConfig':
+            transaction = buildAssetConfig(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetFreeze':
+            transaction = buildAssetFreeze(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetDestroy':
+            transaction = buildAssetDestroy(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetTransfer':
+            transaction = buildAssetTransfer(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetOptIn':
+            transaction = buildAssetOptIn(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'assetOptOut':
+            transaction = buildAssetOptOut(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'appCall':
+            if (!('appId' in ctxn.data)) {
+              transaction = await buildAppCreate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
+              transaction = await buildAppUpdate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            } else {
+              transaction = buildAppCall(ctxn.data, suggestedParams, defaultValidityWindow)
+            }
+            break
+          case 'keyReg':
+            transaction = buildKeyReg(ctxn.data, suggestedParams, defaultValidityWindow)
+            break
+          case 'methodCall':
+            if (!('appId' in ctxn.data)) {
+              transaction = await buildAppCreateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
+              transaction = await buildAppUpdateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            } else {
+              transaction = await buildAppCallMethodCall(ctxn.data, suggestedParams, defaultValidityWindow)
+            }
+            break
+          default:
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            throw new Error(`Unsupported transaction type: ${(ctxn as any).type}`)
+        }
+
+        if (transaction.fee === undefined) {
+          transaction = assignFee(transaction, {
+            feePerByte: suggestedParams.fee,
+            minFee: suggestedParams.minFee,
+            extraFee: ctxn.data.extraFee?.microAlgos,
+            maxFee: ctxn.data.maxFee?.microAlgos,
+          })
+        }
+
+        transactions.push(transaction)
+
+        if (ctxn.data.signer) {
+          const signer = 'signer' in ctxn.data.signer ? ctxn.data.signer.signer : ctxn.data.signer
+          signers.set(transactionIndex, signer)
+        }
+        transactionIndex++
+      }
+    }
+
+    // Validate that the total group size doesn't exceed the maximum
+    if (transactions.length > MAX_TRANSACTION_GROUP_SIZE) {
+      throw new Error(`Transaction group size ${transactions.length} exceeds the maximum limit of ${MAX_TRANSACTION_GROUP_SIZE}`)
+    }
+
+    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    this.txns.forEach((txn, index) => {
+      if (txn.type === 'methodCall') {
+        methodCalls.set(index, txn.data.method)
+      }
+    })
+
+    return { transactions, methodCalls, signers }
+  }
+
+  /**
+   * Builds all transactions in the composer and returns them along with method calls and signers.
+   *
+   * Note: This method only builds the transactions as-is without resource population or automatic grouping.
+   * Use this when you need the raw transactions.
+   * @returns An object containing the array of built transactions, method calls, and signers
+   * @example
+   * ```typescript
+   * const { transactions, methodCalls, signers } = await composer.buildTransactions()
+   * ```
+   */
+  public async buildTransactions(): Promise<BuiltTransactions> {
+    const suggestedParams = await this.getSuggestedParams()
+    const buildResult = await this._buildTransactions(suggestedParams)
+    return {
+      ...buildResult,
+      transactions: buildResult.transactions.map((t) => new TransactionWrapper(t)),
+    }
+  }
+
+  private populateTransactionAndGroupResources(transactions: Transaction[], groupAnalysis?: GroupAnalysis): Transaction[] {
+    if (groupAnalysis) {
+      // Process fee adjustments
+      let surplusGroupFees = 0n
+      const transactionAnalysis: Array<{
+        groupIndex: number
+        requiredFeeDelta?: FeeDelta
+        priority: FeePriority
+        unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
+      }> = []
+
+      // Process fee adjustments
+      groupAnalysis.transactions.forEach((txnAnalysis, groupIndex) => {
+        // Accumulate surplus fees
+        if (txnAnalysis.requiredFeeDelta && FeeDelta.isSurplus(txnAnalysis.requiredFeeDelta)) {
+          surplusGroupFees += FeeDelta.amount(txnAnalysis.requiredFeeDelta)
+        }
+
+        // Calculate priority and add to transaction info
+        const ctxn = this.txns[groupIndex]
+        const txn = transactions[groupIndex]
+        const logicalMaxFee = getLogicalMaxFee(ctxn)
+        const isImmutableFee = logicalMaxFee !== undefined && logicalMaxFee === (txn.fee || 0n)
+
+        let priority = FeePriority.Covered
+        if (txnAnalysis.requiredFeeDelta && FeeDelta.isDeficit(txnAnalysis.requiredFeeDelta)) {
+          const deficitAmount = FeeDelta.amount(txnAnalysis.requiredFeeDelta)
+          if (isImmutableFee || txn.type !== TransactionType.AppCall) {
+            // High priority: transactions that can't be modified
+            priority = FeePriority.ImmutableDeficit(deficitAmount)
+          } else {
+            // Normal priority: app call transactions that can be modified
+            priority = FeePriority.ModifiableDeficit(deficitAmount)
+          }
+        }
+
+        transactionAnalysis.push({
+          groupIndex,
+          requiredFeeDelta: txnAnalysis.requiredFeeDelta,
+          priority,
+          unnamedResourcesAccessed: txnAnalysis.unnamedResourcesAccessed,
+        })
+      })
+
+      // Sort transactions by priority (highest first)
+      transactionAnalysis.sort((a, b) => b.priority.compare(a.priority))
+
+      const indexesWithAccessReferences: number[] = []
+
+      for (const { groupIndex, requiredFeeDelta, unnamedResourcesAccessed } of transactionAnalysis) {
+        // Cover any additional fees required for the transactions
+        if (requiredFeeDelta && FeeDelta.isDeficit(requiredFeeDelta)) {
+          const deficitAmount = FeeDelta.amount(requiredFeeDelta)
+          let additionalFeeDelta: FeeDelta | undefined
+
+          if (surplusGroupFees === 0n) {
+            // No surplus group fees, the transaction must cover its own deficit
+            additionalFeeDelta = requiredFeeDelta
+          } else if (surplusGroupFees >= deficitAmount) {
+            // Surplus fully covers the deficit
+            surplusGroupFees -= deficitAmount
+          } else {
+            // Surplus partially covers the deficit
+            additionalFeeDelta = FeeDelta.fromBigInt(deficitAmount - surplusGroupFees)
+            surplusGroupFees = 0n
+          }
+
+          // If there is any additional fee deficit, the transaction must cover it by modifying the fee
+          if (additionalFeeDelta && FeeDelta.isDeficit(additionalFeeDelta)) {
+            const additionalDeficitAmount = FeeDelta.amount(additionalFeeDelta)
+
+            if (transactions[groupIndex].type === TransactionType.AppCall) {
+              const currentFee = transactions[groupIndex].fee || 0n
+              const transactionFee = currentFee + additionalDeficitAmount
+
+              const logicalMaxFee = getLogicalMaxFee(this.txns[groupIndex])
+              if (!logicalMaxFee || transactionFee > logicalMaxFee) {
+                throw new Error(
+                  `Calculated transaction fee ${transactionFee} µALGO is greater than max of ${logicalMaxFee ?? 0n} for transaction ${groupIndex}`,
+                )
+              }
+
+              transactions[groupIndex].fee = transactionFee
+            } else {
+              throw new Error(
+                `An additional fee of ${additionalDeficitAmount} µALGO is required for non app call transaction ${groupIndex}`,
+              )
+            }
+          }
+        }
+
+        // Apply transaction-level resource population
+        if (unnamedResourcesAccessed && transactions[groupIndex].type === TransactionType.AppCall) {
+          const hasAccessReferences =
+            transactions[groupIndex].appCall?.accessReferences && transactions[groupIndex].appCall?.accessReferences?.length
+          if (!hasAccessReferences) {
+            populateTransactionResources(transactions[groupIndex], unnamedResourcesAccessed, groupIndex)
+          } else {
+            indexesWithAccessReferences.push(groupIndex)
+          }
+        }
+      }
+
+      if (indexesWithAccessReferences.length > 0) {
+        Config.logger.warn(
+          `Resource population will be skipped for transaction indexes ${indexesWithAccessReferences.join(', ')} as they use access references.`,
+        )
+      }
+
+      // Apply group-level resource population
+      if (groupAnalysis.unnamedResourcesAccessed) {
+        populateGroupResources(transactions, groupAnalysis.unnamedResourcesAccessed)
+      }
+    }
+
+    if (transactions.length > 1) {
+      const groupedTransactions = groupTransactions(transactions)
+      // Mutate the input transactions so that the group is updated for any transaction passed into the composer
+      transactions.forEach((t) => (t.group = groupedTransactions[0].group))
+      return transactions
+    } else {
+      return transactions
+    }
+  }
+
+  private async analyzeGroupRequirements(
+    transactions: Transaction[],
+    suggestedParams: SuggestedParams,
+    analysisParams: TransactionComposerConfig,
+  ): Promise<GroupAnalysis> {
+    const appCallIndexesWithoutMaxFees: number[] = []
+
+    let transactionsToSimulate = transactions.map((txn, groupIndex) => {
+      const ctxn = this.txns[groupIndex]
+      const txnToSimulate = { ...txn }
+      delete txnToSimulate.group
+      if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.AppCall) {
+        const logicalMaxFee = getLogicalMaxFee(ctxn)
+        if (logicalMaxFee !== undefined) {
+          txnToSimulate.fee = logicalMaxFee
+        } else {
+          appCallIndexesWithoutMaxFees.push(groupIndex)
+        }
+      }
+
+      return txnToSimulate
+    })
+
+    // Regroup the transactions, as the transactions have likely been adjusted
+    if (transactionsToSimulate.length > 1) {
+      transactionsToSimulate = groupTransactions(transactionsToSimulate)
+    }
+
+    // Check for required max fees on app calls when fee coverage is enabled
+    if (analysisParams.coverAppCallInnerTransactionFees && appCallIndexesWithoutMaxFees.length > 0) {
+      throw new Error(
+        `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
+      )
+    }
+
+    const signedTransactions = transactionsToSimulate.map(
+      (txn) =>
+        ({
+          txn: txn,
+          signature: EMPTY_SIGNATURE,
+        }) satisfies SignedTransaction,
+    )
+
+    const simulateRequest: SimulateRequest = {
+      txnGroups: [
+        {
+          txns: signedTransactions,
+        },
+      ],
+      allowUnnamedResources: true,
+      allowEmptySignatures: true,
+      fixSigners: true,
+      allowMoreLogging: true,
+      execTraceConfig: {
+        enable: true,
+        scratchChange: true,
+        stackChange: true,
+        stateChange: true,
+      },
+    }
+
+    const response = await this.algod.simulateTransaction(simulateRequest)
+    const groupResponse = response.txnGroups[0]
+
+    // Handle any simulation failures
+    if (groupResponse.failureMessage) {
+      if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('fee too small')) {
+        throw new Error(
+          'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
+        )
+      }
+
+      throw new Error(
+        `Error resolving execution info via simulate in transaction ${groupResponse.failedAt?.join(', ')}: ${groupResponse.failureMessage}`,
+      )
+    }
+
+    const txnAnalysisResults: TransactionAnalysis[] = groupResponse.txnResults.map((simulateTxnResult, groupIndex) => {
+      const btxn = transactions[groupIndex]
+
+      let requiredFeeDelta: FeeDelta | undefined
+
+      if (analysisParams.coverAppCallInnerTransactionFees) {
+        const minTxnFee = calculateFee(btxn, {
+          feePerByte: suggestedParams.fee,
+          minFee: suggestedParams.minFee,
+        })
+        const txnFee = btxn.fee ?? 0n
+        const txnFeeDelta = FeeDelta.fromBigInt(minTxnFee - txnFee)
+
+        if (btxn.type === TransactionType.AppCall) {
+          // Calculate inner transaction fee delta
+          const innerTxnsFeeDelta = calculateInnerFeeDelta(simulateTxnResult.txnResult.innerTxns, suggestedParams.minFee)
+          requiredFeeDelta = FeeDelta.fromBigInt(
+            (innerTxnsFeeDelta ? FeeDelta.toBigInt(innerTxnsFeeDelta) : 0n) + (txnFeeDelta ? FeeDelta.toBigInt(txnFeeDelta) : 0n),
+          )
+        } else {
+          requiredFeeDelta = txnFeeDelta
+        }
+      }
+
+      return {
+        requiredFeeDelta,
+        unnamedResourcesAccessed: analysisParams.populateAppCallResources ? simulateTxnResult.unnamedResourcesAccessed : undefined,
+      }
+    })
+
+    const sortedResources = groupResponse.unnamedResourcesAccessed
+
+    // NOTE: We explicitly want to avoid localeCompare as that can lead to different results in different environments
+    const compare = (a: string | bigint, b: string | bigint) => (a < b ? -1 : a > b ? 1 : 0)
+
+    if (sortedResources) {
+      sortedResources.accounts?.sort((a, b) => compare(a.toString(), b.toString()))
+      sortedResources.assets?.sort(compare)
+      sortedResources.apps?.sort(compare)
+      sortedResources.boxes?.sort((a, b) => {
+        const aStr = `${a.app}-${a.name}`
+        const bStr = `${b.app}-${b.name}`
+        return compare(aStr, bStr)
+      })
+      sortedResources.appLocals?.sort((a, b) => {
+        const aStr = `${a.app}-${a.account}`
+        const bStr = `${b.app}-${b.account}`
+        return compare(aStr, bStr)
+      })
+      sortedResources.assetHoldings?.sort((a, b) => {
+        const aStr = `${a.asset}-${a.account}`
+        const bStr = `${b.asset}-${b.account}`
+        return compare(aStr, bStr)
+      })
+    }
+
+    return {
+      transactions: txnAnalysisResults,
+      unnamedResourcesAccessed: analysisParams.populateAppCallResources ? sortedResources : undefined,
+    }
   }
 
   /**
    * Rebuild the group, discarding any previously built transactions.
    * This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
-   * @returns The newly built atomic transaction composer and the transactions
+   * @returns The newly built transaction composer and the transactions
    * @example
    * ```typescript
    * const { atc, transactions, methodCalls } = await composer.rebuild()
    * ```
    */
   async rebuild() {
-    this.atc = new algosdk.AtomicTransactionComposer()
+    this.reset()
     return await this.build()
   }
 
+  private reset() {
+    this.signedTransactions = undefined
+    this.transactionsWithSigners = undefined
+  }
+
   /**
-   * Compose the atomic transaction group and send it to the network.
+   * Compose the transaction group and send it to the network.
    * @param params The parameters to control execution with
    * @returns The execution result
    * @example
@@ -2042,66 +1765,186 @@ export class TransactionComposer {
    * const result = await composer.send()
    * ```
    */
-  async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
-    const group = (await this.build()).transactions
+  async send(params?: SendParams): Promise<SendTransactionComposerResults> {
+    if (
+      this.composerConfig.coverAppCallInnerTransactionFees !== (params?.coverAppCallInnerTransactionFees ?? false) ||
+      this.composerConfig.populateAppCallResources !== (params?.populateAppCallResources ?? true)
+    ) {
+      // If the params are different to the composer config, reset the builtGroup
+      // to ensure that the SendParams overwrites the composer config
+      this.composerConfig = {
+        coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees ?? false,
+        populateAppCallResources: params?.populateAppCallResources ?? true,
+      }
 
-    let waitRounds = params?.maxRoundsToWaitForConfirmation
-
-    const suggestedParams =
-      waitRounds === undefined || params?.coverAppCallInnerTransactionFees ? await this.getSuggestedParams() : undefined
-
-    if (waitRounds === undefined) {
-      const lastRound = group.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
-      const { firstValid: firstRound } = suggestedParams!
-      waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
+      this.reset()
     }
 
     try {
-      return await sendAtomicTransactionComposer(
-        {
-          atc: this.atc,
-          suppressLog: params?.suppressLog,
-          maxRoundsToWaitForConfirmation: waitRounds,
-          populateAppCallResources: params?.populateAppCallResources,
-          coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
-          additionalAtcContext: params?.coverAppCallInnerTransactionFees
-            ? {
-                maxFees: this.txnMaxFees,
-                suggestedParams: suggestedParams!,
-              }
-            : undefined,
-        },
-        this.algod,
-      )
-    } catch (originalError: unknown) {
-      throw await this.transformError(originalError)
+      await this.gatherSignatures()
+
+      if (
+        !this.transactionsWithSigners ||
+        this.transactionsWithSigners.length === 0 ||
+        !this.signedTransactions ||
+        this.signedTransactions.length === 0
+      ) {
+        throw new Error('No transactions available')
+      }
+
+      const transactionsToSend = this.transactionsWithSigners.map((stxn) => stxn.txn)
+      const transactionIds = transactionsToSend.map((txn) => getTransactionId(txn))
+
+      if (transactionsToSend.length > 1) {
+        const groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
+        Config.getLogger(params?.suppressLog).verbose(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+          transactionsToSend,
+        })
+
+        Config.getLogger(params?.suppressLog).debug(`Transaction IDs (${groupId})`, transactionIds)
+      }
+
+      if (Config.debug && Config.traceAll) {
+        await this.simulate({
+          allowEmptySignatures: true,
+          fixSigners: true,
+          allowMoreLogging: true,
+          execTraceConfig: {
+            enable: true,
+            scratchChange: true,
+            stackChange: true,
+            stateChange: true,
+          },
+          resultOnFailure: true,
+        })
+      }
+
+      const group = this.signedTransactions[0].txn.group
+
+      let waitRounds = params?.maxRoundsToWaitForConfirmation
+
+      if (waitRounds === undefined) {
+        const suggestedParams = await this.getSuggestedParams()
+        const firstRound = suggestedParams.firstValid
+        const lastRound = this.signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
+        waitRounds = Number(lastRound - firstRound) + 1
+      }
+
+      const encodedTxns = encodeSignedTransactions(this.signedTransactions)
+      await this.algod.sendRawTransaction(encodedTxns)
+
+      if (transactionsToSend.length > 1 && group) {
+        Config.getLogger(params?.suppressLog).verbose(
+          `Group transaction (${toBase64(group)}) sent with ${transactionsToSend.length} transactions`,
+        )
+      } else {
+        Config.getLogger(params?.suppressLog).verbose(
+          `Sent transaction ID ${getTransactionId(transactionsToSend[0])} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
+        )
+      }
+
+      let confirmations = new Array<PendingTransactionResponse>()
+      if (params?.maxRoundsToWaitForConfirmation !== 0) {
+        confirmations = await Promise.all(transactionIds.map(async (id) => await waitForConfirmation(id, waitRounds, this.algod)))
+      }
+
+      const abiReturns = this.parseAbiReturnValues(confirmations)
+
+      return {
+        groupId: group ? Buffer.from(group).toString('base64') : undefined,
+        transactions: transactionsToSend.map((t) => new TransactionWrapper(t)),
+        txIds: transactionIds,
+        returns: abiReturns,
+        confirmations: confirmations.map((c) => wrapPendingTransactionResponse(c)),
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (originalError: any) {
+      const errorMessage = originalError.body?.message ?? originalError.message ?? 'Received error executing Transaction Composer'
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const err = new Error(errorMessage) as any
+      err.cause = originalError
+
+      if (typeof originalError === 'object') {
+        err.name = originalError.name
+      }
+
+      // Resolve transactions for error handling - use transactionsWithSigners if available,
+      // otherwise fall back to rawBuildTransactions
+      let sentTransactions: Transaction[] | undefined
+      if (this.transactionsWithSigners) {
+        sentTransactions = this.transactionsWithSigners.map((t) => t.txn)
+      } else if (this.rawBuildTransactions) {
+        sentTransactions = this.rawBuildTransactions.length > 1 ? groupTransactions(this.rawBuildTransactions) : this.rawBuildTransactions
+      }
+
+      if (Config.debug && typeof originalError === 'object' && sentTransactions) {
+        err.traces = []
+        Config.getLogger(params?.suppressLog).error(
+          'Received error executing Transaction Composer and debug flag enabled; attempting simulation to get more information',
+          err,
+        )
+
+        const transactionsWithEmptySigners: TransactionWithSigner[] = sentTransactions.map((txn) => ({
+          txn,
+          signer: algosdk.makeEmptyTransactionSigner(),
+        }))
+        const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
+        const simulateResponse = await this.algod.simulateTransaction({
+          txnGroups: [{ txns: signedTransactions }],
+          allowEmptySignatures: true,
+          fixSigners: true,
+          allowMoreLogging: true,
+          execTraceConfig: {
+            enable: true,
+            scratchChange: true,
+            stackChange: true,
+            stateChange: true,
+          },
+        })
+
+        if (Config.debug && !Config.traceAll) {
+          // Emit the event only if traceAll: false, as it should have already been emitted above
+          await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+            simulateResponse,
+          })
+        }
+
+        if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
+          for (const txn of simulateResponse.txnGroups[0].txnResults) {
+            err.traces.push({
+              trace: AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map'),
+              appBudget: txn.appBudgetConsumed,
+              logicSigBudget: txn.logicSigBudgetConsumed,
+              logs: txn.txnResult.logs,
+              message: simulateResponse.txnGroups[0].failureMessage,
+            })
+          }
+        }
+      } else {
+        Config.getLogger(params?.suppressLog).error(
+          'Received error executing Transaction Composer, for more information enable the debug flag',
+          err,
+        )
+      }
+
+      // Attach the sent transactions so we can use them in error transformers
+      err.sentTransactions = (sentTransactions ?? []).map((txn) => new TransactionWrapper(txn))
+
+      throw await this.transformError(err)
     }
   }
 
   /**
-   * @deprecated Use `send` instead.
-   *
-   * Compose the atomic transaction group and send it to the network
-   *
-   * An alias for `composer.send(params)`.
-   * @param params The parameters to control execution with
-   * @returns The execution result
-   */
-  async execute(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
-    return this.send(params)
-  }
-
-  /**
-   * Compose the atomic transaction group and simulate sending it to the network
+   * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
    * ```typescript
    * const result = await composer.simulate()
    * ```
    */
-  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
-   * Compose the atomic transaction group and simulate sending it to the network
+   * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
    * ```typescript
@@ -2112,9 +1955,9 @@ export class TransactionComposer {
    */
   async simulate(
     options: SkipSignaturesSimulateOptions,
-  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  ): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
-   * Compose the atomic transaction group and simulate sending it to the network
+   * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
    * @example
    * ```typescript
@@ -2123,28 +1966,43 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
-  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
-    const { skipSignatures = false, ...rawOptions } = options ?? {}
-    const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
+  async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
+    const { skipSignatures = false, resultOnFailure = false, ...rawOptions } = options ?? {}
 
-    // Build the transactions
     if (skipSignatures) {
       rawOptions.allowEmptySignatures = true
       rawOptions.fixSigners = true
-      // Build transactions uses empty signers
-      const transactions = await this.buildTransactions()
-      for (const txn of transactions.transactions) {
-        atc.addTransaction({ txn, signer: TransactionComposer.NULL_SIGNER })
-      }
-      atc['methodCalls'] = transactions.methodCalls
-    } else {
-      // Build creates real signatures
-      await this.build()
     }
 
-    const { methodResults, simulateResponse } = await atc.simulate(this.algod, {
-      txnGroups: [],
+    let transactionsWithSigner: TransactionWithSigner[]
+    if (!this.transactionsWithSigners) {
+      const builtTransactions = await this.buildTransactions()
+      const transactions =
+        builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
+
+      transactionsWithSigner = transactions.map((txn, index) => ({
+        txn: txn,
+        signer: skipSignatures
+          ? algosdk.makeEmptyTransactionSigner()
+          : (builtTransactions.signers.get(index) ?? algosdk.makeEmptyTransactionSigner()),
+      }))
+    } else {
+      transactionsWithSigner = this.transactionsWithSigners.map((e) => ({
+        txn: e.txn,
+        signer: skipSignatures ? algosdk.makeEmptyTransactionSigner() : e.signer,
+      }))
+    }
+
+    const transactions = transactionsWithSigner.map((e) => e.txn)
+    const signedTransactions = await this.signTransactions(transactionsWithSigner)
+
+    const simulateRequest = {
+      txnGroups: [
+        {
+          txns: signedTransactions,
+        },
+      ],
       ...rawOptions,
       ...(Config.debug
         ? {
@@ -2159,33 +2017,35 @@ export class TransactionComposer {
             },
           }
         : undefined),
-    } satisfies SimulateRequest)
+    } satisfies SimulateRequest
 
-    const failedGroup = simulateResponse?.txnGroups[0]
-    if (failedGroup?.failureMessage) {
-      const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
+    const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
+    const simulateResult = simulateResponse.txnGroups[0]
+
+    if (simulateResult?.failureMessage && !resultOnFailure) {
+      const errorMessage = `Transaction failed at transaction(s) ${simulateResult.failedAt?.join(', ') || 'unknown'} in the group. ${simulateResult.failureMessage}`
       const error = new Error(errorMessage)
 
       if (Config.debug) {
-        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
       }
 
       throw await this.transformError(error)
     }
 
     if (Config.debug && Config.traceAll) {
-      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
     }
 
-    const transactions = atc.buildGroup().map((t) => t.txn)
-    const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
+    const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
+
     return {
-      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+      confirmations: simulateResult.txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
       transactions: transactions.map((t) => new TransactionWrapper(t)),
       txIds: transactions.map((t) => getTransactionId(t)),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
-      returns: methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),
+      returns: abiReturns,
     }
   }
 
@@ -2201,4 +2061,106 @@ export class TransactionComposer {
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   }
+
+  public async gatherSignatures(): Promise<SignedTransaction[]> {
+    if (this.signedTransactions) {
+      return this.signedTransactions
+    }
+
+    await this.build()
+
+    if (!this.transactionsWithSigners || this.transactionsWithSigners.length === 0) {
+      throw new Error('No transactions available to sign')
+    }
+
+    this.signedTransactions = await this.signTransactions(this.transactionsWithSigners)
+    return this.signedTransactions
+  }
+
+  private async signTransactions(transactionsWithSigners: TransactionWithSigner[]): Promise<SignedTransaction[]> {
+    if (transactionsWithSigners.length === 0) {
+      throw new Error('No transactions available to sign')
+    }
+
+    const transactions = transactionsWithSigners.map((txnWithSigner) => txnWithSigner.txn)
+
+    // Group transactions by signer
+    const signerGroups = new Map<TransactionSigner, number[]>()
+    transactionsWithSigners.forEach(({ signer }, index) => {
+      const indexes = signerGroups.get(signer) ?? []
+      indexes.push(index)
+      signerGroups.set(signer, indexes)
+    })
+
+    // Sign transactions in parallel for each signer
+    const signerEntries = Array.from(signerGroups)
+    const signedGroups = await Promise.all(signerEntries.map(([signer, indexes]) => signer(transactions, indexes)))
+
+    // Reconstruct signed transactions in original order
+    const signedTransactions = new Array<SignedTransaction>(transactionsWithSigners.length)
+    signerEntries.forEach(([, indexes], signerIndex) => {
+      const stxs = signedGroups[signerIndex]
+      indexes.forEach((txIndex, stxIndex) => {
+        signedTransactions[txIndex] = decodeSignedTransaction(stxs[stxIndex])
+      })
+    })
+
+    // Verify all transactions were signed
+    const unsignedIndexes = signedTransactions
+      .map((stxn, index) => (stxn === undefined ? index : null))
+      .filter((index): index is number => index !== null)
+
+    if (unsignedIndexes.length > 0) {
+      throw new Error(`Transactions at indexes [${unsignedIndexes.join(', ')}] were not signed`)
+    }
+
+    return signedTransactions
+  }
+
+  private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
+    const abiReturns = new Array<ABIReturn>()
+
+    for (let i = 0; i < confirmations.length; i++) {
+      const confirmation = confirmations[i]
+      const txn = this.txns[i]
+      if (txn?.type !== 'methodCall') continue
+
+      const method = txn.data.method
+      if (method.returns.type !== 'void') {
+        const abiReturn = AppManager.getABIReturn(confirmation, method)
+        if (abiReturn !== undefined) {
+          abiReturns.push(abiReturn)
+        }
+      }
+    }
+
+    return abiReturns
+  }
+
+  public setMaxFees(maxFees: Map<number, AlgoAmount>) {
+    maxFees.forEach((_, index) => {
+      if (index > this.txns.length - 1) {
+        throw new Error(`Index ${index} is out of range. The composer only contains ${this.txns.length} transactions`)
+      }
+    })
+
+    maxFees.forEach((maxFee, index) => {
+      this.txns[index].data.maxFee = new AlgoAmount({ microAlgos: maxFee.microAlgos })
+    })
+  }
+}
+
+/** Get the logical maximum fee based on staticFee and maxFee */
+function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
+  if (ctxn.type === 'txn' || ctxn.type === 'asyncTxn') {
+    return undefined
+  }
+
+  const maxFee = ctxn.data.maxFee
+  const staticFee = ctxn.data.staticFee
+
+  if (maxFee !== undefined && (staticFee === undefined || maxFee.microAlgos > staticFee.microAlgos)) {
+    return maxFee.microAlgos
+  }
+  return staticFee?.microAlgos
 }

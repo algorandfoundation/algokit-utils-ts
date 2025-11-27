@@ -112,6 +112,11 @@ export type AppCallTransactionFields = {
    * Resources accessed by the application
    */
   accessReferences?: AccessReference[]
+
+  /**
+   * The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed.
+   */
+  rejectVersion?: number
 }
 
 /**

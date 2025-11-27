@@ -33,4 +33,4 @@ Something that identifies an app box name - either a:
 
 #### Defined in
 
-[src/types/app-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L59)
+[src/types/app-manager.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L60)
