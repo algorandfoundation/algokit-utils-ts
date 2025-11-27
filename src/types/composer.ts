@@ -1910,6 +1910,7 @@ export class TransactionComposer {
         }
 
         if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
+          // TODO: PD - this version doesn't write the trace into a file
           for (const txn of simulateResponse.txnGroups[0].txnResults) {
             err.traces.push({
               trace: AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map'),
