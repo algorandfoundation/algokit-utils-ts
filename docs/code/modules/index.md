@@ -383,7 +383,7 @@ ___
 
 ### prepareGroupForSending
 
-▸ **prepareGroupForSending**(`composer`, `sendParams`, `additionalAtcContext?`): `Promise`\<[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)\>
+▸ **prepareGroupForSending**(`composer`, `sendParams`, `additionalContext?`): `Promise`\<[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)\>
 
 #### Parameters
 
@@ -391,7 +391,7 @@ ___
 | :------ | :------ | :------ |
 | `composer` | [`TransactionComposer`](../classes/types_composer.TransactionComposer.md) | The Transaction Composer containing the txn group |
 | `sendParams` | [`SendParams`](../interfaces/types_transaction.SendParams.md) | The send params for the transaction group |
-| `additionalAtcContext?` | [`AdditionalTransactionComposerContext`](../interfaces/types_transaction.AdditionalTransactionComposerContext.md) | Additional context used to determine how best to change the transactions in the group |
+| `additionalContext?` | [`AdditionalTransactionComposerContext`](../interfaces/types_transaction.AdditionalTransactionComposerContext.md) | Additional context used to determine how best to change the transactions in the group |
 
 #### Returns
 
