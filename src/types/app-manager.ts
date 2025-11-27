@@ -428,8 +428,7 @@ export class AppManager {
    * const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignature('hello(string)void'));
    * ```
    */
-  public static getABIReturn(confirmation: PendingTransactionResponse | undefined, method: ABIMethod | undefined): ABIReturn | undefined {
-    // TODO: PD - can we make confirmation non-nullable
+  public static getABIReturn(confirmation: PendingTransactionResponse, method: ABIMethod | undefined): ABIReturn | undefined {
     if (!method || !confirmation || method.returns.type === 'void') {
       return undefined
     }

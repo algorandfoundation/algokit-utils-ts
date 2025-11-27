@@ -2,10 +2,10 @@ import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import {
   ABIAddressType,
+  ABIArrayDynamicType,
+  ABIArrayStaticType,
   ABIBoolType,
   ABIByteType,
-  ABIDynamicArrayType,
-  ABIStaticArrayType,
   ABIStringType,
   ABIStructType,
   ABITupleType,
@@ -113,31 +113,31 @@ describe('ABIType encode decode', () => {
     // Static array tests
     {
       description: 'bool[3] array',
-      abiType: new ABIStaticArrayType(new ABIBoolType(), 3),
+      abiType: new ABIArrayStaticType(new ABIBoolType(), 3),
       abiValue: [true, true, false],
       expectedBytes: [192],
     },
     {
       description: 'bool[8] array with 01000000',
-      abiType: new ABIStaticArrayType(new ABIBoolType(), 8),
+      abiType: new ABIArrayStaticType(new ABIBoolType(), 8),
       abiValue: [false, true, false, false, false, false, false, false],
       expectedBytes: [64],
     },
     {
       description: 'bool[8] array with all true',
-      abiType: new ABIStaticArrayType(new ABIBoolType(), 8),
+      abiType: new ABIArrayStaticType(new ABIBoolType(), 8),
       abiValue: [true, true, true, true, true, true, true, true],
       expectedBytes: [255],
     },
     {
       description: 'bool[9] array',
-      abiType: new ABIStaticArrayType(new ABIBoolType(), 9),
+      abiType: new ABIArrayStaticType(new ABIBoolType(), 9),
       abiValue: [true, false, false, true, false, false, true, false, true],
       expectedBytes: [146, 128],
     },
     {
       description: 'uint64[3] array',
-      abiType: new ABIStaticArrayType(new ABIUintType(64), 3),
+      abiType: new ABIArrayStaticType(new ABIUintType(64), 3),
       abiValue: [1n, 2n, 3n],
       expectedBytes: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3],
     },
@@ -145,25 +145,25 @@ describe('ABIType encode decode', () => {
     // Dynamic array tests
     {
       description: 'empty bool[] array',
-      abiType: new ABIDynamicArrayType(new ABIBoolType()),
+      abiType: new ABIArrayDynamicType(new ABIBoolType()),
       abiValue: [],
       expectedBytes: [0, 0],
     },
     {
       description: 'bool[] array with 3 elements',
-      abiType: new ABIDynamicArrayType(new ABIBoolType()),
+      abiType: new ABIArrayDynamicType(new ABIBoolType()),
       abiValue: [true, true, false],
       expectedBytes: [0, 3, 192],
     },
     {
       description: 'bool[] array with 8 elements',
-      abiType: new ABIDynamicArrayType(new ABIBoolType()),
+      abiType: new ABIArrayDynamicType(new ABIBoolType()),
       abiValue: [false, true, false, false, false, false, false, false],
       expectedBytes: [0, 8, 64],
     },
     {
       description: 'bool[] array with 9 elements',
-      abiType: new ABIDynamicArrayType(new ABIBoolType()),
+      abiType: new ABIArrayDynamicType(new ABIBoolType()),
       abiValue: [true, false, false, true, false, false, true, false, true],
       expectedBytes: [0, 9, 146, 128],
     },
@@ -341,7 +341,7 @@ describe('ABIType encode decode', () => {
           },
           {
             name: 'Struct 2 field 3',
-            type: new ABIDynamicArrayType(new ABIStringType()),
+            type: new ABIArrayDynamicType(new ABIStringType()),
           },
         ]),
       },

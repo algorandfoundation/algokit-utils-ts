@@ -99,7 +99,7 @@ export abstract class ABIType {
   static from(str: string): ABIType {
     if (str.endsWith('[]')) {
       const childType = ABIType.from(str.slice(0, str.length - 2))
-      return new ABIDynamicArrayType(childType)
+      return new ABIArrayDynamicType(childType)
     }
     if (str.endsWith(']')) {
       const stringMatches = str.match(STATIC_ARRAY_REGEX)
@@ -112,7 +112,7 @@ export abstract class ABIType {
         throw new Error(`Validation Error: array length exceeds limit ${MAX_LEN}`)
       }
       const childType = ABIType.from(stringMatches[1])
-      return new ABIStaticArrayType(childType, arrayLength)
+      return new ABIArrayStaticType(childType, arrayLength)
     }
     if (str.startsWith('uint')) {
       const digitsOnly = (s: string) => [...s].every((c) => '0123456789'.includes(c))
@@ -604,7 +604,7 @@ export class ABITupleType extends ABIType {
 /**
  * A static-length array ABI type.
  */
-export class ABIStaticArrayType extends ABIType {
+export class ABIArrayStaticType extends ABIType {
   readonly name = ABITypeName.StaticArray
 
   /**
@@ -627,7 +627,7 @@ export class ABIStaticArrayType extends ABIType {
   }
 
   equals(other: ABIType): boolean {
-    return other instanceof ABIStaticArrayType && this.childType.equals(other.childType) && this.length === other.length
+    return other instanceof ABIArrayStaticType && this.childType.equals(other.childType) && this.length === other.length
   }
 
   isDynamic(): boolean {
@@ -676,7 +676,7 @@ export class ABIStaticArrayType extends ABIType {
 /**
  * A dynamic-length array ABI type.
  */
-export class ABIDynamicArrayType extends ABIType {
+export class ABIArrayDynamicType extends ABIType {
   readonly name = ABITypeName.DynamicArray
 
   /**
@@ -692,7 +692,7 @@ export class ABIDynamicArrayType extends ABIType {
   }
 
   equals(other: ABIType): boolean {
-    return other instanceof ABIDynamicArrayType && this.childType.equals(other.childType)
+    return other instanceof ABIArrayDynamicType && this.childType.equals(other.childType)
   }
 
   isDynamic(): boolean {

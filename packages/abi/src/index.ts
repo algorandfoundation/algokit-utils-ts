@@ -14,10 +14,10 @@ export {
 export type { ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
 export {
   ABIAddressType,
+  ABIArrayDynamicType,
+  ABIArrayStaticType,
   ABIBoolType,
   ABIByteType,
-  ABIDynamicArrayType,
-  ABIStaticArrayType,
   ABIStringType,
   ABIStructType,
   ABITupleType,

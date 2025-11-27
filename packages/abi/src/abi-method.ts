@@ -25,7 +25,6 @@ export type ABIMethodArg = {
   type: ABIMethodArgType
   name?: string
   desciption?: string
-  // TODO: PD - implement default value
   defaultValue?: ABIDefaultValue
 }
 

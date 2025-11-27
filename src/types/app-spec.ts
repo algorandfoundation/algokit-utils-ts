@@ -151,7 +151,6 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
   } satisfies Arc56Contract
 }
 
-// TODO: PD - confirm this logic
 function getABIMethodParamsSignature(params: ABIMethodParams) {
   const args = params.args.map((a) => a.type).join(',')
   const returns = params.returns.type === 'void' ? '' : params.returns.type

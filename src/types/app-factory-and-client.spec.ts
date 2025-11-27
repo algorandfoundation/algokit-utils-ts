@@ -791,32 +791,28 @@ describe('ARC56: app-factory-and-app-client', () => {
     await localnet.newScope()
 
     factory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: arc56Json,
+      appSpec: arc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
   }, 10_000)
 
   test('ARC56 error messages from inner app error', async () => {
     const innerFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: errorInnerAppArc56Json,
+      appSpec: errorInnerAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
     const { appClient: innerClient } = await innerFactory.deploy({ createParams: { method: 'createApplication' } })
 
     const middleFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: errorMiddleAppArc56Json,
+      appSpec: errorMiddleAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
     const { appClient: middleClient } = await middleFactory.deploy({ createParams: { method: 'createApplication' } })
 
     const outerFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: errorOuterAppArc56Json,
+      appSpec: errorOuterAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
@@ -829,8 +825,7 @@ describe('ARC56: app-factory-and-app-client', () => {
 
   test('ARC56 error message on deploy', async () => {
     const deployErrorFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: deployErrorAppArc56Json,
+      appSpec: deployErrorAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
@@ -892,11 +887,8 @@ describe('ARC56: app-factory-and-app-client', () => {
     const appClient = localnet.algorand.client.getAppClientById({
       appId,
       defaultSender: localnet.context.testAccount.addr,
-      // @ts-expect-error TODO: Fix this
-      appSpec: arc56Json,
+      appSpec: arc56Json as Arc56Contract,
     })
-
-    // TODO: PD - investigate Fix this
 
     try {
       await appClient.send.call({ method: 'tmpl' })
