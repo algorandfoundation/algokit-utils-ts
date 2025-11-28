@@ -37,14 +37,12 @@ interface Segment {
 export abstract class ABIType {
   /**
    * Returns the ARC-4 type name string representation.
-   * @returns The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
+   * @returns The ARC-4 type string
    */
   abstract get name(): string
 
   /**
    * Returns a user-friendly display name for this type.
-   * For most types, this is the same as name.
-   * For struct types, this returns the struct name.
    * @returns The display name for this type
    */
   get displayName(): string {
@@ -52,7 +50,7 @@ export abstract class ABIType {
   }
 
   /**
-   * Converts the ABI type to its string representation.
+   * Returns the ARC-4 type name string representation.
    * @returns The ARC-4 type string
    */
   toString(): string {
