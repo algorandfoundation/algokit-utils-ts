@@ -1,27 +1,6 @@
-import { Buffer } from 'buffer'
 import { Codec } from '../codec'
-import type { WireMapKey, WireObject } from '../model-serializer'
 import type { EncodingFormat, FieldMetadata, ObjectModelMetadata } from '../types'
-
-function normalizeKey(key: string | WireMapKey): string {
-  return key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : typeof key === 'string' ? key : String(key)
-}
-
-function normalizeWireObject(wireObject: WireObject): Record<string, unknown> {
-  const normalized: Record<string, unknown> = {}
-
-  if (wireObject instanceof Map) {
-    for (const [key, value] of wireObject.entries()) {
-      normalized[normalizeKey(key)] = value
-    }
-  } else if (typeof wireObject === 'object') {
-    for (const [key, value] of Object.entries(wireObject)) {
-      normalized[key] = value
-    }
-  }
-
-  return normalized
-}
+import { normalizeWireObject, type WireObject } from '../wire'
 
 function isEmptyObject(value: unknown): boolean {
   if (value === null || value === undefined) return true
@@ -32,7 +11,11 @@ function isEmptyObject(value: unknown): boolean {
   return keys.length === 0 || keys.every((key) => (value as Record<string, unknown>)[key] === undefined)
 }
 
-export class ObjectModelCodec<T extends Record<string, unknown> = Record<string, unknown>> extends Codec<T, WireObject> {
+export class ObjectModelCodec<T extends Record<string, unknown> = Record<string, unknown>> extends Codec<
+  T,
+  Record<string, unknown>,
+  WireObject
+> {
   private resolvedMetadata: ObjectModelMetadata<T> | undefined = undefined
   private resolvedDefaultValue: T | undefined = undefined
 
@@ -85,7 +68,7 @@ export class ObjectModelCodec<T extends Record<string, unknown> = Record<string,
     return true
   }
 
-  protected toEncoded(value: T, format: EncodingFormat): WireObject {
+  protected toEncoded(value: T, format: EncodingFormat): Record<string, unknown> {
     const metadata = this.getMetadata()
     const result: Record<string, unknown> = {}
 
@@ -140,18 +123,9 @@ export class ObjectModelCodec<T extends Record<string, unknown> = Record<string,
 
   private encodeFlattenedField(field: FieldMetadata, fieldValue: unknown, format: EncodingFormat): Record<string, unknown> | undefined {
     const encoded = field.codec.encodeOptional(fieldValue, format)
-
     if (encoded !== undefined && typeof encoded === 'object' && !Array.isArray(encoded)) {
-      if (encoded instanceof Map) {
-        const result: Record<string, unknown> = {}
-        for (const [key, value] of encoded.entries()) {
-          result[normalizeKey(key)] = value
-        }
-        return result
-      }
-      return encoded as Record<string, unknown>
+      return normalizeWireObject(encoded as WireObject)
     }
-
     return {}
   }
 

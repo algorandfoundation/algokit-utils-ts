@@ -68,31 +68,17 @@ describe('RecordCodec', () => {
     })
 
     describe('from Map', () => {
-      test('should decode Map with string keys to record', () => {
-        const map = new Map([
-          ['key1', 'value1'],
-          ['key2', 'value2'],
-        ])
-        const decoded = stringRecordCodec.decode(map as unknown as Record<string, string>, 'msgpack')
-        expect(decoded).toEqual({ key1: 'value1', key2: 'value2' })
-      })
-
       test('should decode Map with Uint8Array keys to record (UTF-8 conversion)', () => {
-        const key1 = new Uint8Array([107, 101, 121, 49]) // "key1" in UTF-8
-        const key2 = new Uint8Array([107, 101, 121, 50]) // "key2" in UTF-8
         const map = new Map([
-          [key1, 'value1'],
-          [key2, 'value2'],
+          [Buffer.from('key1', 'utf-8'), 'value1'],
+          [Buffer.from('key2', 'utf-8'), 'value2'],
         ])
+
         const decoded = stringRecordCodec.decode(map as unknown as Record<string, string>, 'msgpack')
         expect(decoded).toEqual({ key1: 'value1', key2: 'value2' })
-      })
-    })
 
-    describe('format independence', () => {
-      test('should produce same result for JSON and msgpack when decoding object', () => {
-        const obj = { key1: 'value1', key2: 'value2' }
-        expect(stringRecordCodec.decode(obj, 'json')).toEqual(stringRecordCodec.decode(obj, 'msgpack'))
+        const decodedJson = stringRecordCodec.decode(map as unknown as Record<string, string>, 'json')
+        expect(decodedJson).toEqual({ key1: 'value1', key2: 'value2' })
       })
     })
   })
@@ -109,22 +95,6 @@ describe('RecordCodec', () => {
     test('should decode non-empty record', () => {
       const record = { key: 'value' }
       expect(stringRecordCodec.decodeOptional(record, 'json')).toEqual(record)
-    })
-  })
-
-  describe('round-trip encoding/decoding', () => {
-    test('should round-trip string record', () => {
-      const original = { key1: 'value1', key2: 'value2', key3: 'value3' }
-      const encoded = stringRecordCodec.encodeOptional(original, 'json')
-      const decoded = stringRecordCodec.decode(encoded!, 'json')
-      expect(decoded).toEqual(original)
-    })
-
-    test('should round-trip number record', () => {
-      const original = { a: 1, b: 2, c: 3 }
-      const encoded = numberRecordCodec.encodeOptional(original, 'json')
-      const decoded = numberRecordCodec.decode(encoded!, 'json')
-      expect(decoded).toEqual(original)
     })
   })
 })

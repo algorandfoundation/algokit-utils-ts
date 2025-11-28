@@ -1,4 +1,4 @@
-import type { EncodingFormat, ObjectModelMetadata, WireBigInt, WireObject, WireStringOrBytes } from '@algorandfoundation/algokit-common'
+import type { EncodingFormat, ObjectModelMetadata, WireBigInt, WireObject, WireString } from '@algorandfoundation/algokit-common'
 import {
   Codec,
   MapCodec,
@@ -14,11 +14,11 @@ import {
   fixedBytes1793Codec,
   fixedBytes32Codec,
   fixedBytes64Codec,
-  getWireValue,
+  normalizeWireObject,
+  normalizeWireString,
   numberCodec,
   stringCodec,
 } from '@algorandfoundation/algokit-common'
-import { Buffer } from 'buffer'
 import { AccessReference, AppCallTransactionFields, BoxReference, StateSchema } from './app-call'
 import { AssetConfigTransactionFields } from './asset-config'
 import { AssetFreezeTransactionFields } from './asset-freeze'
@@ -46,12 +46,12 @@ type WireBoxReference = {
   /** App index (0 or index into access list) */
   i?: number
   /** Box name */
-  n?: WireStringOrBytes
+  n?: WireString
 }
 
 type WireAccessReference = {
   /** Account address */
-  d?: WireStringOrBytes
+  d?: WireString
 
   /** App index */
   p?: WireBigInt
@@ -82,7 +82,7 @@ type WireAccessReference = {
 /**
  * Custom codec for TransactionType enum that converts to/from wire format strings
  */
-class TransactionTypeCodec extends Codec<TransactionType, string> {
+class TransactionTypeCodec extends Codec<TransactionType, string, WireString> {
   public defaultValue(): TransactionType {
     return TransactionType.Unknown
   }
@@ -110,9 +110,9 @@ class TransactionTypeCodec extends Codec<TransactionType, string> {
     }
   }
 
-  protected fromEncoded(value: string | Uint8Array, _format: EncodingFormat): TransactionType {
+  protected fromEncoded(value: WireString, _format: EncodingFormat): TransactionType {
     // Convert Uint8Array to string if needed (msgpack may return transaction type as bytes)
-    const typeString = value instanceof Uint8Array ? Buffer.from(value).toString('utf-8') : value
+    const typeString = normalizeWireString(value)
 
     switch (typeString) {
       case 'pay':
@@ -142,69 +142,7 @@ class TransactionTypeCodec extends Codec<TransactionType, string> {
   }
 }
 
-const PaymentTransactionFieldsMeta: ObjectModelMetadata<PaymentTransactionFields> = {
-  name: 'PaymentTransactionFields',
-  kind: 'object',
-  fields: [
-    { name: 'amount', wireKey: 'amt', optional: false, codec: bigIntCodec },
-    { name: 'receiver', wireKey: 'rcv', optional: false, codec: addressCodec },
-    { name: 'closeRemainderTo', wireKey: 'close', optional: true, codec: addressCodec },
-  ],
-}
-
-const AssetTransferTransactionFieldsMeta: ObjectModelMetadata<AssetTransferTransactionFields> = {
-  name: 'AssetTransferTransactionFields',
-  kind: 'object',
-  fields: [
-    { name: 'assetId', wireKey: 'xaid', optional: false, codec: bigIntCodec },
-    { name: 'amount', wireKey: 'aamt', optional: false, codec: bigIntCodec },
-    { name: 'receiver', wireKey: 'arcv', optional: false, codec: addressCodec },
-    { name: 'assetSender', wireKey: 'asnd', optional: true, codec: addressCodec },
-    { name: 'closeRemainderTo', wireKey: 'aclose', optional: true, codec: addressCodec },
-  ],
-}
-
-const AssetFreezeTransactionFieldsMeta: ObjectModelMetadata<AssetFreezeTransactionFields> = {
-  name: 'AssetFreezeTransactionFields',
-  kind: 'object',
-  fields: [
-    { name: 'assetId', wireKey: 'faid', optional: false, codec: bigIntCodec },
-    { name: 'freezeTarget', wireKey: 'fadd', optional: false, codec: addressCodec },
-    { name: 'frozen', wireKey: 'afrz', optional: false, codec: booleanCodec },
-  ],
-}
-
-const KeyRegistrationTransactionFieldsMeta: ObjectModelMetadata<KeyRegistrationTransactionFields> = {
-  name: 'KeyRegistrationTransactionFields',
-  kind: 'object',
-  fields: [
-    { name: 'voteKey', wireKey: 'votekey', optional: true, codec: fixedBytes32Codec },
-    { name: 'selectionKey', wireKey: 'selkey', optional: true, codec: fixedBytes32Codec },
-    { name: 'stateProofKey', wireKey: 'sprfkey', optional: true, codec: fixedBytes64Codec },
-    { name: 'voteFirst', wireKey: 'votefst', optional: true, codec: bigIntCodec },
-    { name: 'voteLast', wireKey: 'votelst', optional: true, codec: bigIntCodec },
-    { name: 'voteKeyDilution', wireKey: 'votekd', optional: true, codec: bigIntCodec },
-    { name: 'nonParticipation', wireKey: 'nonpart', optional: true, codec: booleanCodec },
-  ],
-}
-
-const AssetParamsMeta: ObjectModelMetadata<Omit<AssetConfigTransactionFields, 'assetId'>> = {
-  name: 'AssetParams',
-  kind: 'object',
-  fields: [
-    { name: 'total', wireKey: 't', optional: true, codec: bigIntCodec },
-    { name: 'decimals', wireKey: 'dc', optional: true, codec: numberCodec },
-    { name: 'defaultFrozen', wireKey: 'df', optional: true, codec: booleanCodec },
-    { name: 'unitName', wireKey: 'un', optional: true, codec: stringCodec },
-    { name: 'assetName', wireKey: 'an', optional: true, codec: stringCodec },
-    { name: 'url', wireKey: 'au', optional: true, codec: stringCodec },
-    { name: 'metadataHash', wireKey: 'am', optional: true, codec: fixedBytes32Codec },
-    { name: 'manager', wireKey: 'm', optional: true, codec: addressCodec },
-    { name: 'reserve', wireKey: 'r', optional: true, codec: addressCodec },
-    { name: 'freeze', wireKey: 'f', optional: true, codec: addressCodec },
-    { name: 'clawback', wireKey: 'c', optional: true, codec: addressCodec },
-  ],
-}
+// TODO: NC - Make these more efficient, by normalising the objects <-- Next thing to do.
 
 class TransactionDataCodec<
   T extends
@@ -213,7 +151,7 @@ class TransactionDataCodec<
     | AssetFreezeTransactionFields
     | KeyRegistrationTransactionFields
     | StateProofTransactionFields,
-> extends Codec<T | undefined, WireObject> {
+> extends Codec<T | undefined, Record<string, unknown>> {
   private transactionDataCodec: ObjectModelCodec<T>
 
   constructor(
@@ -228,32 +166,34 @@ class TransactionDataCodec<
     return undefined
   }
 
-  protected toEncoded(value: T | undefined, format: EncodingFormat): WireObject {
+  protected toEncoded(value: T | undefined, format: EncodingFormat): Record<string, unknown> {
     if (!value) {
       throw new Error('Transaction data is missing')
     }
     return this.transactionDataCodec.encode(value, format)
   }
 
-  protected fromEncoded(value: WireObject, format: EncodingFormat): T | undefined {
-    const _type = getWireValue<WireStringOrBytes>(value, 'type')
-    const type = _type instanceof Uint8Array ? Buffer.from(_type).toString('utf-8') : _type
-    if (type !== this.transactionType.toString()) {
-      return undefined
+  protected fromEncoded(value: Record<string, unknown>, format: EncodingFormat): T | undefined {
+    if (value.type === undefined) {
+      throw new Error('Transaction is missing type field')
+    }
+    const type = normalizeWireString(value.type as WireString)
+    if (type === this.transactionType.toString()) {
+      return this.transactionDataCodec.decode(value, format)
     }
 
-    return this.transactionDataCodec.decode(value, format)
+    return undefined
   }
 }
 
-class AssetConfigDataCodec extends Codec<AssetConfigTransactionFields | undefined, WireObject> {
+class AssetConfigDataCodec extends Codec<AssetConfigTransactionFields | undefined, Record<string, unknown>> {
   private assetParamsCodec = new ObjectModelCodec<Omit<AssetConfigTransactionFields, 'assetId'>>(AssetParamsMeta)
 
   public defaultValue(): AssetConfigTransactionFields | undefined {
     return undefined
   }
 
-  protected toEncoded(value: AssetConfigTransactionFields | undefined, format: EncodingFormat): WireObject {
+  protected toEncoded(value: AssetConfigTransactionFields | undefined, format: EncodingFormat): Record<string, unknown> {
     const result: Record<string, unknown> = {}
 
     if (!value) {
@@ -275,11 +215,13 @@ class AssetConfigDataCodec extends Codec<AssetConfigTransactionFields | undefine
     return result
   }
 
-  protected fromEncoded(value: WireObject, format: EncodingFormat): AssetConfigTransactionFields | undefined {
-    const _type = getWireValue<WireStringOrBytes>(value, 'type')
-    const type = _type instanceof Uint8Array ? Buffer.from(_type).toString('utf-8') : _type
-    const caid = getWireValue<WireBigInt>(value, 'caid')
-    const apar = getWireValue<WireObject>(value, 'apar')
+  protected fromEncoded(value: Record<string, unknown>, format: EncodingFormat): AssetConfigTransactionFields | undefined {
+    if (value.type === undefined) {
+      throw new Error('Transaction is missing type field')
+    }
+    const type = normalizeWireString(value.type as WireString)
+    const caid = value.caid as WireBigInt | undefined
+    const apar = value.apar as WireObject | undefined
 
     if (type !== TransactionType.AssetConfig || (caid === undefined && !apar)) {
       return undefined
@@ -296,7 +238,7 @@ class AssetConfigDataCodec extends Codec<AssetConfigTransactionFields | undefine
   }
 }
 
-class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireObject> {
+class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Record<string, unknown>> {
   private appCallFieldsCodec = new ObjectModelCodec<Omit<AppCallTransactionFields, 'accessReferences' | 'boxReferences'>>(
     AppCallTransactionFieldsMeta,
   )
@@ -417,19 +359,24 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
     return accessList.length > 0 ? accessList : undefined
   }
 
-  private decodeAccessReferences(wireAccessReferences: WireAccessReference[] | undefined, format: EncodingFormat): AccessReference[] {
-    if (!wireAccessReferences || wireAccessReferences.length === 0) return []
+  private decodeAccessReferences(_wireAccessReferences: WireAccessReference[] | undefined, format: EncodingFormat): AccessReference[] {
+    if (!_wireAccessReferences || _wireAccessReferences.length === 0) return []
 
     const result: AccessReference[] = []
 
     // Process each entry in the access list
+
+    const wireAccessReferences = _wireAccessReferences.map((ref) => normalizeWireObject(ref))
     for (const ref of wireAccessReferences) {
-      const d = getWireValue<WireStringOrBytes>(ref, 'd')
-      const s = getWireValue<WireBigInt>(ref, 's')
-      const p = getWireValue<WireBigInt>(ref, 'p')
-      const h = getWireValue<WireObject>(ref, 'h')
-      const l = getWireValue<WireObject>(ref, 'l')
-      const b = getWireValue<WireObject>(ref, 'b')
+      const d = ref.d as WireString | undefined
+      const s = ref.s as WireBigInt | undefined
+      const p = ref.p as WireBigInt | undefined
+      const _h = ref.h as WireObject | undefined
+      const h = _h ? normalizeWireObject(_h) : undefined
+      const _l = ref.l as WireObject | undefined
+      const l = _l ? normalizeWireObject(_l) : undefined
+      const _b = ref.b as WireObject | undefined
+      const b = _b ? normalizeWireObject(_b) : undefined
 
       // Simple address reference
       if (d) {
@@ -451,15 +398,15 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
 
       // Holding reference (h)
       if (h) {
-        const addrIdx = getWireValue<number>(h, 'd') ?? 0
-        const assetIdx = getWireValue<number>(h, 's')
+        const addrIdx = (h.d ?? 0) as number
+        const assetIdx = h.s as number | undefined
 
         if (assetIdx === undefined) {
           throw new Error('Access list holding reference is missing asset index')
         }
 
-        const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : getWireValue<WireStringOrBytes>(wireAccessReferences[addrIdx - 1], 'd')!
-        const holdingAssetId = getWireValue<WireBigInt>(wireAccessReferences[assetIdx - 1], 's')!
+        const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : (wireAccessReferences[addrIdx - 1].d! as WireString)
+        const holdingAssetId = wireAccessReferences[assetIdx - 1].s! as WireBigInt
 
         result.push({
           holding: {
@@ -472,11 +419,11 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
 
       // Locals reference (l)
       if (l) {
-        const addrIdx = getWireValue<number>(l, 'd') ?? 0
-        const appIdx = getWireValue<number>(l, 'p') ?? 0
+        const addrIdx = (l.d ?? 0) as number
+        const appIdx = (l.p ?? 0) as number
 
-        const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : getWireValue<WireStringOrBytes>(wireAccessReferences[addrIdx - 1], 'd')!
-        const localsAppId = appIdx === 0 ? 0n : getWireValue<WireBigInt>(wireAccessReferences[appIdx - 1], 'p')!
+        const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : (wireAccessReferences[addrIdx - 1].d! as WireString)
+        const localsAppId = appIdx === 0 ? 0n : (wireAccessReferences[appIdx - 1].p! as WireBigInt)
 
         result.push({
           locals: {
@@ -489,14 +436,14 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
 
       // Box reference (b)
       if (b) {
-        const boxAppIdx = getWireValue<number>(b, 'i') ?? 0
-        const name = getWireValue<WireStringOrBytes>(b, 'n')
+        const boxAppIdx = (b.i ?? 0) as number
+        const name = b.n as WireString | undefined
 
         if (!name) {
           throw new Error('Access list box reference is missing name')
         }
 
-        const boxAppId = boxAppIdx === 0 ? 0n : getWireValue<WireBigInt>(wireAccessReferences[boxAppIdx - 1], 'p')!
+        const boxAppId = boxAppIdx === 0 ? 0n : (wireAccessReferences[boxAppIdx - 1].p! as WireBigInt)
 
         result.push({
           box: {
@@ -544,13 +491,12 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
   ): BoxReference[] {
     if (!wireBoxReferences || wireBoxReferences.length === 0) return []
 
-    return wireBoxReferences.map((box) => {
-      // Use getValue to handle Map values with Uint8Array keys from msgpack
-      const boxIndex = getWireValue<number | bigint>(box, 'i')
-      const boxName = getWireValue<string | Uint8Array>(box, 'n')
+    return wireBoxReferences.map((_box) => {
+      const box = normalizeWireObject(_box)
+      const boxIndex = box.i as number | undefined
+      const boxName = box.n as WireString | undefined
 
-      // Handle index - could be number, bigint, or undefined
-      const index = typeof boxIndex === 'bigint' ? Number(boxIndex) : typeof boxIndex === 'number' ? boxIndex : 0
+      const index = boxIndex ?? 0
 
       let appId: bigint
       if (index === 0) {
@@ -562,7 +508,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
         if (foreignAppId === undefined) {
           throw new Error(`Failed to find the app reference at index ${index - 1}`)
         }
-        appId = bigIntCodec.decode(foreignAppId as WireBigInt, format)
+        appId = bigIntCodec.decode(foreignAppId, format)
       }
 
       return {
@@ -572,7 +518,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
     })
   }
 
-  protected toEncoded(value: AppCallTransactionFields | undefined, format: EncodingFormat): WireObject {
+  protected toEncoded(value: AppCallTransactionFields | undefined, format: EncodingFormat): Record<string, unknown> {
     const result: Record<string, unknown> = {}
 
     if (!value) {
@@ -581,7 +527,6 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
 
     const encodedParams = this.appCallFieldsCodec.encodeOptional(value, format)
     if (encodedParams && Object.keys(encodedParams).length > 0) {
-      // TODO: NC - This should also handle if we get back a map (use other code for that)
       Object.assign(result, encodedParams)
     }
 
@@ -598,23 +543,23 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
     return result
   }
 
-  protected fromEncoded(value: WireObject, format: EncodingFormat): AppCallTransactionFields | undefined {
-    const _type = getWireValue<WireStringOrBytes>(value, 'type')
-    const type = _type instanceof Uint8Array ? Buffer.from(_type).toString('utf-8') : _type
-    const appReferences = getWireValue<WireBigInt[]>(value, 'apfa')
-    const wireBoxReferences = getWireValue<WireBoxReference[]>(value, 'apbx')
-    const wireAccessReferences = getWireValue<WireAccessReference[]>(value, 'al')
-
+  protected fromEncoded(value: Record<string, unknown>, format: EncodingFormat): AppCallTransactionFields | undefined {
+    if (value.type === undefined) {
+      throw new Error('Transaction is missing type field')
+    }
+    const type = normalizeWireString(value.type as WireString)
     if (type !== TransactionType.AppCall) {
       return undefined
     }
 
+    const appReferences = value.apfa as WireBigInt[] | undefined
+    const wireBoxReferences = value.apbx as WireBoxReference[] | undefined
+    const wireAccessReferences = value.al as WireAccessReference[] | undefined
     const boxReferences = this.decodeBoxReferences(
       appReferences?.map((ar) => bigIntCodec.decode(ar, format)),
       wireBoxReferences,
       format,
     )
-
     const accessReferences = this.decodeAccessReferences(wireAccessReferences, format)
 
     return {
@@ -627,6 +572,70 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
   public isDefaultValue(value: AppCallTransactionFields | undefined): boolean {
     return value === undefined
   }
+}
+
+const PaymentTransactionFieldsMeta: ObjectModelMetadata<PaymentTransactionFields> = {
+  name: 'PaymentTransactionFields',
+  kind: 'object',
+  fields: [
+    { name: 'amount', wireKey: 'amt', optional: false, codec: bigIntCodec },
+    { name: 'receiver', wireKey: 'rcv', optional: false, codec: addressCodec },
+    { name: 'closeRemainderTo', wireKey: 'close', optional: true, codec: addressCodec },
+  ],
+}
+
+const AssetTransferTransactionFieldsMeta: ObjectModelMetadata<AssetTransferTransactionFields> = {
+  name: 'AssetTransferTransactionFields',
+  kind: 'object',
+  fields: [
+    { name: 'assetId', wireKey: 'xaid', optional: false, codec: bigIntCodec },
+    { name: 'amount', wireKey: 'aamt', optional: false, codec: bigIntCodec },
+    { name: 'receiver', wireKey: 'arcv', optional: false, codec: addressCodec },
+    { name: 'assetSender', wireKey: 'asnd', optional: true, codec: addressCodec },
+    { name: 'closeRemainderTo', wireKey: 'aclose', optional: true, codec: addressCodec },
+  ],
+}
+
+const AssetFreezeTransactionFieldsMeta: ObjectModelMetadata<AssetFreezeTransactionFields> = {
+  name: 'AssetFreezeTransactionFields',
+  kind: 'object',
+  fields: [
+    { name: 'assetId', wireKey: 'faid', optional: false, codec: bigIntCodec },
+    { name: 'freezeTarget', wireKey: 'fadd', optional: false, codec: addressCodec },
+    { name: 'frozen', wireKey: 'afrz', optional: false, codec: booleanCodec },
+  ],
+}
+
+const KeyRegistrationTransactionFieldsMeta: ObjectModelMetadata<KeyRegistrationTransactionFields> = {
+  name: 'KeyRegistrationTransactionFields',
+  kind: 'object',
+  fields: [
+    { name: 'voteKey', wireKey: 'votekey', optional: true, codec: fixedBytes32Codec },
+    { name: 'selectionKey', wireKey: 'selkey', optional: true, codec: fixedBytes32Codec },
+    { name: 'stateProofKey', wireKey: 'sprfkey', optional: true, codec: fixedBytes64Codec },
+    { name: 'voteFirst', wireKey: 'votefst', optional: true, codec: bigIntCodec },
+    { name: 'voteLast', wireKey: 'votelst', optional: true, codec: bigIntCodec },
+    { name: 'voteKeyDilution', wireKey: 'votekd', optional: true, codec: bigIntCodec },
+    { name: 'nonParticipation', wireKey: 'nonpart', optional: true, codec: booleanCodec },
+  ],
+}
+
+const AssetParamsMeta: ObjectModelMetadata<Omit<AssetConfigTransactionFields, 'assetId'>> = {
+  name: 'AssetParams',
+  kind: 'object',
+  fields: [
+    { name: 'total', wireKey: 't', optional: true, codec: bigIntCodec },
+    { name: 'decimals', wireKey: 'dc', optional: true, codec: numberCodec },
+    { name: 'defaultFrozen', wireKey: 'df', optional: true, codec: booleanCodec },
+    { name: 'unitName', wireKey: 'un', optional: true, codec: stringCodec },
+    { name: 'assetName', wireKey: 'an', optional: true, codec: stringCodec },
+    { name: 'url', wireKey: 'au', optional: true, codec: stringCodec },
+    { name: 'metadataHash', wireKey: 'am', optional: true, codec: fixedBytes32Codec },
+    { name: 'manager', wireKey: 'm', optional: true, codec: addressCodec },
+    { name: 'reserve', wireKey: 'r', optional: true, codec: addressCodec },
+    { name: 'freeze', wireKey: 'f', optional: true, codec: addressCodec },
+    { name: 'clawback', wireKey: 'c', optional: true, codec: addressCodec },
+  ],
 }
 
 const StateSchemaMeta: ObjectModelMetadata<StateSchema> = {
@@ -727,10 +736,6 @@ const ParticipantMeta: ObjectModelMetadata<Participant> = {
   ],
 }
 
-/**
- * Metadata for the Reveal value structure (without position, as position is the map key)
- * Wire format: { s: SigslotCommit, p: Participant }
- */
 const RevealMeta: ObjectModelMetadata<Reveal> = {
   name: 'Reveal',
   kind: 'object',
@@ -793,11 +798,7 @@ const HeartbeatProofMeta: ObjectModelMetadata<HeartbeatProof> = {
   ],
 }
 
-/**
- * Metadata for HeartbeatTransactionFields
- * These fields are nested under 'hb' wire key (not flattened)
- */
-export const HeartbeatTransactionFieldsMeta: ObjectModelMetadata<HeartbeatTransactionFields> = {
+const HeartbeatTransactionFieldsMeta: ObjectModelMetadata<HeartbeatTransactionFields> = {
   name: 'HeartbeatTransactionFields',
   kind: 'object',
   fields: [
@@ -809,6 +810,9 @@ export const HeartbeatTransactionFieldsMeta: ObjectModelMetadata<HeartbeatTransa
   ],
 }
 
+/**
+ * Metadata for Transaction
+ */
 export const TransactionMeta: ObjectModelMetadata<Transaction> = {
   name: 'Transaction',
   kind: 'object',

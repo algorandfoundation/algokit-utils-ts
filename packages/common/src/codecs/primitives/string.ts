@@ -1,19 +1,15 @@
-import { Buffer } from 'buffer'
 import { Codec } from '../codec'
-import { WireStringOrBytes } from '../model-serializer'
 import type { EncodingFormat } from '../types'
+import { normalizeWireString, WireString } from '../wire'
 
-class StringCodec extends Codec<string, WireStringOrBytes> {
+class StringCodec extends Codec<string, WireString> {
   public defaultValue(): string {
     return ''
   }
 
-  protected fromEncoded(value: WireStringOrBytes, _format: EncodingFormat): string {
+  protected fromEncoded(value: WireString, _format: EncodingFormat): string {
     // Due to how we need to configure msgpack decoding, Uint8Array values are returned for strings
-    if (value instanceof Uint8Array) {
-      return Buffer.from(value).toString('utf-8')
-    }
-    return value
+    return normalizeWireString(value)
   }
 }
 

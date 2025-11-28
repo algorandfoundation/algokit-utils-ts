@@ -1,11 +1,12 @@
 import { Buffer } from 'buffer'
 import { Codec } from '../codec'
 import type { EncodingFormat } from '../types'
+import { WireObject } from '../wire'
 
 /**
  * Record codec - for string-keyed objects with homogeneous values
  */
-export class RecordCodec<V, VEncoded = V> extends Codec<Record<string, V>, Record<string, VEncoded>> {
+export class RecordCodec<V, VEncoded = V> extends Codec<Record<string, V>, Record<string, VEncoded>, WireObject<VEncoded>> {
   constructor(private readonly valueCodec: Codec<V, VEncoded>) {
     super()
   }
@@ -25,13 +26,16 @@ export class RecordCodec<V, VEncoded = V> extends Codec<Record<string, V>, Recor
     return result
   }
 
-  protected fromEncoded(value: Record<string, VEncoded> | Map<string | Uint8Array, VEncoded>, format: EncodingFormat): Record<string, V> {
+  protected fromEncoded(value: WireObject<VEncoded>, format: EncodingFormat): Record<string, V> {
     const result: Record<string, V> = {}
-
     if (value instanceof Map) {
-      for (const [key, val] of value.entries()) {
-        const strKey = key instanceof Uint8Array ? Buffer.from(key).toString('utf-8') : key
-        result[strKey] = this.valueCodec.decode(val, format)
+      for (const [_key, val] of value.entries()) {
+        const keyType = typeof _key
+        if (keyType === 'number' || keyType === 'bigint') {
+          throw new Error(`RecordCodec received a non-string key of type ${keyType}`)
+        }
+        const key = _key instanceof Uint8Array ? Buffer.from(_key).toString('utf-8') : String(_key)
+        result[key] = this.valueCodec.decode(val, format)
       }
     } else {
       for (const [key, val] of Object.entries(value)) {

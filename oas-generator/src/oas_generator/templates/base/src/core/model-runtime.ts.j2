@@ -1,32 +1,23 @@
 import {
-  decodeMsgpack,
-  encodeMsgpack,
   ObjectModelCodec,
-  parseJson,
+  decodeMsgpack as rawDecodeMsgpack,
+  encodeMsgpack as rawEncodeMsgpack,
   stringifyJson,
-  WireObject,
-  type EncodingFormat,
   type ObjectModelMetadata,
-} from '@algorandfoundation/algokit-common';
+} from '@algorandfoundation/algokit-common'
 
-export class AlgorandSerializer {
-  static encode<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>, format: 'json'): string
-  static encode<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>, format?: 'msgpack'): Uint8Array
-  static encode<T extends Record<string, unknown>>(
-    value: T,
-    meta: ObjectModelMetadata<T>,
-    format: EncodingFormat = 'msgpack',
-  ): Uint8Array | string {
-    const wire = new ObjectModelCodec(meta).encode(value, format);
-    return format === 'msgpack' ? encodeMsgpack(wire) : stringifyJson(wire);
-  }
-
-  static decode<T extends Record<string, unknown>>(
-    value: Uint8Array | Record<string, unknown>,
-    meta: ObjectModelMetadata<T>,
-    format: EncodingFormat = 'msgpack',
-  ): T {
-    const wire = value instanceof Uint8Array ? decodeMsgpack(value) : value;
-    return new ObjectModelCodec<T>(meta).decode(wire, format);
-  }
+export function encodeJson<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>): string {
+  const wire = new ObjectModelCodec(meta).encode(value, 'json')
+  return stringifyJson(wire)
+}
+export function encodeMsgpack<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>): Uint8Array {
+  const wire = new ObjectModelCodec(meta).encode(value, 'msgpack')
+  return rawEncodeMsgpack(wire)
+}
+export function decodeJson<T extends Record<string, unknown>>(value: Record<string, unknown>, meta: ObjectModelMetadata<T>): T {
+  return new ObjectModelCodec<T>(meta).decode(value, 'json')
+}
+export function decodeMsgpack<T extends Record<string, unknown>>(value: Uint8Array, meta: ObjectModelMetadata<T>): T {
+  const wire = rawDecodeMsgpack(value)
+  return new ObjectModelCodec<T>(meta).decode(wire, 'msgpack')
 }

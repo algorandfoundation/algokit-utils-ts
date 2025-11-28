@@ -27,5 +27,5 @@ export { ArrayModelCodec } from './models/array-model'
 export { ObjectModelCodec } from './models/object-model'
 export { PrimitiveModelCodec } from './models/primitive-model'
 
-export { getWireValue } from './model-serializer'
-export type { WireBigInt, WireMapKey, WireObject, WireStringOrBytes } from './model-serializer'
+export { normalizeWireObject, normalizeWireString } from './wire'
+export type { WireBigInt, WireMapKey, WireObject, WireString } from './wire'

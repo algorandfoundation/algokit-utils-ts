@@ -202,14 +202,15 @@ describe('AddressCodec', () => {
 
   describe('error handling', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    test.each<{ value: any; description: string }>([
-      { value: 123, description: 'number' },
-      { value: true, description: 'boolean' },
-      { value: {}, description: 'object' },
-      { value: [], description: 'array' },
-    ])('should throw error when decoding $description', ({ value }) => {
-      expect(() => addressCodec.decode(value, 'json')).toThrow('Cannot decode address from')
-      expect(() => addressCodec.decode(value, 'msgpack')).toThrow('Cannot decode address from')
+    test.each<{ value: any; type: string }>([
+      { value: 123, type: 'number' },
+      { value: true, type: 'boolean' },
+      { value: {}, type: 'object' },
+      { value: [], type: 'array' },
+    ])('should throw error when decoding $type', ({ value }) => {
+      const errorMessage = 'AddressCodec cannot decode address'
+      expect(() => addressCodec.decode(value, 'json')).toThrow(errorMessage)
+      expect(() => addressCodec.decode(value, 'msgpack')).toThrow(errorMessage)
     })
 
     test('should throw error on invalid Uint8Array length', () => {

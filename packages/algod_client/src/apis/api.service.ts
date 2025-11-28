@@ -1,5 +1,5 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
-import { AlgorandSerializer } from '../core/model-runtime'
+import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime'
 import type { EncodingFormat } from '@algorandfoundation/algokit-common'
 import { concatArrays } from '@algorandfoundation/algokit-common'
 import type {
@@ -103,7 +103,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, AccountApplicationInformationMeta, responseFormat)
+    return decodeJson(payload, AccountApplicationInformationMeta)
   }
 
   /**
@@ -124,7 +124,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, AccountAssetInformationMeta, responseFormat)
+    return decodeJson(payload, AccountAssetInformationMeta)
   }
 
   /**
@@ -145,7 +145,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, AccountMeta, responseFormat)
+    return decodeJson(payload, AccountMeta)
   }
 
   /**
@@ -166,7 +166,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, BoxMeta, responseFormat)
+    return decodeJson(payload, BoxMeta)
   }
 
   /**
@@ -187,7 +187,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetApplicationBoxesMeta, responseFormat)
+    return decodeJson(payload, GetApplicationBoxesMeta)
   }
 
   /**
@@ -208,7 +208,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, ApplicationMeta, responseFormat)
+    return decodeJson(payload, ApplicationMeta)
   }
 
   /**
@@ -229,7 +229,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, AssetMeta, responseFormat)
+    return decodeJson(payload, AssetMeta)
   }
 
   async getBlock(round: number | bigint, params?: { headerOnly?: boolean }): Promise<GetBlock> {
@@ -247,7 +247,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetBlockMeta, responseFormat)
+    return decodeMsgpack(payload, GetBlockMeta)
   }
 
   async getBlockHash(round: number | bigint): Promise<GetBlockHash> {
@@ -265,7 +265,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetBlockHashMeta, responseFormat)
+    return decodeJson(payload, GetBlockHashMeta)
   }
 
   /**
@@ -286,7 +286,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetBlockTimeStampOffsetMeta, responseFormat)
+    return decodeJson(payload, GetBlockTimeStampOffsetMeta)
   }
 
   async getBlockTxIds(round: number | bigint): Promise<GetBlockTxIds> {
@@ -304,7 +304,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetBlockTxIdsMeta, responseFormat)
+    return decodeJson(payload, GetBlockTxIdsMeta)
   }
 
   /**
@@ -325,7 +325,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GenesisMeta, responseFormat)
+    return decodeJson(payload, GenesisMeta)
   }
 
   /**
@@ -346,7 +346,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LedgerStateDeltaMeta, responseFormat)
+    return decodeMsgpack(payload, LedgerStateDeltaMeta)
   }
 
   /**
@@ -367,7 +367,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LedgerStateDeltaMeta, responseFormat)
+    return decodeMsgpack(payload, LedgerStateDeltaMeta)
   }
 
   async getLightBlockHeaderProof(round: number | bigint): Promise<LightBlockHeaderProof> {
@@ -385,7 +385,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LightBlockHeaderProofMeta, responseFormat)
+    return decodeJson(payload, LightBlockHeaderProofMeta)
   }
 
   /**
@@ -406,7 +406,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetPendingTransactionsMeta, responseFormat)
+    return decodeMsgpack(payload, GetPendingTransactionsMeta)
   }
 
   /**
@@ -427,7 +427,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetPendingTransactionsByAddressMeta, responseFormat)
+    return decodeMsgpack(payload, GetPendingTransactionsByAddressMeta)
   }
 
   async getReady(): Promise<void> {
@@ -461,7 +461,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, StateProofMeta, responseFormat)
+    return decodeJson(payload, StateProofMeta)
   }
 
   async getStatus(): Promise<GetStatus> {
@@ -479,7 +479,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetStatusMeta, responseFormat)
+    return decodeJson(payload, GetStatusMeta)
   }
 
   async getSupply(): Promise<GetSupply> {
@@ -497,7 +497,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetSupplyMeta, responseFormat)
+    return decodeJson(payload, GetSupplyMeta)
   }
 
   /**
@@ -518,7 +518,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetSyncRoundMeta, responseFormat)
+    return decodeJson(payload, GetSyncRoundMeta)
   }
 
   /**
@@ -539,7 +539,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, GetTransactionGroupLedgerStateDeltasForRoundMeta, responseFormat)
+    return decodeMsgpack(payload, GetTransactionGroupLedgerStateDeltasForRoundMeta)
   }
 
   async getTransactionProof(
@@ -561,7 +561,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, TransactionProofMeta, responseFormat)
+    return decodeJson(payload, TransactionProofMeta)
   }
 
   /**
@@ -582,7 +582,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, VersionMeta, responseFormat)
+    return decodeJson(payload, VersionMeta)
   }
 
   async healthCheck(): Promise<void> {
@@ -623,7 +623,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, PendingTransactionResponseMeta, responseFormat)
+    return decodeMsgpack(payload, PendingTransactionResponseMeta)
   }
 
   private async _rawTransaction(body: Uint8Array): Promise<RawTransaction> {
@@ -645,7 +645,7 @@ export class AlgodApi {
       mediaType: mediaType,
     })
 
-    return AlgorandSerializer.decode(payload, RawTransactionMeta, responseFormat)
+    return decodeJson(payload, RawTransactionMeta)
   }
 
   /**
@@ -694,7 +694,7 @@ export class AlgodApi {
     const bodyMeta = SimulateRequestMeta
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
+    const serializedBody = body ? encodeMsgpack(body, bodyMeta) : undefined
 
     const payload = await this.httpRequest.request<Uint8Array>({
       method: 'POST',
@@ -706,7 +706,7 @@ export class AlgodApi {
       mediaType: mediaType,
     })
 
-    return AlgorandSerializer.decode(payload, SimulateTransactionMeta, responseFormat)
+    return decodeMsgpack(payload, SimulateTransactionMeta)
   }
 
   /**
@@ -732,7 +732,7 @@ export class AlgodApi {
       mediaType: mediaType,
     })
 
-    return AlgorandSerializer.decode(payload, TealCompileMeta, responseFormat)
+    return decodeJson(payload, TealCompileMeta)
   }
 
   /**
@@ -757,7 +757,7 @@ export class AlgodApi {
       mediaType: mediaType,
     })
 
-    return AlgorandSerializer.decode(payload, TealDisassembleMeta, responseFormat)
+    return decodeJson(payload, TealDisassembleMeta)
   }
 
   /**
@@ -771,7 +771,7 @@ export class AlgodApi {
     const bodyMeta = DryrunRequestMeta
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
@@ -783,7 +783,7 @@ export class AlgodApi {
       mediaType: mediaType,
     })
 
-    return AlgorandSerializer.decode(payload, TealDryrunMeta, responseFormat)
+    return decodeJson(payload, TealDryrunMeta)
   }
 
   private async _transactionParams(): Promise<TransactionParams> {
@@ -801,7 +801,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, TransactionParamsMeta, responseFormat)
+    return decodeJson(payload, TransactionParamsMeta)
   }
 
   /**
@@ -841,7 +841,7 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, WaitForBlockMeta, responseFormat)
+    return decodeJson(payload, WaitForBlockMeta)
   }
 
   /**

@@ -166,18 +166,13 @@ describe('UnknownCodec', () => {
         })
       })
 
-      test('should convert Map with number keys to object with string keys', () => {
+      test('should fail to convert Map with number keys', () => {
         const input = new Map([
           [1, 'one'],
           [2, 'two'],
           [3, 'three'],
         ])
-        const result = unknownCodec.decode(input, 'msgpack')
-        expect(result).toEqual({
-          '1': 'one',
-          '2': 'two',
-          '3': 'three',
-        })
+        expect(() => unknownCodec.decode(input, 'msgpack')).toThrow('RecordCodec received a non-string key of type number')
       })
 
       test('should recursively decode Map values', () => {

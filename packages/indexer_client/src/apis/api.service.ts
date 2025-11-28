@@ -1,5 +1,5 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
-import { AlgorandSerializer } from '../core/model-runtime'
+import { decodeJson } from '../core/model-runtime'
 import type { EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   Block,
@@ -85,7 +85,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAccountAppLocalStatesMeta, responseFormat)
+    return decodeJson(payload, LookupAccountAppLocalStatesMeta)
   }
 
   /**
@@ -114,7 +114,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAccountAssetsMeta, responseFormat)
+    return decodeJson(payload, LookupAccountAssetsMeta)
   }
 
   /**
@@ -146,7 +146,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAccountByIdMeta, responseFormat)
+    return decodeJson(payload, LookupAccountByIdMeta)
   }
 
   /**
@@ -175,7 +175,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAccountCreatedApplicationsMeta, responseFormat)
+    return decodeJson(payload, LookupAccountCreatedApplicationsMeta)
   }
 
   /**
@@ -204,7 +204,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAccountCreatedAssetsMeta, responseFormat)
+    return decodeJson(payload, LookupAccountCreatedAssetsMeta)
   }
 
   /**
@@ -264,7 +264,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAccountTransactionsMeta, responseFormat)
+    return decodeJson(payload, LookupAccountTransactionsMeta)
   }
 
   /**
@@ -285,7 +285,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, BoxMeta, responseFormat)
+    return decodeJson(payload, BoxMeta)
   }
 
   /**
@@ -306,7 +306,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupApplicationByIdMeta, responseFormat)
+    return decodeJson(payload, LookupApplicationByIdMeta)
   }
 
   /**
@@ -344,7 +344,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupApplicationLogsByIdMeta, responseFormat)
+    return decodeJson(payload, LookupApplicationLogsByIdMeta)
   }
 
   /**
@@ -384,7 +384,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAssetBalancesMeta, responseFormat)
+    return decodeJson(payload, LookupAssetBalancesMeta)
   }
 
   /**
@@ -405,7 +405,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAssetByIdMeta, responseFormat)
+    return decodeJson(payload, LookupAssetByIdMeta)
   }
 
   /**
@@ -469,7 +469,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupAssetTransactionsMeta, responseFormat)
+    return decodeJson(payload, LookupAssetTransactionsMeta)
   }
 
   /**
@@ -490,7 +490,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, BlockMeta, responseFormat)
+    return decodeJson(payload, BlockMeta)
   }
 
   /**
@@ -511,7 +511,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, LookupTransactionMeta, responseFormat)
+    return decodeJson(payload, LookupTransactionMeta)
   }
 
   async makeHealthCheck(): Promise<HealthCheck> {
@@ -529,7 +529,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, HealthCheckMeta, responseFormat)
+    return decodeJson(payload, HealthCheckMeta)
   }
 
   /**
@@ -578,7 +578,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, SearchForAccountsMeta, responseFormat)
+    return decodeJson(payload, SearchForAccountsMeta)
   }
 
   /**
@@ -602,7 +602,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, SearchForApplicationBoxesMeta, responseFormat)
+    return decodeJson(payload, SearchForApplicationBoxesMeta)
   }
 
   /**
@@ -635,7 +635,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, SearchForApplicationsMeta, responseFormat)
+    return decodeJson(payload, SearchForApplicationsMeta)
   }
 
   /**
@@ -672,7 +672,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, SearchForAssetsMeta, responseFormat)
+    return decodeJson(payload, SearchForAssetsMeta)
   }
 
   /**
@@ -713,7 +713,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, SearchForBlockHeadersMeta, responseFormat)
+    return decodeJson(payload, SearchForBlockHeadersMeta)
   }
 
   /**
@@ -780,6 +780,6 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return AlgorandSerializer.decode(payload, SearchForTransactionsMeta, responseFormat)
+    return decodeJson(payload, SearchForTransactionsMeta)
   }
 }

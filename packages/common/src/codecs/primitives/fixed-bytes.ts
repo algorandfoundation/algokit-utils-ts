@@ -1,9 +1,9 @@
 import { Buffer } from 'buffer'
 import { Codec } from '../codec'
-import { WireStringOrBytes } from '../model-serializer'
 import type { EncodingFormat } from '../types'
+import { WireString } from '../wire'
 
-export class FixedBytesCodec extends Codec<Uint8Array, WireStringOrBytes> {
+export class FixedBytesCodec extends Codec<Uint8Array, WireString> {
   constructor(private readonly length: number) {
     super()
   }
@@ -12,14 +12,14 @@ export class FixedBytesCodec extends Codec<Uint8Array, WireStringOrBytes> {
     return new Uint8Array(this.length)
   }
 
-  protected toEncoded(value: Uint8Array, format: EncodingFormat): WireStringOrBytes {
+  protected toEncoded(value: Uint8Array, format: EncodingFormat): WireString {
     if (format === 'json') {
       return Buffer.from(value).toString('base64')
     }
     return value
   }
 
-  protected fromEncoded(value: WireStringOrBytes, _format: EncodingFormat): Uint8Array {
+  protected fromEncoded(value: WireString, _format: EncodingFormat): Uint8Array {
     if (value instanceof Uint8Array) return value
     if (typeof value === 'string') {
       return new Uint8Array(Buffer.from(value, 'base64'))

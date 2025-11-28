@@ -1,6 +1,6 @@
 import { Codec } from '../codec'
-import { WireBigInt } from '../model-serializer'
 import type { EncodingFormat } from '../types'
+import { WireBigInt } from '../wire'
 
 class BigIntCodec extends Codec<bigint, WireBigInt> {
   public defaultValue(): bigint {

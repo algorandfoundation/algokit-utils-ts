@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { WireBigInt } from '../model-serializer'
+import { WireBigInt } from '../wire'
 import { bigIntCodec } from './bigint'
 
 describe('BigIntCodec', () => {

@@ -8,7 +8,7 @@ import type { EncodingFormat } from './types'
  * @template T - The application/runtime type (e.g., bigint, string, Uint8Array)
  * @template TEncoded - The wire format type (may differ based on format, e.g., bigint → string in JSON)
  */
-export abstract class Codec<T, TEncoded = T> {
+export abstract class Codec<T, TEncoded = T, TWireEncoded = TEncoded> {
   /**
    * The default value for this type (used to determine if a value should be omitted during encoding)
    */
@@ -43,7 +43,7 @@ export abstract class Codec<T, TEncoded = T> {
    * @param format - The wire format (json or msgpack)
    * @returns The decoded application value
    */
-  public decode(value: TEncoded | undefined | null, format: EncodingFormat): T {
+  public decode(value: TWireEncoded | undefined | null, format: EncodingFormat): T {
     // undefined is encoded as msgpack nil, which may be decoded as JS null. Treat null and undefined the same.
     if (value === undefined || value === null) return this.defaultValue()
     const decoded = this.fromEncoded(value, format)
@@ -57,7 +57,7 @@ export abstract class Codec<T, TEncoded = T> {
    * @param format - The wire format (json or msgpack)
    * @returns The decoded application value, or undefined if wire value was undefined
    */
-  public decodeOptional(value: TEncoded | undefined | null, format: EncodingFormat): T | undefined {
+  public decodeOptional(value: TWireEncoded | undefined | null, format: EncodingFormat): T | undefined {
     // undefined is encoded as msgpack nil, which may be decoded as JS null. Treat null and undefined the same.
     if (value === undefined || value === null) return undefined
     return this.fromEncoded(value, format)
@@ -81,7 +81,7 @@ export abstract class Codec<T, TEncoded = T> {
    * @param format - The wire format
    * @returns The decoded value
    */
-  protected fromEncoded(value: TEncoded, format: EncodingFormat): T {
+  protected fromEncoded(value: TWireEncoded, format: EncodingFormat): T {
     return value as unknown as T
   }
 
