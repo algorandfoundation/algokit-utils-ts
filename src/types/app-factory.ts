@@ -1,4 +1,4 @@
-import { Arc56Contract, argTypeIsAbiType, decodeAVMOrABIValue, findABIMethod } from '@algorandfoundation/algokit-abi'
+import { Arc56Contract, argTypeIsTransaction, findABIMethod, getABIDecodedValue } from '@algorandfoundation/algokit-abi'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
@@ -643,30 +643,32 @@ export class AppFactory {
     }
   }
 
-  // TODO: PD - confirm why only getCreateABIArgs, and nothing for update/delete
   private getCreateABIArgsWithDefaultValues(
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
   ): AppMethodCall<CommonAppCallParams>['args'] {
     const m = findABIMethod(methodNameOrSignature, this._appSpec)
-    return args?.map((a, i) => {
-      const arg = m.args[i]
-      if (a !== undefined) {
-        return a
+    return args?.map((arg, i) => {
+      const methodArg = m.args[i]
+      if (arg !== undefined) {
+        return arg
       }
-      const defaultValue = arg.defaultValue
-      if (defaultValue && argTypeIsAbiType(arg.type)) {
+      if (argTypeIsTransaction(methodArg.type)) {
+        return arg
+      }
+      const defaultValue = methodArg.defaultValue
+      if (defaultValue) {
         switch (defaultValue.source) {
           case 'literal': {
             const bytes = Buffer.from(defaultValue.data, 'base64')
-            const type = defaultValue.type ?? arg.type
-            return decodeAVMOrABIValue(type, bytes)
+            const value_type = defaultValue.type ?? methodArg.type
+            return getABIDecodedValue(value_type, bytes)
           }
           default:
             throw new Error(`Can't provide default value for ${defaultValue.source} for a contract creation call`)
         }
       }
-      throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
+      throw new Error(`No value provided for required argument ${methodArg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
     })
   }
 

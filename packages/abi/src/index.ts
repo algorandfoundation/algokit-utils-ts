@@ -2,16 +2,16 @@ export {
   argTypeIsAbiType,
   argTypeIsReference,
   argTypeIsTransaction,
-  decodeAVMOrABIValue,
   decodeAVMValue,
-  encodeAVMOrABIValue,
   findABIMethod,
+  getABIDecodedValue,
+  getABIEncodedValue,
   getABIMethod,
   getABIMethodSelector,
   getABIMethodSignature,
   isAVMType,
 } from './abi-method'
-export type { ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
+export type { ABIDefaultValue, ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
 export {
   ABIAddressType,
   ABIArrayDynamicType,
@@ -32,10 +32,16 @@ export type { ABIReferenceValue, ABIValue } from './abi-value'
 export type { ARC28Event } from './arc28-event'
 export {
   getBoxABIStorageKey,
+  getBoxABIStorageKeys,
   getBoxABIStorageMap,
+  getBoxABIStorageMaps,
+  getGlobalABIStorageKey,
   getGlobalABIStorageKeys,
+  getGlobalABIStorageMap,
   getGlobalABIStorageMaps,
+  getLocalABIStorageKey,
   getLocalABIStorageKeys,
+  getLocalABIStorageMap,
   getLocalABIStorageMaps,
 } from './arc56-contract'
 export type {

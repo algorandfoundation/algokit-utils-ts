@@ -1,5 +1,5 @@
 import sha512 from 'js-sha512'
-import { ABIStructType, ABIType, parseTupleContent } from './abi-type'
+import { ABIAddressType, ABIStructType, ABIType, ABIUintType, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { AVMType, Arc56Contract, Arc56Method } from './arc56-contract'
@@ -312,10 +312,17 @@ export function isAVMType(type: unknown): type is AVMType {
   return typeof type === 'string' && (type === 'AVMString' || type === 'AVMBytes' || type === 'AVMUint64')
 }
 
-export function decodeAVMOrABIValue(type: AVMType | ABIType, bytes: Uint8Array): ABIValue {
-  return isAVMType(type) ? decodeAVMValue(type, bytes) : type.decode(bytes)
+export function getABIDecodedValue(type: AVMType | ABIType | ABIReferenceType, bytes: Uint8Array): ABIValue {
+  if (type === ABIReferenceType.Asset || type === ABIReferenceType.Application) {
+    return new ABIUintType(64).decode(bytes)
+  } else if (type === ABIReferenceType.Account) {
+    return new ABIAddressType().decode(bytes)
+  } else if (isAVMType(type)) {
+    return decodeAVMValue(type, bytes)
+  }
+  return type.decode(bytes)
 }
 
-export function encodeAVMOrABIValue(type: AVMType | ABIType, value: ABIValue): Uint8Array {
+export function getABIEncodedValue(type: AVMType | ABIType, value: ABIValue): Uint8Array {
   return isAVMType(type) ? encodeAVMValue(type, value) : type.encode(value)
 }

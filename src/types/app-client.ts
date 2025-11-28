@@ -1,16 +1,17 @@
 import {
+  ABIDefaultValue,
   ABIStorageKey,
   ABIStorageMap,
   ABIType,
   ABIValue,
   Arc56Contract,
   ProgramSourceInfo,
-  argTypeIsAbiType,
   argTypeIsTransaction,
-  decodeAVMOrABIValue,
-  encodeAVMOrABIValue,
   findABIMethod,
+  getABIDecodedValue,
+  getABIEncodedValue,
   getBoxABIStorageKey,
+  getBoxABIStorageKeys,
   getBoxABIStorageMap,
   getGlobalABIStorageKeys,
   getGlobalABIStorageMaps,
@@ -433,7 +434,7 @@ export class AppClient {
   private _approvalSourceMap: ProgramSourceMap | undefined
   private _clearSourceMap: ProgramSourceMap | undefined
 
-  private _localStateMethods: (address: string | Address) => ReturnType<AppClient['getStateMethods']>
+  private _localStateMethods: (address: ReadableAddress) => ReturnType<AppClient['getStateMethods']>
   private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
   private _boxStateMethods: ReturnType<AppClient['getBoxMethods']>
 
@@ -473,7 +474,7 @@ export class AppClient {
 
     this._approvalSourceMap = params.approvalSourceMap
     this._clearSourceMap = params.clearSourceMap
-    this._localStateMethods = (address: string | Address) =>
+    this._localStateMethods = (address: ReadableAddress) =>
       this.getStateMethods(
         () => this.getLocalState(address),
         () => getLocalABIStorageKeys(this._appSpec),
@@ -1060,23 +1061,24 @@ export class AppClient {
   ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
     const m = findABIMethod(methodNameOrSignature, this._appSpec)
     return await Promise.all(
-      args?.map(async (a, i) => {
-        const arg = m.args[i]
-        if (!arg) {
+      args?.map(async (arg, i) => {
+        const methodArg = m.args[i]
+        if (!methodArg) {
           throw new Error(`Unexpected arg at position ${i}. ${m.name} only expects ${m.args.length} args`)
         }
-        if (a !== undefined) {
-          return a
+        if (argTypeIsTransaction(methodArg.type)) {
+          return arg
         }
-        const defaultValue = arg.defaultValue
-        // TODO: PD - the existing logic seems to only handle default value for ABI types
-        // Confirm that we don't need to do it for reference types
-        if (defaultValue && argTypeIsAbiType(arg.type)) {
+        if (arg !== undefined) {
+          return arg
+        }
+        const defaultValue = methodArg.defaultValue
+        if (defaultValue) {
           switch (defaultValue.source) {
             case 'literal': {
               const bytes = Buffer.from(defaultValue.data, 'base64')
-              const type = defaultValue.type ?? arg.type
-              return decodeAVMOrABIValue(type, bytes)
+              const value_type = defaultValue.type ?? methodArg.type
+              return getABIDecodedValue(value_type, bytes)
             }
             case 'method': {
               const method = this.getABIMethod(defaultValue.data)
@@ -1089,31 +1091,52 @@ export class AppClient {
               if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
-              // TODO: PD - confirm that we don't need to convert struct returned value to tuple anymore
               return result.return
             }
             case 'local':
-            case 'global': {
-              const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
-              const value = Object.values(state).find((s) => s.keyBase64 === defaultValue.data)
-              if (!value) {
-                throw new Error(
-                  `Preparing default value for argument ${arg.name ?? `arg${i + 1}`} resulted in the failure: The key '${defaultValue.data}' could not be found in ${defaultValue.source} storage`,
-                )
-              }
-              return 'valueRaw' in value ? decodeAVMOrABIValue(defaultValue.type ?? arg.type, value.valueRaw) : value.value
-            }
+            case 'global':
             case 'box': {
-              const value = await this.getBoxValue(Buffer.from(defaultValue.data, 'base64'))
-              return decodeAVMOrABIValue(defaultValue.type ?? arg.type, value)
+              return await this.getDefaultValueFromStorage(
+                { data: defaultValue.data, source: defaultValue.source },
+                methodArg.name ?? `arg${i + 1}`,
+                sender,
+              )
             }
           }
         }
-        if (!argTypeIsTransaction(arg.type)) {
-          throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
-        }
       }) ?? [],
     )
+  }
+
+  private async getDefaultValueFromStorage(defaultValue: ABIDefaultValue, argName: string, sender: ReadableAddress): Promise<ABIValue> {
+    const keys =
+      defaultValue.source === 'box'
+        ? getBoxABIStorageKeys(this.appSpec)
+        : defaultValue.source === 'global'
+          ? getGlobalABIStorageKeys(this.appSpec)
+          : getLocalABIStorageKeys(this.appSpec)
+
+    const key = Object.values(keys).find((s) => s.key === defaultValue.data)
+    if (!key) {
+      throw new Error(
+        `Unable to find default value for argument '${argName}': The storage key (base64: '${defaultValue.data}') is not defined in the contract's ${defaultValue.source} storage schema`,
+      )
+    }
+
+    if (defaultValue.source === 'box') {
+      const value = await this.getBoxValue(Buffer.from(defaultValue.data, 'base64'))
+      return getABIDecodedValue(key.valueType, value)
+    }
+
+    const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
+    const value = Object.values(state).find((s) => s.keyBase64 === defaultValue.data)
+    if (!value) {
+      throw new Error(
+        `Unable to find default value for argument '${argName}': No value exists in ${defaultValue.source} storage for key (base64: '${defaultValue.data}')`,
+      )
+    }
+
+    return 'valueRaw' in value ? getABIDecodedValue(key.valueType, value.valueRaw) : value.value
   }
 
   private getBareParamsMethods() {
@@ -1552,7 +1575,7 @@ export class AppClient {
       getValue: async (name: string) => {
         const metadata = getBoxABIStorageKey(that._appSpec, name)
         const value = await that.getBoxValue(Buffer.from(metadata.key, 'base64'))
-        return decodeAVMOrABIValue(metadata.valueType, value)
+        return getABIDecodedValue(metadata.valueType, value)
       },
       /**
        *
@@ -1565,10 +1588,10 @@ export class AppClient {
       getMapValue: async (mapName: string, key: Uint8Array | any) => {
         const metadata = getBoxABIStorageMap(that._appSpec, mapName)
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, encodeAVMOrABIValue(metadata.keyType, key)])
+        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(metadata.keyType, key)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = await that.getBoxValue(Buffer.from(base64Key, 'base64'))
-        return decodeAVMOrABIValue(metadata.valueType, value)
+        return getABIDecodedValue(metadata.valueType, value)
       },
 
       /**
@@ -1590,8 +1613,8 @@ export class AppClient {
               .filter((b) => binaryStartsWith(b.nameRaw, prefix))
               .map(async (b) => {
                 return [
-                  decodeAVMOrABIValue(metadata.keyType, b.nameRaw.slice(prefix.length)),
-                  decodeAVMOrABIValue(metadata.valueType, await that.getBoxValue(b.nameRaw)),
+                  getABIDecodedValue(metadata.keyType, b.nameRaw.slice(prefix.length)),
+                  getABIDecodedValue(metadata.valueType, await that.getBoxValue(b.nameRaw)),
                 ] as const
               }),
           ),
@@ -1635,7 +1658,7 @@ export class AppClient {
         const value = state.find((s) => s.keyBase64 === metadata.key)
 
         if (value && 'valueRaw' in value) {
-          return decodeAVMOrABIValue(metadata.valueType, value.valueRaw)
+          return getABIDecodedValue(metadata.valueType, value.valueRaw)
         }
 
         return value?.value
@@ -1654,12 +1677,12 @@ export class AppClient {
         const metadata = mapGetter()[mapName]
 
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, encodeAVMOrABIValue(metadata.keyType, key)])
+        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(metadata.keyType, key)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = state.find((s) => s.keyBase64 === base64Key)
 
         if (value && 'valueRaw' in value) {
-          return decodeAVMOrABIValue(metadata.valueType, value.valueRaw)
+          return getABIDecodedValue(metadata.valueType, value.valueRaw)
         }
 
         return value?.value
@@ -1683,8 +1706,8 @@ export class AppClient {
             .map((s) => {
               const key = s.keyRaw.slice(prefix.length)
               return [
-                decodeAVMOrABIValue(metadata.keyType, key),
-                'valueRaw' in s ? decodeAVMOrABIValue(metadata.valueType, s.valueRaw) : s.value,
+                getABIDecodedValue(metadata.keyType, key),
+                'valueRaw' in s ? getABIDecodedValue(metadata.valueType, s.valueRaw) : s.value,
               ] as const
             }),
         )
