@@ -14,7 +14,7 @@ export type PostWalletInitResponse = {
   walletHandleToken?: string
 }
 
-export const PostWalletInitResponseMeta: ObjectModelMetadata = {
+export const PostWalletInitResponseMeta: ObjectModelMetadata<PostWalletInitResponse> = {
   name: 'PostWalletInitResponse',
   kind: 'object',
   fields: [

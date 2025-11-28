@@ -21,7 +21,7 @@ export type PostMultisigExportResponse = {
   threshold?: number
 }
 
-export const PostMultisigExportResponseMeta: ObjectModelMetadata = {
+export const PostMultisigExportResponseMeta: ObjectModelMetadata<PostMultisigExportResponse> = {
   name: 'PostMultisigExportResponse',
   kind: 'object',
   fields: [

@@ -87,7 +87,7 @@ import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
 {% if descriptor.is_object %}
 {%   for f in descriptor.fields %}
 {%     if f.inline_object_schema %}
-const {{ f.inline_meta_name }}: ObjectModelMetadata = {{ inline_object_meta(f.inline_object_schema, f.inline_object_schema.get('required', []), f.inline_meta_name) }};
+const {{ f.inline_meta_name }}: ObjectModelMetadata<{{ modelName }}['{{ f.name }}']> = {{ inline_object_meta(f.inline_object_schema, f.inline_object_schema.get('required', []), f.inline_meta_name) }};
 
 {%     endif %}
 {%   endfor %}
@@ -104,7 +104,7 @@ export interface {{ modelName }} {
 export type {{ modelName }} = {{ schema | ts_type(schemas) }};
 {% endif %}
 
-export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata{% elif isArray %}ArrayModelMetadata{% else %}PrimitiveModelMetadata{% endif %} = {
+export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelName }}>{% elif isArray %}ArrayModelMetadata{% else %}PrimitiveModelMetadata{% endif %} = {
   name: '{{ modelName }}',
   kind: {% if isObject %}'object'{% elif isArray %}'array'{% else %}'primitive'{% endif %},
 {% if isObject %}

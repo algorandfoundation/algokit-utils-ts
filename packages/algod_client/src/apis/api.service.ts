@@ -93,7 +93,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{address}/applications/{application-id}',
       path: { address: address, 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -114,7 +114,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{address}/assets/{asset-id}',
       path: { address: address, 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -135,7 +135,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{address}',
       path: { address: address },
@@ -156,7 +156,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/box',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -177,7 +177,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -198,7 +198,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -219,7 +219,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -255,7 +255,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/hash',
       path: { round: typeof round === 'bigint' ? round.toString() : round },
@@ -276,7 +276,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/devmode/blocks/offset',
       path: {},
@@ -294,7 +294,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/txids',
       path: { round: typeof round === 'bigint' ? round.toString() : round },
@@ -315,7 +315,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/genesis',
       path: {},
@@ -375,7 +375,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/lightheader/proof',
       path: { round: typeof round === 'bigint' ? round.toString() : round },
@@ -451,7 +451,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/stateproofs/{round}',
       path: { round: typeof round === 'bigint' ? round.toString() : round },
@@ -469,7 +469,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/status',
       path: {},
@@ -487,7 +487,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/ledger/supply',
       path: {},
@@ -508,7 +508,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/ledger/sync',
       path: {},
@@ -551,7 +551,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/transactions/{txid}/proof',
       path: { round: typeof round === 'bigint' ? round.toString() : round, txid: txid },
@@ -572,7 +572,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/versions',
       path: {},
@@ -635,7 +635,7 @@ export class AlgodApi {
     const mediaType = 'application/msgpack'
     headers['Content-Type'] = mediaType
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v2/transactions',
       path: {},
@@ -722,7 +722,7 @@ export class AlgodApi {
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v2/teal/compile',
       path: {},
@@ -747,7 +747,7 @@ export class AlgodApi {
     const mediaType = 'application/msgpack'
     headers['Content-Type'] = mediaType
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v2/teal/disassemble',
       path: {},
@@ -773,7 +773,7 @@ export class AlgodApi {
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : undefined
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v2/teal/dryrun',
       path: {},
@@ -791,7 +791,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/transactions/params',
       path: {},
@@ -831,7 +831,7 @@ export class AlgodApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/status/wait-for-block-after/{round}',
       path: { round: typeof round === 'bigint' ? round.toString() : round },

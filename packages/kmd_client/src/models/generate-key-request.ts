@@ -12,7 +12,7 @@ export type GenerateKeyRequest = {
   walletHandleToken?: string
 }
 
-export const GenerateKeyRequestMeta: ObjectModelMetadata = {
+export const GenerateKeyRequestMeta: ObjectModelMetadata<GenerateKeyRequest> = {
   name: 'GenerateKeyRequest',
   kind: 'object',
   fields: [

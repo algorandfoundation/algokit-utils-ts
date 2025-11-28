@@ -42,7 +42,7 @@ export type AssetHolding = {
   optedOutAtRound?: bigint
 }
 
-export const AssetHoldingMeta: ObjectModelMetadata = {
+export const AssetHoldingMeta: ObjectModelMetadata<AssetHolding> = {
   name: 'AssetHolding',
   kind: 'object',
   fields: [

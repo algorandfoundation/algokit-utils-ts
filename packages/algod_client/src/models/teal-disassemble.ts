@@ -10,7 +10,7 @@ export type TealDisassemble = {
   result: string
 }
 
-export const TealDisassembleMeta: ObjectModelMetadata = {
+export const TealDisassembleMeta: ObjectModelMetadata<TealDisassemble> = {
   name: 'TealDisassemble',
   kind: 'object',
   fields: [

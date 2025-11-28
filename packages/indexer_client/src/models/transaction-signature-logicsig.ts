@@ -32,7 +32,7 @@ export type TransactionSignatureLogicsig = {
   signature?: Uint8Array
 }
 
-export const TransactionSignatureLogicsigMeta: ObjectModelMetadata = {
+export const TransactionSignatureLogicsigMeta: ObjectModelMetadata<TransactionSignatureLogicsig> = {
   name: 'TransactionSignatureLogicsig',
   kind: 'object',
   fields: [

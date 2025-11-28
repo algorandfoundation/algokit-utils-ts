@@ -10,7 +10,7 @@ export type ListMultisigRequest = {
   walletHandleToken?: string
 }
 
-export const ListMultisigRequestMeta: ObjectModelMetadata = {
+export const ListMultisigRequestMeta: ObjectModelMetadata<ListMultisigRequest> = {
   name: 'ListMultisigRequest',
   kind: 'object',
   fields: [

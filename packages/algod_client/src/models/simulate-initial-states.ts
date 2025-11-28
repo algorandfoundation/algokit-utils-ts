@@ -16,7 +16,7 @@ export type SimulateInitialStates = {
   appInitialStates?: ApplicationInitialStates[]
 }
 
-export const SimulateInitialStatesMeta: ObjectModelMetadata = {
+export const SimulateInitialStatesMeta: ObjectModelMetadata<SimulateInitialStates> = {
   name: 'SimulateInitialStates',
   kind: 'object',
   fields: [

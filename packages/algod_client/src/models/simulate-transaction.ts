@@ -34,7 +34,7 @@ export type SimulateTransaction = {
   initialStates?: SimulateInitialStates
 }
 
-export const SimulateTransactionMeta: ObjectModelMetadata = {
+export const SimulateTransactionMeta: ObjectModelMetadata<SimulateTransaction> = {
   name: 'SimulateTransaction',
   kind: 'object',
   fields: [

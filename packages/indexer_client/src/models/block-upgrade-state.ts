@@ -35,7 +35,7 @@ export type BlockUpgradeState = {
   nextProtocolVoteBefore?: bigint
 }
 
-export const BlockUpgradeStateMeta: ObjectModelMetadata = {
+export const BlockUpgradeStateMeta: ObjectModelMetadata<BlockUpgradeState> = {
   name: 'BlockUpgradeState',
   kind: 'object',
   fields: [

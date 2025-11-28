@@ -15,7 +15,7 @@ export type PostKeyListResponse = {
   message?: string
 }
 
-export const PostKeyListResponseMeta: ObjectModelMetadata = {
+export const PostKeyListResponseMeta: ObjectModelMetadata<PostKeyListResponse> = {
   name: 'PostKeyListResponse',
   kind: 'object',
   fields: [

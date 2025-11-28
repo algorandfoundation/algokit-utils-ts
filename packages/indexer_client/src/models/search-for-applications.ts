@@ -22,7 +22,7 @@ export type SearchForApplications = {
   nextToken?: string
 }
 
-export const SearchForApplicationsMeta: ObjectModelMetadata = {
+export const SearchForApplicationsMeta: ObjectModelMetadata<SearchForApplications> = {
   name: 'SearchForApplications',
   kind: 'object',
   fields: [

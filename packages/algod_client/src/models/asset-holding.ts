@@ -27,7 +27,7 @@ export type AssetHolding = {
   isFrozen: boolean
 }
 
-export const AssetHoldingMeta: ObjectModelMetadata = {
+export const AssetHoldingMeta: ObjectModelMetadata<AssetHolding> = {
   name: 'AssetHolding',
   kind: 'object',
   fields: [

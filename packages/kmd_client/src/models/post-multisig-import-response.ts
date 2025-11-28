@@ -14,7 +14,7 @@ export type PostMultisigImportResponse = {
   message?: string
 }
 
-export const PostMultisigImportResponseMeta: ObjectModelMetadata = {
+export const PostMultisigImportResponseMeta: ObjectModelMetadata<PostMultisigImportResponse> = {
   name: 'PostMultisigImportResponse',
   kind: 'object',
   fields: [

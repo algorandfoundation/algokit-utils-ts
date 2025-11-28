@@ -19,7 +19,7 @@ export type BoxReference = {
   name: Uint8Array
 }
 
-export const BoxReferenceMeta: ObjectModelMetadata = {
+export const BoxReferenceMeta: ObjectModelMetadata<BoxReference> = {
   name: 'BoxReference',
   kind: 'object',
   fields: [

@@ -13,6 +13,6 @@ export function decodeMsgpack(
   return msgpackDecode(buffer, { intMode: IntMode.AS_ENCODED, ...options }) as Map<number | bigint | Uint8Array, unknown>
 }
 
-export function encodeMsgpack(data: Record<string, unknown>): Uint8Array {
+export function encodeMsgpack(data: unknown): Uint8Array {
   return new Uint8Array(msgpackEncode(data, { sortKeys: true, ignoreUndefined: true }))
 }

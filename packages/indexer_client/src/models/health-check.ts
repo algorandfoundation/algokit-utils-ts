@@ -24,7 +24,7 @@ export type HealthCheck = {
   errors?: string[]
 }
 
-export const HealthCheckMeta: ObjectModelMetadata = {
+export const HealthCheckMeta: ObjectModelMetadata<HealthCheck> = {
   name: 'HealthCheck',
   kind: 'object',
   fields: [

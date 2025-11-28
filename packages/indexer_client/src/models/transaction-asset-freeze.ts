@@ -28,7 +28,7 @@ export type TransactionAssetFreeze = {
   newFreezeStatus: boolean
 }
 
-export const TransactionAssetFreezeMeta: ObjectModelMetadata = {
+export const TransactionAssetFreezeMeta: ObjectModelMetadata<TransactionAssetFreeze> = {
   name: 'TransactionAssetFreeze',
   kind: 'object',
   fields: [

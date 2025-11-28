@@ -18,7 +18,7 @@ export type ApplicationStateSchema = {
   numByteSlice: number
 }
 
-export const ApplicationStateSchemaMeta: ObjectModelMetadata = {
+export const ApplicationStateSchemaMeta: ObjectModelMetadata<ApplicationStateSchema> = {
   name: 'ApplicationStateSchema',
   kind: 'object',
   fields: [

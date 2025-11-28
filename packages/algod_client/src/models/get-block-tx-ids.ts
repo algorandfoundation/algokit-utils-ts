@@ -10,7 +10,7 @@ export type GetBlockTxIds = {
   blockTxIds: string[]
 }
 
-export const GetBlockTxIdsMeta: ObjectModelMetadata = {
+export const GetBlockTxIdsMeta: ObjectModelMetadata<GetBlockTxIds> = {
   name: 'GetBlockTxIds',
   kind: 'object',
   fields: [

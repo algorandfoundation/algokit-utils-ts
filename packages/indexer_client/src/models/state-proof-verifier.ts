@@ -16,7 +16,7 @@ export type StateProofVerifier = {
   keyLifetime?: bigint
 }
 
-export const StateProofVerifierMeta: ObjectModelMetadata = {
+export const StateProofVerifierMeta: ObjectModelMetadata<StateProofVerifier> = {
   name: 'StateProofVerifier',
   kind: 'object',
   fields: [

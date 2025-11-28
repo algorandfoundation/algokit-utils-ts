@@ -32,7 +32,7 @@ export type TransactionPayment = {
   receiver: string
 }
 
-export const TransactionPaymentMeta: ObjectModelMetadata = {
+export const TransactionPaymentMeta: ObjectModelMetadata<TransactionPayment> = {
   name: 'TransactionPayment',
   kind: 'object',
   fields: [

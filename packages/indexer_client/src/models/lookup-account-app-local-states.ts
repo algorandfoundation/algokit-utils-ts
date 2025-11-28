@@ -22,7 +22,7 @@ export type LookupAccountAppLocalStates = {
   nextToken?: string
 }
 
-export const LookupAccountAppLocalStatesMeta: ObjectModelMetadata = {
+export const LookupAccountAppLocalStatesMeta: ObjectModelMetadata<LookupAccountAppLocalStates> = {
   name: 'LookupAccountAppLocalStates',
   kind: 'object',
   fields: [

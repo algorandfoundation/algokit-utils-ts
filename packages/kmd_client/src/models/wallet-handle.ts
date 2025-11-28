@@ -15,7 +15,7 @@ export type WalletHandle = {
   wallet?: Wallet
 }
 
-export const WalletHandleMeta: ObjectModelMetadata = {
+export const WalletHandleMeta: ObjectModelMetadata<WalletHandle> = {
   name: 'WalletHandle',
   kind: 'object',
   fields: [

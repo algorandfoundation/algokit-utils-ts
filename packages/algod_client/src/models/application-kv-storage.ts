@@ -22,7 +22,7 @@ export type ApplicationKvStorage = {
   account?: string
 }
 
-export const ApplicationKvStorageMeta: ObjectModelMetadata = {
+export const ApplicationKvStorageMeta: ObjectModelMetadata<ApplicationKvStorage> = {
   name: 'ApplicationKvStorage',
   kind: 'object',
   fields: [

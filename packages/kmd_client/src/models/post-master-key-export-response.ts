@@ -17,7 +17,7 @@ export type PostMasterKeyExportResponse = {
   message?: string
 }
 
-export const PostMasterKeyExportResponseMeta: ObjectModelMetadata = {
+export const PostMasterKeyExportResponseMeta: ObjectModelMetadata<PostMasterKeyExportResponse> = {
   name: 'PostMasterKeyExportResponse',
   kind: 'object',
   fields: [

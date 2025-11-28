@@ -18,7 +18,7 @@ export type ImportMultisigRequest = {
   walletHandleToken?: string
 }
 
-export const ImportMultisigRequestMeta: ObjectModelMetadata = {
+export const ImportMultisigRequestMeta: ObjectModelMetadata<ImportMultisigRequest> = {
   name: 'ImportMultisigRequest',
   kind: 'object',
   fields: [

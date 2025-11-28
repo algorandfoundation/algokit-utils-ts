@@ -13,7 +13,7 @@ export type BoxDescriptor = {
   name: Uint8Array
 }
 
-export const BoxDescriptorMeta: ObjectModelMetadata = {
+export const BoxDescriptorMeta: ObjectModelMetadata<BoxDescriptor> = {
   name: 'BoxDescriptor',
   kind: 'object',
   fields: [

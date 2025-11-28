@@ -22,7 +22,7 @@ export type SearchForAccounts = {
   nextToken?: string
 }
 
-export const SearchForAccountsMeta: ObjectModelMetadata = {
+export const SearchForAccountsMeta: ObjectModelMetadata<SearchForAccounts> = {
   name: 'SearchForAccounts',
   kind: 'object',
   fields: [

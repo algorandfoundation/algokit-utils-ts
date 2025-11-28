@@ -16,7 +16,7 @@ export type MultisigSubsig = {
   sig?: Signature
 }
 
-export const MultisigSubsigMeta: ObjectModelMetadata = {
+export const MultisigSubsigMeta: ObjectModelMetadata<MultisigSubsig> = {
   name: 'MultisigSubsig',
   kind: 'object',
   fields: [

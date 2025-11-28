@@ -27,7 +27,7 @@ export type SourceMap = {
   mappings: string
 }
 
-export const SourceMapMeta: ObjectModelMetadata = {
+export const SourceMapMeta: ObjectModelMetadata<SourceMap> = {
   name: 'SourceMap',
   kind: 'object',
   fields: [

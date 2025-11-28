@@ -20,10 +20,9 @@ export class PrimitiveModelCodec<T = unknown, TWire = T> extends Codec<T, TWire>
     return metadata.codec.defaultValue() as T
   }
 
-  protected isDefaultValue(value: T): boolean {
+  public isDefaultValue(value: T): boolean {
     const metadata = this.getMetadata()
-    const codec = metadata.codec as unknown as { isDefaultValue(value: unknown): boolean }
-    return codec.isDefaultValue(value)
+    return metadata.codec.isDefaultValue(value)
   }
 
   protected toEncoded(value: T, format: EncodingFormat): TWire {

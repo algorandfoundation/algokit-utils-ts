@@ -25,7 +25,7 @@ export type BlockUpgradeVote = {
   upgradePropose?: string
 }
 
-export const BlockUpgradeVoteMeta: ObjectModelMetadata = {
+export const BlockUpgradeVoteMeta: ObjectModelMetadata<BlockUpgradeVote> = {
   name: 'BlockUpgradeVote',
   kind: 'object',
   fields: [

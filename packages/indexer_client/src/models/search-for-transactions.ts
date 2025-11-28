@@ -21,7 +21,7 @@ export type SearchForTransactions = {
   transactions: Transaction[]
 }
 
-export const SearchForTransactionsMeta: ObjectModelMetadata = {
+export const SearchForTransactionsMeta: ObjectModelMetadata<SearchForTransactions> = {
   name: 'SearchForTransactions',
   kind: 'object',
   fields: [

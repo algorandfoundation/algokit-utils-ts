@@ -14,7 +14,7 @@ export type PostKeyImportResponse = {
   message?: string
 }
 
-export const PostKeyImportResponseMeta: ObjectModelMetadata = {
+export const PostKeyImportResponseMeta: ObjectModelMetadata<PostKeyImportResponse> = {
   name: 'PostKeyImportResponse',
   kind: 'object',
   fields: [

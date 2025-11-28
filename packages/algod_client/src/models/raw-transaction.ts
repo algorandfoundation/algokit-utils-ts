@@ -10,7 +10,7 @@ export type RawTransaction = {
   txId: string
 }
 
-export const RawTransactionMeta: ObjectModelMetadata = {
+export const RawTransactionMeta: ObjectModelMetadata<RawTransaction> = {
   name: 'RawTransaction',
   kind: 'object',
   fields: [

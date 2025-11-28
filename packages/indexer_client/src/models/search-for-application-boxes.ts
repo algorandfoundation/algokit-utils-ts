@@ -21,7 +21,7 @@ export type SearchForApplicationBoxes = {
   nextToken?: string
 }
 
-export const SearchForApplicationBoxesMeta: ObjectModelMetadata = {
+export const SearchForApplicationBoxesMeta: ObjectModelMetadata<SearchForApplicationBoxes> = {
   name: 'SearchForApplicationBoxes',
   kind: 'object',
   fields: [

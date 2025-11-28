@@ -15,7 +15,7 @@ export type LookupAccountById = {
   currentRound: bigint
 }
 
-export const LookupAccountByIdMeta: ObjectModelMetadata = {
+export const LookupAccountByIdMeta: ObjectModelMetadata<LookupAccountById> = {
   name: 'LookupAccountById',
   kind: 'object',
   fields: [

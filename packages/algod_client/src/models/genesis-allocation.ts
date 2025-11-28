@@ -6,7 +6,7 @@ import {
   ObjectModelCodec,
 } from '@algorandfoundation/algokit-common'
 
-const GenesisAllocationStateMeta: ObjectModelMetadata = {
+const GenesisAllocationStateMeta: ObjectModelMetadata<GenesisAllocation['state']> = {
   name: 'GenesisAllocationStateMeta',
   kind: 'object',
   fields: [
@@ -76,7 +76,7 @@ export type GenesisAllocation = {
   }
 }
 
-export const GenesisAllocationMeta: ObjectModelMetadata = {
+export const GenesisAllocationMeta: ObjectModelMetadata<GenesisAllocation> = {
   name: 'GenesisAllocation',
   kind: 'object',
   fields: [

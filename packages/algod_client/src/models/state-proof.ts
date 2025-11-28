@@ -18,7 +18,7 @@ export type StateProof = {
   stateProof: Uint8Array
 }
 
-export const StateProofMeta: ObjectModelMetadata = {
+export const StateProofMeta: ObjectModelMetadata<StateProof> = {
   name: 'StateProof',
   kind: 'object',
   fields: [

@@ -19,7 +19,7 @@ export type TealCompile = {
   sourcemap?: SourceMap
 }
 
-export const TealCompileMeta: ObjectModelMetadata = {
+export const TealCompileMeta: ObjectModelMetadata<TealCompile> = {
   name: 'TealCompile',
   kind: 'object',
   fields: [

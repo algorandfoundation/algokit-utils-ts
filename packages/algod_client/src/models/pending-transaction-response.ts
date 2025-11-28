@@ -85,7 +85,7 @@ export type PendingTransactionResponse = {
   txn: SignedTransaction
 }
 
-export const PendingTransactionResponseMeta: ObjectModelMetadata = {
+export const PendingTransactionResponseMeta: ObjectModelMetadata<PendingTransactionResponse> = {
   name: 'PendingTransactionResponse',
   kind: 'object',
   fields: [

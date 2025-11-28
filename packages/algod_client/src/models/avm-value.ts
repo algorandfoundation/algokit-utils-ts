@@ -25,7 +25,7 @@ export type AvmValue = {
   uint?: bigint
 }
 
-export const AvmValueMeta: ObjectModelMetadata = {
+export const AvmValueMeta: ObjectModelMetadata<AvmValue> = {
   name: 'AvmValue',
   kind: 'object',
   fields: [

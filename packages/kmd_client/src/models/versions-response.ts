@@ -11,7 +11,7 @@ export type VersionsResponse = {
   versions?: string[]
 }
 
-export const VersionsResponseMeta: ObjectModelMetadata = {
+export const VersionsResponseMeta: ObjectModelMetadata<VersionsResponse> = {
   name: 'VersionsResponse',
   kind: 'object',
   fields: [

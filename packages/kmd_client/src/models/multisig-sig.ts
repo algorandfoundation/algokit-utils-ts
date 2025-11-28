@@ -16,7 +16,7 @@ export type MultisigSig = {
   version?: number
 }
 
-export const MultisigSigMeta: ObjectModelMetadata = {
+export const MultisigSigMeta: ObjectModelMetadata<MultisigSig> = {
   name: 'MultisigSig',
   kind: 'object',
   fields: [

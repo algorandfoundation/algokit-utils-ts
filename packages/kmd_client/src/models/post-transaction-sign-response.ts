@@ -15,7 +15,7 @@ export type PostTransactionSignResponse = {
   signedTransaction?: Uint8Array
 }
 
-export const PostTransactionSignResponseMeta: ObjectModelMetadata = {
+export const PostTransactionSignResponseMeta: ObjectModelMetadata<PostTransactionSignResponse> = {
   name: 'PostTransactionSignResponse',
   kind: 'object',
   fields: [

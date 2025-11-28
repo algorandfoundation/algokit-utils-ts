@@ -18,7 +18,7 @@ export type DryrunSource = {
   appId: bigint
 }
 
-export const DryrunSourceMeta: ObjectModelMetadata = {
+export const DryrunSourceMeta: ObjectModelMetadata<DryrunSource> = {
   name: 'DryrunSource',
   kind: 'object',
   fields: [

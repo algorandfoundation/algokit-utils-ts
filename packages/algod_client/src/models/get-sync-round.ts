@@ -10,7 +10,7 @@ export type GetSyncRound = {
   round: bigint
 }
 
-export const GetSyncRoundMeta: ObjectModelMetadata = {
+export const GetSyncRoundMeta: ObjectModelMetadata<GetSyncRound> = {
   name: 'GetSyncRound',
   kind: 'object',
   fields: [

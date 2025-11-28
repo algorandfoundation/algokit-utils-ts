@@ -141,7 +141,7 @@ export type GetStatus = {
   upgradeVoteRounds?: number
 }
 
-export const GetStatusMeta: ObjectModelMetadata = {
+export const GetStatusMeta: ObjectModelMetadata<GetStatus> = {
   name: 'GetStatus',
   kind: 'object',
   fields: [

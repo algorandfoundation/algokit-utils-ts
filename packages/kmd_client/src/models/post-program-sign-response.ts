@@ -15,7 +15,7 @@ export type PostProgramSignResponse = {
   sig?: Uint8Array
 }
 
-export const PostProgramSignResponseMeta: ObjectModelMetadata = {
+export const PostProgramSignResponseMeta: ObjectModelMetadata<PostProgramSignResponse> = {
   name: 'PostProgramSignResponse',
   kind: 'object',
   fields: [

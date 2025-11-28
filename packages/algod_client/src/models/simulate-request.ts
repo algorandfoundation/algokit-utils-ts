@@ -52,7 +52,7 @@ export type SimulateRequest = {
   fixSigners?: boolean
 }
 
-export const SimulateRequestMeta: ObjectModelMetadata = {
+export const SimulateRequestMeta: ObjectModelMetadata<SimulateRequest> = {
   name: 'SimulateRequest',
   kind: 'object',
   fields: [

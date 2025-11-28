@@ -34,7 +34,7 @@ export type ApplicationStateOperation = {
   account?: string
 }
 
-export const ApplicationStateOperationMeta: ObjectModelMetadata = {
+export const ApplicationStateOperationMeta: ObjectModelMetadata<ApplicationStateOperation> = {
   name: 'ApplicationStateOperation',
   kind: 'object',
   fields: [

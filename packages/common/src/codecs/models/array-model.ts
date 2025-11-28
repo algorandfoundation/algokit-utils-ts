@@ -19,7 +19,7 @@ export class ArrayModelCodec<T extends unknown[] = unknown[]> extends Codec<T, u
     return [] as unknown as T
   }
 
-  protected isDefaultValue(value: T): boolean {
+  public isDefaultValue(value: T): boolean {
     return value.length === 0
   }
 

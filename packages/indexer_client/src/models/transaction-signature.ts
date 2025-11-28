@@ -21,7 +21,7 @@ export type TransactionSignature = {
   sig?: Uint8Array
 }
 
-export const TransactionSignatureMeta: ObjectModelMetadata = {
+export const TransactionSignatureMeta: ObjectModelMetadata<TransactionSignature> = {
   name: 'TransactionSignature',
   kind: 'object',
   fields: [

@@ -24,7 +24,7 @@ export type LightBlockHeaderProof = {
   proof: Uint8Array
 }
 
-export const LightBlockHeaderProofMeta: ObjectModelMetadata = {
+export const LightBlockHeaderProofMeta: ObjectModelMetadata<LightBlockHeaderProof> = {
   name: 'LightBlockHeaderProof',
   kind: 'object',
   fields: [

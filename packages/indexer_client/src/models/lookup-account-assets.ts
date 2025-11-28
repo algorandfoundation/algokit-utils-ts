@@ -21,7 +21,7 @@ export type LookupAccountAssets = {
   assets: AssetHolding[]
 }
 
-export const LookupAccountAssetsMeta: ObjectModelMetadata = {
+export const LookupAccountAssetsMeta: ObjectModelMetadata<LookupAccountAssets> = {
   name: 'LookupAccountAssets',
   kind: 'object',
   fields: [

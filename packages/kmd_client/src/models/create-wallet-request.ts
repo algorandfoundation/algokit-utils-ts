@@ -16,7 +16,7 @@ export type CreateWalletRequest = {
   walletPassword?: string
 }
 
-export const CreateWalletRequestMeta: ObjectModelMetadata = {
+export const CreateWalletRequestMeta: ObjectModelMetadata<CreateWalletRequest> = {
   name: 'CreateWalletRequest',
   kind: 'object',
   fields: [

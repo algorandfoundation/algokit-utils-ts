@@ -24,7 +24,7 @@ export type TransactionAssetConfig = {
   params?: AssetParams
 }
 
-export const TransactionAssetConfigMeta: ObjectModelMetadata = {
+export const TransactionAssetConfigMeta: ObjectModelMetadata<TransactionAssetConfig> = {
   name: 'TransactionAssetConfig',
   kind: 'object',
   fields: [

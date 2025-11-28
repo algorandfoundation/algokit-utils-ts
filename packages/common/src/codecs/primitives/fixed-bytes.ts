@@ -27,7 +27,7 @@ export class FixedBytesCodec extends Codec<Uint8Array, WireStringOrBytes> {
     throw new Error(`Cannot decode fixed ${this.length} bytes from ${typeof value}`)
   }
 
-  protected isDefaultValue(value: Uint8Array): boolean {
+  public isDefaultValue(value: Uint8Array): boolean {
     if (value.byteLength !== this.length) return false
     return value.every((byte) => byte === 0)
   }

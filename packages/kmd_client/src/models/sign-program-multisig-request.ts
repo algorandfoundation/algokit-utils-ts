@@ -24,7 +24,7 @@ export type SignProgramMultisigRequest = {
   walletPassword?: string
 }
 
-export const SignProgramMultisigRequestMeta: ObjectModelMetadata = {
+export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMultisigRequest> = {
   name: 'SignProgramMultisigRequest',
   kind: 'object',
   fields: [

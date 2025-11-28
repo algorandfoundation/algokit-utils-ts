@@ -21,7 +21,7 @@ export type Genesis = {
   timestamp?: number
 }
 
-export const GenesisMeta: ObjectModelMetadata = {
+export const GenesisMeta: ObjectModelMetadata<Genesis> = {
   name: 'Genesis',
   kind: 'object',
   fields: [

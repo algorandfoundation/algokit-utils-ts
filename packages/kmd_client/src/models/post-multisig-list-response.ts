@@ -15,7 +15,7 @@ export type PostMultisigListResponse = {
   message?: string
 }
 
-export const PostMultisigListResponseMeta: ObjectModelMetadata = {
+export const PostMultisigListResponseMeta: ObjectModelMetadata<PostMultisigListResponse> = {
   name: 'PostMultisigListResponse',
   kind: 'object',
   fields: [

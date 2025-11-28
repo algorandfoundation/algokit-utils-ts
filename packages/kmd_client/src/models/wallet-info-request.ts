@@ -10,7 +10,7 @@ export type WalletInfoRequest = {
   walletHandleToken?: string
 }
 
-export const WalletInfoRequestMeta: ObjectModelMetadata = {
+export const WalletInfoRequestMeta: ObjectModelMetadata<WalletInfoRequest> = {
   name: 'WalletInfoRequest',
   kind: 'object',
   fields: [

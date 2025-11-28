@@ -22,7 +22,7 @@ export type SearchForAssets = {
   nextToken?: string
 }
 
-export const SearchForAssetsMeta: ObjectModelMetadata = {
+export const SearchForAssetsMeta: ObjectModelMetadata<SearchForAssets> = {
   name: 'SearchForAssets',
   kind: 'object',
   fields: [

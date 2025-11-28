@@ -24,7 +24,7 @@ export type Box = {
   value: Uint8Array
 }
 
-export const BoxMeta: ObjectModelMetadata = {
+export const BoxMeta: ObjectModelMetadata<Box> = {
   name: 'Box',
   kind: 'object',
   fields: [

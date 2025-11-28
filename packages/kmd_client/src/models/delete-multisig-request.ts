@@ -12,7 +12,7 @@ export type DeleteMultisigRequest = {
   walletPassword?: string
 }
 
-export const DeleteMultisigRequestMeta: ObjectModelMetadata = {
+export const DeleteMultisigRequestMeta: ObjectModelMetadata<DeleteMultisigRequest> = {
   name: 'DeleteMultisigRequest',
   kind: 'object',
   fields: [

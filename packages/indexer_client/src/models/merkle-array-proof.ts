@@ -20,7 +20,7 @@ export type MerkleArrayProof = {
   treeDepth?: number
 }
 
-export const MerkleArrayProofMeta: ObjectModelMetadata = {
+export const MerkleArrayProofMeta: ObjectModelMetadata<MerkleArrayProof> = {
   name: 'MerkleArrayProof',
   kind: 'object',
   fields: [

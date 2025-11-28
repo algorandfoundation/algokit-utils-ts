@@ -141,7 +141,7 @@ export type WaitForBlock = {
   upgradeVoteRounds?: number
 }
 
-export const WaitForBlockMeta: ObjectModelMetadata = {
+export const WaitForBlockMeta: ObjectModelMetadata<WaitForBlock> = {
   name: 'WaitForBlock',
   kind: 'object',
   fields: [

@@ -15,7 +15,7 @@ export type PostMultisigTransactionSignResponse = {
   multisig?: Uint8Array
 }
 
-export const PostMultisigTransactionSignResponseMeta: ObjectModelMetadata = {
+export const PostMultisigTransactionSignResponseMeta: ObjectModelMetadata<PostMultisigTransactionSignResponse> = {
   name: 'PostMultisigTransactionSignResponse',
   kind: 'object',
   fields: [

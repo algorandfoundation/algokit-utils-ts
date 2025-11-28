@@ -12,7 +12,7 @@ export type ImportKeyRequest = {
   walletHandleToken?: string
 }
 
-export const ImportKeyRequestMeta: ObjectModelMetadata = {
+export const ImportKeyRequestMeta: ObjectModelMetadata<ImportKeyRequest> = {
   name: 'ImportKeyRequest',
   kind: 'object',
   fields: [

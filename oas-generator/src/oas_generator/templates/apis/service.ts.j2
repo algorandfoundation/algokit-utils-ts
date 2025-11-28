@@ -92,7 +92,13 @@ export class {{ service_class_name }} {
     {% if op.responseTsType == 'void' %}
     await this.httpRequest.request<void>({
     {% else %}
-    const payload = await this.httpRequest.request<{{'Uint8Array' if body_format == 'msgpack' else 'string'}}>({
+      {% if body_format == 'msgpack' %}
+    const payload = await this.httpRequest.request<Uint8Array>({
+      {% elif meta_expr(op.responseTsType) == 'undefined' %}
+    const payload = await this.httpRequest.request<{{ op.responseTsType }}>({
+      {% else %}
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
+      {% endif %}
     {% endif %}
       method: '{{ op.method }}',
       url: '{{ op.path }}',

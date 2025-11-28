@@ -11,7 +11,7 @@ export type ExportMasterKeyRequest = {
   walletPassword?: string
 }
 
-export const ExportMasterKeyRequestMeta: ObjectModelMetadata = {
+export const ExportMasterKeyRequestMeta: ObjectModelMetadata<ExportMasterKeyRequest> = {
   name: 'ExportMasterKeyRequest',
   kind: 'object',
   fields: [

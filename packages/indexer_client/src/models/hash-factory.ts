@@ -10,7 +10,7 @@ export type HashFactory = {
   hashType?: number
 }
 
-export const HashFactoryMeta: ObjectModelMetadata = {
+export const HashFactoryMeta: ObjectModelMetadata<HashFactory> = {
   name: 'HashFactory',
   kind: 'object',
   fields: [

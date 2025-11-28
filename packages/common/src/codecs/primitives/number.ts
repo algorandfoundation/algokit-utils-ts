@@ -5,7 +5,7 @@ class NumberCodec extends Codec<number> {
     return 0
   }
 
-  protected override isDefaultValue(value: number): boolean {
+  public isDefaultValue(value: number): boolean {
     return value === this.defaultValue() || Number.isNaN(value)
   }
 }

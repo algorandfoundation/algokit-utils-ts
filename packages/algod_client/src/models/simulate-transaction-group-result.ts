@@ -42,7 +42,7 @@ export type SimulateTransactionGroupResult = {
   unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
 }
 
-export const SimulateTransactionGroupResultMeta: ObjectModelMetadata = {
+export const SimulateTransactionGroupResultMeta: ObjectModelMetadata<SimulateTransactionGroupResult> = {
   name: 'SimulateTransactionGroupResult',
   kind: 'object',
   fields: [

@@ -1,4 +1,4 @@
-import { ModelSerializer, ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
+import { ObjectModelCodec, ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
 import { TransactionMeta } from '@algorandfoundation/algokit-transact'
 import { assert, describe, expect, test } from 'vitest'
 import { OnApplicationComplete } from '../src/transactions/app-call'
@@ -626,10 +626,12 @@ describe('App Call', () => {
       // This code is here to demonstrate the problem.
       // When encoding, the cross product references are added first,
       // so modify the access list encoding data to simulate how it may be encoded on chain.
-      const txnDto = ModelSerializer.encode(txn, TransactionMeta, 'msgpack')
+      const codec = new ObjectModelCodec(TransactionMeta)
+      const txnDto = codec.encodeOptional(txn, 'msgpack') as Record<string, unknown>
+
       const accessList = txnDto.al! as ResourceHoldingReference[]
       // Index 2 is actually the holding reference.
-      // Manually adjust the indexes, because we'll be re-ording the list.
+      // Manually adjust the indexes, because we'll be re-ordering the list.
       accessList[2]!.h!.d = 2
       accessList[2]!.h!.s = 3
       const updateAccessList: ResourceHoldingReference[] = []
@@ -638,7 +640,8 @@ describe('App Call', () => {
       updateAccessList.push(accessList[1])
       txnDto.al = updateAccessList
 
-      const decodedTxn = ModelSerializer.decode<Transaction>(txnDto, TransactionMeta, 'msgpack')
+      const decodedTxn = codec.decode(txnDto, 'msgpack')
+
       assert.deepStrictEqual(decodedTxn?.appCall!.accessReferences, txn?.appCall!.accessReferences)
     })
 
@@ -669,7 +672,7 @@ describe('App Call', () => {
         },
       }
 
-      const txnDto = ModelSerializer.encode(txn, TransactionMeta, 'msgpack')
+      const txnDto = new ObjectModelCodec(TransactionMeta).encodeOptional(txn, 'msgpack') as Record<string, unknown>
       assert.isUndefined(txnDto.al)
     })
   })

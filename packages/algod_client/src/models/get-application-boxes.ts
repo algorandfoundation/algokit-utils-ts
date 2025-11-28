@@ -10,7 +10,7 @@ export type GetApplicationBoxes = {
   boxes: BoxDescriptor[]
 }
 
-export const GetApplicationBoxesMeta: ObjectModelMetadata = {
+export const GetApplicationBoxesMeta: ObjectModelMetadata<GetApplicationBoxes> = {
   name: 'GetApplicationBoxes',
   kind: 'object',
   fields: [

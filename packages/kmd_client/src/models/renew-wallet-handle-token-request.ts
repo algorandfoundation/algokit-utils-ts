@@ -10,7 +10,7 @@ export type RenewWalletHandleTokenRequest = {
   walletHandleToken?: string
 }
 
-export const RenewWalletHandleTokenRequestMeta: ObjectModelMetadata = {
+export const RenewWalletHandleTokenRequestMeta: ObjectModelMetadata<RenewWalletHandleTokenRequest> = {
   name: 'RenewWalletHandleTokenRequest',
   kind: 'object',
   fields: [

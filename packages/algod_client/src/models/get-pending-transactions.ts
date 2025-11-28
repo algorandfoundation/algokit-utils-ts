@@ -22,7 +22,7 @@ export type GetPendingTransactions = {
   totalTransactions: number
 }
 
-export const GetPendingTransactionsMeta: ObjectModelMetadata = {
+export const GetPendingTransactionsMeta: ObjectModelMetadata<GetPendingTransactions> = {
   name: 'GetPendingTransactions',
   kind: 'object',
   fields: [

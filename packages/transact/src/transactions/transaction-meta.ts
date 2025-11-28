@@ -19,8 +19,27 @@ import {
   stringCodec,
 } from '@algorandfoundation/algokit-common'
 import { Buffer } from 'buffer'
-import { AccessReference, AppCallTransactionFields, BoxReference } from './app-call'
+import { AccessReference, AppCallTransactionFields, BoxReference, StateSchema } from './app-call'
 import { AssetConfigTransactionFields } from './asset-config'
+import { AssetFreezeTransactionFields } from './asset-freeze'
+import { AssetTransferTransactionFields } from './asset-transfer'
+import { HeartbeatProof, HeartbeatTransactionFields } from './heartbeat'
+import { KeyRegistrationTransactionFields } from './key-registration'
+import { PaymentTransactionFields } from './payment'
+import {
+  FalconSignatureStruct,
+  FalconVerifier,
+  HashFactory,
+  MerkleArrayProof,
+  MerkleSignatureVerifier,
+  Participant,
+  Reveal,
+  SigslotCommit,
+  StateProof,
+  StateProofMessage,
+  StateProofTransactionFields,
+} from './state-proof'
+import { Transaction } from './transaction'
 import { TransactionType } from './transaction-type'
 
 type WireBoxReference = {
@@ -117,13 +136,13 @@ class TransactionTypeCodec extends Codec<TransactionType, string> {
     }
   }
 
-  protected isDefaultValue(_value: TransactionType): boolean {
+  public isDefaultValue(_value: TransactionType): boolean {
     // Never omit the transaction type - it's always required
     return false
   }
 }
 
-const PaymentTransactionFieldsMeta: ObjectModelMetadata = {
+const PaymentTransactionFieldsMeta: ObjectModelMetadata<PaymentTransactionFields> = {
   name: 'PaymentTransactionFields',
   kind: 'object',
   fields: [
@@ -133,7 +152,7 @@ const PaymentTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-const AssetTransferTransactionFieldsMeta: ObjectModelMetadata = {
+const AssetTransferTransactionFieldsMeta: ObjectModelMetadata<AssetTransferTransactionFields> = {
   name: 'AssetTransferTransactionFields',
   kind: 'object',
   fields: [
@@ -145,7 +164,7 @@ const AssetTransferTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-const AssetFreezeTransactionFieldsMeta: ObjectModelMetadata = {
+const AssetFreezeTransactionFieldsMeta: ObjectModelMetadata<AssetFreezeTransactionFields> = {
   name: 'AssetFreezeTransactionFields',
   kind: 'object',
   fields: [
@@ -155,7 +174,7 @@ const AssetFreezeTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-const KeyRegistrationTransactionFieldsMeta: ObjectModelMetadata = {
+const KeyRegistrationTransactionFieldsMeta: ObjectModelMetadata<KeyRegistrationTransactionFields> = {
   name: 'KeyRegistrationTransactionFields',
   kind: 'object',
   fields: [
@@ -169,7 +188,7 @@ const KeyRegistrationTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-const AssetParamsMeta: ObjectModelMetadata = {
+const AssetParamsMeta: ObjectModelMetadata<Omit<AssetConfigTransactionFields, 'assetId'>> = {
   name: 'AssetParams',
   kind: 'object',
   fields: [
@@ -187,29 +206,36 @@ const AssetParamsMeta: ObjectModelMetadata = {
   ],
 }
 
-class TransactionDataCodec extends Codec<Record<string, unknown> | undefined, WireObject> {
-  private transactionDataCodec: ObjectModelCodec<Record<string, unknown>>
+class TransactionDataCodec<
+  T extends
+    | PaymentTransactionFields
+    | AssetTransferTransactionFields
+    | AssetFreezeTransactionFields
+    | KeyRegistrationTransactionFields
+    | StateProofTransactionFields,
+> extends Codec<T | undefined, WireObject> {
+  private transactionDataCodec: ObjectModelCodec<T>
 
   constructor(
     private readonly transactionType: TransactionType,
-    transactionTypeDataMetadata: ObjectModelMetadata,
+    transactionTypeDataMetadata: ObjectModelMetadata<T>,
   ) {
     super()
-    this.transactionDataCodec = new ObjectModelCodec<Record<string, unknown>>(transactionTypeDataMetadata)
+    this.transactionDataCodec = new ObjectModelCodec<T>(transactionTypeDataMetadata)
   }
 
-  public defaultValue(): Record<string, unknown> | undefined {
+  public defaultValue(): T | undefined {
     return undefined
   }
 
-  protected toEncoded(value: Record<string, unknown> | undefined, format: EncodingFormat): WireObject {
+  protected toEncoded(value: T | undefined, format: EncodingFormat): WireObject {
     if (!value) {
       throw new Error('Transaction data is missing')
     }
     return this.transactionDataCodec.encode(value, format)
   }
 
-  protected fromEncoded(value: WireObject, format: EncodingFormat): Record<string, unknown> | undefined {
+  protected fromEncoded(value: WireObject, format: EncodingFormat): T | undefined {
     const _type = getWireValue<WireStringOrBytes>(value, 'type')
     const type = _type instanceof Uint8Array ? Buffer.from(_type).toString('utf-8') : _type
     if (type !== this.transactionType.toString()) {
@@ -265,7 +291,7 @@ class AssetConfigDataCodec extends Codec<AssetConfigTransactionFields | undefine
     } satisfies AssetConfigTransactionFields
   }
 
-  protected isDefaultValue(value: AssetConfigTransactionFields | undefined): boolean {
+  public isDefaultValue(value: AssetConfigTransactionFields | undefined): boolean {
     return value === undefined
   }
 }
@@ -598,12 +624,12 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, WireO
     } satisfies AppCallTransactionFields
   }
 
-  protected isDefaultValue(value: AppCallTransactionFields | undefined): boolean {
+  public isDefaultValue(value: AppCallTransactionFields | undefined): boolean {
     return value === undefined
   }
 }
 
-const StateSchemaMeta: ObjectModelMetadata = {
+const StateSchemaMeta: ObjectModelMetadata<StateSchema> = {
   name: 'StateSchema',
   kind: 'object',
   fields: [
@@ -612,7 +638,7 @@ const StateSchemaMeta: ObjectModelMetadata = {
   ],
 }
 
-const AppCallTransactionFieldsMeta: ObjectModelMetadata = {
+const AppCallTransactionFieldsMeta: ObjectModelMetadata<AppCallTransactionFields> = {
   name: 'AppCallTransactionFields',
   kind: 'object',
   fields: [
@@ -641,13 +667,13 @@ const AppCallTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-const HashFactoryMeta: ObjectModelMetadata = {
+const HashFactoryMeta: ObjectModelMetadata<HashFactory> = {
   name: 'HashFactory',
   kind: 'object',
   fields: [{ name: 'hashType', wireKey: 't', optional: false, codec: numberCodec }],
 }
 
-const MerkleArrayProofMeta: ObjectModelMetadata = {
+const MerkleArrayProofMeta: ObjectModelMetadata<MerkleArrayProof> = {
   name: 'MerkleArrayProof',
   kind: 'object',
   fields: [
@@ -657,13 +683,13 @@ const MerkleArrayProofMeta: ObjectModelMetadata = {
   ],
 }
 
-const FalconVerifierMeta: ObjectModelMetadata = {
+const FalconVerifierMeta: ObjectModelMetadata<FalconVerifier> = {
   name: 'FalconVerifier',
   kind: 'object',
   fields: [{ name: 'publicKey', wireKey: 'k', optional: false, codec: fixedBytes1793Codec }],
 }
 
-const FalconSignatureStructMeta: ObjectModelMetadata = {
+const FalconSignatureStructMeta: ObjectModelMetadata<FalconSignatureStruct> = {
   name: 'FalconSignatureStruct',
   kind: 'object',
   fields: [
@@ -674,7 +700,7 @@ const FalconSignatureStructMeta: ObjectModelMetadata = {
   ],
 }
 
-const SigslotCommitMeta: ObjectModelMetadata = {
+const SigslotCommitMeta: ObjectModelMetadata<SigslotCommit> = {
   name: 'SigslotCommit',
   kind: 'object',
   fields: [
@@ -683,7 +709,7 @@ const SigslotCommitMeta: ObjectModelMetadata = {
   ],
 }
 
-const MerkleSignatureVerifierMeta: ObjectModelMetadata = {
+const MerkleSignatureVerifierMeta: ObjectModelMetadata<MerkleSignatureVerifier> = {
   name: 'MerkleSignatureVerifier',
   kind: 'object',
   fields: [
@@ -692,7 +718,7 @@ const MerkleSignatureVerifierMeta: ObjectModelMetadata = {
   ],
 }
 
-const ParticipantMeta: ObjectModelMetadata = {
+const ParticipantMeta: ObjectModelMetadata<Participant> = {
   name: 'Participant',
   kind: 'object',
   fields: [
@@ -705,7 +731,7 @@ const ParticipantMeta: ObjectModelMetadata = {
  * Metadata for the Reveal value structure (without position, as position is the map key)
  * Wire format: { s: SigslotCommit, p: Participant }
  */
-const RevealMeta: ObjectModelMetadata = {
+const RevealMeta: ObjectModelMetadata<Reveal> = {
   name: 'Reveal',
   kind: 'object',
   fields: [
@@ -714,7 +740,7 @@ const RevealMeta: ObjectModelMetadata = {
   ],
 }
 
-const StateProofMeta: ObjectModelMetadata = {
+const StateProofMeta: ObjectModelMetadata<StateProof> = {
   name: 'StateProof',
   kind: 'object',
   fields: [
@@ -733,7 +759,7 @@ const StateProofMeta: ObjectModelMetadata = {
   ],
 }
 
-const StateProofMessageMeta: ObjectModelMetadata = {
+const StateProofMessageMeta: ObjectModelMetadata<StateProofMessage> = {
   name: 'StateProofMessage',
   kind: 'object',
   fields: [
@@ -745,7 +771,7 @@ const StateProofMessageMeta: ObjectModelMetadata = {
   ],
 }
 
-const StateProofTransactionFieldsMeta: ObjectModelMetadata = {
+const StateProofTransactionFieldsMeta: ObjectModelMetadata<StateProofTransactionFields> = {
   name: 'StateProofTransactionFields',
   kind: 'object',
   fields: [
@@ -755,7 +781,7 @@ const StateProofTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-const HeartbeatProofMeta: ObjectModelMetadata = {
+const HeartbeatProofMeta: ObjectModelMetadata<HeartbeatProof> = {
   name: 'HeartbeatProof',
   kind: 'object',
   fields: [
@@ -771,7 +797,7 @@ const HeartbeatProofMeta: ObjectModelMetadata = {
  * Metadata for HeartbeatTransactionFields
  * These fields are nested under 'hb' wire key (not flattened)
  */
-export const HeartbeatTransactionFieldsMeta: ObjectModelMetadata = {
+export const HeartbeatTransactionFieldsMeta: ObjectModelMetadata<HeartbeatTransactionFields> = {
   name: 'HeartbeatTransactionFields',
   kind: 'object',
   fields: [
@@ -783,7 +809,7 @@ export const HeartbeatTransactionFieldsMeta: ObjectModelMetadata = {
   ],
 }
 
-export const TransactionMeta: ObjectModelMetadata = {
+export const TransactionMeta: ObjectModelMetadata<Transaction> = {
   name: 'Transaction',
   kind: 'object',
   fields: [

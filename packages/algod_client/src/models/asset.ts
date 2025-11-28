@@ -17,7 +17,7 @@ export type Asset = {
   params: AssetParams
 }
 
-export const AssetMeta: ObjectModelMetadata = {
+export const AssetMeta: ObjectModelMetadata<Asset> = {
   name: 'Asset',
   kind: 'object',
   fields: [

@@ -1,33 +1,30 @@
 import {
-  ModelSerializer,
-  parseJson,
-  stringifyJson,
   decodeMsgpack,
   encodeMsgpack,
+  ObjectModelCodec,
+  stringifyJson,
   type EncodingFormat,
   type ObjectModelMetadata,
 } from '@algorandfoundation/algokit-common'
 
 export class AlgorandSerializer {
-  static encode(value: Record<string, unknown>, meta: ObjectModelMetadata, format: 'json'): string
-  static encode(value: Record<string, unknown>, meta: ObjectModelMetadata, format?: 'msgpack'): Uint8Array
-  static encode(value: Record<string, unknown>, meta: ObjectModelMetadata, format: EncodingFormat = 'msgpack'): Uint8Array | string {
-    const wire = ModelSerializer.encode(value, meta, format)
-    if (format === 'msgpack') {
-      return wire instanceof Uint8Array ? wire : encodeMsgpack(wire)
-    }
-    return typeof wire === 'string' ? wire : stringifyJson(wire)
+  static encode<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>, format: 'json'): string
+  static encode<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>, format?: 'msgpack'): Uint8Array
+  static encode<T extends Record<string, unknown>>(
+    value: T,
+    meta: ObjectModelMetadata<T>,
+    format: EncodingFormat = 'msgpack',
+  ): Uint8Array | string {
+    const wire = new ObjectModelCodec(meta).encode(value, format)
+    return format === 'msgpack' ? encodeMsgpack(wire) : stringifyJson(wire)
   }
 
-  static decode<T>(value: Uint8Array | string, meta: ObjectModelMetadata, format: EncodingFormat = 'msgpack'): T {
-    let wire: Record<string, unknown> | Map<number | bigint | Uint8Array, unknown>
-    if (value instanceof Uint8Array) {
-      wire = decodeMsgpack(value)
-    } else if (typeof value === 'string') {
-      wire = parseJson(value)
-    } else {
-      wire = value
-    }
-    return ModelSerializer.decode(wire, meta, format) as T
+  static decode<T extends Record<string, unknown>>(
+    value: Uint8Array | Record<string, unknown>,
+    meta: ObjectModelMetadata<T>,
+    format: EncodingFormat = 'msgpack',
+  ): T {
+    const wire = value instanceof Uint8Array ? decodeMsgpack(value) : value
+    return new ObjectModelCodec<T>(meta).decode(wire, format)
   }
 }

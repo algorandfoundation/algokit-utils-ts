@@ -15,7 +15,7 @@ export type TransactionSignatureMultisigSubsignature = {
   signature?: Uint8Array
 }
 
-export const TransactionSignatureMultisigSubsignatureMeta: ObjectModelMetadata = {
+export const TransactionSignatureMultisigSubsignatureMeta: ObjectModelMetadata<TransactionSignatureMultisigSubsignature> = {
   name: 'TransactionSignatureMultisigSubsignature',
   kind: 'object',
   fields: [

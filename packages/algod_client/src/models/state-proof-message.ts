@@ -34,7 +34,7 @@ export type StateProofMessage = {
   lastAttestedRound: bigint
 }
 
-export const StateProofMessageMeta: ObjectModelMetadata = {
+export const StateProofMessageMeta: ObjectModelMetadata<StateProofMessage> = {
   name: 'StateProofMessage',
   kind: 'object',
   fields: [

@@ -30,7 +30,7 @@ export type TransactionSignatureMultisig = {
   version?: number
 }
 
-export const TransactionSignatureMultisigMeta: ObjectModelMetadata = {
+export const TransactionSignatureMultisigMeta: ObjectModelMetadata<TransactionSignatureMultisig> = {
   name: 'TransactionSignatureMultisig',
   kind: 'object',
   fields: [

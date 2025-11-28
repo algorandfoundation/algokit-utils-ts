@@ -37,7 +37,7 @@ export type TransactionHeartbeat = {
   hbKeyDilution: bigint
 }
 
-export const TransactionHeartbeatMeta: ObjectModelMetadata = {
+export const TransactionHeartbeatMeta: ObjectModelMetadata<TransactionHeartbeat> = {
   name: 'TransactionHeartbeat',
   kind: 'object',
   fields: [

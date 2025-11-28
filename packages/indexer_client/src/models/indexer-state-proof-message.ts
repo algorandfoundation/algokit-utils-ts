@@ -31,7 +31,7 @@ export type IndexerStateProofMessage = {
   latestAttestedRound?: bigint
 }
 
-export const IndexerStateProofMessageMeta: ObjectModelMetadata = {
+export const IndexerStateProofMessageMeta: ObjectModelMetadata<IndexerStateProofMessage> = {
   name: 'IndexerStateProofMessage',
   kind: 'object',
   fields: [

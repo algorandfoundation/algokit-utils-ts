@@ -33,7 +33,7 @@ export type Application = {
   params: ApplicationParams
 }
 
-export const ApplicationMeta: ObjectModelMetadata = {
+export const ApplicationMeta: ObjectModelMetadata<Application> = {
   name: 'Application',
   kind: 'object',
   fields: [

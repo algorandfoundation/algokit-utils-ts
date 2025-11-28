@@ -10,7 +10,7 @@ export type GetBlockHash = {
   blockHash: string
 }
 
-export const GetBlockHashMeta: ObjectModelMetadata = {
+export const GetBlockHashMeta: ObjectModelMetadata<GetBlockHash> = {
   name: 'GetBlockHash',
   kind: 'object',
   fields: [

@@ -44,7 +44,7 @@ export type ApplicationParams = {
   version?: number
 }
 
-export const ApplicationParamsMeta: ObjectModelMetadata = {
+export const ApplicationParamsMeta: ObjectModelMetadata<ApplicationParams> = {
   name: 'ApplicationParams',
   kind: 'object',
   fields: [

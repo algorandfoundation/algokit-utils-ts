@@ -70,7 +70,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/apps-local-state',
       path: { 'account-id': accountId },
@@ -99,7 +99,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/assets',
       path: { 'account-id': accountId },
@@ -132,7 +132,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}',
       path: { 'account-id': accountId },
@@ -160,7 +160,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-applications',
       path: { 'account-id': accountId },
@@ -189,7 +189,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-assets',
       path: { 'account-id': accountId },
@@ -234,7 +234,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/transactions',
       path: { 'account-id': accountId },
@@ -275,7 +275,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/box',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -296,7 +296,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -327,7 +327,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/logs',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -364,7 +364,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/balances',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -395,7 +395,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -437,7 +437,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/transactions',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -480,7 +480,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round-number}',
       path: { 'round-number': typeof roundNumber === 'bigint' ? roundNumber.toString() : roundNumber },
@@ -501,7 +501,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/transactions/{txid}',
       path: { txid: txid },
@@ -519,7 +519,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/health',
       path: {},
@@ -552,7 +552,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts',
       path: {},
@@ -592,7 +592,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -619,7 +619,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications',
       path: {},
@@ -654,7 +654,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets',
       path: {},
@@ -693,7 +693,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/block-headers',
       path: {},
@@ -745,7 +745,7 @@ export class IndexerApi {
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
 
-    const payload = await this.httpRequest.request<string>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/transactions',
       path: {},

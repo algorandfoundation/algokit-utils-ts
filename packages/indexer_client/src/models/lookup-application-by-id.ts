@@ -15,7 +15,7 @@ export type LookupApplicationById = {
   currentRound: bigint
 }
 
-export const LookupApplicationByIdMeta: ObjectModelMetadata = {
+export const LookupApplicationByIdMeta: ObjectModelMetadata<LookupApplicationById> = {
   name: 'LookupApplicationById',
   kind: 'object',
   fields: [

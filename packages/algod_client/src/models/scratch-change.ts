@@ -17,7 +17,7 @@ export type ScratchChange = {
   newValue: AvmValue
 }
 
-export const ScratchChangeMeta: ObjectModelMetadata = {
+export const ScratchChangeMeta: ObjectModelMetadata<ScratchChange> = {
   name: 'ScratchChange',
   kind: 'object',
   fields: [

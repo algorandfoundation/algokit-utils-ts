@@ -19,7 +19,7 @@ export type ApplicationLogData = {
   logs: Uint8Array[]
 }
 
-export const ApplicationLogDataMeta: ObjectModelMetadata = {
+export const ApplicationLogDataMeta: ObjectModelMetadata<ApplicationLogData> = {
   name: 'ApplicationLogData',
   kind: 'object',
   fields: [

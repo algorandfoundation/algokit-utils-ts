@@ -35,7 +35,7 @@ export type SimulateTransactionResult = {
   fixedSigner?: string
 }
 
-export const SimulateTransactionResultMeta: ObjectModelMetadata = {
+export const SimulateTransactionResultMeta: ObjectModelMetadata<SimulateTransactionResult> = {
   name: 'SimulateTransactionResult',
   kind: 'object',
   fields: [

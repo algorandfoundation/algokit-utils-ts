@@ -15,7 +15,7 @@ export abstract class Codec<T, TEncoded = T> {
   public abstract defaultValue(): T
 
   /**
-   * Encode a value that is required in the wire format
+   * Encode a value, always returning the value regardless of if it is default
    * @param value - The application value
    * @param format - The wire format (json or msgpack)
    * @returns The encoded value, or the default if it is undefined or null
@@ -26,7 +26,7 @@ export abstract class Codec<T, TEncoded = T> {
   }
 
   /**
-   * Encode a value that is optional in the wire format
+   * Encode a value, omitting it if set to the default value.
    * @param value - The application value
    * @param format - The wire format (json or msgpack)
    * @returns The encoded value, or undefined if it equals the default (will be omitted)
@@ -91,7 +91,7 @@ export abstract class Codec<T, TEncoded = T> {
    * @param value - The value to check
    * @returns True if value equals default
    */
-  protected isDefaultValue(value: T): boolean {
+  public isDefaultValue(value: T): boolean {
     return value === this.defaultValue()
   }
 }

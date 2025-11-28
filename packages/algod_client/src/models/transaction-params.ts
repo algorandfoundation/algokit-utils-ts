@@ -46,7 +46,7 @@ export type TransactionParams = {
   minFee: bigint
 }
 
-export const TransactionParamsMeta: ObjectModelMetadata = {
+export const TransactionParamsMeta: ObjectModelMetadata<TransactionParams> = {
   name: 'TransactionParams',
   kind: 'object',
   fields: [

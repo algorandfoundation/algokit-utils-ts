@@ -48,7 +48,7 @@ export type TransactionKeyreg = {
   stateProofKey?: Uint8Array
 }
 
-export const TransactionKeyregMeta: ObjectModelMetadata = {
+export const TransactionKeyregMeta: ObjectModelMetadata<TransactionKeyreg> = {
   name: 'TransactionKeyreg',
   kind: 'object',
   fields: [

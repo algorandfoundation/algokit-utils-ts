@@ -188,7 +188,7 @@ export type Account = {
   closedAtRound?: bigint
 }
 
-export const AccountMeta: ObjectModelMetadata = {
+export const AccountMeta: ObjectModelMetadata<Account> = {
   name: 'Account',
   kind: 'object',
   fields: [

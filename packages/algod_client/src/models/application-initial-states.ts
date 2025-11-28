@@ -24,7 +24,7 @@ export type ApplicationInitialStates = {
   appBoxes?: ApplicationKvStorage
 }
 
-export const ApplicationInitialStatesMeta: ObjectModelMetadata = {
+export const ApplicationInitialStatesMeta: ObjectModelMetadata<ApplicationInitialStates> = {
   name: 'ApplicationInitialStates',
   kind: 'object',
   fields: [

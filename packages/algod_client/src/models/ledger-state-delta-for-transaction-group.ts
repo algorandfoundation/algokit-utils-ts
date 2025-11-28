@@ -14,7 +14,7 @@ export type LedgerStateDeltaForTransactionGroup = {
   ids: string[]
 }
 
-export const LedgerStateDeltaForTransactionGroupMeta: ObjectModelMetadata = {
+export const LedgerStateDeltaForTransactionGroupMeta: ObjectModelMetadata<LedgerStateDeltaForTransactionGroup> = {
   name: 'LedgerStateDeltaForTransactionGroup',
   kind: 'object',
   fields: [

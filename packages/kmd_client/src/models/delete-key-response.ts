@@ -13,7 +13,7 @@ export type DeleteKeyResponse = {
   message?: string
 }
 
-export const DeleteKeyResponseMeta: ObjectModelMetadata = {
+export const DeleteKeyResponseMeta: ObjectModelMetadata<DeleteKeyResponse> = {
   name: 'DeleteKeyResponse',
   kind: 'object',
   fields: [

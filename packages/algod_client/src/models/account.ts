@@ -172,7 +172,7 @@ export type Account = {
   lastHeartbeat?: bigint
 }
 
-export const AccountMeta: ObjectModelMetadata = {
+export const AccountMeta: ObjectModelMetadata<Account> = {
   name: 'Account',
   kind: 'object',
   fields: [

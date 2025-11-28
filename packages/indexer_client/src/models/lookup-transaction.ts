@@ -15,7 +15,7 @@ export type LookupTransaction = {
   currentRound: bigint
 }
 
-export const LookupTransactionMeta: ObjectModelMetadata = {
+export const LookupTransactionMeta: ObjectModelMetadata<LookupTransaction> = {
   name: 'LookupTransaction',
   kind: 'object',
   fields: [

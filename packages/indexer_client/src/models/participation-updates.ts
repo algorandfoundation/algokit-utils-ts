@@ -18,7 +18,7 @@ export type ParticipationUpdates = {
   absentParticipationAccounts?: string[]
 }
 
-export const ParticipationUpdatesMeta: ObjectModelMetadata = {
+export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
   name: 'ParticipationUpdates',
   kind: 'object',
   fields: [

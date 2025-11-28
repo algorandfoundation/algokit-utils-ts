@@ -17,7 +17,7 @@ export type StateProofReveal = {
   participant?: StateProofParticipant
 }
 
-export const StateProofRevealMeta: ObjectModelMetadata = {
+export const StateProofRevealMeta: ObjectModelMetadata<StateProofReveal> = {
   name: 'StateProofReveal',
   kind: 'object',
   fields: [

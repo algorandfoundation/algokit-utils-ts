@@ -1,6 +1,6 @@
 import {
   MAX_TX_GROUP_SIZE,
-  ModelSerializer,
+  ObjectModelCodec,
   SIGNATURE_ENCODING_INCR,
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
@@ -254,7 +254,7 @@ export function validateTransaction(transaction: Transaction): void {
  */
 export function encodeTransactionRaw(transaction: Transaction): Uint8Array {
   validateTransaction(transaction)
-  const encodingData = ModelSerializer.encode(transaction, TransactionMeta, 'msgpack')
+  const encodingData = new ObjectModelCodec<Transaction>(TransactionMeta).encodeOptional(transaction, 'msgpack')
   return encodeMsgpack(encodingData)
 }
 
@@ -287,7 +287,7 @@ export function decodeTransaction(encoded_transaction: Uint8Array): Transaction 
   }
 
   const decodedData = decodeMsgpack(hasPrefix ? encoded_transaction.slice(prefixBytes.length) : encoded_transaction)
-  return ModelSerializer.decode<Transaction>(decodedData, TransactionMeta, 'msgpack')
+  return new ObjectModelCodec<Transaction>(TransactionMeta).decode(decodedData, 'msgpack')
 }
 
 /**

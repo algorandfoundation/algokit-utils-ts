@@ -23,7 +23,7 @@ export type GetSupply = {
   totalMoney: bigint
 }
 
-export const GetSupplyMeta: ObjectModelMetadata = {
+export const GetSupplyMeta: ObjectModelMetadata<GetSupply> = {
   name: 'GetSupply',
   kind: 'object',
   fields: [

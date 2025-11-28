@@ -1,4 +1,4 @@
-import { ModelSerializer, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { ObjectModelCodec, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { SignedTransactionMeta } from './signed-transaction-meta'
 import { Transaction, validateTransaction } from './transaction'
 
@@ -113,7 +113,7 @@ export type LogicSignature = {
  */
 export function encodeSignedTransaction(signedTransaction: SignedTransaction): Uint8Array {
   validateSignedTransaction(signedTransaction)
-  const encodingData = ModelSerializer.encode(signedTransaction, SignedTransactionMeta, 'msgpack')
+  const encodingData = new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta).encodeOptional(signedTransaction, 'msgpack')
   return encodeMsgpack(encodingData)
 }
 
@@ -137,7 +137,7 @@ export function encodeSignedTransactions(signedTransactions: SignedTransaction[]
  */
 export function decodeSignedTransaction(encodedSignedTransaction: Uint8Array): SignedTransaction {
   const decodedData = decodeMsgpack(encodedSignedTransaction)
-  return ModelSerializer.decode<SignedTransaction>(decodedData, SignedTransactionMeta, 'msgpack')
+  return new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta).decode(decodedData, 'msgpack')
 }
 
 /**

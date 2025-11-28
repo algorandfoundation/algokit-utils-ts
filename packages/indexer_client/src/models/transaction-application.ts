@@ -85,7 +85,7 @@ export type TransactionApplication = {
   rejectVersion?: number
 }
 
-export const TransactionApplicationMeta: ObjectModelMetadata = {
+export const TransactionApplicationMeta: ObjectModelMetadata<TransactionApplication> = {
   name: 'TransactionApplication',
   kind: 'object',
   fields: [

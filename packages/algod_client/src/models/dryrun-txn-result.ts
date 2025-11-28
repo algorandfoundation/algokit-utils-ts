@@ -46,7 +46,7 @@ export type DryrunTxnResult = {
   budgetConsumed?: number
 }
 
-export const DryrunTxnResultMeta: ObjectModelMetadata = {
+export const DryrunTxnResultMeta: ObjectModelMetadata<DryrunTxnResult> = {
   name: 'DryrunTxnResult',
   kind: 'object',
   fields: [

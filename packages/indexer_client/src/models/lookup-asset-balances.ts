@@ -22,7 +22,7 @@ export type LookupAssetBalances = {
   nextToken?: string
 }
 
-export const LookupAssetBalancesMeta: ObjectModelMetadata = {
+export const LookupAssetBalancesMeta: ObjectModelMetadata<LookupAssetBalances> = {
   name: 'LookupAssetBalances',
   kind: 'object',
   fields: [

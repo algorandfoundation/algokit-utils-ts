@@ -42,7 +42,7 @@ export type TransactionAssetTransfer = {
   sender?: string
 }
 
-export const TransactionAssetTransferMeta: ObjectModelMetadata = {
+export const TransactionAssetTransferMeta: ObjectModelMetadata<TransactionAssetTransfer> = {
   name: 'TransactionAssetTransfer',
   kind: 'object',
   fields: [

@@ -17,7 +17,7 @@ export type PostWalletRenameResponse = {
   wallet?: Wallet
 }
 
-export const PostWalletRenameResponseMeta: ObjectModelMetadata = {
+export const PostWalletRenameResponseMeta: ObjectModelMetadata<PostWalletRenameResponse> = {
   name: 'PostWalletRenameResponse',
   kind: 'object',
   fields: [

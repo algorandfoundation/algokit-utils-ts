@@ -25,7 +25,7 @@ export type TealValue = {
   uint: bigint
 }
 
-export const TealValueMeta: ObjectModelMetadata = {
+export const TealValueMeta: ObjectModelMetadata<TealValue> = {
   name: 'TealValue',
   kind: 'object',
   fields: [

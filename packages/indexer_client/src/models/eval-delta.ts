@@ -25,7 +25,7 @@ export type EvalDelta = {
   uint?: bigint
 }
 
-export const EvalDeltaMeta: ObjectModelMetadata = {
+export const EvalDeltaMeta: ObjectModelMetadata<EvalDelta> = {
   name: 'EvalDelta',
   kind: 'object',
   fields: [

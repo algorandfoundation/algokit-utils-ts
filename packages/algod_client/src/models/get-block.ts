@@ -9,7 +9,7 @@ export type GetBlock = {
   cert?: Record<string, unknown>
 }
 
-export const GetBlockMeta: ObjectModelMetadata = {
+export const GetBlockMeta: ObjectModelMetadata<GetBlock> = {
   name: 'GetBlock',
   kind: 'object',
   fields: [

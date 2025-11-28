@@ -10,7 +10,7 @@ export type ListKeysRequest = {
   walletHandleToken?: string
 }
 
-export const ListKeysRequestMeta: ObjectModelMetadata = {
+export const ListKeysRequestMeta: ObjectModelMetadata<ListKeysRequest> = {
   name: 'ListKeysRequest',
   kind: 'object',
   fields: [

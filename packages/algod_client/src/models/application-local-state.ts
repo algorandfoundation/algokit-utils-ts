@@ -21,7 +21,7 @@ export type ApplicationLocalState = {
   keyValue?: TealKeyValueStore
 }
 
-export const ApplicationLocalStateMeta: ObjectModelMetadata = {
+export const ApplicationLocalStateMeta: ObjectModelMetadata<ApplicationLocalState> = {
   name: 'ApplicationLocalState',
   kind: 'object',
   fields: [

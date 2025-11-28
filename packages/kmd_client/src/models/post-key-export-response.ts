@@ -15,7 +15,7 @@ export type PostKeyExportResponse = {
   privateKey?: Uint8Array
 }
 
-export const PostKeyExportResponseMeta: ObjectModelMetadata = {
+export const PostKeyExportResponseMeta: ObjectModelMetadata<PostKeyExportResponse> = {
   name: 'PostKeyExportResponse',
   kind: 'object',
   fields: [

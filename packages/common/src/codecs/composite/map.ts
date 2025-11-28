@@ -76,7 +76,7 @@ export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>,
     return result
   }
 
-  protected isDefaultValue(value: Map<K, V>): boolean {
+  public isDefaultValue(value: Map<K, V>): boolean {
     return value.size === 0
   }
 }

@@ -28,7 +28,7 @@ export type SimulateTraceConfig = {
   stateChange?: boolean
 }
 
-export const SimulateTraceConfigMeta: ObjectModelMetadata = {
+export const SimulateTraceConfigMeta: ObjectModelMetadata<SimulateTraceConfig> = {
   name: 'SimulateTraceConfig',
   kind: 'object',
   fields: [

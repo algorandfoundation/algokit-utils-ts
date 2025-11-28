@@ -92,7 +92,7 @@ export type AssetParams = {
   urlB64?: Uint8Array
 }
 
-export const AssetParamsMeta: ObjectModelMetadata = {
+export const AssetParamsMeta: ObjectModelMetadata<AssetParams> = {
   name: 'AssetParams',
   kind: 'object',
   fields: [

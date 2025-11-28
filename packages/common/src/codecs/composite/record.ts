@@ -42,7 +42,7 @@ export class RecordCodec<V, VEncoded = V> extends Codec<Record<string, V>, Recor
     return result
   }
 
-  protected isDefaultValue(value: Record<string, V>): boolean {
+  public isDefaultValue(value: Record<string, V>): boolean {
     return Object.keys(value).length === 0
   }
 }

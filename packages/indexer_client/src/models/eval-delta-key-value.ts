@@ -14,7 +14,7 @@ export type EvalDeltaKeyValue = {
   value: EvalDelta
 }
 
-export const EvalDeltaKeyValueMeta: ObjectModelMetadata = {
+export const EvalDeltaKeyValueMeta: ObjectModelMetadata<EvalDeltaKeyValue> = {
   name: 'EvalDeltaKeyValue',
   kind: 'object',
   fields: [

@@ -47,7 +47,7 @@ export type SimulationOpcodeTraceUnit = {
   stackAdditions?: AvmValue[]
 }
 
-export const SimulationOpcodeTraceUnitMeta: ObjectModelMetadata = {
+export const SimulationOpcodeTraceUnitMeta: ObjectModelMetadata<SimulationOpcodeTraceUnit> = {
   name: 'SimulationOpcodeTraceUnit',
   kind: 'object',
   fields: [

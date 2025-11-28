@@ -17,7 +17,7 @@ export type TealDryrun = {
   protocolVersion: string
 }
 
-export const TealDryrunMeta: ObjectModelMetadata = {
+export const TealDryrunMeta: ObjectModelMetadata<TealDryrun> = {
   name: 'TealDryrun',
   kind: 'object',
   fields: [

@@ -59,7 +59,7 @@ export type SimulationTransactionExecTrace = {
   innerTrace?: SimulationTransactionExecTrace[]
 }
 
-export const SimulationTransactionExecTraceMeta: ObjectModelMetadata = {
+export const SimulationTransactionExecTraceMeta: ObjectModelMetadata<SimulationTransactionExecTrace> = {
   name: 'SimulationTransactionExecTrace',
   kind: 'object',
   fields: [

@@ -22,7 +22,7 @@ export type GetPendingTransactionsByAddress = {
   totalTransactions: number
 }
 
-export const GetPendingTransactionsByAddressMeta: ObjectModelMetadata = {
+export const GetPendingTransactionsByAddressMeta: ObjectModelMetadata<GetPendingTransactionsByAddress> = {
   name: 'GetPendingTransactionsByAddress',
   kind: 'object',
   fields: [

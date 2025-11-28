@@ -21,7 +21,7 @@ export type SearchForBlockHeaders = {
   blocks: Block[]
 }
 
-export const SearchForBlockHeadersMeta: ObjectModelMetadata = {
+export const SearchForBlockHeadersMeta: ObjectModelMetadata<SearchForBlockHeaders> = {
   name: 'SearchForBlockHeaders',
   kind: 'object',
   fields: [

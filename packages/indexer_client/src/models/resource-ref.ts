@@ -36,7 +36,7 @@ export type ResourceRef = {
   local?: LocalsRef
 }
 
-export const ResourceRefMeta: ObjectModelMetadata = {
+export const ResourceRefMeta: ObjectModelMetadata<ResourceRef> = {
   name: 'ResourceRef',
   kind: 'object',
   fields: [

@@ -10,7 +10,7 @@ export type GetBlockTimeStampOffset = {
   offset: number
 }
 
-export const GetBlockTimeStampOffsetMeta: ObjectModelMetadata = {
+export const GetBlockTimeStampOffsetMeta: ObjectModelMetadata<GetBlockTimeStampOffset> = {
   name: 'GetBlockTimeStampOffset',
   kind: 'object',
   fields: [

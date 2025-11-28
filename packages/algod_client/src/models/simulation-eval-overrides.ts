@@ -39,7 +39,7 @@ export type SimulationEvalOverrides = {
   fixSigners?: boolean
 }
 
-export const SimulationEvalOverridesMeta: ObjectModelMetadata = {
+export const SimulationEvalOverridesMeta: ObjectModelMetadata<SimulationEvalOverrides> = {
   name: 'SimulationEvalOverrides',
   kind: 'object',
   fields: [

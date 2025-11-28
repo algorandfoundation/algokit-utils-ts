@@ -39,7 +39,7 @@ export type AccountParticipation = {
   stateProofKey?: Uint8Array
 }
 
-export const AccountParticipationMeta: ObjectModelMetadata = {
+export const AccountParticipationMeta: ObjectModelMetadata<AccountParticipation> = {
   name: 'AccountParticipation',
   kind: 'object',
   fields: [

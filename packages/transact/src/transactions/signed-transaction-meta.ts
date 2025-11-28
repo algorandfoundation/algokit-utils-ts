@@ -8,9 +8,10 @@ import {
   fixedBytes64Codec,
   numberCodec,
 } from '@algorandfoundation/algokit-common'
+import { LogicSignature, MultisigSignature, MultisigSubsignature, SignedTransaction } from './signed-transaction'
 import { TransactionMeta } from './transaction-meta'
 
-const MultisigSubsignatureMeta: ObjectModelMetadata = {
+const MultisigSubsignatureMeta: ObjectModelMetadata<MultisigSubsignature> = {
   name: 'MultisigSubsignature',
   kind: 'object',
   fields: [
@@ -19,7 +20,7 @@ const MultisigSubsignatureMeta: ObjectModelMetadata = {
   ],
 }
 
-const MultisigSignatureMeta: ObjectModelMetadata = {
+const MultisigSignatureMeta: ObjectModelMetadata<MultisigSignature> = {
   name: 'MultisigSignature',
   kind: 'object',
   fields: [
@@ -34,7 +35,7 @@ const MultisigSignatureMeta: ObjectModelMetadata = {
   ],
 }
 
-const LogicSignatureMeta: ObjectModelMetadata = {
+const LogicSignatureMeta: ObjectModelMetadata<LogicSignature> = {
   name: 'LogicSignature',
   kind: 'object',
   fields: [
@@ -59,7 +60,7 @@ const LogicSignatureMeta: ObjectModelMetadata = {
 /**
  * Metadata for SignedTransaction
  */
-export const SignedTransactionMeta: ObjectModelMetadata = {
+export const SignedTransactionMeta: ObjectModelMetadata<SignedTransaction> = {
   name: 'SignedTransaction',
   kind: 'object',
   fields: [

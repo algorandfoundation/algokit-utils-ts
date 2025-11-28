@@ -120,7 +120,7 @@ export type Block = {
   participationUpdates?: ParticipationUpdates
 }
 
-export const BlockMeta: ObjectModelMetadata = {
+export const BlockMeta: ObjectModelMetadata<Block> = {
   name: 'Block',
   kind: 'object',
   fields: [

@@ -15,7 +15,7 @@ export type StateProofParticipant = {
   weight?: bigint
 }
 
-export const StateProofParticipantMeta: ObjectModelMetadata = {
+export const StateProofParticipantMeta: ObjectModelMetadata<StateProofParticipant> = {
   name: 'StateProofParticipant',
   kind: 'object',
   fields: [

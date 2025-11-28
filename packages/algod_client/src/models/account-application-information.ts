@@ -17,7 +17,7 @@ export type AccountApplicationInformation = {
   createdApp?: ApplicationParams
 }
 
-export const AccountApplicationInformationMeta: ObjectModelMetadata = {
+export const AccountApplicationInformationMeta: ObjectModelMetadata<AccountApplicationInformation> = {
   name: 'AccountApplicationInformation',
   kind: 'object',
   fields: [

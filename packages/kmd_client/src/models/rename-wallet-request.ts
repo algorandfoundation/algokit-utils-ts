@@ -12,7 +12,7 @@ export type RenameWalletRequest = {
   walletPassword?: string
 }
 
-export const RenameWalletRequestMeta: ObjectModelMetadata = {
+export const RenameWalletRequestMeta: ObjectModelMetadata<RenameWalletRequest> = {
   name: 'RenameWalletRequest',
   kind: 'object',
   fields: [

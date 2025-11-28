@@ -17,8 +17,9 @@ export interface FieldMetadata {
   readonly flattened?: boolean
 }
 
-export type ObjectModelMetadata = {
+export type ObjectModelMetadata<T> = {
   readonly name: string
+  readonly __type?: T
   readonly kind: 'object'
   readonly fields: readonly FieldMetadata[]
 }

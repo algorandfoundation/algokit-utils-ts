@@ -39,7 +39,7 @@ export type BlockRewards = {
   rewardsResidue: bigint
 }
 
-export const BlockRewardsMeta: ObjectModelMetadata = {
+export const BlockRewardsMeta: ObjectModelMetadata<BlockRewards> = {
   name: 'BlockRewards',
   kind: 'object',
   fields: [

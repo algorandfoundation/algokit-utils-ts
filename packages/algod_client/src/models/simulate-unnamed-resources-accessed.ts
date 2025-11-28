@@ -53,7 +53,7 @@ export type SimulateUnnamedResourcesAccessed = {
   appLocals?: ApplicationLocalReference[]
 }
 
-export const SimulateUnnamedResourcesAccessedMeta: ObjectModelMetadata = {
+export const SimulateUnnamedResourcesAccessedMeta: ObjectModelMetadata<SimulateUnnamedResourcesAccessed> = {
   name: 'SimulateUnnamedResourcesAccessed',
   kind: 'object',
   fields: [

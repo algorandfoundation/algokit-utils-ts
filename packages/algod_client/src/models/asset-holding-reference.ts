@@ -19,7 +19,7 @@ export type AssetHoldingReference = {
   asset: bigint
 }
 
-export const AssetHoldingReferenceMeta: ObjectModelMetadata = {
+export const AssetHoldingReferenceMeta: ObjectModelMetadata<AssetHoldingReference> = {
   name: 'AssetHoldingReference',
   kind: 'object',
   fields: [

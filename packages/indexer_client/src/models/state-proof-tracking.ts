@@ -27,7 +27,7 @@ export type StateProofTracking = {
   nextRound?: number
 }
 
-export const StateProofTrackingMeta: ObjectModelMetadata = {
+export const StateProofTrackingMeta: ObjectModelMetadata<StateProofTracking> = {
   name: 'StateProofTracking',
   kind: 'object',
   fields: [

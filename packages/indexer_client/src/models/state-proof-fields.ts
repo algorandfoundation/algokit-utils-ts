@@ -47,7 +47,7 @@ export type StateProofFields = {
   positionsToReveal?: bigint[]
 }
 
-export const StateProofFieldsMeta: ObjectModelMetadata = {
+export const StateProofFieldsMeta: ObjectModelMetadata<StateProofFields> = {
   name: 'StateProofFields',
   kind: 'object',
   fields: [

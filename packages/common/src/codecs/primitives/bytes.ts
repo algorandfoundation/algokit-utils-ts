@@ -23,7 +23,7 @@ class BytesCodec extends Codec<Uint8Array, WireStringOrBytes> {
     throw new Error(`Cannot decode bytes from ${typeof value}`)
   }
 
-  protected isDefaultValue(value: Uint8Array): boolean {
+  public isDefaultValue(value: Uint8Array): boolean {
     return value.byteLength === 0
   }
 }

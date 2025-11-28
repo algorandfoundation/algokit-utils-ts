@@ -24,7 +24,7 @@ export type SignTransactionRequest = {
   walletPassword?: string
 }
 
-export const SignTransactionRequestMeta: ObjectModelMetadata = {
+export const SignTransactionRequestMeta: ObjectModelMetadata<SignTransactionRequest> = {
   name: 'SignTransactionRequest',
   kind: 'object',
   fields: [

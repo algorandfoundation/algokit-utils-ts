@@ -11,7 +11,7 @@ export type InitWalletHandleTokenRequest = {
   walletPassword?: string
 }
 
-export const InitWalletHandleTokenRequestMeta: ObjectModelMetadata = {
+export const InitWalletHandleTokenRequestMeta: ObjectModelMetadata<InitWalletHandleTokenRequest> = {
   name: 'InitWalletHandleTokenRequest',
   kind: 'object',
   fields: [

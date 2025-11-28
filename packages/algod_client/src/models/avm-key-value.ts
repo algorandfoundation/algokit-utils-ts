@@ -14,7 +14,7 @@ export type AvmKeyValue = {
   value: AvmValue
 }
 
-export const AvmKeyValueMeta: ObjectModelMetadata = {
+export const AvmKeyValueMeta: ObjectModelMetadata<AvmKeyValue> = {
   name: 'AvmKeyValue',
   kind: 'object',
   fields: [

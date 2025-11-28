@@ -29,7 +29,7 @@ export type LedgerTealValue = {
   uint?: bigint
 }
 
-export const LedgerTealValueMeta: ObjectModelMetadata = {
+export const LedgerTealValueMeta: ObjectModelMetadata<LedgerTealValue> = {
   name: 'LedgerTealValue',
   kind: 'object',
   fields: [
@@ -49,7 +49,7 @@ export type LedgerStateSchema = {
   numByteSlices?: bigint
 }
 
-export const LedgerStateSchemaMeta: ObjectModelMetadata = {
+export const LedgerStateSchemaMeta: ObjectModelMetadata<LedgerStateSchema> = {
   name: 'LedgerStateSchema',
   kind: 'object',
   fields: [
@@ -72,7 +72,7 @@ export type LedgerAppParams = {
   globalState?: Map<Uint8Array, LedgerTealValue>
 }
 
-export const LedgerAppParamsMeta: ObjectModelMetadata = {
+export const LedgerAppParamsMeta: ObjectModelMetadata<LedgerAppParams> = {
   name: 'LedgerAppParams',
   kind: 'object',
   fields: [
@@ -100,7 +100,7 @@ export type LedgerAppLocalState = {
   keyValue?: Map<Uint8Array, LedgerTealValue>
 }
 
-export const LedgerAppLocalStateMeta: ObjectModelMetadata = {
+export const LedgerAppLocalStateMeta: ObjectModelMetadata<LedgerAppLocalState> = {
   name: 'LedgerAppLocalState',
   kind: 'object',
   fields: [
@@ -122,7 +122,7 @@ export type LedgerAppLocalStateDelta = {
   localState?: LedgerAppLocalState
 }
 
-export const LedgerAppLocalStateDeltaMeta: ObjectModelMetadata = {
+export const LedgerAppLocalStateDeltaMeta: ObjectModelMetadata<LedgerAppLocalStateDelta> = {
   name: 'LedgerAppLocalStateDelta',
   kind: 'object',
   fields: [
@@ -139,7 +139,7 @@ export type LedgerAppParamsDelta = {
   params?: LedgerAppParams
 }
 
-export const LedgerAppParamsDeltaMeta: ObjectModelMetadata = {
+export const LedgerAppParamsDeltaMeta: ObjectModelMetadata<LedgerAppParamsDelta> = {
   name: 'LedgerAppParamsDelta',
   kind: 'object',
   fields: [
@@ -158,7 +158,7 @@ export type LedgerAppResourceRecord = {
   state: LedgerAppLocalStateDelta
 }
 
-export const LedgerAppResourceRecordMeta: ObjectModelMetadata = {
+export const LedgerAppResourceRecordMeta: ObjectModelMetadata<LedgerAppResourceRecord> = {
   name: 'LedgerAppResourceRecord',
   kind: 'object',
   fields: [
@@ -177,7 +177,7 @@ export type LedgerAssetHolding = {
   frozen: boolean
 }
 
-export const LedgerAssetHoldingMeta: ObjectModelMetadata = {
+export const LedgerAssetHoldingMeta: ObjectModelMetadata<LedgerAssetHolding> = {
   name: 'LedgerAssetHolding',
   kind: 'object',
   fields: [
@@ -194,7 +194,7 @@ export type LedgerAssetHoldingDelta = {
   holding?: LedgerAssetHolding
 }
 
-export const LedgerAssetHoldingDeltaMeta: ObjectModelMetadata = {
+export const LedgerAssetHoldingDeltaMeta: ObjectModelMetadata<LedgerAssetHoldingDelta> = {
   name: 'LedgerAssetHoldingDelta',
   kind: 'object',
   fields: [
@@ -256,7 +256,7 @@ export type LedgerAssetParams = {
   clawback?: string
 }
 
-export const LedgerAssetParamsMeta: ObjectModelMetadata = {
+export const LedgerAssetParamsMeta: ObjectModelMetadata<LedgerAssetParams> = {
   name: 'LedgerAssetParams',
   kind: 'object',
   fields: [
@@ -282,7 +282,7 @@ export type LedgerAssetParamsDelta = {
   params?: LedgerAssetParams
 }
 
-export const LedgerAssetParamsDeltaMeta: ObjectModelMetadata = {
+export const LedgerAssetParamsDeltaMeta: ObjectModelMetadata<LedgerAssetParamsDelta> = {
   name: 'LedgerAssetParamsDelta',
   kind: 'object',
   fields: [
@@ -301,7 +301,7 @@ export type LedgerAssetResourceRecord = {
   holding: LedgerAssetHoldingDelta
 }
 
-export const LedgerAssetResourceRecordMeta: ObjectModelMetadata = {
+export const LedgerAssetResourceRecordMeta: ObjectModelMetadata<LedgerAssetResourceRecord> = {
   name: 'LedgerAssetResourceRecord',
   kind: 'object',
   fields: [
@@ -324,7 +324,7 @@ export type LedgerVotingData = {
   voteKeyDilution: bigint
 }
 
-export const LedgerVotingDataMeta: ObjectModelMetadata = {
+export const LedgerVotingDataMeta: ObjectModelMetadata<LedgerVotingData> = {
   name: 'LedgerVotingData',
   kind: 'object',
   fields: [
@@ -395,7 +395,7 @@ export type LedgerAccountBaseData = {
   lastHeartbeat: bigint
 }
 
-export const LedgerAccountBaseDataMeta: ObjectModelMetadata = {
+export const LedgerAccountBaseDataMeta: ObjectModelMetadata<LedgerAccountBaseData> = {
   name: 'LedgerAccountBaseData',
   kind: 'object',
   fields: [
@@ -436,7 +436,7 @@ export type LedgerAccountData = {
   votingData: LedgerVotingData
 }
 
-export const LedgerAccountDataMeta: ObjectModelMetadata = {
+export const LedgerAccountDataMeta: ObjectModelMetadata<LedgerAccountData> = {
   name: 'LedgerAccountData',
   kind: 'object',
   fields: [
@@ -455,7 +455,7 @@ export type LedgerBalanceRecord = {
   accountData: LedgerAccountData
 }
 
-export const LedgerBalanceRecordMeta: ObjectModelMetadata = {
+export const LedgerBalanceRecordMeta: ObjectModelMetadata<LedgerBalanceRecord> = {
   name: 'LedgerBalanceRecord',
   kind: 'object',
   fields: [
@@ -470,7 +470,7 @@ export type LedgerAccountDeltas = {
   assetResources?: LedgerAssetResourceRecord[]
 }
 
-export const LedgerAccountDeltasMeta: ObjectModelMetadata = {
+export const LedgerAccountDeltasMeta: ObjectModelMetadata<LedgerAccountDeltas> = {
   name: 'LedgerAccountDeltas',
   kind: 'object',
   fields: [
@@ -509,7 +509,7 @@ export type LedgerKvValueDelta = {
   oldData?: Uint8Array
 }
 
-export const LedgerKvValueDeltaMeta: ObjectModelMetadata = {
+export const LedgerKvValueDeltaMeta: ObjectModelMetadata<LedgerKvValueDelta> = {
   name: 'LedgerKvValueDelta',
   kind: 'object',
   fields: [
@@ -529,7 +529,7 @@ export type LedgerIncludedTransactions = {
   intra: number
 }
 
-export const LedgerIncludedTransactionsMeta: ObjectModelMetadata = {
+export const LedgerIncludedTransactionsMeta: ObjectModelMetadata<LedgerIncludedTransactions> = {
   name: 'LedgerIncludedTransactions',
   kind: 'object',
   fields: [
@@ -562,7 +562,7 @@ export type LedgerModifiedCreatable = {
   nDeltas: number
 }
 
-export const LedgerModifiedCreatableMeta: ObjectModelMetadata = {
+export const LedgerModifiedCreatableMeta: ObjectModelMetadata<LedgerModifiedCreatable> = {
   name: 'LedgerModifiedCreatable',
   kind: 'object',
   fields: [
@@ -587,7 +587,7 @@ export type LedgerAlgoCount = {
   rewardUnits: bigint
 }
 
-export const LedgerAlgoCountMeta: ObjectModelMetadata = {
+export const LedgerAlgoCountMeta: ObjectModelMetadata<LedgerAlgoCount> = {
   name: 'LedgerAlgoCount',
   kind: 'object',
   fields: [
@@ -609,7 +609,7 @@ export type LedgerAccountTotals = {
   rewardsLevel: bigint
 }
 
-export const LedgerAccountTotalsMeta: ObjectModelMetadata = {
+export const LedgerAccountTotalsMeta: ObjectModelMetadata<LedgerAccountTotals> = {
   name: 'LedgerAccountTotals',
   kind: 'object',
   fields: [
@@ -660,7 +660,7 @@ export type LedgerStateDelta = {
   creatables?: Map<number, LedgerModifiedCreatable>
 }
 
-export const LedgerStateDeltaMeta: ObjectModelMetadata = {
+export const LedgerStateDeltaMeta: ObjectModelMetadata<LedgerStateDelta> = {
   name: 'LedgerStateDelta',
   kind: 'object',
   fields: [

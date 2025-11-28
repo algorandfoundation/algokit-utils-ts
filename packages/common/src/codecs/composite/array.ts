@@ -27,7 +27,7 @@ export class ArrayCodec<T, TEncoded = T> extends Codec<T[], TEncoded[]> {
     return value.map((item) => this.itemCodec.decode(item, format))
   }
 
-  protected isDefaultValue(value: T[]): boolean {
+  public isDefaultValue(value: T[]): boolean {
     return value.length === 0
   }
 }

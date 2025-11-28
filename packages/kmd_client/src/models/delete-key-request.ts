@@ -12,7 +12,7 @@ export type DeleteKeyRequest = {
   walletPassword?: string
 }
 
-export const DeleteKeyRequestMeta: ObjectModelMetadata = {
+export const DeleteKeyRequestMeta: ObjectModelMetadata<DeleteKeyRequest> = {
   name: 'DeleteKeyRequest',
   kind: 'object',
   fields: [

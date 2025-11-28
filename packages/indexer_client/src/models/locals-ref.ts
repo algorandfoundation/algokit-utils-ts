@@ -19,7 +19,7 @@ export type LocalsRef = {
   app: bigint
 }
 
-export const LocalsRefMeta: ObjectModelMetadata = {
+export const LocalsRefMeta: ObjectModelMetadata<LocalsRef> = {
   name: 'LocalsRef',
   kind: 'object',
   fields: [

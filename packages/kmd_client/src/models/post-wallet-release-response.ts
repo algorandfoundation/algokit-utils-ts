@@ -13,7 +13,7 @@ export type PostWalletReleaseResponse = {
   message?: string
 }
 
-export const PostWalletReleaseResponseMeta: ObjectModelMetadata = {
+export const PostWalletReleaseResponseMeta: ObjectModelMetadata<PostWalletReleaseResponse> = {
   name: 'PostWalletReleaseResponse',
   kind: 'object',
   fields: [

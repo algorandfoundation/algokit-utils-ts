@@ -13,7 +13,7 @@ export type DeleteMultisigResponse = {
   message?: string
 }
 
-export const DeleteMultisigResponseMeta: ObjectModelMetadata = {
+export const DeleteMultisigResponseMeta: ObjectModelMetadata<DeleteMultisigResponse> = {
   name: 'DeleteMultisigResponse',
   kind: 'object',
   fields: [

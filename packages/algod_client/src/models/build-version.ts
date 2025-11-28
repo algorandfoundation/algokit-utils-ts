@@ -13,7 +13,7 @@ export type BuildVersion = {
   minor: number
 }
 
-export const BuildVersionMeta: ObjectModelMetadata = {
+export const BuildVersionMeta: ObjectModelMetadata<BuildVersion> = {
   name: 'BuildVersion',
   kind: 'object',
   fields: [

@@ -23,7 +23,7 @@ export type TransactionStateProof = {
   message?: IndexerStateProofMessage
 }
 
-export const TransactionStateProofMeta: ObjectModelMetadata = {
+export const TransactionStateProofMeta: ObjectModelMetadata<TransactionStateProof> = {
   name: 'TransactionStateProof',
   kind: 'object',
   fields: [

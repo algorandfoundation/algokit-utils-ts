@@ -18,7 +18,7 @@ export type StateProofSignature = {
   verifyingKey?: Uint8Array
 }
 
-export const StateProofSignatureMeta: ObjectModelMetadata = {
+export const StateProofSignatureMeta: ObjectModelMetadata<StateProofSignature> = {
   name: 'StateProofSignature',
   kind: 'object',
   fields: [

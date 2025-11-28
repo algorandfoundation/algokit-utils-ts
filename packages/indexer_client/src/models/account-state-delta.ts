@@ -14,7 +14,7 @@ export type AccountStateDelta = {
   delta: StateDelta
 }
 
-export const AccountStateDeltaMeta: ObjectModelMetadata = {
+export const AccountStateDeltaMeta: ObjectModelMetadata<AccountStateDelta> = {
   name: 'AccountStateDelta',
   kind: 'object',
   fields: [

@@ -16,7 +16,7 @@ export type SimulateRequestTransactionGroup = {
   txns: SignedTransaction[]
 }
 
-export const SimulateRequestTransactionGroupMeta: ObjectModelMetadata = {
+export const SimulateRequestTransactionGroupMeta: ObjectModelMetadata<SimulateRequestTransactionGroup> = {
   name: 'SimulateRequestTransactionGroup',
   kind: 'object',
   fields: [

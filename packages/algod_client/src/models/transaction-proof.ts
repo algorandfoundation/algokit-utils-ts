@@ -37,7 +37,7 @@ export type TransactionProof = {
   hashtype: 'sha512_256' | 'sha256'
 }
 
-export const TransactionProofMeta: ObjectModelMetadata = {
+export const TransactionProofMeta: ObjectModelMetadata<TransactionProof> = {
   name: 'TransactionProof',
   kind: 'object',
   fields: [

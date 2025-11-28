@@ -19,7 +19,7 @@ export type ApplicationLocalReference = {
   app: bigint
 }
 
-export const ApplicationLocalReferenceMeta: ObjectModelMetadata = {
+export const ApplicationLocalReferenceMeta: ObjectModelMetadata<ApplicationLocalReference> = {
   name: 'ApplicationLocalReference',
   kind: 'object',
   fields: [

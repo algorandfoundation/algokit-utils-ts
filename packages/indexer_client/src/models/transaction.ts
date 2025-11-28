@@ -188,7 +188,7 @@ export type Transaction = {
   innerTxns?: Transaction[]
 }
 
-export const TransactionMeta: ObjectModelMetadata = {
+export const TransactionMeta: ObjectModelMetadata<Transaction> = {
   name: 'Transaction',
   kind: 'object',
   fields: [

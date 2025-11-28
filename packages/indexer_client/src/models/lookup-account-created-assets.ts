@@ -22,7 +22,7 @@ export type LookupAccountCreatedAssets = {
   nextToken?: string
 }
 
-export const LookupAccountCreatedAssetsMeta: ObjectModelMetadata = {
+export const LookupAccountCreatedAssetsMeta: ObjectModelMetadata<LookupAccountCreatedAssets> = {
   name: 'LookupAccountCreatedAssets',
   kind: 'object',
   fields: [

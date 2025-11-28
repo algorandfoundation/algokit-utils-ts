@@ -17,7 +17,7 @@ export type AccountAssetInformation = {
   createdAsset?: AssetParams
 }
 
-export const AccountAssetInformationMeta: ObjectModelMetadata = {
+export const AccountAssetInformationMeta: ObjectModelMetadata<AccountAssetInformation> = {
   name: 'AccountAssetInformation',
   kind: 'object',
   fields: [

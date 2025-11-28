@@ -40,7 +40,7 @@ export type DryrunRequest = {
   sources: DryrunSource[]
 }
 
-export const DryrunRequestMeta: ObjectModelMetadata = {
+export const DryrunRequestMeta: ObjectModelMetadata<DryrunRequest> = {
   name: 'DryrunRequest',
   kind: 'object',
   fields: [

@@ -14,7 +14,7 @@ export type TealKeyValue = {
   value: TealValue
 }
 
-export const TealKeyValueMeta: ObjectModelMetadata = {
+export const TealKeyValueMeta: ObjectModelMetadata<TealKeyValue> = {
   name: 'TealKeyValue',
   kind: 'object',
   fields: [

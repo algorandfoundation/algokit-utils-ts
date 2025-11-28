@@ -10,7 +10,7 @@ export type GetTransactionGroupLedgerStateDeltasForRound = {
   deltas: LedgerStateDeltaForTransactionGroup[]
 }
 
-export const GetTransactionGroupLedgerStateDeltasForRoundMeta: ObjectModelMetadata = {
+export const GetTransactionGroupLedgerStateDeltasForRoundMeta: ObjectModelMetadata<GetTransactionGroupLedgerStateDeltasForRound> = {
   name: 'GetTransactionGroupLedgerStateDeltasForRound',
   kind: 'object',
   fields: [

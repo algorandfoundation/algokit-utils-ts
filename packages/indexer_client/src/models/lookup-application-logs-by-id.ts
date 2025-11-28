@@ -26,7 +26,7 @@ export type LookupApplicationLogsById = {
   logData?: ApplicationLogData[]
 }
 
-export const LookupApplicationLogsByIdMeta: ObjectModelMetadata = {
+export const LookupApplicationLogsByIdMeta: ObjectModelMetadata<LookupApplicationLogsById> = {
   name: 'LookupApplicationLogsById',
   kind: 'object',
   fields: [

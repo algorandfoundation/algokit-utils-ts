@@ -15,7 +15,7 @@ export type StateProofSigSlot = {
   lowerSigWeight?: bigint
 }
 
-export const StateProofSigSlotMeta: ObjectModelMetadata = {
+export const StateProofSigSlotMeta: ObjectModelMetadata<StateProofSigSlot> = {
   name: 'StateProofSigSlot',
   kind: 'object',
   fields: [

@@ -33,7 +33,7 @@ export type HbProofFields = {
   hbPk2sig?: Uint8Array
 }
 
-export const HbProofFieldsMeta: ObjectModelMetadata = {
+export const HbProofFieldsMeta: ObjectModelMetadata<HbProofFields> = {
   name: 'HbProofFields',
   kind: 'object',
   fields: [

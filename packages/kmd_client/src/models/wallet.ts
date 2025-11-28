@@ -21,7 +21,7 @@ export type Wallet = {
   supportedTxs?: TxType[]
 }
 
-export const WalletMeta: ObjectModelMetadata = {
+export const WalletMeta: ObjectModelMetadata<Wallet> = {
   name: 'Wallet',
   kind: 'object',
   fields: [

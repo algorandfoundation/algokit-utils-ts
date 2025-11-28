@@ -30,7 +30,7 @@ export type DryrunState = {
   error?: string
 }
 
-export const DryrunStateMeta: ObjectModelMetadata = {
+export const DryrunStateMeta: ObjectModelMetadata<DryrunState> = {
   name: 'DryrunState',
   kind: 'object',
   fields: [
