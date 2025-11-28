@@ -38,7 +38,7 @@ A collection of random notes pop up during the migration process.
   - Bring the unhappy path tests over (fail to encode/decode)
   - ABIResult vs ABIReturn
     - TestContractClient was updated
-  - TODO: PD - support txnCount for ABIMethod
+  - txnCount was removed from ABIMethod, do we need to add it back?
   - Remove `ABIMethodParams`
 - Make sure that the python utils also sort resources during resource population
 - migration stratefy for EventType.TxnGroupSimulated in utils-ts-debug
@@ -49,3 +49,4 @@ A collection of random notes pop up during the migration process.
 - TODO: re-export transact under utils/transact folder
 - integration:
   - need to remove `decodeReturnValue` from the client generator
+- TODO: move ProgramSourceMap

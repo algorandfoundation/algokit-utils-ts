@@ -20,7 +20,6 @@ export interface PcLineLocation {
   nameIndex?: number
 }
 
-// TODO: PD - delete this?
 /**
  * Contains a mapping from TEAL program PC to source file location.
  */
