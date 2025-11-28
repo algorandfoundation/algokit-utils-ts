@@ -1,6 +1,6 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import type { LogicSignature, SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
 import { encodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Address } from './encoding/address.js'
 import { LogicSig, LogicSigAccount } from './logicsig.js'
 import { addressFromMultisigPreImg } from './multisig.js'
 

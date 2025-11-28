@@ -19,7 +19,7 @@ import {
   getLocalABIStorageMaps,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
+import { Address, ReadableAddress, getAddress, getApplicationAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Indexer, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
@@ -463,7 +463,7 @@ export class AppClient {
    */
   constructor(params: AppClientParams) {
     this._appId = params.appId
-    this._appAddress = algosdk.getApplicationAddress(this._appId)
+    this._appAddress = getApplicationAddress(this._appId)
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand

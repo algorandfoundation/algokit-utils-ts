@@ -1,7 +1,8 @@
 import { ABIType, ABIValue, Arc56Contract, getABIMethod } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
@@ -281,7 +282,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
@@ -315,7 +316,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)

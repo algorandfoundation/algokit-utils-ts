@@ -1,10 +1,11 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Address } from '@algorandfoundation/algokit-common'
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, Kmd } from '@algorandfoundation/sdk'
+import { Kmd } from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
 import { GetTestAccountParams } from '../types/testing'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 
 /**
  * @deprecated Use `getTestAccount(params, algorandClient)` instead. The `algorandClient` object can be created using `AlgorandClient.fromClients({ algod, kmd })`.

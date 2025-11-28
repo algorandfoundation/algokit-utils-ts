@@ -1,9 +1,9 @@
 import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
-import { ReadableAddress, getAddress } from '@algorandfoundation/algokit-common'
+import { Address, ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import {
   ABI_RETURN_PREFIX,
   BoxName,
@@ -210,7 +210,7 @@ export class AppManager {
 
     return {
       appId: BigInt(app.id),
-      appAddress: algosdk.getApplicationAddress(app.id),
+      appAddress: getApplicationAddress(app.id),
       approvalProgram: app.params.approvalProgram,
       clearStateProgram: app.params.clearStateProgram,
       creator: Address.fromString(app.params.creator),

@@ -1,4 +1,4 @@
-import { Address } from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/algokit-common'
 import { asJson } from '../util'
 
 const DISPENSER_BASE_URL = 'https://api.dispenser.algorandfoundation.tools'

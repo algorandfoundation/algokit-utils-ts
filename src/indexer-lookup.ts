@@ -1,5 +1,6 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, Indexer } from '@algorandfoundation/sdk'
+import { Indexer } from '@algorandfoundation/sdk'
 import { LookupAssetHoldingsOptions } from './types/indexer'
 export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>
 

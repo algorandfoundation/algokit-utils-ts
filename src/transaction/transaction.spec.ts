@@ -1,7 +1,8 @@
 import { ABIType } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Account, Address } from '@algorandfoundation/sdk'
+import { Account } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -986,7 +987,7 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(
           await v9Client.params.call({
             method: 'addressBalance',
-            args: [algosdk.getApplicationAddress(externalAppID).toString()],
+            args: [getApplicationAddress(externalAppID).toString()],
             sender: testAccount,
           }),
         )
@@ -1045,7 +1046,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: algosdk.Address & algosdk.Account & AddressWithSigner
+  let testAccount: Address & algosdk.Account & AddressWithSigner
 
   beforeEach(fixture.newScope)
 
@@ -1312,8 +1313,8 @@ describe('access references', () => {
   let appClient: AppClient
   let externalClient: AppClient
 
-  let alice: algosdk.Address
-  let getTestAccounts: (count: number) => Promise<algosdk.Address[]>
+  let alice: Address
+  let getTestAccounts: (count: number) => Promise<Address[]>
 
   beforeEach(fixture.newScope)
 

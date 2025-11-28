@@ -1,6 +1,6 @@
 import { ABIMethod } from '@algorandfoundation/algokit-abi'
+import { getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'
@@ -159,7 +159,7 @@ export class AlgorandClientTransactionSender {
       return {
         ...result,
         appId: BigInt(result.confirmation.appId!),
-        appAddress: algosdk.getApplicationAddress(result.confirmation.appId!),
+        appAddress: getApplicationAddress(result.confirmation.appId!),
       }
     }
   }

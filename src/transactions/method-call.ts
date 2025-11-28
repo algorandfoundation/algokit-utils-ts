@@ -9,9 +9,9 @@ import {
   argTypeIsTransaction,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { getAddress } from '@algorandfoundation/algokit-common'
+import { Address, getAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { Address, TransactionSigner } from '@algorandfoundation/sdk'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { AppManager } from '../types/app-manager'
