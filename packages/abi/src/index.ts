@@ -22,7 +22,6 @@ export {
   ABIStructType,
   ABITupleType,
   ABIType,
-  ABITypeName,
   ABIUfixedType,
   ABIUintType,
   parseTupleContent,

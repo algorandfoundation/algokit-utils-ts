@@ -10,19 +10,6 @@ import type { ABIStructValue, ABIValue } from './abi-value'
 import { StructField } from './arc56-contract'
 import { bigIntToBytes, bytesToBigInt } from './bigint'
 
-export enum ABITypeName {
-  Uint = 'Uint',
-  Ufixed = 'Ufixed',
-  Address = 'Address',
-  Bool = 'Bool',
-  Byte = 'Byte',
-  String = 'String',
-  Tuple = 'Tuple',
-  StaticArray = 'StaticArray',
-  DynamicArray = 'DynamicArray',
-  Struct = 'Struct',
-}
-
 const STATIC_ARRAY_REGEX = /^([a-z\d[\](),]+)\[(0|[1-9][\d]*)]$/
 const UFIXED_REGEX = /^ufixed([1-9][\d]*)x([1-9][\d]*)$/
 const MAX_LEN = 2 ** 16 - 1
@@ -48,14 +35,29 @@ interface Segment {
  * This is the abstract base class for all ABI types.
  */
 export abstract class ABIType {
-  /** The name of this ABI type */
-  abstract readonly name: ABITypeName
-
   /**
-   * Converts the ABI type to its ARC-4 string representation.
+   * Returns the ARC-4 type name string representation.
    * @returns The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
    */
-  abstract toString(): string
+  abstract get name(): string
+
+  /**
+   * Returns a user-friendly display name for this type.
+   * For most types, this is the same as name.
+   * For struct types, this returns the struct name.
+   * @returns The display name for this type
+   */
+  get displayName(): string {
+    return this.name
+  }
+
+  /**
+   * Converts the ABI type to its string representation.
+   * @returns The ARC-4 type string
+   */
+  toString(): string {
+    return this.name
+  }
 
   /**
    * Checks if this ABI type is equal to another.
@@ -168,8 +170,6 @@ export abstract class ABIType {
  * An unsigned integer ABI type of a specific bit size.
  */
 export class ABIUintType extends ABIType {
-  readonly name = ABITypeName.Uint
-
   /**
    * Creates a new unsigned integer type.
    * @param bitSize The bit size (must be a multiple of 8, between 8 and 512)
@@ -181,7 +181,7 @@ export class ABIUintType extends ABIType {
     }
   }
 
-  toString(): string {
+  get name(): string {
     return `uint${this.bitSize}`
   }
 
@@ -199,11 +199,11 @@ export class ABIUintType extends ABIType {
 
   encode(value: ABIValue): Uint8Array {
     if (typeof value !== 'bigint' && typeof value !== 'number') {
-      throw new Error(`Cannot encode value as ${this.toString()}: ${value}`)
+      throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
 
     if (value >= BigInt(2 ** this.bitSize) || value < BigInt(0)) {
-      throw new Error(`${value} is not a non-negative int or too big to fit in size ${this.toString()}`)
+      throw new Error(`${value} is not a non-negative int or too big to fit in size ${this.name}`)
     }
     if (typeof value === 'number' && !Number.isSafeInteger(value)) {
       throw new Error(`${value} should be converted into a BigInt before it is encoded`)
@@ -213,7 +213,7 @@ export class ABIUintType extends ABIType {
 
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length !== this.bitSize / 8) {
-      throw new Error(`byte string must correspond to a ${this.toString()}`)
+      throw new Error(`byte string must correspond to a ${this.name}`)
     }
     const value = bytesToBigInt(bytes)
     return this.bitSize < 53 ? Number(value) : value
@@ -224,8 +224,6 @@ export class ABIUintType extends ABIType {
  * A fixed-point number ABI type of a specific bit size and precision.
  */
 export class ABIUfixedType extends ABIType {
-  readonly name = ABITypeName.Ufixed
-
   /**
    * Creates a new fixed-point type.
    * @param bitSize The bit size (must be a multiple of 8, between 8 and 512)
@@ -244,7 +242,7 @@ export class ABIUfixedType extends ABIType {
     }
   }
 
-  toString(): string {
+  get name(): string {
     return `ufixed${this.bitSize}x${this.precision}`
   }
 
@@ -262,10 +260,10 @@ export class ABIUfixedType extends ABIType {
 
   encode(value: ABIValue): Uint8Array {
     if (typeof value !== 'bigint' && typeof value !== 'number') {
-      throw new Error(`Cannot encode value as ${this.toString()}: ${value}`)
+      throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
     if (value >= BigInt(2 ** this.bitSize) || value < BigInt(0)) {
-      throw new Error(`${value} is not a non-negative int or too big to fit in size ${this.toString()}`)
+      throw new Error(`${value} is not a non-negative int or too big to fit in size ${this.name}`)
     }
     if (typeof value === 'number' && !Number.isSafeInteger(value)) {
       throw new Error(`${value} should be converted into a BigInt before it is encoded`)
@@ -275,7 +273,7 @@ export class ABIUfixedType extends ABIType {
 
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length !== this.bitSize / 8) {
-      throw new Error(`byte string must correspond to a ${this.toString()}`)
+      throw new Error(`byte string must correspond to a ${this.name}`)
     }
     const value = bytesToBigInt(bytes)
     return this.bitSize < 53 ? Number(value) : value
@@ -286,9 +284,7 @@ export class ABIUfixedType extends ABIType {
  * An Algorand address ABI type.
  */
 export class ABIAddressType extends ABIType {
-  readonly name = ABITypeName.Address
-
-  toString(): string {
+  get name(): string {
     return 'address'
   }
 
@@ -325,9 +321,7 @@ export class ABIAddressType extends ABIType {
  * A boolean ABI type.
  */
 export class ABIBoolType extends ABIType {
-  readonly name = ABITypeName.Bool
-
-  toString(): string {
+  get name(): string {
     return 'bool'
   }
 
@@ -364,9 +358,7 @@ export class ABIBoolType extends ABIType {
  * A single byte ABI type.
  */
 export class ABIByteType extends ABIType {
-  readonly name = ABITypeName.Byte
-
-  toString(): string {
+  get name(): string {
     return 'byte'
   }
 
@@ -407,9 +399,7 @@ export class ABIByteType extends ABIType {
  * A dynamic-length string ABI type.
  */
 export class ABIStringType extends ABIType {
-  readonly name = ABITypeName.String
-
-  toString(): string {
+  get name(): string {
     return 'string'
   }
 
@@ -467,8 +457,6 @@ export class ABIStringType extends ABIType {
  * A tuple ABI type containing other ABI types.
  */
 export class ABITupleType extends ABIType {
-  readonly name = ABITypeName.Tuple
-
   /**
    * Creates a new tuple type.
    * @param childTypes The types of the tuple elements
@@ -480,10 +468,10 @@ export class ABITupleType extends ABIType {
     }
   }
 
-  toString(): string {
+  get name(): string {
     const typeStrings: string[] = []
     for (let i = 0; i < this.childTypes.length; i++) {
-      typeStrings[i] = this.childTypes[i].toString()
+      typeStrings[i] = this.childTypes[i].name
     }
     return `(${typeStrings.join(',')})`
   }
@@ -605,8 +593,6 @@ export class ABITupleType extends ABIType {
  * A static-length array ABI type.
  */
 export class ABIArrayStaticType extends ABIType {
-  readonly name = ABITypeName.StaticArray
-
   /**
    * Creates a new static array type.
    * @param childType The type of the array elements
@@ -622,8 +608,8 @@ export class ABIArrayStaticType extends ABIType {
     }
   }
 
-  toString(): string {
-    return `${this.childType.toString()}[${this.length}]`
+  get name(): string {
+    return `${this.childType.name}[${this.length}]`
   }
 
   equals(other: ABIType): boolean {
@@ -651,7 +637,7 @@ export class ABIArrayStaticType extends ABIType {
 
   encode(value: ABIValue): Uint8Array {
     if (!Array.isArray(value) && !(value instanceof Uint8Array)) {
-      throw new Error(`Cannot encode value as ${this.toString()}: ${value}`)
+      throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
     if (value.length !== this.length) {
       throw new Error(`Value array does not match static array length. Expected ${this.length}, got ${value.length}`)
@@ -677,8 +663,6 @@ export class ABIArrayStaticType extends ABIType {
  * A dynamic-length array ABI type.
  */
 export class ABIArrayDynamicType extends ABIType {
-  readonly name = ABITypeName.DynamicArray
-
   /**
    * Creates a new dynamic array type.
    * @param childType The type of the array elements
@@ -687,8 +671,8 @@ export class ABIArrayDynamicType extends ABIType {
     super()
   }
 
-  toString(): string {
-    return `${this.childType.toString()}[]`
+  get name(): string {
+    return `${this.childType.name}[]`
   }
 
   equals(other: ABIType): boolean {
@@ -714,7 +698,7 @@ export class ABIArrayDynamicType extends ABIType {
 
   encode(value: ABIValue): Uint8Array {
     if (!Array.isArray(value) && !(value instanceof Uint8Array)) {
-      throw new Error(`Cannot encode value as ${this.toString()}: ${value}`)
+      throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
     const convertedTuple = this.toABITupleType(value.length)
     const encodedTuple = convertedTuple.encode(value)
@@ -741,8 +725,6 @@ export class ABIArrayDynamicType extends ABIType {
  * A struct ABI type with named fields.
  */
 export class ABIStructType extends ABIType {
-  readonly name = ABITypeName.Struct
-
   /**
    * Creates a new struct type.
    * @param structName The name of the struct
@@ -755,9 +737,13 @@ export class ABIStructType extends ABIType {
     super()
   }
 
-  toString(): string {
+  get name(): string {
     const tupleType = this.toABITupleType()
-    return tupleType.toString()
+    return tupleType.name
+  }
+
+  get displayName(): string {
+    return this.structName
   }
 
   equals(other: ABIType): boolean {
@@ -845,7 +831,7 @@ export class ABIStructType extends ABIType {
 
   encode(value: ABIValue): Uint8Array {
     if (typeof value !== 'object' || Array.isArray(value) || value instanceof Uint8Array || value instanceof Address) {
-      throw new Error(`Cannot encode value as ${this.toString()}: ${value}`)
+      throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
 
     const tupleType = this.toABITupleType()

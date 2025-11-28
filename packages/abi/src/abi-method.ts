@@ -176,10 +176,10 @@ export function getABIMethodSignature(abiMethod: ABIMethod): string {
   const args = abiMethod.args
     .map((arg) => {
       if (argTypeIsTransaction(arg.type) || argTypeIsReference(arg.type)) return arg.type
-      return arg.type.toString()
+      return arg.type.name
     })
     .join(',')
-  const returns = abiMethod.returns.type === 'void' ? 'void' : abiMethod.returns.type.toString()
+  const returns = abiMethod.returns.type === 'void' ? 'void' : abiMethod.returns.type.name
   return `${abiMethod.name}(${args})${returns}`
 }
 
