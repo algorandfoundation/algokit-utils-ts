@@ -248,13 +248,15 @@ export function validateTransaction(transaction: Transaction): void {
   }
 }
 
+const transactionCodec = new ObjectModelCodec<Transaction>(TransactionMeta)
+
 /**
  * Encode the transaction without the domain separation (e.g. "TX") prefix
  * This is useful for encoding the transaction for signing with tools that automatically add "TX" prefix to the transaction bytes.
  */
 export function encodeTransactionRaw(transaction: Transaction): Uint8Array {
   validateTransaction(transaction)
-  const encodingData = new ObjectModelCodec<Transaction>(TransactionMeta).encodeOptional(transaction, 'msgpack')
+  const encodingData = transactionCodec.encode(transaction, 'msgpack')
   return encodeMsgpack(encodingData)
 }
 
@@ -287,7 +289,7 @@ export function decodeTransaction(encoded_transaction: Uint8Array): Transaction 
   }
 
   const decodedData = decodeMsgpack(hasPrefix ? encoded_transaction.slice(prefixBytes.length) : encoded_transaction)
-  return new ObjectModelCodec<Transaction>(TransactionMeta).decode(decodedData, 'msgpack')
+  return transactionCodec.decode(decodedData, 'msgpack')
 }
 
 /**

@@ -1,8 +1,9 @@
-import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import { EMPTY_SIGNATURE, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
   Transaction,
+  decodeTransaction,
   encodeTransaction,
   encodeTransactionRaw,
   estimateTransactionSize,
@@ -99,5 +100,34 @@ describe('Transaction Validation', () => {
 
       expect(() => sut(transaction)).toThrow('Asset transfer validation failed: Asset ID must not be 0')
     })
+  })
+})
+
+describe('decodeTransaction', () => {
+  test('should successfully decode transaction with unknown type', () => {
+    const addressBytes = new Uint8Array([
+      230, 185, 154, 253, 65, 13, 19, 221, 14, 138, 126, 148, 184, 121, 29, 48, 92, 117, 6, 238, 183, 225, 250, 65, 14, 118, 26, 59, 98, 44,
+      225, 20,
+    ])
+    const wireTransaction = {
+      amt: 1000,
+      fv: 1000,
+      lv: 2000,
+      rcv: addressBytes,
+      snd: addressBytes,
+      type: 'xyz', // An unknown transaction type
+    }
+    const encodedTransaction = encodeMsgpack(wireTransaction)
+
+    const decodedTransaction = decodeTransaction(encodedTransaction)
+
+    expect(decodedTransaction).toMatchInlineSnapshot(`
+      {
+        "firstValid": 1000n,
+        "lastValid": 2000n,
+        "sender": "424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI",
+        "type": "unknown",
+      }
+    `)
   })
 })

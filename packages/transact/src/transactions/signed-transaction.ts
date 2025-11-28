@@ -103,6 +103,8 @@ export type LogicSignature = {
   logicMultiSignature?: MultisigSignature
 }
 
+const signedTransactionCodec = new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta)
+
 /**
  * Encode signed transactions to MsgPack for sending on the network.
  *
@@ -113,7 +115,7 @@ export type LogicSignature = {
  */
 export function encodeSignedTransaction(signedTransaction: SignedTransaction): Uint8Array {
   validateSignedTransaction(signedTransaction)
-  const encodingData = new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta).encodeOptional(signedTransaction, 'msgpack')
+  const encodingData = signedTransactionCodec.encode(signedTransaction, 'msgpack')
   return encodeMsgpack(encodingData)
 }
 
@@ -137,7 +139,7 @@ export function encodeSignedTransactions(signedTransactions: SignedTransaction[]
  */
 export function decodeSignedTransaction(encodedSignedTransaction: Uint8Array): SignedTransaction {
   const decodedData = decodeMsgpack(encodedSignedTransaction)
-  return new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta).decode(decodedData, 'msgpack')
+  return signedTransactionCodec.decode(decodedData, 'msgpack')
 }
 
 /**
