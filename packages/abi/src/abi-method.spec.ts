@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer'
 import { describe, expect, test } from 'vitest'
-import { getABIMethod, getABIMethodSelector, getABIMethodSignature } from './abi-method'
+import { getABIMethod } from './abi-method'
 import { parseTupleContent } from './abi-type'
 
 describe('getABIMethod', () => {
@@ -27,7 +27,7 @@ describe('getABIMethod', () => {
   )
 })
 
-describe('getABIMethodSelector', () => {
+describe('get ABIMethod selector', () => {
   test.each([
     ['add(uint64,uint64)uint64', 'fe6bdf69'],
     ['optIn()void', '29314d95'],
@@ -35,7 +35,7 @@ describe('getABIMethodSelector', () => {
     ['bootstrap(pay,pay,application)void', '895c2a3b'],
   ])('should generate correct selector for %s', (signature: string, expectedHex: string) => {
     const method = getABIMethod(signature)
-    const selector = getABIMethodSelector(method)
+    const selector = method.getSelector()
 
     expect(selector).toHaveLength(4)
     expect(Buffer.from(selector).toString('hex')).toBe(expectedHex)
@@ -53,10 +53,10 @@ describe('parseTupleContent', () => {
   })
 })
 
-describe('getABIMethodSignature round trip', () => {
+describe('get ABIMethod signature round trip', () => {
   test.each([['add(uint64,uint64)uint64'], ['optIn()void']])('should round trip signature %s correctly', (signature: string) => {
     const method = getABIMethod(signature)
-    const regeneratedSignature = getABIMethodSignature(method)
+    const regeneratedSignature = method.getSignature()
     expect(regeneratedSignature).toBe(signature)
   })
 })

@@ -1,4 +1,5 @@
 export {
+  ABIMethod,
   argTypeIsAbiType,
   argTypeIsReference,
   argTypeIsTransaction,
@@ -7,11 +8,9 @@ export {
   getABIDecodedValue,
   getABIEncodedValue,
   getABIMethod,
-  getABIMethodSelector,
-  getABIMethodSignature,
   isAVMType,
 } from './abi-method'
-export type { ABIDefaultValue, ABIMethod, ABIReferenceType, ABIReturn } from './abi-method'
+export type { ABIDefaultValue, ABIReferenceType, ABIReturn } from './abi-method'
 export {
   ABIAddressType,
   ABIArrayDynamicType,

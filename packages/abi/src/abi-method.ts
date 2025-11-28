@@ -75,13 +75,53 @@ export type ABIStruct = {
   [key: string]: ABIStruct | ABIValue
 }
 
-export type ABIMethod = {
-  name: string
-  description?: string
-  args: ABIMethodArg[]
-  returns: ABIMethodReturn
-  events?: ARC28Event[]
-  readonly?: boolean
+export class ABIMethod {
+  readonly name: string
+  readonly description?: string
+  readonly args: ABIMethodArg[]
+  readonly returns: ABIMethodReturn
+  readonly events?: ARC28Event[]
+  readonly readonly?: boolean
+
+  constructor(params: {
+    name: string
+    description?: string
+    args: ABIMethodArg[]
+    returns: ABIMethodReturn
+    events?: ARC28Event[]
+    readonly?: boolean
+  }) {
+    this.name = params.name
+    this.description = params.description
+    this.args = params.args
+    this.returns = params.returns
+    this.events = params.events
+    this.readonly = params.readonly
+  }
+
+  /**
+   * Returns the signature of this ABI method.
+   * @returns The signature, e.g. `my_method(unit64,string)bytes`
+   */
+  getSignature(): string {
+    const args = this.args
+      .map((arg) => {
+        if (argTypeIsTransaction(arg.type) || argTypeIsReference(arg.type)) return arg.type
+        return arg.type.name
+      })
+      .join(',')
+    const returns = this.returns.type === 'void' ? 'void' : this.returns.type.name
+    return `${this.name}(${args})${returns}`
+  }
+
+  /**
+   * Returns the method selector of this ABI method.
+   * @returns The 4-byte method selector
+   */
+  getSelector(): Uint8Array {
+    const hash = sha512.sha512_256.array(this.getSignature())
+    return new Uint8Array(hash.slice(0, 4))
+  }
 }
 
 /**
@@ -160,37 +200,11 @@ export function getABIMethod(signature: string): ABIMethod {
   const returnType = signature.slice(argsEnd + 1)
   const returns = { type: returnType === 'void' ? ('void' as const) : ABIType.from(returnType) } satisfies ABIMethodReturn
 
-  return {
+  return new ABIMethod({
     name,
     args,
     returns,
-  } satisfies ABIMethod
-}
-
-/**
- * Returns the signature of a given ABI method.
- * @param signature The ABI method
- * @returns The signature, e.g. `my_method(unit64,string)bytes`
- */
-export function getABIMethodSignature(abiMethod: ABIMethod): string {
-  const args = abiMethod.args
-    .map((arg) => {
-      if (argTypeIsTransaction(arg.type) || argTypeIsReference(arg.type)) return arg.type
-      return arg.type.name
-    })
-    .join(',')
-  const returns = abiMethod.returns.type === 'void' ? 'void' : abiMethod.returns.type.name
-  return `${abiMethod.name}(${args})${returns}`
-}
-
-/**
- * Returns the method selector of a given ABI method.
- * @param abiMethod The ABI method
- * @returns The 4-byte method selector
- */
-export function getABIMethodSelector(abiMethod: ABIMethod): Uint8Array {
-  const hash = sha512.sha512_256.array(getABIMethodSignature(abiMethod))
-  return new Uint8Array(hash.slice(0, 4))
+  })
 }
 
 function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {
@@ -243,14 +257,14 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
     desc: method.returns.desc,
   }
 
-  return {
+  return new ABIMethod({
     name: method.name,
     description: method.desc,
     args,
     returns,
     events: method.events,
     readonly: method.readonly,
-  } satisfies ABIMethod
+  })
 }
 
 export function argTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {

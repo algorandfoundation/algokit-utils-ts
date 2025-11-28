@@ -1,4 +1,4 @@
-import { findABIMethod, getABIMethodSelector } from '@algorandfoundation/algokit-abi'
+import { findABIMethod } from '@algorandfoundation/algokit-abi'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
@@ -120,7 +120,7 @@ describe('AlgorandClient', () => {
         sender: alice,
         appId: appId,
         args: [
-          getABIMethodSelector(appClient.appClient.getABIMethod('doMath')!),
+          appClient.appClient.getABIMethod('doMath')!.getSelector(),
           algosdk.encodeUint64(1),
           algosdk.encodeUint64(2),
           Uint8Array.from(Buffer.from('AANzdW0=', 'base64')), //sum

@@ -7,7 +7,6 @@ import {
   ABIValue,
   argTypeIsReference,
   argTypeIsTransaction,
-  getABIMethodSelector,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { getAddress } from '@algorandfoundation/algokit-common'
@@ -320,7 +319,7 @@ function encodeMethodArguments(
   const encodedArgs = new Array<Uint8Array>()
 
   // Insert method selector at the front
-  encodedArgs.push(getABIMethodSelector(method))
+  encodedArgs.push(method.getSelector())
 
   // Get ABI types for non-transaction arguments
   const abiTypes = new Array<ABIType>()
