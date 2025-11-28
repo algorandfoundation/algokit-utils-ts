@@ -51,7 +51,7 @@ ___
 
 ### returns
 
-• `Optional` **returns**: [`ABIReturn`](../modules/types_app.md#abireturn)[]
+• `Optional` **returns**: `ABIReturn`[]
 
 If ABI method(s) were called the processed return values
 

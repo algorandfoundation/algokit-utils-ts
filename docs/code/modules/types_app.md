@@ -32,7 +32,6 @@
 
 - [ABIAppCallArg](types_app.md#abiappcallarg)
 - [ABIAppCallArgs](types_app.md#abiappcallargs)
-- [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
 - [AppCallTransactionResult](types_app.md#appcalltransactionresult)
 - [AppReturn](types_app.md#appreturn)
@@ -58,31 +57,19 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 #### Defined in
 
-[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[src/types/app.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L72)
 
 ___
 
 ### ABIAppCallArgs
 
-Ƭ **ABIAppCallArgs**: [`CoreAppCallArgs`](../interfaces/types_app.CoreAppCallArgs.md) & \{ `method`: `ABIMethodParams` \| `ABIMethod` ; `methodArgs`: [`ABIAppCallArg`](types_app.md#abiappcallarg)[]  }
+Ƭ **ABIAppCallArgs**: [`CoreAppCallArgs`](../interfaces/types_app.CoreAppCallArgs.md) & \{ `method`: `ABIMethod` ; `methodArgs`: [`ABIAppCallArg`](types_app.md#abiappcallarg)[]  }
 
 App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
-
-___
-
-### ABIReturn
-
-Ƭ **ABIReturn**: \{ `decodeError`: `undefined` ; `method`: `ABIMethod` ; `rawReturnValue`: `Uint8Array` ; `returnValue`: `ABIValue`  } \| \{ `decodeError`: `Error` ; `method?`: `undefined` ; `rawReturnValue?`: `undefined` ; `returnValue?`: `undefined`  }
-
-The return value of an ABI method call
-
-#### Defined in
-
-[src/types/app.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L149)
+[src/types/app.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L84)
 
 ___
 
@@ -96,19 +83,19 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L94)
+[src/types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
 
 ___
 
 ### AppCallTransactionResult
 
-Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<[`ABIReturn`](types_app.md#abireturn)\>
+Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<`ABIReturn`\>
 
 Result from calling an app
 
 #### Defined in
 
-[src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
+[src/types/app.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L147)
 
 ___
 
@@ -130,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L231)
+[src/types/app.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L222)
 
 ___
 
@@ -142,19 +129,19 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L248)
+[src/types/app.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L239)
 
 ___
 
 ### SendAppTransactionResult
 
-Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: [`ABIReturn`](types_app.md#abireturn)  }\>
+Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: `ABIReturn`  }\>
 
 Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L237)
+[src/types/app.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L228)
 
 ___
 
@@ -166,7 +153,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L245)
+[src/types/app.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L236)
 
 ## Variables
 
@@ -178,7 +165,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
+[src/types/app.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L32)
 
 ___
 
@@ -190,7 +177,7 @@ The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/ma
 
 #### Defined in
 
-[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
+[src/types/app.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L26)
 
 ___
 
@@ -202,7 +189,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
+[src/types/app.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L29)
 
 ___
 
@@ -214,7 +201,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)
+[src/types/app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L23)
 
 ___
 
@@ -226,4 +213,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L19)
+[src/types/app.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L20)

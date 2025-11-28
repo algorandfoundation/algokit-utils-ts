@@ -42,7 +42,7 @@ The string name of an ABI type
 
 #### Defined in
 
-[src/types/app-spec.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L210)
+[src/types/app-spec.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L259)
 
 ___
 
@@ -54,7 +54,7 @@ AVM data type
 
 #### Defined in
 
-[src/types/app-spec.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L266)
+[src/types/app-spec.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L315)
 
 ___
 
@@ -70,19 +70,19 @@ The various call configs:
 
 #### Defined in
 
-[src/types/app-spec.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L181)
+[src/types/app-spec.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L230)
 
 ___
 
 ### DefaultArgument
 
-Ƭ **DefaultArgument**: \{ `data`: `ABIMethodParams` ; `source`: ``"abi-method"``  } \| \{ `data`: `string` ; `source`: ``"global-state"``  } \| \{ `data`: `string` ; `source`: ``"local-state"``  } \| \{ `data`: `string` \| `number` ; `source`: ``"constant"``  }
+Ƭ **DefaultArgument**: \{ `data`: `ABIMethod` ; `source`: ``"abi-method"``  } \| \{ `data`: `string` ; `source`: ``"global-state"``  } \| \{ `data`: `string` ; `source`: ``"local-state"``  } \| \{ `data`: `string` \| `number` ; `source`: ``"constant"``  }
 
 Defines a strategy for obtaining a default value for a given ABI arg.
 
 #### Defined in
 
-[src/types/app-spec.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L226)
+[src/types/app-spec.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L275)
 
 ___
 
@@ -94,7 +94,7 @@ The name of a field
 
 #### Defined in
 
-[src/types/app-spec.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L207)
+[src/types/app-spec.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L256)
 
 ___
 
@@ -106,7 +106,7 @@ A lookup of encoded method call spec to hint
 
 #### Defined in
 
-[src/types/app-spec.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L165)
+[src/types/app-spec.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L214)
 
 ___
 
@@ -125,7 +125,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L315)
+[src/types/app-spec.ts:364](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L364)
 
 ___
 
@@ -137,13 +137,13 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-[src/types/app-spec.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L213)
+[src/types/app-spec.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L262)
 
 ## Functions
 
 ### arc32ToArc56
 
-▸ **arc32ToArc56**(`appSpec`): [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md)
+▸ **arc32ToArc56**(`appSpec`): `Arc56Contract`
 
 Converts an ARC-32 Application Specification to an ARC-56 Contract
 
@@ -155,7 +155,7 @@ Converts an ARC-32 Application Specification to an ARC-56 Contract
 
 #### Returns
 
-[`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md)
+`Arc56Contract`
 
 The ARC-56 Contract
 
@@ -167,4 +167,4 @@ const arc56AppSpec = arc32ToArc56(arc32AppSpec)
 
 #### Defined in
 
-[src/types/app-spec.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L14)
+[src/types/app-spec.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L20)
