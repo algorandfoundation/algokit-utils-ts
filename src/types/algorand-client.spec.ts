@@ -1,4 +1,4 @@
-import { findABIMethod } from '@algorandfoundation/algokit-abi'
+import { getABIMethod } from '@algorandfoundation/algokit-abi'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
@@ -274,7 +274,7 @@ describe('AlgorandClient', () => {
   test('methodCall create', async () => {
     await algorand.send.appCreateMethodCall({
       sender: alice,
-      method: findABIMethod('createApplication', APP_SPEC),
+      method: getABIMethod('createApplication', APP_SPEC),
       approvalProgram: await compileProgram(algorand, APP_SPEC.source!.approval),
       clearStateProgram: await compileProgram(algorand, APP_SPEC.source!.clear),
     })

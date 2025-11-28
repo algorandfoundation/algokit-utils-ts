@@ -122,6 +122,61 @@ export class ABIMethod {
     const hash = sha512.sha512_256.array(this.getSignature())
     return new Uint8Array(hash.slice(0, 4))
   }
+
+  /**
+   * Returns the ABI method object for a given method signature.
+   * @param signature The method signature
+   * e.g. `my_method(unit64,string)bytes`
+   * @returns The `ABIMethod`
+   */
+  static fromSignature(signature: string): ABIMethod {
+    const argsStart = signature.indexOf('(')
+    if (argsStart === -1) {
+      throw new Error(`Invalid method signature: ${signature}`)
+    }
+
+    let argsEnd = -1
+    let depth = 0
+    for (let i = argsStart; i < signature.length; i++) {
+      const char = signature[i]
+
+      if (char === '(') {
+        depth += 1
+      } else if (char === ')') {
+        if (depth === 0) {
+          // unpaired parenthesis
+          break
+        }
+
+        depth -= 1
+        if (depth === 0) {
+          argsEnd = i
+          break
+        }
+      }
+    }
+
+    if (argsEnd === -1) {
+      throw new Error(`Invalid method signature: ${signature}`)
+    }
+
+    const name = signature.slice(0, argsStart)
+    const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
+      .map((n: string) => {
+        if (argTypeIsTransaction(n as ABIMethodArgType) || argTypeIsReference(n as ABIMethodArgType)) {
+          return { type: n as ABIMethodArgType } satisfies ABIMethodArg
+        }
+        return { type: ABIType.from(n) } satisfies ABIMethodArg
+      })
+    const returnType = signature.slice(argsEnd + 1)
+    const returns = { type: returnType === 'void' ? ('void' as const) : ABIType.from(returnType) } satisfies ABIMethodReturn
+
+    return new ABIMethod({
+      name,
+      args,
+      returns,
+    })
+  }
 }
 
 /**
@@ -131,7 +186,7 @@ export class ABIMethod {
  * @param appSpec The app spec for the app
  * @returns The `ABIMethod`
  */
-export function findABIMethod(methodNameOrSignature: string, appSpec: Arc56Contract): ABIMethod {
+export function getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contract): ABIMethod {
   if (!methodNameOrSignature.includes('(')) {
     const methods = appSpec.methods.filter((m) => m.name === methodNameOrSignature)
     if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
@@ -150,61 +205,6 @@ export function findABIMethod(methodNameOrSignature: string, appSpec: Arc56Contr
     if (!method) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
     return arc56MethodToABIMethod(method, appSpec)
   }
-}
-
-/**
- * Returns the ABI method object for a given method signature.
- * @param signature The method signature
- * e.g. `my_method(unit64,string)bytes`
- * @returns The `ABIMethod`
- */
-export function getABIMethod(signature: string): ABIMethod {
-  const argsStart = signature.indexOf('(')
-  if (argsStart === -1) {
-    throw new Error(`Invalid method signature: ${signature}`)
-  }
-
-  let argsEnd = -1
-  let depth = 0
-  for (let i = argsStart; i < signature.length; i++) {
-    const char = signature[i]
-
-    if (char === '(') {
-      depth += 1
-    } else if (char === ')') {
-      if (depth === 0) {
-        // unpaired parenthesis
-        break
-      }
-
-      depth -= 1
-      if (depth === 0) {
-        argsEnd = i
-        break
-      }
-    }
-  }
-
-  if (argsEnd === -1) {
-    throw new Error(`Invalid method signature: ${signature}`)
-  }
-
-  const name = signature.slice(0, argsStart)
-  const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
-    .map((n: string) => {
-      if (argTypeIsTransaction(n as ABIMethodArgType) || argTypeIsReference(n as ABIMethodArgType)) {
-        return { type: n as ABIMethodArgType } satisfies ABIMethodArg
-      }
-      return { type: ABIType.from(n) } satisfies ABIMethodArg
-    })
-  const returnType = signature.slice(argsEnd + 1)
-  const returns = { type: returnType === 'void' ? ('void' as const) : ABIType.from(returnType) } satisfies ABIMethodReturn
-
-  return new ABIMethod({
-    name,
-    args,
-    returns,
-  })
 }
 
 function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {

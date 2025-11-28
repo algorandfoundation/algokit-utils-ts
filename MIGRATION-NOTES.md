@@ -41,6 +41,7 @@ A collection of random notes pop up during the migration process.
   - txnCount was removed from ABIMethod, do we need to add it back?
   - Remove `ABIMethodParams`
   - name and displayName added. toString() is the `name`, `displayName` is `name`, except for struct
+  - getArc56Method replaced by getABIMethod
 - Make sure that the python utils also sort resources during resource population
 - migration stratefy for EventType.TxnGroupSimulated in utils-ts-debug
 - TODO: docs for composer simulate workflow

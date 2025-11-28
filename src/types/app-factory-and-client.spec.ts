@@ -1,4 +1,4 @@
-import { ABIType, ABIValue, Arc56Contract, findABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIType, ABIValue, Arc56Contract, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
@@ -476,7 +476,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    const returnValue = AppManager.getABIReturn(result.confirmations[1], findABIMethod('call_abi_txn', client.appSpec))
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], getABIMethod('call_abi_txn', client.appSpec))
     expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
     expect(returnValue?.returnValue).toBe(result.return)
   })
@@ -537,7 +537,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const expectedReturnValue = AppManager.getABIReturn(result.confirmations[0], findABIMethod('call_abi_foreign_refs', client.appSpec))
+    const expectedReturnValue = AppManager.getABIReturn(result.confirmations[0], getABIMethod('call_abi_foreign_refs', client.appSpec))
     const testAccountPublicKey = testAccount.publicKey
     expect(result.return).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
     expect(expectedReturnValue?.returnValue).toBe(result.return)

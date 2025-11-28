@@ -4,7 +4,6 @@ export {
   argTypeIsReference,
   argTypeIsTransaction,
   decodeAVMValue,
-  findABIMethod,
   getABIDecodedValue,
   getABIEncodedValue,
   getABIMethod,

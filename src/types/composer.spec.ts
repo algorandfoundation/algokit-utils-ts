@@ -1,4 +1,4 @@
-import { getABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIMethod } from '@algorandfoundation/algokit-abi'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
@@ -97,7 +97,7 @@ describe('TransactionComposer', () => {
       composer1.addAppCallMethodCall({
         appId: 123n,
         sender: testAccount,
-        method: getABIMethod('createBoxInNewApp(pay)void'),
+        method: ABIMethod.fromSignature('createBoxInNewApp(pay)void'),
         args: [
           algorand.createTransaction.payment({
             sender: testAccount,
@@ -137,7 +137,7 @@ describe('TransactionComposer', () => {
       composer1.addAppCallMethodCall({
         appId: 123n,
         sender: testAccount,
-        method: getABIMethod('createBoxInNewApp(pay)void'),
+        method: ABIMethod.fromSignature('createBoxInNewApp(pay)void'),
         args: [paymentTxn],
       })
 

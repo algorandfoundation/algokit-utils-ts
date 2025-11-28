@@ -7,9 +7,9 @@ import {
   Arc56Contract,
   ProgramSourceInfo,
   argTypeIsTransaction,
-  findABIMethod,
   getABIDecodedValue,
   getABIEncodedValue,
+  getABIMethod,
   getBoxABIStorageKey,
   getBoxABIStorageKeys,
   getBoxABIStorageMap,
@@ -861,7 +861,7 @@ export class AppClient {
    * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
    */
   public getABIMethod(methodNameOrSignature: string) {
-    return findABIMethod(methodNameOrSignature, this._appSpec)
+    return getABIMethod(methodNameOrSignature, this._appSpec)
   }
 
   /**
@@ -1059,7 +1059,7 @@ export class AppClient {
     args: AppClientMethodCallParams['args'] | undefined,
     sender: ReadableAddress,
   ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
-    const m = findABIMethod(methodNameOrSignature, this._appSpec)
+    const m = getABIMethod(methodNameOrSignature, this._appSpec)
     return await Promise.all(
       args?.map(async (arg, i) => {
         const methodArg = m.args[i]
@@ -1352,7 +1352,7 @@ export class AppClient {
         // Read-only call - do it via simulate
         if (
           (params.onComplete === OnApplicationComplete.NoOp || !params.onComplete) &&
-          findABIMethod(params.method, this._appSpec).readonly
+          getABIMethod(params.method, this._appSpec).readonly
         ) {
           const readonlyParams = {
             ...params,
@@ -1494,7 +1494,7 @@ export class AppClient {
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     const sender = this.getSender(params.sender)
-    const method = findABIMethod(params.method, this._appSpec)
+    const method = getABIMethod(params.method, this._appSpec)
     const args = await this.getABIArgsWithDefaultValues(params.method, params.args, sender)
     return {
       ...params,

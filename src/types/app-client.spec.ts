@@ -1,4 +1,4 @@
-import { ABIStructType, ABIType, ABIValue, findABIMethod, getABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, ABIStructType, ABIType, ABIValue, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
@@ -380,7 +380,7 @@ describe('app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    const returnValue = AppManager.getABIReturn(result.confirmations[1], findABIMethod('call_abi_txn', client.appSpec))
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], getABIMethod('call_abi_txn', client.appSpec))
     expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
     expect(returnValue?.returnValue).toBe(result.return)
   })
@@ -724,7 +724,7 @@ describe('app-client', () => {
     const appCall1Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: getABIMethod('set_global(uint64,uint64,string,byte[4])void'),
+      method: ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
       args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
     }
 
@@ -737,7 +737,7 @@ describe('app-client', () => {
     const appCall2Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: getABIMethod('call_abi(string)string'),
+      method: ABIMethod.fromSignature('call_abi(string)string'),
       args: ['test'],
     }
 

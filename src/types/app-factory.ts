@@ -1,4 +1,4 @@
-import { Arc56Contract, argTypeIsTransaction, findABIMethod, getABIDecodedValue } from '@algorandfoundation/algokit-abi'
+import { Arc56Contract, argTypeIsTransaction, getABIDecodedValue, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import { ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
@@ -637,7 +637,7 @@ export class AppFactory {
       ...params,
       sender: this.getSender(params.sender),
       signer: this.getSigner(params.sender, params.signer),
-      method: findABIMethod(params.method, this._appSpec),
+      method: getABIMethod(params.method, this._appSpec),
       args: this.getCreateABIArgsWithDefaultValues(params.method, params.args),
       onComplete,
     }
@@ -647,7 +647,7 @@ export class AppFactory {
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
   ): AppMethodCall<CommonAppCallParams>['args'] {
-    const m = findABIMethod(methodNameOrSignature, this._appSpec)
+    const m = getABIMethod(methodNameOrSignature, this._appSpec)
     return args?.map((arg, i) => {
       const methodArg = m.args[i]
       if (arg !== undefined) {
