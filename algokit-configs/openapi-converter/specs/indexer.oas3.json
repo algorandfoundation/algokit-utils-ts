@@ -174,28 +174,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "accounts",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "accounts": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Account"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/AccountsResponse"
                 }
               }
             }
@@ -205,19 +184,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -227,19 +194,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -309,21 +264,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "account",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "account": {
-                      "$ref": "#/components/schemas/Account"
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/AccountResponse"
                 }
               }
             }
@@ -333,19 +274,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -355,19 +284,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -377,19 +294,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -454,28 +359,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "assets",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "assets": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AssetHolding"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/AssetHoldingsResponse"
                 }
               }
             }
@@ -485,19 +369,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -507,19 +379,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -529,19 +389,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -606,28 +454,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "assets",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "assets": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Asset"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/AssetsResponse"
                 }
               }
             }
@@ -637,19 +464,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -659,19 +474,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -681,19 +484,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -758,28 +549,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "apps-local-states",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "apps-local-states": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ApplicationLocalState"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/ApplicationLocalStatesResponse"
                 }
               }
             }
@@ -789,19 +559,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -811,19 +569,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -833,19 +579,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -910,28 +644,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "applications",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "applications": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Application"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/ApplicationsResponse"
                 }
               }
             }
@@ -941,19 +654,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -963,19 +664,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -985,19 +674,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1177,28 +854,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "current-round",
-                    "transactions"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "transactions": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Transaction"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/TransactionsResponse"
                 }
               }
             }
@@ -1208,19 +864,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1230,19 +874,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1306,28 +938,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "applications",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "applications": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Application"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/ApplicationsResponse"
                 }
               }
             }
@@ -1337,19 +948,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1389,20 +988,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "application": {
-                      "$ref": "#/components/schemas/Application"
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/ApplicationResponse"
                 }
               }
             }
@@ -1412,19 +998,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1434,19 +1008,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1495,28 +1057,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "application-id",
-                    "boxes"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "application-id": {
-                      "type": "integer",
-                      "description": "\\[appidx\\] application index.",
-                      "x-algokit-bigint": true
-                    },
-                    "boxes": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/BoxDescriptor"
-                      }
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/BoxesResponse"
                 }
               }
             }
@@ -1526,19 +1067,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1548,19 +1077,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1570,19 +1087,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1634,19 +1139,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1656,19 +1149,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1678,19 +1159,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1774,33 +1243,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "application-id",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "application-id": {
-                      "type": "integer",
-                      "description": "\\[appidx\\] application index.",
-                      "x-algokit-bigint": true
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "log-data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ApplicationLogData"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/ApplicationLogsResponse"
                 }
               }
             }
@@ -1880,28 +1323,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "assets",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "assets": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Asset"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/AssetsResponse"
                 }
               }
             }
@@ -1911,19 +1333,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1933,19 +1343,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1985,21 +1383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "asset",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "asset": {
-                      "$ref": "#/components/schemas/Asset"
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/AssetResponse"
                 }
               }
             }
@@ -2009,19 +1393,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2031,19 +1403,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2053,19 +1413,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2139,28 +1487,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "balances",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "balances": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/MiniAssetHolding"
-                      }
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    }
-                  }
+                  "$ref": "#/components/schemas/AssetBalancesResponse"
                 }
               }
             }
@@ -2170,19 +1497,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2192,19 +1507,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2406,28 +1709,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "current-round",
-                    "transactions"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "transactions": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Transaction"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/TransactionsResponse"
                 }
               }
             }
@@ -2437,19 +1719,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2459,19 +1729,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2592,28 +1850,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "blocks",
-                    "current-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "blocks": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Block"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/BlockHeadersResponse"
                 }
               }
             }
@@ -2623,19 +1860,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2645,19 +1870,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2708,19 +1921,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2730,19 +1931,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2773,21 +1962,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "current-round",
-                    "transaction"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "transaction": {
-                      "$ref": "#/components/schemas/Transaction"
-                    },
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/TransactionResponse"
                 }
               }
             }
@@ -2797,19 +1972,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2819,19 +1982,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -2841,19 +1992,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -3074,28 +2213,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "current-round",
-                    "transactions"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "current-round": {
-                      "type": "integer",
-                      "description": "Round at which the results were computed.",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "transactions": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Transaction"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/TransactionsResponse"
                 }
               }
             }
@@ -3105,19 +2223,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -3127,19 +2233,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {}
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -5081,6 +4175,333 @@
             "x-algorand-format": "uint16"
           }
         }
+      },
+      "AccountResponse": {
+        "required": [
+          "account",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          }
+        }
+      },
+      "AssetHoldingsResponse": {
+        "required": [
+          "assets",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetHolding"
+            }
+          }
+        }
+      },
+      "AccountsResponse": {
+        "required": [
+          "accounts",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Account"
+            }
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          }
+        }
+      },
+      "AssetBalancesResponse": {
+        "required": [
+          "balances",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MiniAssetHolding"
+            }
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          }
+        }
+      },
+      "ApplicationResponse": {
+        "required": [
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "application": {
+            "$ref": "#/components/schemas/Application"
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          }
+        }
+      },
+      "ApplicationsResponse": {
+        "required": [
+          "applications",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "applications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Application"
+            }
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          }
+        }
+      },
+      "ApplicationLogsResponse": {
+        "required": [
+          "application-id",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "application-id": {
+            "type": "integer",
+            "description": "\\[appidx\\] application index.",
+            "x-algokit-bigint": true
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          },
+          "log-data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationLogData"
+            }
+          }
+        }
+      },
+      "ApplicationLocalStatesResponse": {
+        "required": [
+          "apps-local-states",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "apps-local-states": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationLocalState"
+            }
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          }
+        }
+      },
+      "AssetResponse": {
+        "required": [
+          "asset",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "asset": {
+            "$ref": "#/components/schemas/Asset"
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          }
+        }
+      },
+      "BoxesResponse": {
+        "required": [
+          "application-id",
+          "boxes"
+        ],
+        "type": "object",
+        "properties": {
+          "application-id": {
+            "type": "integer",
+            "description": "\\[appidx\\] application index.",
+            "x-algokit-bigint": true
+          },
+          "boxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxDescriptor"
+            }
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {}
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "AssetsResponse": {
+        "required": [
+          "assets",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            }
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          }
+        }
+      },
+      "BlockHeadersResponse": {
+        "required": [
+          "blocks",
+          "current-round"
+        ],
+        "type": "object",
+        "properties": {
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Block"
+            }
+          }
+        }
+      },
+      "TransactionResponse": {
+        "required": [
+          "current-round",
+          "transaction"
+        ],
+        "type": "object",
+        "properties": {
+          "transaction": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          }
+        }
+      },
+      "TransactionsResponse": {
+        "required": [
+          "current-round",
+          "transactions"
+        ],
+        "type": "object",
+        "properties": {
+          "current-round": {
+            "type": "integer",
+            "description": "Round at which the results were computed.",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          }
+        }
       }
     },
     "responses": {
@@ -5089,21 +4510,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "account",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "account": {
-                  "$ref": "#/components/schemas/Account"
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                }
-              }
+              "$ref": "#/components/schemas/AccountResponse"
             }
           }
         }
@@ -5113,28 +4520,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "assets",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                },
-                "assets": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AssetHolding"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/AssetHoldingsResponse"
             }
           }
         }
@@ -5144,28 +4530,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "accounts",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "accounts": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Account"
-                  }
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                }
-              }
+              "$ref": "#/components/schemas/AccountsResponse"
             }
           }
         }
@@ -5175,28 +4540,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "balances",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "balances": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MiniAssetHolding"
-                  }
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                }
-              }
+              "$ref": "#/components/schemas/AssetBalancesResponse"
             }
           }
         }
@@ -5206,20 +4550,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "application": {
-                  "$ref": "#/components/schemas/Application"
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                }
-              }
+              "$ref": "#/components/schemas/ApplicationResponse"
             }
           }
         }
@@ -5229,28 +4560,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "applications",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "applications": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Application"
-                  }
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                }
-              }
+              "$ref": "#/components/schemas/ApplicationsResponse"
             }
           }
         }
@@ -5260,33 +4570,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "application-id",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "application-id": {
-                  "type": "integer",
-                  "description": "\\[appidx\\] application index.",
-                  "x-algokit-bigint": true
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                },
-                "log-data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicationLogData"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/ApplicationLogsResponse"
             }
           }
         }
@@ -5296,28 +4580,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "apps-local-states",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "apps-local-states": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicationLocalState"
-                  }
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                }
-              }
+              "$ref": "#/components/schemas/ApplicationLocalStatesResponse"
             }
           }
         }
@@ -5327,21 +4590,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "asset",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "asset": {
-                  "$ref": "#/components/schemas/Asset"
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                }
-              }
+              "$ref": "#/components/schemas/AssetResponse"
             }
           }
         }
@@ -5351,28 +4600,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "application-id",
-                "boxes"
-              ],
-              "type": "object",
-              "properties": {
-                "application-id": {
-                  "type": "integer",
-                  "description": "\\[appidx\\] application index.",
-                  "x-algokit-bigint": true
-                },
-                "boxes": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BoxDescriptor"
-                  }
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                }
-              }
+              "$ref": "#/components/schemas/BoxesResponse"
             }
           }
         }
@@ -5392,19 +4620,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/ErrorResponse"
             }
           }
         }
@@ -5414,28 +4630,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "assets",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "assets": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Asset"
-                  }
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                }
-              }
+              "$ref": "#/components/schemas/AssetsResponse"
             }
           }
         }
@@ -5455,28 +4650,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "blocks",
-                "current-round"
-              ],
-              "type": "object",
-              "properties": {
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                },
-                "blocks": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Block"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/BlockHeadersResponse"
             }
           }
         }
@@ -5496,21 +4670,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "current-round",
-                "transaction"
-              ],
-              "type": "object",
-              "properties": {
-                "transaction": {
-                  "$ref": "#/components/schemas/Transaction"
-                },
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                }
-              }
+              "$ref": "#/components/schemas/TransactionResponse"
             }
           }
         }
@@ -5520,28 +4680,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "current-round",
-                "transactions"
-              ],
-              "type": "object",
-              "properties": {
-                "current-round": {
-                  "type": "integer",
-                  "description": "Round at which the results were computed.",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                },
-                "transactions": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Transaction"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/TransactionsResponse"
             }
           }
         }

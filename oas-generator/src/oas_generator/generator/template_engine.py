@@ -484,7 +484,7 @@ class OperationProcessor:
             send_raw_transaction_method = '''/**
    * Send a signed transaction or array of signed transactions to the network.
    */
-  async sendRawTransaction(stxOrStxs: Uint8Array | Uint8Array[]): Promise<RawTransaction> {
+  async sendRawTransaction(stxOrStxs: Uint8Array | Uint8Array[]): Promise<PostTransactionsResponse> {
     let rawTransactions = stxOrStxs;
     if (Array.isArray(stxOrStxs)) {
       if (!stxOrStxs.every((a) => a instanceof Uint8Array)) {
@@ -950,8 +950,8 @@ class CodeGenerator:
                 "models/custom/block.ts.j2",
                 {"spec": spec},
             )
-            files[models_dir / "get-block.ts"] = self.renderer.render(
-                "models/custom/get-block.ts.j2",
+            files[models_dir / "block-response.ts"] = self.renderer.render(
+                "models/custom/block-response.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "ledger-state-delta.ts"] = self.renderer.render(

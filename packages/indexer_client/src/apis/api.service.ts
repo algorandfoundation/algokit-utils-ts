@@ -2,50 +2,42 @@ import type { BaseHttpRequest } from '../core/base-http-request'
 import { decodeJson } from '../core/model-runtime'
 import type { EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
+  AccountResponse,
+  AccountsResponse,
+  ApplicationLocalStatesResponse,
+  ApplicationLogsResponse,
+  ApplicationResponse,
+  ApplicationsResponse,
+  AssetBalancesResponse,
+  AssetHoldingsResponse,
+  AssetResponse,
+  AssetsResponse,
   Block,
+  BlockHeadersResponse,
   Box,
+  BoxesResponse,
   HealthCheck,
-  LookupAccountAppLocalStates,
-  LookupAccountAssets,
-  LookupAccountById,
-  LookupAccountCreatedApplications,
-  LookupAccountCreatedAssets,
-  LookupAccountTransactions,
-  LookupApplicationById,
-  LookupApplicationLogsById,
-  LookupAssetBalances,
-  LookupAssetById,
-  LookupAssetTransactions,
-  LookupTransaction,
-  SearchForAccounts,
-  SearchForApplicationBoxes,
-  SearchForApplications,
-  SearchForAssets,
-  SearchForBlockHeaders,
-  SearchForTransactions,
+  TransactionResponse,
+  TransactionsResponse,
 } from '../models/index'
 import {
+  AccountResponseMeta,
+  AccountsResponseMeta,
+  ApplicationLocalStatesResponseMeta,
+  ApplicationLogsResponseMeta,
+  ApplicationResponseMeta,
+  ApplicationsResponseMeta,
+  AssetBalancesResponseMeta,
+  AssetHoldingsResponseMeta,
+  AssetResponseMeta,
+  AssetsResponseMeta,
   BlockMeta,
+  BlockHeadersResponseMeta,
   BoxMeta,
+  BoxesResponseMeta,
   HealthCheckMeta,
-  LookupAccountAppLocalStatesMeta,
-  LookupAccountAssetsMeta,
-  LookupAccountByIdMeta,
-  LookupAccountCreatedApplicationsMeta,
-  LookupAccountCreatedAssetsMeta,
-  LookupAccountTransactionsMeta,
-  LookupApplicationByIdMeta,
-  LookupApplicationLogsByIdMeta,
-  LookupAssetBalancesMeta,
-  LookupAssetByIdMeta,
-  LookupAssetTransactionsMeta,
-  LookupTransactionMeta,
-  SearchForAccountsMeta,
-  SearchForApplicationBoxesMeta,
-  SearchForApplicationsMeta,
-  SearchForAssetsMeta,
-  SearchForBlockHeadersMeta,
-  SearchForTransactionsMeta,
+  TransactionResponseMeta,
+  TransactionsResponseMeta,
 } from '../models/index'
 
 export class IndexerApi {
@@ -65,7 +57,7 @@ export class IndexerApi {
   async lookupAccountAppLocalStates(
     accountId: string,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountAppLocalStates> {
+  ): Promise<ApplicationLocalStatesResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -85,7 +77,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAccountAppLocalStatesMeta)
+    return decodeJson(payload, ApplicationLocalStatesResponseMeta)
   }
 
   /**
@@ -94,7 +86,7 @@ export class IndexerApi {
   async lookupAccountAssets(
     accountId: string,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountAssets> {
+  ): Promise<AssetHoldingsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -114,7 +106,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAccountAssetsMeta)
+    return decodeJson(payload, AssetHoldingsResponseMeta)
   }
 
   /**
@@ -127,7 +119,7 @@ export class IndexerApi {
       includeAll?: boolean
       exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     },
-  ): Promise<LookupAccountById> {
+  ): Promise<AccountResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -146,7 +138,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAccountByIdMeta)
+    return decodeJson(payload, AccountResponseMeta)
   }
 
   /**
@@ -155,7 +147,7 @@ export class IndexerApi {
   async lookupAccountCreatedApplications(
     accountId: string,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountCreatedApplications> {
+  ): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -175,7 +167,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAccountCreatedApplicationsMeta)
+    return decodeJson(payload, ApplicationsResponseMeta)
   }
 
   /**
@@ -184,7 +176,7 @@ export class IndexerApi {
   async lookupAccountCreatedAssets(
     accountId: string,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountCreatedAssets> {
+  ): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -204,7 +196,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAccountCreatedAssetsMeta)
+    return decodeJson(payload, AssetsResponseMeta)
   }
 
   /**
@@ -229,7 +221,7 @@ export class IndexerApi {
       currencyLessThan?: number | bigint
       rekeyTo?: boolean
     },
-  ): Promise<LookupAccountTransactions> {
+  ): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -264,7 +256,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAccountTransactionsMeta)
+    return decodeJson(payload, TransactionsResponseMeta)
   }
 
   /**
@@ -291,7 +283,7 @@ export class IndexerApi {
   /**
    * Lookup application.
    */
-  async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupApplicationById> {
+  async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<ApplicationResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -306,7 +298,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupApplicationByIdMeta)
+    return decodeJson(payload, ApplicationResponseMeta)
   }
 
   /**
@@ -322,7 +314,7 @@ export class IndexerApi {
       maxRound?: number | bigint
       senderAddress?: string
     },
-  ): Promise<LookupApplicationLogsById> {
+  ): Promise<ApplicationLogsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -344,7 +336,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupApplicationLogsByIdMeta)
+    return decodeJson(payload, ApplicationLogsResponseMeta)
   }
 
   /**
@@ -359,7 +351,7 @@ export class IndexerApi {
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
     },
-  ): Promise<LookupAssetBalances> {
+  ): Promise<AssetBalancesResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -384,13 +376,13 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAssetBalancesMeta)
+    return decodeJson(payload, AssetBalancesResponseMeta)
   }
 
   /**
    * Lookup asset information.
    */
-  async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupAssetById> {
+  async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<AssetResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -405,7 +397,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAssetByIdMeta)
+    return decodeJson(payload, AssetResponseMeta)
   }
 
   /**
@@ -432,7 +424,7 @@ export class IndexerApi {
       excludeCloseTo?: boolean
       rekeyTo?: boolean
     },
-  ): Promise<LookupAssetTransactions> {
+  ): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -469,7 +461,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupAssetTransactionsMeta)
+    return decodeJson(payload, TransactionsResponseMeta)
   }
 
   /**
@@ -496,7 +488,7 @@ export class IndexerApi {
   /**
    * Lookup a single transaction.
    */
-  async lookupTransaction(txid: string): Promise<LookupTransaction> {
+  async lookupTransaction(txid: string): Promise<TransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -511,7 +503,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, LookupTransactionMeta)
+    return decodeJson(payload, TransactionResponseMeta)
   }
 
   async makeHealthCheck(): Promise<HealthCheck> {
@@ -547,7 +539,7 @@ export class IndexerApi {
     round?: number | bigint
     applicationId?: number | bigint
     onlineOnly?: boolean
-  }): Promise<SearchForAccounts> {
+  }): Promise<AccountsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -578,16 +570,13 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, SearchForAccountsMeta)
+    return decodeJson(payload, AccountsResponseMeta)
   }
 
   /**
    * Given an application ID, returns the box names of that application sorted lexicographically.
    */
-  async searchForApplicationBoxes(
-    applicationId: number | bigint,
-    params?: { limit?: number; next?: string },
-  ): Promise<SearchForApplicationBoxes> {
+  async searchForApplicationBoxes(applicationId: number | bigint, params?: { limit?: number; next?: string }): Promise<BoxesResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -602,7 +591,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, SearchForApplicationBoxesMeta)
+    return decodeJson(payload, BoxesResponseMeta)
   }
 
   /**
@@ -614,7 +603,7 @@ export class IndexerApi {
     includeAll?: boolean
     limit?: number
     next?: string
-  }): Promise<SearchForApplications> {
+  }): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -635,7 +624,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, SearchForApplicationsMeta)
+    return decodeJson(payload, ApplicationsResponseMeta)
   }
 
   /**
@@ -649,7 +638,7 @@ export class IndexerApi {
     name?: string
     unit?: string
     assetId?: number | bigint
-  }): Promise<SearchForAssets> {
+  }): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -672,7 +661,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, SearchForAssetsMeta)
+    return decodeJson(payload, AssetsResponseMeta)
   }
 
   /**
@@ -688,7 +677,7 @@ export class IndexerApi {
     proposers?: string[]
     expired?: string[]
     absent?: string[]
-  }): Promise<SearchForBlockHeaders> {
+  }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -713,7 +702,7 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, SearchForBlockHeadersMeta)
+    return decodeJson(payload, BlockHeadersResponseMeta)
   }
 
   /**
@@ -740,7 +729,7 @@ export class IndexerApi {
     excludeCloseTo?: boolean
     rekeyTo?: boolean
     applicationId?: number | bigint
-  }): Promise<SearchForTransactions> {
+  }): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -780,6 +769,6 @@ export class IndexerApi {
       mediaType: undefined,
     })
 
-    return decodeJson(payload, SearchForTransactionsMeta)
+    return decodeJson(payload, TransactionsResponseMeta)
   }
 }

@@ -1,4 +1,4 @@
-import { AlgodClient, SimulateRequest, SimulateTransaction, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, SimulateRequest, SimulateResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { AccessReference, OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
@@ -2092,7 +2092,7 @@ export class TransactionComposer {
    * const result = await composer.simulate()
    * ```
    */
-  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -2105,7 +2105,7 @@ export class TransactionComposer {
    */
   async simulate(
     options: SkipSignaturesSimulateOptions,
-  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -2116,8 +2116,8 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
-  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
+  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
     const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
 

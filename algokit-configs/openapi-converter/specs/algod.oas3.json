@@ -389,24 +389,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "round": {
-                      "type": "integer",
-                      "description": "The round for which this information is relevant.",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "asset-holding": {
-                      "$ref": "#/components/schemas/AssetHolding"
-                    },
-                    "created-asset": {
-                      "$ref": "#/components/schemas/AssetParams"
-                    }
-                  }
+                  "$ref": "#/components/schemas/AccountAssetResponse"
                 }
               }
             }
@@ -495,28 +478,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "round": {
-                      "type": "integer",
-                      "description": "The round for which this information is relevant.",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "next-token": {
-                      "type": "string",
-                      "description": "Used for pagination, when making another request provide this token with the next parameter."
-                    },
-                    "asset-holdings": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AccountAssetHolding"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/AccountAssetsInformationResponse"
                 }
               }
             }
@@ -613,46 +575,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "round": {
-                      "type": "integer",
-                      "description": "The round for which this information is relevant.",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "app-local-state": {
-                      "$ref": "#/components/schemas/ApplicationLocalState"
-                    },
-                    "created-app": {
-                      "$ref": "#/components/schemas/ApplicationParams"
-                    }
-                  }
+                  "$ref": "#/components/schemas/AccountApplicationResponse"
                 }
               },
               "application/msgpack": {
                 "schema": {
-                  "required": [
-                    "round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "round": {
-                      "type": "integer",
-                      "description": "The round for which this information is relevant.",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "app-local-state": {
-                      "$ref": "#/components/schemas/ApplicationLocalState"
-                    },
-                    "created-app": {
-                      "$ref": "#/components/schemas/ApplicationParams"
-                    }
-                  }
+                  "$ref": "#/components/schemas/AccountApplicationResponse"
                 }
               }
             }
@@ -760,27 +688,7 @@
             "content": {
               "application/msgpack": {
                 "schema": {
-                  "required": [
-                    "top-transactions",
-                    "total-transactions"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "top-transactions": {
-                      "type": "array",
-                      "description": "An array of signed transaction objects.",
-                      "items": {
-                        "type": "object",
-                        "properties": {},
-                        "x-algokit-signed-txn": true
-                      }
-                    },
-                    "total-transactions": {
-                      "type": "integer",
-                      "description": "Total number of transactions in the pool."
-                    }
-                  },
-                  "description": "PendingTransactions is an array of signed transactions exactly as they were submitted."
+                  "$ref": "#/components/schemas/PendingTransactionsResponse"
                 }
               }
             }
@@ -882,24 +790,7 @@
             "content": {
               "application/msgpack": {
                 "schema": {
-                  "required": [
-                    "block"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "block": {
-                      "type": "object",
-                      "properties": {},
-                      "description": "Block header data.",
-                      "x-algorand-format": "BlockHeader"
-                    },
-                    "cert": {
-                      "type": "object",
-                      "properties": {},
-                      "description": "Optional certificate object. This is only included when the format is set to message pack.",
-                      "x-algorand-format": "BlockCertificate"
-                    }
-                  }
+                  "$ref": "#/components/schemas/BlockResponse"
                 }
               }
             }
@@ -981,20 +872,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "blockTxids"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "blockTxids": {
-                      "type": "array",
-                      "description": "Block transaction IDs.",
-                      "items": {
-                        "type": "string"
-                      },
-                      "x-algokit-field-rename": "block_tx_ids"
-                    }
-                  }
+                  "$ref": "#/components/schemas/BlockTxidsResponse"
                 }
               }
             }
@@ -1076,16 +954,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "blockHash"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "blockHash": {
-                      "type": "string",
-                      "description": "Block header hash."
-                    }
-                  }
+                  "$ref": "#/components/schemas/BlockHashResponse"
                 }
               }
             }
@@ -1284,18 +1153,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "logs"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "logs": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AppCallLogs"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/BlockLogsResponse"
                 }
               }
             }
@@ -1357,33 +1215,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "current_round",
-                    "online-money",
-                    "total-money"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "current_round": {
-                      "type": "integer",
-                      "description": "Round",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "online-money": {
-                      "type": "integer",
-                      "description": "OnlineMoney",
-                      "x-go-type": "uint64",
-                      "x-algokit-bigint": true
-                    },
-                    "total-money": {
-                      "type": "integer",
-                      "description": "TotalMoney",
-                      "x-go-type": "uint64",
-                      "x-algokit-bigint": true
-                    }
-                  },
-                  "description": "Supply represents the current supply of MicroAlgos in the system"
+                  "$ref": "#/components/schemas/SupplyResponse"
                 }
               }
             }
@@ -1420,10 +1252,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ParticipationKey"
-                  }
+                  "$ref": "#/components/schemas/ParticipationKeysResponse"
                 }
               }
             }
@@ -1499,16 +1328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "partId"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "partId": {
-                      "type": "string",
-                      "description": "encoding of the participation ID."
-                    }
-                  }
+                  "$ref": "#/components/schemas/PostParticipationResponse"
                 }
               }
             }
@@ -1968,144 +1788,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "catchup-time",
-                    "last-round",
-                    "last-version",
-                    "next-version",
-                    "next-version-round",
-                    "next-version-supported",
-                    "stopped-at-unsupported-round",
-                    "time-since-last-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "catchup-time": {
-                      "type": "integer",
-                      "description": "CatchupTime in nanoseconds",
-                      "x-go-type": "int64",
-                      "x-algokit-bigint": true
-                    },
-                    "last-round": {
-                      "type": "integer",
-                      "description": "LastRound indicates the last round seen",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "last-version": {
-                      "type": "string",
-                      "description": "LastVersion indicates the last consensus version supported"
-                    },
-                    "next-version": {
-                      "type": "string",
-                      "description": "NextVersion of consensus protocol to use"
-                    },
-                    "next-version-round": {
-                      "type": "integer",
-                      "description": "NextVersionRound is the round at which the next consensus version will apply",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "next-version-supported": {
-                      "type": "boolean",
-                      "description": "NextVersionSupported indicates whether the next consensus version is supported by this node"
-                    },
-                    "stopped-at-unsupported-round": {
-                      "type": "boolean",
-                      "description": "StoppedAtUnsupportedRound indicates that the node does not support the new rounds and has stopped making progress"
-                    },
-                    "time-since-last-round": {
-                      "type": "integer",
-                      "description": "TimeSinceLastRound in nanoseconds",
-                      "x-go-type": "int64",
-                      "x-algokit-bigint": true
-                    },
-                    "last-catchpoint": {
-                      "type": "string",
-                      "description": "The last catchpoint seen by the node"
-                    },
-                    "catchpoint": {
-                      "type": "string",
-                      "description": "The current catchpoint that is being caught up to"
-                    },
-                    "catchpoint-total-accounts": {
-                      "type": "integer",
-                      "description": "The total number of accounts included in the current catchpoint",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-processed-accounts": {
-                      "type": "integer",
-                      "description": "The number of accounts from the current catchpoint that have been processed so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-verified-accounts": {
-                      "type": "integer",
-                      "description": "The number of accounts from the current catchpoint that have been verified so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-total-kvs": {
-                      "type": "integer",
-                      "description": "The total number of key-values (KVs) included in the current catchpoint",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-processed-kvs": {
-                      "type": "integer",
-                      "description": "The number of key-values (KVs) from the current catchpoint that have been processed so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-verified-kvs": {
-                      "type": "integer",
-                      "description": "The number of key-values (KVs) from the current catchpoint that have been verified so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-total-blocks": {
-                      "type": "integer",
-                      "description": "The total number of blocks that are required to complete the current catchpoint catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-acquired-blocks": {
-                      "type": "integer",
-                      "description": "The number of blocks that have already been obtained by the node as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "upgrade-delay": {
-                      "type": "integer",
-                      "description": "Upgrade delay",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "upgrade-node-vote": {
-                      "type": "boolean",
-                      "description": "This node's upgrade vote"
-                    },
-                    "upgrade-votes-required": {
-                      "type": "integer",
-                      "description": "Yes votes required for consensus upgrade"
-                    },
-                    "upgrade-votes": {
-                      "type": "integer",
-                      "description": "Total votes cast for consensus upgrade"
-                    },
-                    "upgrade-yes-votes": {
-                      "type": "integer",
-                      "description": "Yes votes cast for consensus upgrade"
-                    },
-                    "upgrade-no-votes": {
-                      "type": "integer",
-                      "description": "No votes cast for consensus upgrade"
-                    },
-                    "upgrade-next-protocol-vote-before": {
-                      "type": "integer",
-                      "description": "Next protocol round",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "upgrade-vote-rounds": {
-                      "type": "integer",
-                      "description": "Total voting rounds for current upgrade"
-                    }
-                  },
-                  "description": "NodeStatus contains the information about a node status"
+                  "$ref": "#/components/schemas/NodeStatusResponse"
                 }
               }
             },
@@ -2168,144 +1851,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "catchup-time",
-                    "last-round",
-                    "last-version",
-                    "next-version",
-                    "next-version-round",
-                    "next-version-supported",
-                    "stopped-at-unsupported-round",
-                    "time-since-last-round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "catchup-time": {
-                      "type": "integer",
-                      "description": "CatchupTime in nanoseconds",
-                      "x-go-type": "int64",
-                      "x-algokit-bigint": true
-                    },
-                    "last-round": {
-                      "type": "integer",
-                      "description": "LastRound indicates the last round seen",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "last-version": {
-                      "type": "string",
-                      "description": "LastVersion indicates the last consensus version supported"
-                    },
-                    "next-version": {
-                      "type": "string",
-                      "description": "NextVersion of consensus protocol to use"
-                    },
-                    "next-version-round": {
-                      "type": "integer",
-                      "description": "NextVersionRound is the round at which the next consensus version will apply",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "next-version-supported": {
-                      "type": "boolean",
-                      "description": "NextVersionSupported indicates whether the next consensus version is supported by this node"
-                    },
-                    "stopped-at-unsupported-round": {
-                      "type": "boolean",
-                      "description": "StoppedAtUnsupportedRound indicates that the node does not support the new rounds and has stopped making progress"
-                    },
-                    "time-since-last-round": {
-                      "type": "integer",
-                      "description": "TimeSinceLastRound in nanoseconds",
-                      "x-go-type": "int64",
-                      "x-algokit-bigint": true
-                    },
-                    "last-catchpoint": {
-                      "type": "string",
-                      "description": "The last catchpoint seen by the node"
-                    },
-                    "catchpoint": {
-                      "type": "string",
-                      "description": "The current catchpoint that is being caught up to"
-                    },
-                    "catchpoint-total-accounts": {
-                      "type": "integer",
-                      "description": "The total number of accounts included in the current catchpoint",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-processed-accounts": {
-                      "type": "integer",
-                      "description": "The number of accounts from the current catchpoint that have been processed so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-verified-accounts": {
-                      "type": "integer",
-                      "description": "The number of accounts from the current catchpoint that have been verified so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-total-kvs": {
-                      "type": "integer",
-                      "description": "The total number of key-values (KVs) included in the current catchpoint",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-processed-kvs": {
-                      "type": "integer",
-                      "description": "The number of key-values (KVs) from the current catchpoint that have been processed so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-verified-kvs": {
-                      "type": "integer",
-                      "description": "The number of key-values (KVs) from the current catchpoint that have been verified so far as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-total-blocks": {
-                      "type": "integer",
-                      "description": "The total number of blocks that are required to complete the current catchpoint catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "catchpoint-acquired-blocks": {
-                      "type": "integer",
-                      "description": "The number of blocks that have already been obtained by the node as part of the catchup",
-                      "x-go-type": "uint64"
-                    },
-                    "upgrade-delay": {
-                      "type": "integer",
-                      "description": "Upgrade delay",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "upgrade-node-vote": {
-                      "type": "boolean",
-                      "description": "This node's upgrade vote"
-                    },
-                    "upgrade-votes-required": {
-                      "type": "integer",
-                      "description": "Yes votes required for consensus upgrade"
-                    },
-                    "upgrade-votes": {
-                      "type": "integer",
-                      "description": "Total votes cast for consensus upgrade"
-                    },
-                    "upgrade-yes-votes": {
-                      "type": "integer",
-                      "description": "Yes votes cast for consensus upgrade"
-                    },
-                    "upgrade-no-votes": {
-                      "type": "integer",
-                      "description": "No votes cast for consensus upgrade"
-                    },
-                    "upgrade-next-protocol-vote-before": {
-                      "type": "integer",
-                      "description": "Next protocol round",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "upgrade-vote-rounds": {
-                      "type": "integer",
-                      "description": "Total voting rounds for current upgrade"
-                    }
-                  },
-                  "description": "NodeStatus contains the information about a node status"
+                  "$ref": "#/components/schemas/NodeStatusResponse"
                 }
               }
             },
@@ -2384,16 +1930,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "txId"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "txId": {
-                      "type": "string",
-                      "description": "encoding of the transaction hash."
-                    }
-                  }
+                  "$ref": "#/components/schemas/PostTransactionsResponse"
                 }
               }
             }
@@ -2562,41 +2099,7 @@
             "content": {
               "application/msgpack": {
                 "schema": {
-                  "required": [
-                    "last-round",
-                    "txn-groups",
-                    "version"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "version": {
-                      "type": "integer",
-                      "description": "The version of this response object.",
-                      "x-go-type": "uint64"
-                    },
-                    "last-round": {
-                      "type": "integer",
-                      "description": "The round immediately preceding this simulation. State changes through this round were used to run this simulation.",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "txn-groups": {
-                      "type": "array",
-                      "description": "A result object for each transaction group that was simulated.",
-                      "items": {
-                        "$ref": "#/components/schemas/SimulateTransactionGroupResult"
-                      }
-                    },
-                    "eval-overrides": {
-                      "$ref": "#/components/schemas/SimulationEvalOverrides"
-                    },
-                    "exec-trace-config": {
-                      "$ref": "#/components/schemas/SimulateTraceConfig"
-                    },
-                    "initial-states": {
-                      "$ref": "#/components/schemas/SimulateInitialStates"
-                    }
-                  }
+                  "$ref": "#/components/schemas/SimulateResponse"
                 }
               }
             }
@@ -2663,50 +2166,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "consensus-version",
-                    "fee",
-                    "genesis-hash",
-                    "genesis-id",
-                    "last-round",
-                    "min-fee"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "consensus-version": {
-                      "type": "string",
-                      "description": "ConsensusVersion indicates the consensus protocol version\nas of LastRound."
-                    },
-                    "fee": {
-                      "type": "integer",
-                      "description": "Fee is the suggested transaction fee\nFee is in units of micro-Algos per byte.\nFee may fall to zero but transactions must still have a fee of\nat least MinTxnFee for the current network protocol.",
-                      "x-go-type": "uint64",
-                      "x-algokit-bigint": true
-                    },
-                    "genesis-hash": {
-                      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
-                      "type": "string",
-                      "description": "GenesisHash is the hash of the genesis block.",
-                      "format": "byte"
-                    },
-                    "genesis-id": {
-                      "type": "string",
-                      "description": "GenesisID is an ID listed in the genesis block."
-                    },
-                    "last-round": {
-                      "type": "integer",
-                      "description": "LastRound indicates the last round seen",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    },
-                    "min-fee": {
-                      "type": "integer",
-                      "description": "The minimum transaction fee (not per byte) required for the\ntxn to validate for the current network protocol.",
-                      "x-go-type": "uint64",
-                      "x-algokit-bigint": true
-                    }
-                  },
-                  "description": "TransactionParams contains the parameters that help a client construct\na new transaction."
+                  "$ref": "#/components/schemas/TransactionParametersResponse"
                 }
               }
             }
@@ -2787,27 +2247,7 @@
             "content": {
               "application/msgpack": {
                 "schema": {
-                  "required": [
-                    "top-transactions",
-                    "total-transactions"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "top-transactions": {
-                      "type": "array",
-                      "description": "An array of signed transaction objects.",
-                      "items": {
-                        "type": "object",
-                        "properties": {},
-                        "x-algokit-signed-txn": true
-                      }
-                    },
-                    "total-transactions": {
-                      "type": "integer",
-                      "description": "Total number of transactions in the pool."
-                    }
-                  },
-                  "description": "PendingTransactions is an array of signed transactions exactly as they were submitted."
+                  "$ref": "#/components/schemas/PendingTransactionsResponse"
                 }
               }
             }
@@ -3078,18 +2518,7 @@
             "content": {
               "application/msgpack": {
                 "schema": {
-                  "required": [
-                    "Deltas"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "Deltas": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/LedgerStateDeltaForTransactionGroup"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/TransactionGroupLedgerStateDeltasForRoundResponse"
                 }
               }
             }
@@ -3560,18 +2989,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "boxes"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "boxes": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/BoxDescriptor"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/BoxesResponse"
                 }
               }
             }
@@ -3803,18 +3221,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "round"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "round": {
-                      "type": "integer",
-                      "description": "The minimum sync round for the ledger.",
-                      "x-go-type": "basics.Round",
-                      "x-algokit-bigint": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/GetSyncRoundResponse"
                 }
               }
             }
@@ -4039,24 +3446,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "hash",
-                    "result"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "hash": {
-                      "type": "string",
-                      "description": "base32 SHA512_256 of program bytes (Address style)"
-                    },
-                    "result": {
-                      "type": "string",
-                      "description": "base64 encoded program bytes"
-                    },
-                    "sourcemap": {
-                      "$ref": "#/components/schemas/SourceMap"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CompileResponse"
                 }
               }
             }
@@ -4130,16 +3520,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "result"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "result": {
-                      "type": "string",
-                      "description": "disassembled Teal code"
-                    }
-                  }
+                  "$ref": "#/components/schemas/DisassembleResponse"
                 }
               }
             }
@@ -4227,17 +3608,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "catchup-message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "catchup-message": {
-                      "type": "string",
-                      "description": "Catchup start response string"
-                    }
-                  },
-                  "description": "An catchpoint start response."
+                  "$ref": "#/components/schemas/CatchpointStartResponse"
                 }
               }
             },
@@ -4247,17 +3618,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "catchup-message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "catchup-message": {
-                      "type": "string",
-                      "description": "Catchup start response string"
-                    }
-                  },
-                  "description": "An catchpoint start response."
+                  "$ref": "#/components/schemas/CatchpointStartResponse"
                 }
               }
             },
@@ -4337,17 +3698,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "catchup-message"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "catchup-message": {
-                      "type": "string",
-                      "description": "Catchup abort response string"
-                    }
-                  },
-                  "description": "An catchpoint abort response."
+                  "$ref": "#/components/schemas/CatchpointAbortResponse"
                 }
               }
             },
@@ -4421,27 +3772,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "error",
-                    "protocol-version",
-                    "txns"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "txns": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/DryrunTxnResult"
-                      }
-                    },
-                    "error": {
-                      "type": "string"
-                    },
-                    "protocol-version": {
-                      "type": "string",
-                      "description": "Protocol version is the protocol version Dryrun was operated under."
-                    }
-                  }
+                  "$ref": "#/components/schemas/DryrunResponse"
                 }
               }
             }
@@ -4527,17 +3858,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": [
-                    "offset"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "offset": {
-                      "type": "integer",
-                      "description": "Timestamp offset in seconds.",
-                      "x-go-type": "uint64"
-                    }
-                  }
+                  "$ref": "#/components/schemas/GetBlockTimeStampOffsetResponse"
                 }
               }
             }
@@ -6555,6 +5876,573 @@
         },
         "description": "Proof of transaction in a block."
       },
+      "GetBlockTimeStampOffsetResponse": {
+        "required": [
+          "offset"
+        ],
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "description": "Timestamp offset in seconds.",
+            "x-go-type": "uint64"
+          }
+        }
+      },
+      "GetSyncRoundResponse": {
+        "required": [
+          "round"
+        ],
+        "type": "object",
+        "properties": {
+          "round": {
+            "type": "integer",
+            "description": "The minimum sync round for the ledger.",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          }
+        }
+      },
+      "TransactionGroupLedgerStateDeltasForRoundResponse": {
+        "required": [
+          "Deltas"
+        ],
+        "type": "object",
+        "properties": {
+          "Deltas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LedgerStateDeltaForTransactionGroup"
+            }
+          }
+        }
+      },
+      "AccountAssetResponse": {
+        "required": [
+          "round"
+        ],
+        "type": "object",
+        "properties": {
+          "round": {
+            "type": "integer",
+            "description": "The round for which this information is relevant.",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "asset-holding": {
+            "$ref": "#/components/schemas/AssetHolding"
+          },
+          "created-asset": {
+            "$ref": "#/components/schemas/AssetParams"
+          }
+        }
+      },
+      "AccountAssetsInformationResponse": {
+        "required": [
+          "round"
+        ],
+        "type": "object",
+        "properties": {
+          "round": {
+            "type": "integer",
+            "description": "The round for which this information is relevant.",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "next-token": {
+            "type": "string",
+            "description": "Used for pagination, when making another request provide this token with the next parameter."
+          },
+          "asset-holdings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountAssetHolding"
+            }
+          }
+        }
+      },
+      "AccountApplicationResponse": {
+        "required": [
+          "round"
+        ],
+        "type": "object",
+        "properties": {
+          "round": {
+            "type": "integer",
+            "description": "The round for which this information is relevant.",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "app-local-state": {
+            "$ref": "#/components/schemas/ApplicationLocalState"
+          },
+          "created-app": {
+            "$ref": "#/components/schemas/ApplicationParams"
+          }
+        }
+      },
+      "BlockResponse": {
+        "required": [
+          "block"
+        ],
+        "type": "object",
+        "properties": {
+          "block": {
+            "type": "object",
+            "properties": {},
+            "description": "Block header data.",
+            "x-algorand-format": "BlockHeader"
+          },
+          "cert": {
+            "type": "object",
+            "properties": {},
+            "description": "Optional certificate object. This is only included when the format is set to message pack.",
+            "x-algorand-format": "BlockCertificate"
+          }
+        }
+      },
+      "BlockTxidsResponse": {
+        "required": [
+          "blockTxids"
+        ],
+        "type": "object",
+        "properties": {
+          "blockTxids": {
+            "type": "array",
+            "description": "Block transaction IDs.",
+            "items": {
+              "type": "string"
+            },
+            "x-algokit-field-rename": "block_tx_ids"
+          }
+        }
+      },
+      "BlockHashResponse": {
+        "required": [
+          "blockHash"
+        ],
+        "type": "object",
+        "properties": {
+          "blockHash": {
+            "type": "string",
+            "description": "Block header hash."
+          }
+        }
+      },
+      "CatchpointStartResponse": {
+        "required": [
+          "catchup-message"
+        ],
+        "type": "object",
+        "properties": {
+          "catchup-message": {
+            "type": "string",
+            "description": "Catchup start response string"
+          }
+        },
+        "description": "An catchpoint start response."
+      },
+      "CatchpointAbortResponse": {
+        "required": [
+          "catchup-message"
+        ],
+        "type": "object",
+        "properties": {
+          "catchup-message": {
+            "type": "string",
+            "description": "Catchup abort response string"
+          }
+        },
+        "description": "An catchpoint abort response."
+      },
+      "NodeStatusResponse": {
+        "required": [
+          "catchup-time",
+          "last-round",
+          "last-version",
+          "next-version",
+          "next-version-round",
+          "next-version-supported",
+          "stopped-at-unsupported-round",
+          "time-since-last-round"
+        ],
+        "type": "object",
+        "properties": {
+          "catchup-time": {
+            "type": "integer",
+            "description": "CatchupTime in nanoseconds",
+            "x-go-type": "int64",
+            "x-algokit-bigint": true
+          },
+          "last-round": {
+            "type": "integer",
+            "description": "LastRound indicates the last round seen",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "last-version": {
+            "type": "string",
+            "description": "LastVersion indicates the last consensus version supported"
+          },
+          "next-version": {
+            "type": "string",
+            "description": "NextVersion of consensus protocol to use"
+          },
+          "next-version-round": {
+            "type": "integer",
+            "description": "NextVersionRound is the round at which the next consensus version will apply",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "next-version-supported": {
+            "type": "boolean",
+            "description": "NextVersionSupported indicates whether the next consensus version is supported by this node"
+          },
+          "stopped-at-unsupported-round": {
+            "type": "boolean",
+            "description": "StoppedAtUnsupportedRound indicates that the node does not support the new rounds and has stopped making progress"
+          },
+          "time-since-last-round": {
+            "type": "integer",
+            "description": "TimeSinceLastRound in nanoseconds",
+            "x-go-type": "int64",
+            "x-algokit-bigint": true
+          },
+          "last-catchpoint": {
+            "type": "string",
+            "description": "The last catchpoint seen by the node"
+          },
+          "catchpoint": {
+            "type": "string",
+            "description": "The current catchpoint that is being caught up to"
+          },
+          "catchpoint-total-accounts": {
+            "type": "integer",
+            "description": "The total number of accounts included in the current catchpoint",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-processed-accounts": {
+            "type": "integer",
+            "description": "The number of accounts from the current catchpoint that have been processed so far as part of the catchup",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-verified-accounts": {
+            "type": "integer",
+            "description": "The number of accounts from the current catchpoint that have been verified so far as part of the catchup",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-total-kvs": {
+            "type": "integer",
+            "description": "The total number of key-values (KVs) included in the current catchpoint",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-processed-kvs": {
+            "type": "integer",
+            "description": "The number of key-values (KVs) from the current catchpoint that have been processed so far as part of the catchup",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-verified-kvs": {
+            "type": "integer",
+            "description": "The number of key-values (KVs) from the current catchpoint that have been verified so far as part of the catchup",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-total-blocks": {
+            "type": "integer",
+            "description": "The total number of blocks that are required to complete the current catchpoint catchup",
+            "x-go-type": "uint64"
+          },
+          "catchpoint-acquired-blocks": {
+            "type": "integer",
+            "description": "The number of blocks that have already been obtained by the node as part of the catchup",
+            "x-go-type": "uint64"
+          },
+          "upgrade-delay": {
+            "type": "integer",
+            "description": "Upgrade delay",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "upgrade-node-vote": {
+            "type": "boolean",
+            "description": "This node's upgrade vote"
+          },
+          "upgrade-votes-required": {
+            "type": "integer",
+            "description": "Yes votes required for consensus upgrade"
+          },
+          "upgrade-votes": {
+            "type": "integer",
+            "description": "Total votes cast for consensus upgrade"
+          },
+          "upgrade-yes-votes": {
+            "type": "integer",
+            "description": "Yes votes cast for consensus upgrade"
+          },
+          "upgrade-no-votes": {
+            "type": "integer",
+            "description": "No votes cast for consensus upgrade"
+          },
+          "upgrade-next-protocol-vote-before": {
+            "type": "integer",
+            "description": "Next protocol round",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "upgrade-vote-rounds": {
+            "type": "integer",
+            "description": "Total voting rounds for current upgrade"
+          }
+        },
+        "description": "NodeStatus contains the information about a node status"
+      },
+      "PendingTransactionsResponse": {
+        "required": [
+          "top-transactions",
+          "total-transactions"
+        ],
+        "type": "object",
+        "properties": {
+          "top-transactions": {
+            "type": "array",
+            "description": "An array of signed transaction objects.",
+            "items": {
+              "type": "object",
+              "properties": {},
+              "x-algokit-signed-txn": true
+            }
+          },
+          "total-transactions": {
+            "type": "integer",
+            "description": "Total number of transactions in the pool."
+          }
+        },
+        "description": "PendingTransactions is an array of signed transactions exactly as they were submitted."
+      },
+      "ParticipationKeysResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ParticipationKey"
+        }
+      },
+      "PostParticipationResponse": {
+        "required": [
+          "partId"
+        ],
+        "type": "object",
+        "properties": {
+          "partId": {
+            "type": "string",
+            "description": "encoding of the participation ID."
+          }
+        }
+      },
+      "PostTransactionsResponse": {
+        "required": [
+          "txId"
+        ],
+        "type": "object",
+        "properties": {
+          "txId": {
+            "type": "string",
+            "description": "encoding of the transaction hash."
+          }
+        }
+      },
+      "SimulateResponse": {
+        "required": [
+          "last-round",
+          "txn-groups",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "description": "The version of this response object.",
+            "x-go-type": "uint64"
+          },
+          "last-round": {
+            "type": "integer",
+            "description": "The round immediately preceding this simulation. State changes through this round were used to run this simulation.",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "txn-groups": {
+            "type": "array",
+            "description": "A result object for each transaction group that was simulated.",
+            "items": {
+              "$ref": "#/components/schemas/SimulateTransactionGroupResult"
+            }
+          },
+          "eval-overrides": {
+            "$ref": "#/components/schemas/SimulationEvalOverrides"
+          },
+          "exec-trace-config": {
+            "$ref": "#/components/schemas/SimulateTraceConfig"
+          },
+          "initial-states": {
+            "$ref": "#/components/schemas/SimulateInitialStates"
+          }
+        }
+      },
+      "BlockLogsResponse": {
+        "required": [
+          "logs"
+        ],
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppCallLogs"
+            }
+          }
+        }
+      },
+      "SupplyResponse": {
+        "required": [
+          "current_round",
+          "online-money",
+          "total-money"
+        ],
+        "type": "object",
+        "properties": {
+          "current_round": {
+            "type": "integer",
+            "description": "Round",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "online-money": {
+            "type": "integer",
+            "description": "OnlineMoney",
+            "x-go-type": "uint64",
+            "x-algokit-bigint": true
+          },
+          "total-money": {
+            "type": "integer",
+            "description": "TotalMoney",
+            "x-go-type": "uint64",
+            "x-algokit-bigint": true
+          }
+        },
+        "description": "Supply represents the current supply of MicroAlgos in the system"
+      },
+      "TransactionParametersResponse": {
+        "required": [
+          "consensus-version",
+          "fee",
+          "genesis-hash",
+          "genesis-id",
+          "last-round",
+          "min-fee"
+        ],
+        "type": "object",
+        "properties": {
+          "consensus-version": {
+            "type": "string",
+            "description": "ConsensusVersion indicates the consensus protocol version\nas of LastRound."
+          },
+          "fee": {
+            "type": "integer",
+            "description": "Fee is the suggested transaction fee\nFee is in units of micro-Algos per byte.\nFee may fall to zero but transactions must still have a fee of\nat least MinTxnFee for the current network protocol.",
+            "x-go-type": "uint64",
+            "x-algokit-bigint": true
+          },
+          "genesis-hash": {
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "type": "string",
+            "description": "GenesisHash is the hash of the genesis block.",
+            "format": "byte"
+          },
+          "genesis-id": {
+            "type": "string",
+            "description": "GenesisID is an ID listed in the genesis block."
+          },
+          "last-round": {
+            "type": "integer",
+            "description": "LastRound indicates the last round seen",
+            "x-go-type": "basics.Round",
+            "x-algokit-bigint": true
+          },
+          "min-fee": {
+            "type": "integer",
+            "description": "The minimum transaction fee (not per byte) required for the\ntxn to validate for the current network protocol.",
+            "x-go-type": "uint64",
+            "x-algokit-bigint": true
+          }
+        },
+        "description": "TransactionParams contains the parameters that help a client construct\na new transaction."
+      },
+      "BoxesResponse": {
+        "required": [
+          "boxes"
+        ],
+        "type": "object",
+        "properties": {
+          "boxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxDescriptor"
+            }
+          }
+        }
+      },
+      "CompileResponse": {
+        "required": [
+          "hash",
+          "result"
+        ],
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "description": "base32 SHA512_256 of program bytes (Address style)"
+          },
+          "result": {
+            "type": "string",
+            "description": "base64 encoded program bytes"
+          },
+          "sourcemap": {
+            "$ref": "#/components/schemas/SourceMap"
+          }
+        }
+      },
+      "DisassembleResponse": {
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "disassembled Teal code"
+          }
+        }
+      },
+      "DryrunResponse": {
+        "required": [
+          "error",
+          "protocol-version",
+          "txns"
+        ],
+        "type": "object",
+        "properties": {
+          "txns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DryrunTxnResult"
+            }
+          },
+          "error": {
+            "type": "string"
+          },
+          "protocol-version": {
+            "type": "string",
+            "description": "Protocol version is the protocol version Dryrun was operated under."
+          }
+        }
+      },
       "SourceMap": {
         "type": "object",
         "required": [
@@ -6595,17 +6483,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "offset"
-              ],
-              "type": "object",
-              "properties": {
-                "offset": {
-                  "type": "integer",
-                  "description": "Timestamp offset in seconds.",
-                  "x-go-type": "uint64"
-                }
-              }
+              "$ref": "#/components/schemas/GetBlockTimeStampOffsetResponse"
             }
           }
         }
@@ -6615,18 +6493,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "round"
-              ],
-              "type": "object",
-              "properties": {
-                "round": {
-                  "type": "integer",
-                  "description": "The minimum sync round for the ledger.",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                }
-              }
+              "$ref": "#/components/schemas/GetSyncRoundResponse"
             }
           }
         }
@@ -6646,18 +6513,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "Deltas"
-              ],
-              "type": "object",
-              "properties": {
-                "Deltas": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LedgerStateDeltaForTransactionGroup"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/TransactionGroupLedgerStateDeltasForRoundResponse"
             }
           }
         }
@@ -6707,24 +6563,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "round"
-              ],
-              "type": "object",
-              "properties": {
-                "round": {
-                  "type": "integer",
-                  "description": "The round for which this information is relevant.",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "asset-holding": {
-                  "$ref": "#/components/schemas/AssetHolding"
-                },
-                "created-asset": {
-                  "$ref": "#/components/schemas/AssetParams"
-                }
-              }
+              "$ref": "#/components/schemas/AccountAssetResponse"
             }
           }
         }
@@ -6734,28 +6573,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "round"
-              ],
-              "type": "object",
-              "properties": {
-                "round": {
-                  "type": "integer",
-                  "description": "The round for which this information is relevant.",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "next-token": {
-                  "type": "string",
-                  "description": "Used for pagination, when making another request provide this token with the next parameter."
-                },
-                "asset-holdings": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AccountAssetHolding"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/AccountAssetsInformationResponse"
             }
           }
         }
@@ -6765,24 +6583,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "round"
-              ],
-              "type": "object",
-              "properties": {
-                "round": {
-                  "type": "integer",
-                  "description": "The round for which this information is relevant.",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "app-local-state": {
-                  "$ref": "#/components/schemas/ApplicationLocalState"
-                },
-                "created-app": {
-                  "$ref": "#/components/schemas/ApplicationParams"
-                }
-              }
+              "$ref": "#/components/schemas/AccountApplicationResponse"
             }
           }
         }
@@ -6792,24 +6593,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "block"
-              ],
-              "type": "object",
-              "properties": {
-                "block": {
-                  "type": "object",
-                  "properties": {},
-                  "description": "Block header data.",
-                  "x-algorand-format": "BlockHeader"
-                },
-                "cert": {
-                  "type": "object",
-                  "properties": {},
-                  "description": "Optional certificate object. This is only included when the format is set to message pack.",
-                  "x-algorand-format": "BlockCertificate"
-                }
-              }
+              "$ref": "#/components/schemas/BlockResponse"
             }
           }
         }
@@ -6819,20 +6603,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "blockTxids"
-              ],
-              "type": "object",
-              "properties": {
-                "blockTxids": {
-                  "type": "array",
-                  "description": "Block transaction IDs.",
-                  "items": {
-                    "type": "string"
-                  },
-                  "x-algokit-field-rename": "block_tx_ids"
-                }
-              }
+              "$ref": "#/components/schemas/BlockTxidsResponse"
             }
           }
         }
@@ -6842,16 +6613,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "blockHash"
-              ],
-              "type": "object",
-              "properties": {
-                "blockHash": {
-                  "type": "string",
-                  "description": "Block header hash."
-                }
-              }
+              "$ref": "#/components/schemas/BlockHashResponse"
             }
           }
         }
@@ -6870,17 +6632,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "catchup-message"
-              ],
-              "type": "object",
-              "properties": {
-                "catchup-message": {
-                  "type": "string",
-                  "description": "Catchup start response string"
-                }
-              },
-              "description": "An catchpoint start response."
+              "$ref": "#/components/schemas/CatchpointStartResponse"
             }
           }
         },
@@ -6890,17 +6642,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "catchup-message"
-              ],
-              "type": "object",
-              "properties": {
-                "catchup-message": {
-                  "type": "string",
-                  "description": "Catchup abort response string"
-                }
-              },
-              "description": "An catchpoint abort response."
+              "$ref": "#/components/schemas/CatchpointAbortResponse"
             }
           }
         },
@@ -6910,144 +6652,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "catchup-time",
-                "last-round",
-                "last-version",
-                "next-version",
-                "next-version-round",
-                "next-version-supported",
-                "stopped-at-unsupported-round",
-                "time-since-last-round"
-              ],
-              "type": "object",
-              "properties": {
-                "catchup-time": {
-                  "type": "integer",
-                  "description": "CatchupTime in nanoseconds",
-                  "x-go-type": "int64",
-                  "x-algokit-bigint": true
-                },
-                "last-round": {
-                  "type": "integer",
-                  "description": "LastRound indicates the last round seen",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "last-version": {
-                  "type": "string",
-                  "description": "LastVersion indicates the last consensus version supported"
-                },
-                "next-version": {
-                  "type": "string",
-                  "description": "NextVersion of consensus protocol to use"
-                },
-                "next-version-round": {
-                  "type": "integer",
-                  "description": "NextVersionRound is the round at which the next consensus version will apply",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "next-version-supported": {
-                  "type": "boolean",
-                  "description": "NextVersionSupported indicates whether the next consensus version is supported by this node"
-                },
-                "stopped-at-unsupported-round": {
-                  "type": "boolean",
-                  "description": "StoppedAtUnsupportedRound indicates that the node does not support the new rounds and has stopped making progress"
-                },
-                "time-since-last-round": {
-                  "type": "integer",
-                  "description": "TimeSinceLastRound in nanoseconds",
-                  "x-go-type": "int64",
-                  "x-algokit-bigint": true
-                },
-                "last-catchpoint": {
-                  "type": "string",
-                  "description": "The last catchpoint seen by the node"
-                },
-                "catchpoint": {
-                  "type": "string",
-                  "description": "The current catchpoint that is being caught up to"
-                },
-                "catchpoint-total-accounts": {
-                  "type": "integer",
-                  "description": "The total number of accounts included in the current catchpoint",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-processed-accounts": {
-                  "type": "integer",
-                  "description": "The number of accounts from the current catchpoint that have been processed so far as part of the catchup",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-verified-accounts": {
-                  "type": "integer",
-                  "description": "The number of accounts from the current catchpoint that have been verified so far as part of the catchup",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-total-kvs": {
-                  "type": "integer",
-                  "description": "The total number of key-values (KVs) included in the current catchpoint",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-processed-kvs": {
-                  "type": "integer",
-                  "description": "The number of key-values (KVs) from the current catchpoint that have been processed so far as part of the catchup",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-verified-kvs": {
-                  "type": "integer",
-                  "description": "The number of key-values (KVs) from the current catchpoint that have been verified so far as part of the catchup",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-total-blocks": {
-                  "type": "integer",
-                  "description": "The total number of blocks that are required to complete the current catchpoint catchup",
-                  "x-go-type": "uint64"
-                },
-                "catchpoint-acquired-blocks": {
-                  "type": "integer",
-                  "description": "The number of blocks that have already been obtained by the node as part of the catchup",
-                  "x-go-type": "uint64"
-                },
-                "upgrade-delay": {
-                  "type": "integer",
-                  "description": "Upgrade delay",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "upgrade-node-vote": {
-                  "type": "boolean",
-                  "description": "This node's upgrade vote"
-                },
-                "upgrade-votes-required": {
-                  "type": "integer",
-                  "description": "Yes votes required for consensus upgrade"
-                },
-                "upgrade-votes": {
-                  "type": "integer",
-                  "description": "Total votes cast for consensus upgrade"
-                },
-                "upgrade-yes-votes": {
-                  "type": "integer",
-                  "description": "Yes votes cast for consensus upgrade"
-                },
-                "upgrade-no-votes": {
-                  "type": "integer",
-                  "description": "No votes cast for consensus upgrade"
-                },
-                "upgrade-next-protocol-vote-before": {
-                  "type": "integer",
-                  "description": "Next protocol round",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "upgrade-vote-rounds": {
-                  "type": "integer",
-                  "description": "Total voting rounds for current upgrade"
-                }
-              },
-              "description": "NodeStatus contains the information about a node status"
+              "$ref": "#/components/schemas/NodeStatusResponse"
             }
           }
         },
@@ -7058,27 +6663,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "top-transactions",
-                "total-transactions"
-              ],
-              "type": "object",
-              "properties": {
-                "top-transactions": {
-                  "type": "array",
-                  "description": "An array of signed transaction objects.",
-                  "items": {
-                    "type": "object",
-                    "properties": {},
-                    "x-algokit-signed-txn": true
-                  }
-                },
-                "total-transactions": {
-                  "type": "integer",
-                  "description": "Total number of transactions in the pool."
-                }
-              },
-              "description": "PendingTransactions is an array of signed transactions exactly as they were submitted."
+              "$ref": "#/components/schemas/PendingTransactionsResponse"
             }
           }
         }
@@ -7088,10 +6673,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ParticipationKey"
-              }
+              "$ref": "#/components/schemas/ParticipationKeysResponse"
             }
           }
         }
@@ -7111,16 +6693,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "partId"
-              ],
-              "type": "object",
-              "properties": {
-                "partId": {
-                  "type": "string",
-                  "description": "encoding of the participation ID."
-                }
-              }
+              "$ref": "#/components/schemas/PostParticipationResponse"
             }
           }
         }
@@ -7130,16 +6703,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "txId"
-              ],
-              "type": "object",
-              "properties": {
-                "txId": {
-                  "type": "string",
-                  "description": "encoding of the transaction hash."
-                }
-              }
+              "$ref": "#/components/schemas/PostTransactionsResponse"
             }
           }
         }
@@ -7149,41 +6713,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "last-round",
-                "txn-groups",
-                "version"
-              ],
-              "type": "object",
-              "properties": {
-                "version": {
-                  "type": "integer",
-                  "description": "The version of this response object.",
-                  "x-go-type": "uint64"
-                },
-                "last-round": {
-                  "type": "integer",
-                  "description": "The round immediately preceding this simulation. State changes through this round were used to run this simulation.",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "txn-groups": {
-                  "type": "array",
-                  "description": "A result object for each transaction group that was simulated.",
-                  "items": {
-                    "$ref": "#/components/schemas/SimulateTransactionGroupResult"
-                  }
-                },
-                "eval-overrides": {
-                  "$ref": "#/components/schemas/SimulationEvalOverrides"
-                },
-                "exec-trace-config": {
-                  "$ref": "#/components/schemas/SimulateTraceConfig"
-                },
-                "initial-states": {
-                  "$ref": "#/components/schemas/SimulateInitialStates"
-                }
-              }
+              "$ref": "#/components/schemas/SimulateResponse"
             }
           }
         }
@@ -7193,18 +6723,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "logs"
-              ],
-              "type": "object",
-              "properties": {
-                "logs": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AppCallLogs"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/BlockLogsResponse"
             }
           }
         }
@@ -7214,33 +6733,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "current_round",
-                "online-money",
-                "total-money"
-              ],
-              "type": "object",
-              "properties": {
-                "current_round": {
-                  "type": "integer",
-                  "description": "Round",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "online-money": {
-                  "type": "integer",
-                  "description": "OnlineMoney",
-                  "x-go-type": "uint64",
-                  "x-algokit-bigint": true
-                },
-                "total-money": {
-                  "type": "integer",
-                  "description": "TotalMoney",
-                  "x-go-type": "uint64",
-                  "x-algokit-bigint": true
-                }
-              },
-              "description": "Supply represents the current supply of MicroAlgos in the system"
+              "$ref": "#/components/schemas/SupplyResponse"
             }
           }
         }
@@ -7250,50 +6743,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "consensus-version",
-                "fee",
-                "genesis-hash",
-                "genesis-id",
-                "last-round",
-                "min-fee"
-              ],
-              "type": "object",
-              "properties": {
-                "consensus-version": {
-                  "type": "string",
-                  "description": "ConsensusVersion indicates the consensus protocol version\nas of LastRound."
-                },
-                "fee": {
-                  "type": "integer",
-                  "description": "Fee is the suggested transaction fee\nFee is in units of micro-Algos per byte.\nFee may fall to zero but transactions must still have a fee of\nat least MinTxnFee for the current network protocol.",
-                  "x-go-type": "uint64",
-                  "x-algokit-bigint": true
-                },
-                "genesis-hash": {
-                  "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
-                  "type": "string",
-                  "description": "GenesisHash is the hash of the genesis block.",
-                  "format": "byte"
-                },
-                "genesis-id": {
-                  "type": "string",
-                  "description": "GenesisID is an ID listed in the genesis block."
-                },
-                "last-round": {
-                  "type": "integer",
-                  "description": "LastRound indicates the last round seen",
-                  "x-go-type": "basics.Round",
-                  "x-algokit-bigint": true
-                },
-                "min-fee": {
-                  "type": "integer",
-                  "description": "The minimum transaction fee (not per byte) required for the\ntxn to validate for the current network protocol.",
-                  "x-go-type": "uint64",
-                  "x-algokit-bigint": true
-                }
-              },
-              "description": "TransactionParams contains the parameters that help a client construct\na new transaction."
+              "$ref": "#/components/schemas/TransactionParametersResponse"
             }
           }
         }
@@ -7313,18 +6763,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "boxes"
-              ],
-              "type": "object",
-              "properties": {
-                "boxes": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BoxDescriptor"
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/BoxesResponse"
             }
           }
         }
@@ -7354,24 +6793,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "hash",
-                "result"
-              ],
-              "type": "object",
-              "properties": {
-                "hash": {
-                  "type": "string",
-                  "description": "base32 SHA512_256 of program bytes (Address style)"
-                },
-                "result": {
-                  "type": "string",
-                  "description": "base64 encoded program bytes"
-                },
-                "sourcemap": {
-                  "$ref": "#/components/schemas/SourceMap"
-                }
-              }
+              "$ref": "#/components/schemas/CompileResponse"
             }
           }
         }
@@ -7381,16 +6803,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "result"
-              ],
-              "type": "object",
-              "properties": {
-                "result": {
-                  "type": "string",
-                  "description": "disassembled Teal code"
-                }
-              }
+              "$ref": "#/components/schemas/DisassembleResponse"
             }
           }
         }
@@ -7400,27 +6813,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": [
-                "error",
-                "protocol-version",
-                "txns"
-              ],
-              "type": "object",
-              "properties": {
-                "txns": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DryrunTxnResult"
-                  }
-                },
-                "error": {
-                  "type": "string"
-                },
-                "protocol-version": {
-                  "type": "string",
-                  "description": "Protocol version is the protocol version Dryrun was operated under."
-                }
-              }
+              "$ref": "#/components/schemas/DryrunResponse"
             }
           }
         }

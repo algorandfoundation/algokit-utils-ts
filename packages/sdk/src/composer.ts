@@ -2,7 +2,7 @@ import type {
   AlgodClient,
   PendingTransactionResponse,
   SimulateRequest,
-  SimulateTransaction,
+  SimulateResponse,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import type { AccessReference, BoxReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
@@ -589,14 +589,14 @@ export class AtomicTransactionComposer {
    *
    * @returns A promise that, upon success, resolves to an object containing an
    *   array of results containing one element for each method call transaction
-   *   in this group (ABIResult[]) and the SimulateTransaction object.
+   *   in this group (ABIResult[]) and the SimulateResponse object.
    */
   async simulate(
     client: AlgodClient,
     request?: SimulateRequest,
   ): Promise<{
     methodResults: ABIResult[]
-    simulateResponse: SimulateTransaction
+    simulateResponse: SimulateResponse
   }> {
     if (this.status > AtomicTransactionComposerStatus.SUBMITTED) {
       throw new Error('Simulated Transaction group has already been submitted to the network')

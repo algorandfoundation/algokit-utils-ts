@@ -1,8 +1,6 @@
-/* Minimal client runtime config holder */
 export type BaseURL = string
 
 export interface ClientConfig {
-  // Prefer idiomatic camelCase going forward
   baseUrl: BaseURL
   credentials?: 'include' | 'omit' | 'same-origin'
   token?: string | (() => string | Promise<string>)
