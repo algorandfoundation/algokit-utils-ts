@@ -1,11 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bytesCodec,
-  ObjectModelCodec,
-  ArrayModelCodec,
-  PrimitiveModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, ObjectModelCodec, ArrayModelCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { Digest } from './digest'
 import { DigestMeta } from './digest'
 import type { MultisigSig } from './multisig-sig'

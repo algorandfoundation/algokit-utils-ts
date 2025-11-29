@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { LedgerStateDelta } from './ledger-state-delta'
 import { LedgerStateDeltaMeta } from './ledger-state-delta'
 

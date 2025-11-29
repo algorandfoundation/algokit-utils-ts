@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TransactionSignatureMultisigSubsignature } from './transaction-signature-multisig-subsignature'
 import { TransactionSignatureMultisigSubsignatureMeta } from './transaction-signature-multisig-subsignature'
 

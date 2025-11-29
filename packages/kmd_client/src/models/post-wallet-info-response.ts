@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  booleanCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { WalletHandle } from './wallet-handle'
 import { WalletHandleMeta } from './wallet-handle'
 

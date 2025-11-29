@@ -1,11 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  bigIntCodec,
-  booleanCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * AssetParams specifies the parameters for an asset.

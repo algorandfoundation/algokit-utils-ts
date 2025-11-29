@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  bigIntCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * DryrunSource is TEAL source text that gets uploaded, compiled, and inserted into transactions or application state.

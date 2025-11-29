@@ -1,8 +1,5 @@
 import type { ArrayModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TealKeyValue } from './teal-key-value'
 import { TealKeyValueMeta } from './teal-key-value'
 

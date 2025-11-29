@@ -1,8 +1,5 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  addressCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * References an account's local state for an application.

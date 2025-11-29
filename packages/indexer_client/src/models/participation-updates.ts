@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringArrayCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Participation account data that needs to be checked/acted on by the network.

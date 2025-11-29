@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  stringArrayCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Source map for the program

@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Proof of transaction in a block.

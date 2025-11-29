@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofVerifier } from './state-proof-verifier'
 import { StateProofVerifierMeta } from './state-proof-verifier'
 

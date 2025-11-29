@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  PrimitiveModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 import type { Signature } from './signature'

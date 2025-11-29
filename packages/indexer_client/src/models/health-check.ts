@@ -1,12 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bigIntCodec,
-  booleanCodec,
-  stringArrayCodec,
-  RecordCodec,
-  unknownCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, booleanCodec, stringArrayCodec, RecordCodec, unknownCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * A health check response.

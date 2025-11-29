@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Box descriptor describes an app box without a value.

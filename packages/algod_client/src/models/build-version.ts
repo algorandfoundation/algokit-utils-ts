@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec } from '@algorandfoundation/algokit-common'
 
 export type BuildVersion = {
   branch: string

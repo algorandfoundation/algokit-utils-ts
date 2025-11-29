@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { SourceMap } from './source-map'
 import { SourceMapMeta } from './source-map'
 

@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Describes an asset held by an account.

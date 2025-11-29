@@ -1,11 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  booleanCodec,
-  ArrayCodec,
-  PrimitiveModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, booleanCodec, ArrayCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { TxType } from './tx-type'
 import { TxTypeMeta } from './tx-type'
 

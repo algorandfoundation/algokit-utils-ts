@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { DryrunTxnResult } from './dryrun-txn-result'
 import { DryrunTxnResultMeta } from './dryrun-txn-result'
 

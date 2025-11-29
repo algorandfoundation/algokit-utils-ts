@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  bigIntCodec,
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * NodeStatus contains the information about a node status

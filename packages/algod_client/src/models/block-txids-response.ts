@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringArrayCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 export type BlockTxidsResponse = {
   /**

@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  ArrayModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { MasterDerivationKey } from './master-derivation-key'
 import { MasterDerivationKeyMeta } from './master-derivation-key'
 

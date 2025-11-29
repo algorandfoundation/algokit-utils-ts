@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  bigIntCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a TEAL value delta.

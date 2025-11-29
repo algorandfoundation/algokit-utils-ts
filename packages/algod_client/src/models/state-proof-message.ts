@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents the message that the state proofs are attesting to.

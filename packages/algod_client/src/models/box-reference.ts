@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * References a box of an application.

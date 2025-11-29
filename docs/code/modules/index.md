@@ -323,7 +323,7 @@ ___
 
 ### performTransactionComposerSimulate
 
-▸ **performTransactionComposerSimulate**(`composer`, `options?`): `Promise`\<`SimulateTransaction`\>
+▸ **performTransactionComposerSimulate**(`composer`, `options?`): `Promise`\<`SimulateResponse`\>
 
 #### Parameters
 
@@ -334,7 +334,7 @@ ___
 
 #### Returns
 
-`Promise`\<`SimulateTransaction`\>
+`Promise`\<`SimulateResponse`\>
 
 The simulation result, which includes various details about how the transactions would be processed.
 

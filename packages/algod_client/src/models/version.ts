@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bytesCodec,
-  stringArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, stringArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { BuildVersion } from './build-version'
 import { BuildVersionMeta } from './build-version'
 

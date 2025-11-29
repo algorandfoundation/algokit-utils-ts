@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bigIntCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetHolding } from './asset-holding'
 import { AssetHoldingMeta } from './asset-holding'
 

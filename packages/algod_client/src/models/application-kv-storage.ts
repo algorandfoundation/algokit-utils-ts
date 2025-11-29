@@ -1,9 +1,5 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  addressCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { addressCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmKeyValue } from './avm-key-value'
 import { AvmKeyValueMeta } from './avm-key-value'
 

@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofSignature } from './state-proof-signature'
 import { StateProofSignatureMeta } from './state-proof-signature'
 

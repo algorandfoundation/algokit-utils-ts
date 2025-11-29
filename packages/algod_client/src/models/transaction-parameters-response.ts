@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bigIntCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * TransactionParams contains the parameters that help a client construct

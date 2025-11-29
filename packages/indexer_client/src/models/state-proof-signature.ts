@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  bytesCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
 

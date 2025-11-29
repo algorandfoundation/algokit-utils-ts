@@ -1,11 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  booleanCodec,
-  bytesCodec,
-  ObjectModelCodec,
-  PrimitiveModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, bytesCodec, ObjectModelCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSig } from './multisig-sig'
 import { MultisigSigMeta } from './multisig-sig'
 import type { PublicKey } from './public-key'

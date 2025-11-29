@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TealValue } from './teal-value'
 import { TealValueMeta } from './teal-value'
 

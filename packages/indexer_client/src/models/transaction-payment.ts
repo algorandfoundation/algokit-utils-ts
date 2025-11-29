@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bigIntCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for a payment transaction.

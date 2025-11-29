@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTMultisigImportResponse is the response to `POST /v1/multisig/import`

@@ -1,11 +1,5 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  bytesCodec,
-  addressCodec,
-  ObjectModelCodec,
-  ArrayModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, bytesCodec, addressCodec, ObjectModelCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
 import type { TealKeyValueStore } from './teal-key-value-store'

@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Specifies maximums on the number of each type that may be stored.

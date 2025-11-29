@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSubsig } from './multisig-subsig'
 import { MultisigSubsigMeta } from './multisig-subsig'
 

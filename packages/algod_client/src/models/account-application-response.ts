@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalState } from './application-local-state'
 import { ApplicationLocalStateMeta } from './application-local-state'
 import type { ApplicationParams } from './application-params'

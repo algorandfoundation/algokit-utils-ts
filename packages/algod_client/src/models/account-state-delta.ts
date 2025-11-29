@@ -1,8 +1,5 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  addressCodec,
-  ArrayModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { addressCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateDelta } from './state-delta'
 import { StateDeltaMeta } from './state-delta'
 

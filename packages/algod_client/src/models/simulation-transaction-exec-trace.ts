@@ -1,11 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  booleanCodec,
-  bytesCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, bytesCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { SimulationOpcodeTraceUnit } from './simulation-opcode-trace-unit'
 import { SimulationOpcodeTraceUnitMeta } from './simulation-opcode-trace-unit'
 

@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  bigIntCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 
 const GenesisAllocationStateMeta: ObjectModelMetadata<GenesisAllocation['state']> = {
   name: 'GenesisAllocationStateMeta',

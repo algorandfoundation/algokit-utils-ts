@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { EvalDelta } from './eval-delta'
 import { EvalDeltaMeta } from './eval-delta'
 

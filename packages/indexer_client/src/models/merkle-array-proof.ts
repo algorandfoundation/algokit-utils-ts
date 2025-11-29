@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  bytesArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, bytesArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { HashFactory } from './hash-factory'
 import { HashFactoryMeta } from './hash-factory'
 

@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bytesArrayCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Stores the global information associated with an application.

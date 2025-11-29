@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  ArrayCodec,
-  numberArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, ArrayCodec, numberArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateOperation } from './application-state-operation'
 import { ApplicationStateOperationMeta } from './application-state-operation'
 import type { AvmValue } from './avm-value'

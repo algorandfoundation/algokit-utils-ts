@@ -1,9 +1,5 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  addressCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, addressCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
 import type { HoldingRef } from './holding-ref'

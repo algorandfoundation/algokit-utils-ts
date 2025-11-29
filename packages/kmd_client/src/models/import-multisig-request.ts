@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  ArrayCodec,
-  PrimitiveModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, ArrayCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 

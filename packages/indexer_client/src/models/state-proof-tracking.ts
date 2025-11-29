@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  bigIntCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 export type StateProofTracking = {
   /**

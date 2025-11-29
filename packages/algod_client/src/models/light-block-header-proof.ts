@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Proof of membership and position of a light block header.

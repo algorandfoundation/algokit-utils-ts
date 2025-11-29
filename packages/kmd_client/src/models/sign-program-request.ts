@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTProgramSignRequest is the request for `POST /v1/program/sign`

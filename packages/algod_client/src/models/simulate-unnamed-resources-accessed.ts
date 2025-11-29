@@ -1,11 +1,5 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  ArrayCodec,
-  bigIntArrayCodec,
-  addressArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, ArrayCodec, bigIntArrayCodec, addressArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalReference } from './application-local-reference'
 import { ApplicationLocalReferenceMeta } from './application-local-reference'
 import type { AssetHoldingReference } from './asset-holding-reference'

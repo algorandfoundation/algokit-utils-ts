@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationInitialStates } from './application-initial-states'
 import { ApplicationInitialStatesMeta } from './application-initial-states'
 

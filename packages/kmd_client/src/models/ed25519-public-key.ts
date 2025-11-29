@@ -1,7 +1,5 @@
 import type { ArrayModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberArrayCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberArrayCodec } from '@algorandfoundation/algokit-common'
 
 export type Ed25519PublicKey = number[]
 

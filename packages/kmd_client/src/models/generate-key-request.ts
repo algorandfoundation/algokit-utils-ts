@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTKeyRequest is the request for `POST /v1/key`

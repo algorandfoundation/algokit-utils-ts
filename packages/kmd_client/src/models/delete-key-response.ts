@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1DELETEKeyResponse is the response to `DELETE /v1/key`

@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bigIntCodec,
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields relating to voting for a protocol upgrade.

@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringArrayCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * VersionsResponse is the response to `GET /versions`

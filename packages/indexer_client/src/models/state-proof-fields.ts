@@ -1,12 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  numberCodec,
-  bigIntCodec,
-  bytesCodec,
-  ArrayCodec,
-  bigIntArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { numberCodec, bigIntCodec, bytesCodec, ArrayCodec, bigIntArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { MerkleArrayProof } from './merkle-array-proof'
 import { MerkleArrayProofMeta } from './merkle-array-proof'
 import type { StateProofReveal } from './state-proof-reveal'

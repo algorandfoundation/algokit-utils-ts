@@ -1,11 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  numberCodec,
-  booleanCodec,
-  ArrayCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, booleanCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { GenesisAllocation } from './genesis-allocation'
 import { GenesisAllocationMeta } from './genesis-allocation'
 

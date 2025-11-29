@@ -1,10 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  stringCodec,
-  bigIntCodec,
-  bytesCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { HbProofFields } from './hb-proof-fields'
 import { HbProofFieldsMeta } from './hb-proof-fields'
 

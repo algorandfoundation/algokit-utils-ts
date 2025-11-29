@@ -1,9 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  booleanCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, booleanCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetParams } from './asset-params'
 import { AssetParamsMeta } from './asset-params'
 

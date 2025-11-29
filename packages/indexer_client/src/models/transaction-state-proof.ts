@@ -1,8 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bigIntCodec,
-  ObjectModelCodec,
-} from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { IndexerStateProofMessage } from './indexer-state-proof-message'
 import { IndexerStateProofMessageMeta } from './indexer-state-proof-message'
 import type { StateProofFields } from './state-proof-fields'

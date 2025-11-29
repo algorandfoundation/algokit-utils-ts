@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  booleanCodec,
-} from '@algorandfoundation/algokit-common'
+import { booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * An object that configures simulation execution trace.

@@ -28,9 +28,7 @@
   "paths": {
     "/health": {
       "get": {
-        "tags": [
-          "common"
-        ],
+        "tags": ["common"],
         "summary": "Returns 200 if healthy.",
         "operationId": "makeHealthCheck",
         "responses": {
@@ -53,9 +51,7 @@
     },
     "/v2/accounts": {
       "get": {
-        "tags": [
-          "search"
-        ],
+        "tags": ["search"],
         "description": "Search for accounts.",
         "operationId": "searchForAccounts",
         "parameters": [
@@ -111,14 +107,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": [
-                  "all",
-                  "assets",
-                  "created-assets",
-                  "apps-local-state",
-                  "created-apps",
-                  "none"
-                ]
+                "enum": ["all", "assets", "created-assets", "apps-local-state", "created-apps", "none"]
               }
             }
           },
@@ -204,9 +193,7 @@
     },
     "/v2/accounts/{account-id}": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup account information.",
         "operationId": "lookupAccountByID",
         "parameters": [
@@ -246,14 +233,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": [
-                  "all",
-                  "assets",
-                  "created-assets",
-                  "apps-local-state",
-                  "created-apps",
-                  "none"
-                ]
+                "enum": ["all", "assets", "created-assets", "apps-local-state", "created-apps", "none"]
               }
             }
           }
@@ -304,9 +284,7 @@
     },
     "/v2/accounts/{account-id}/assets": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup an account's asset holdings, optionally for a specific ID.",
         "operationId": "lookupAccountAssets",
         "parameters": [
@@ -399,9 +377,7 @@
     },
     "/v2/accounts/{account-id}/created-assets": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup an account's created asset parameters, optionally for a specific ID.",
         "operationId": "lookupAccountCreatedAssets",
         "parameters": [
@@ -494,9 +470,7 @@
     },
     "/v2/accounts/{account-id}/apps-local-state": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup an account's asset holdings, optionally for a specific ID.",
         "operationId": "lookupAccountAppLocalStates",
         "parameters": [
@@ -589,9 +563,7 @@
     },
     "/v2/accounts/{account-id}/created-applications": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup an account's created application parameters, optionally for a specific ID.",
         "operationId": "lookupAccountCreatedApplications",
         "parameters": [
@@ -684,9 +656,7 @@
     },
     "/v2/accounts/{account-id}/transactions": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup account transactions. Transactions are returned newest to oldest.",
         "operationId": "lookupAccountTransactions",
         "parameters": [
@@ -721,16 +691,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": [
-                "pay",
-                "keyreg",
-                "acfg",
-                "axfer",
-                "afrz",
-                "appl",
-                "stpf",
-                "hb"
-              ]
+              "enum": ["pay", "keyreg", "acfg", "axfer", "afrz", "appl", "stpf", "hb"]
             }
           },
           {
@@ -739,11 +700,7 @@
             "description": "SigType filters just results using the specified type of signature:\n* sig - Standard\n* msig - MultiSig\n* lsig - LogicSig",
             "schema": {
               "type": "string",
-              "enum": [
-                "sig",
-                "msig",
-                "lsig"
-              ]
+              "enum": ["sig", "msig", "lsig"]
             }
           },
           {
@@ -884,9 +841,7 @@
     },
     "/v2/applications": {
       "get": {
-        "tags": [
-          "search"
-        ],
+        "tags": ["search"],
         "description": "Search for applications",
         "operationId": "searchForApplications",
         "parameters": [
@@ -958,9 +913,7 @@
     },
     "/v2/applications/{application-id}": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup application.",
         "operationId": "lookupApplicationByID",
         "parameters": [
@@ -1018,9 +971,7 @@
     },
     "/v2/applications/{application-id}/boxes": {
       "get": {
-        "tags": [
-          "search"
-        ],
+        "tags": ["search"],
         "summary": "Get box names for a given application.",
         "description": "Given an application ID, returns the box names of that application sorted lexicographically.",
         "operationId": "searchForApplicationBoxes",
@@ -1097,9 +1048,7 @@
     },
     "/v2/applications/{application-id}/box": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "summary": "Get box information for a given application.",
         "description": "Given an application ID and box name, returns base64 encoded box name and value. Box names must be in the goal app call arg form 'encoding:value'. For ints, use the form 'int:1234'. For raw bytes, encode base 64 and use 'b64' prefix as in 'b64:A=='. For printable strings, use the form 'str:hello'. For addresses, use the form 'addr:XYZ...'.",
         "operationId": "lookupApplicationBoxByIDAndName",
@@ -1169,9 +1118,7 @@
     },
     "/v2/applications/{application-id}/logs": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup application logs.",
         "operationId": "lookupApplicationLogsByID",
         "parameters": [
@@ -1253,9 +1200,7 @@
     },
     "/v2/assets": {
       "get": {
-        "tags": [
-          "search"
-        ],
+        "tags": ["search"],
         "description": "Search for assets.",
         "operationId": "searchForAssets",
         "parameters": [
@@ -1353,9 +1298,7 @@
     },
     "/v2/assets/{asset-id}": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup asset information.",
         "operationId": "lookupAssetByID",
         "parameters": [
@@ -1423,9 +1366,7 @@
     },
     "/v2/assets/{asset-id}/balances": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup the list of accounts who hold this asset ",
         "operationId": "lookupAssetBalances",
         "parameters": [
@@ -1517,9 +1458,7 @@
     },
     "/v2/assets/{asset-id}/transactions": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup transactions for an asset. Transactions are returned oldest to newest.",
         "operationId": "lookupAssetTransactions",
         "parameters": [
@@ -1554,16 +1493,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": [
-                "pay",
-                "keyreg",
-                "acfg",
-                "axfer",
-                "afrz",
-                "appl",
-                "stpf",
-                "hb"
-              ]
+              "enum": ["pay", "keyreg", "acfg", "axfer", "afrz", "appl", "stpf", "hb"]
             }
           },
           {
@@ -1572,11 +1502,7 @@
             "description": "SigType filters just results using the specified type of signature:\n* sig - Standard\n* msig - MultiSig\n* lsig - LogicSig",
             "schema": {
               "type": "string",
-              "enum": [
-                "sig",
-                "msig",
-                "lsig"
-              ]
+              "enum": ["sig", "msig", "lsig"]
             }
           },
           {
@@ -1670,11 +1596,7 @@
             "description": "Combine with the address parameter to define what type of address to search for.",
             "schema": {
               "type": "string",
-              "enum": [
-                "sender",
-                "receiver",
-                "freeze-target"
-              ]
+              "enum": ["sender", "receiver", "freeze-target"]
             }
           },
           {
@@ -1739,9 +1661,7 @@
     },
     "/v2/block-headers": {
       "get": {
-        "tags": [
-          "search"
-        ],
+        "tags": ["search"],
         "description": "Search for block headers. Block headers are returned in ascending round order. Transactions are not included in the output.",
         "operationId": "searchForBlockHeaders",
         "parameters": [
@@ -1880,9 +1800,7 @@
     },
     "/v2/blocks/{round-number}": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup block.",
         "operationId": "lookupBlock",
         "parameters": [
@@ -1941,9 +1859,7 @@
     },
     "/v2/transactions/{txid}": {
       "get": {
-        "tags": [
-          "lookup"
-        ],
+        "tags": ["lookup"],
         "description": "Lookup a single transaction.",
         "operationId": "lookupTransaction",
         "parameters": [
@@ -2002,9 +1918,7 @@
     },
     "/v2/transactions": {
       "get": {
-        "tags": [
-          "search"
-        ],
+        "tags": ["search"],
         "description": "Search for transactions. Transactions are returned oldest to newest unless the address parameter is used, in which case results are returned newest to oldest.",
         "operationId": "searchForTransactions",
         "parameters": [
@@ -2039,16 +1953,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": [
-                "pay",
-                "keyreg",
-                "acfg",
-                "axfer",
-                "afrz",
-                "appl",
-                "stpf",
-                "hb"
-              ]
+              "enum": ["pay", "keyreg", "acfg", "axfer", "afrz", "appl", "stpf", "hb"]
             }
           },
           {
@@ -2057,11 +1962,7 @@
             "description": "SigType filters just results using the specified type of signature:\n* sig - Standard\n* msig - MultiSig\n* lsig - LogicSig",
             "schema": {
               "type": "string",
-              "enum": [
-                "sig",
-                "msig",
-                "lsig"
-              ]
+              "enum": ["sig", "msig", "lsig"]
             }
           },
           {
@@ -2174,11 +2075,7 @@
             "description": "Combine with the address parameter to define what type of address to search for.",
             "schema": {
               "type": "string",
-              "enum": [
-                "sender",
-                "receiver",
-                "freeze-target"
-              ]
+              "enum": ["sender", "receiver", "freeze-target"]
             }
           },
           {
@@ -2247,10 +2144,7 @@
       "Hashtype": {
         "type": "string",
         "description": "The type of hash function used to create the proof, must be one of: \n* sha512_256 \n* sha256",
-        "enum": [
-          "sha512_256",
-          "sha256"
-        ]
+        "enum": ["sha512_256", "sha256"]
       },
       "Account": {
         "required": [
@@ -2359,11 +2253,7 @@
           "sig-type": {
             "type": "string",
             "description": "the type of signature used by this account, must be one of:\n* sig\n* msig\n* lsig\n* or null if unknown",
-            "enum": [
-              "sig",
-              "msig",
-              "lsig"
-            ]
+            "enum": ["sig", "msig", "lsig"]
           },
           "total-apps-opted-in": {
             "type": "integer",
@@ -2422,13 +2312,7 @@
         "description": "Account information at a given round.\n\nDefinition:\ndata/basics/userBalance.go : AccountData\n"
       },
       "AccountParticipation": {
-        "required": [
-          "selection-participation-key",
-          "vote-first-valid",
-          "vote-key-dilution",
-          "vote-last-valid",
-          "vote-participation-key"
-        ],
+        "required": ["selection-participation-key", "vote-first-valid", "vote-key-dilution", "vote-last-valid", "vote-participation-key"],
         "type": "object",
         "properties": {
           "selection-participation-key": {
@@ -2468,10 +2352,7 @@
         "description": "AccountParticipation describes the parameters used by this account in consensus protocol."
       },
       "ApplicationStateSchema": {
-        "required": [
-          "num-byte-slice",
-          "num-uint"
-        ],
+        "required": ["num-byte-slice", "num-uint"],
         "type": "object",
         "properties": {
           "num-uint": {
@@ -2490,10 +2371,7 @@
         "description": "Specifies maximums on the number of each type that may be stored."
       },
       "ApplicationLocalState": {
-        "required": [
-          "id",
-          "schema"
-        ],
+        "required": ["id", "schema"],
         "type": "object",
         "properties": {
           "id": {
@@ -2532,10 +2410,7 @@
         }
       },
       "TealKeyValue": {
-        "required": [
-          "key",
-          "value"
-        ],
+        "required": ["key", "value"],
         "type": "object",
         "properties": {
           "key": {
@@ -2548,11 +2423,7 @@
         "description": "Represents a key-value pair in an application store."
       },
       "TealValue": {
-        "required": [
-          "bytes",
-          "type",
-          "uint"
-        ],
+        "required": ["bytes", "type", "uint"],
         "type": "object",
         "properties": {
           "type": {
@@ -2573,10 +2444,7 @@
         "description": "Represents a TEAL value."
       },
       "Application": {
-        "required": [
-          "id",
-          "params"
-        ],
+        "required": ["id", "params"],
         "type": "object",
         "properties": {
           "id": {
@@ -2649,10 +2517,7 @@
         "description": "Stores the global information associated with an application."
       },
       "ApplicationLogData": {
-        "required": [
-          "logs",
-          "txid"
-        ],
+        "required": ["logs", "txid"],
         "type": "object",
         "properties": {
           "txid": {
@@ -2672,10 +2537,7 @@
         "description": "Stores the global information associated with an application."
       },
       "Asset": {
-        "required": [
-          "index",
-          "params"
-        ],
+        "required": ["index", "params"],
         "type": "object",
         "properties": {
           "index": {
@@ -2705,11 +2567,7 @@
         "description": "Specifies both the unique identifier and the parameters for an asset"
       },
       "AssetHolding": {
-        "required": [
-          "amount",
-          "asset-id",
-          "is-frozen"
-        ],
+        "required": ["amount", "asset-id", "is-frozen"],
         "type": "object",
         "properties": {
           "amount": {
@@ -2744,11 +2602,7 @@
         "description": "Describes an asset held by an account.\n\nDefinition:\ndata/basics/userBalance.go : AssetHolding"
       },
       "AssetParams": {
-        "required": [
-          "creator",
-          "decimals",
-          "total"
-        ],
+        "required": ["creator", "decimals", "total"],
         "type": "object",
         "properties": {
           "clawback": {
@@ -2944,14 +2798,7 @@
         "description": "Block information.\n\nDefinition:\ndata/bookkeeping/block.go : Block"
       },
       "BlockRewards": {
-        "required": [
-          "fee-sink",
-          "rewards-calculation-round",
-          "rewards-level",
-          "rewards-pool",
-          "rewards-rate",
-          "rewards-residue"
-        ],
+        "required": ["fee-sink", "rewards-calculation-round", "rewards-level", "rewards-pool", "rewards-rate", "rewards-residue"],
         "type": "object",
         "properties": {
           "fee-sink": {
@@ -2986,9 +2833,7 @@
         "description": "Fields relating to rewards,"
       },
       "BlockUpgradeState": {
-        "required": [
-          "current-protocol"
-        ],
+        "required": ["current-protocol"],
         "type": "object",
         "properties": {
           "current-protocol": {
@@ -3036,11 +2881,7 @@
         "description": "Fields relating to voting for a protocol upgrade."
       },
       "Box": {
-        "required": [
-          "name",
-          "round",
-          "value"
-        ],
+        "required": ["name", "round", "value"],
         "type": "object",
         "properties": {
           "round": {
@@ -3064,9 +2905,7 @@
         "description": "Box name and its content."
       },
       "BoxDescriptor": {
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "type": "object",
         "properties": {
           "name": {
@@ -3079,10 +2918,7 @@
         "description": "Box descriptor describes an app box without a value."
       },
       "BoxReference": {
-        "required": [
-          "app",
-          "name"
-        ],
+        "required": ["app", "name"],
         "type": "object",
         "properties": {
           "app": {
@@ -3100,13 +2936,7 @@
         "description": "BoxReference names a box by its name and the application ID it belongs to."
       },
       "HealthCheck": {
-        "required": [
-          "db-available",
-          "is-migrating",
-          "message",
-          "round",
-          "version"
-        ],
+        "required": ["db-available", "is-migrating", "message", "round", "version"],
         "type": "object",
         "properties": {
           "version": {
@@ -3140,10 +2970,7 @@
         "description": "A health check response."
       },
       "HoldingRef": {
-        "required": [
-          "address",
-          "asset"
-        ],
+        "required": ["address", "asset"],
         "type": "object",
         "properties": {
           "address": {
@@ -3160,10 +2987,7 @@
         "description": "HoldingRef names a holding by referring to an Address and Asset it belongs to."
       },
       "LocalsRef": {
-        "required": [
-          "address",
-          "app"
-        ],
+        "required": ["address", "app"],
         "type": "object",
         "properties": {
           "address": {
@@ -3180,11 +3004,7 @@
         "description": "LocalsRef names a local state by referring to an Address and App it belongs to."
       },
       "MiniAssetHolding": {
-        "required": [
-          "address",
-          "amount",
-          "is-frozen"
-        ],
+        "required": ["address", "amount", "is-frozen"],
         "type": "object",
         "properties": {
           "address": {
@@ -3217,14 +3037,7 @@
       "OnCompletion": {
         "type": "string",
         "description": "\\[apan\\] defines the what additional actions occur with the transaction.\n\nValid types:\n* noop\n* optin\n* closeout\n* clear\n* update\n* delete",
-        "enum": [
-          "noop",
-          "optin",
-          "closeout",
-          "clear",
-          "update",
-          "delete"
-        ]
+        "enum": ["noop", "optin", "closeout", "clear", "update", "delete"]
       },
       "ParticipationUpdates": {
         "type": "object",
@@ -3284,10 +3097,7 @@
         }
       },
       "AccountStateDelta": {
-        "required": [
-          "address",
-          "delta"
-        ],
+        "required": ["address", "delta"],
         "type": "object",
         "properties": {
           "address": {
@@ -3300,10 +3110,7 @@
         "description": "Application state delta."
       },
       "EvalDeltaKeyValue": {
-        "required": [
-          "key",
-          "value"
-        ],
+        "required": ["key", "value"],
         "type": "object",
         "properties": {
           "key": {
@@ -3316,9 +3123,7 @@
         "description": "Key-value pairs for StateDelta."
       },
       "EvalDelta": {
-        "required": [
-          "action"
-        ],
+        "required": ["action"],
         "type": "object",
         "properties": {
           "action": {
@@ -3338,10 +3143,7 @@
         "description": "Represents a TEAL value delta."
       },
       "StateSchema": {
-        "required": [
-          "num-byte-slice",
-          "num-uint"
-        ],
+        "required": ["num-byte-slice", "num-uint"],
         "type": "object",
         "properties": {
           "num-uint": {
@@ -3360,13 +3162,7 @@
         "description": "Represents a \\[apls\\] local-state or \\[apgs\\] global-state schema. These schemas determine how much storage may be used in a local-state or global-state for an application. The more space used, the larger minimum balance must be maintained in the account holding the data."
       },
       "Transaction": {
-        "required": [
-          "fee",
-          "first-valid",
-          "last-valid",
-          "sender",
-          "tx-type"
-        ],
+        "required": ["fee", "first-valid", "last-valid", "sender", "tx-type"],
         "type": "object",
         "properties": {
           "application-transaction": {
@@ -3503,16 +3299,7 @@
           "tx-type": {
             "type": "string",
             "description": "\\[type\\] Indicates what type of transaction this is. Different types have different fields.\n\nValid types, and where their fields are stored:\n* \\[pay\\] payment-transaction\n* \\[keyreg\\] keyreg-transaction\n* \\[acfg\\] asset-config-transaction\n* \\[axfer\\] asset-transfer-transaction\n* \\[afrz\\] asset-freeze-transaction\n* \\[appl\\] application-transaction\n* \\[stpf\\] state-proof-transaction\n* \\[hb\\] heartbeat-transaction",
-            "enum": [
-              "pay",
-              "keyreg",
-              "acfg",
-              "axfer",
-              "afrz",
-              "appl",
-              "stpf",
-              "hb"
-            ],
+            "enum": ["pay", "keyreg", "acfg", "axfer", "afrz", "appl", "stpf", "hb"],
             "x-algorand-format": "tx-type-enum"
           },
           "local-state-delta": {
@@ -3545,10 +3332,7 @@
         "description": "Contains all fields common to all transactions and serves as an envelope to all transactions type. Represents both regular and inner transactions.\n\nDefinition:\ndata/transactions/signedtxn.go : SignedTxn\ndata/transactions/transaction.go : Transaction\n"
       },
       "TransactionApplication": {
-        "required": [
-          "application-id",
-          "on-completion"
-        ],
+        "required": ["application-id", "on-completion"],
         "type": "object",
         "properties": {
           "application-id": {
@@ -3652,11 +3436,7 @@
         "description": "Fields for asset allocation, re-configuration, and destruction.\n\n\nA zero value for asset-id indicates asset creation.\nA zero value for the params indicates asset destruction.\n\nDefinition:\ndata/transactions/asset.go : AssetConfigTxnFields"
       },
       "TransactionAssetFreeze": {
-        "required": [
-          "address",
-          "asset-id",
-          "new-freeze-status"
-        ],
+        "required": ["address", "asset-id", "new-freeze-status"],
         "type": "object",
         "properties": {
           "address": {
@@ -3693,13 +3473,7 @@
         "description": "Fields for a state proof transaction. \n\nDefinition:\ndata/transactions/stateproof.go : StateProofTxnFields"
       },
       "TransactionHeartbeat": {
-        "required": [
-          "hb-address",
-          "hb-key-dilution",
-          "hb-proof",
-          "hb-seed",
-          "hb-vote-id"
-        ],
+        "required": ["hb-address", "hb-key-dilution", "hb-proof", "hb-seed", "hb-vote-id"],
         "type": "object",
         "properties": {
           "hb-address": {
@@ -3730,11 +3504,7 @@
         "description": "Fields for a heartbeat transaction.\n\nDefinition:\ndata/transactions/heartbeat.go : HeartbeatTxnFields"
       },
       "TransactionAssetTransfer": {
-        "required": [
-          "amount",
-          "asset-id",
-          "receiver"
-        ],
+        "required": ["amount", "asset-id", "receiver"],
         "type": "object",
         "properties": {
           "amount": {
@@ -3811,10 +3581,7 @@
         "description": "Fields for a keyreg transaction.\n\nDefinition:\ndata/transactions/keyreg.go : KeyregTxnFields"
       },
       "TransactionPayment": {
-        "required": [
-          "amount",
-          "receiver"
-        ],
+        "required": ["amount", "receiver"],
         "type": "object",
         "properties": {
           "amount": {
@@ -3857,9 +3624,7 @@
         "description": "Validation signature associated with some data. Only one of the signatures should be provided."
       },
       "TransactionSignatureLogicsig": {
-        "required": [
-          "logic"
-        ],
+        "required": ["logic"],
         "type": "object",
         "properties": {
           "args": {
@@ -4177,10 +3942,7 @@
         }
       },
       "AccountResponse": {
-        "required": [
-          "account",
-          "current-round"
-        ],
+        "required": ["account", "current-round"],
         "type": "object",
         "properties": {
           "account": {
@@ -4194,10 +3956,7 @@
         }
       },
       "AssetHoldingsResponse": {
-        "required": [
-          "assets",
-          "current-round"
-        ],
+        "required": ["assets", "current-round"],
         "type": "object",
         "properties": {
           "current-round": {
@@ -4218,10 +3977,7 @@
         }
       },
       "AccountsResponse": {
-        "required": [
-          "accounts",
-          "current-round"
-        ],
+        "required": ["accounts", "current-round"],
         "type": "object",
         "properties": {
           "accounts": {
@@ -4242,10 +3998,7 @@
         }
       },
       "AssetBalancesResponse": {
-        "required": [
-          "balances",
-          "current-round"
-        ],
+        "required": ["balances", "current-round"],
         "type": "object",
         "properties": {
           "balances": {
@@ -4266,9 +4019,7 @@
         }
       },
       "ApplicationResponse": {
-        "required": [
-          "current-round"
-        ],
+        "required": ["current-round"],
         "type": "object",
         "properties": {
           "application": {
@@ -4282,10 +4033,7 @@
         }
       },
       "ApplicationsResponse": {
-        "required": [
-          "applications",
-          "current-round"
-        ],
+        "required": ["applications", "current-round"],
         "type": "object",
         "properties": {
           "applications": {
@@ -4306,10 +4054,7 @@
         }
       },
       "ApplicationLogsResponse": {
-        "required": [
-          "application-id",
-          "current-round"
-        ],
+        "required": ["application-id", "current-round"],
         "type": "object",
         "properties": {
           "application-id": {
@@ -4335,10 +4080,7 @@
         }
       },
       "ApplicationLocalStatesResponse": {
-        "required": [
-          "apps-local-states",
-          "current-round"
-        ],
+        "required": ["apps-local-states", "current-round"],
         "type": "object",
         "properties": {
           "apps-local-states": {
@@ -4359,10 +4101,7 @@
         }
       },
       "AssetResponse": {
-        "required": [
-          "asset",
-          "current-round"
-        ],
+        "required": ["asset", "current-round"],
         "type": "object",
         "properties": {
           "asset": {
@@ -4376,10 +4115,7 @@
         }
       },
       "BoxesResponse": {
-        "required": [
-          "application-id",
-          "boxes"
-        ],
+        "required": ["application-id", "boxes"],
         "type": "object",
         "properties": {
           "application-id": {
@@ -4400,9 +4136,7 @@
         }
       },
       "ErrorResponse": {
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "type": "object",
         "properties": {
           "data": {
@@ -4415,10 +4149,7 @@
         }
       },
       "AssetsResponse": {
-        "required": [
-          "assets",
-          "current-round"
-        ],
+        "required": ["assets", "current-round"],
         "type": "object",
         "properties": {
           "assets": {
@@ -4439,10 +4170,7 @@
         }
       },
       "BlockHeadersResponse": {
-        "required": [
-          "blocks",
-          "current-round"
-        ],
+        "required": ["blocks", "current-round"],
         "type": "object",
         "properties": {
           "current-round": {
@@ -4463,10 +4191,7 @@
         }
       },
       "TransactionResponse": {
-        "required": [
-          "current-round",
-          "transaction"
-        ],
+        "required": ["current-round", "transaction"],
         "type": "object",
         "properties": {
           "transaction": {
@@ -4480,10 +4205,7 @@
         }
       },
       "TransactionsResponse": {
-        "required": [
-          "current-round",
-          "transactions"
-        ],
+        "required": ["current-round", "transactions"],
         "type": "object",
         "properties": {
           "current-round": {
@@ -4754,11 +4476,7 @@
         "description": "Combine with the address parameter to define what type of address to search for.",
         "schema": {
           "type": "string",
-          "enum": [
-            "sender",
-            "receiver",
-            "freeze-target"
-          ]
+          "enum": ["sender", "receiver", "freeze-target"]
         }
       },
       "after-time": {
@@ -4858,14 +4576,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": [
-              "all",
-              "assets",
-              "created-assets",
-              "apps-local-state",
-              "created-apps",
-              "none"
-            ]
+            "enum": ["all", "assets", "created-assets", "apps-local-state", "created-apps", "none"]
           }
         }
       },
@@ -4960,11 +4671,7 @@
         "description": "SigType filters just results using the specified type of signature:\n* sig - Standard\n* msig - MultiSig\n* lsig - LogicSig",
         "schema": {
           "type": "string",
-          "enum": [
-            "sig",
-            "msig",
-            "lsig"
-          ]
+          "enum": ["sig", "msig", "lsig"]
         }
       },
       "auth-addr": {
@@ -5000,16 +4707,7 @@
         "in": "query",
         "schema": {
           "type": "string",
-          "enum": [
-            "pay",
-            "keyreg",
-            "acfg",
-            "axfer",
-            "afrz",
-            "appl",
-            "stpf",
-            "hb"
-          ]
+          "enum": ["pay", "keyreg", "acfg", "axfer", "afrz", "appl", "stpf", "hb"]
         }
       }
     }

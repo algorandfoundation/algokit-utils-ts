@@ -1,7 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import {
-  bytesCodec,
-} from '@algorandfoundation/algokit-common'
+import { bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * \[hbprf\] HbProof is a signature using HeartbeatAddress's partkey, thereby showing it is online.
