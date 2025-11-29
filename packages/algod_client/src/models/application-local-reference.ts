@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   bigIntCodec,
   addressCodec,
@@ -11,7 +11,7 @@ export type ApplicationLocalReference = {
   /**
    * Address of the account with the local state.
    */
-  account: string
+  account: Address
 
   /**
    * Application ID of the local state application.

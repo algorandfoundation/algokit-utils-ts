@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   stringCodec,
   bytesCodec,
@@ -31,7 +31,7 @@ export type ApplicationStateOperation = {
   /**
    * For local state changes, the address of the account associated with the local state.
    */
-  account?: string
+  account?: Address
 }
 
 export const ApplicationStateOperationMeta: ObjectModelMetadata<ApplicationStateOperation> = {

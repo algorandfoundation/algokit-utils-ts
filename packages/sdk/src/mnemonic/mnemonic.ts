@@ -1,48 +1,47 @@
 /* eslint-disable no-bitwise */
-import english from './wordlists/english.js';
-import * as nacl from '../nacl/naclWrappers.js';
-import { Address } from '../encoding/address.js';
-import Account from '../types/account.js';
+import english from './wordlists/english.js'
+import * as nacl from '../nacl/naclWrappers.js'
+import { Address } from '../encoding/address.js'
+import Account from '../types/account.js'
 
-export const FAIL_TO_DECODE_MNEMONIC_ERROR_MSG = 'failed to decode mnemonic';
-export const NOT_IN_WORDS_LIST_ERROR_MSG =
-  'the mnemonic contains a word that is not in the wordlist';
+export const FAIL_TO_DECODE_MNEMONIC_ERROR_MSG = 'failed to decode mnemonic'
+export const NOT_IN_WORDS_LIST_ERROR_MSG = 'the mnemonic contains a word that is not in the wordlist'
 
 // https://stackoverflow.com/a/51452614
 function toUint11Array(buffer8: Uint8Array | number[]): number[] {
-  const buffer11: number[] = [];
-  let acc = 0;
-  let accBits = 0;
+  const buffer11: number[] = []
+  let acc = 0
+  let accBits = 0
   function add(octet: number) {
-    acc |= octet << accBits;
-    accBits += 8;
+    acc |= octet << accBits
+    accBits += 8
     if (accBits >= 11) {
-      buffer11.push(acc & 0x7ff);
-      acc >>= 11;
-      accBits -= 11;
+      buffer11.push(acc & 0x7ff)
+      acc >>= 11
+      accBits -= 11
     }
   }
   function flush() {
     if (accBits) {
-      buffer11.push(acc);
+      buffer11.push(acc)
     }
   }
 
-  buffer8.forEach(add);
-  flush();
-  return buffer11;
+  buffer8.forEach(add)
+  flush()
+  return buffer11
 }
 
 function applyWords(nums: number[]): string[] {
-  return nums.map((n) => english[n]);
+  return nums.map((n) => english[n])
 }
 
 function computeChecksum(seed: Uint8Array): string {
-  const hashBuffer = nacl.genericHash(seed);
-  const uint11Hash = toUint11Array(hashBuffer);
-  const words = applyWords(uint11Hash);
+  const hashBuffer = nacl.genericHash(seed)
+  const uint11Hash = toUint11Array(hashBuffer)
+  const words = applyWords(uint11Hash)
 
-  return words[0];
+  return words[0]
 }
 
 /**
@@ -54,40 +53,40 @@ function computeChecksum(seed: Uint8Array): string {
 export function mnemonicFromSeed(seed: Uint8Array) {
   // Sanity length check
   if (seed.length !== nacl.SEED_BTYES_LENGTH) {
-    throw new RangeError(`Seed length must be ${nacl.SEED_BTYES_LENGTH}`);
+    throw new RangeError(`Seed length must be ${nacl.SEED_BTYES_LENGTH}`)
   }
 
-  const uint11Array = toUint11Array(seed);
-  const words = applyWords(uint11Array);
-  const checksumWord = computeChecksum(seed);
+  const uint11Array = toUint11Array(seed)
+  const words = applyWords(uint11Array)
+  const checksumWord = computeChecksum(seed)
 
-  return `${words.join(' ')} ${checksumWord}`;
+  return `${words.join(' ')} ${checksumWord}`
 }
 
 // from Uint11Array
 // https://stackoverflow.com/a/51452614
 function toUint8Array(buffer11: number[]): Uint8Array {
-  const buffer8: number[] = [];
-  let acc = 0;
-  let accBits = 0;
+  const buffer8: number[] = []
+  let acc = 0
+  let accBits = 0
   function add(ui11: number) {
-    acc |= ui11 << accBits;
-    accBits += 11;
+    acc |= ui11 << accBits
+    accBits += 11
     while (accBits >= 8) {
-      buffer8.push(acc & 0xff);
-      acc >>= 8;
-      accBits -= 8;
+      buffer8.push(acc & 0xff)
+      acc >>= 8
+      accBits -= 8
     }
   }
   function flush() {
     if (accBits) {
-      buffer8.push(acc);
+      buffer8.push(acc)
     }
   }
 
-  buffer11.forEach(add);
-  flush();
-  return new Uint8Array(buffer8);
+  buffer11.forEach(add)
+  flush()
+  return new Uint8Array(buffer8)
 }
 
 /**
@@ -98,19 +97,19 @@ function toUint8Array(buffer11: number[]): Uint8Array {
  * @returns 32 bytes long seed
  */
 export function seedFromMnemonic(mnemonic: string) {
-  const words = mnemonic.split(' ');
-  const key = words.slice(0, 24);
+  const words = mnemonic.split(' ')
+  const key = words.slice(0, 24)
 
   // Check that all words are in list
   for (const w of key) {
-    if (english.indexOf(w) === -1) throw new Error(NOT_IN_WORDS_LIST_ERROR_MSG);
+    if (english.indexOf(w) === -1) throw new Error(NOT_IN_WORDS_LIST_ERROR_MSG)
   }
 
-  const checksum = words[words.length - 1];
-  const uint11Array = key.map((word) => english.indexOf(word));
+  const checksum = words[words.length - 1]
+  const uint11Array = key.map((word) => english.indexOf(word))
 
   // Convert the key to uint8Array
-  let uint8Array = toUint8Array(uint11Array);
+  let uint8Array = toUint8Array(uint11Array)
 
   // We need to chop the last byte -
   // the short explanation - Since 256 is not divisible by 11, we have an extra 0x0 byte.
@@ -119,23 +118,21 @@ export function seedFromMnemonic(mnemonic: string) {
   // While converting back to byte array, our new 264 bits array is divisible by 8 but the last byte is just the padding.
 
   // check that we have 33 bytes long array as expected
-  if (uint8Array.length !== 33)
-    throw new Error(FAIL_TO_DECODE_MNEMONIC_ERROR_MSG);
+  if (uint8Array.length !== 33) throw new Error(FAIL_TO_DECODE_MNEMONIC_ERROR_MSG)
 
   // check that the last byte is actually 0x0
-  if (uint8Array[uint8Array.length - 1] !== 0x0)
-    throw new Error(FAIL_TO_DECODE_MNEMONIC_ERROR_MSG);
+  if (uint8Array[uint8Array.length - 1] !== 0x0) throw new Error(FAIL_TO_DECODE_MNEMONIC_ERROR_MSG)
 
   // chop it !
-  uint8Array = uint8Array.slice(0, uint8Array.length - 1);
+  uint8Array = uint8Array.slice(0, uint8Array.length - 1)
 
   // compute checksum
-  const cs = computeChecksum(uint8Array);
+  const cs = computeChecksum(uint8Array)
 
   // success!
-  if (cs === checksum) return uint8Array;
+  if (cs === checksum) return uint8Array
 
-  throw new Error(FAIL_TO_DECODE_MNEMONIC_ERROR_MSG);
+  throw new Error(FAIL_TO_DECODE_MNEMONIC_ERROR_MSG)
 }
 
 /**
@@ -144,10 +141,10 @@ export function seedFromMnemonic(mnemonic: string) {
  * @throws error if fails to decode the mnemonic
  */
 export function mnemonicToSecretKey(mn: string): Account {
-  const seed = seedFromMnemonic(mn);
-  const keys = nacl.keyPairFromSeed(seed);
-  const addr = new Address(keys.publicKey);
-  return { addr, sk: keys.secretKey };
+  const seed = seedFromMnemonic(mn)
+  const keys = nacl.keyPairFromSeed(seed)
+  const addr = new Address(keys.publicKey)
+  return { addr, sk: keys.secretKey }
 }
 
 /**
@@ -157,8 +154,8 @@ export function mnemonicToSecretKey(mn: string): Account {
  */
 export function secretKeyToMnemonic(sk: Uint8Array) {
   // get the seed from the sk
-  const seed = sk.slice(0, nacl.SEED_BTYES_LENGTH);
-  return mnemonicFromSeed(seed);
+  const seed = sk.slice(0, nacl.SEED_BTYES_LENGTH)
+  return mnemonicFromSeed(seed)
 }
 
 /**
@@ -168,7 +165,7 @@ export function secretKeyToMnemonic(sk: Uint8Array) {
  * @throws error if fails to decode the mnemonic
  */
 export function mnemonicToMasterDerivationKey(mn: string) {
-  return seedFromMnemonic(mn);
+  return seedFromMnemonic(mn)
 }
 
 /**
@@ -177,5 +174,5 @@ export function mnemonicToMasterDerivationKey(mn: string) {
  * @returns string mnemonic
  */
 export function masterDerivationKeyToMnemonic(mdk: Uint8Array) {
-  return mnemonicFromSeed(mdk);
+  return mnemonicFromSeed(mdk)
 }

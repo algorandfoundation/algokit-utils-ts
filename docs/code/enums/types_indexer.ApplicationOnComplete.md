@@ -25,7 +25,7 @@ Defines the what additional actions occur with the transaction https://dev.algor
 
 #### Defined in
 
-[src/types/indexer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L170)
+[src/types/indexer.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L16)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L169)
+[src/types/indexer.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L15)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L172)
+[src/types/indexer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L18)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L167)
+[src/types/indexer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L13)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L168)
+[src/types/indexer.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L14)
 
 ___
 
@@ -75,4 +75,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L171)
+[src/types/indexer.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L17)

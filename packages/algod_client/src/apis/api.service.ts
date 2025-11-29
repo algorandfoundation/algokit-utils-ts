@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime'
-import type { EncodingFormat } from '@algorandfoundation/algokit-common'
+import { type EncodingFormat } from '@algorandfoundation/algokit-common'
 import { concatArrays } from '@algorandfoundation/algokit-common'
 import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact'
 import type {

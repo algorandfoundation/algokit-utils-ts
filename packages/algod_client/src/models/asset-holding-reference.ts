@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   bigIntCodec,
   addressCodec,
@@ -11,7 +11,7 @@ export type AssetHoldingReference = {
   /**
    * Address of the account holding the asset.
    */
-  account: string
+  account: Address
 
   /**
    * Asset ID of the holding.

@@ -1,4 +1,4 @@
-import { EMPTY_SIGNATURE, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { Address, EMPTY_SIGNATURE, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
@@ -13,25 +13,10 @@ import {
 } from './transaction'
 import { TransactionType } from './transaction-type'
 
-const VALID_ADDRESS_1 = '424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'
+const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI')
 
 describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
-    test('should throw error when sender is missing', () => {
-      const transaction: Transaction = {
-        type: TransactionType.Payment,
-        sender: '',
-        firstValid: 1000n,
-        lastValid: 2000n,
-        payment: {
-          amount: 1000n,
-          receiver: VALID_ADDRESS_1,
-        },
-      }
-
-      expect(() => validateTransaction(transaction)).toThrow('Transaction sender is required')
-    })
-
     test('should throw error when no transaction type specific field is set', () => {
       const transaction: Transaction = {
         type: TransactionType.Payment,
@@ -125,7 +110,43 @@ describe('decodeTransaction', () => {
       {
         "firstValid": 1000n,
         "lastValid": 2000n,
-        "sender": "424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI",
+        "sender": Address {
+          "publicKey": Uint8Array [
+            230,
+            185,
+            154,
+            253,
+            65,
+            13,
+            19,
+            221,
+            14,
+            138,
+            126,
+            148,
+            184,
+            121,
+            29,
+            48,
+            92,
+            117,
+            6,
+            238,
+            183,
+            225,
+            250,
+            65,
+            14,
+            118,
+            26,
+            59,
+            98,
+            44,
+            225,
+            20,
+          ],
+          Symbol(algokit_common:Address): true,
+        },
         "type": "unknown",
       }
     `)

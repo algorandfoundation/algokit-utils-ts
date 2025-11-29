@@ -24,7 +24,7 @@ Algod client, see https://dev.algorand.co/reference/rest-apis/algod/
 
 #### Defined in
 
-[src/types/client-manager.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L16)
+[src/types/client-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L15)
 
 ___
 
@@ -36,7 +36,7 @@ Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer
 
 #### Defined in
 
-[src/types/client-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L18)
+[src/types/client-manager.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L17)
 
 ___
 
@@ -48,4 +48,4 @@ Optional KMD client, see https://dev.algorand.co/reference/rest-apis/kmd/
 
 #### Defined in
 
-[src/types/client-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L20)
+[src/types/client-manager.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L19)

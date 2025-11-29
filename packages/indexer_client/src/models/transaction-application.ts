@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   numberCodec,
   bigIntCodec,
@@ -45,7 +45,7 @@ export type TransactionApplication = {
   /**
    * \[apat\] List of accounts in addition to the sender that may be accessed from the application's approval-program and clear-state-program.
    */
-  accounts?: string[]
+  accounts?: Address[]
 
   /**
    * \[apbx\] the boxes that can be accessed by this transaction (and others in the same group).

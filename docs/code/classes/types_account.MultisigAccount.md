@@ -49,7 +49,7 @@ Account wrapper that supports partial or full multisig signing.
 
 #### Defined in
 
-[src/types/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L46)
+[src/types/account.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L48)
 
 ## Properties
 
@@ -59,7 +59,7 @@ Account wrapper that supports partial or full multisig signing.
 
 #### Defined in
 
-[src/types/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L23)
+[src/types/account.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L25)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L21)
+[src/types/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L23)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L24)
+[src/types/account.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L26)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L22)
+[src/types/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L24)
 
 ## Accessors
 
@@ -105,7 +105,7 @@ The address of the multisig account
 
 #### Defined in
 
-[src/types/account.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L37)
+[src/types/account.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L39)
 
 ___
 
@@ -121,7 +121,7 @@ The parameters for the multisig account
 
 #### Defined in
 
-[src/types/account.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L27)
+[src/types/account.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L29)
 
 ___
 
@@ -137,7 +137,7 @@ The transaction signer for the multisig account
 
 #### Defined in
 
-[src/types/account.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L42)
+[src/types/account.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L44)
 
 ___
 
@@ -153,7 +153,7 @@ readonly (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[]
 
 #### Defined in
 
-[src/types/account.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L32)
+[src/types/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L34)
 
 ## Methods
 
@@ -183,4 +183,4 @@ const signedTxn = multisigAccount.sign(myTransaction)
 
 #### Defined in
 
-[src/types/account.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L65)
+[src/types/account.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L67)

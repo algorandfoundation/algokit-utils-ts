@@ -2,6 +2,7 @@ import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundati
 import {
   addressArrayCodec,
   addressCodec,
+  Address,
   ArrayCodec,
   bigIntCodec,
   booleanCodec,
@@ -229,7 +230,7 @@ export type BlockHeader = {
   /** [gh] Genesis hash. */
   genesisHash?: Uint8Array
   /** [prp] Proposer address. */
-  proposer?: string
+  proposer?: Address
   /** [fc] Fees collected in this block. */
   feesCollected?: bigint
   /** [bi] Bonus incentive for block proposal. */
@@ -237,9 +238,9 @@ export type BlockHeader = {
   /** [pp] Proposer payout. */
   proposerPayout?: bigint
   /** [fees] FeeSink address. */
-  feeSink?: string
+  feeSink?: Address
   /** [rwd] RewardsPool address. */
-  rewardsPool?: string
+  rewardsPool?: Address
   /** [earn] Rewards level. */
   rewardsLevel?: bigint
   /** [rate] Rewards rate. */

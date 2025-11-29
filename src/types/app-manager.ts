@@ -1,10 +1,11 @@
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
-import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
-import { TransactionSignerAccount } from './account'
 import {
+  ABI_RETURN_PREFIX,
   BoxName,
   DELETABLE_TEMPLATE_NAME,
   UPDATABLE_TEMPLATE_NAME,
@@ -53,10 +54,10 @@ export interface AppInformation {
  * Something that identifies an app box name - either a:
  *  * `Uint8Array` (the actual binary of the box name)
  *  * `string` (that will be encoded to a `Uint8Array`)
- *  * `TransactionSignerAccount` (that will be encoded into the
+ *  * `AddressWithSigner` (that will be encoded into the
  *    public key address of the corresponding account)
  */
-export type BoxIdentifier = string | Uint8Array | TransactionSignerAccount
+export type BoxIdentifier = string | Uint8Array | AddressWithSigner
 
 /**
  * A grouping of the app ID and name identifier to reference an app box.
@@ -213,7 +214,7 @@ export class AppManager {
       appAddress: algosdk.getApplicationAddress(app.id),
       approvalProgram: app.params.approvalProgram,
       clearStateProgram: app.params.clearStateProgram,
-      creator: Address.fromString(app.params.creator),
+      creator: app.params.creator,
       localInts: Number(app.params.localStateSchema?.numUint ?? 0),
       localByteSlices: Number(app.params.localStateSchema?.numByteSlice ?? 0),
       globalInts: Number(app.params.globalStateSchema?.numUint ?? 0),
@@ -248,8 +249,8 @@ export class AppManager {
    * const localState = await appManager.getLocalState(12353n, 'ACCOUNTADDRESS');
    * ```
    */
-  public async getLocalState(appId: bigint, address: Address | string) {
-    const appInfo = await this._algod.accountApplicationInformation(address.toString(), Number(appId))
+  public async getLocalState(appId: bigint, address: ReadableAddress) {
+    const appInfo = await this._algod.accountApplicationInformation(getAddress(address).toString(), Number(appId))
 
     if (!appInfo.appLocalState) {
       throw new Error("Couldn't find local state")
@@ -437,12 +438,42 @@ export class AppManager {
     }
 
     // The parseMethodResponse method mutates the second parameter :(
-    const resultDummy: algosdk.ABIResult = {
+    const abiResult: algosdk.ABIResult = {
       txID: '',
       method,
       rawReturnValue: new Uint8Array(),
     }
-    return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation), method.returns.type)
+
+    try {
+      abiResult.txInfo = confirmation
+      const logs = confirmation.logs || []
+      if (logs.length === 0) {
+        throw new Error(`App call transaction did not log a return value`)
+      }
+      const lastLog = logs[logs.length - 1]
+      if (!AppManager.hasAbiReturnPrefix(lastLog)) {
+        throw new Error(`App call transaction did not log an ABI return value`)
+      }
+
+      abiResult.rawReturnValue = new Uint8Array(lastLog.slice(4))
+      abiResult.returnValue = method.returns.type.decode(abiResult.rawReturnValue)
+    } catch (err) {
+      abiResult.decodeError = err as Error
+    }
+
+    return getABIReturnValue(abiResult, method.returns.type)
+  }
+
+  private static hasAbiReturnPrefix(log: Uint8Array): boolean {
+    if (log.length < ABI_RETURN_PREFIX.length) {
+      return false
+    }
+    for (let i = 0; i < ABI_RETURN_PREFIX.length; i++) {
+      if (log[i] !== ABI_RETURN_PREFIX[i]) {
+        return false
+      }
+    }
+    return true
   }
 
   /**

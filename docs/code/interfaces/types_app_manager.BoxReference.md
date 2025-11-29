@@ -23,7 +23,7 @@ A unique application id
 
 #### Defined in
 
-[src/types/app-manager.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L66)
+[src/types/app-manager.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L69)
 
 ___
 
@@ -35,4 +35,4 @@ Identifier for a box name
 
 #### Defined in
 
-[src/types/app-manager.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L70)
+[src/types/app-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L73)

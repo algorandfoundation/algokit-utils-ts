@@ -1,3 +1,4 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { Transaction, validateTransaction } from '../src/transactions/transaction'
 import { TransactionType } from '../src/transactions/transaction-type'
@@ -72,12 +73,12 @@ describe('Payment', () => {
     test('should validate valid payment transaction', () => {
       const transaction: Transaction = {
         type: TransactionType.Payment,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         payment: {
           amount: 1000000n, // 1 ALGO
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         },
       }
 
@@ -87,12 +88,12 @@ describe('Payment', () => {
     test('should validate payment transaction with zero amount', () => {
       const transaction: Transaction = {
         type: TransactionType.Payment,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         payment: {
           amount: 0n, // Zero payment is allowed
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         },
       }
 
@@ -102,13 +103,13 @@ describe('Payment', () => {
     test('should validate payment transaction with close remainder', () => {
       const transaction: Transaction = {
         type: TransactionType.Payment,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         payment: {
           amount: 500000n, // 0.5 ALGO
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          closeRemainderTo: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Close account
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+          closeRemainderTo: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Close account
         },
       }
 
@@ -116,7 +117,7 @@ describe('Payment', () => {
     })
 
     test('should validate self-payment transaction', () => {
-      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+      const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
       const transaction: Transaction = {
         type: TransactionType.Payment,
         sender: senderAddress,

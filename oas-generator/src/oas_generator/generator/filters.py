@@ -199,8 +199,15 @@ def _map_primitive(schema_type: str, schema_format: str | None, schema: Schema) 
     elif schema_type == "number":
         result = TypeScriptType.NUMBER
     elif schema_type == "string":
+        algorand_format = schema.get(constants.X_ALGORAND_FORMAT)
+        is_address = algorand_format == "Address"
         is_byte = schema_format == "byte" or schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
-        result = TypeScriptType.UINT8ARRAY if is_byte else TypeScriptType.STRING
+        if is_address:
+            result = TypeScriptType.ADDRESS
+        elif is_byte:
+            result = TypeScriptType.UINT8ARRAY
+        else:
+            result = TypeScriptType.STRING
     elif schema_type == "boolean":
         result = TypeScriptType.BOOLEAN
     else:

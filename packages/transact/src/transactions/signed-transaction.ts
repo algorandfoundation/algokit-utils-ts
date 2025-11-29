@@ -1,6 +1,7 @@
 import { ObjectModelCodec, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { SignedTransactionMeta } from './signed-transaction-meta'
 import { Transaction, validateTransaction } from './transaction'
+import { Address } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a signed Algorand transaction
@@ -29,7 +30,7 @@ export type SignedTransaction = {
   /**
    * Optional auth address applicable if the transaction sender is a rekeyed account.
    */
-  authAddress?: string
+  authAddress?: Address
 }
 
 /**
@@ -41,7 +42,7 @@ export type MultisigSubsignature = {
   /**
    * Address of a keypair account participant that is sub-signing a multisignature transaction.
    */
-  address: string
+  address: Address
 
   /**
    * Optional Ed25519 signature for the transaction.

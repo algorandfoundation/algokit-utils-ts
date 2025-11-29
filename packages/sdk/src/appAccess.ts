@@ -1,6 +1,5 @@
-import { ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
 import { AccessReference, BoxReference, HoldingReference, LocalsReference } from '@algorandfoundation/algokit-transact'
-import { Address } from './encoding/address.js'
+import { Address } from '@algorandfoundation/algokit-common'
 
 /**
  * foreignArraysToResourceReferences makes a single array of ResourceReferences from various foreign resource arrays.
@@ -23,7 +22,7 @@ export function foreignArraysToResourceReferences({
   boxes,
 }: {
   appIndex: bigint | number
-  accounts?: ReadonlyArray<string | Address>
+  accounts?: ReadonlyArray<Address>
   foreignAssets?: ReadonlyArray<number | bigint>
   foreignApps?: ReadonlyArray<number | bigint>
   holdings?: ReadonlyArray<HoldingReference>
@@ -31,8 +30,8 @@ export function foreignArraysToResourceReferences({
   boxes?: ReadonlyArray<BoxReference>
 }): Array<AccessReference> {
   const accessList: Array<AccessReference> = []
-  function ensureAddress(addr: string) {
-    if (!addr || addr === ZERO_ADDRESS) {
+  function ensureAddress(addr: Address) {
+    if (!addr || addr.equals(Address.zeroAddress())) {
       return
     }
     if (!accessList.find((rr) => rr.address === addr)) {
@@ -50,7 +49,7 @@ export function foreignArraysToResourceReferences({
     }
   }
   for (const acct of accounts ?? []) {
-    ensureAddress(acct.toString())
+    ensureAddress(acct)
   }
   for (const asset of foreignAssets ?? []) {
     ensureAsset(asset)

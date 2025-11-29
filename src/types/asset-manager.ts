@@ -3,7 +3,7 @@ import { Address } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
-import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer } from './composer'
+import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer, TransactionComposerConfig } from './composer'
 import { SendParams } from './transaction'
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
@@ -149,7 +149,7 @@ export class AssetManager {
    * const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
    * ```
    */
-  constructor(algod: AlgodClient, newGroup: () => TransactionComposer) {
+  constructor(algod: AlgodClient, newGroup: (config?: TransactionComposerConfig) => TransactionComposer) {
     this._algod = algod
     this._newGroup = newGroup
   }

@@ -1,6 +1,8 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { TransactionWithSigner } from '../transaction'
+import { BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,
@@ -36,32 +38,6 @@ export interface AppReference {
   appAddress: string
 }
 
-/**
- * @deprecated Use `types/app-manager/BoxReference` instead.
- *
- * A grouping of the app ID and name of the box in an Uint8Array
- */
-export interface BoxReference {
-  /**
-   * A unique application id
-   */
-  appId: number | bigint
-  /**
-   * Name of box to reference
-   */
-  name: BoxIdentifier
-}
-
-/**
- * @deprecated Use `types/app-manager/BoxIdentifier` instead.
- *
- * Something that identifies a box name - either a:
- *  * `Uint8Array`
- *  * `string` (that will be encoded to a Uint8Array)
- *  * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
- */
-export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
-
 /** Common app call arguments for ABI and non-ABI (raw) calls */
 export interface CoreAppCallArgs {
   /** The optional lease for the transaction */
@@ -93,7 +69,8 @@ export interface RawAppCallArgs extends CoreAppCallArgs {
 
 /** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
 export type ABIAppCallArg =
-  | ABIArgument
+  | ABIValue
+  | TransactionWithSigner
   | TransactionToSign
   | Transaction
   | Promise<SendTransactionResult>
@@ -116,68 +93,12 @@ export type ABIAppCallArgs = CoreAppCallArgs & {
  **/
 export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
-/**
- * @deprecated Use `TransactionComposer` to construct create app transactions instead.
- *
- * Base interface for common data passed to an app create or update.
- */
-interface CreateOrUpdateAppParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the transaction */
-  from: SendTransactionFrom
-  /** The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
-  approvalProgram: Uint8Array | string
-  /** The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
-  clearStateProgram: Uint8Array | string
-  /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
-  /** The (optional) transaction note */
-  note?: TransactionNote
-  /** The arguments passed in to the app call */
-  args?: AppCallArgs
-}
-
-/**
- * @deprecated Use `TransactionComposer` to construct create app transactions instead.
- *
- * Parameters that are passed in when creating an app. */
-export interface CreateAppParams extends CreateOrUpdateAppParams {
-  /** The storage schema to request for the created app */
-  schema: AppStorageSchema
-  /** Override the on-completion action for the create call; defaults to NoOp */
-  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
-}
-
-/**
- * @deprecated Use `TransactionComposer` to construct update app transactions instead.
- *
- * Parameters that are passed in when updating an app. */
-export interface UpdateAppParams extends CreateOrUpdateAppParams {
-  /** The id of the app to update */
-  appId: number | bigint
-}
-
-/**
- * @deprecated Use `OnApplicationComplete` directly instead.
- *
- * The type of call / [on-completion action](https://dev.algorand.co/concepts/smart-contracts/overview#smart-contract-lifecycle) for a smart contract call.
- *
- * Equivalent of `OnApplicationComplete`, but as a more convenient string enum.
- *
- * * `no_op`: Normal smart contract call, no special on-complete action
- * * `opt_in`: Opt-in to smart contract local storage
- * * `close_out`: Close-out local storage storage
- * * `clear_state`: Clear local storage state
- * * `update_application`: Update the smart contract
- * * `delete_application`: Delete the smart contract
- */
-export type AppCallType = 'no_op' | 'opt_in' | 'close_out' | 'clear_state' | 'update_application' | 'delete_application'
-
 /** Parameters representing a call to an app. */
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number | bigint
   /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
-  callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
+  callType: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */
@@ -297,29 +218,6 @@ export enum OnSchemaBreak {
   ReplaceApp,
   /** Create a new app */
   AppendApp,
-}
-
-/** The parameters to deploy an app */
-export interface AppDeploymentParams
-  extends Omit<CreateAppParams, 'onCompleteAction' | 'args' | 'note' | 'skipSending' | 'skipWaiting' | 'atc'> {
-  /** The deployment metadata */
-  metadata: AppDeployMetadata
-  /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParams?: TealTemplateParams
-  /** What action to perform if a schema break is detected */
-  onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
-  /** What action to perform if a TEAL update is detected */
-  onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
-  /** Optional cached value of the existing apps for the given creator */
-  existingDeployments?: AppLookup
-  /** Any args to pass to any create transaction that is issued as part of deployment */
-  createArgs?: AppCallArgs
-  /** Override the on-completion action for the create call; defaults to NoOp */
-  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
-  /** Any args to pass to any update transaction that is issued as part of deployment */
-  updateArgs?: AppCallArgs
-  /** Any args to pass to any delete transaction that is issued as part of deployment */
-  deleteArgs?: AppCallArgs
 }
 
 /** The result of compiling the approval and clear state TEAL programs for an app */

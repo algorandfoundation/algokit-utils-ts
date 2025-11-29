@@ -67,7 +67,4 @@ env/
 venv/
 ENV/
 
-.references/
-
-# Polytest (temporary files until polytest branch merged to main)
-.polytest_algokit-polytest/
+.polytest*/

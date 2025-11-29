@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   addressCodec,
   ArrayCodec,
@@ -19,7 +19,7 @@ export type ApplicationKvStorage = {
   /**
    * The address of the account associated with the local state.
    */
-  account?: string
+  account?: Address
 }
 
 export const ApplicationKvStorageMeta: ObjectModelMetadata<ApplicationKvStorage> = {

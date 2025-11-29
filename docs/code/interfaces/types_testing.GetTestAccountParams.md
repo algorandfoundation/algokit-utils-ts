@@ -38,7 +38,7 @@ Optional override for how to get a test account; this allows you to retrieve acc
 
 #### Defined in
 
-[src/types/testing.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L48)
+[src/types/testing.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L46)
 
 ___
 
@@ -50,7 +50,7 @@ Initial funds to ensure the account has
 
 #### Defined in
 
-[src/types/testing.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L44)
+[src/types/testing.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L42)
 
 ___
 
@@ -62,4 +62,4 @@ Whether to suppress the log (which includes a mnemonic) or not (default: do not 
 
 #### Defined in
 
-[src/types/testing.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L46)
+[src/types/testing.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L44)

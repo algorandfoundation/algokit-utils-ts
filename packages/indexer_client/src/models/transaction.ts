@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   stringCodec,
   numberCodec,
@@ -51,7 +51,7 @@ export type Transaction = {
   /**
    * \[sgnr\] this is included with signed transactions when the signing address does not equal the sender. The backend can use this to ensure that auth addr is equal to the accounts auth addr.
    */
-  authAddr?: string
+  authAddr?: Address
 
   /**
    * \[rc\] rewards applied to close-remainder-to account.
@@ -138,7 +138,7 @@ export type Transaction = {
   /**
    * \[rekey\] when included in a valid transaction, the accounts auth addr will be updated with this value and future signatures must be signed with the key represented by this address.
    */
-  rekeyTo?: string
+  rekeyTo?: Address
 
   /**
    * Time when the block this transaction is in was confirmed.

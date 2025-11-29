@@ -13,7 +13,6 @@ export {
   groupTransactions,
   type Transaction,
 } from './transactions/transaction'
-
 export { TransactionType } from './transactions/transaction-type'
 
 export {
@@ -30,14 +29,13 @@ export {
 export { SignedTransactionMeta } from './transactions/signed-transaction-meta'
 export { TransactionMeta } from './transactions/transaction-meta'
 
+export * from './signer'
 export * from './transactions/app-call'
 export * from './transactions/asset-config'
 export * from './transactions/asset-freeze'
 export * from './transactions/asset-transfer'
 export * from './transactions/key-registration'
 export * from './transactions/payment'
-
-export { addressFromPublicKey, publicKeyFromAddress } from '@algorandfoundation/algokit-common'
 
 export {
   addressFromMultisigSignature,

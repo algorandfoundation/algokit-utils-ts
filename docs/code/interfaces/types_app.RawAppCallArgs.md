@@ -39,7 +39,7 @@ The address of any accounts to load in
 
 #### Defined in
 
-[src/types/app.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L79)
+[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
 
 ___
 
@@ -51,7 +51,7 @@ Any application arguments to pass through
 
 #### Defined in
 
-[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
+[src/types/app.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L65)
 
 ___
 
@@ -67,7 +67,7 @@ IDs of any apps to load into the foreignApps array
 
 #### Defined in
 
-[src/types/app.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L81)
+[src/types/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L50)
 
 ___
 
@@ -83,13 +83,13 @@ IDs of any assets to load into the foreignAssets array
 
 #### Defined in
 
-[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
+[src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
 
 ___
 
 ### boxes
 
-• `Optional` **boxes**: ([`BoxReference`](types_app.BoxReference.md) \| [`BoxIdentifier`](../modules/types_app.md#boxidentifier) \| `BoxReference`)[]
+• `Optional` **boxes**: (`BoxReference` \| [`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](types_app_manager.BoxReference.md))[]
 
 Any box references to load
 
@@ -99,7 +99,7 @@ Any box references to load
 
 #### Defined in
 
-[src/types/app.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L77)
+[src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
 
 ___
 
@@ -115,7 +115,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
+[src/types/app.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L44)
 
 ___
 
@@ -127,13 +127,13 @@ Property to aid intellisense
 
 #### Defined in
 
-[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
+[src/types/app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L67)
 
 ___
 
 ### rekeyTo
 
-• `Optional` **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **rekeyTo**: `string` \| `AddressWithSigner`
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 
@@ -145,4 +145,4 @@ Optional account / account address that should be authorised to transact on beha
 
 #### Defined in
 
-[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)
+[src/types/app.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L57)

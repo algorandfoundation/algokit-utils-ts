@@ -27,6 +27,7 @@ import {
 } from './composer'
 import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'
+import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
@@ -366,7 +367,7 @@ export class AppDeployer {
     const existingAppRecord = await this._appManager.getById(existingApp.appId)
     const existingApproval = Buffer.from(existingAppRecord.approvalProgram).toString('base64')
     const existingClear = Buffer.from(existingAppRecord.clearStateProgram).toString('base64')
-    const existingExtraPages = calculateExtraProgramPages(existingAppRecord.approvalProgram, existingAppRecord.clearStateProgram)
+    const extraPages = existingAppRecord.extraProgramPages ?? 0
 
     const newApprovalBytes = Buffer.from(approvalProgram)
     const newClearBytes = Buffer.from(clearStateProgram)
@@ -382,7 +383,7 @@ export class AppDeployer {
       existingAppRecord.globalInts < (createParams.schema?.globalInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0) ||
       existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0) ||
-      existingExtraPages < newExtraPages
+      extraPages < newExtraPages
 
     if (isSchemaBreak) {
       Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
@@ -391,7 +392,7 @@ export class AppDeployer {
           globalByteSlices: existingAppRecord.globalByteSlices,
           localInts: existingAppRecord.localInts,
           localByteSlices: existingAppRecord.localByteSlices,
-          extraProgramPages: existingExtraPages,
+          extraProgramPages: extraPages,
         },
         to: { ...createParams.schema, extraProgramPages: newExtraPages },
       })
@@ -468,8 +469,8 @@ export class AppDeployer {
     return { ...existingApp, operationPerformed: 'nothing' }
   }
 
-  private updateAppLookup(sender: string | Address, appMetadata: AppMetadata) {
-    const s = typeof sender === 'string' ? sender : sender.toString()
+  private updateAppLookup(sender: ReadableAddress, appMetadata: AppMetadata) {
+    const s = getAddress(sender).toString()
     const lookup = this._appLookups.get(s)
     if (!lookup) {
       this._appLookups.set(s, { creator: Address.fromString(s), apps: { [appMetadata.name]: appMetadata } })
@@ -487,19 +488,20 @@ export class AppDeployer {
    *
    * If the `AppManager` instance wasn't created with an indexer client, this function will throw an error.
    *
-   * @param creatorAddress The address of the account that is the creator of the apps you want to search for
+   * @param creator The address of the account that is the creator of the apps you want to search for
    * @param ignoreCache Whether or not to ignore the cache and force a lookup, default: use the cache
    * @returns A name-based lookup of the app metadata
    * @example
    * ```ts
    * const result = await deployer.getCreatorAppsByName(creator)
    */
-  async getCreatorAppsByName(creatorAddress: string | Address, ignoreCache?: boolean): Promise<AppLookup> {
+  async getCreatorAppsByName(creator: ReadableAddress, ignoreCache?: boolean): Promise<AppLookup> {
     const appLookup: Record<string, AppMetadata> = {}
 
-    const address = typeof creatorAddress === 'string' ? creatorAddress : creatorAddress.toString()
-    if (!ignoreCache && this._appLookups.has(address)) {
-      return this._appLookups.get(address)!
+    const creatorAddress = getAddress(creator)
+    const creatorString = creatorAddress.toString()
+    if (!ignoreCache && this._appLookups.has(creatorString)) {
+      return this._appLookups.get(creatorString)!
     }
 
     if (!this._indexer) {
@@ -507,7 +509,7 @@ export class AppDeployer {
     }
 
     // Extract all apps that account created
-    const createdApps = (await indexer.lookupAccountCreatedApplicationByAddress(this._indexer, creatorAddress))
+    const createdApps = (await indexer.lookupAccountCreatedApplicationByAddress(this._indexer, creatorString))
       .map((a) => {
         return { id: a.id, createdAtRound: a.createdAtRound!, deleted: a.deleted }
       })
@@ -596,11 +598,11 @@ export class AppDeployer {
       })
 
     const lookup = {
-      creator: typeof creatorAddress === 'string' ? Address.fromString(creatorAddress) : creatorAddress,
+      creator: creatorAddress,
       apps: appLookup,
     }
 
-    this._appLookups.set(creatorAddress.toString(), lookup)
+    this._appLookups.set(creatorString, lookup)
 
     return lookup
   }

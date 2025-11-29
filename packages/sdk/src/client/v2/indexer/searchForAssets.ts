@@ -1,8 +1,8 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { Address } from '../../../encoding/address.js';
-import { AssetsResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { Address } from '../../../encoding/address.js'
+import { AssetsResponse } from './models/types.js'
 
 /**
  * Returns information about indexed assets.
@@ -21,7 +21,7 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    */
   // eslint-disable-next-line class-methods-use-this
   path() {
-    return '/v2/assets';
+    return '/v2/assets'
   }
 
   /**
@@ -40,8 +40,8 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -60,8 +60,8 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   creator(creator: string | Address) {
-    this.query.creator = creator.toString();
-    return this;
+    this.query.creator = creator.toString()
+    return this
   }
 
   /**
@@ -80,8 +80,8 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   name(name: string) {
-    this.query.name = name;
-    return this;
+    this.query.name = name
+    return this
   }
 
   /**
@@ -100,8 +100,8 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   unit(unit: string) {
-    this.query.unit = unit;
-    return this;
+    this.query.unit = unit
+    return this
   }
 
   /**
@@ -120,8 +120,8 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   index(index: number | bigint) {
-    this.query['asset-id'] = index;
-    return this;
+    this.query['asset-id'] = index
+    return this
   }
 
   /**
@@ -146,8 +146,8 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -173,12 +173,12 @@ export default class SearchForAssets extends JSONRequest<AssetsResponse> {
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): AssetsResponse {
-    return decodeJSON(response.getJSONText(), AssetsResponse);
+    return decodeJSON(response.getJSONText(), AssetsResponse)
   }
 }

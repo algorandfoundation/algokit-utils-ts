@@ -16,7 +16,7 @@ Represents the data for AVM traces debug events emitted whenever a transaction i
 
 ### simulateResponse
 
-• **simulateResponse**: `SimulateResponse`
+• **simulateResponse**: `SimulateTransactionGroupResult`
 
 The simulation response from Algod
 

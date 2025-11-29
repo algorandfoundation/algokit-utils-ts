@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { decodeJson } from '../core/model-runtime'
-import type { EncodingFormat } from '@algorandfoundation/algokit-common'
+import { Address, type EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   AccountResponse,
   AccountsResponse,
@@ -300,7 +300,7 @@ export class IndexerApi {
       txid?: string
       minRound?: number | bigint
       maxRound?: number | bigint
-      senderAddress?: string
+      senderAddress?: Address
     },
   ): Promise<ApplicationLogsResponse> {
     const headers: Record<string, string> = {}
@@ -317,7 +317,7 @@ export class IndexerApi {
         txid: params?.txid,
         'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
         'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
-        'sender-address': params?.senderAddress,
+        'sender-address': params?.senderAddress?.toString(),
       },
       headers,
       body: undefined,
@@ -404,7 +404,7 @@ export class IndexerApi {
       afterTime?: string
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
-      address?: string
+      address?: Address
       addressRole?: 'sender' | 'receiver' | 'freeze-target'
       excludeCloseTo?: boolean
       rekeyTo?: boolean
@@ -436,7 +436,7 @@ export class IndexerApi {
             : params?.currencyGreaterThan,
         'currency-less-than':
           typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        address: params?.address,
+        address: params?.address?.toString(),
         'address-role': params?.addressRole,
         'exclude-close-to': params?.excludeCloseTo,
         'rekey-to': params?.rekeyTo,
@@ -516,7 +516,7 @@ export class IndexerApi {
     includeAll?: boolean
     exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     currencyLessThan?: number | bigint
-    authAddr?: string
+    authAddr?: Address
     round?: number | bigint
     applicationId?: number | bigint
     onlineOnly?: boolean
@@ -541,7 +541,7 @@ export class IndexerApi {
         exclude: params?.exclude,
         'currency-less-than':
           typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        'auth-addr': params?.authAddr,
+        'auth-addr': params?.authAddr?.toString(),
         round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         'online-only': params?.onlineOnly,
@@ -651,9 +651,9 @@ export class IndexerApi {
     maxRound?: number | bigint
     beforeTime?: string
     afterTime?: string
-    proposers?: string[]
-    expired?: string[]
-    absent?: string[]
+    proposers?: Address[]
+    expired?: Address[]
+    absent?: Address[]
   }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
@@ -670,9 +670,9 @@ export class IndexerApi {
         'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
         'before-time': params?.beforeTime,
         'after-time': params?.afterTime,
-        proposers: params?.proposers,
-        expired: params?.expired,
-        absent: params?.absent,
+        proposers: params?.proposers?.toString(),
+        expired: params?.expired?.toString(),
+        absent: params?.absent?.toString(),
       },
       headers,
       body: undefined,
@@ -700,7 +700,7 @@ export class IndexerApi {
     afterTime?: string
     currencyGreaterThan?: number | bigint
     currencyLessThan?: number | bigint
-    address?: string
+    address?: Address
     addressRole?: 'sender' | 'receiver' | 'freeze-target'
     excludeCloseTo?: boolean
     rekeyTo?: boolean
@@ -734,7 +734,7 @@ export class IndexerApi {
             : params?.currencyGreaterThan,
         'currency-less-than':
           typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        address: params?.address,
+        address: params?.address?.toString(),
         'address-role': params?.addressRole,
         'exclude-close-to': params?.excludeCloseTo,
         'rekey-to': params?.rekeyTo,

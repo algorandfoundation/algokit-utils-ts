@@ -21,6 +21,7 @@ class Parameter:
     ts_type: str
     description: str | None = None
     stringify_bigint: bool = False
+    stringify_address: bool = False
 
 
 @dataclass
@@ -95,6 +96,7 @@ class OperationContext:
             "tsType": param.ts_type,
             "description": param.description,
             "stringifyBigInt": param.stringify_bigint,
+            "stringifyAddress": param.stringify_address,
         }
 
     @staticmethod

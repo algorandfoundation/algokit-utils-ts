@@ -5,16 +5,16 @@
  * @returns A byte array containing the big-endian encoding of the input bigint
  */
 export function bigIntToBytes(bi: bigint | number, size: number) {
-  let hex = bi.toString(16);
+  let hex = bi.toString(16)
   // Pad the hex with zeros so it matches the size in bytes
   if (hex.length !== size * 2) {
-    hex = hex.padStart(size * 2, '0');
+    hex = hex.padStart(size * 2, '0')
   }
-  const byteArray = new Uint8Array(hex.length / 2);
+  const byteArray = new Uint8Array(hex.length / 2)
   for (let i = 0, j = 0; i < hex.length / 2; i++, j += 2) {
-    byteArray[i] = parseInt(hex.slice(j, j + 2), 16);
+    byteArray[i] = parseInt(hex.slice(j, j + 2), 16)
   }
-  return byteArray;
+  return byteArray
 }
 
 /**
@@ -24,10 +24,10 @@ export function bigIntToBytes(bi: bigint | number, size: number) {
  * @returns The bigint that was encoded in the input data.
  */
 export function bytesToBigInt(bytes: Uint8Array) {
-  let res = BigInt(0);
-  const buf = new DataView(bytes.buffer, bytes.byteOffset);
+  let res = BigInt(0)
+  const buf = new DataView(bytes.buffer, bytes.byteOffset)
   for (let i = 0; i < bytes.length; i++) {
-    res = BigInt(Number(buf.getUint8(i))) + res * BigInt(256);
+    res = BigInt(Number(buf.getUint8(i))) + res * BigInt(256)
   }
-  return res;
+  return res
 }

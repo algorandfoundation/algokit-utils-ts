@@ -1,3 +1,4 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { Transaction, validateTransaction } from '../src/transactions/transaction'
 import { TransactionType } from '../src/transactions/transaction-type'
@@ -72,13 +73,13 @@ describe('AssetTransfer', () => {
     test('should throw error when asset ID is zero', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetTransfer: {
           assetId: 0n, // Invalid asset ID
           amount: 1000n,
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         },
       }
 
@@ -88,13 +89,13 @@ describe('AssetTransfer', () => {
     test('should validate valid asset transfer transaction', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetTransfer: {
           assetId: 123n,
           amount: 1000n,
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         },
       }
 
@@ -102,7 +103,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate asset opt-in transaction', () => {
-      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+      const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
         sender: senderAddress,
@@ -121,14 +122,14 @@ describe('AssetTransfer', () => {
     test('should validate asset transfer with clawback', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA', // Clawback address
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Clawback address
         firstValid: 1000n,
         lastValid: 2000n,
         assetTransfer: {
           assetId: 123n,
           amount: 1000n,
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          assetSender: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Clawback from this address
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+          assetSender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Clawback from this address
         },
       }
 
@@ -138,14 +139,14 @@ describe('AssetTransfer', () => {
     test('should validate asset opt-out transaction', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetTransfer: {
           assetId: 123n,
           amount: 1000n,
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          closeRemainderTo: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Close remainder to this address
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+          closeRemainderTo: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Close remainder to this address
         },
       }
 
@@ -155,15 +156,15 @@ describe('AssetTransfer', () => {
     test('should validate asset transfer with both clawback and close remainder', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetTransfer: {
           assetId: 123n,
           amount: 1000n,
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          assetSender: 'CNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Clawback from this address
-          closeRemainderTo: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Close remainder to this address
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+          assetSender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Clawback from this address
+          closeRemainderTo: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Close remainder to this address
         },
       }
 
@@ -171,7 +172,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate asset transfer to self', () => {
-      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+      const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
         sender: senderAddress,
@@ -190,14 +191,14 @@ describe('AssetTransfer', () => {
     test('should validate asset close-out transaction (zero amount with close remainder)', () => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
         lastValid: 2000n,
         assetTransfer: {
           assetId: 123n,
           amount: 0n, // Zero amount
-          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          closeRemainderTo: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Close out asset holding
+          receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
+          closeRemainderTo: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Close out asset holding
         },
       }
 

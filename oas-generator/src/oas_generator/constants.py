@@ -38,6 +38,7 @@ class TypeScriptType(StrEnum):
     OBJECT = "object"
     NUMBER_OR_BIGINT = "number | bigint"
     NEVER = "never"
+    ADDRESS = "Address"
 
 
 class SchemaKey(StrEnum):
@@ -170,6 +171,7 @@ TS_BUILTIN_TYPES: Final[frozenset[str]] = frozenset(
         TypeScriptType.BIGINT,
         TypeScriptType.BOOLEAN,
         TypeScriptType.NEVER,
+        TypeScriptType.ADDRESS,
     ]
 )
 

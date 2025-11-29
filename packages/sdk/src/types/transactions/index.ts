@@ -1,2 +1,1 @@
-export * from './base.js';
-export * from './encoded.js';
+export * from './encoded.js'

@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   numberCodec,
   ArrayCodec,
@@ -20,7 +20,7 @@ export type SimulateUnnamedResourcesAccessed = {
   /**
    * The unnamed accounts that were referenced. The order of this array is arbitrary.
    */
-  accounts?: string[]
+  accounts?: Address[]
 
   /**
    * The unnamed assets that were referenced. The order of this array is arbitrary.

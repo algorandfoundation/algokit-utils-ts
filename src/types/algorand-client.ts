@@ -2,7 +2,7 @@ import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
-import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import { MultisigAccount, SigningAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
@@ -10,8 +10,10 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { ErrorTransformer, TransactionComposer } from './composer'
+import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './composer'
 import { AlgoConfig } from './network-client'
+import { ReadableAddress } from '@algorandfoundation/algokit-common'
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 
 /**
  * A client that brokers easy access to Algorand functionality.
@@ -42,9 +44,9 @@ export class AlgorandClient {
     this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)
     this._appManager = new AppManager(this._clientManager.algod)
-    this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
-    this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
+    this._assetManager = new AssetManager(this._clientManager.algod, (config) => this.newGroup(config))
+    this._transactionSender = new AlgorandClientTransactionSender((config) => this.newGroup(config), this._assetManager, this._appManager)
+    this._transactionCreator = new AlgorandClientTransactionCreator((config) => this.newGroup(config))
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
@@ -64,7 +66,7 @@ export class AlgorandClient {
 
   /**
    * Sets the default signer to use if no other signer is specified.
-   * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
+   * @param signer The signer to use, either a `TransactionSigner` or a `AddressWithSigner`
    * @returns The `AlgorandClient` so method calls can be chained
    * @example
    * ```typescript
@@ -72,14 +74,14 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
    * ```
    */
-  public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AlgorandClient {
+  public setDefaultSigner(signer: algosdk.TransactionSigner | AddressWithSigner): AlgorandClient {
     this._accountManager.setDefaultSigner(signer)
     return this
   }
 
   /**
    * Tracks the given account (object that encapsulates an address and a signer) for later signing.
-   * @param account The account to register, which can be a `TransactionSignerAccount` or
+   * @param account The account to register, which can be a `AddressWithSigner` or
    *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
    * @example
    * ```typescript
@@ -92,7 +94,7 @@ export class AlgorandClient {
    * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(account: TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
+  public setSignerFromAccount(account: AddressWithSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }
@@ -232,14 +234,15 @@ export class AlgorandClient {
    * const composer = AlgorandClient.mainNet().newGroup();
    * const result = await composer.addTransaction(payment).send()
    */
-  public newGroup() {
+  public newGroup(composerConfig?: TransactionComposerConfig) {
     return new TransactionComposer({
       algod: this.client.algod,
-      getSigner: (addr: string | Address) => this.account.getSigner(addr),
+      getSigner: (addr: ReadableAddress) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
       errorTransformers: [...this._errorTransformers],
+      composerConfig: composerConfig,
     })
   }
 

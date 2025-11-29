@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   addressCodec,
   ArrayModelCodec,
@@ -10,7 +10,7 @@ import { StateDeltaMeta } from './state-delta'
  * Application state delta.
  */
 export type AccountStateDelta = {
-  address: string
+  address: Address
   delta: StateDelta
 }
 

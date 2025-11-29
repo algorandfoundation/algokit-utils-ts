@@ -1,10 +1,10 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClient, HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { ApplicationResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClient, HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { ApplicationResponse } from './models/types.js'
 
 export default class LookupApplications extends JSONRequest<ApplicationResponse> {
-  private index: bigint;
+  private index: bigint
 
   /**
    * Returns information about the passed application.
@@ -20,15 +20,15 @@ export default class LookupApplications extends JSONRequest<ApplicationResponse>
    * @category GET
    */
   constructor(c: HTTPClient, index: number | bigint) {
-    super(c);
-    this.index = BigInt(index);
+    super(c)
+    this.index = BigInt(index)
   }
 
   /**
    * @returns `/v2/applications/${index}`
    */
   path() {
-    return `/v2/applications/${this.index}`;
+    return `/v2/applications/${this.index}`
   }
 
   /**
@@ -56,12 +56,12 @@ export default class LookupApplications extends JSONRequest<ApplicationResponse>
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): ApplicationResponse {
-    return decodeJSON(response.getJSONText(), ApplicationResponse);
+    return decodeJSON(response.getJSONText(), ApplicationResponse)
   }
 }

@@ -10,7 +10,7 @@ Parameters to configure transaction sending.
 
 - **`SendParams`**
 
-  ↳ [`AtomicTransactionComposerToSend`](types_transaction.AtomicTransactionComposerToSend.md)
+  ↳ [`TransactionComposerToSend`](types_transaction.TransactionComposerToSend.md)
 
 ## Table of contents
 
@@ -31,7 +31,7 @@ Whether to use simulate to automatically calculate required app call inner trans
 
 #### Defined in
 
-[src/types/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L142)
+[src/types/transaction.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L149)
 
 ___
 
@@ -43,7 +43,7 @@ The number of rounds to wait for confirmation. By default until the latest lastV
 
 #### Defined in
 
-[src/types/transaction.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L136)
+[src/types/transaction.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L143)
 
 ___
 
@@ -55,7 +55,7 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 #### Defined in
 
-[src/types/transaction.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L140)
+[src/types/transaction.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L147)
 
 ___
 
@@ -67,4 +67,4 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L138)
+[src/types/transaction.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L145)

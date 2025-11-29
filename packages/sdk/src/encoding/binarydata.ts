@@ -1,4 +1,4 @@
-import { isNode } from '../utils/utils.js';
+import { isNode } from '../utils/utils.js'
 
 /**
  * Convert a base64 string to a Uint8Array for Node.js and browser environments.
@@ -6,11 +6,11 @@ import { isNode } from '../utils/utils.js';
  */
 export function base64ToBytes(base64String: string): Uint8Array {
   if (isNode()) {
-    return new Uint8Array(Buffer.from(base64String, 'base64'));
+    return new Uint8Array(Buffer.from(base64String, 'base64'))
   }
   /* eslint-env browser */
-  const binString = atob(base64String);
-  return Uint8Array.from(binString, (m) => m.codePointAt(0)!);
+  const binString = atob(base64String)
+  return Uint8Array.from(binString, (m) => m.codePointAt(0)!)
 }
 
 /**
@@ -19,13 +19,11 @@ export function base64ToBytes(base64String: string): Uint8Array {
  */
 export function bytesToBase64(byteArray: Uint8Array): string {
   if (isNode()) {
-    return Buffer.from(byteArray).toString('base64');
+    return Buffer.from(byteArray).toString('base64')
   }
   /* eslint-env browser */
-  const binString = Array.from(byteArray, (x) => String.fromCodePoint(x)).join(
-    ''
-  );
-  return btoa(binString);
+  const binString = Array.from(byteArray, (x) => String.fromCodePoint(x)).join('')
+  return btoa(binString)
 }
 
 /**
@@ -33,7 +31,7 @@ export function bytesToBase64(byteArray: Uint8Array): string {
  * @returns A decoded string
  */
 export function bytesToString(byteArray: Uint8Array): string {
-  return new TextDecoder().decode(byteArray);
+  return new TextDecoder().decode(byteArray)
 }
 
 /**
@@ -42,9 +40,9 @@ export function bytesToString(byteArray: Uint8Array): string {
  */
 export function coerceToBytes(input: Uint8Array | string): Uint8Array {
   if (typeof input === 'string') {
-    return new TextEncoder().encode(input);
+    return new TextEncoder().encode(input)
   }
-  return input;
+  return input
 }
 
 /**
@@ -53,11 +51,11 @@ export function coerceToBytes(input: Uint8Array | string): Uint8Array {
  */
 export function bytesToHex(byteArray: Uint8Array): string {
   if (isNode()) {
-    return Buffer.from(byteArray).toString('hex');
+    return Buffer.from(byteArray).toString('hex')
   }
   return Array.from(byteArray)
     .map((i) => i.toString(16).padStart(2, '0'))
-    .join('');
+    .join('')
 }
 
 /**
@@ -66,15 +64,15 @@ export function bytesToHex(byteArray: Uint8Array): string {
  */
 export function hexToBytes(hexString: string): Uint8Array {
   if (isNode()) {
-    return Buffer.from(hexString, 'hex');
+    return Buffer.from(hexString, 'hex')
   }
-  let hex = hexString;
+  let hex = hexString
   if (hexString.length % 2 !== 0) {
-    hex = hexString.padStart(1, '0');
+    hex = hexString.padStart(1, '0')
   }
-  const byteArray = new Uint8Array(hex.length / 2);
+  const byteArray = new Uint8Array(hex.length / 2)
   for (let i = 0; i < hex.length / 2; i++) {
-    byteArray[i] = parseInt(hex.slice(2 * i, 2 * i + 2), 16);
+    byteArray[i] = parseInt(hex.slice(2 * i, 2 * i + 2), 16)
   }
-  return byteArray;
+  return byteArray
 }

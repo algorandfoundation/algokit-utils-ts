@@ -17,13 +17,13 @@ Defines an unsigned transaction that will appear in a group of transactions alon
 
 ### signer
 
-• **signer**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **signer**: `AddressWithSigner` \| `TransactionSigner`
 
 The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account
 
 #### Defined in
 
-[src/types/transaction.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L115)
+[src/types/transaction.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L122)
 
 ___
 
@@ -35,4 +35,4 @@ The unsigned transaction to sign and send
 
 #### Defined in
 
-[src/types/transaction.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L113)
+[src/types/transaction.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L120)

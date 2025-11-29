@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   bigIntCodec,
   addressCodec,
@@ -11,7 +11,7 @@ export type HoldingRef = {
   /**
    * \[d\] Address in access list, or the sender of the transaction.
    */
-  address: string
+  address: Address
 
   /**
    * \[s\] Asset ID for asset in access list.

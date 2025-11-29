@@ -1,9 +1,9 @@
 import type { EncodingFormat, ObjectModelMetadata, WireBigInt, WireObject, WireString } from '@algorandfoundation/algokit-common'
 import {
+  Address,
   Codec,
   MapCodec,
   ObjectModelCodec,
-  ZERO_ADDRESS,
   addressArrayCodec,
   addressCodec,
   bigIntArrayCodec,
@@ -260,7 +260,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       for (let idx = 0; idx < accessList.length; idx++) {
         const entry = accessList[idx]
         const matchesAddress =
-          (!entry.d && !target.address) || (entry.d && target.address && addressCodec.decode(entry.d, format) === target.address)
+          (!entry.d && !target.address) || (entry.d && target.address && addressCodec.decode(entry.d, format).equals(target.address))
         const matchesAssetId =
           (entry.s === undefined && target.assetId === undefined) ||
           (entry.s !== undefined && target.assetId !== undefined && bigIntCodec.decode(entry.s, format) === target.assetId)
@@ -274,7 +274,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       }
 
       // Add new entries for each field
-      if (target.address && target.address !== ZERO_ADDRESS) {
+      if (target.address && !target.address.equals(Address.zeroAddress())) {
         accessList.push({ d: addressCodec.encodeOptional(target.address, format)! })
       }
       if (target.assetId !== undefined) {
@@ -299,7 +299,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       if (accessRef.holding) {
         const holding = accessRef.holding
         let addressIndex = 0
-        if (holding.address && holding.address !== ZERO_ADDRESS) {
+        if (holding.address && !holding.address.equals(Address.zeroAddress())) {
           addressIndex = ensure({ address: holding.address })
         }
         const assetIndex = ensure({ assetId: holding.assetId })
@@ -316,7 +316,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       if (accessRef.locals) {
         const locals = accessRef.locals
         let addressIndex = 0
-        if (locals.address && locals.address !== ZERO_ADDRESS) {
+        if (locals.address && !locals.address.equals(Address.zeroAddress())) {
           addressIndex = ensure({ address: locals.address })
         }
 
@@ -403,13 +403,14 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
           throw new Error('Access list holding reference is missing asset index')
         }
 
-        const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : (wireAccessReferences[addrIdx - 1].d! as WireString)
+        const holdingAddress =
+          addrIdx === 0 ? Address.zeroAddress() : addressCodec.decode(wireAccessReferences[addrIdx - 1].d! as WireString, format)
         const holdingAssetId = wireAccessReferences[assetIdx - 1].s! as WireBigInt
 
         result.push({
           holding: {
             assetId: bigIntCodec.decode(holdingAssetId, format),
-            address: typeof holdingAddress == 'string' ? holdingAddress : addressCodec.decode(holdingAddress, format),
+            address: holdingAddress,
           },
         })
         continue
@@ -420,13 +421,14 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
         const addrIdx = (l.d ?? 0) as number
         const appIdx = (l.p ?? 0) as number
 
-        const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : (wireAccessReferences[addrIdx - 1].d! as WireString)
+        const localsAddress =
+          addrIdx === 0 ? Address.zeroAddress() : addressCodec.decode(wireAccessReferences[addrIdx - 1].d! as WireString, format)
         const localsAppId = appIdx === 0 ? 0n : (wireAccessReferences[appIdx - 1].p! as WireBigInt)
 
         result.push({
           locals: {
             appId: bigIntCodec.decode(localsAppId, format),
-            address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress, format),
+            address: localsAddress,
           },
         })
         continue

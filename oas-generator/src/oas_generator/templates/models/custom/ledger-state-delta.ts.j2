@@ -7,6 +7,7 @@ import {
   stringCodec,
   bytesCodec,
   addressCodec,
+  Address,
   ArrayCodec,
   MapCodec,
   ObjectModelCodec,
@@ -68,7 +69,7 @@ export type LedgerAppParams = {
   globalStateSchema: LedgerStateSchema
   extraProgramPages: number
   version?: number
-  sizeSponsor?: string
+  sizeSponsor?: Address
   globalState?: Map<Uint8Array, LedgerTealValue>
 }
 
@@ -153,7 +154,7 @@ export const LedgerAppParamsDeltaMeta: ObjectModelMetadata<LedgerAppParamsDelta>
  */
 export type LedgerAppResourceRecord = {
   appId: bigint
-  address: string
+  address: Address
   params: LedgerAppParamsDelta
   state: LedgerAppLocalStateDelta
 }
@@ -241,19 +242,19 @@ export type LedgerAssetParams = {
   /**
    * Manager specifies an account that is allowed to change the non-zero addresses in this AssetParams.
    */
-  manager?: string
+  manager?: Address
   /**
    * Specifies an account whose holdings of this asset should be reported as "not minted".
    */
-  reserve?: string
+  reserve?: Address
   /**
    * Specifies an account that is allowed to change the frozen state of holdings of this asset.
    */
-  freeze?: string
+  freeze?: Address
   /**
    * Specifies an account that is allowed to take units of this asset from any account.
    */
-  clawback?: string
+  clawback?: Address
 }
 
 export const LedgerAssetParamsMeta: ObjectModelMetadata<LedgerAssetParams> = {
@@ -296,7 +297,7 @@ export const LedgerAssetParamsDeltaMeta: ObjectModelMetadata<LedgerAssetParamsDe
  */
 export type LedgerAssetResourceRecord = {
   assetId: bigint
-  address: string
+  address: Address
   params: LedgerAssetParamsDelta
   holding: LedgerAssetHoldingDelta
 }
@@ -351,7 +352,7 @@ export type LedgerAccountBaseData = {
   microAlgos: bigint
   rewardsBase: bigint
   rewardedMicroAlgos: bigint
-  authAddress: string
+  authAddress: Address
   incentiveEligible: boolean
   /**
    * Totals across created globals, and opted in locals.
@@ -451,7 +452,7 @@ export const LedgerAccountDataMeta: ObjectModelMetadata<LedgerAccountData> = {
 }
 
 export type LedgerBalanceRecord = {
-  address: string
+  address: Address
   accountData: LedgerAccountData
 }
 
@@ -555,7 +556,7 @@ export type LedgerModifiedCreatable = {
   /**
    * Creator of the app/asset.
    */
-  creator: string
+  creator: Address
   /**
    * Keeps track of how many times this app/asset appears in accountUpdates.creatableDeltas.
    */

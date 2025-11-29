@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { encodeJson, decodeJson } from '../core/model-runtime'
-import type { EncodingFormat } from '@algorandfoundation/algokit-common'
+import { type EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   CreateWalletRequest,
   DeleteKeyRequest,

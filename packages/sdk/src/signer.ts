@@ -26,7 +26,7 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
 
     for (const index of indexesToSign) {
       const txn = txnGroup[index]
-      const authAddress = account.addr.toString()
+      const authAddress = account.addr
 
       // Sign transaction using nacl
       const bytesToSign = encodeTransaction(txn)
@@ -35,7 +35,7 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
       const signedTxn: SignedTransaction = {
         txn: txn,
         signature,
-        authAddress: authAddress !== txn.sender ? authAddress : undefined,
+        authAddress: !authAddress.equals(txn.sender) ? authAddress : undefined,
       }
 
       signed.push(encodeSignedTransaction(signedTxn))
@@ -108,22 +108,4 @@ export function makeEmptyTransactionSigner(): TransactionSigner {
 
     return Promise.resolve(unsigned)
   }
-}
-
-/** Represents an unsigned transactions and a signer that can authorize that transaction. */
-export interface TransactionWithSigner {
-  /** An unsigned transaction */
-  txn: Transaction
-  /** A transaction signer that can authorize txn */
-  signer: TransactionSigner
-}
-
-/**
- * Check if a value conforms to the TransactionWithSigner structure.
- * @param value - The value to check.
- * @returns True if an only if the value has the structure of a TransactionWithSigner.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isTransactionWithSigner(value: any): value is TransactionWithSigner {
-  return typeof value === 'object' && Object.keys(value).length === 2 && typeof value.txn === 'object' && typeof value.signer === 'function'
 }

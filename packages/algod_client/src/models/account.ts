@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   stringCodec,
   numberCodec,
@@ -31,7 +31,7 @@ export type Account = {
   /**
    * the account public key
    */
-  address: string
+  address: Address
 
   /**
    * \[algo\] total number of MicroAlgos in the account
@@ -159,7 +159,7 @@ export type Account = {
   /**
    * \[spend\] the address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field.
    */
-  authAddr?: string
+  authAddr?: Address
 
   /**
    * The round in which this account last proposed the block.

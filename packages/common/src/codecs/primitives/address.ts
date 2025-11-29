@@ -1,32 +1,36 @@
 import { Buffer } from 'buffer'
-import { addressFromPublicKey, publicKeyFromAddress } from '../../address'
-import { ADDRESS_LENGTH, PUBLIC_KEY_BYTE_LENGTH, ZERO_ADDRESS } from '../../constants'
+import { Address } from '../../address'
+import { ADDRESS_LENGTH, PUBLIC_KEY_BYTE_LENGTH } from '../../constants'
 import { Codec } from '../codec'
 import type { EncodingFormat } from '../types'
 import { WireString } from '../wire'
 
-class AddressCodec extends Codec<string, WireString> {
-  public defaultValue(): string {
-    return ZERO_ADDRESS
+class AddressCodec extends Codec<Address, WireString> {
+  public defaultValue(): Address {
+    return Address.zeroAddress()
   }
 
-  protected toEncoded(value: string, format: EncodingFormat): WireString {
+  protected toEncoded(value: Address, format: EncodingFormat): WireString {
     if (format === 'json') {
-      return value
+      return value.toString()
     }
-    return publicKeyFromAddress(value)
+    return value.publicKey
   }
 
-  protected fromEncoded(value: WireString, _format: EncodingFormat): string {
-    if (typeof value === 'string') return value
+  protected fromEncoded(value: WireString, _format: EncodingFormat): Address {
+    if (typeof value === 'string') return Address.fromString(value)
     if (value instanceof Uint8Array) {
       if (value.length === PUBLIC_KEY_BYTE_LENGTH) {
-        return addressFromPublicKey(value)
+        return new Address(value)
       } else if (value.length === ADDRESS_LENGTH) {
-        return Buffer.from(value).toString('utf-8')
+        return Address.fromString(Buffer.from(value).toString('utf-8'))
       }
     }
     throw new Error(`AddressCodec cannot decode address from ${typeof value}`)
+  }
+
+  public isDefaultValue(value: Address): boolean {
+    return value.equals(this.defaultValue())
   }
 }
 

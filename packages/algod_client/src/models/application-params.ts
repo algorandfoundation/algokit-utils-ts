@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   numberCodec,
   bytesCodec,
@@ -18,7 +18,7 @@ export type ApplicationParams = {
   /**
    * The address that created this application. This is the address where the parameters and global state for this application can be found.
    */
-  creator: string
+  creator: Address
 
   /**
    * \[approv\] approval program.

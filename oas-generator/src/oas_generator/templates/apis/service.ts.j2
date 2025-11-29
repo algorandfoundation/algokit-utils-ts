@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request';
 import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime';
-import type { EncodingFormat } from '@algorandfoundation/algokit-common';
+import { Address, type EncodingFormat } from '@algorandfoundation/algokit-common';
 {% if custom_imports %}
 {% for import_statement in custom_imports %}
 {{ import_statement }}
@@ -9,7 +9,7 @@ import type { EncodingFormat } from '@algorandfoundation/algokit-common';
 {% if import_types and import_types|length > 0 %}
 {% set sorted = import_types | sort %}
 import type { {{ sorted | join(', ') }} } from '../models/index';
-import { {% for t in sorted %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
+import { {% for t in sorted | reject('equalto', 'SuggestedParams') %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
 {% endif %}
 
 {% macro base_meta(type_name) -%}
@@ -104,12 +104,12 @@ export class {{ service_class_name }} {
       url: '{{ op.path }}',
       path: {
 {%- for p in op.pathParameters %}
-        '{{ p.name }}': {% if p.stringifyBigInt %}(typeof {{ p.varName }} === 'bigint' ? {{ p.varName }}.toString() : {{ p.varName }}){% else %}{{ p.varName }}{% endif %},
+        '{{ p.name }}': {% if p.stringifyAddress %}{{ p.varName }}?.toString() ?? {{ p.varName }}{% elif p.stringifyBigInt %}(typeof {{ p.varName }} === 'bigint' ? {{ p.varName }}.toString() : {{ p.varName }}){% else %}{{ p.varName }}{% endif %},
 {%- endfor %}
       },
       query: {
 {%- for p in query_params %}
-        '{{ p.name }}': {% if p.stringifyBigInt %}(typeof params?.{{ p.varName }} === 'bigint' ? (params!.{{ p.varName }} as bigint).toString() : params?.{{ p.varName }}){% else %}params?.{{ p.varName }}{% endif %},
+        '{{ p.name }}': {% if p.stringifyAddress %}params?.{{ p.varName }}?.toString(){% elif p.stringifyBigInt %}(typeof params?.{{ p.varName }} === 'bigint' ? (params!.{{ p.varName }} as bigint).toString() : params?.{{ p.varName }}){% else %}params?.{{ p.varName }}{% endif %},
 {%- endfor %}
 {%- if op.forceMsgpackQuery %}
         'format': 'msgpack',

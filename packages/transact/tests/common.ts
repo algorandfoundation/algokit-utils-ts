@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Address } from '@algorandfoundation/algokit-common'
 import * as fs from 'fs'
 import * as path from 'path'
 import { OnApplicationComplete, Transaction, TransactionType } from '../src'
@@ -39,6 +40,26 @@ const defaultReviver = (key: string, value: unknown) => {
     }
 
     return new Uint8Array(value)
+  }
+
+  const addrKeys = [
+    'sender',
+    'receiver',
+    'closeRemainderTo',
+    'rekeyTo',
+    'address',
+    'freezeTarget',
+    'manager',
+    'reserve',
+    'clawback',
+    'freeze',
+  ]
+  if (addrKeys.includes(key)) {
+    return Address.fromString(value as string)
+  }
+
+  if (key == 'accountReferences') {
+    return (value as string[]).map((addr: string) => Address.fromString(addr))
   }
 
   if (typeof value === 'number' && BIGINT_FIELDS.includes(key)) {

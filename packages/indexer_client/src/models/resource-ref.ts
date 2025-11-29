@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   bigIntCodec,
   addressCodec,
@@ -18,7 +18,7 @@ export type ResourceRef = {
   /**
    * \[d\] Account whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram.
    */
-  address?: string
+  address?: Address
 
   /**
    * \[p\] Application id whose GlobalState may be read by the executing

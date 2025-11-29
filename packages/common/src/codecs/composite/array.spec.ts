@@ -1,3 +1,4 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { numberCodec } from '../primitives/number'
 import {
@@ -151,8 +152,8 @@ describe('ArrayCodec', () => {
 
     test('addressArrayCodec can encode and decode', () => {
       const addresses = [
-        'VCMJKWOY5P5P7SKMZFFOCEROPJCZOTIJMNIYNUCKH7LRO45JMJP6UYBIJA',
-        '7ZUECA7HFLZTXENRV24SHLU4AVPUTMTTDUFUBNBD64C73F3UHRTHAIOF6Q',
+        Address.fromString('VCMJKWOY5P5P7SKMZFFOCEROPJCZOTIJMNIYNUCKH7LRO45JMJP6UYBIJA'),
+        Address.fromString('7ZUECA7HFLZTXENRV24SHLU4AVPUTMTTDUFUBNBD64C73F3UHRTHAIOF6Q'),
       ]
       const encoded = addressArrayCodec.encodeOptional(addresses, 'json')
       const decoded = addressArrayCodec.decode(encoded, 'json')

@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   stringCodec,
   numberCodec,
@@ -31,7 +31,7 @@ export type Block = {
   /**
    * the proposer of this block.
    */
-  proposer?: string
+  proposer?: Address
 
   /**
    * the sum of all fees paid by transactions in this block.

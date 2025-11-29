@@ -9,6 +9,7 @@ import {
   decodeMsgpack,
   encodeMsgpack,
   hash,
+  Address,
 } from '@algorandfoundation/algokit-common'
 import base32 from 'hi-base32'
 import { AppCallTransactionFields, validateAppCallTransaction } from './app-call'
@@ -40,7 +41,7 @@ export type Transaction = {
    *
    * Fees are deducted from this account.
    */
-  sender: string
+  sender: Address
 
   /**
    * Optional transaction fee in microALGO.
@@ -89,7 +90,7 @@ export type Transaction = {
    * Reverting back control to the original address must be done by setting this field to
    * the original address.
    */
-  rekeyTo?: string
+  rekeyTo?: Address
 
   /**
    * Optional lease value to enforce mutual transaction exclusion.
@@ -193,10 +194,6 @@ export function encodeTransactions(transactions: Transaction[]): Uint8Array[] {
  * Validate a transaction
  */
 export function validateTransaction(transaction: Transaction): void {
-  if (!transaction.sender) {
-    throw new Error('Transaction sender is required')
-  }
-
   // Validate that only one transaction type specific field is set
   const typeFields = [
     transaction.payment,

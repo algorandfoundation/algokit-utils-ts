@@ -1,4 +1,4 @@
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -15,7 +15,7 @@ import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
-import { getABIReturnValue, populateAppCallResources, waitForConfirmation } from './transaction'
+import { getABIReturnValue, waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
@@ -1044,7 +1044,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: algosdk.Address & algosdk.Account
+  let testAccount: algosdk.Address & algosdk.Account & AddressWithSigner
 
   beforeEach(fixture.newScope)
 
@@ -1185,12 +1185,10 @@ describe('Resource population: meta', () => {
       composer.addAppCallMethodCall(await v9AppClient.params.call({ method: 'dummy', note: `${i}` }))
     }
 
-    const atc = (await composer.build()).atc
     const getResources = async () => {
-      const populatedAtc = await populateAppCallResources(atc, algorand.client.algod)
-
       const resources = []
-      for (const txnWithSigner of populatedAtc.buildGroup()) {
+      const transactionsWithSigners = (await composer.build()).transactions
+      for (const txnWithSigner of transactionsWithSigners) {
         const txn = txnWithSigner.txn
 
         for (const acct of txn.appCall?.accountReferences ?? []) {
@@ -1356,7 +1354,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice.toString() }],
+      accessReferences: [{ address: alice }],
     })
   })
 
@@ -1385,7 +1383,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(15)).map((a) => ({ address: a.toString() }))],
+      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
     })
   })
 
@@ -1395,7 +1393,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(16)).map((a) => ({ address: a.toString() }))],
+        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1436,7 +1434,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { address: alice.toString(), assetId: assetId } }],
+      accessReferences: [{ holding: { address: alice, assetId: assetId } }],
     })
   })
 
@@ -1449,7 +1447,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { address: alice.toString(), appId: externalClient.appId } }],
+      accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
     })
   })
 })

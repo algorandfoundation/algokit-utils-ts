@@ -1,8 +1,8 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { Address } from '../../../encoding/address.js';
-import { AccountsResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { Address } from '../../../encoding/address.js'
+import { AccountsResponse } from './models/types.js'
 
 /**
  * Returns information about indexed accounts.
@@ -21,7 +21,7 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    */
   // eslint-disable-next-line class-methods-use-this
   path() {
-    return '/v2/accounts';
+    return '/v2/accounts'
   }
 
   /**
@@ -54,8 +54,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    */
   currencyGreaterThan(greater: number | bigint) {
     // We convert the following to a string for now to correctly include zero values in request parameters.
-    this.query['currency-greater-than'] = greater.toString();
-    return this;
+    this.query['currency-greater-than'] = greater.toString()
+    return this
   }
 
   /**
@@ -85,8 +85,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   currencyLessThan(lesser: number | bigint) {
-    this.query['currency-less-than'] = lesser;
-    return this;
+    this.query['currency-less-than'] = lesser
+    return this
   }
 
   /**
@@ -105,8 +105,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -125,8 +125,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   assetID(id: number | bigint) {
-    this.query['asset-id'] = id;
-    return this;
+    this.query['asset-id'] = id
+    return this
   }
 
   /**
@@ -152,8 +152,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -172,8 +172,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   round(round: number | bigint) {
-    this.query.round = round;
-    return this;
+    this.query.round = round
+    return this
   }
 
   /**
@@ -191,8 +191,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @param authAddr
    */
   authAddr(authAddr: string | Address) {
-    this.query['auth-addr'] = authAddr.toString();
-    return this;
+    this.query['auth-addr'] = authAddr.toString()
+    return this
   }
 
   /**
@@ -211,8 +211,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   applicationID(applicationID: number | bigint) {
-    this.query['application-id'] = applicationID;
-    return this;
+    this.query['application-id'] = applicationID
+    return this
   }
 
   /**
@@ -240,8 +240,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   includeAll(value = true) {
-    this.query['include-all'] = value;
-    return this;
+    this.query['include-all'] = value
+    return this
   }
 
   /**
@@ -267,8 +267,8 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   exclude(exclude: string) {
-    this.query.exclude = exclude;
-    return this;
+    this.query.exclude = exclude
+    return this
   }
 
   /**
@@ -287,12 +287,12 @@ export default class SearchAccounts extends JSONRequest<AccountsResponse> {
    * @category query
    */
   onlineOnly(onlineOnly: boolean) {
-    this.query['online-only'] = onlineOnly;
-    return this;
+    this.query['online-only'] = onlineOnly
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): AccountsResponse {
-    return decodeJSON(response.getJSONText(), AccountsResponse);
+    return decodeJSON(response.getJSONText(), AccountsResponse)
   }
 }

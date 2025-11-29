@@ -1,4 +1,4 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import {
   numberCodec,
   addressCodec,
@@ -32,7 +32,7 @@ export type SimulateTransactionResult = {
   /**
    * The account that needed to sign this transaction when no signature was provided and the provided signer was incorrect.
    */
-  fixedSigner?: string
+  fixedSigner?: Address
 }
 
 export const SimulateTransactionResultMeta: ObjectModelMetadata<SimulateTransactionResult> = {

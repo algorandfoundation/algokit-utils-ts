@@ -1,31 +1,28 @@
-import ServiceClient from '../serviceClient.js';
-import MakeHealthCheck from './makeHealthCheck.js';
-import LookupAssetBalances from './lookupAssetBalances.js';
-import LookupAssetTransactions from './lookupAssetTransactions.js';
-import LookupAccountTransactions from './lookupAccountTransactions.js';
-import LookupBlock from './lookupBlock.js';
-import LookupTransactionByID from './lookupTransactionByID.js';
-import LookupAccountByID from './lookupAccountByID.js';
-import LookupAccountAssets from './lookupAccountAssets.js';
-import LookupAccountCreatedAssets from './lookupAccountCreatedAssets.js';
-import LookupAccountAppLocalStates from './lookupAccountAppLocalStates.js';
-import LookupAccountCreatedApplications from './lookupAccountCreatedApplications.js';
-import LookupAssetByID from './lookupAssetByID.js';
-import LookupApplications from './lookupApplications.js';
-import LookupApplicationLogs from './lookupApplicationLogs.js';
-import LookupApplicationBoxByIDandName from './lookupApplicationBoxByIDandName.js';
-import SearchAccounts from './searchAccounts.js';
-import SearchForBlockHeaders from './searchForBlockHeaders.js';
-import SearchForTransactions from './searchForTransactions.js';
-import SearchForAssets from './searchForAssets.js';
-import SearchForApplications from './searchForApplications.js';
-import SearchForApplicationBoxes from './searchForApplicationBoxes.js';
-import { BaseHTTPClient } from '../../baseHTTPClient.js';
-import {
-  CustomTokenHeader,
-  IndexerTokenHeader,
-} from '../../urlTokenBaseHTTPClient.js';
-import { Address } from '../../../encoding/address.js';
+import ServiceClient from '../serviceClient.js'
+import MakeHealthCheck from './makeHealthCheck.js'
+import LookupAssetBalances from './lookupAssetBalances.js'
+import LookupAssetTransactions from './lookupAssetTransactions.js'
+import LookupAccountTransactions from './lookupAccountTransactions.js'
+import LookupBlock from './lookupBlock.js'
+import LookupTransactionByID from './lookupTransactionByID.js'
+import LookupAccountByID from './lookupAccountByID.js'
+import LookupAccountAssets from './lookupAccountAssets.js'
+import LookupAccountCreatedAssets from './lookupAccountCreatedAssets.js'
+import LookupAccountAppLocalStates from './lookupAccountAppLocalStates.js'
+import LookupAccountCreatedApplications from './lookupAccountCreatedApplications.js'
+import LookupAssetByID from './lookupAssetByID.js'
+import LookupApplications from './lookupApplications.js'
+import LookupApplicationLogs from './lookupApplicationLogs.js'
+import LookupApplicationBoxByIDandName from './lookupApplicationBoxByIDandName.js'
+import SearchAccounts from './searchAccounts.js'
+import SearchForBlockHeaders from './searchForBlockHeaders.js'
+import SearchForTransactions from './searchForTransactions.js'
+import SearchForAssets from './searchForAssets.js'
+import SearchForApplications from './searchForApplications.js'
+import SearchForApplicationBoxes from './searchForApplicationBoxes.js'
+import { BaseHTTPClient } from '../../baseHTTPClient.js'
+import { CustomTokenHeader, IndexerTokenHeader } from '../../urlTokenBaseHTTPClient.js'
+import { Address } from '../../../encoding/address.js'
 
 /**
  * The Indexer provides a REST API interface of API calls to support searching the Algorand Blockchain.
@@ -64,16 +61,12 @@ export class IndexerClient extends ServiceClient {
    * @param headers - Optional headers
    */
   constructor(
-    tokenOrBaseClient:
-      | string
-      | IndexerTokenHeader
-      | CustomTokenHeader
-      | BaseHTTPClient,
+    tokenOrBaseClient: string | IndexerTokenHeader | CustomTokenHeader | BaseHTTPClient,
     baseServer = 'http://127.0.0.1',
     port: string | number = 8080,
-    headers: Record<string, string> = {}
+    headers: Record<string, string> = {},
   ) {
-    super('X-Indexer-API-Token', tokenOrBaseClient, baseServer, port, headers);
+    super('X-Indexer-API-Token', tokenOrBaseClient, baseServer, port, headers)
   }
 
   /**
@@ -89,7 +82,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   makeHealthCheck() {
-    return new MakeHealthCheck(this.c);
+    return new MakeHealthCheck(this.c)
   }
 
   /**
@@ -106,7 +99,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAssetBalances(index: number | bigint) {
-    return new LookupAssetBalances(this.c, index);
+    return new LookupAssetBalances(this.c, index)
   }
 
   /**
@@ -123,7 +116,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAssetTransactions(index: number | bigint) {
-    return new LookupAssetTransactions(this.c, index);
+    return new LookupAssetTransactions(this.c, index)
   }
 
   /**
@@ -140,7 +133,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAccountTransactions(account: string | Address) {
-    return new LookupAccountTransactions(this.c, account);
+    return new LookupAccountTransactions(this.c, account)
   }
 
   /**
@@ -157,7 +150,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupBlock(round: number | bigint) {
-    return new LookupBlock(this.c, round);
+    return new LookupBlock(this.c, round)
   }
 
   /**
@@ -174,7 +167,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupTransactionByID(txID: string) {
-    return new LookupTransactionByID(this.c, txID);
+    return new LookupTransactionByID(this.c, txID)
   }
 
   /**
@@ -191,7 +184,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAccountByID(account: string | Address) {
-    return new LookupAccountByID(this.c, account);
+    return new LookupAccountByID(this.c, account)
   }
 
   /**
@@ -208,7 +201,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAccountAssets(account: string | Address) {
-    return new LookupAccountAssets(this.c, account);
+    return new LookupAccountAssets(this.c, account)
   }
 
   /**
@@ -225,7 +218,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAccountCreatedAssets(account: string | Address) {
-    return new LookupAccountCreatedAssets(this.c, account);
+    return new LookupAccountCreatedAssets(this.c, account)
   }
 
   /**
@@ -242,7 +235,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAccountAppLocalStates(account: string | Address) {
-    return new LookupAccountAppLocalStates(this.c, account);
+    return new LookupAccountAppLocalStates(this.c, account)
   }
 
   /**
@@ -259,7 +252,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAccountCreatedApplications(account: string | Address) {
-    return new LookupAccountCreatedApplications(this.c, account);
+    return new LookupAccountCreatedApplications(this.c, account)
   }
 
   /**
@@ -276,7 +269,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupAssetByID(index: number | bigint) {
-    return new LookupAssetByID(this.c, index);
+    return new LookupAssetByID(this.c, index)
   }
 
   /**
@@ -293,7 +286,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupApplications(index: number | bigint) {
-    return new LookupApplications(this.c, index);
+    return new LookupApplications(this.c, index)
   }
 
   /**
@@ -310,7 +303,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupApplicationLogs(appID: number | bigint) {
-    return new LookupApplicationLogs(this.c, appID);
+    return new LookupApplicationLogs(this.c, appID)
   }
 
   /**
@@ -325,7 +318,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   searchAccounts() {
-    return new SearchAccounts(this.c);
+    return new SearchAccounts(this.c)
   }
 
   /**
@@ -340,7 +333,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   searchForBlockHeaders() {
-    return new SearchForBlockHeaders(this.c);
+    return new SearchForBlockHeaders(this.c)
   }
 
   /**
@@ -355,7 +348,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   searchForTransactions() {
-    return new SearchForTransactions(this.c);
+    return new SearchForTransactions(this.c)
   }
 
   /**
@@ -370,7 +363,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   searchForAssets() {
-    return new SearchForAssets(this.c);
+    return new SearchForAssets(this.c)
   }
 
   /**
@@ -385,7 +378,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   searchForApplications() {
-    return new SearchForApplications(this.c);
+    return new SearchForApplications(this.c)
   }
 
   /**
@@ -415,7 +408,7 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   searchForApplicationBoxes(appID: number | bigint) {
-    return new SearchForApplicationBoxes(this.c, appID);
+    return new SearchForApplicationBoxes(this.c, appID)
   }
 
   /**
@@ -435,6 +428,6 @@ export class IndexerClient extends ServiceClient {
    * @category GET
    */
   lookupApplicationBoxByIDandName(appID: number | bigint, boxName: Uint8Array) {
-    return new LookupApplicationBoxByIDandName(this.c, appID, boxName);
+    return new LookupApplicationBoxByIDandName(this.c, appID, boxName)
   }
 }

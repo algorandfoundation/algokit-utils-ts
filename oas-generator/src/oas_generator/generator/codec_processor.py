@@ -324,6 +324,7 @@ def get_codec_imports(has_arrays: bool = False, has_models: bool = False) -> lis
         "bigIntCodec",
         "booleanCodec",
         "bytesCodec",
+        "addressCodec",
     ])
 
     if has_arrays:

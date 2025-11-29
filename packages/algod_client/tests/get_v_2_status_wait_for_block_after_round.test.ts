@@ -11,7 +11,7 @@ describe('GET v2_status_wait-for-block-after_ROUND', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.waitForBlock(TEST_ROUND)
+      const result = await client.statusAfterBlock(TEST_ROUND)
 
       expect(result).toMatchSnapshot()
     })

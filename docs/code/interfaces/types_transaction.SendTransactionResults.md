@@ -12,8 +12,6 @@ The result of preparing and/or sending multiple transactions
 
   ↳ [`AppCallTransactionResultOfType`](types_app.AppCallTransactionResultOfType.md)
 
-  ↳ [`SendAtomicTransactionComposerResults`](types_transaction.SendAtomicTransactionComposerResults.md)
-
   ↳ [`ConfirmedTransactionResults`](types_transaction.ConfirmedTransactionResults.md)
 
 ## Table of contents
@@ -27,23 +25,23 @@ The result of preparing and/or sending multiple transactions
 
 ### confirmations
 
-• `Optional` **confirmations**: `PendingTransactionResponse`[]
+• `Optional` **confirmations**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction
 
 #### Defined in
 
-[src/types/transaction.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L67)
+[src/types/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L80)
 
 ___
 
 ### transactions
 
-• **transactions**: `Transaction`[]
+• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
 
 The transactions that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
+[src/types/transaction.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L76)

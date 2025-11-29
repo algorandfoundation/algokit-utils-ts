@@ -1,9 +1,9 @@
-import JSONRequest from '../jsonrequest.js';
-import { HTTPClientResponse } from '../../client.js';
-import { decodeJSON } from '../../../encoding/encoding.js';
-import { base64StringFunnel } from './lookupAccountTransactions.js';
-import { Address } from '../../../encoding/address.js';
-import { TransactionsResponse } from './models/types.js';
+import JSONRequest from '../jsonrequest.js'
+import { HTTPClientResponse } from '../../client.js'
+import { decodeJSON } from '../../../encoding/encoding.js'
+import { base64StringFunnel } from './lookupAccountTransactions.js'
+import { Address } from '../../../encoding/address.js'
+import { TransactionsResponse } from './models/types.js'
 
 /**
  * Returns information about indexed transactions.
@@ -22,7 +22,7 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    */
   // eslint-disable-next-line class-methods-use-this
   path() {
-    return '/v2/transactions';
+    return '/v2/transactions'
   }
 
   /**
@@ -41,8 +41,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   notePrefix(prefix: Uint8Array | string) {
-    this.query['note-prefix'] = base64StringFunnel(prefix);
-    return this;
+    this.query['note-prefix'] = base64StringFunnel(prefix)
+    return this
   }
 
   /**
@@ -60,8 +60,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   txType(type: string) {
-    this.query['tx-type'] = type;
-    return this;
+    this.query['tx-type'] = type
+    return this
   }
 
   /**
@@ -82,8 +82,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   sigType(type: string) {
-    this.query['sig-type'] = type;
-    return this;
+    this.query['sig-type'] = type
+    return this
   }
 
   /**
@@ -102,8 +102,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   txid(txid: string) {
-    this.query.txid = txid;
-    return this;
+    this.query.txid = txid
+    return this
   }
 
   /**
@@ -122,8 +122,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   groupid(groupid: Uint8Array | string) {
-    this.query['group-id'] = base64StringFunnel(groupid);
-    return this;
+    this.query['group-id'] = base64StringFunnel(groupid)
+    return this
   }
 
   /**
@@ -142,8 +142,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   round(round: number | bigint) {
-    this.query.round = round;
-    return this;
+    this.query.round = round
+    return this
   }
 
   /**
@@ -162,8 +162,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   minRound(round: number | bigint) {
-    this.query['min-round'] = round;
-    return this;
+    this.query['min-round'] = round
+    return this
   }
 
   /**
@@ -182,8 +182,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   maxRound(round: number | bigint) {
-    this.query['max-round'] = round;
-    return this;
+    this.query['max-round'] = round
+    return this
   }
 
   /**
@@ -202,8 +202,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   assetID(id: number | bigint) {
-    this.query['asset-id'] = id;
-    return this;
+    this.query['asset-id'] = id
+    return this
   }
 
   /**
@@ -222,8 +222,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   limit(limit: number) {
-    this.query.limit = limit;
-    return this;
+    this.query.limit = limit
+    return this
   }
 
   /**
@@ -242,9 +242,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   beforeTime(before: string | Date) {
-    this.query['before-time'] =
-      before instanceof Date ? before.toISOString() : before;
-    return this;
+    this.query['before-time'] = before instanceof Date ? before.toISOString() : before
+    return this
   }
 
   /**
@@ -263,9 +262,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   afterTime(after: string | Date) {
-    this.query['after-time'] =
-      after instanceof Date ? after.toISOString() : after;
-    return this;
+    this.query['after-time'] = after instanceof Date ? after.toISOString() : after
+    return this
   }
 
   /**
@@ -286,8 +284,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   addressRole(role: string) {
-    this.query['address-role'] = role;
-    return this;
+    this.query['address-role'] = role
+    return this
   }
 
   /**
@@ -306,8 +304,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   address(address: string | Address) {
-    this.query.address = address.toString();
-    return this;
+    this.query.address = address.toString()
+    return this
   }
 
   /**
@@ -325,8 +323,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   excludeCloseTo(exclude: boolean) {
-    this.query['exclude-close-to'] = exclude;
-    return this;
+    this.query['exclude-close-to'] = exclude
+    return this
   }
 
   /**
@@ -352,8 +350,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   nextToken(nextToken: string) {
-    this.query.next = nextToken;
-    return this;
+    this.query.next = nextToken
+    return this
   }
 
   /**
@@ -371,8 +369,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   rekeyTo(rekeyTo: boolean) {
-    this.query['rekey-to'] = rekeyTo;
-    return this;
+    this.query['rekey-to'] = rekeyTo
+    return this
   }
 
   /**
@@ -391,8 +389,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   applicationID(applicationID: number | bigint) {
-    this.query['application-id'] = applicationID;
-    return this;
+    this.query['application-id'] = applicationID
+    return this
   }
 
   /**
@@ -423,8 +421,8 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    */
   currencyGreaterThan(greater: number | bigint) {
     // We convert the following to a string for now to correctly include zero values in request parameters.
-    this.query['currency-greater-than'] = greater.toString();
-    return this;
+    this.query['currency-greater-than'] = greater.toString()
+    return this
   }
 
   /**
@@ -454,12 +452,12 @@ export default class SearchForTransactions extends JSONRequest<TransactionsRespo
    * @category query
    */
   currencyLessThan(lesser: number | bigint) {
-    this.query['currency-less-than'] = lesser;
-    return this;
+    this.query['currency-less-than'] = lesser
+    return this
   }
 
   // eslint-disable-next-line class-methods-use-this
   prepare(response: HTTPClientResponse): TransactionsResponse {
-    return decodeJSON(response.getJSONText(), TransactionsResponse);
+    return decodeJSON(response.getJSONText(), TransactionsResponse)
   }
 }

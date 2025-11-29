@@ -673,6 +673,9 @@ class OperationProcessor:
             else:
                 stringify_bigint = constants.TypeScriptType.BIGINT in ts_type_str
 
+            # Handle Address type - needs toString() for query and path params
+            stringify_address = constants.TypeScriptType.ADDRESS in ts_type_str
+
             location = location_candidate
             required = param.get(constants.SchemaKey.REQUIRED, False) or location == constants.ParamLocation.PATH
 
@@ -685,6 +688,7 @@ class OperationProcessor:
                     ts_type=ts_type_str,
                     description=param.get(constants.OperationKey.DESCRIPTION),
                     stringify_bigint=stringify_bigint,
+                    stringify_address=stringify_address,
                 )
             )
 
