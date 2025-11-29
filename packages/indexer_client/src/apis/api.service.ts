@@ -300,7 +300,7 @@ export class IndexerApi {
       txid?: string
       minRound?: number | bigint
       maxRound?: number | bigint
-      senderAddress?: Address
+      senderAddress?: string | Address
     },
   ): Promise<ApplicationLogsResponse> {
     const headers: Record<string, string> = {}
@@ -404,7 +404,7 @@ export class IndexerApi {
       afterTime?: string
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
-      address?: Address
+      address?: string | Address
       addressRole?: 'sender' | 'receiver' | 'freeze-target'
       excludeCloseTo?: boolean
       rekeyTo?: boolean
@@ -516,7 +516,7 @@ export class IndexerApi {
     includeAll?: boolean
     exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     currencyLessThan?: number | bigint
-    authAddr?: Address
+    authAddr?: string | Address
     round?: number | bigint
     applicationId?: number | bigint
     onlineOnly?: boolean
@@ -651,9 +651,9 @@ export class IndexerApi {
     maxRound?: number | bigint
     beforeTime?: string
     afterTime?: string
-    proposers?: Address[]
-    expired?: Address[]
-    absent?: Address[]
+    proposers?: (string | Address)[]
+    expired?: (string | Address)[]
+    absent?: (string | Address)[]
   }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
@@ -700,7 +700,7 @@ export class IndexerApi {
     afterTime?: string
     currencyGreaterThan?: number | bigint
     currencyLessThan?: number | bigint
-    address?: Address
+    address?: string | Address
     addressRole?: 'sender' | 'receiver' | 'freeze-target'
     excludeCloseTo?: boolean
     rekeyTo?: boolean

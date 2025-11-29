@@ -257,9 +257,11 @@
             "schema": {
               "pattern": "[A-Z0-9]{58}",
               "type": "string",
-              "x-go-type": "basics.Address"
+              "x-go-type": "basics.Address",
+              "x-algorand-format": "Address"
             },
-            "x-go-type": "basics.Address"
+            "x-go-type": "basics.Address",
+            "x-algorand-format": "Address"
           },
           {
             "name": "exclude",
@@ -352,9 +354,11 @@
             "schema": {
               "pattern": "[A-Z0-9]{58}",
               "type": "string",
-              "x-go-type": "basics.Address"
+              "x-go-type": "basics.Address",
+              "x-algorand-format": "Address"
             },
-            "x-go-type": "basics.Address"
+            "x-go-type": "basics.Address",
+            "x-algorand-format": "Address"
           },
           {
             "name": "asset-id",
@@ -449,9 +453,11 @@
             "schema": {
               "pattern": "[A-Z0-9]{58}",
               "type": "string",
-              "x-go-type": "basics.Address"
+              "x-go-type": "basics.Address",
+              "x-algorand-format": "Address"
             },
-            "x-go-type": "basics.Address"
+            "x-go-type": "basics.Address",
+            "x-algorand-format": "Address"
           },
           {
             "name": "limit",
@@ -538,9 +544,11 @@
             "schema": {
               "pattern": "[A-Z0-9]{58}",
               "type": "string",
-              "x-go-type": "basics.Address"
+              "x-go-type": "basics.Address",
+              "x-algorand-format": "Address"
             },
-            "x-go-type": "basics.Address"
+            "x-go-type": "basics.Address",
+            "x-algorand-format": "Address"
           },
           {
             "name": "application-id",
@@ -655,9 +663,11 @@
             "schema": {
               "pattern": "[A-Z0-9]{58}",
               "type": "string",
-              "x-go-type": "basics.Address"
+              "x-go-type": "basics.Address",
+              "x-algorand-format": "Address"
             },
-            "x-go-type": "basics.Address"
+            "x-go-type": "basics.Address",
+            "x-algorand-format": "Address"
           },
           {
             "name": "max",
@@ -1408,9 +1418,11 @@
             "schema": {
               "pattern": "[A-Z0-9]{58}",
               "type": "string",
-              "x-go-type": "basics.Address"
+              "x-go-type": "basics.Address",
+              "x-algorand-format": "Address"
             },
-            "x-go-type": "basics.Address"
+            "x-go-type": "basics.Address",
+            "x-algorand-format": "Address"
           },
           {
             "name": "dilution",
@@ -6915,9 +6927,11 @@
         "schema": {
           "pattern": "[A-Z0-9]{58}",
           "type": "string",
-          "x-go-type": "basics.Address"
+          "x-go-type": "basics.Address",
+          "x-algorand-format": "Address"
         },
-        "x-go-type": "basics.Address"
+        "x-go-type": "basics.Address",
+        "x-algorand-format": "Address"
       },
       "asset-id": {
         "name": "asset-id",

@@ -104,7 +104,7 @@ export class {{ service_class_name }} {
       url: '{{ op.path }}',
       path: {
 {%- for p in op.pathParameters %}
-        '{{ p.name }}': {% if p.stringifyAddress %}{{ p.varName }}?.toString() ?? {{ p.varName }}{% elif p.stringifyBigInt %}(typeof {{ p.varName }} === 'bigint' ? {{ p.varName }}.toString() : {{ p.varName }}){% else %}{{ p.varName }}{% endif %},
+        '{{ p.name }}': {% if p.stringifyAddress %}{{ p.varName }}?.toString(){% elif p.stringifyBigInt %}(typeof {{ p.varName }} === 'bigint' ? {{ p.varName }}.toString() : {{ p.varName }}){% else %}{{ p.varName }}{% endif %},
 {%- endfor %}
       },
       query: {
