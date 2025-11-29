@@ -33,12 +33,8 @@ undefined
 export class {{ service_class_name }} {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: EncodingFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack';
-  }
-
-  private static mediaFor(format: EncodingFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack';
+  private mimeTypeFor(format: EncodingFormat | 'text'): string {
+    return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain';
   }
 
 {% for op in operations %}
@@ -62,16 +58,16 @@ export class {{ service_class_name }} {
     const headers: Record<string, string> = {};
     {% set body_format = 'msgpack' if op.forceMsgpackQuery else 'json' %}
     const responseFormat: EncodingFormat = '{{ body_format }}'
-    headers['Accept'] = {{ service_class_name }}.acceptFor(responseFormat);
+    headers['Accept'] = this.mimeTypeFor(responseFormat);
 
     {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
       {% if is_raw_bytes_body %}
     const serializedBody = body ?? undefined;
-    const mediaType = 'application/msgpack';
+    const mediaType = '{{op.requestBody.mediaType}}';
     headers['Content-Type'] = mediaType;
       {% else %}
     const bodyMeta = {{ meta_expr(op.requestBody.tsType) }};
-    const mediaType = bodyMeta ? {{ service_class_name }}.mediaFor(responseFormat) : undefined;
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat);
     if (mediaType) headers['Content-Type'] = mediaType;
         {% if op.requestBody and not meta_expr(op.requestBody.tsType) == 'undefined' %}
           {% if body_format == 'json' %}
@@ -122,10 +118,8 @@ export class {{ service_class_name }} {
       headers,
       {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
       body: serializedBody,
-      mediaType: mediaType,
       {% else %}
       body: undefined,
-      mediaType: undefined,
       {% endif %}
     });
 

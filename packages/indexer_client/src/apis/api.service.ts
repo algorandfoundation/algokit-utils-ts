@@ -43,12 +43,8 @@ import {
 export class IndexerApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: EncodingFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
-  }
-
-  private static mediaFor(format: EncodingFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
+  private mimeTypeFor(format: EncodingFormat | 'text'): string {
+    return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain'
   }
 
   /**
@@ -60,7 +56,7 @@ export class IndexerApi {
   ): Promise<ApplicationLocalStatesResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -74,7 +70,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, ApplicationLocalStatesResponseMeta)
@@ -89,7 +84,7 @@ export class IndexerApi {
   ): Promise<AssetHoldingsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -103,7 +98,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AssetHoldingsResponseMeta)
@@ -122,7 +116,7 @@ export class IndexerApi {
   ): Promise<AccountResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -135,7 +129,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AccountResponseMeta)
@@ -150,7 +143,7 @@ export class IndexerApi {
   ): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -164,7 +157,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, ApplicationsResponseMeta)
@@ -179,7 +171,7 @@ export class IndexerApi {
   ): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -193,7 +185,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AssetsResponseMeta)
@@ -224,7 +215,7 @@ export class IndexerApi {
   ): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -253,7 +244,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, TransactionsResponseMeta)
@@ -265,7 +255,7 @@ export class IndexerApi {
   async lookupApplicationBoxByIdAndName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -274,7 +264,6 @@ export class IndexerApi {
       query: { name: params?.name },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, BoxMeta)
@@ -286,7 +275,7 @@ export class IndexerApi {
   async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<ApplicationResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -295,7 +284,6 @@ export class IndexerApi {
       query: { 'include-all': params?.includeAll },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, ApplicationResponseMeta)
@@ -317,7 +305,7 @@ export class IndexerApi {
   ): Promise<ApplicationLogsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -333,7 +321,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, ApplicationLogsResponseMeta)
@@ -354,7 +341,7 @@ export class IndexerApi {
   ): Promise<AssetBalancesResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -373,7 +360,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AssetBalancesResponseMeta)
@@ -385,7 +371,7 @@ export class IndexerApi {
   async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<AssetResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -394,7 +380,6 @@ export class IndexerApi {
       query: { 'include-all': params?.includeAll },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AssetResponseMeta)
@@ -427,7 +412,7 @@ export class IndexerApi {
   ): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -458,7 +443,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, TransactionsResponseMeta)
@@ -470,7 +454,7 @@ export class IndexerApi {
   async lookupBlock(roundNumber: number | bigint, params?: { headerOnly?: boolean }): Promise<Block> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -479,7 +463,6 @@ export class IndexerApi {
       query: { 'header-only': params?.headerOnly },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, BlockMeta)
@@ -491,7 +474,7 @@ export class IndexerApi {
   async lookupTransaction(txid: string): Promise<TransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -500,7 +483,6 @@ export class IndexerApi {
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, TransactionResponseMeta)
@@ -509,7 +491,7 @@ export class IndexerApi {
   async makeHealthCheck(): Promise<HealthCheck> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -518,7 +500,6 @@ export class IndexerApi {
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, HealthCheckMeta)
@@ -542,7 +523,7 @@ export class IndexerApi {
   }): Promise<AccountsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -567,7 +548,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AccountsResponseMeta)
@@ -579,7 +559,7 @@ export class IndexerApi {
   async searchForApplicationBoxes(applicationId: number | bigint, params?: { limit?: number; next?: string }): Promise<BoxesResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -588,7 +568,6 @@ export class IndexerApi {
       query: { limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, BoxesResponseMeta)
@@ -606,7 +585,7 @@ export class IndexerApi {
   }): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -621,7 +600,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, ApplicationsResponseMeta)
@@ -641,7 +619,7 @@ export class IndexerApi {
   }): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -658,7 +636,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, AssetsResponseMeta)
@@ -680,7 +657,7 @@ export class IndexerApi {
   }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -699,7 +676,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, BlockHeadersResponseMeta)
@@ -732,7 +708,7 @@ export class IndexerApi {
   }): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -766,7 +742,6 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, TransactionsResponseMeta)

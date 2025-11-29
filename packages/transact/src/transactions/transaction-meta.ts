@@ -142,8 +142,6 @@ class TransactionTypeCodec extends Codec<TransactionType, string, WireString> {
   }
 }
 
-// TODO: NC - Make these more efficient, by normalising the objects <-- Next thing to do.
-
 class TransactionDataCodec<
   T extends
     | PaymentTransactionFields

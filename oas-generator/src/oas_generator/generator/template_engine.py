@@ -480,6 +480,7 @@ class OperationProcessor:
         if service_class_name == "AlgodApi":
             custom_imports = [
                 "import { concatArrays } from '@algorandfoundation/algokit-common';",
+                "import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact';",
             ]
             send_raw_transaction_method = '''/**
    * Send a signed transaction or array of signed transactions to the network.
@@ -527,7 +528,22 @@ class OperationProcessor:
   async getTransactionParams(): Promise<SuggestedParams> {
     return await this.suggestedParams();
   }'''
-            custom_methods = [send_raw_transaction_method, get_application_box_by_name_method, suggested_params_method, get_transaction_params_method]
+
+            simulate_raw_transactions_method = '''/**
+   * Simulate an encoded signed transaction or array of encoded signed transactions.
+   */
+  async simulateRawTransactions(stxOrStxs: Uint8Array | Uint8Array[]): Promise<SimulateResponse> {
+    const txns = Array.isArray(stxOrStxs) ? stxOrStxs.map((stxn) => decodeSignedTransaction(stxn)) : [decodeSignedTransaction(stxOrStxs)];
+    return this.simulateTransactions({
+      txnGroups: [
+        {
+          txns,
+        },
+      ],
+    });
+  }'''
+
+            custom_methods = [send_raw_transaction_method, get_application_box_by_name_method, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
 
         return custom_imports, custom_methods
 

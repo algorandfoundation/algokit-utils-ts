@@ -1829,7 +1829,7 @@
         ],
         "summary": "Gets the node status after waiting for a round after the given round.",
         "description": "Waits for a block to appear after round {round} and returns the node's status at the time. There is a 1 minute timeout, when reached the current status is returned regardless of whether or not it is the round after the given round.",
-        "operationId": "WaitForBlock",
+        "operationId": "StatusAfterBlock",
         "parameters": [
           {
             "name": "round",
@@ -2067,7 +2067,7 @@
           "nonparticipating"
         ],
         "summary": "Simulates a raw transaction or transaction group as it would be evaluated on the network. The simulation will use blockchain state from the latest committed round.",
-        "operationId": "SimulateTransaction",
+        "operationId": "SimulateTransactions",
         "parameters": [
           {
             "name": "format",

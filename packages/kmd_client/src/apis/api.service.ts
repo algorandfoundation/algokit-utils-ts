@@ -93,12 +93,8 @@ import {
 export class KmdApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: EncodingFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
-  }
-
-  private static mediaFor(format: EncodingFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
+  private mimeTypeFor(format: EncodingFormat | 'text'): string {
+    return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain'
   }
 
   /**
@@ -107,10 +103,10 @@ export class KmdApi {
   async createWallet(body: CreateWalletRequest): Promise<PostWalletResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = CreateWalletRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -121,7 +117,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostWalletResponseMeta)
@@ -133,10 +128,10 @@ export class KmdApi {
   async deleteKey(body: DeleteKeyRequest): Promise<DeleteKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = DeleteKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -147,7 +142,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, DeleteKeyResponseMeta)
@@ -159,10 +153,10 @@ export class KmdApi {
   async deleteMultisig(body: DeleteMultisigRequest): Promise<DeleteMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = DeleteMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -173,7 +167,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, DeleteMultisigResponseMeta)
@@ -185,10 +178,10 @@ export class KmdApi {
   async exportKey(body: ExportKeyRequest): Promise<PostKeyExportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ExportKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -199,7 +192,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostKeyExportResponseMeta)
@@ -211,10 +203,10 @@ export class KmdApi {
   async exportMasterKey(body: ExportMasterKeyRequest): Promise<PostMasterKeyExportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ExportMasterKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -225,7 +217,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostMasterKeyExportResponseMeta)
@@ -237,10 +228,10 @@ export class KmdApi {
   async exportMultisig(body: ExportMultisigRequest): Promise<PostMultisigExportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ExportMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -251,7 +242,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostMultisigExportResponseMeta)
@@ -263,10 +253,10 @@ export class KmdApi {
   async generateKey(body: GenerateKeyRequest): Promise<PostKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = GenerateKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -277,7 +267,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostKeyResponseMeta)
@@ -286,7 +275,7 @@ export class KmdApi {
   async getVersion(): Promise<VersionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -295,7 +284,6 @@ export class KmdApi {
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, VersionsResponseMeta)
@@ -307,10 +295,10 @@ export class KmdApi {
   async getWalletInfo(body: WalletInfoRequest): Promise<PostWalletInfoResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = WalletInfoRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -321,7 +309,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostWalletInfoResponseMeta)
@@ -333,10 +320,10 @@ export class KmdApi {
   async importKey(body: ImportKeyRequest): Promise<PostKeyImportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ImportKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -347,7 +334,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostKeyImportResponseMeta)
@@ -359,10 +345,10 @@ export class KmdApi {
   async importMultisig(body: ImportMultisigRequest): Promise<PostMultisigImportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ImportMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -373,7 +359,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostMultisigImportResponseMeta)
@@ -385,10 +370,10 @@ export class KmdApi {
   async initWalletHandleToken(body: InitWalletHandleTokenRequest): Promise<PostWalletInitResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = InitWalletHandleTokenRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -399,7 +384,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostWalletInitResponseMeta)
@@ -411,10 +395,10 @@ export class KmdApi {
   async listKeysInWallet(body: ListKeysRequest): Promise<PostKeyListResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ListKeysRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -425,7 +409,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostKeyListResponseMeta)
@@ -437,10 +420,10 @@ export class KmdApi {
   async listMultisig(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ListMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -451,7 +434,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostMultisigListResponseMeta)
@@ -463,7 +445,7 @@ export class KmdApi {
   async listWallets(): Promise<GetWalletsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
@@ -472,7 +454,6 @@ export class KmdApi {
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return decodeJson(payload, GetWalletsResponseMeta)
@@ -484,10 +465,10 @@ export class KmdApi {
   async releaseWalletHandleToken(body: ReleaseWalletHandleTokenRequest): Promise<PostWalletReleaseResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ReleaseWalletHandleTokenRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -498,7 +479,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostWalletReleaseResponseMeta)
@@ -510,10 +490,10 @@ export class KmdApi {
   async renameWallet(body: RenameWalletRequest): Promise<PostWalletRenameResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = RenameWalletRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -524,7 +504,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostWalletRenameResponseMeta)
@@ -536,10 +515,10 @@ export class KmdApi {
   async renewWalletHandleToken(body: RenewWalletHandleTokenRequest): Promise<PostWalletRenewResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = RenewWalletHandleTokenRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -550,7 +529,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostWalletRenewResponseMeta)
@@ -562,10 +540,10 @@ export class KmdApi {
   async signMultisigProgram(body: SignProgramMultisigRequest): Promise<PostMultisigProgramSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignProgramMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -576,7 +554,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostMultisigProgramSignResponseMeta)
@@ -588,10 +565,10 @@ export class KmdApi {
   async signMultisigTransaction(body: SignMultisigRequest): Promise<PostMultisigTransactionSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -602,7 +579,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostMultisigTransactionSignResponseMeta)
@@ -614,10 +590,10 @@ export class KmdApi {
   async signProgram(body: SignProgramRequest): Promise<PostProgramSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignProgramRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -628,7 +604,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostProgramSignResponseMeta)
@@ -640,10 +615,10 @@ export class KmdApi {
   async signTransaction(body: SignTransactionRequest): Promise<PostTransactionSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignTransactionRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
@@ -654,7 +629,6 @@ export class KmdApi {
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
     return decodeJson(payload, PostTransactionSignResponseMeta)
@@ -666,7 +640,7 @@ export class KmdApi {
   async swaggerHandler(): Promise<string> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const payload = await this.httpRequest.request<string>({
       method: 'GET',
@@ -675,7 +649,6 @@ export class KmdApi {
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
     return payload

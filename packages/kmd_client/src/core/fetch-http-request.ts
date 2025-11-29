@@ -15,7 +15,7 @@ const RETRY_ERROR_CODES = [
 ]
 
 const DEFAULT_MAX_TRIES = 5
-const DEFAULT_MAX_BACKOFF_MS = 10_000
+const MAX_BACKOFF_MS = 10_000
 
 const toNumber = (value: unknown): number | undefined => {
   if (typeof value === 'number') {
@@ -50,27 +50,17 @@ const delay = async (ms: number): Promise<void> =>
     setTimeout(resolve, ms)
   })
 
-const normalizeTries = (maxRetries?: number): number => {
-  const candidate = maxRetries
-  if (typeof candidate !== 'number' || !Number.isFinite(candidate)) {
+const calculateMaxNumberOfTries = (maxRetries?: number): number => {
+  if (typeof maxRetries !== 'number' || !Number.isFinite(maxRetries)) {
     return DEFAULT_MAX_TRIES
   }
-  const rounded = Math.floor(candidate)
-  return rounded <= 1 ? 1 : rounded
-}
-
-const normalizeBackoff = (maxBackoffMs?: number): number => {
-  if (typeof maxBackoffMs !== 'number' || !Number.isFinite(maxBackoffMs)) {
-    return DEFAULT_MAX_BACKOFF_MS
-  }
-  const normalized = Math.floor(maxBackoffMs)
-  return normalized <= 0 ? 0 : normalized
+  const rounded = Math.floor(maxRetries)
+  return rounded + 1
 }
 
 export class FetchHttpRequest extends BaseHttpRequest {
   async request<T>(options: ApiRequestOptions): Promise<T> {
-    const maxTries = normalizeTries(this.config.maxRetries)
-    const maxBackoffMs = normalizeBackoff(this.config.maxBackoffMs)
+    const maxTries = calculateMaxNumberOfTries(this.config.maxRetries)
 
     let attempt = 1
     let lastError: unknown
@@ -83,7 +73,7 @@ export class FetchHttpRequest extends BaseHttpRequest {
           throw error
         }
 
-        const backoff = attempt === 1 ? 0 : Math.min(1000 * 2 ** (attempt - 1), maxBackoffMs)
+        const backoff = attempt === 1 ? 0 : Math.min(1000 * 2 ** (attempt - 1), MAX_BACKOFF_MS)
         if (backoff > 0) {
           await delay(backoff)
         }
@@ -101,7 +91,7 @@ export class FetchHttpRequest extends BaseHttpRequest {
 
     const status = extractStatus(error)
     if (status !== undefined) {
-      const retryStatuses = this.config.retryStatusCodes ?? RETRY_STATUS_CODES
+      const retryStatuses = RETRY_STATUS_CODES
       if (retryStatuses.includes(status)) {
         return true
       }
@@ -109,7 +99,7 @@ export class FetchHttpRequest extends BaseHttpRequest {
 
     const code = extractCode(error)
     if (code) {
-      const retryCodes = this.config.retryErrorCodes ?? RETRY_ERROR_CODES
+      const retryCodes = RETRY_ERROR_CODES
       if (retryCodes.includes(code)) {
         return true
       }
