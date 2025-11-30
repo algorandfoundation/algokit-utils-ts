@@ -157,13 +157,12 @@ export class ABIMethod {
     }
 
     const name = signature.slice(0, argsStart)
-    const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
-      .map((n: string) => {
-        if (argTypeIsTransaction(n as ABIMethodArgType) || argTypeIsReference(n as ABIMethodArgType)) {
-          return { type: n as ABIMethodArgType } satisfies ABIMethodArg
-        }
-        return { type: ABIType.from(n) } satisfies ABIMethodArg
-      })
+    const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)).map((n: string) => {
+      if (argTypeIsTransaction(n as ABIMethodArgType) || argTypeIsReference(n as ABIMethodArgType)) {
+        return { type: n as ABIMethodArgType } satisfies ABIMethodArg
+      }
+      return { type: ABIType.from(n) } satisfies ABIMethodArg
+    })
     const returnType = signature.slice(argsEnd + 1)
     const returns = { type: returnType === 'void' ? ('void' as const) : ABIType.from(returnType) } satisfies ABIMethodReturn
 
