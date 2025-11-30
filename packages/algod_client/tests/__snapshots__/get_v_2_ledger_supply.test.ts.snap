@@ -2,8 +2,8 @@
 
 exports[`GET v2_ledger_supply > Common Tests > Basic request and response validation 1`] = `
 {
-  "currentRound": 57490073n,
-  "onlineMoney": 4932435449098711n,
-  "totalMoney": 10123920987202653n,
+  "currentRound": 57711497n,
+  "onlineMoney": 4932435470803876n,
+  "totalMoney": 10123920607967507n,
 }
 `;

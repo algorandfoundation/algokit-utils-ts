@@ -74,6 +74,6 @@ exports[`GET v2_accounts_ADDRESS_assets_ASSET-ID > Common Tests > Basic request 
       115,
     ],
   },
-  "round": 57490072n,
+  "round": 57711496n,
 }
 `;
