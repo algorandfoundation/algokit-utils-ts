@@ -33,7 +33,7 @@ ___
 
 ### contract
 
-• **contract**: `ABIContractParams`
+• **contract**: `ContractDefinition`
 
 The ABI-0004 contract definition see https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md
 
