@@ -79,11 +79,9 @@ type WireAccessReference = {
   }
 }
 
-/**
- * Custom codec for TransactionType enum that converts to/from wire format strings
- */
 class TransactionTypeCodec extends Codec<TransactionType, string, WireString> {
   public defaultValue(): TransactionType {
+    // This ensure that we never omit the transaction type, as a transaction should never be created with this value
     return TransactionType.Unknown
   }
 
@@ -134,11 +132,6 @@ class TransactionTypeCodec extends Codec<TransactionType, string, WireString> {
       default:
         return TransactionType.Unknown
     }
-  }
-
-  public isDefaultValue(_value: TransactionType): boolean {
-    // Never omit the transaction type - it's always required
-    return false
   }
 }
 

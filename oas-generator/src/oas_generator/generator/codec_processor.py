@@ -1,4 +1,4 @@
-"""Codec expression generator for the new codec-based metadata system.
+"""Codec expression generator for the codec-based metadata system.
 
 This module generates TypeScript codec expressions from OpenAPI schema information.
 It maps field descriptors to codec singleton references or codec constructors.
@@ -10,10 +10,8 @@ from typing import Literal
 
 from oas_generator.generator.models import FieldDescriptor
 
-# Type alias for model metadata kinds
 ModelKind = Literal["object", "array", "primitive"]
 
-# Global registry tracking model kinds (populated during schema processing)
 _MODEL_KIND_REGISTRY: dict[str, ModelKind] = {}
 
 
@@ -39,11 +37,6 @@ def get_model_kind(model_name: str) -> ModelKind | None:
     return _MODEL_KIND_REGISTRY.get(model_name)
 
 
-def clear_model_registry() -> None:
-    """Clear the model kind registry (useful for testing)."""
-    _MODEL_KIND_REGISTRY.clear()
-
-
 class CodecProcessor:
     """Generates TypeScript codec expressions from field descriptors."""
 
@@ -63,7 +56,6 @@ class CodecProcessor:
             return "new RecordCodec(unknownCodec)"
 
         if field.is_array:
-            # Return singleton array codec names instead of new ArrayCodec(...)
             array_codec = CodecProcessor._get_array_codec_singleton(
                 ref_model=field.ref_model,
                 is_signed_txn=field.is_signed_txn,
@@ -162,7 +154,6 @@ class CodecProcessor:
         if inline_meta_name:
             return f"new ObjectModelCodec({inline_meta_name})"
 
-        # Primitive codecs based on flags
         if is_bytes:
             return "bytesCodec"
         if is_bigint:
@@ -178,7 +169,7 @@ class CodecProcessor:
         if ts_type:
             return CodecProcessor.infer_primitive_codec(ts_type)
 
-        # Ultimate fallback
+        # Final fallback
         return "stringCodec"
 
     @staticmethod
@@ -331,7 +322,6 @@ def get_codec_imports(has_arrays: bool = False, has_models: bool = False) -> lis
         imports.append("ArrayCodec")
 
     if has_models:
-        # Import all three specific model codec types instead of generic ModelCodec
         imports.extend([
             "ObjectModelCodec",
             "ArrayModelCodec",

@@ -43,3 +43,4 @@ A collection of random notes pop up during the migration process.
 - review the names of SignedTransactionWrapper
 - TODO: re-export transact under utils/transact folder
 - trace field at err.traces[].trace is now a typed value, rather than a map.
+- Does lmsig stand for logicMultiSignature? We use logicMultiSignature in our code, as we use multiSignature instead of msig in the Transaction type. An alternative is to use msig and lmsig, like algosdk does?

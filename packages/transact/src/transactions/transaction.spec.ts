@@ -17,17 +17,6 @@ const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7
 
 describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
-    test('should throw error when no transaction type specific field is set', () => {
-      const transaction: Transaction = {
-        type: TransactionType.Payment,
-        sender: VALID_ADDRESS_1,
-        firstValid: 1000n,
-        lastValid: 2000n,
-      }
-
-      expect(() => validateTransaction(transaction)).toThrow('No transaction type specific field is set')
-    })
-
     test('should throw error when multiple transaction type specific fields are set', () => {
       const transaction: Transaction = {
         type: TransactionType.Payment,

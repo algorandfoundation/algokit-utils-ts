@@ -1,4 +1,5 @@
 import {
+  Address,
   MAX_TX_GROUP_SIZE,
   ObjectModelCodec,
   SIGNATURE_ENCODING_INCR,
@@ -9,7 +10,6 @@ import {
   decodeMsgpack,
   encodeMsgpack,
   hash,
-  Address,
 } from '@algorandfoundation/algokit-common'
 import base32 from 'hi-base32'
 import { AppCallTransactionFields, validateAppCallTransaction } from './app-call'
@@ -206,14 +206,7 @@ export function validateTransaction(transaction: Transaction): void {
     transaction.stateProof,
   ]
 
-  // Count fields that are set (not undefined)
-  // Special case: for KeyRegistration type, allow keyRegistration field to be undefined
-  // (offline key registration has all fields optional)
   const setFieldsCount = typeFields.filter((field) => field !== undefined).length
-
-  if (setFieldsCount === 0 && transaction.type !== TransactionType.KeyRegistration) {
-    throw new Error('No transaction type specific field is set')
-  }
 
   if (setFieldsCount > 1) {
     throw new Error('Multiple transaction type specific fields set')

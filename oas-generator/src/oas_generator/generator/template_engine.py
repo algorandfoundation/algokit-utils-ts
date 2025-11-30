@@ -673,11 +673,9 @@ class OperationProcessor:
             else:
                 stringify_bigint = constants.TypeScriptType.BIGINT in ts_type_str
 
-            # Handle Address type - needs toString() for query and path params
-            # Also widen Address to accept string | Address for better ergonomics
+
             stringify_address = constants.TypeScriptType.ADDRESS in ts_type_str
             if stringify_address:
-                # Replace 'Address' with 'string | Address' to accept both types
                 ts_type_str = ts_type_str.replace(constants.TypeScriptType.ADDRESS, f"(string | {constants.TypeScriptType.ADDRESS})")
 
             location = location_candidate
