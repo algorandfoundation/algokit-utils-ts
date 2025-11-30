@@ -31,7 +31,7 @@ describe('ClientManager', () => {
 
       const response = await Promise.all(
         new Array(150).fill(0).map(async (_) => {
-          return await indexer.lookupAccountByID('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
+          return await indexer.lookupAccountById('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
         }),
       )
       expect(response.length).toBe(150)
@@ -126,7 +126,7 @@ describe('ClientManager', () => {
 
     test('Get working LocalNet indexer client', async () => {
       const indexer = ClientManager.getIndexerClient(ClientManager.getDefaultLocalNetConfig('indexer'))
-      await indexer.makeHealthCheck().do()
+      await indexer.makeHealthCheck()
     })
 
     test('Get working LocalNet kmd client', async () => {
@@ -141,7 +141,7 @@ describe('ClientManager', () => {
 
     test('Get working MainNet indexer client', async () => {
       const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('mainnet', 'indexer'))
-      await indexer.makeHealthCheck().do()
+      await indexer.makeHealthCheck()
     })
 
     test('Determine LocalNet algod client is LocalNet', async () => {

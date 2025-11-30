@@ -34,8 +34,10 @@ export * from './transactions/app-call'
 export * from './transactions/asset-config'
 export * from './transactions/asset-freeze'
 export * from './transactions/asset-transfer'
+export * from './transactions/heartbeat'
 export * from './transactions/key-registration'
 export * from './transactions/payment'
+export * from './transactions/state-proof'
 
 export {
   addressFromMultisigSignature,

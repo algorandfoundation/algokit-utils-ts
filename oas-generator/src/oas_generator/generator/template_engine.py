@@ -655,12 +655,14 @@ class OperationProcessor:
 
             # Extract parameter details
             raw_name = str(param.get("name"))
+            # Check for custom parameter rename via x-algokit-field-rename
+            canonical_param_name = param.get(constants.X_ALGOKIT_FIELD_RENAME) or raw_name
             # Always skip `format` query param - we default to JSON and don't expose format selection
             location_candidate = param.get(constants.OperationKey.IN, constants.ParamLocation.QUERY)
             if location_candidate == constants.ParamLocation.QUERY and raw_name == constants.FORMAT_PARAM_NAME:
                 # Skip format parameter entirely - always default to JSON
                 continue
-            var_name = self._sanitize_variable_name(ts_camel_case(raw_name), used_names)
+            var_name = self._sanitize_variable_name(ts_camel_case(canonical_param_name), used_names)
             used_names.add(var_name)
 
             schema = param.get("schema", {})

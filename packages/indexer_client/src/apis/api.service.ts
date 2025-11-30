@@ -51,7 +51,7 @@ export class IndexerApi {
    * Lookup an account's asset holdings, optionally for a specific ID.
    */
   async lookupAccountAppLocalStates(
-    accountId: string,
+    account: string | Address,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<ApplicationLocalStatesResponse> {
     const headers: Record<string, string> = {}
@@ -61,7 +61,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/apps-local-state',
-      path: { 'account-id': accountId },
+      path: { 'account-id': account?.toString() },
       query: {
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         'include-all': params?.includeAll,
@@ -79,7 +79,7 @@ export class IndexerApi {
    * Lookup an account's asset holdings, optionally for a specific ID.
    */
   async lookupAccountAssets(
-    accountId: string,
+    account: string | Address,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<AssetHoldingsResponse> {
     const headers: Record<string, string> = {}
@@ -89,7 +89,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/assets',
-      path: { 'account-id': accountId },
+      path: { 'account-id': account?.toString() },
       query: {
         'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
         'include-all': params?.includeAll,
@@ -107,7 +107,7 @@ export class IndexerApi {
    * Lookup account information.
    */
   async lookupAccountById(
-    accountId: string,
+    account: string | Address,
     params?: {
       round?: number | bigint
       includeAll?: boolean
@@ -121,7 +121,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}',
-      path: { 'account-id': accountId },
+      path: { 'account-id': account?.toString() },
       query: {
         round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
         'include-all': params?.includeAll,
@@ -138,7 +138,7 @@ export class IndexerApi {
    * Lookup an account's created application parameters, optionally for a specific ID.
    */
   async lookupAccountCreatedApplications(
-    accountId: string,
+    account: string | Address,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
@@ -148,7 +148,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-applications',
-      path: { 'account-id': accountId },
+      path: { 'account-id': account?.toString() },
       query: {
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         'include-all': params?.includeAll,
@@ -166,7 +166,7 @@ export class IndexerApi {
    * Lookup an account's created asset parameters, optionally for a specific ID.
    */
   async lookupAccountCreatedAssets(
-    accountId: string,
+    account: string | Address,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
@@ -176,7 +176,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-assets',
-      path: { 'account-id': accountId },
+      path: { 'account-id': account?.toString() },
       query: {
         'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
         'include-all': params?.includeAll,
@@ -194,7 +194,7 @@ export class IndexerApi {
    * Lookup account transactions. Transactions are returned newest to oldest.
    */
   async lookupAccountTransactions(
-    accountId: string,
+    account: string | Address,
     params?: {
       limit?: number
       next?: string
@@ -220,7 +220,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/transactions',
-      path: { 'account-id': accountId },
+      path: { 'account-id': account?.toString() },
       query: {
         limit: params?.limit,
         next: params?.next,
@@ -471,7 +471,7 @@ export class IndexerApi {
   /**
    * Lookup a single transaction.
    */
-  async lookupTransaction(txid: string): Promise<TransactionResponse> {
+  async lookupTransactionById(txid: string): Promise<TransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)

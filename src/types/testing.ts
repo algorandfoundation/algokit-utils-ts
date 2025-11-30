@@ -1,9 +1,9 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
+import { IndexerClient, TransactionResponse } from '@algorandfoundation/algokit-indexer-client'
 import { AddressWithSigner, Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Indexer, Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
+import { Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
@@ -20,7 +20,7 @@ export interface AlgorandTestAutomationContext {
   /** Algod client instance that will log transactions in `transactionLogger` */
   algod: AlgodClient
   /** Indexer client instance */
-  indexer: Indexer
+  indexer: IndexerClient
   /** KMD client instance */
   kmd: Kmd
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
@@ -32,7 +32,7 @@ export interface AlgorandTestAutomationContext {
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
-  waitForIndexerTransaction: (transactionId: string) => Promise<algosdk.indexerModels.TransactionResponse>
+  waitForIndexerTransaction: (transactionId: string) => Promise<TransactionResponse>
 }
 
 /**
@@ -52,7 +52,7 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** An optional algod client, if not specified then it will create one against `algodConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   algod?: AlgodClient
   /** An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
-  indexer?: Indexer
+  indexer?: IndexerClient
   /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   kmd?: Kmd
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
