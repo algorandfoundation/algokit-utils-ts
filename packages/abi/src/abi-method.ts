@@ -29,7 +29,7 @@ export type ABIMethodArg = {
 }
 
 export type ABIMethodReturn = {
-  type: ABIType | 'void'
+  type: ABIMethodReturnType
   description?: string
 }
 
@@ -57,15 +57,11 @@ export type ABIReturn =
       method: ABIMethod
       /** The raw return value as bytes.
        *
-       * This value will be empty if the method does not return a value (return type "void")
+       * This is the value from the last app call log with the first 4 bytes (the ABI return prefix) omitted.
        */
       rawReturnValue: Uint8Array
-      /** The parsed ABI return value.
-       *
-       * This value will be undefined if decoding failed or the method does not return a value (return type "void")
-       */
+      /** The parsed ABI return value. */
       returnValue: ABIValue
-      /** Any error that occurred during decoding, or undefined if decoding was successful */
       decodeError: undefined
     }
   | { rawReturnValue?: undefined; returnValue?: undefined; method: ABIMethod; decodeError: Error }

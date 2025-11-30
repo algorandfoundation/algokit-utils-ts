@@ -2,7 +2,6 @@ import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/alg
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import {
   ABI_RETURN_PREFIX,
@@ -429,7 +428,7 @@ export class AppManager {
    * ```
    */
   public static getABIReturn(confirmation: PendingTransactionResponse, method: ABIMethod | undefined): ABIReturn | undefined {
-    if (!method || !confirmation || method.returns.type === 'void') {
+    if (!method || method.returns.type === 'void') {
       return undefined
     }
 
