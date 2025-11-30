@@ -90,7 +90,7 @@ export async function populateAppCallResources(composer: TransactionComposer) {
  *
  * @param composer The Transaction Composer containing the txn group
  * @param sendParams The send params for the transaction group
- * @param additionalAtcContext Additional context used to determine how best to change the transactions in the group
+ * @param additionalContext Additional context used to determine how best to change the transactions in the group
  * @returns A new Transaction Composer with the changes applied
  *
  * @privateRemarks
@@ -100,15 +100,15 @@ export async function populateAppCallResources(composer: TransactionComposer) {
 export async function prepareGroupForSending(
   composer: TransactionComposer,
   sendParams: SendParams,
-  additionalAtcContext?: AdditionalTransactionComposerContext,
+  additionalContext?: AdditionalTransactionComposerContext,
 ) {
   const newComposer = composer.clone({
     coverAppCallInnerTransactionFees: sendParams.coverAppCallInnerTransactionFees ?? false,
     populateAppCallResources: sendParams.populateAppCallResources ?? true,
   })
 
-  if (additionalAtcContext?.maxFees) {
-    newComposer.setMaxFees(additionalAtcContext?.maxFees)
+  if (additionalContext?.maxFees) {
+    newComposer.setMaxFees(additionalContext?.maxFees)
   }
 
   await newComposer.build()
