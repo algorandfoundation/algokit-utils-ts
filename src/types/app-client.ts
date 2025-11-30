@@ -21,7 +21,6 @@ import {
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getApplicationAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Indexer, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'

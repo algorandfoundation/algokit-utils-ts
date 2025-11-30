@@ -1,7 +1,6 @@
 import { ABIType, ABIValue, Arc56Contract, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { TransactionSigner } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
