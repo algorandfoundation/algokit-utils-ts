@@ -45,7 +45,7 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L20)
+[src/types/kmd-account-manager.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L21)
 
 ## Properties
 
@@ -55,7 +55,7 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L13)
+[src/types/kmd-account-manager.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L14)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L14)
+[src/types/kmd-account-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L15)
 
 ## Methods
 
@@ -89,7 +89,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L185)
+[src/types/kmd-account-manager.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L190)
 
 ___
 
@@ -130,7 +130,7 @@ const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('accoun
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L137)
+[src/types/kmd-account-manager.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L142)
 
 ___
 
@@ -165,7 +165,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L64)
+[src/types/kmd-account-manager.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L65)
 
 ___
 
@@ -179,4 +179,4 @@ ___
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L29)
+[src/types/kmd-account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L30)

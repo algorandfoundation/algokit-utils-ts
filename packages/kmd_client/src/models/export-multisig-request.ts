@@ -5,8 +5,8 @@ import { stringCodec } from '@algorandfoundation/algokit-common'
  * APIV1POSTMultisigExportRequest is the request for `POST /v1/multisig/export`
  */
 export type ExportMultisigRequest = {
-  address?: string
-  walletHandleToken?: string
+  address: string
+  walletHandleToken: string
 }
 
 export const ExportMultisigRequestMeta: ObjectModelMetadata<ExportMultisigRequest> = {
@@ -16,13 +16,13 @@ export const ExportMultisigRequestMeta: ObjectModelMetadata<ExportMultisigReques
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

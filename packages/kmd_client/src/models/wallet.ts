@@ -4,15 +4,15 @@ import type { TxType } from './tx-type'
 import { TxTypeMeta } from './tx-type'
 
 /**
- * APIV1Wallet is the API's representation of a wallet
+ * Wallet is the API's representation of a wallet
  */
 export type Wallet = {
-  driverName?: string
-  driverVersion?: number
-  id?: string
-  mnemonicUx?: boolean
-  name?: string
-  supportedTxs?: TxType[]
+  driverName: string
+  driverVersion: number
+  id: string
+  mnemonicUx: boolean
+  name: string
+  supportedTxs: TxType[]
 }
 
 export const WalletMeta: ObjectModelMetadata<Wallet> = {
@@ -22,37 +22,37 @@ export const WalletMeta: ObjectModelMetadata<Wallet> = {
     {
       name: 'driverName',
       wireKey: 'driver_name',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'driverVersion',
       wireKey: 'driver_version',
-      optional: true,
+      optional: false,
       codec: numberCodec,
     },
     {
       name: 'id',
       wireKey: 'id',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'mnemonicUx',
       wireKey: 'mnemonic_ux',
-      optional: true,
+      optional: false,
       codec: booleanCodec,
     },
     {
       name: 'name',
       wireKey: 'name',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'supportedTxs',
       wireKey: 'supported_txs',
-      optional: true,
+      optional: false,
       codec: new ArrayCodec(new PrimitiveModelCodec(TxTypeMeta)),
     },
   ],

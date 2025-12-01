@@ -5,9 +5,9 @@ import { stringCodec } from '@algorandfoundation/algokit-common'
  * APIV1POSTKeyExportRequest is the request for `POST /v1/key/export`
  */
 export type ExportKeyRequest = {
-  address?: string
-  walletHandleToken?: string
-  walletPassword?: string
+  address: string
+  walletHandleToken: string
+  walletPassword: string
 }
 
 export const ExportKeyRequestMeta: ObjectModelMetadata<ExportKeyRequest> = {
@@ -17,19 +17,19 @@ export const ExportKeyRequestMeta: ObjectModelMetadata<ExportKeyRequest> = {
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

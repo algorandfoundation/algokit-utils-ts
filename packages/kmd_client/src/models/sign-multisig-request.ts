@@ -1,22 +1,18 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, bytesCodec, ObjectModelCodec, ArrayModelCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
-import type { Digest } from './digest'
-import { DigestMeta } from './digest'
+import { stringCodec, bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSig } from './multisig-sig'
 import { MultisigSigMeta } from './multisig-sig'
-import type { PublicKey } from './public-key'
-import { PublicKeyMeta } from './public-key'
 
 /**
  * APIV1POSTMultisigTransactionSignRequest is the request for `POST /v1/multisig/sign`
  */
 export type SignMultisigRequest = {
-  partialMultisig?: MultisigSig
-  publicKey?: PublicKey
-  signer?: Digest
-  transaction?: Uint8Array
-  walletHandleToken?: string
-  walletPassword?: string
+  partialMultisig: MultisigSig
+  publicKey: Uint8Array
+  signer: Uint8Array
+  transaction: Uint8Array
+  walletHandleToken: string
+  walletPassword: string
 }
 
 export const SignMultisigRequestMeta: ObjectModelMetadata<SignMultisigRequest> = {
@@ -26,37 +22,37 @@ export const SignMultisigRequestMeta: ObjectModelMetadata<SignMultisigRequest> =
     {
       name: 'partialMultisig',
       wireKey: 'partial_multisig',
-      optional: true,
+      optional: false,
       codec: new ObjectModelCodec(MultisigSigMeta),
     },
     {
       name: 'publicKey',
       wireKey: 'public_key',
-      optional: true,
-      codec: new PrimitiveModelCodec(PublicKeyMeta),
+      optional: false,
+      codec: bytesCodec,
     },
     {
       name: 'signer',
       wireKey: 'signer',
-      optional: true,
-      codec: new ArrayModelCodec(DigestMeta),
+      optional: false,
+      codec: bytesCodec,
     },
     {
       name: 'transaction',
       wireKey: 'transaction',
-      optional: true,
+      optional: false,
       codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

@@ -3,91 +3,85 @@ import { encodeJson, decodeJson } from '../core/model-runtime'
 import { type EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   CreateWalletRequest,
+  CreateWalletResponse,
   DeleteKeyRequest,
-  DeleteKeyResponse,
   DeleteMultisigRequest,
-  DeleteMultisigResponse,
   ExportKeyRequest,
+  ExportKeyResponse,
   ExportMasterKeyRequest,
+  ExportMasterKeyResponse,
   ExportMultisigRequest,
+  ExportMultisigResponse,
   GenerateKeyRequest,
-  GetWalletsResponse,
+  GenerateKeyResponse,
   ImportKeyRequest,
+  ImportKeyResponse,
   ImportMultisigRequest,
+  ImportMultisigResponse,
   InitWalletHandleTokenRequest,
+  InitWalletHandleTokenResponse,
   ListKeysRequest,
+  ListKeysResponse,
   ListMultisigRequest,
-  PostKeyExportResponse,
-  PostKeyImportResponse,
-  PostKeyListResponse,
-  PostKeyResponse,
-  PostMasterKeyExportResponse,
-  PostMultisigExportResponse,
-  PostMultisigImportResponse,
-  PostMultisigListResponse,
-  PostMultisigProgramSignResponse,
-  PostMultisigTransactionSignResponse,
-  PostProgramSignResponse,
-  PostTransactionSignResponse,
-  PostWalletInfoResponse,
-  PostWalletInitResponse,
-  PostWalletReleaseResponse,
-  PostWalletRenameResponse,
-  PostWalletRenewResponse,
-  PostWalletResponse,
+  ListMultisigResponse,
+  ListWalletsResponse,
   ReleaseWalletHandleTokenRequest,
   RenameWalletRequest,
+  RenameWalletResponse,
   RenewWalletHandleTokenRequest,
+  RenewWalletHandleTokenResponse,
   SignMultisigRequest,
+  SignMultisigResponse,
   SignProgramMultisigRequest,
+  SignProgramMultisigResponse,
   SignProgramRequest,
+  SignProgramResponse,
   SignTransactionRequest,
+  SignTransactionResponse,
   VersionsResponse,
   WalletInfoRequest,
+  WalletInfoResponse,
 } from '../models/index'
 import {
   CreateWalletRequestMeta,
+  CreateWalletResponseMeta,
   DeleteKeyRequestMeta,
-  DeleteKeyResponseMeta,
   DeleteMultisigRequestMeta,
-  DeleteMultisigResponseMeta,
   ExportKeyRequestMeta,
+  ExportKeyResponseMeta,
   ExportMasterKeyRequestMeta,
+  ExportMasterKeyResponseMeta,
   ExportMultisigRequestMeta,
+  ExportMultisigResponseMeta,
   GenerateKeyRequestMeta,
-  GetWalletsResponseMeta,
+  GenerateKeyResponseMeta,
   ImportKeyRequestMeta,
+  ImportKeyResponseMeta,
   ImportMultisigRequestMeta,
+  ImportMultisigResponseMeta,
   InitWalletHandleTokenRequestMeta,
+  InitWalletHandleTokenResponseMeta,
   ListKeysRequestMeta,
+  ListKeysResponseMeta,
   ListMultisigRequestMeta,
-  PostKeyExportResponseMeta,
-  PostKeyImportResponseMeta,
-  PostKeyListResponseMeta,
-  PostKeyResponseMeta,
-  PostMasterKeyExportResponseMeta,
-  PostMultisigExportResponseMeta,
-  PostMultisigImportResponseMeta,
-  PostMultisigListResponseMeta,
-  PostMultisigProgramSignResponseMeta,
-  PostMultisigTransactionSignResponseMeta,
-  PostProgramSignResponseMeta,
-  PostTransactionSignResponseMeta,
-  PostWalletInfoResponseMeta,
-  PostWalletInitResponseMeta,
-  PostWalletReleaseResponseMeta,
-  PostWalletRenameResponseMeta,
-  PostWalletRenewResponseMeta,
-  PostWalletResponseMeta,
+  ListMultisigResponseMeta,
+  ListWalletsResponseMeta,
   ReleaseWalletHandleTokenRequestMeta,
   RenameWalletRequestMeta,
+  RenameWalletResponseMeta,
   RenewWalletHandleTokenRequestMeta,
+  RenewWalletHandleTokenResponseMeta,
   SignMultisigRequestMeta,
+  SignMultisigResponseMeta,
   SignProgramMultisigRequestMeta,
+  SignProgramMultisigResponseMeta,
   SignProgramRequestMeta,
+  SignProgramResponseMeta,
   SignTransactionRequestMeta,
+  SignTransactionResponseMeta,
   VersionsResponseMeta,
   WalletInfoRequestMeta,
+  WalletInfoResponseMeta,
 } from '../models/index'
 
 export class KmdApi {
@@ -100,7 +94,7 @@ export class KmdApi {
   /**
    * Create a new wallet (collection of keys) with the given parameters.
    */
-  async createWallet(body: CreateWalletRequest): Promise<PostWalletResponse> {
+  private async _createWallet(body: CreateWalletRequest): Promise<CreateWalletResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -119,13 +113,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostWalletResponseMeta)
+    return decodeJson(payload, CreateWalletResponseMeta)
   }
 
   /**
    * Deletes the key with the passed public key from the wallet.
    */
-  async deleteKey(body: DeleteKeyRequest): Promise<DeleteKeyResponse> {
+  async deleteKey(body: DeleteKeyRequest): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -135,7 +129,7 @@ export class KmdApi {
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
+    await this.httpRequest.request<void>({
       method: 'DELETE',
       url: '/v1/key',
       path: {},
@@ -143,14 +137,12 @@ export class KmdApi {
       headers,
       body: serializedBody,
     })
-
-    return decodeJson(payload, DeleteKeyResponseMeta)
   }
 
   /**
    * Deletes multisig preimage information for the passed address from the wallet.
    */
-  async deleteMultisig(body: DeleteMultisigRequest): Promise<DeleteMultisigResponse> {
+  async deleteMultisig(body: DeleteMultisigRequest): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -160,7 +152,7 @@ export class KmdApi {
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
+    await this.httpRequest.request<void>({
       method: 'DELETE',
       url: '/v1/multisig',
       path: {},
@@ -168,14 +160,12 @@ export class KmdApi {
       headers,
       body: serializedBody,
     })
-
-    return decodeJson(payload, DeleteMultisigResponseMeta)
   }
 
   /**
    * Export the secret key associated with the passed public key.
    */
-  async exportKey(body: ExportKeyRequest): Promise<PostKeyExportResponse> {
+  async exportKey(body: ExportKeyRequest): Promise<ExportKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -194,13 +184,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostKeyExportResponseMeta)
+    return decodeJson(payload, ExportKeyResponseMeta)
   }
 
   /**
    * Export the master derivation key from the wallet. This key is a master "backup" key for the underlying wallet. With it, you can regenerate all of the wallets that have been generated with this wallet's `POST /v1/key` endpoint. This key will not allow you to recover keys imported from other wallets, however.
    */
-  async exportMasterKey(body: ExportMasterKeyRequest): Promise<PostMasterKeyExportResponse> {
+  async exportMasterKey(body: ExportMasterKeyRequest): Promise<ExportMasterKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -219,13 +209,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostMasterKeyExportResponseMeta)
+    return decodeJson(payload, ExportMasterKeyResponseMeta)
   }
 
   /**
    * Given a multisig address whose preimage this wallet stores, returns the information used to generate the address, including public keys, threshold, and multisig version.
    */
-  async exportMultisig(body: ExportMultisigRequest): Promise<PostMultisigExportResponse> {
+  async exportMultisig(body: ExportMultisigRequest): Promise<ExportMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -244,13 +234,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostMultisigExportResponseMeta)
+    return decodeJson(payload, ExportMultisigResponseMeta)
   }
 
   /**
    * Generates the next key in the deterministic key sequence (as determined by the master derivation key) and adds it to the wallet, returning the public key.
    */
-  async generateKey(body: GenerateKeyRequest): Promise<PostKeyResponse> {
+  async generateKey(body: GenerateKeyRequest): Promise<GenerateKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -269,7 +259,7 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostKeyResponseMeta)
+    return decodeJson(payload, GenerateKeyResponseMeta)
   }
 
   async getVersion(): Promise<VersionsResponse> {
@@ -292,7 +282,7 @@ export class KmdApi {
   /**
    * Returns information about the wallet associated with the passed wallet handle token. Additionally returns expiration information about the token itself.
    */
-  async getWalletInfo(body: WalletInfoRequest): Promise<PostWalletInfoResponse> {
+  async getWalletInfo(body: WalletInfoRequest): Promise<WalletInfoResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -311,13 +301,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostWalletInfoResponseMeta)
+    return decodeJson(payload, WalletInfoResponseMeta)
   }
 
   /**
    * Import an externally generated key into the wallet. Note that if you wish to back up the imported key, you must do so by backing up the entire wallet database, because imported keys were not derived from the wallet's master derivation key.
    */
-  async importKey(body: ImportKeyRequest): Promise<PostKeyImportResponse> {
+  async importKey(body: ImportKeyRequest): Promise<ImportKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -336,13 +326,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostKeyImportResponseMeta)
+    return decodeJson(payload, ImportKeyResponseMeta)
   }
 
   /**
    * Generates a multisig account from the passed public keys array and multisig metadata, and stores all of this in the wallet.
    */
-  async importMultisig(body: ImportMultisigRequest): Promise<PostMultisigImportResponse> {
+  async importMultisig(body: ImportMultisigRequest): Promise<ImportMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -361,13 +351,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostMultisigImportResponseMeta)
+    return decodeJson(payload, ImportMultisigResponseMeta)
   }
 
   /**
    * Unlock the wallet and return a wallet handle token that can be used for subsequent operations. These tokens expire periodically and must be renewed. You can `POST` the token to `/v1/wallet/info` to see how much time remains until expiration, and renew it with `/v1/wallet/renew`. When you're done, you can invalidate the token with `/v1/wallet/release`.
    */
-  async initWalletHandleToken(body: InitWalletHandleTokenRequest): Promise<PostWalletInitResponse> {
+  async initWalletHandle(body: InitWalletHandleTokenRequest): Promise<InitWalletHandleTokenResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -386,13 +376,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostWalletInitResponseMeta)
+    return decodeJson(payload, InitWalletHandleTokenResponseMeta)
   }
 
   /**
    * Lists all of the public keys in this wallet. All of them have a stored private key.
    */
-  async listKeysInWallet(body: ListKeysRequest): Promise<PostKeyListResponse> {
+  async listKeysInWallet(body: ListKeysRequest): Promise<ListKeysResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -411,13 +401,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostKeyListResponseMeta)
+    return decodeJson(payload, ListKeysResponseMeta)
   }
 
   /**
    * Lists all of the multisig accounts whose preimages this wallet stores
    */
-  async listMultisig(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
+  async listMultisig(body: ListMultisigRequest): Promise<ListMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -436,13 +426,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostMultisigListResponseMeta)
+    return decodeJson(payload, ListMultisigResponseMeta)
   }
 
   /**
    * Lists all of the wallets that kmd is aware of.
    */
-  async listWallets(): Promise<GetWalletsResponse> {
+  async listWallets(): Promise<ListWalletsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -456,13 +446,13 @@ export class KmdApi {
       body: undefined,
     })
 
-    return decodeJson(payload, GetWalletsResponseMeta)
+    return decodeJson(payload, ListWalletsResponseMeta)
   }
 
   /**
    * Invalidate the passed wallet handle token, making it invalid for use in subsequent requests.
    */
-  async releaseWalletHandleToken(body: ReleaseWalletHandleTokenRequest): Promise<PostWalletReleaseResponse> {
+  async releaseWalletHandleToken(body: ReleaseWalletHandleTokenRequest): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -472,7 +462,7 @@ export class KmdApi {
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
+    await this.httpRequest.request<void>({
       method: 'POST',
       url: '/v1/wallet/release',
       path: {},
@@ -480,14 +470,12 @@ export class KmdApi {
       headers,
       body: serializedBody,
     })
-
-    return decodeJson(payload, PostWalletReleaseResponseMeta)
   }
 
   /**
    * Rename the underlying wallet to something else
    */
-  async renameWallet(body: RenameWalletRequest): Promise<PostWalletRenameResponse> {
+  async renameWallet(body: RenameWalletRequest): Promise<RenameWalletResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -506,13 +494,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostWalletRenameResponseMeta)
+    return decodeJson(payload, RenameWalletResponseMeta)
   }
 
   /**
    * Renew a wallet handle token, increasing its expiration duration to its initial value
    */
-  async renewWalletHandleToken(body: RenewWalletHandleTokenRequest): Promise<PostWalletRenewResponse> {
+  async renewWalletHandleToken(body: RenewWalletHandleTokenRequest): Promise<RenewWalletHandleTokenResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -531,13 +519,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostWalletRenewResponseMeta)
+    return decodeJson(payload, RenewWalletHandleTokenResponseMeta)
   }
 
   /**
    * Start a multisig signature, or add a signature to a partially completed multisig signature object.
    */
-  async signMultisigProgram(body: SignProgramMultisigRequest): Promise<PostMultisigProgramSignResponse> {
+  async signMultisigProgram(body: SignProgramMultisigRequest): Promise<SignProgramMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -556,13 +544,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostMultisigProgramSignResponseMeta)
+    return decodeJson(payload, SignProgramMultisigResponseMeta)
   }
 
   /**
    * Start a multisig signature, or add a signature to a partially completed multisig signature object.
    */
-  async signMultisigTransaction(body: SignMultisigRequest): Promise<PostMultisigTransactionSignResponse> {
+  async signMultisigTransaction(body: SignMultisigRequest): Promise<SignMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -581,13 +569,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostMultisigTransactionSignResponseMeta)
+    return decodeJson(payload, SignMultisigResponseMeta)
   }
 
   /**
    * Signs the passed program with a key from the wallet, determined by the account named in the request.
    */
-  async signProgram(body: SignProgramRequest): Promise<PostProgramSignResponse> {
+  async signProgram(body: SignProgramRequest): Promise<SignProgramResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -606,13 +594,13 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostProgramSignResponseMeta)
+    return decodeJson(payload, SignProgramResponseMeta)
   }
 
   /**
    * Signs the passed transaction with a key from the wallet, determined by the sender encoded in the transaction.
    */
-  async signTransaction(body: SignTransactionRequest): Promise<PostTransactionSignResponse> {
+  async signTransaction(body: SignTransactionRequest): Promise<SignTransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -631,26 +619,17 @@ export class KmdApi {
       body: serializedBody,
     })
 
-    return decodeJson(payload, PostTransactionSignResponseMeta)
+    return decodeJson(payload, SignTransactionResponseMeta)
   }
 
   /**
-   * Returns the entire swagger spec in json.
+   * Create a new wallet (collection of keys) with the given parameters.
    */
-  async swaggerHandler(): Promise<string> {
-    const headers: Record<string, string> = {}
-    const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = this.mimeTypeFor(responseFormat)
-
-    const payload = await this.httpRequest.request<string>({
-      method: 'GET',
-      url: '/swagger.json',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-    })
-
-    return payload
+  async createWallet(body: CreateWalletRequest): Promise<CreateWalletResponse> {
+    const requestBody = {
+      ...body,
+      walletDriverName: body.walletDriverName ?? 'sqlite',
+    }
+    return await this._createWallet(requestBody)
   }
 }

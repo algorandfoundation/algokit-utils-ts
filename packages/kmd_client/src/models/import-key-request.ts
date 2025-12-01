@@ -5,8 +5,8 @@ import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
  * APIV1POSTKeyImportRequest is the request for `POST /v1/key/import`
  */
 export type ImportKeyRequest = {
-  privateKey?: Uint8Array
-  walletHandleToken?: string
+  privateKey: Uint8Array
+  walletHandleToken: string
 }
 
 export const ImportKeyRequestMeta: ObjectModelMetadata<ImportKeyRequest> = {
@@ -16,13 +16,13 @@ export const ImportKeyRequestMeta: ObjectModelMetadata<ImportKeyRequest> = {
     {
       name: 'privateKey',
       wireKey: 'private_key',
-      optional: true,
+      optional: false,
       codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

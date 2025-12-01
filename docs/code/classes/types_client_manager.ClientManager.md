@@ -101,7 +101,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 #### Defined in
 
-[src/types/client-manager.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L74)
+[src/types/client-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L73)
 
 ## Properties
 
@@ -111,7 +111,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 #### Defined in
 
-[src/types/client-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L49)
+[src/types/client-manager.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L48)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L52)
+[src/types/client-manager.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L51)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L125)
+[src/types/client-manager.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L124)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L50)
+[src/types/client-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L49)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[src/types/client-manager.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L51)
+[src/types/client-manager.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L50)
 
 ## Accessors
 
@@ -169,7 +169,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L93)
+[src/types/client-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L92)
 
 ___
 
@@ -191,7 +191,7 @@ Error if no Indexer client is configured
 
 #### Defined in
 
-[src/types/client-manager.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L102)
+[src/types/client-manager.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L101)
 
 ___
 
@@ -209,7 +209,7 @@ The Indexer client or `undefined`
 
 #### Defined in
 
-[src/types/client-manager.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L111)
+[src/types/client-manager.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L110)
 
 ___
 
@@ -231,7 +231,7 @@ Error if no KMD client is configured
 
 #### Defined in
 
-[src/types/client-manager.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L120)
+[src/types/client-manager.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L119)
 
 ## Methods
 
@@ -276,7 +276,7 @@ const appClient = clientManager.getAppClientByCreatorAndName({
 
 #### Defined in
 
-[src/types/client-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L284)
+[src/types/client-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L283)
 
 ___
 
@@ -316,7 +316,7 @@ const appClient = clientManager.getAppClientById({
 
 #### Defined in
 
-[src/types/client-manager.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L307)
+[src/types/client-manager.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L306)
 
 ___
 
@@ -359,7 +359,7 @@ const appClient = clientManager.getAppClientByNetwork({
 
 #### Defined in
 
-[src/types/client-manager.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L330)
+[src/types/client-manager.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L329)
 
 ___
 
@@ -413,7 +413,7 @@ const factory = clientManager.getAppFactory({
 
 #### Defined in
 
-[src/types/client-manager.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L261)
+[src/types/client-manager.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L260)
 
 ___
 
@@ -450,7 +450,7 @@ const client = clientManager.getTestNetDispenser(
 
 #### Defined in
 
-[src/types/client-manager.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L215)
+[src/types/client-manager.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L214)
 
 ___
 
@@ -486,7 +486,7 @@ const client = clientManager.getTestNetDispenserFromEnvironment(
 
 #### Defined in
 
-[src/types/client-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L234)
+[src/types/client-manager.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L233)
 
 ___
 
@@ -544,7 +544,7 @@ const appClient = clientManager.getTypedAppClientByCreatorAndName(MyContractClie
 
 #### Defined in
 
-[src/types/client-manager.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L358)
+[src/types/client-manager.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L357)
 
 ___
 
@@ -590,7 +590,7 @@ const appClient = clientManager.getTypedAppClientById(MyContractClient, {
 
 #### Defined in
 
-[src/types/client-manager.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L382)
+[src/types/client-manager.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L381)
 
 ___
 
@@ -637,7 +637,7 @@ const appClient = clientManager.getTypedAppClientByNetwork(MyContractClient, {
 
 #### Defined in
 
-[src/types/client-manager.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L408)
+[src/types/client-manager.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L407)
 
 ___
 
@@ -683,7 +683,7 @@ const appFactory = clientManager.getTypedAppFactory(MyContractClient, {
 
 #### Defined in
 
-[src/types/client-manager.ts:431](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L431)
+[src/types/client-manager.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L430)
 
 ___
 
@@ -707,7 +707,7 @@ const isLocalNet = await clientManager.isLocalNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L171)
+[src/types/client-manager.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L170)
 
 ___
 
@@ -731,7 +731,7 @@ const isMainNet = await clientManager.isMainNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L195)
+[src/types/client-manager.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L194)
 
 ___
 
@@ -755,7 +755,7 @@ const isTestNet = await clientManager.isTestNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L183)
+[src/types/client-manager.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L182)
 
 ___
 
@@ -780,7 +780,7 @@ const genesisId = network.genesisId
 
 #### Defined in
 
-[src/types/client-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L135)
+[src/types/client-manager.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L134)
 
 ___
 
@@ -810,7 +810,7 @@ const isLocalNet = ClientManager.genesisIdIsLocalNet('testnet-v1.0')
 
 #### Defined in
 
-[src/types/client-manager.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L159)
+[src/types/client-manager.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L158)
 
 ___
 
@@ -841,7 +841,7 @@ const config = ClientManager.getAlgoNodeConfig('testnet', 'algod')
 
 #### Defined in
 
-[src/types/client-manager.ts:545](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L545)
+[src/types/client-manager.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L544)
 
 ___
 
@@ -886,7 +886,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:590](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L590)
+[src/types/client-manager.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L589)
 
 ___
 
@@ -912,7 +912,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:611](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L611)
+[src/types/client-manager.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L610)
 
 ___
 
@@ -942,7 +942,7 @@ const config = ClientManager.getAlgodConfigFromEnvironment()
 
 #### Defined in
 
-[src/types/client-manager.ts:492](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L492)
+[src/types/client-manager.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L491)
 
 ___
 
@@ -975,7 +975,7 @@ const config = ClientManager.getConfigFromEnvironmentOrLocalNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L456)
+[src/types/client-manager.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L455)
 
 ___
 
@@ -1005,7 +1005,7 @@ const config = ClientManager.getDefaultLocalNetConfig('algod')
 
 #### Defined in
 
-[src/types/client-manager.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L561)
+[src/types/client-manager.ts:560](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L560)
 
 ___
 
@@ -1050,7 +1050,7 @@ The Indexer client
 
 #### Defined in
 
-[src/types/client-manager.ts:636](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L636)
+[src/types/client-manager.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L635)
 
 ___
 
@@ -1076,7 +1076,7 @@ The Indexer client
 
 #### Defined in
 
-[src/types/client-manager.ts:658](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L658)
+[src/types/client-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L657)
 
 ___
 
@@ -1106,7 +1106,7 @@ const config = ClientManager.getIndexerConfigFromEnvironment()
 
 #### Defined in
 
-[src/types/client-manager.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L519)
+[src/types/client-manager.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L518)
 
 ___
 
@@ -1138,7 +1138,7 @@ The KMD client
 
 #### Defined in
 
-[src/types/client-manager.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L674)
+[src/types/client-manager.ts:673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L673)
 
 ___
 
@@ -1163,4 +1163,4 @@ The KMD client
 
 #### Defined in
 
-[src/types/client-manager.ts:689](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L689)
+[src/types/client-manager.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L693)

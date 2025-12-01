@@ -1,13 +1,11 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, bytesCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
-import type { PublicKey } from './public-key'
-import { PublicKeyMeta } from './public-key'
+import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTTransactionSignRequest is the request for `POST /v1/transaction/sign`
  */
 export type SignTransactionRequest = {
-  publicKey?: PublicKey
+  publicKey: Uint8Array
 
   /**
    * Base64 encoding of msgpack encoding of a `Transaction` object
@@ -15,9 +13,9 @@ export type SignTransactionRequest = {
    * in that case, the field `txn` / `Transaction` of the
    * generated `SignedTxn` object needs to be used
    */
-  transaction?: Uint8Array
-  walletHandleToken?: string
-  walletPassword?: string
+  transaction: Uint8Array
+  walletHandleToken: string
+  walletPassword: string
 }
 
 export const SignTransactionRequestMeta: ObjectModelMetadata<SignTransactionRequest> = {
@@ -27,25 +25,25 @@ export const SignTransactionRequestMeta: ObjectModelMetadata<SignTransactionRequ
     {
       name: 'publicKey',
       wireKey: 'public_key',
-      optional: true,
-      codec: new PrimitiveModelCodec(PublicKeyMeta),
+      optional: false,
+      codec: bytesCodec,
     },
     {
       name: 'transaction',
       wireKey: 'transaction',
-      optional: true,
+      optional: false,
       codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

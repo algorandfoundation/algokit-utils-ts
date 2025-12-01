@@ -248,9 +248,54 @@ def ts_type(schema: Schema | None, schemas: Schemas | None = None) -> str:
 
     if "$ref" in schema:
         ref_name = _extract_ref_name(schema["$ref"])
+
+        # Check if the referenced schema is an array of uint8 (should be inlined as Uint8Array)
+        if schemas and ref_name in schemas:
+            ref_schema = schemas[ref_name]
+            if is_array_of_uint8_schema(ref_schema, schemas):
+                return TypeScriptType.UINT8ARRAY
+
         return ts_pascal_case(ref_name)
 
     return _ts_type_inner(schema, schemas)
+
+
+def is_array_of_uint8_schema(schema: Schema, schemas: Schemas | None = None) -> bool:
+    """Check if a schema represents an array of uint8 (should be inlined as Uint8Array).
+
+    This detects schemas like:
+    {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "format": "uint8"
+      }
+    }
+
+    Or schemas that are just a $ref to such a schema.
+    """
+    if not isinstance(schema, dict):
+        return False
+
+    # Check if this is a $ref to another schema
+    if "$ref" in schema and schemas:
+        ref_name = _extract_ref_name(schema["$ref"])
+        if ref_name in schemas:
+            # Recursively check the referenced schema
+            return is_array_of_uint8_schema(schemas[ref_name], schemas)
+
+    if schema.get(SchemaKey.TYPE) != "array":
+        return False
+
+    items = schema.get(SchemaKey.ITEMS)
+    if not isinstance(items, dict):
+        return False
+
+    # Check if items are integers with uint8 format
+    return (
+        items.get(SchemaKey.TYPE) == "integer" and
+        items.get(SchemaKey.FORMAT) == "uint8"
+    )
 
 
 def _ts_type_inner(schema: Schema, schemas: Schemas | None) -> str:

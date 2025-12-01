@@ -5,9 +5,9 @@ import { stringCodec } from '@algorandfoundation/algokit-common'
  * APIV1DELETEKeyRequest is the request for `DELETE /v1/key`
  */
 export type DeleteKeyRequest = {
-  address?: string
-  walletHandleToken?: string
-  walletPassword?: string
+  address: string
+  walletHandleToken: string
+  walletPassword: string
 }
 
 export const DeleteKeyRequestMeta: ObjectModelMetadata<DeleteKeyRequest> = {
@@ -17,19 +17,19 @@ export const DeleteKeyRequestMeta: ObjectModelMetadata<DeleteKeyRequest> = {
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

@@ -1,17 +1,13 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
-import type { PublicKey } from './public-key'
-import { PublicKeyMeta } from './public-key'
-import type { Signature } from './signature'
-import { SignatureMeta } from './signature'
+import { bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * MultisigSubsig is a struct that holds a pair of public key and signatures
  * signatures may be empty
  */
 export type MultisigSubsig = {
-  key?: PublicKey
-  sig?: Signature
+  key: Uint8Array
+  sig: Uint8Array
 }
 
 export const MultisigSubsigMeta: ObjectModelMetadata<MultisigSubsig> = {
@@ -21,14 +17,14 @@ export const MultisigSubsigMeta: ObjectModelMetadata<MultisigSubsig> = {
     {
       name: 'key',
       wireKey: 'Key',
-      optional: true,
-      codec: new PrimitiveModelCodec(PublicKeyMeta),
+      optional: false,
+      codec: bytesCodec,
     },
     {
       name: 'sig',
       wireKey: 'Sig',
-      optional: true,
-      codec: new PrimitiveModelCodec(SignatureMeta),
+      optional: false,
+      codec: bytesCodec,
     },
   ],
 }
