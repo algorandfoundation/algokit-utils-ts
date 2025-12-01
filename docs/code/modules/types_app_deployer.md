@@ -32,7 +32,7 @@ The parameters to idempotently deploy an app
 
 #### Defined in
 
-[src/types/app-deployer.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L42)
+[src/types/app-deployer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L41)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L102)
+[src/types/app-deployer.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L101)
 
 ___
 
@@ -54,7 +54,7 @@ Params to specify a delete method call for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L39)
+[src/types/app-deployer.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L38)
 
 ___
 
@@ -66,7 +66,7 @@ Params to specify a transaction for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L37)
+[src/types/app-deployer.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L36)
 
 ___
 
@@ -78,7 +78,7 @@ Params to specify an update method call for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L35)
+[src/types/app-deployer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L34)
 
 ___
 
@@ -90,4 +90,4 @@ Params to specify an update transaction for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L33)
+[src/types/app-deployer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L32)

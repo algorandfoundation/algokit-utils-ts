@@ -36,4 +36,4 @@ Interface to identify a typed factory that can be used to create and deploy an a
 
 #### Defined in
 
-[src/types/client-manager.ts:707](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L707)
+[src/types/client-manager.ts:709](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L709)

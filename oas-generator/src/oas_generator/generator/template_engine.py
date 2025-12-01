@@ -528,7 +528,6 @@ class OperationProcessor:
   async getTransactionParams(): Promise<SuggestedParams> {
     return await this.suggestedParams();
   }'''
-
             simulate_raw_transactions_method = '''/**
    * Simulate an encoded signed transaction or array of encoded signed transactions.
    */
@@ -545,6 +544,18 @@ class OperationProcessor:
 
             custom_methods = [send_raw_transaction_method, get_application_box_by_name_method, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
 
+        if service_class_name == "IndexerApi":
+            get_application_box_by_name_method = '''/**
+   * Given an application ID and box name, it returns the round, box name, and value.
+   */
+  async lookupApplicationBoxByIdAndName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
+    const name = `b64:${Buffer.from(boxName).toString('base64')}`;
+    return this._lookupApplicationBoxByIdAndName(applicationId, { name });
+  }
+'''
+
+            custom_methods = [get_application_box_by_name_method]
+
         return custom_imports, custom_methods
 
     def _get_private_methods(self, service_class_name: str) -> set[str]:
@@ -556,7 +567,9 @@ class OperationProcessor:
                 "GetApplicationBoxByName", # Wrapped by custom method
                 "TransactionParams" # Wrapped by custom method
             },
-            "IndexerApi": set(),  # No private methods by default
+            "IndexerApi": {
+                "lookupApplicationBoxByIDAndName" # Wrapped by custom method
+            },
             "KmdApi": set(),  # No private methods by default
         }
 
@@ -668,17 +681,13 @@ class OperationProcessor:
             schema = param.get("schema", {})
             ts_type_str = ts_type(schema, schemas)
 
-            # Handle bigint ergonomics
+            # Allow both number and bigint inputs for ergonomics
             if ts_type_str == constants.TypeScriptType.BIGINT:
                 ts_type_str = constants.TypeScriptType.NUMBER_OR_BIGINT
-                stringify_bigint = True
-            else:
-                stringify_bigint = constants.TypeScriptType.BIGINT in ts_type_str
 
-
-            stringify_address = constants.TypeScriptType.ADDRESS in ts_type_str
-            if stringify_address:
-                ts_type_str = ts_type_str.replace(constants.TypeScriptType.ADDRESS, f"(string | {constants.TypeScriptType.ADDRESS})")
+            # Allow both string and Address inputs for ergonomics
+            if constants.TypeScriptType.ADDRESS in ts_type_str:
+                ts_type_str = ts_type_str.replace(constants.TypeScriptType.ADDRESS, f"string | {constants.TypeScriptType.ADDRESS}")
 
             location = location_candidate
             required = param.get(constants.SchemaKey.REQUIRED, False) or location == constants.ParamLocation.PATH
@@ -691,8 +700,6 @@ class OperationProcessor:
                     required=required,
                     ts_type=ts_type_str,
                     description=param.get(constants.OperationKey.DESCRIPTION),
-                    stringify_bigint=stringify_bigint,
-                    stringify_address=stringify_address,
                 )
             )
 

@@ -89,10 +89,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{address}/applications/{application-id}',
-      path: {
-        address: address?.toString(),
-        'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId,
-      },
+      path: { address: address, 'application-id': applicationId },
       query: {},
       headers,
       body: undefined,
@@ -112,7 +109,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{address}/assets/{asset-id}',
-      path: { address: address?.toString(), 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
+      path: { address: address, 'asset-id': assetId },
       query: {},
       headers,
       body: undefined,
@@ -132,7 +129,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{address}',
-      path: { address: address?.toString() },
+      path: { address: address },
       query: { exclude: params?.exclude },
       headers,
       body: undefined,
@@ -152,7 +149,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/box',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: { name: params?.name },
       headers,
       body: undefined,
@@ -172,7 +169,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: { max: params?.max },
       headers,
       body: undefined,
@@ -192,7 +189,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: {},
       headers,
       body: undefined,
@@ -212,7 +209,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}',
-      path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
+      path: { 'asset-id': assetId },
       query: {},
       headers,
       body: undefined,
@@ -229,7 +226,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Uint8Array>({
       method: 'GET',
       url: '/v2/blocks/{round}',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: { 'header-only': params?.headerOnly, format: 'msgpack' },
       headers,
       body: undefined,
@@ -246,7 +243,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/hash',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: {},
       headers,
       body: undefined,
@@ -283,7 +280,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/txids',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: {},
       headers,
       body: undefined,
@@ -323,7 +320,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Uint8Array>({
       method: 'GET',
       url: '/v2/deltas/{round}',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: { format: 'msgpack' },
       headers,
       body: undefined,
@@ -360,7 +357,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/lightheader/proof',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: {},
       headers,
       body: undefined,
@@ -400,7 +397,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Uint8Array>({
       method: 'GET',
       url: '/v2/accounts/{address}/transactions/pending',
-      path: { address: address?.toString() },
+      path: { address: address },
       query: { max: params?.max, format: 'msgpack' },
       headers,
       body: undefined,
@@ -432,7 +429,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/stateproofs/{round}',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: {},
       headers,
       body: undefined,
@@ -506,7 +503,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Uint8Array>({
       method: 'GET',
       url: '/v2/deltas/{round}/txn/group',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: { format: 'msgpack' },
       headers,
       body: undefined,
@@ -517,7 +514,7 @@ export class AlgodApi {
 
   async getTransactionProof(
     round: number | bigint,
-    txid: string,
+    txId: string,
     params?: { hashtype?: 'sha512_256' | 'sha256' },
   ): Promise<TransactionProof> {
     const headers: Record<string, string> = {}
@@ -527,7 +524,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round}/transactions/{txid}/proof',
-      path: { round: typeof round === 'bigint' ? round.toString() : round, txid: txid },
+      path: { round: round, txid: txId },
       query: { hashtype: params?.hashtype },
       headers,
       body: undefined,
@@ -578,7 +575,7 @@ export class AlgodApi {
    * - transaction removed from pool due to error (committed round = 0, pool error != "")
    * Or the transaction may have happened sufficiently long ago that the node no longer remembers it, and this will return an error.
    */
-  async pendingTransactionInformation(txid: string): Promise<PendingTransactionResponse> {
+  async pendingTransactionInformation(txId: string): Promise<PendingTransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -586,7 +583,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Uint8Array>({
       method: 'GET',
       url: '/v2/transactions/pending/{txid}',
-      path: { txid: txid },
+      path: { txid: txId },
       query: { format: 'msgpack' },
       headers,
       body: undefined,
@@ -645,7 +642,7 @@ export class AlgodApi {
     await this.httpRequest.request<void>({
       method: 'POST',
       url: '/v2/ledger/sync/{round}',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: {},
       headers,
       body: undefined,
@@ -685,7 +682,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/status/wait-for-block-after/{round}',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
+      path: { round: round },
       query: {},
       headers,
       body: undefined,

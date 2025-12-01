@@ -104,12 +104,12 @@ export class {{ service_class_name }} {
       url: '{{ op.path }}',
       path: {
 {%- for p in op.pathParameters %}
-        '{{ p.name }}': {% if p.stringifyAddress %}{{ p.varName }}?.toString(){% elif p.stringifyBigInt %}(typeof {{ p.varName }} === 'bigint' ? {{ p.varName }}.toString() : {{ p.varName }}){% else %}{{ p.varName }}{% endif %},
+        '{{ p.name }}': {{ p.varName }},
 {%- endfor %}
       },
       query: {
 {%- for p in query_params %}
-        '{{ p.name }}': {% if p.stringifyAddress %}params?.{{ p.varName }}?.toString(){% elif p.stringifyBigInt %}(typeof params?.{{ p.varName }} === 'bigint' ? (params!.{{ p.varName }} as bigint).toString() : params?.{{ p.varName }}){% else %}params?.{{ p.varName }}{% endif %},
+        '{{ p.name }}': params?.{{ p.varName }},
 {%- endfor %}
 {%- if op.forceMsgpackQuery %}
         'format': 'msgpack',

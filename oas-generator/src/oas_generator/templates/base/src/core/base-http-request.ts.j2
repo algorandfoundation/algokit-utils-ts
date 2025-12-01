@@ -1,14 +1,16 @@
+import { Address } from '@algorandfoundation/algokit-common';
 import type { ClientConfig } from './client-config';
 
-export type QueryValue = string | number | bigint | boolean;
-export type QueryParams = Record<string, QueryValue | QueryValue[] | undefined>;
+type PathValue = string | number | bigint | Address;
+type QueryValue = string | number | bigint | boolean | Address;
+type QueryParams = Record<string, QueryValue | QueryValue[] | undefined>;
 
-export type BodyValue = Uint8Array | Record<string, unknown> | unknown[] | string | number | boolean | null;
+type BodyValue = Uint8Array | Record<string, unknown> | unknown[] | string | number | boolean | null;
 
 export interface ApiRequestOptions {
   method: string;
   url: string;
-  path?: Record<string, string | number | bigint>;
+  path?: Record<string, PathValue>;
   query?: QueryParams;
   headers?: Record<string, string>;
   body?: BodyValue;

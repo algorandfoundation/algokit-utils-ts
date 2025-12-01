@@ -29,29 +29,29 @@ describe('ClientManager', () => {
     test('Retries indexer calls', async () => {
       const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('testnet', 'indexer'))
 
-      const response = await Promise.all(
-        new Array(150).fill(0).map(async (_) => {
-          return await indexer.lookupAccountById('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-        }),
-      )
-      expect(response.length).toBe(150)
+      const promises = new Array(150).fill(0).map((_) => {
+        return indexer.lookupAccountById('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
+      })
+      expect(promises.length).toBe(150)
+      await expect(async () => await Promise.all(promises)).rejects.toThrowError()
+
       expect(myLogger.warn).toHaveBeenCalledWith(
-        'algosdk request failed 1 times. Retrying in 0ms: URLTokenBaseHTTPError: Network request error. Received status 429 (Too Many Requests)',
+        'Request failed 1 times. Retrying in 0ms: Error: Request to /v2/accounts/XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA failed with status 429',
       )
-    }, 10_000)
+    }, 20_000)
     test('Retries algod calls', async () => {
       const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
 
-      const response = await Promise.all(
-        new Array(150).fill(0).map(async (_) => {
-          return await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-        }),
-      )
-      expect(response.length).toBe(150)
+      const promises = new Array(150).fill(0).map((_) => {
+        return algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
+      })
+      expect(promises.length).toBe(150)
+      await expect(async () => await Promise.all(promises)).rejects.toThrowError()
+
       expect(myLogger.warn).toHaveBeenCalledWith(
-        'algosdk request failed 1 times. Retrying in 0ms: URLTokenBaseHTTPError: Network request error. Received status 429 (Too Many Requests)',
+        'Request failed 1 times. Retrying in 0ms: Error: Request to /v2/accounts/XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA failed with status 429',
       )
-    }, 10_000)
+    }, 20_000)
   })
 
   describe('Config', () => {

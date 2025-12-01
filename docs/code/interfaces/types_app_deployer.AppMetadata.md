@@ -37,7 +37,7 @@ The Algorand address of the account associated with the app
 
 #### Defined in
 
-[src/types/app-deployer.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L81)
+[src/types/app-deployer.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L80)
 
 ___
 
@@ -49,7 +49,7 @@ The id of the app
 
 #### Defined in
 
-[src/types/app-deployer.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L79)
+[src/types/app-deployer.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L78)
 
 ___
 
@@ -61,7 +61,7 @@ The metadata when the app was created
 
 #### Defined in
 
-[src/types/app-deployer.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L87)
+[src/types/app-deployer.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L86)
 
 ___
 
@@ -73,7 +73,7 @@ The round the app was created
 
 #### Defined in
 
-[src/types/app-deployer.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L83)
+[src/types/app-deployer.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L82)
 
 ___
 
@@ -101,7 +101,7 @@ Whether or not the app is deleted
 
 #### Defined in
 
-[src/types/app-deployer.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L89)
+[src/types/app-deployer.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L88)
 
 ___
 
@@ -145,7 +145,7 @@ The last round that the app was updated
 
 #### Defined in
 
-[src/types/app-deployer.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L85)
+[src/types/app-deployer.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L84)
 
 ___
 

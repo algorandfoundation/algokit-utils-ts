@@ -8,7 +8,7 @@ export type ApplicationLogData = {
   /**
    * Transaction ID
    */
-  txid: string
+  txId: string
 
   /**
    * Logs for the application being executed by the transaction.
@@ -21,7 +21,7 @@ export const ApplicationLogDataMeta: ObjectModelMetadata<ApplicationLogData> = {
   kind: 'object',
   fields: [
     {
-      name: 'txid',
+      name: 'txId',
       wireKey: 'txid',
       optional: false,
       codec: stringCodec,

@@ -9,7 +9,7 @@ export async function request<T>(config: ClientConfig, options: ApiRequestOption
   let rawPath = options.url.endsWith('/') ? options.url.slice(0, -1) : options.url
   if (options.path) {
     for (const [key, value] of Object.entries(options.path)) {
-      const replace = encodeURIPath(String(value))
+      const replace = encodeURIPath(value.toString())
       rawPath = rawPath.replace(`{${key}}`, replace)
     }
   }
@@ -22,13 +22,7 @@ export async function request<T>(config: ClientConfig, options: ApiRequestOption
   if (options.query) {
     for (const [key, value] of Object.entries(options.query)) {
       if (value === undefined || value === null) continue
-      if (Array.isArray(value)) {
-        for (const item of value) {
-          url.searchParams.append(key, item.toString())
-        }
-      } else {
-        url.searchParams.append(key, value.toString())
-      }
+      url.searchParams.set(key, Array.isArray(value) ? value.map((v) => v.toString()).join(',') : value.toString())
     }
   }
 
@@ -87,7 +81,7 @@ export async function request<T>(config: ClientConfig, options: ApiRequestOption
     } catch {
       errorBody = undefined
     }
-    throw new ApiError(url.toString(), response.status, errorBody)
+    throw new ApiError(url.pathname.toString(), response.status, errorBody)
   }
 
   if (

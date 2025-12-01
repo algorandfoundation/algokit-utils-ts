@@ -2,6 +2,7 @@ import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Kmd } from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
 import { AppFactory, AppFactoryParams } from './app-factory'
@@ -592,6 +593,7 @@ export class ClientManager {
       baseUrl: server,
       port,
       token,
+      logger: Config.logger,
     })
   }
 
@@ -607,7 +609,6 @@ export class ClientManager {
    *  ```
    */
   public static getAlgodClientFromEnvironment(): AlgodClient {
-    const test = {}
     return ClientManager.getAlgodClient(ClientManager.getAlgodConfigFromEnvironment())
   }
 
@@ -638,6 +639,7 @@ export class ClientManager {
       baseUrl: server,
       port,
       token,
+      logger: Config.logger,
     })
   }
 

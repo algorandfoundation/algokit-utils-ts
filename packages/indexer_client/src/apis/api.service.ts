@@ -61,13 +61,8 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/apps-local-state',
-      path: { 'account-id': account?.toString() },
-      query: {
-        'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
-        'include-all': params?.includeAll,
-        limit: params?.limit,
-        next: params?.next,
-      },
+      path: { 'account-id': account },
+      query: { 'application-id': params?.applicationId, 'include-all': params?.includeAll, limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
     })
@@ -89,13 +84,8 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/assets',
-      path: { 'account-id': account?.toString() },
-      query: {
-        'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
-        'include-all': params?.includeAll,
-        limit: params?.limit,
-        next: params?.next,
-      },
+      path: { 'account-id': account },
+      query: { 'asset-id': params?.assetId, 'include-all': params?.includeAll, limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
     })
@@ -121,12 +111,8 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}',
-      path: { 'account-id': account?.toString() },
-      query: {
-        round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
-        'include-all': params?.includeAll,
-        exclude: params?.exclude,
-      },
+      path: { 'account-id': account },
+      query: { round: params?.round, 'include-all': params?.includeAll, exclude: params?.exclude },
       headers,
       body: undefined,
     })
@@ -148,13 +134,8 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-applications',
-      path: { 'account-id': account?.toString() },
-      query: {
-        'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
-        'include-all': params?.includeAll,
-        limit: params?.limit,
-        next: params?.next,
-      },
+      path: { 'account-id': account },
+      query: { 'application-id': params?.applicationId, 'include-all': params?.includeAll, limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
     })
@@ -176,13 +157,8 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-assets',
-      path: { 'account-id': account?.toString() },
-      query: {
-        'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
-        'include-all': params?.includeAll,
-        limit: params?.limit,
-        next: params?.next,
-      },
+      path: { 'account-id': account },
+      query: { 'asset-id': params?.assetId, 'include-all': params?.includeAll, limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
     })
@@ -201,7 +177,7 @@ export class IndexerApi {
       notePrefix?: string
       txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
       sigType?: 'sig' | 'msig' | 'lsig'
-      txid?: string
+      txId?: string
       round?: number | bigint
       minRound?: number | bigint
       maxRound?: number | bigint
@@ -220,26 +196,22 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/transactions',
-      path: { 'account-id': account?.toString() },
+      path: { 'account-id': account },
       query: {
         limit: params?.limit,
         next: params?.next,
         'note-prefix': params?.notePrefix,
         'tx-type': params?.txType,
         'sig-type': params?.sigType,
-        txid: params?.txid,
-        round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
-        'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
-        'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
-        'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
+        txid: params?.txId,
+        round: params?.round,
+        'min-round': params?.minRound,
+        'max-round': params?.maxRound,
+        'asset-id': params?.assetId,
         'before-time': params?.beforeTime,
         'after-time': params?.afterTime,
-        'currency-greater-than':
-          typeof params?.currencyGreaterThan === 'bigint'
-            ? (params!.currencyGreaterThan as bigint).toString()
-            : params?.currencyGreaterThan,
-        'currency-less-than':
-          typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
+        'currency-greater-than': params?.currencyGreaterThan,
+        'currency-less-than': params?.currencyLessThan,
         'rekey-to': params?.rekeyTo,
       },
       headers,
@@ -252,7 +224,7 @@ export class IndexerApi {
   /**
    * Given an application ID and box name, returns base64 encoded box name and value. Box names must be in the goal app call arg form 'encoding:value'. For ints, use the form 'int:1234'. For raw bytes, encode base 64 and use 'b64' prefix as in 'b64:A=='. For printable strings, use the form 'str:hello'. For addresses, use the form 'addr:XYZ...'.
    */
-  async lookupApplicationBoxByIdAndName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
+  private async _lookupApplicationBoxByIdAndName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -260,7 +232,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/box',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: { name: params?.name },
       headers,
       body: undefined,
@@ -280,7 +252,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: { 'include-all': params?.includeAll },
       headers,
       body: undefined,
@@ -297,7 +269,7 @@ export class IndexerApi {
     params?: {
       limit?: number
       next?: string
-      txid?: string
+      txId?: string
       minRound?: number | bigint
       maxRound?: number | bigint
       senderAddress?: string | Address
@@ -310,14 +282,14 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/logs',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: {
         limit: params?.limit,
         next: params?.next,
-        txid: params?.txid,
-        'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
-        'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
-        'sender-address': params?.senderAddress?.toString(),
+        txid: params?.txId,
+        'min-round': params?.minRound,
+        'max-round': params?.maxRound,
+        'sender-address': params?.senderAddress,
       },
       headers,
       body: undefined,
@@ -346,17 +318,13 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/balances',
-      path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
+      path: { 'asset-id': assetId },
       query: {
         'include-all': params?.includeAll,
         limit: params?.limit,
         next: params?.next,
-        'currency-greater-than':
-          typeof params?.currencyGreaterThan === 'bigint'
-            ? (params!.currencyGreaterThan as bigint).toString()
-            : params?.currencyGreaterThan,
-        'currency-less-than':
-          typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
+        'currency-greater-than': params?.currencyGreaterThan,
+        'currency-less-than': params?.currencyLessThan,
       },
       headers,
       body: undefined,
@@ -376,7 +344,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}',
-      path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
+      path: { 'asset-id': assetId },
       query: { 'include-all': params?.includeAll },
       headers,
       body: undefined,
@@ -396,7 +364,7 @@ export class IndexerApi {
       notePrefix?: string
       txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
       sigType?: 'sig' | 'msig' | 'lsig'
-      txid?: string
+      txId?: string
       round?: number | bigint
       minRound?: number | bigint
       maxRound?: number | bigint
@@ -417,26 +385,22 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/transactions',
-      path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
+      path: { 'asset-id': assetId },
       query: {
         limit: params?.limit,
         next: params?.next,
         'note-prefix': params?.notePrefix,
         'tx-type': params?.txType,
         'sig-type': params?.sigType,
-        txid: params?.txid,
-        round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
-        'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
-        'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
+        txid: params?.txId,
+        round: params?.round,
+        'min-round': params?.minRound,
+        'max-round': params?.maxRound,
         'before-time': params?.beforeTime,
         'after-time': params?.afterTime,
-        'currency-greater-than':
-          typeof params?.currencyGreaterThan === 'bigint'
-            ? (params!.currencyGreaterThan as bigint).toString()
-            : params?.currencyGreaterThan,
-        'currency-less-than':
-          typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        address: params?.address?.toString(),
+        'currency-greater-than': params?.currencyGreaterThan,
+        'currency-less-than': params?.currencyLessThan,
+        address: params?.address,
         'address-role': params?.addressRole,
         'exclude-close-to': params?.excludeCloseTo,
         'rekey-to': params?.rekeyTo,
@@ -459,7 +423,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round-number}',
-      path: { 'round-number': typeof roundNumber === 'bigint' ? roundNumber.toString() : roundNumber },
+      path: { 'round-number': roundNumber },
       query: { 'header-only': params?.headerOnly },
       headers,
       body: undefined,
@@ -471,7 +435,7 @@ export class IndexerApi {
   /**
    * Lookup a single transaction.
    */
-  async lookupTransactionById(txid: string): Promise<TransactionResponse> {
+  async lookupTransactionById(txId: string): Promise<TransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -479,7 +443,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/transactions/{txid}',
-      path: { txid: txid },
+      path: { txid: txId },
       query: {},
       headers,
       body: undefined,
@@ -530,20 +494,16 @@ export class IndexerApi {
       url: '/v2/accounts',
       path: {},
       query: {
-        'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
+        'asset-id': params?.assetId,
         limit: params?.limit,
         next: params?.next,
-        'currency-greater-than':
-          typeof params?.currencyGreaterThan === 'bigint'
-            ? (params!.currencyGreaterThan as bigint).toString()
-            : params?.currencyGreaterThan,
+        'currency-greater-than': params?.currencyGreaterThan,
         'include-all': params?.includeAll,
         exclude: params?.exclude,
-        'currency-less-than':
-          typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        'auth-addr': params?.authAddr?.toString(),
-        round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
-        'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
+        'currency-less-than': params?.currencyLessThan,
+        'auth-addr': params?.authAddr,
+        round: params?.round,
+        'application-id': params?.applicationId,
         'online-only': params?.onlineOnly,
       },
       headers,
@@ -564,7 +524,7 @@ export class IndexerApi {
     const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
-      path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
+      path: { 'application-id': applicationId },
       query: { limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
@@ -592,7 +552,7 @@ export class IndexerApi {
       url: '/v2/applications',
       path: {},
       query: {
-        'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
+        'application-id': params?.applicationId,
         creator: params?.creator,
         'include-all': params?.includeAll,
         limit: params?.limit,
@@ -632,7 +592,7 @@ export class IndexerApi {
         creator: params?.creator,
         name: params?.name,
         unit: params?.unit,
-        'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
+        'asset-id': params?.assetId,
       },
       headers,
       body: undefined,
@@ -651,9 +611,9 @@ export class IndexerApi {
     maxRound?: number | bigint
     beforeTime?: string
     afterTime?: string
-    proposers?: (string | Address)[]
-    expired?: (string | Address)[]
-    absent?: (string | Address)[]
+    proposers?: string | Address[]
+    expired?: string | Address[]
+    absent?: string | Address[]
   }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
@@ -666,13 +626,13 @@ export class IndexerApi {
       query: {
         limit: params?.limit,
         next: params?.next,
-        'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
-        'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
+        'min-round': params?.minRound,
+        'max-round': params?.maxRound,
         'before-time': params?.beforeTime,
         'after-time': params?.afterTime,
-        proposers: params?.proposers?.toString(),
-        expired: params?.expired?.toString(),
-        absent: params?.absent?.toString(),
+        proposers: params?.proposers,
+        expired: params?.expired,
+        absent: params?.absent,
       },
       headers,
       body: undefined,
@@ -691,7 +651,7 @@ export class IndexerApi {
     txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
     sigType?: 'sig' | 'msig' | 'lsig'
     groupId?: string
-    txid?: string
+    txId?: string
     round?: number | bigint
     minRound?: number | bigint
     maxRound?: number | bigint
@@ -721,29 +681,33 @@ export class IndexerApi {
         'tx-type': params?.txType,
         'sig-type': params?.sigType,
         'group-id': params?.groupId,
-        txid: params?.txid,
-        round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
-        'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
-        'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
-        'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
+        txid: params?.txId,
+        round: params?.round,
+        'min-round': params?.minRound,
+        'max-round': params?.maxRound,
+        'asset-id': params?.assetId,
         'before-time': params?.beforeTime,
         'after-time': params?.afterTime,
-        'currency-greater-than':
-          typeof params?.currencyGreaterThan === 'bigint'
-            ? (params!.currencyGreaterThan as bigint).toString()
-            : params?.currencyGreaterThan,
-        'currency-less-than':
-          typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        address: params?.address?.toString(),
+        'currency-greater-than': params?.currencyGreaterThan,
+        'currency-less-than': params?.currencyLessThan,
+        address: params?.address,
         'address-role': params?.addressRole,
         'exclude-close-to': params?.excludeCloseTo,
         'rekey-to': params?.rekeyTo,
-        'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
+        'application-id': params?.applicationId,
       },
       headers,
       body: undefined,
     })
 
     return decodeJson(payload, TransactionsResponseMeta)
+  }
+
+  /**
+   * Given an application ID and box name, it returns the round, box name, and value.
+   */
+  async lookupApplicationBoxByIdAndName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
+    const name = `b64:${Buffer.from(boxName).toString('base64')}`
+    return this._lookupApplicationBoxByIdAndName(applicationId, { name })
   }
 }
