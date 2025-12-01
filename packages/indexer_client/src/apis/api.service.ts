@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { decodeJson } from '../core/model-runtime'
-import { Address, type EncodingFormat } from '@algorandfoundation/algokit-common'
+import { ReadableAddress, type EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   AccountResponse,
   AccountsResponse,
@@ -51,7 +51,7 @@ export class IndexerApi {
    * Lookup an account's asset holdings, optionally for a specific ID.
    */
   async lookupAccountAppLocalStates(
-    account: string | Address,
+    account: ReadableAddress,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<ApplicationLocalStatesResponse> {
     const headers: Record<string, string> = {}
@@ -74,7 +74,7 @@ export class IndexerApi {
    * Lookup an account's asset holdings, optionally for a specific ID.
    */
   async lookupAccountAssets(
-    account: string | Address,
+    account: ReadableAddress,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<AssetHoldingsResponse> {
     const headers: Record<string, string> = {}
@@ -97,7 +97,7 @@ export class IndexerApi {
    * Lookup account information.
    */
   async lookupAccountById(
-    account: string | Address,
+    account: ReadableAddress,
     params?: {
       round?: number | bigint
       includeAll?: boolean
@@ -124,7 +124,7 @@ export class IndexerApi {
    * Lookup an account's created application parameters, optionally for a specific ID.
    */
   async lookupAccountCreatedApplications(
-    account: string | Address,
+    account: ReadableAddress,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
@@ -147,7 +147,7 @@ export class IndexerApi {
    * Lookup an account's created asset parameters, optionally for a specific ID.
    */
   async lookupAccountCreatedAssets(
-    account: string | Address,
+    account: ReadableAddress,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
@@ -170,7 +170,7 @@ export class IndexerApi {
    * Lookup account transactions. Transactions are returned newest to oldest.
    */
   async lookupAccountTransactions(
-    account: string | Address,
+    account: ReadableAddress,
     params?: {
       limit?: number
       next?: string
@@ -272,7 +272,7 @@ export class IndexerApi {
       txId?: string
       minRound?: number | bigint
       maxRound?: number | bigint
-      senderAddress?: string | Address
+      senderAddress?: ReadableAddress
     },
   ): Promise<ApplicationLogsResponse> {
     const headers: Record<string, string> = {}
@@ -372,7 +372,7 @@ export class IndexerApi {
       afterTime?: string
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
-      address?: string | Address
+      address?: ReadableAddress
       addressRole?: 'sender' | 'receiver' | 'freeze-target'
       excludeCloseTo?: boolean
       rekeyTo?: boolean
@@ -480,7 +480,7 @@ export class IndexerApi {
     includeAll?: boolean
     exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     currencyLessThan?: number | bigint
-    authAddr?: string | Address
+    authAddr?: ReadableAddress
     round?: number | bigint
     applicationId?: number | bigint
     onlineOnly?: boolean
@@ -611,9 +611,9 @@ export class IndexerApi {
     maxRound?: number | bigint
     beforeTime?: string
     afterTime?: string
-    proposers?: string | Address[]
-    expired?: string | Address[]
-    absent?: string | Address[]
+    proposers?: ReadableAddress[]
+    expired?: ReadableAddress[]
+    absent?: ReadableAddress[]
   }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
@@ -660,7 +660,7 @@ export class IndexerApi {
     afterTime?: string
     currencyGreaterThan?: number | bigint
     currencyLessThan?: number | bigint
-    address?: string | Address
+    address?: ReadableAddress
     addressRole?: 'sender' | 'receiver' | 'freeze-target'
     excludeCloseTo?: boolean
     rekeyTo?: boolean

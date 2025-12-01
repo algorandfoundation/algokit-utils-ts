@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request';
 import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime';
-import { Address, type EncodingFormat } from '@algorandfoundation/algokit-common';
+import { ReadableAddress, type EncodingFormat } from '@algorandfoundation/algokit-common';
 {% if custom_imports %}
 {% for import_statement in custom_imports %}
 {{ import_statement }}

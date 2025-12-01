@@ -687,7 +687,7 @@ class OperationProcessor:
 
             # Allow both string and Address inputs for ergonomics
             if constants.TypeScriptType.ADDRESS in ts_type_str:
-                ts_type_str = ts_type_str.replace(constants.TypeScriptType.ADDRESS, f"string | {constants.TypeScriptType.ADDRESS}")
+                ts_type_str = ts_type_str.replace(constants.TypeScriptType.ADDRESS, "ReadableAddress")
 
             location = location_candidate
             required = param.get(constants.SchemaKey.REQUIRED, False) or location == constants.ParamLocation.PATH

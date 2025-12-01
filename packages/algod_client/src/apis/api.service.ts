@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime'
-import { Address, type EncodingFormat } from '@algorandfoundation/algokit-common'
+import { ReadableAddress, type EncodingFormat } from '@algorandfoundation/algokit-common'
 import { concatArrays } from '@algorandfoundation/algokit-common'
 import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact'
 import type {
@@ -81,7 +81,7 @@ export class AlgodApi {
   /**
    * Given a specific account public key and application ID, this call returns the account's application local state and global state (AppLocalState and AppParams, if either exists). Global state will only be returned if the provided address is the application's creator.
    */
-  async accountApplicationInformation(address: string | Address, applicationId: number | bigint): Promise<AccountApplicationResponse> {
+  async accountApplicationInformation(address: ReadableAddress, applicationId: number | bigint): Promise<AccountApplicationResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -101,7 +101,7 @@ export class AlgodApi {
   /**
    * Given a specific account public key and asset ID, this call returns the account's asset holding and asset parameters (if either exist). Asset parameters will only be returned if the provided address is the asset's creator.
    */
-  async accountAssetInformation(address: string | Address, assetId: number | bigint): Promise<AccountAssetResponse> {
+  async accountAssetInformation(address: ReadableAddress, assetId: number | bigint): Promise<AccountAssetResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -121,7 +121,7 @@ export class AlgodApi {
   /**
    * Given a specific account public key, this call returns the account's status, balance and spendable amounts
    */
-  async accountInformation(address: string | Address, params?: { exclude?: 'all' | 'none' }): Promise<Account> {
+  async accountInformation(address: ReadableAddress, params?: { exclude?: 'all' | 'none' }): Promise<Account> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
@@ -389,7 +389,7 @@ export class AlgodApi {
   /**
    * Get the list of pending transactions by address, sorted by priority, in decreasing order, truncated at the end at MAX. If MAX = 0, returns all pending transactions.
    */
-  async getPendingTransactionsByAddress(address: string | Address, params?: { max?: number }): Promise<PendingTransactionsResponse> {
+  async getPendingTransactionsByAddress(address: ReadableAddress, params?: { max?: number }): Promise<PendingTransactionsResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'msgpack'
     headers['Accept'] = this.mimeTypeFor(responseFormat)

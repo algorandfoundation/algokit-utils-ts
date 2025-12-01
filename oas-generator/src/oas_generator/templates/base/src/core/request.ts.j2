@@ -1,6 +1,6 @@
 import { decodeMsgpack, encodeMsgpack, parseJson, stringifyJson } from '@algorandfoundation/algokit-common'
 import { ApiError } from './api-error';
-import { ApiRequestOptions } from './base-http-request';
+import { ApiRequestOptions, inputValueAsString } from './base-http-request';
 import type { ClientConfig } from './client-config';
 
 const encodeURIPath = (path: string): string => encodeURI(path).replace(/%5B/g, '[').replace(/%5D/g, ']');
@@ -9,7 +9,7 @@ export async function request<T>(config: ClientConfig, options: ApiRequestOption
   let rawPath = options.url.endsWith('/') ? options.url.slice(0, -1) : options.url;
   if (options.path) {
     for (const [key, value] of Object.entries(options.path)) {
-      const replace = encodeURIPath(value.toString());
+      const replace = encodeURIPath(inputValueAsString(value));
       rawPath = rawPath.replace(`{${key}}`, replace);
     }
   }
@@ -22,7 +22,7 @@ export async function request<T>(config: ClientConfig, options: ApiRequestOption
   if (options.query) {
     for (const [key, value] of Object.entries(options.query)) {
       if (value === undefined || value === null) continue;
-      url.searchParams.set(key, Array.isArray(value) ? value.map((v) => v.toString()).join(',') : value.toString());
+      url.searchParams.set(key, Array.isArray(value) ? value.map((v) => inputValueAsString(v)).join(',') : inputValueAsString(value));
     }
   }
 
