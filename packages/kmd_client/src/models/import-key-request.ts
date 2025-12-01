@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTKeyImportRequest is the request for `POST /v1/key/import`
@@ -8,7 +9,7 @@ export type ImportKeyRequest = {
   walletHandleToken?: string
 }
 
-export const ImportKeyRequestMeta: ModelMetadata = {
+export const ImportKeyRequestMeta: ObjectModelMetadata<ImportKeyRequest> = {
   name: 'ImportKeyRequest',
   kind: 'object',
   fields: [
@@ -16,15 +17,13 @@ export const ImportKeyRequestMeta: ModelMetadata = {
       name: 'privateKey',
       wireKey: 'private_key',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

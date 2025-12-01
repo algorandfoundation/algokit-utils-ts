@@ -1,14 +1,11 @@
 import { ABIMethod, ABIReturn } from '@algorandfoundation/algokit-abi'
 import {
   AlgodClient,
-  AlgorandSerializer,
   PendingTransactionResponse,
   SimulateRequest,
-  SimulateTransaction,
+  SimulateResponse,
   SimulateUnnamedResourcesAccessed,
-  SimulationTransactionExecTraceMeta,
   SuggestedParams,
-  toBase64,
 } from '@algorandfoundation/algokit-algod-client'
 import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import {
@@ -27,6 +24,7 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
+import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import {
@@ -1659,7 +1657,7 @@ export class TransactionComposer {
       },
     }
 
-    const response = await this.algod.simulateTransaction(simulateRequest)
+    const response = await this.algod.simulateTransactions(simulateRequest)
     const groupResponse = response.txnGroups[0]
 
     // Handle any simulation failures
@@ -1835,7 +1833,7 @@ export class TransactionComposer {
 
       if (transactionsToSend.length > 1 && group) {
         Config.getLogger(params?.suppressLog).verbose(
-          `Group transaction (${toBase64(group)}) sent with ${transactionsToSend.length} transactions`,
+          `Group transaction (${Buffer.from(group).toString('base64')}) sent with ${transactionsToSend.length} transactions`,
         )
       } else {
         Config.getLogger(params?.suppressLog).verbose(
@@ -1889,7 +1887,7 @@ export class TransactionComposer {
           signer: algosdk.makeEmptyTransactionSigner(),
         }))
         const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
-        const simulateResponse = await this.algod.simulateTransaction({
+        const simulateResponse = await this.algod.simulateTransactions({
           txnGroups: [{ txns: signedTransactions }],
           allowEmptySignatures: true,
           fixSigners: true,
@@ -1912,7 +1910,7 @@ export class TransactionComposer {
         if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
           for (const txn of simulateResponse.txnGroups[0].txnResults) {
             err.traces.push({
-              trace: AlgorandSerializer.encode(txn.execTrace, SimulationTransactionExecTraceMeta, 'map'),
+              trace: txn.execTrace,
               appBudget: txn.appBudgetConsumed,
               logicSigBudget: txn.logicSigBudgetConsumed,
               logs: txn.txnResult.logs,
@@ -1942,7 +1940,7 @@ export class TransactionComposer {
    * const result = await composer.simulate()
    * ```
    */
-  async simulate(): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(): Promise<SendTransactionComposerResults & { simulateResponse: SimulateResponse }>
   /**
    * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -1953,9 +1951,7 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(
-    options: SkipSignaturesSimulateOptions,
-  ): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(options: SkipSignaturesSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateResponse }>
   /**
    * Compose the transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -1966,8 +1962,8 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }>
-  async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
+  async simulate(options: RawSimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  async simulate(options?: SimulateOptions): Promise<SendTransactionComposerResults & { simulateResponse: SimulateResponse }> {
     const { skipSignatures = false, resultOnFailure = false, ...rawOptions } = options ?? {}
 
     if (skipSignatures) {
@@ -2019,7 +2015,7 @@ export class TransactionComposer {
         : undefined),
     } satisfies SimulateRequest
 
-    const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
+    const simulateResponse = await this.algod.simulateTransactions(simulateRequest)
     const simulateResult = simulateResponse.txnGroups[0]
 
     if (simulateResult?.failureMessage && !resultOnFailure) {

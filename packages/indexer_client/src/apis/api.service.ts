@@ -1,62 +1,50 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
-import { AlgorandSerializer } from '../core/model-runtime'
-import type { BodyFormat } from '../core/model-runtime'
+import { decodeJson } from '../core/model-runtime'
+import { Address, type EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
+  AccountResponse,
+  AccountsResponse,
+  ApplicationLocalStatesResponse,
+  ApplicationLogsResponse,
+  ApplicationResponse,
+  ApplicationsResponse,
+  AssetBalancesResponse,
+  AssetHoldingsResponse,
+  AssetResponse,
+  AssetsResponse,
   Block,
+  BlockHeadersResponse,
   Box,
+  BoxesResponse,
   HealthCheck,
-  LookupAccountAppLocalStates,
-  LookupAccountAssets,
-  LookupAccountById,
-  LookupAccountCreatedApplications,
-  LookupAccountCreatedAssets,
-  LookupAccountTransactions,
-  LookupApplicationById,
-  LookupApplicationLogsById,
-  LookupAssetBalances,
-  LookupAssetById,
-  LookupAssetTransactions,
-  LookupTransaction,
-  SearchForAccounts,
-  SearchForApplicationBoxes,
-  SearchForApplications,
-  SearchForAssets,
-  SearchForBlockHeaders,
-  SearchForTransactions,
+  TransactionResponse,
+  TransactionsResponse,
 } from '../models/index'
 import {
+  AccountResponseMeta,
+  AccountsResponseMeta,
+  ApplicationLocalStatesResponseMeta,
+  ApplicationLogsResponseMeta,
+  ApplicationResponseMeta,
+  ApplicationsResponseMeta,
+  AssetBalancesResponseMeta,
+  AssetHoldingsResponseMeta,
+  AssetResponseMeta,
+  AssetsResponseMeta,
   BlockMeta,
+  BlockHeadersResponseMeta,
   BoxMeta,
+  BoxesResponseMeta,
   HealthCheckMeta,
-  LookupAccountAppLocalStatesMeta,
-  LookupAccountAssetsMeta,
-  LookupAccountByIdMeta,
-  LookupAccountCreatedApplicationsMeta,
-  LookupAccountCreatedAssetsMeta,
-  LookupAccountTransactionsMeta,
-  LookupApplicationByIdMeta,
-  LookupApplicationLogsByIdMeta,
-  LookupAssetBalancesMeta,
-  LookupAssetByIdMeta,
-  LookupAssetTransactionsMeta,
-  LookupTransactionMeta,
-  SearchForAccountsMeta,
-  SearchForApplicationBoxesMeta,
-  SearchForApplicationsMeta,
-  SearchForAssetsMeta,
-  SearchForBlockHeadersMeta,
-  SearchForTransactionsMeta,
+  TransactionResponseMeta,
+  TransactionsResponseMeta,
 } from '../models/index'
 
 export class IndexerApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: BodyFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
-  }
-
-  private static mediaFor(format: BodyFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
+  private mimeTypeFor(format: EncodingFormat | 'text'): string {
+    return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain'
   }
 
   /**
@@ -65,12 +53,12 @@ export class IndexerApi {
   async lookupAccountAppLocalStates(
     accountId: string,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountAppLocalStates> {
+  ): Promise<ApplicationLocalStatesResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/apps-local-state',
       path: { 'account-id': accountId },
@@ -82,14 +70,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountAppLocalStatesMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountAppLocalStates
+    return decodeJson(payload, ApplicationLocalStatesResponseMeta)
   }
 
   /**
@@ -98,12 +81,12 @@ export class IndexerApi {
   async lookupAccountAssets(
     accountId: string,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountAssets> {
+  ): Promise<AssetHoldingsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/assets',
       path: { 'account-id': accountId },
@@ -115,14 +98,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountAssetsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountAssets
+    return decodeJson(payload, AssetHoldingsResponseMeta)
   }
 
   /**
@@ -135,12 +113,12 @@ export class IndexerApi {
       includeAll?: boolean
       exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     },
-  ): Promise<LookupAccountById> {
+  ): Promise<AccountResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}',
       path: { 'account-id': accountId },
@@ -151,14 +129,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountById
+    return decodeJson(payload, AccountResponseMeta)
   }
 
   /**
@@ -167,12 +140,12 @@ export class IndexerApi {
   async lookupAccountCreatedApplications(
     accountId: string,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountCreatedApplications> {
+  ): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-applications',
       path: { 'account-id': accountId },
@@ -184,14 +157,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountCreatedApplicationsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountCreatedApplications
+    return decodeJson(payload, ApplicationsResponseMeta)
   }
 
   /**
@@ -200,12 +168,12 @@ export class IndexerApi {
   async lookupAccountCreatedAssets(
     accountId: string,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
-  ): Promise<LookupAccountCreatedAssets> {
+  ): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/created-assets',
       path: { 'account-id': accountId },
@@ -217,14 +185,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountCreatedAssetsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountCreatedAssets
+    return decodeJson(payload, AssetsResponseMeta)
   }
 
   /**
@@ -249,12 +212,12 @@ export class IndexerApi {
       currencyLessThan?: number | bigint
       rekeyTo?: boolean
     },
-  ): Promise<LookupAccountTransactions> {
+  ): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts/{account-id}/transactions',
       path: { 'account-id': accountId },
@@ -281,14 +244,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAccountTransactionsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAccountTransactions
+    return decodeJson(payload, TransactionsResponseMeta)
   }
 
   /**
@@ -296,49 +254,39 @@ export class IndexerApi {
    */
   async lookupApplicationBoxByIdAndName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/box',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
       query: { name: params?.name },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = BoxMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as Box
+    return decodeJson(payload, BoxMeta)
   }
 
   /**
    * Lookup application.
    */
-  async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupApplicationById> {
+  async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<ApplicationResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
       query: { 'include-all': params?.includeAll },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupApplicationByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupApplicationById
+    return decodeJson(payload, ApplicationResponseMeta)
   }
 
   /**
@@ -352,14 +300,14 @@ export class IndexerApi {
       txid?: string
       minRound?: number | bigint
       maxRound?: number | bigint
-      senderAddress?: string
+      senderAddress?: string | Address
     },
-  ): Promise<LookupApplicationLogsById> {
+  ): Promise<ApplicationLogsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/logs',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
@@ -369,18 +317,13 @@ export class IndexerApi {
         txid: params?.txid,
         'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
         'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
-        'sender-address': params?.senderAddress,
+        'sender-address': params?.senderAddress?.toString(),
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupApplicationLogsByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupApplicationLogsById
+    return decodeJson(payload, ApplicationLogsResponseMeta)
   }
 
   /**
@@ -395,12 +338,12 @@ export class IndexerApi {
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
     },
-  ): Promise<LookupAssetBalances> {
+  ): Promise<AssetBalancesResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/balances',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -417,39 +360,29 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAssetBalancesMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAssetBalances
+    return decodeJson(payload, AssetBalancesResponseMeta)
   }
 
   /**
    * Lookup asset information.
    */
-  async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupAssetById> {
+  async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<AssetResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
       query: { 'include-all': params?.includeAll },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAssetByIdMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAssetById
+    return decodeJson(payload, AssetResponseMeta)
   }
 
   /**
@@ -471,17 +404,17 @@ export class IndexerApi {
       afterTime?: string
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
-      address?: string
+      address?: string | Address
       addressRole?: 'sender' | 'receiver' | 'freeze-target'
       excludeCloseTo?: boolean
       rekeyTo?: boolean
     },
-  ): Promise<LookupAssetTransactions> {
+  ): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets/{asset-id}/transactions',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
@@ -503,21 +436,16 @@ export class IndexerApi {
             : params?.currencyGreaterThan,
         'currency-less-than':
           typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        address: params?.address,
+        address: params?.address?.toString(),
         'address-role': params?.addressRole,
         'exclude-close-to': params?.excludeCloseTo,
         'rekey-to': params?.rekeyTo,
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupAssetTransactionsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupAssetTransactions
+    return decodeJson(payload, TransactionsResponseMeta)
   }
 
   /**
@@ -525,71 +453,56 @@ export class IndexerApi {
    */
   async lookupBlock(roundNumber: number | bigint, params?: { headerOnly?: boolean }): Promise<Block> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/blocks/{round-number}',
       path: { 'round-number': typeof roundNumber === 'bigint' ? roundNumber.toString() : roundNumber },
       query: { 'header-only': params?.headerOnly },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = BlockMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as Block
+    return decodeJson(payload, BlockMeta)
   }
 
   /**
    * Lookup a single transaction.
    */
-  async lookupTransaction(txid: string): Promise<LookupTransaction> {
+  async lookupTransaction(txid: string): Promise<TransactionResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/transactions/{txid}',
       path: { txid: txid },
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = LookupTransactionMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as LookupTransaction
+    return decodeJson(payload, TransactionResponseMeta)
   }
 
   async makeHealthCheck(): Promise<HealthCheck> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/health',
       path: {},
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = HealthCheckMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as HealthCheck
+    return decodeJson(payload, HealthCheckMeta)
   }
 
   /**
@@ -603,16 +516,16 @@ export class IndexerApi {
     includeAll?: boolean
     exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     currencyLessThan?: number | bigint
-    authAddr?: string
+    authAddr?: string | Address
     round?: number | bigint
     applicationId?: number | bigint
     onlineOnly?: boolean
-  }): Promise<SearchForAccounts> {
+  }): Promise<AccountsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/accounts',
       path: {},
@@ -628,49 +541,36 @@ export class IndexerApi {
         exclude: params?.exclude,
         'currency-less-than':
           typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        'auth-addr': params?.authAddr,
+        'auth-addr': params?.authAddr?.toString(),
         round: typeof params?.round === 'bigint' ? (params!.round as bigint).toString() : params?.round,
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         'online-only': params?.onlineOnly,
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = SearchForAccountsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForAccounts
+    return decodeJson(payload, AccountsResponseMeta)
   }
 
   /**
    * Given an application ID, returns the box names of that application sorted lexicographically.
    */
-  async searchForApplicationBoxes(
-    applicationId: number | bigint,
-    params?: { limit?: number; next?: string },
-  ): Promise<SearchForApplicationBoxes> {
+  async searchForApplicationBoxes(applicationId: number | bigint, params?: { limit?: number; next?: string }): Promise<BoxesResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
       query: { limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = SearchForApplicationBoxesMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForApplicationBoxes
+    return decodeJson(payload, BoxesResponseMeta)
   }
 
   /**
@@ -682,12 +582,12 @@ export class IndexerApi {
     includeAll?: boolean
     limit?: number
     next?: string
-  }): Promise<SearchForApplications> {
+  }): Promise<ApplicationsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/applications',
       path: {},
@@ -700,14 +600,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = SearchForApplicationsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForApplications
+    return decodeJson(payload, ApplicationsResponseMeta)
   }
 
   /**
@@ -721,12 +616,12 @@ export class IndexerApi {
     name?: string
     unit?: string
     assetId?: number | bigint
-  }): Promise<SearchForAssets> {
+  }): Promise<AssetsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/assets',
       path: {},
@@ -741,14 +636,9 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = SearchForAssetsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForAssets
+    return decodeJson(payload, AssetsResponseMeta)
   }
 
   /**
@@ -761,15 +651,15 @@ export class IndexerApi {
     maxRound?: number | bigint
     beforeTime?: string
     afterTime?: string
-    proposers?: string[]
-    expired?: string[]
-    absent?: string[]
-  }): Promise<SearchForBlockHeaders> {
+    proposers?: (string | Address)[]
+    expired?: (string | Address)[]
+    absent?: (string | Address)[]
+  }): Promise<BlockHeadersResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/block-headers',
       path: {},
@@ -780,20 +670,15 @@ export class IndexerApi {
         'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
         'before-time': params?.beforeTime,
         'after-time': params?.afterTime,
-        proposers: params?.proposers,
-        expired: params?.expired,
-        absent: params?.absent,
+        proposers: params?.proposers?.toString(),
+        expired: params?.expired?.toString(),
+        absent: params?.absent?.toString(),
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = SearchForBlockHeadersMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForBlockHeaders
+    return decodeJson(payload, BlockHeadersResponseMeta)
   }
 
   /**
@@ -815,17 +700,17 @@ export class IndexerApi {
     afterTime?: string
     currencyGreaterThan?: number | bigint
     currencyLessThan?: number | bigint
-    address?: string
+    address?: string | Address
     addressRole?: 'sender' | 'receiver' | 'freeze-target'
     excludeCloseTo?: boolean
     rekeyTo?: boolean
     applicationId?: number | bigint
-  }): Promise<SearchForTransactions> {
+  }): Promise<TransactionsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = IndexerApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v2/transactions',
       path: {},
@@ -849,7 +734,7 @@ export class IndexerApi {
             : params?.currencyGreaterThan,
         'currency-less-than':
           typeof params?.currencyLessThan === 'bigint' ? (params!.currencyLessThan as bigint).toString() : params?.currencyLessThan,
-        address: params?.address,
+        address: params?.address?.toString(),
         'address-role': params?.addressRole,
         'exclude-close-to': params?.excludeCloseTo,
         'rekey-to': params?.rekeyTo,
@@ -857,13 +742,8 @@ export class IndexerApi {
       },
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = SearchForTransactionsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as SearchForTransactions
+    return decodeJson(payload, TransactionsResponseMeta)
   }
 }

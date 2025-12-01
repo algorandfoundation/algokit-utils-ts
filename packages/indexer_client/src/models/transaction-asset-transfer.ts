@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for an asset transfer transaction.
@@ -38,7 +39,7 @@ export type TransactionAssetTransfer = {
   sender?: string
 }
 
-export const TransactionAssetTransferMeta: ModelMetadata = {
+export const TransactionAssetTransferMeta: ObjectModelMetadata<TransactionAssetTransfer> = {
   name: 'TransactionAssetTransfer',
   kind: 'object',
   fields: [
@@ -46,43 +47,37 @@ export const TransactionAssetTransferMeta: ModelMetadata = {
       name: 'amount',
       wireKey: 'amount',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closeAmount',
       wireKey: 'close-amount',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closeTo',
       wireKey: 'close-to',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'receiver',
       wireKey: 'receiver',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'sender',
       wireKey: 'sender',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

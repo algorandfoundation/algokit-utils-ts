@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a TEAL value delta.
@@ -20,7 +21,7 @@ export type EvalDelta = {
   uint?: bigint
 }
 
-export const EvalDeltaMeta: ModelMetadata = {
+export const EvalDeltaMeta: ObjectModelMetadata<EvalDelta> = {
   name: 'EvalDelta',
   kind: 'object',
   fields: [
@@ -28,22 +29,19 @@ export const EvalDeltaMeta: ModelMetadata = {
       name: 'action',
       wireKey: 'action',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'bytes',
       wireKey: 'bytes',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'uint',
       wireKey: 'uint',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

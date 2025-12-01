@@ -1,33 +1,23 @@
-import type { ClientConfig } from './client-config'
+import { decodeMsgpack, encodeMsgpack, parseJson, stringifyJson } from '@algorandfoundation/algokit-common'
 import { ApiError } from './api-error'
-import { decodeMsgPack, encodeMsgPack } from './codecs'
-import type { QueryParams, BodyValue } from './base-http-request'
+import { ApiRequestOptions } from './base-http-request'
+import type { ClientConfig } from './client-config'
 
 const encodeURIPath = (path: string): string => encodeURI(path).replace(/%5B/g, '[').replace(/%5D/g, ']')
 
-export async function request<T>(
-  config: ClientConfig,
-  options: {
-    method: string
-    url: string
-    path?: Record<string, string | number | bigint>
-    query?: QueryParams
-    headers?: Record<string, string>
-    body?: BodyValue
-    mediaType?: string
-    responseHeader?: string
-  },
-): Promise<T> {
-  let rawPath = options.url
+export async function request<T>(config: ClientConfig, options: ApiRequestOptions): Promise<T> {
+  let rawPath = options.url.endsWith('/') ? options.url.slice(0, -1) : options.url
   if (options.path) {
     for (const [key, value] of Object.entries(options.path)) {
-      const raw = typeof value === 'bigint' ? value.toString() : String(value)
-      const replace = config.encodePath ? config.encodePath(raw) : encodeURIPath(raw)
+      const replace = encodeURIPath(String(value))
       rawPath = rawPath.replace(`{${key}}`, replace)
     }
   }
 
   const url = new URL(rawPath, config.baseUrl)
+  if (config.port !== undefined) {
+    url.port = config.port.toString()
+  }
 
   if (options.query) {
     for (const [key, value] of Object.entries(options.query)) {
@@ -43,33 +33,33 @@ export async function request<T>(
   }
 
   const headers: Record<string, string> = {
-    ...(typeof config.headers === 'function' ? await config.headers() : (config.headers ?? {})),
+    ...(config.headers ?? {}),
     ...(options.headers ?? {}),
   }
 
-  const apiToken = config.apiToken
-  if (apiToken) {
-    headers['X-KMD-API-Token'] = apiToken
+  if (config.token) {
+    if (typeof config.token === 'string') {
+      headers['X-KMD-API-Token'] = config.token
+    } else {
+      for (const [name, value] of Object.entries(config.token)) {
+        headers[name] = value
+      }
+    }
   }
 
-  const token = typeof config.token === 'function' ? await config.token() : config.token
-  if (token) headers['Authorization'] = `Bearer ${token}`
-  if (!token && config.username && config.password) {
-    headers['Authorization'] = `Basic ${btoa(`${config.username}:${config.password}`)}`
-  }
-
+  const requestContentType = options.headers?.['Content-Type'] ?? options.headers?.['content-type']
   let bodyPayload: BodyInit | undefined = undefined
   if (options.body != null) {
     if (options.body instanceof Uint8Array) {
       bodyPayload = options.body.slice().buffer
     } else if (typeof options.body === 'string') {
       bodyPayload = options.body
-    } else if (options.mediaType?.includes('msgpack')) {
-      bodyPayload = encodeMsgPack(options.body).slice().buffer
-    } else if (options.mediaType?.includes('json')) {
-      bodyPayload = JSON.stringify(options.body)
+    } else if (requestContentType?.includes('msgpack')) {
+      bodyPayload = encodeMsgpack(options.body).slice().buffer
+    } else if (requestContentType?.includes('json')) {
+      bodyPayload = stringifyJson(options.body)
     } else {
-      bodyPayload = JSON.stringify(options.body)
+      bodyPayload = stringifyJson(options.body)
     }
   }
 
@@ -77,17 +67,20 @@ export async function request<T>(
     method: options.method,
     headers,
     body: bodyPayload,
-    credentials: config.credentials,
   })
 
+  const responseContentType = response.headers.get('content-type') ?? ''
   if (!response.ok) {
     let errorBody: unknown
     try {
-      const ct = response.headers.get('content-type') ?? ''
-      if (ct.includes('application/msgpack')) {
-        errorBody = decodeMsgPack(new Uint8Array(await response.arrayBuffer()))
-      } else if (ct.includes('application/json')) {
-        errorBody = JSON.parse(await response.text())
+      if (responseContentType.includes('application/msgpack')) {
+        errorBody = decodeMsgpack(new Uint8Array(await response.arrayBuffer()), {
+          useMap: false,
+          rawBinaryStringKeys: false,
+          rawBinaryStringValues: false,
+        })
+      } else if (responseContentType.includes('application/json')) {
+        errorBody = parseJson(await response.text())
       } else {
         errorBody = await response.text()
       }
@@ -97,26 +90,19 @@ export async function request<T>(
     throw new ApiError(url.toString(), response.status, errorBody)
   }
 
-  if (options.responseHeader) {
-    const value = response.headers.get(options.responseHeader)
-    return value as unknown as T
-  }
-
-  const contentType = response.headers.get('content-type') ?? ''
-
-  if (contentType.includes('application/msgpack')) {
+  if (
+    responseContentType.includes('application/msgpack') ||
+    responseContentType.includes('application/octet-stream') ||
+    responseContentType.includes('application/x-binary')
+  ) {
     return new Uint8Array(await response.arrayBuffer()) as unknown as T
   }
 
-  if (contentType.includes('application/octet-stream') || contentType.includes('application/x-binary')) {
-    return new Uint8Array(await response.arrayBuffer()) as unknown as T
+  if (responseContentType.includes('application/json')) {
+    return parseJson(await response.text()) as unknown as T
   }
 
-  if (contentType.includes('application/json')) {
-    return JSON.parse(await response.text()) as unknown as T
-  }
-
-  if (!contentType) {
+  if (!responseContentType) {
     return new Uint8Array(await response.arrayBuffer()) as unknown as T
   }
 

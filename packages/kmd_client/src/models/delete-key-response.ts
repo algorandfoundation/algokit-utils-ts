@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1DELETEKeyResponse is the response to `DELETE /v1/key`
@@ -9,7 +10,7 @@ export type DeleteKeyResponse = {
   message?: string
 }
 
-export const DeleteKeyResponseMeta: ModelMetadata = {
+export const DeleteKeyResponseMeta: ObjectModelMetadata<DeleteKeyResponse> = {
   name: 'DeleteKeyResponse',
   kind: 'object',
   fields: [
@@ -17,15 +18,13 @@ export const DeleteKeyResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

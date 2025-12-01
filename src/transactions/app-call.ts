@@ -5,6 +5,7 @@ import {
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import {
+  Address,
   MAX_ACCOUNT_REFERENCES,
   MAX_OVERALL_REFERENCES,
   ReadableAddress,
@@ -263,7 +264,7 @@ export function populateTransactionResources(
   if (resourcesAccessed.accounts) {
     transaction.appCall.accountReferences = transaction.appCall.accountReferences ?? []
     for (const account of resourcesAccessed.accounts) {
-      const address = getAddress(account)
+      const address = account
       if (!transaction.appCall.accountReferences.some((a) => a.equals(address))) {
         transaction.appCall.accountReferences.push(address)
       }
@@ -400,7 +401,7 @@ function isAppCallBelowResourceLimit(txn: Transaction): boolean {
 }
 
 type GroupResourceToPopulate =
-  | { type: GroupResourceType.Account; data: string }
+  | { type: GroupResourceType.Account; data: Address }
   | { type: GroupResourceType.App; data: bigint }
   | { type: GroupResourceType.Asset; data: bigint }
   | { type: GroupResourceType.Box; data: TransactBoxReference }
@@ -417,7 +418,7 @@ function populateGroupResource(
 ): void {
   // For asset holdings and app locals, first try to find a transaction that already has the account available
   if (resource.type === GroupResourceType.AssetHolding || resource.type === GroupResourceType.AppLocal) {
-    const address = getAddress(resource.data.account)
+    const address = resource.data.account
 
     // Try to find a transaction that already has the account available
     const groupIndex1 = transactions.findIndex((txn) => {
@@ -561,7 +562,7 @@ function populateGroupResource(
   switch (resource.type) {
     case GroupResourceType.Account: {
       appCall.accountReferences = appCall.accountReferences ?? []
-      const address = getAddress(resource.data)
+      const address = resource.data
       if (!appCall.accountReferences.some((a) => a.equals(address))) {
         appCall.accountReferences.push(address)
       }
@@ -601,7 +602,7 @@ function populateGroupResource(
       if (!appCall.assetReferences.includes(resource.data.asset)) {
         appCall.assetReferences.push(resource.data.asset)
       }
-      const address = getAddress(resource.data.account)
+      const address = resource.data.account
       appCall.accountReferences = appCall.accountReferences ?? []
       if (!appCall.accountReferences.some((a) => a.equals(address))) {
         appCall.accountReferences.push(address)
@@ -613,7 +614,7 @@ function populateGroupResource(
       if (!appCall.appReferences.includes(resource.data.app)) {
         appCall.appReferences.push(resource.data.app)
       }
-      const address = getAddress(resource.data.account)
+      const address = resource.data.account
       appCall.accountReferences = appCall.accountReferences ?? []
       if (!appCall.accountReferences.some((a) => a.equals(address))) {
         appCall.accountReferences.push(address)

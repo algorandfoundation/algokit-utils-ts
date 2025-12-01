@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields relating to rewards,
@@ -35,7 +36,7 @@ export type BlockRewards = {
   rewardsResidue: bigint
 }
 
-export const BlockRewardsMeta: ModelMetadata = {
+export const BlockRewardsMeta: ObjectModelMetadata<BlockRewards> = {
   name: 'BlockRewards',
   kind: 'object',
   fields: [
@@ -43,43 +44,37 @@ export const BlockRewardsMeta: ModelMetadata = {
       name: 'feeSink',
       wireKey: 'fee-sink',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'rewardsCalculationRound',
       wireKey: 'rewards-calculation-round',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'rewardsLevel',
       wireKey: 'rewards-level',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'rewardsPool',
       wireKey: 'rewards-pool',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'rewardsRate',
       wireKey: 'rewards-rate',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'rewardsResidue',
       wireKey: 'rewards-residue',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

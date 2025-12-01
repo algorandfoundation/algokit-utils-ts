@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTWalletRenameRequest is the request for `POST /v1/wallet/rename`
@@ -9,7 +10,7 @@ export type RenameWalletRequest = {
   walletPassword?: string
 }
 
-export const RenameWalletRequestMeta: ModelMetadata = {
+export const RenameWalletRequestMeta: ObjectModelMetadata<RenameWalletRequest> = {
   name: 'RenameWalletRequest',
   kind: 'object',
   fields: [
@@ -17,22 +18,19 @@ export const RenameWalletRequestMeta: ModelMetadata = {
       name: 'walletId',
       wireKey: 'wallet_id',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletName',
       wireKey: 'wallet_name',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

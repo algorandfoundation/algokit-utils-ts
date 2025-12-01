@@ -18,7 +18,7 @@
     "test:watch": "vitest watch --coverage --passWithNoTests",
     "check-types": "tsc --noEmit",
     "audit": "better-npm-audit audit",
-    "pre-commit": "run-s check-types lint:fix audit format test"
+    "pre-commit": "run-s check-types test"
   },
   "dependencies": {},
   "peerDependencies": {},

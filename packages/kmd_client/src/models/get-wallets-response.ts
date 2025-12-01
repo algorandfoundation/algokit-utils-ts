@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { Wallet } from './wallet'
 import { WalletMeta } from './wallet'
 
@@ -12,7 +13,7 @@ export type GetWalletsResponse = {
   wallets?: Wallet[]
 }
 
-export const GetWalletsResponseMeta: ModelMetadata = {
+export const GetWalletsResponseMeta: ObjectModelMetadata<GetWalletsResponse> = {
   name: 'GetWalletsResponse',
   kind: 'object',
   fields: [
@@ -20,22 +21,19 @@ export const GetWalletsResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'wallets',
       wireKey: 'wallets',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => WalletMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(WalletMeta)),
     },
   ],
 }

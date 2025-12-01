@@ -184,7 +184,7 @@ export const waitForConfirmation = async function (
       }
     }
 
-    await algod.waitForBlock(toNumber(currentRound))
+    await algod.statusAfterBlock(toNumber(currentRound))
     currentRound++
   }
 

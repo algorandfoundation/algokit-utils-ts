@@ -250,9 +250,8 @@ export class AccountManager {
 
     return {
       ...account,
-      // None of the Number types can practically overflow 2^53
-      authAddr: account.authAddr ? Address.fromString(account.authAddr) : undefined,
-      address: Address.fromString(address),
+      authAddr: account.authAddr,
+      address,
       balance: AlgoAmount.MicroAlgo(Number(account.amount)),
       amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),
       minBalance: AlgoAmount.MicroAlgo(Number(account.minBalance)),

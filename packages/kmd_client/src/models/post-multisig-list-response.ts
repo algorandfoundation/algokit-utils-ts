@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTMultisigListResponse is the response to `POST /v1/multisig/list`
@@ -10,7 +11,7 @@ export type PostMultisigListResponse = {
   message?: string
 }
 
-export const PostMultisigListResponseMeta: ModelMetadata = {
+export const PostMultisigListResponseMeta: ObjectModelMetadata<PostMultisigListResponse> = {
   name: 'PostMultisigListResponse',
   kind: 'object',
   fields: [
@@ -18,22 +19,19 @@ export const PostMultisigListResponseMeta: ModelMetadata = {
       name: 'addresses',
       wireKey: 'addresses',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: stringArrayCodec,
     },
     {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

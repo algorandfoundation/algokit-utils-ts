@@ -12,8 +12,6 @@ export interface ApiRequestOptions {
   query?: QueryParams;
   headers?: Record<string, string>;
   body?: BodyValue;
-  mediaType?: string;
-  responseHeader?: string;
 }
 
 export abstract class BaseHttpRequest {

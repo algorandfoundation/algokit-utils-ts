@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, bytesCodec, ObjectModelCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSig } from './multisig-sig'
 import { MultisigSigMeta } from './multisig-sig'
 import type { PublicKey } from './public-key'
@@ -17,7 +18,7 @@ export type SignProgramMultisigRequest = {
   walletPassword?: string
 }
 
-export const SignProgramMultisigRequestMeta: ModelMetadata = {
+export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMultisigRequest> = {
   name: 'SignProgramMultisigRequest',
   kind: 'object',
   fields: [
@@ -25,50 +26,43 @@ export const SignProgramMultisigRequestMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'data',
       wireKey: 'data',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'partialMultisig',
       wireKey: 'partial_multisig',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => MultisigSigMeta },
+      codec: new ObjectModelCodec(MultisigSigMeta),
     },
     {
       name: 'publicKey',
       wireKey: 'public_key',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      codec: new PrimitiveModelCodec(PublicKeyMeta),
     },
     {
       name: 'useLegacyMsig',
       wireKey: 'use_legacy_msig',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

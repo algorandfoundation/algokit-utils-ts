@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * The set of parameters and limits override during simulation. If this set of parameters is present, then evaluation parameters may differ from standard evaluation in certain ways.
@@ -35,7 +36,7 @@ export type SimulationEvalOverrides = {
   fixSigners?: boolean
 }
 
-export const SimulationEvalOverridesMeta: ModelMetadata = {
+export const SimulationEvalOverridesMeta: ObjectModelMetadata<SimulationEvalOverrides> = {
   name: 'SimulationEvalOverrides',
   kind: 'object',
   fields: [
@@ -43,43 +44,37 @@ export const SimulationEvalOverridesMeta: ModelMetadata = {
       name: 'allowEmptySignatures',
       wireKey: 'allow-empty-signatures',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'allowUnnamedResources',
       wireKey: 'allow-unnamed-resources',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'maxLogCalls',
       wireKey: 'max-log-calls',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'maxLogSize',
       wireKey: 'max-log-size',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'extraOpcodeBudget',
       wireKey: 'extra-opcode-budget',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'fixSigners',
       wireKey: 'fix-signers',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
   ],
 }

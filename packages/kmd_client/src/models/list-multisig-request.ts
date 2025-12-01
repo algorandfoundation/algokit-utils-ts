@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTMultisigListRequest is the request for `POST /v1/multisig/list`
@@ -7,7 +8,7 @@ export type ListMultisigRequest = {
   walletHandleToken?: string
 }
 
-export const ListMultisigRequestMeta: ModelMetadata = {
+export const ListMultisigRequestMeta: ObjectModelMetadata<ListMultisigRequest> = {
   name: 'ListMultisigRequest',
   kind: 'object',
   fields: [
@@ -15,8 +16,7 @@ export const ListMultisigRequestMeta: ModelMetadata = {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

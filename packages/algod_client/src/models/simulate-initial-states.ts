@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationInitialStates } from './application-initial-states'
 import { ApplicationInitialStatesMeta } from './application-initial-states'
 
@@ -12,7 +13,7 @@ export type SimulateInitialStates = {
   appInitialStates?: ApplicationInitialStates[]
 }
 
-export const SimulateInitialStatesMeta: ModelMetadata = {
+export const SimulateInitialStatesMeta: ObjectModelMetadata<SimulateInitialStates> = {
   name: 'SimulateInitialStates',
   kind: 'object',
   fields: [
@@ -20,8 +21,7 @@ export const SimulateInitialStatesMeta: ModelMetadata = {
       name: 'appInitialStates',
       wireKey: 'app-initial-states',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationInitialStatesMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationInitialStatesMeta)),
     },
   ],
 }

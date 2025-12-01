@@ -1,5 +1,7 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
+import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 
 /**
  * A transaction group to simulate.
@@ -11,7 +13,7 @@ export type SimulateRequestTransactionGroup = {
   txns: SignedTransaction[]
 }
 
-export const SimulateRequestTransactionGroupMeta: ModelMetadata = {
+export const SimulateRequestTransactionGroupMeta: ObjectModelMetadata<SimulateRequestTransactionGroup> = {
   name: 'SimulateRequestTransactionGroup',
   kind: 'object',
   fields: [
@@ -19,8 +21,7 @@ export const SimulateRequestTransactionGroupMeta: ModelMetadata = {
       name: 'txns',
       wireKey: 'txns',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'codec', codecKey: 'SignedTransaction' } },
+      codec: new ArrayCodec(new ObjectModelCodec(SignedTransactionMeta)),
     },
   ],
 }

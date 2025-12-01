@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents the message that the state proofs are attesting to.
@@ -30,7 +31,7 @@ export type StateProofMessage = {
   lastAttestedRound: bigint
 }
 
-export const StateProofMessageMeta: ModelMetadata = {
+export const StateProofMessageMeta: ObjectModelMetadata<StateProofMessage> = {
   name: 'StateProofMessage',
   kind: 'object',
   fields: [
@@ -38,36 +39,31 @@ export const StateProofMessageMeta: ModelMetadata = {
       name: 'blockHeadersCommitment',
       wireKey: 'BlockHeadersCommitment',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'votersCommitment',
       wireKey: 'VotersCommitment',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'lnProvenWeight',
       wireKey: 'LnProvenWeight',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'firstAttestedRound',
       wireKey: 'FirstAttestedRound',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'lastAttestedRound',
       wireKey: 'LastAttestedRound',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

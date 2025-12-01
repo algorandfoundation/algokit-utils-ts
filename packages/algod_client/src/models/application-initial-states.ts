@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationKvStorage } from './application-kv-storage'
 import { ApplicationKvStorageMeta } from './application-kv-storage'
 
@@ -19,7 +20,7 @@ export type ApplicationInitialStates = {
   appBoxes?: ApplicationKvStorage
 }
 
-export const ApplicationInitialStatesMeta: ModelMetadata = {
+export const ApplicationInitialStatesMeta: ObjectModelMetadata<ApplicationInitialStates> = {
   name: 'ApplicationInitialStates',
   kind: 'object',
   fields: [
@@ -27,29 +28,25 @@ export const ApplicationInitialStatesMeta: ModelMetadata = {
       name: 'id',
       wireKey: 'id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationKvStorageMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationKvStorageMeta)),
     },
     {
       name: 'appGlobals',
       wireKey: 'app-globals',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationKvStorageMeta },
+      codec: new ObjectModelCodec(ApplicationKvStorageMeta),
     },
     {
       name: 'appBoxes',
       wireKey: 'app-boxes',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationKvStorageMeta },
+      codec: new ObjectModelCodec(ApplicationKvStorageMeta),
     },
   ],
 }

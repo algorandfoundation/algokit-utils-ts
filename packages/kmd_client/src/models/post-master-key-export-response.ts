@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { MasterDerivationKey } from './master-derivation-key'
 import { MasterDerivationKeyMeta } from './master-derivation-key'
 
@@ -12,7 +13,7 @@ export type PostMasterKeyExportResponse = {
   message?: string
 }
 
-export const PostMasterKeyExportResponseMeta: ModelMetadata = {
+export const PostMasterKeyExportResponseMeta: ObjectModelMetadata<PostMasterKeyExportResponse> = {
   name: 'PostMasterKeyExportResponse',
   kind: 'object',
   fields: [
@@ -20,22 +21,19 @@ export const PostMasterKeyExportResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'masterDerivationKey',
       wireKey: 'master_derivation_key',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => MasterDerivationKeyMeta },
+      codec: new ArrayModelCodec(MasterDerivationKeyMeta),
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

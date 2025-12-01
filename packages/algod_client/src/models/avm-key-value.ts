@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmValue } from './avm-value'
 import { AvmValueMeta } from './avm-value'
 
@@ -10,7 +11,7 @@ export type AvmKeyValue = {
   value: AvmValue
 }
 
-export const AvmKeyValueMeta: ModelMetadata = {
+export const AvmKeyValueMeta: ObjectModelMetadata<AvmKeyValue> = {
   name: 'AvmKeyValue',
   kind: 'object',
   fields: [
@@ -18,15 +19,13 @@ export const AvmKeyValueMeta: ModelMetadata = {
       name: 'key',
       wireKey: 'key',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'value',
       wireKey: 'value',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => AvmValueMeta },
+      codec: new ObjectModelCodec(AvmValueMeta),
     },
   ],
 }

@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1DELETEMultisigResponse is the response to POST /v1/multisig/delete`
@@ -9,7 +10,7 @@ export type DeleteMultisigResponse = {
   message?: string
 }
 
-export const DeleteMultisigResponseMeta: ModelMetadata = {
+export const DeleteMultisigResponseMeta: ObjectModelMetadata<DeleteMultisigResponse> = {
   name: 'DeleteMultisigResponse',
   kind: 'object',
   fields: [
@@ -17,15 +18,13 @@ export const DeleteMultisigResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

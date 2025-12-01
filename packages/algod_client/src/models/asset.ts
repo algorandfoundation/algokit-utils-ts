@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetParams } from './asset-params'
 import { AssetParamsMeta } from './asset-params'
 
@@ -9,27 +10,25 @@ export type Asset = {
   /**
    * unique asset identifier
    */
-  index: bigint
+  id: bigint
   params: AssetParams
 }
 
-export const AssetMeta: ModelMetadata = {
+export const AssetMeta: ObjectModelMetadata<Asset> = {
   name: 'Asset',
   kind: 'object',
   fields: [
     {
-      name: 'index',
+      name: 'id',
       wireKey: 'index',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      codec: new ObjectModelCodec(AssetParamsMeta),
     },
   ],
 }

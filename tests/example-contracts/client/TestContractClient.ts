@@ -5,7 +5,7 @@
  * requires: @algorandfoundation/algokit-utils: ^7
  */
 import { Arc56Contract } from '@algorandfoundation/algokit-abi'
-import { SimulateTransaction } from '@algorandfoundation/algokit-algod-client'
+import { SimulateResponse } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import { TransactionSigner } from '@algorandfoundation/sdk'
 import { type AlgorandClient } from '../../../src/types/algorand-client'
@@ -1253,11 +1253,9 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
   /**
    * Simulates the transaction group and returns the result
    */
-  simulate(): Promise<TestContractComposerResults<TReturns> & { simulateResponse: SimulateTransaction }>
-  simulate(
-    options: SkipSignaturesSimulateOptions,
-  ): Promise<TestContractComposerResults<TReturns> & { simulateResponse: SimulateTransaction }>
-  simulate(options: RawSimulateOptions): Promise<TestContractComposerResults<TReturns> & { simulateResponse: SimulateTransaction }>
+  simulate(): Promise<TestContractComposerResults<TReturns> & { simulateResponse: SimulateResponse }>
+  simulate(options: SkipSignaturesSimulateOptions): Promise<TestContractComposerResults<TReturns> & { simulateResponse: SimulateResponse }>
+  simulate(options: RawSimulateOptions): Promise<TestContractComposerResults<TReturns> & { simulateResponse: SimulateResponse }>
   /**
    * Sends the transaction group to the network and returns the results
    */

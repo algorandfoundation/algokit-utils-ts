@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTWalletInitResponse is the response to `POST /v1/wallet/init`
@@ -10,7 +11,7 @@ export type PostWalletInitResponse = {
   walletHandleToken?: string
 }
 
-export const PostWalletInitResponseMeta: ModelMetadata = {
+export const PostWalletInitResponseMeta: ObjectModelMetadata<PostWalletInitResponse> = {
   name: 'PostWalletInitResponse',
   kind: 'object',
   fields: [
@@ -18,22 +19,19 @@ export const PostWalletInitResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

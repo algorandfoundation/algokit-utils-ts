@@ -212,7 +212,7 @@ export class AppManager {
       appAddress: getApplicationAddress(app.id),
       approvalProgram: app.params.approvalProgram,
       clearStateProgram: app.params.clearStateProgram,
-      creator: Address.fromString(app.params.creator),
+      creator: app.params.creator,
       localInts: Number(app.params.localStateSchema?.numUint ?? 0),
       localByteSlices: Number(app.params.localStateSchema?.numByteSlice ?? 0),
       globalInts: Number(app.params.globalStateSchema?.numUint ?? 0),

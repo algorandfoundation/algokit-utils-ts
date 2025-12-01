@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TealValue } from './teal-value'
 import { TealValueMeta } from './teal-value'
 
@@ -10,7 +11,7 @@ export type TealKeyValue = {
   value: TealValue
 }
 
-export const TealKeyValueMeta: ModelMetadata = {
+export const TealKeyValueMeta: ObjectModelMetadata<TealKeyValue> = {
   name: 'TealKeyValue',
   kind: 'object',
   fields: [
@@ -18,15 +19,13 @@ export const TealKeyValueMeta: ModelMetadata = {
       name: 'key',
       wireKey: 'key',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'value',
       wireKey: 'value',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => TealValueMeta },
+      codec: new ObjectModelCodec(TealValueMeta),
     },
   ],
 }

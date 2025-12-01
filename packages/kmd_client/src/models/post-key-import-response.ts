@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTKeyImportResponse is the response to `POST /v1/key/import`
@@ -10,7 +11,7 @@ export type PostKeyImportResponse = {
   message?: string
 }
 
-export const PostKeyImportResponseMeta: ModelMetadata = {
+export const PostKeyImportResponseMeta: ObjectModelMetadata<PostKeyImportResponse> = {
   name: 'PostKeyImportResponse',
   kind: 'object',
   fields: [
@@ -18,22 +19,19 @@ export const PostKeyImportResponseMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Proof of transaction in a block.
@@ -32,7 +33,7 @@ export type TransactionProof = {
   hashtype: 'sha512_256' | 'sha256'
 }
 
-export const TransactionProofMeta: ModelMetadata = {
+export const TransactionProofMeta: ObjectModelMetadata<TransactionProof> = {
   name: 'TransactionProof',
   kind: 'object',
   fields: [
@@ -40,36 +41,31 @@ export const TransactionProofMeta: ModelMetadata = {
       name: 'proof',
       wireKey: 'proof',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'stibhash',
       wireKey: 'stibhash',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'treedepth',
       wireKey: 'treedepth',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'idx',
       wireKey: 'idx',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'hashtype',
       wireKey: 'hashtype',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Box name and its content.
@@ -20,7 +21,7 @@ export type Box = {
   value: Uint8Array
 }
 
-export const BoxMeta: ModelMetadata = {
+export const BoxMeta: ObjectModelMetadata<Box> = {
   name: 'Box',
   kind: 'object',
   fields: [
@@ -28,22 +29,19 @@ export const BoxMeta: ModelMetadata = {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'name',
       wireKey: 'name',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'value',
       wireKey: 'value',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

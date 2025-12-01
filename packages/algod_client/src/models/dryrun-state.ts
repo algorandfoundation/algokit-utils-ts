@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TealValue } from './teal-value'
 import { TealValueMeta } from './teal-value'
 
@@ -24,7 +25,7 @@ export type DryrunState = {
   error?: string
 }
 
-export const DryrunStateMeta: ModelMetadata = {
+export const DryrunStateMeta: ObjectModelMetadata<DryrunState> = {
   name: 'DryrunState',
   kind: 'object',
   fields: [
@@ -32,36 +33,31 @@ export const DryrunStateMeta: ModelMetadata = {
       name: 'line',
       wireKey: 'line',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'pc',
       wireKey: 'pc',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'stack',
       wireKey: 'stack',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TealValueMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(TealValueMeta)),
     },
     {
       name: 'scratch',
       wireKey: 'scratch',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TealValueMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(TealValueMeta)),
     },
     {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

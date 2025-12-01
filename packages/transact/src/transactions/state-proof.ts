@@ -18,7 +18,7 @@ export type StateProof = {
   sigProofs: MerkleArrayProof
   partProofs: MerkleArrayProof
   merkleSignatureSaltVersion: number
-  reveals: Reveal[]
+  reveals: Map<bigint, Reveal>
   positionsToReveal: bigint[]
 }
 
@@ -59,7 +59,6 @@ export type SigslotCommit = {
 }
 
 export type Reveal = {
-  position: bigint
   sigslot: SigslotCommit
   participant: Participant
 }

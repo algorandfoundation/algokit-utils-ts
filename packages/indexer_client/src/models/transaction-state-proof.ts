@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { IndexerStateProofMessage } from './indexer-state-proof-message'
 import { IndexerStateProofMessageMeta } from './indexer-state-proof-message'
 import type { StateProofFields } from './state-proof-fields'
@@ -19,7 +20,7 @@ export type TransactionStateProof = {
   message?: IndexerStateProofMessage
 }
 
-export const TransactionStateProofMeta: ModelMetadata = {
+export const TransactionStateProofMeta: ObjectModelMetadata<TransactionStateProof> = {
   name: 'TransactionStateProof',
   kind: 'object',
   fields: [
@@ -27,22 +28,19 @@ export const TransactionStateProofMeta: ModelMetadata = {
       name: 'stateProofType',
       wireKey: 'state-proof-type',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'stateProof',
       wireKey: 'state-proof',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => StateProofFieldsMeta },
+      codec: new ObjectModelCodec(StateProofFieldsMeta),
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => IndexerStateProofMessageMeta },
+      codec: new ObjectModelCodec(IndexerStateProofMessageMeta),
     },
   ],
 }

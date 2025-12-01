@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { StateProofParticipant } from './state-proof-participant'
 import { StateProofParticipantMeta } from './state-proof-participant'
 import type { StateProofSigSlot } from './state-proof-sig-slot'
@@ -13,7 +14,7 @@ export type StateProofReveal = {
   participant?: StateProofParticipant
 }
 
-export const StateProofRevealMeta: ModelMetadata = {
+export const StateProofRevealMeta: ObjectModelMetadata<StateProofReveal> = {
   name: 'StateProofReveal',
   kind: 'object',
   fields: [
@@ -21,22 +22,19 @@ export const StateProofRevealMeta: ModelMetadata = {
       name: 'position',
       wireKey: 'position',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'sigSlot',
       wireKey: 'sig-slot',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => StateProofSigSlotMeta },
+      codec: new ObjectModelCodec(StateProofSigSlotMeta),
     },
     {
       name: 'participant',
       wireKey: 'participant',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => StateProofParticipantMeta },
+      codec: new ObjectModelCodec(StateProofParticipantMeta),
     },
   ],
 }

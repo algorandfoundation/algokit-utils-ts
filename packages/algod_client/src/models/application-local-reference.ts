@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * References an account's local state for an application.
@@ -7,7 +8,7 @@ export type ApplicationLocalReference = {
   /**
    * Address of the account with the local state.
    */
-  account: string
+  account: Address
 
   /**
    * Application ID of the local state application.
@@ -15,7 +16,7 @@ export type ApplicationLocalReference = {
   app: bigint
 }
 
-export const ApplicationLocalReferenceMeta: ModelMetadata = {
+export const ApplicationLocalReferenceMeta: ObjectModelMetadata<ApplicationLocalReference> = {
   name: 'ApplicationLocalReference',
   kind: 'object',
   fields: [
@@ -23,15 +24,13 @@ export const ApplicationLocalReferenceMeta: ModelMetadata = {
       name: 'account',
       wireKey: 'account',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'app',
       wireKey: 'app',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

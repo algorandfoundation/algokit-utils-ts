@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, ObjectModelCodec, ArrayModelCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { Digest } from './digest'
 import { DigestMeta } from './digest'
 import type { MultisigSig } from './multisig-sig'
@@ -18,7 +19,7 @@ export type SignMultisigRequest = {
   walletPassword?: string
 }
 
-export const SignMultisigRequestMeta: ModelMetadata = {
+export const SignMultisigRequestMeta: ObjectModelMetadata<SignMultisigRequest> = {
   name: 'SignMultisigRequest',
   kind: 'object',
   fields: [
@@ -26,43 +27,37 @@ export const SignMultisigRequestMeta: ModelMetadata = {
       name: 'partialMultisig',
       wireKey: 'partial_multisig',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => MultisigSigMeta },
+      codec: new ObjectModelCodec(MultisigSigMeta),
     },
     {
       name: 'publicKey',
       wireKey: 'public_key',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      codec: new PrimitiveModelCodec(PublicKeyMeta),
     },
     {
       name: 'signer',
       wireKey: 'signer',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => DigestMeta },
+      codec: new ArrayModelCodec(DigestMeta),
     },
     {
       name: 'transaction',
       wireKey: 'transaction',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

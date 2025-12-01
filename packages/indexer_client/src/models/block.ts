@@ -1,4 +1,13 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  bytesCodec,
+  addressCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { BlockRewards } from './block-rewards'
 import { BlockRewardsMeta } from './block-rewards'
 import type { BlockUpgradeState } from './block-upgrade-state'
@@ -22,7 +31,7 @@ export type Block = {
   /**
    * the proposer of this block.
    */
-  proposer?: string
+  proposer?: Address
 
   /**
    * the sum of all fees paid by transactions in this block.
@@ -111,7 +120,7 @@ export type Block = {
   participationUpdates?: ParticipationUpdates
 }
 
-export const BlockMeta: ModelMetadata = {
+export const BlockMeta: ObjectModelMetadata<Block> = {
   name: 'Block',
   kind: 'object',
   fields: [
@@ -119,148 +128,127 @@ export const BlockMeta: ModelMetadata = {
       name: 'proposer',
       wireKey: 'proposer',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'feesCollected',
       wireKey: 'fees-collected',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'bonus',
       wireKey: 'bonus',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'proposerPayout',
       wireKey: 'proposer-payout',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'genesisHash',
       wireKey: 'genesis-hash',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'genesisId',
       wireKey: 'genesis-id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'previousBlockHash',
       wireKey: 'previous-block-hash',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'previousBlockHash512',
       wireKey: 'previous-block-hash-512',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'rewards',
       wireKey: 'rewards',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => BlockRewardsMeta },
+      codec: new ObjectModelCodec(BlockRewardsMeta),
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'seed',
       wireKey: 'seed',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'stateProofTracking',
       wireKey: 'state-proof-tracking',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => StateProofTrackingMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(StateProofTrackingMeta)),
     },
     {
       name: 'timestamp',
       wireKey: 'timestamp',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'transactions',
       wireKey: 'transactions',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => TransactionMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(TransactionMeta)),
     },
     {
       name: 'transactionsRoot',
       wireKey: 'transactions-root',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'transactionsRootSha256',
       wireKey: 'transactions-root-sha256',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'transactionsRootSha512',
       wireKey: 'transactions-root-sha512',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'txnCounter',
       wireKey: 'txn-counter',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'upgradeState',
       wireKey: 'upgrade-state',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => BlockUpgradeStateMeta },
+      codec: new ObjectModelCodec(BlockUpgradeStateMeta),
     },
     {
       name: 'upgradeVote',
       wireKey: 'upgrade-vote',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => BlockUpgradeVoteMeta },
+      codec: new ObjectModelCodec(BlockUpgradeVoteMeta),
     },
     {
       name: 'participationUpdates',
       wireKey: 'participation-updates',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => ParticipationUpdatesMeta },
+      codec: new ObjectModelCodec(ParticipationUpdatesMeta),
     },
   ],
 }

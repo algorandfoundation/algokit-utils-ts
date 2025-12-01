@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, addressCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmValue } from './avm-value'
 import { AvmValueMeta } from './avm-value'
 
@@ -25,10 +26,10 @@ export type ApplicationStateOperation = {
   /**
    * For local state changes, the address of the account associated with the local state.
    */
-  account?: string
+  account?: Address
 }
 
-export const ApplicationStateOperationMeta: ModelMetadata = {
+export const ApplicationStateOperationMeta: ObjectModelMetadata<ApplicationStateOperation> = {
   name: 'ApplicationStateOperation',
   kind: 'object',
   fields: [
@@ -36,36 +37,31 @@ export const ApplicationStateOperationMeta: ModelMetadata = {
       name: 'operation',
       wireKey: 'operation',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'appStateType',
       wireKey: 'app-state-type',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'key',
       wireKey: 'key',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'newValue',
       wireKey: 'new-value',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => AvmValueMeta },
+      codec: new ObjectModelCodec(AvmValueMeta),
     },
     {
       name: 'account',
       wireKey: 'account',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
   ],
 }

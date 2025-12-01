@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec, addressCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { PendingTransactionResponse } from './pending-transaction-response'
 import { PendingTransactionResponseMeta } from './pending-transaction-response'
 import type { SimulateUnnamedResourcesAccessed } from './simulate-unnamed-resources-accessed'
@@ -27,10 +28,10 @@ export type SimulateTransactionResult = {
   /**
    * The account that needed to sign this transaction when no signature was provided and the provided signer was incorrect.
    */
-  fixedSigner?: string
+  fixedSigner?: Address
 }
 
-export const SimulateTransactionResultMeta: ModelMetadata = {
+export const SimulateTransactionResultMeta: ObjectModelMetadata<SimulateTransactionResult> = {
   name: 'SimulateTransactionResult',
   kind: 'object',
   fields: [
@@ -38,43 +39,37 @@ export const SimulateTransactionResultMeta: ModelMetadata = {
       name: 'txnResult',
       wireKey: 'txn-result',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => PendingTransactionResponseMeta },
+      codec: new ObjectModelCodec(PendingTransactionResponseMeta),
     },
     {
       name: 'appBudgetConsumed',
       wireKey: 'app-budget-consumed',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'logicSigBudgetConsumed',
       wireKey: 'logic-sig-budget-consumed',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'execTrace',
       wireKey: 'exec-trace',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => SimulationTransactionExecTraceMeta },
+      codec: new ObjectModelCodec(SimulationTransactionExecTraceMeta),
     },
     {
       name: 'unnamedResourcesAccessed',
       wireKey: 'unnamed-resources-accessed',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => SimulateUnnamedResourcesAccessedMeta },
+      codec: new ObjectModelCodec(SimulateUnnamedResourcesAccessedMeta),
     },
     {
       name: 'fixedSigner',
       wireKey: 'fixed-signer',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
   ],
 }

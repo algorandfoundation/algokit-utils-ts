@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec, bytesCodec, addressCodec, ObjectModelCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
 import type { TealKeyValueStore } from './teal-key-value-store'
@@ -11,7 +12,7 @@ export type ApplicationParams = {
   /**
    * The address that created this application. This is the address where the parameters and global state for this application can be found.
    */
-  creator?: string
+  creator?: Address
 
   /**
    * approval program.
@@ -37,7 +38,7 @@ export type ApplicationParams = {
   version?: number
 }
 
-export const ApplicationParamsMeta: ModelMetadata = {
+export const ApplicationParamsMeta: ObjectModelMetadata<ApplicationParams> = {
   name: 'ApplicationParams',
   kind: 'object',
   fields: [
@@ -45,57 +46,49 @@ export const ApplicationParamsMeta: ModelMetadata = {
       name: 'creator',
       wireKey: 'creator',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'approvalProgram',
       wireKey: 'approval-program',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'clearStateProgram',
       wireKey: 'clear-state-program',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'extraProgramPages',
       wireKey: 'extra-program-pages',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'localStateSchema',
       wireKey: 'local-state-schema',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationStateSchemaMeta },
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'globalStateSchema',
       wireKey: 'global-state-schema',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationStateSchemaMeta },
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'globalState',
       wireKey: 'global-state',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => TealKeyValueStoreMeta },
+      codec: new ArrayModelCodec(TealKeyValueStoreMeta),
     },
     {
       name: 'version',
       wireKey: 'version',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

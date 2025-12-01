@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 import type { Signature } from './signature'
@@ -13,7 +14,7 @@ export type MultisigSubsig = {
   sig?: Signature
 }
 
-export const MultisigSubsigMeta: ModelMetadata = {
+export const MultisigSubsigMeta: ObjectModelMetadata<MultisigSubsig> = {
   name: 'MultisigSubsig',
   kind: 'object',
   fields: [
@@ -21,15 +22,13 @@ export const MultisigSubsigMeta: ModelMetadata = {
       name: 'key',
       wireKey: 'Key',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      codec: new PrimitiveModelCodec(PublicKeyMeta),
     },
     {
       name: 'sig',
       wireKey: 'Sig',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => SignatureMeta },
+      codec: new PrimitiveModelCodec(SignatureMeta),
     },
   ],
 }

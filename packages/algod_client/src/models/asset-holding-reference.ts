@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * References an asset held by an account.
@@ -7,7 +8,7 @@ export type AssetHoldingReference = {
   /**
    * Address of the account holding the asset.
    */
-  account: string
+  account: Address
 
   /**
    * Asset ID of the holding.
@@ -15,7 +16,7 @@ export type AssetHoldingReference = {
   asset: bigint
 }
 
-export const AssetHoldingReferenceMeta: ModelMetadata = {
+export const AssetHoldingReferenceMeta: ObjectModelMetadata<AssetHoldingReference> = {
   name: 'AssetHoldingReference',
   kind: 'object',
   fields: [
@@ -23,15 +24,13 @@ export const AssetHoldingReferenceMeta: ModelMetadata = {
       name: 'account',
       wireKey: 'account',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'asset',
       wireKey: 'asset',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

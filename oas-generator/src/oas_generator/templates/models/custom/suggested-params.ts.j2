@@ -1,0 +1,14 @@
+import { Expand } from '@algorandfoundation/algokit-common';
+import type { TransactionParametersResponse } from './transaction-parameters-response';
+
+/** Contains parameters relevant to the creation of a new transaction in a specific network at a specific time. */
+export type SuggestedParams = Expand<
+  Omit<TransactionParametersResponse, 'lastRound'> & {
+    flatFee: boolean
+    firstValid: bigint
+    lastValid: bigint
+  }
+>;
+
+// This is never used, just to satisfy the import generator pattern
+export type SuggestedParamsMeta = never;

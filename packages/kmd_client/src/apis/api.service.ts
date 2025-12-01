@@ -1,6 +1,6 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
-import { AlgorandSerializer } from '../core/model-runtime'
-import type { BodyFormat } from '../core/model-runtime'
+import { encodeJson, decodeJson } from '../core/model-runtime'
+import { type EncodingFormat } from '@algorandfoundation/algokit-common'
 import type {
   CreateWalletRequest,
   DeleteKeyRequest,
@@ -93,12 +93,8 @@ import {
 export class KmdApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
-  private static acceptFor(format: BodyFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
-  }
-
-  private static mediaFor(format: BodyFormat): string {
-    return format === 'json' ? 'application/json' : 'application/msgpack'
+  private mimeTypeFor(format: EncodingFormat | 'text'): string {
+    return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain'
   }
 
   /**
@@ -106,29 +102,24 @@ export class KmdApi {
    */
   async createWallet(body: CreateWalletRequest): Promise<PostWalletResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = CreateWalletRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/wallet',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletResponse
+    return decodeJson(payload, PostWalletResponseMeta)
   }
 
   /**
@@ -136,29 +127,24 @@ export class KmdApi {
    */
   async deleteKey(body: DeleteKeyRequest): Promise<DeleteKeyResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = DeleteKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'DELETE',
       url: '/v1/key',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = DeleteKeyResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as DeleteKeyResponse
+    return decodeJson(payload, DeleteKeyResponseMeta)
   }
 
   /**
@@ -166,29 +152,24 @@ export class KmdApi {
    */
   async deleteMultisig(body: DeleteMultisigRequest): Promise<DeleteMultisigResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = DeleteMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'DELETE',
       url: '/v1/multisig',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = DeleteMultisigResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as DeleteMultisigResponse
+    return decodeJson(payload, DeleteMultisigResponseMeta)
   }
 
   /**
@@ -196,29 +177,24 @@ export class KmdApi {
    */
   async exportKey(body: ExportKeyRequest): Promise<PostKeyExportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ExportKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/key/export',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyExportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyExportResponse
+    return decodeJson(payload, PostKeyExportResponseMeta)
   }
 
   /**
@@ -226,29 +202,24 @@ export class KmdApi {
    */
   async exportMasterKey(body: ExportMasterKeyRequest): Promise<PostMasterKeyExportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ExportMasterKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/master-key/export',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostMasterKeyExportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMasterKeyExportResponse
+    return decodeJson(payload, PostMasterKeyExportResponseMeta)
   }
 
   /**
@@ -256,29 +227,24 @@ export class KmdApi {
    */
   async exportMultisig(body: ExportMultisigRequest): Promise<PostMultisigExportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ExportMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/multisig/export',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigExportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigExportResponse
+    return decodeJson(payload, PostMultisigExportResponseMeta)
   }
 
   /**
@@ -286,51 +252,41 @@ export class KmdApi {
    */
   async generateKey(body: GenerateKeyRequest): Promise<PostKeyResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = GenerateKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/key',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyResponse
+    return decodeJson(payload, PostKeyResponseMeta)
   }
 
   async getVersion(): Promise<VersionsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/versions',
       path: {},
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = VersionsResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as VersionsResponse
+    return decodeJson(payload, VersionsResponseMeta)
   }
 
   /**
@@ -338,29 +294,24 @@ export class KmdApi {
    */
   async getWalletInfo(body: WalletInfoRequest): Promise<PostWalletInfoResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = WalletInfoRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/wallet/info',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletInfoResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletInfoResponse
+    return decodeJson(payload, PostWalletInfoResponseMeta)
   }
 
   /**
@@ -368,29 +319,24 @@ export class KmdApi {
    */
   async importKey(body: ImportKeyRequest): Promise<PostKeyImportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ImportKeyRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/key/import',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyImportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyImportResponse
+    return decodeJson(payload, PostKeyImportResponseMeta)
   }
 
   /**
@@ -398,29 +344,24 @@ export class KmdApi {
    */
   async importMultisig(body: ImportMultisigRequest): Promise<PostMultisigImportResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ImportMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/multisig/import',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigImportResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigImportResponse
+    return decodeJson(payload, PostMultisigImportResponseMeta)
   }
 
   /**
@@ -428,29 +369,24 @@ export class KmdApi {
    */
   async initWalletHandleToken(body: InitWalletHandleTokenRequest): Promise<PostWalletInitResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = InitWalletHandleTokenRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/wallet/init',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletInitResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletInitResponse
+    return decodeJson(payload, PostWalletInitResponseMeta)
   }
 
   /**
@@ -458,59 +394,49 @@ export class KmdApi {
    */
   async listKeysInWallet(body: ListKeysRequest): Promise<PostKeyListResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ListKeysRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/key/list',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostKeyListResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostKeyListResponse
+    return decodeJson(payload, PostKeyListResponseMeta)
   }
 
   /**
    * Lists all of the multisig accounts whose preimages this wallet stores
    */
-  async listMultisg(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
+  async listMultisig(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ListMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/multisig/list',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigListResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigListResponse
+    return decodeJson(payload, PostMultisigListResponseMeta)
   }
 
   /**
@@ -518,24 +444,19 @@ export class KmdApi {
    */
   async listWallets(): Promise<GetWalletsResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'GET',
       url: '/v1/wallets',
       path: {},
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = GetWalletsResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as GetWalletsResponse
+    return decodeJson(payload, GetWalletsResponseMeta)
   }
 
   /**
@@ -543,29 +464,24 @@ export class KmdApi {
    */
   async releaseWalletHandleToken(body: ReleaseWalletHandleTokenRequest): Promise<PostWalletReleaseResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = ReleaseWalletHandleTokenRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/wallet/release',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletReleaseResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletReleaseResponse
+    return decodeJson(payload, PostWalletReleaseResponseMeta)
   }
 
   /**
@@ -573,29 +489,24 @@ export class KmdApi {
    */
   async renameWallet(body: RenameWalletRequest): Promise<PostWalletRenameResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = RenameWalletRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/wallet/rename',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletRenameResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletRenameResponse
+    return decodeJson(payload, PostWalletRenameResponseMeta)
   }
 
   /**
@@ -603,29 +514,24 @@ export class KmdApi {
    */
   async renewWalletHandleToken(body: RenewWalletHandleTokenRequest): Promise<PostWalletRenewResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = RenewWalletHandleTokenRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/wallet/renew',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostWalletRenewResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostWalletRenewResponse
+    return decodeJson(payload, PostWalletRenewResponseMeta)
   }
 
   /**
@@ -633,29 +539,24 @@ export class KmdApi {
    */
   async signMultisigProgram(body: SignProgramMultisigRequest): Promise<PostMultisigProgramSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignProgramMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/multisig/signprogram',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigProgramSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigProgramSignResponse
+    return decodeJson(payload, PostMultisigProgramSignResponseMeta)
   }
 
   /**
@@ -663,29 +564,24 @@ export class KmdApi {
    */
   async signMultisigTransaction(body: SignMultisigRequest): Promise<PostMultisigTransactionSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignMultisigRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/multisig/sign',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostMultisigTransactionSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostMultisigTransactionSignResponse
+    return decodeJson(payload, PostMultisigTransactionSignResponseMeta)
   }
 
   /**
@@ -693,29 +589,24 @@ export class KmdApi {
    */
   async signProgram(body: SignProgramRequest): Promise<PostProgramSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignProgramRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/program/sign',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostProgramSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostProgramSignResponse
+    return decodeJson(payload, PostProgramSignResponseMeta)
   }
 
   /**
@@ -723,29 +614,24 @@ export class KmdApi {
    */
   async signTransaction(body: SignTransactionRequest): Promise<PostTransactionSignResponse> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
     const bodyMeta = SignTransactionRequestMeta
-    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
       method: 'POST',
       url: '/v1/transaction/sign',
       path: {},
       query: {},
       headers,
       body: serializedBody,
-      mediaType: mediaType,
     })
 
-    const responseMeta = PostTransactionSignResponseMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as PostTransactionSignResponse
+    return decodeJson(payload, PostTransactionSignResponseMeta)
   }
 
   /**
@@ -753,23 +639,18 @@ export class KmdApi {
    */
   async swaggerHandler(): Promise<string> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = KmdApi.acceptFor(responseFormat)
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const payload = await this.httpRequest.request<unknown>({
+    const payload = await this.httpRequest.request<string>({
       method: 'GET',
       url: '/swagger.json',
       path: {},
       query: {},
       headers,
       body: undefined,
-      mediaType: undefined,
     })
 
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as string
+    return payload
   }
 }

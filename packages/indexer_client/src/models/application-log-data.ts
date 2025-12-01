@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Stores the global information associated with an application.
@@ -15,7 +16,7 @@ export type ApplicationLogData = {
   logs: Uint8Array[]
 }
 
-export const ApplicationLogDataMeta: ModelMetadata = {
+export const ApplicationLogDataMeta: ObjectModelMetadata<ApplicationLogData> = {
   name: 'ApplicationLogData',
   kind: 'object',
   fields: [
@@ -23,15 +24,13 @@ export const ApplicationLogDataMeta: ModelMetadata = {
       name: 'txid',
       wireKey: 'txid',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'logs',
       wireKey: 'logs',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
+      codec: bytesArrayCodec,
     },
   ],
 }

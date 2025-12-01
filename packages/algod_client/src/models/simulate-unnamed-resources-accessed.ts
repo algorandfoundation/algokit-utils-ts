@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec, ArrayCodec, bigIntArrayCodec, addressArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationLocalReference } from './application-local-reference'
 import { ApplicationLocalReferenceMeta } from './application-local-reference'
 import type { AssetHoldingReference } from './asset-holding-reference'
@@ -13,7 +14,7 @@ export type SimulateUnnamedResourcesAccessed = {
   /**
    * The unnamed accounts that were referenced. The order of this array is arbitrary.
    */
-  accounts?: string[]
+  accounts?: Address[]
 
   /**
    * The unnamed assets that were referenced. The order of this array is arbitrary.
@@ -46,7 +47,7 @@ export type SimulateUnnamedResourcesAccessed = {
   appLocals?: ApplicationLocalReference[]
 }
 
-export const SimulateUnnamedResourcesAccessedMeta: ModelMetadata = {
+export const SimulateUnnamedResourcesAccessedMeta: ObjectModelMetadata<SimulateUnnamedResourcesAccessed> = {
   name: 'SimulateUnnamedResourcesAccessed',
   kind: 'object',
   fields: [
@@ -54,50 +55,43 @@ export const SimulateUnnamedResourcesAccessedMeta: ModelMetadata = {
       name: 'accounts',
       wireKey: 'accounts',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: addressArrayCodec,
     },
     {
       name: 'assets',
       wireKey: 'assets',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: bigIntArrayCodec,
     },
     {
       name: 'apps',
       wireKey: 'apps',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: bigIntArrayCodec,
     },
     {
       name: 'boxes',
       wireKey: 'boxes',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => BoxReferenceMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(BoxReferenceMeta)),
     },
     {
       name: 'extraBoxRefs',
       wireKey: 'extra-box-refs',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'assetHoldings',
       wireKey: 'asset-holdings',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetHoldingReferenceMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AssetHoldingReferenceMeta)),
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationLocalReferenceMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLocalReferenceMeta)),
     },
   ],
 }
