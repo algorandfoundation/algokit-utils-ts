@@ -34,7 +34,15 @@ A collection of random notes pop up during the migration process.
 - transaction_asserts uses 'noble/ed25519' while composer uses nacl, which one should we use?
 - additionalAtcContext was removed from AtomicTransactionComposerToSend
 - ABI
-  - how to construct ABIStruct from string
+  - ABIStruct can't be constructed from string.
+  - Bring the unhappy path tests over (fail to encode/decode)
+  - ABIResult vs ABIReturn
+    - TestContractClient was updated
+  - txnCount was removed from ABIMethod, do we need to add it back?
+  - Remove `ABIMethodParams`
+  - name and displayName added. toString() is the `name`, `displayName` is `name`, except for struct
+  - getArc56Method replaced by getABIMethod
+  - getABIDecodedValue changed behaviour, it doesn't deal with struct anymore
 - Make sure that the python utils also sort resources during resource population
 - migration stratefy for EventType.TxnGroupSimulated in utils-ts-debug
 - TODO: docs for composer simulate workflow
@@ -42,5 +50,8 @@ A collection of random notes pop up during the migration process.
   - call `build` -> resource population into transactions with signers -> simulate will use the transactions with signers
 - review the names of SignedTransactionWrapper
 - TODO: re-export transact under utils/transact folder
+- integration:
+  - need to remove `decodeReturnValue` from the client generator
+- TODO: move ProgramSourceMap
 - trace field at err.traces[].trace is now a typed value, rather than a map.
 - Does lmsig stand for logicMultiSignature? We use logicMultiSignature in our code, as we use multiSignature instead of msig in the Transaction type. An alternative is to use msig and lmsig, like algosdk does?

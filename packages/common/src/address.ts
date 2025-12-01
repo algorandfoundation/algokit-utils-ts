@@ -1,7 +1,7 @@
 import base32 from 'hi-base32'
 import sha512 from 'js-sha512'
-import { CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH } from './constants'
 import { arrayEqual, concatArrays } from './array'
+import { CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH } from './constants'
 
 export const ALGORAND_ADDRESS_BYTE_LENGTH = 36
 export const ALGORAND_CHECKSUM_BYTE_LENGTH = 4

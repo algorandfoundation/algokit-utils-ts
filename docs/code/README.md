@@ -21,7 +21,6 @@
 - [types/amount](modules/types_amount.md)
 - [types/amount.spec](modules/types_amount_spec.md)
 - [types/app](modules/types_app.md)
-- [types/app-arc56](modules/types_app_arc56.md)
 - [types/app-client](modules/types_app_client.md)
 - [types/app-client.spec](modules/types_app_client_spec.md)
 - [types/app-deployer](modules/types_app_deployer.md)

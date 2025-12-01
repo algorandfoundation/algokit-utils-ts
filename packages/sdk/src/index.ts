@@ -1,7 +1,6 @@
 import type { SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
 import { encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as convert from './convert'
-import { Address } from './encoding/address'
 import * as nacl from './nacl/naclWrappers'
 import * as utils from './utils/utils'
 
@@ -54,34 +53,16 @@ export function signBytes(bytes: Uint8Array, sk: Uint8Array) {
   return sig
 }
 
-/**
- * verifyBytes takes array of bytes, an address, and a signature and verifies if the signature is correct for the public
- * key and the bytes (the bytes should have been signed with "MX" prepended for domain separation).
- * @param bytes - Uint8Array
- * @param signature - binary signature
- * @param addr - string address
- * @returns bool
- */
-export function verifyBytes(bytes: Uint8Array, signature: Uint8Array, addr: string | Address) {
-  const toBeVerified = utils.concatArrays(SIGN_BYTES_PREFIX, bytes)
-  const addrObj = typeof addr === 'string' ? Address.fromString(addr) : addr
-  return nacl.verify(toBeVerified, signature, addrObj.publicKey)
-}
-
 export const ERROR_MULTISIG_BAD_SENDER = new Error(MULTISIG_BAD_SENDER_ERROR_MSG)
 export const ERROR_INVALID_MICROALGOS = new Error(convert.INVALID_MICROALGOS_ERROR_MSG)
 
-export * from './abi/index'
 export { default as generateAccount } from './account'
 export * from './client'
 // Export client classes with algosdk-compatible names
 export { KmdClient as Kmd } from './client/kmd'
 export { IndexerClient as Indexer } from './client/v2/indexer/index'
 export * as indexerModels from './client/v2/indexer/models/types'
-export * from './composer'
 export * from './convert'
-export { Address, decodeAddress, encodeAddress, getApplicationAddress, isValidAddress } from './encoding/address'
-export { bigIntToBytes, bytesToBigInt } from './encoding/bigint'
 export { base64ToBytes, bytesToBase64, bytesToHex, bytesToString, coerceToBytes, hexToBytes } from './encoding/binarydata'
 export * from './encoding/encoding'
 export { decodeUint64, encodeUint64 } from './encoding/uint64'

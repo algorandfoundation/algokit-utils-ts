@@ -1,6 +1,7 @@
+import { ABIType, ABIValue, Arc56Contract, getABIMethod } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Address, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
@@ -17,7 +18,6 @@ import { getTestingAppContract } from '../../tests/example-contracts/testing-app
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './app'
-import { Arc56Contract, getArc56Method } from './app-arc56'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
@@ -281,7 +281,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
@@ -315,7 +315,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
@@ -476,7 +476,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    const returnValue = AppManager.getABIReturn(result.confirmations[1], getArc56Method('call_abi_txn', client.appSpec))
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], getABIMethod('call_abi_txn', client.appSpec))
     expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
     expect(returnValue?.returnValue).toBe(result.return)
   })
@@ -537,7 +537,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const expectedReturnValue = AppManager.getABIReturn(result.confirmations[0], getArc56Method('call_abi_foreign_refs', client.appSpec))
+    const expectedReturnValue = AppManager.getABIReturn(result.confirmations[0], getABIMethod('call_abi_foreign_refs', client.appSpec))
     const testAccountPublicKey = testAccount.publicKey
     expect(result.return).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
     expect(expectedReturnValue?.returnValue).toBe(result.return)
@@ -716,11 +716,11 @@ describe('ARC32: app-factory-and-app-client', () => {
     const expectedValue = 1234524352
     await client.send.call({
       method: 'set_box',
-      args: [boxName1, new ABIUintType(32).encode(expectedValue)],
+      args: [boxName1, ABIType.from('uint32').encode(expectedValue)],
       boxReferences: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
+    const boxes = await client.getBoxValuesFromABIType(ABIType.from('uint32'), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, ABIType.from('uint32'))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
@@ -758,7 +758,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       )
     })
 
-    async function testAbiWithDefaultArgMethod<TArg extends algosdk.ABIValue, TResult>(
+    async function testAbiWithDefaultArgMethod<TArg extends ABIValue, TResult>(
       methodSignature: string,
       definedValue: TArg,
       definedValueReturnValue: TResult,
@@ -791,32 +791,28 @@ describe('ARC56: app-factory-and-app-client', () => {
     await localnet.newScope()
 
     factory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: arc56Json,
+      appSpec: arc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
   }, 10_000)
 
   test('ARC56 error messages from inner app error', async () => {
     const innerFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: errorInnerAppArc56Json,
+      appSpec: errorInnerAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
     const { appClient: innerClient } = await innerFactory.deploy({ createParams: { method: 'createApplication' } })
 
     const middleFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: errorMiddleAppArc56Json,
+      appSpec: errorMiddleAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
     const { appClient: middleClient } = await middleFactory.deploy({ createParams: { method: 'createApplication' } })
 
     const outerFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: errorOuterAppArc56Json,
+      appSpec: errorOuterAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
@@ -829,8 +825,7 @@ describe('ARC56: app-factory-and-app-client', () => {
 
   test('ARC56 error message on deploy', async () => {
     const deployErrorFactory = localnet.algorand.client.getAppFactory({
-      // @ts-expect-error TODO: Fix this
-      appSpec: deployErrorAppArc56Json,
+      appSpec: deployErrorAppArc56Json as Arc56Contract,
       defaultSender: localnet.context.testAccount.addr,
     })
 
@@ -892,8 +887,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     const appClient = localnet.algorand.client.getAppClientById({
       appId,
       defaultSender: localnet.context.testAccount.addr,
-      // @ts-expect-error TODO: Fix this
-      appSpec: arc56Json,
+      appSpec: arc56Json as Arc56Contract,
     })
 
     try {

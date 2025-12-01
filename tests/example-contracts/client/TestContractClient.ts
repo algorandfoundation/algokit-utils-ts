@@ -4,12 +4,11 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^7
  */
+import { Arc56Contract } from '@algorandfoundation/algokit-abi'
 import { SimulateResponse } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import { TransactionSigner } from '@algorandfoundation/sdk'
 import { type AlgorandClient } from '../../../src/types/algorand-client'
-import { ABIReturn } from '../../../src/types/app'
-import { Arc56Contract, getArc56ReturnValue } from '../../../src/types/app-arc56'
 import {
   AppClientBareCallParams,
   AppClientCompilationParams,
@@ -676,16 +675,6 @@ export class TestContractClient {
   }
 
   /**
-   * Checks for decode errors on the given return value and maps the return value to the return type for the given method
-   * @returns The typed return value or undefined if there was no value
-   */
-  decodeReturnValue<TSignature extends TestContractNonVoidMethodSignatures>(method: TSignature, returnValue: ABIReturn | undefined) {
-    return returnValue !== undefined
-      ? getArc56ReturnValue<MethodReturn<TSignature>>(returnValue, this.appClient.getABIMethod(method), APP_SPEC.structs)
-      : undefined
-  }
-
-  /**
    * Returns a new `TestContractClient` client, resolving the app by creator address and name
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
@@ -1064,7 +1053,6 @@ export class TestContractClient {
     const client = this
     const composer = this.algorand.newGroup()
     let promiseChain: Promise<unknown> = Promise.resolve()
-    const resultMappers: Array<undefined | ((x: ABIReturn | undefined) => any)> = []
     return {
       /**
        * Add a doMath(uint64,uint64,string)uint64 method call against the TestContract contract
@@ -1075,7 +1063,6 @@ export class TestContractClient {
         > & { onComplete?: OnApplicationComplete.NoOp },
       ) {
         promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.doMath(params)))
-        resultMappers.push((v) => client.decodeReturnValue('doMath(uint64,uint64,string)uint64', v))
         return this
       },
       /**
@@ -1087,7 +1074,6 @@ export class TestContractClient {
         },
       ) {
         promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.txnArg(params)))
-        resultMappers.push((v) => client.decodeReturnValue('txnArg(pay)address', v))
         return this
       },
       /**
@@ -1099,7 +1085,6 @@ export class TestContractClient {
         },
       ) {
         promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.helloWorld(params)))
-        resultMappers.push((v) => client.decodeReturnValue('helloWorld()string', v))
         return this
       },
       /**
@@ -1111,7 +1096,6 @@ export class TestContractClient {
         },
       ) {
         promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.methodArg(params)))
-        resultMappers.push((v) => client.decodeReturnValue('methodArg(appl)uint64', v))
         return this
       },
       /**
@@ -1123,7 +1107,6 @@ export class TestContractClient {
         > & { onComplete?: OnApplicationComplete.NoOp },
       ) {
         promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.nestedTxnArg(params)))
-        resultMappers.push((v) => client.decodeReturnValue('nestedTxnArg(pay,appl)uint64', v))
         return this
       },
       /**
@@ -1136,7 +1119,6 @@ export class TestContractClient {
         > & { onComplete?: OnApplicationComplete.NoOp },
       ) {
         promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.doubleNestedTxnArg(params)))
-        resultMappers.push((v) => client.decodeReturnValue('doubleNestedTxnArg(pay,appl,pay,appl)uint64', v))
         return this
       },
       /**
@@ -1159,7 +1141,7 @@ export class TestContractClient {
         const result = await (!options ? composer.simulate() : composer.simulate(options))
         return {
           ...result,
-          returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val) : val.returnValue)),
+          returns: result.returns?.map((val) => val.returnValue),
         }
       },
       async send(params?: SendParams) {
@@ -1167,7 +1149,7 @@ export class TestContractClient {
         const result = await composer.send(params)
         return {
           ...result,
-          returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val) : val.returnValue)),
+          returns: result.returns?.map((val) => val.returnValue),
         }
       },
     } as unknown as TestContractComposer

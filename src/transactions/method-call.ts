@@ -1,6 +1,3 @@
-import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { getAddress } from '@algorandfoundation/algokit-common'
-import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import {
   ABIMethod,
   ABIReferenceType,
@@ -8,11 +5,13 @@ import {
   ABIType,
   ABIUintType,
   ABIValue,
-  Address,
-  TransactionSigner,
-  abiTypeIsReference,
-  abiTypeIsTransaction,
-} from '@algorandfoundation/sdk'
+  argTypeIsReference,
+  argTypeIsTransaction,
+} from '@algorandfoundation/algokit-abi'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { Address, getAddress } from '@algorandfoundation/algokit-common'
+import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { AppManager } from '../types/app-manager'
@@ -237,7 +236,7 @@ function populateMethodArgsIntoReferenceArrays(
 
   methodArgs.forEach((arg, i) => {
     const argType = method.args[i].type
-    if (abiTypeIsReference(argType)) {
+    if (argTypeIsReference(argType)) {
       switch (argType) {
         case 'account':
           if (typeof arg === 'string' && arg !== sender.toString() && !accounts.some((a) => a.toString() === arg)) {
@@ -331,9 +330,9 @@ function encodeMethodArguments(
     const methodArg = method.args[i]
     const argValue = args[i]
 
-    if (abiTypeIsTransaction(methodArg.type)) {
+    if (argTypeIsTransaction(methodArg.type)) {
       // Transaction arguments are not ABI encoded - they're handled separately
-    } else if (abiTypeIsReference(methodArg.type)) {
+    } else if (argTypeIsReference(methodArg.type)) {
       // Reference types are encoded as uint8 indexes
       const referenceType = methodArg.type
       if (typeof argValue === 'string' || typeof argValue === 'bigint') {
@@ -550,7 +549,7 @@ export const buildAppUpdateMethodCall = async (
   const accountReferences = params.accountReferences?.map((a) => getAddress(a))
   const common = buildMethodCallCommon(
     {
-      appId: 0n,
+      appId: params.appId,
       method: params.method,
       args: params.args ?? [],
       accountReferences: accountReferences,
@@ -594,7 +593,7 @@ export const buildAppCallMethodCall = async (
   const accountReferences = params.accountReferences?.map((a) => getAddress(a))
   const common = buildMethodCallCommon(
     {
-      appId: 0n,
+      appId: params.appId,
       method: params.method,
       args: params.args ?? [],
       accountReferences: accountReferences,

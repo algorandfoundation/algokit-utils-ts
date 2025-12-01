@@ -1,8 +1,6 @@
 import { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { Transaction } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIReturnType, TransactionSigner } from '@algorandfoundation/sdk'
-import { ABIReturn } from '../types/app'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionComposer } from '../types/composer'
 import {
   AdditionalTransactionComposerContext,
@@ -10,7 +8,7 @@ import {
   SendTransactionComposerResults,
   TransactionComposerToSend,
 } from '../types/transaction'
-import { convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
+import { toNumber } from '../util'
 
 /** Represents an unsigned transactions and a signer that can authorize that transaction. */
 export interface TransactionWithSigner {
@@ -131,33 +129,6 @@ export const sendTransactionComposer = async function (atcSend: TransactionCompo
   return atcSend.transactionComposer.send({
     ...executeParams,
   })
-}
-
-/**
- * Takes an algosdk `ABIResult` and converts it to an `ABIReturn`.
- * Converts `bigint`'s for Uint's < 64 to `number` for easier use.
- * @param result The `ABIReturn`
- */
-export function getABIReturnValue(result: algosdk.ABIResult, type: ABIReturnType): ABIReturn {
-  if (result.decodeError) {
-    return {
-      decodeError: result.decodeError,
-    }
-  }
-
-  const returnValue = convertAbiByteArrays(
-    result.returnValue !== undefined && result.method.returns.type !== 'void'
-      ? convertABIDecodedBigIntToNumber(result.returnValue, result.method.returns.type)
-      : result.returnValue!,
-    type,
-  )
-
-  return {
-    method: result.method,
-    rawReturnValue: result.rawReturnValue,
-    decodeError: undefined,
-    returnValue,
-  }
 }
 
 /**

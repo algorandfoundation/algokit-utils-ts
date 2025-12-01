@@ -1,6 +1,12 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIContractParams, ABIMethod, ABIMethodParams } from '@algorandfoundation/sdk'
-import { Arc56Contract, Method as Arc56Method, StorageKey, StructField } from './app-arc56'
+import {
+  ABIMethod,
+  ABIType as ABITypeClass,
+  ARC28Event,
+  Arc56Contract,
+  Arc56Method,
+  StorageKey,
+  StructField,
+} from '@algorandfoundation/algokit-abi'
 
 /**
  * Converts an ARC-32 Application Specification to an ARC-56 Contract
@@ -19,7 +25,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
       return [struct.name, fields]
     }),
   ) satisfies { [structName: string]: StructField[] }
-  const hint = (m: ABIMethodParams) => appSpec.hints[new ABIMethod(m).getSignature()] as Hint | undefined
+  const hint = (m: ABIMethodParams) => appSpec.hints[getABIMethodParamsSignature(m)] as Hint | undefined
   const actions = (m: ABIMethodParams, type: 'CREATE' | 'CALL') => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     return hint(m)?.call_config !== undefined ? callConfigToActions(hint(m)?.call_config!, type) : []
@@ -52,7 +58,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
     return {
       source: defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local',
       data: Buffer.from(
-        typeof defaultArg.data === 'number' ? algosdk.ABIType.from('uint64').encode(defaultArg.data) : defaultArg.data,
+        typeof defaultArg.data === 'number' ? ABITypeClass.from('uint64').encode(defaultArg.data) : defaultArg.data,
       ).toString('base64'),
       type: type === 'string' ? 'AVMString' : type,
     }
@@ -145,6 +151,12 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
   } satisfies Arc56Contract
 }
 
+function getABIMethodParamsSignature(params: ABIMethodParams) {
+  const args = params.args.map((a) => a.type).join(',')
+  const returns = params.returns.type === 'void' ? '' : params.returns.type
+  return `${params.name}(${args})${returns}`
+}
+
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {
   /** Method call hints */
@@ -159,6 +171,44 @@ export interface AppSpec {
   state: StateSchemaSpec
   /** The config of all BARE calls (i.e. non ABI calls with no args) */
   bare_call_config: CallConfig
+}
+
+interface ABIContractParams {
+  name: string
+  desc?: string
+  networks?: ABIContractNetworks
+  methods: ABIMethodParams[]
+  events?: ARC28Event[]
+}
+
+interface ABIContractNetworks {
+  [network: string]: ABIContractNetworkInfo
+}
+
+interface ABIContractNetworkInfo {
+  appID: number
+}
+
+interface ABIMethodParams {
+  name: string
+  desc?: string
+  args: ABIMethodArgParams[]
+  returns: ABIMethodReturnParams
+  /** Optional, is it a read-only method (according to [ARC-22](https://arc.algorand.foundation/ARCs/arc-0022)) */
+  readonly?: boolean
+  /** [ARC-28](https://arc.algorand.foundation/ARCs/arc-0028) events that MAY be emitted by this method */
+  events?: ARC28Event[]
+}
+
+interface ABIMethodArgParams {
+  type: string
+  name?: string
+  desc?: string
+}
+
+interface ABIMethodReturnParams {
+  type: string
+  desc?: string
 }
 
 /** A lookup of encoded method call spec to hint */
@@ -229,7 +279,7 @@ export type DefaultArgument =
        * The default value should be fetched by invoking an ABI method
        */
       source: 'abi-method'
-      data: ABIMethodParams
+      data: ABIMethod
     }
   | {
       /**

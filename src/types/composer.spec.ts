@@ -1,4 +1,4 @@
-import { ABIMethod } from '@algorandfoundation/sdk'
+import { ABIMethod } from '@algorandfoundation/algokit-abi'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'

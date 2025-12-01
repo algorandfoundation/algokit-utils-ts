@@ -38,7 +38,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L277)
+[src/types/account.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L278)
 
 ___
 
@@ -81,7 +81,7 @@ Account information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L128)
+[src/types/account.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L129)
 
 ___
 
@@ -95,7 +95,7 @@ Use AddressWithSigner
 
 #### Defined in
 
-[src/types/account.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L125)
+[src/types/account.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L126)
 
 ## Variables
 
@@ -107,4 +107,4 @@ The account name identifier used for fund dispensing in test environments
 
 #### Defined in
 
-[src/types/account.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L19)
+[src/types/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L20)

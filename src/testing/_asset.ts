@@ -1,4 +1,4 @@
-import { Address } from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/algokit-common'
 import { AlgorandClient } from '../types/algorand-client'
 
 export async function generateTestAsset(algorand: AlgorandClient, sender: Address | string, total?: number) {
