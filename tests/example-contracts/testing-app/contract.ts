@@ -1,5 +1,5 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'

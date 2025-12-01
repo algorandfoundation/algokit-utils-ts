@@ -1,6 +1,7 @@
+import { ABIMethod, ABIStructType, ABIType, ABIValue, getABIMethod } from '@algorandfoundation/algokit-abi'
+import { getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
@@ -9,7 +10,6 @@ import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMa
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
-import { getABIDecodedValue, getArc56Method } from './app-arc56'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
@@ -208,7 +208,7 @@ describe('app-client', () => {
 
     invariant(result.operationPerformed === 'replace')
     expect(result.appId).toBeGreaterThan(createdResult.appId)
-    expect(result.appAddress).toEqual(algosdk.getApplicationAddress(result.appId))
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
     invariant(result.confirmation)
     invariant(result.deleteResult)
     invariant(result.deleteResult.confirmation)
@@ -242,7 +242,7 @@ describe('app-client', () => {
 
     invariant(result.operationPerformed === 'replace')
     expect(result.appId).toBeGreaterThan(createdResult.appId)
-    expect(result.appAddress).toEqual(algosdk.getApplicationAddress(result.appId))
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
     invariant(result.confirmation)
     invariant(result.deleteResult)
     invariant(result.deleteResult.confirmation)
@@ -380,7 +380,7 @@ describe('app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    const returnValue = AppManager.getABIReturn(result.confirmations[1], getArc56Method('call_abi_txn', client.appSpec))
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], getABIMethod('call_abi_txn', client.appSpec))
     expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
     expect(returnValue?.returnValue).toBe(result.return)
   })
@@ -618,11 +618,11 @@ describe('app-client', () => {
     const expectedValue = 1234524352
     await client.send.call({
       method: 'set_box',
-      args: [boxName1, new ABIUintType(32).encode(expectedValue)],
+      args: [boxName1, ABIType.from('uint32').encode(expectedValue)],
       boxReferences: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
+    const boxes = await client.getBoxValuesFromABIType(ABIType.from('uint32'), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, ABIType.from('uint32'))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
@@ -657,7 +657,7 @@ describe('app-client', () => {
       )
     })
 
-    async function testAbiWithDefaultArgMethod<TArg extends algosdk.ABIValue, TResult>(
+    async function testAbiWithDefaultArgMethod<TArg extends ABIValue, TResult>(
       methodSignature: string,
       definedValue: TArg,
       definedValueReturnValue: TResult,
@@ -724,7 +724,7 @@ describe('app-client', () => {
     const appCall1Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: algosdk.ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
+      method: ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
       args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
     }
 
@@ -737,7 +737,7 @@ describe('app-client', () => {
     const appCall2Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: algosdk.ABIMethod.fromSignature('call_abi(string)string'),
+      method: ABIMethod.fromSignature('call_abi(string)string'),
       args: ['test'],
     }
 
@@ -790,12 +790,17 @@ describe('app-client', () => {
 
     describe('getABIDecodedValue', () => {
       test('correctly decodes a struct containing a uint16', () => {
-        const decoded = getABIDecodedValue(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100]), 'User', {
+        const structType = ABIStructType.fromStruct('User', {
           User: [
             { name: 'userId', type: 'uint16' },
             { name: 'name', type: 'string' },
           ],
-        }) as { userId: number; name: string }
+        })
+
+        const decoded = structType.decode(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100])) as {
+          userId: number
+          name: string
+        }
 
         expect(typeof decoded.userId).toBe('number')
         expect(decoded.userId).toBe(1)
@@ -807,8 +812,9 @@ describe('app-client', () => {
         // Generate all valid ABI uint bit lengths
         Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
       )('correctly decodes a uint%i', (bitLength) => {
-        const encoded = new ABIUintType(bitLength).encode(1)
-        const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
+        const abiType = ABIType.from(`uint${bitLength}`)
+        const encoded = abiType.encode(1)
+        const decoded = abiType.decode(encoded)
 
         if (bitLength < 53) {
           expect(typeof decoded).toBe('number')

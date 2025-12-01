@@ -1,3 +1,4 @@
+import { ABIMethod, ABIReturn } from '@algorandfoundation/algokit-abi'
 import {
   AlgodClient,
   AlgorandSerializer,
@@ -14,6 +15,7 @@ import {
   OnApplicationComplete,
   SignedTransaction,
   Transaction,
+  TransactionSigner,
   TransactionType,
   assignFee,
   calculateFee,
@@ -25,7 +27,6 @@ import {
   groupTransactions,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { TransactionSigner } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
 import {
@@ -80,7 +81,6 @@ import {
 import { buildPayment, type PaymentParams } from '../transactions/payment'
 import { asJson } from '../util'
 import { AlgoAmount } from './amount'
-import { ABIReturn } from './app'
 import { AppManager } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
@@ -226,7 +226,7 @@ export interface BuiltTransactions {
   /** The built transactions */
   transactions: TransactionWrapper[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
-  methodCalls: Map<number, algosdk.ABIMethod>
+  methodCalls: Map<number, ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
   signers: Map<number, algosdk.TransactionSigner>
 }
@@ -1330,7 +1330,7 @@ export class TransactionComposer {
       })
     }
 
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    const methodCalls = new Map<number, ABIMethod>()
     this.txns.forEach((txn, index) => {
       if (txn.type === 'methodCall') {
         methodCalls.set(index, txn.data.method)
@@ -1443,7 +1443,7 @@ export class TransactionComposer {
       throw new Error(`Transaction group size ${transactions.length} exceeds the maximum limit of ${MAX_TRANSACTION_GROUP_SIZE}`)
     }
 
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    const methodCalls = new Map<number, ABIMethod>()
     this.txns.forEach((txn, index) => {
       if (txn.type === 'methodCall') {
         methodCalls.set(index, txn.data.method)

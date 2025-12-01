@@ -1,6 +1,8 @@
+import { ABIType } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
+import { Account } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -15,7 +17,7 @@ import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
-import { getABIReturnValue, waitForConfirmation } from './transaction'
+import { waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
@@ -985,7 +987,7 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(
           await v9Client.params.call({
             method: 'addressBalance',
-            args: [algosdk.getApplicationAddress(externalAppID).toString()],
+            args: [getApplicationAddress(externalAppID).toString()],
             sender: testAccount,
           }),
         )
@@ -1044,7 +1046,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: algosdk.Address & algosdk.Account & AddressWithSigner
+  let testAccount: Address & algosdk.Account & AddressWithSigner
 
   beforeEach(fixture.newScope)
 
@@ -1224,82 +1226,77 @@ describe('Resource population: meta', () => {
 
 describe('abi return', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getABIResult = (type: string, value: any) => {
+  const encodeThenDecodeValue = (type: string, value: any) => {
     const abiType = ABIType.from(type)
-    const result = {
-      method: new ABIMethod({ name: '', args: [], returns: { type: type } }),
-      rawReturnValue: abiType.encode(value),
-      returnValue: abiType.decode(abiType.encode(value)),
-      txID: '',
-    } as algosdk.ABIResult
-    return getABIReturnValue(result, abiType)
+    const encoded = abiType.encode(value)
+    return abiType.decode(encoded)
   }
 
   test('uint32', () => {
-    expect(getABIResult('uint32', 0).returnValue).toBe(0)
-    expect(getABIResult('uint32', 0n).returnValue).toBe(0)
-    expect(getABIResult('uint32', 1).returnValue).toBe(1)
-    expect(getABIResult('uint32', 1n).returnValue).toBe(1)
-    expect(getABIResult('uint32', 2 ** 32 - 1).returnValue).toBe(2 ** 32 - 1)
-    expect(getABIResult('uint32', 2n ** 32n - 1n).returnValue).toBe(2 ** 32 - 1)
+    expect(encodeThenDecodeValue('uint32', 0)).toBe(0)
+    expect(encodeThenDecodeValue('uint32', 0n)).toBe(0)
+    expect(encodeThenDecodeValue('uint32', 1)).toBe(1)
+    expect(encodeThenDecodeValue('uint32', 1n)).toBe(1)
+    expect(encodeThenDecodeValue('uint32', 2 ** 32 - 1)).toBe(2 ** 32 - 1)
+    expect(encodeThenDecodeValue('uint32', 2n ** 32n - 1n)).toBe(2 ** 32 - 1)
   })
 
   test('uint64', () => {
-    expect(getABIResult('uint64', 0).returnValue).toBe(0n)
-    expect(getABIResult('uint64', 1).returnValue).toBe(1n)
-    expect(getABIResult('uint64', 2 ** 32 - 1).returnValue).toBe(2n ** 32n - 1n)
-    expect(getABIResult('uint64', 2n ** 64n - 1n).returnValue).toBe(2n ** 64n - 1n)
+    expect(encodeThenDecodeValue('uint64', 0)).toBe(0n)
+    expect(encodeThenDecodeValue('uint64', 1)).toBe(1n)
+    expect(encodeThenDecodeValue('uint64', 2 ** 32 - 1)).toBe(2n ** 32n - 1n)
+    expect(encodeThenDecodeValue('uint64', 2n ** 64n - 1n)).toBe(2n ** 64n - 1n)
   })
 
   test('uint32[]', () => {
-    expect(getABIResult('uint32[]', [0]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[]', [0n]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[]', [1]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[]', [1n]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
-    expect(getABIResult('uint32[]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+    expect(encodeThenDecodeValue('uint32[]', [0])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[]', [0n])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[]', [1])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[]', [1n])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[]', [1, 2, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[]', [1n, 2n, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[]', [2 ** 32 - 1])).toEqual([2 ** 32 - 1])
+    expect(encodeThenDecodeValue('uint32[]', [2n ** 32n - 1n, 1])).toEqual([2 ** 32 - 1, 1])
   })
 
   test('uint32[n]', () => {
-    expect(getABIResult('uint32[1]', [0]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[1]', [0n]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[1]', [1]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[1]', [1n]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[3]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[3]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[1]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
-    expect(getABIResult('uint32[2]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+    expect(encodeThenDecodeValue('uint32[1]', [0])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[1]', [0n])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[1]', [1])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[1]', [1n])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[3]', [1, 2, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[3]', [1n, 2n, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[1]', [2 ** 32 - 1])).toEqual([2 ** 32 - 1])
+    expect(encodeThenDecodeValue('uint32[2]', [2n ** 32n - 1n, 1])).toEqual([2 ** 32 - 1, 1])
   })
 
   test('uint64[]', () => {
-    expect(getABIResult('uint64[]', [0]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[]', [0n]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[]', [1]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[]', [1n]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
-    expect(getABIResult('uint64[]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+    expect(encodeThenDecodeValue('uint64[]', [0])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[]', [0n])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[]', [1])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[]', [1n])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[]', [1, 2, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[]', [1n, 2n, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[]', [2 ** 32 - 1])).toEqual([2n ** 32n - 1n])
+    expect(encodeThenDecodeValue('uint64[]', [2n ** 64n - 1n, 1])).toEqual([2n ** 64n - 1n, 1n])
   })
 
   test('uint64[n]', () => {
-    expect(getABIResult('uint64[1]', [0]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[1]', [0n]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[1]', [1]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[1]', [1n]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[3]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[3]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[1]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
-    expect(getABIResult('uint64[2]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+    expect(encodeThenDecodeValue('uint64[1]', [0])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[1]', [0n])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[1]', [1])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[1]', [1n])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[3]', [1, 2, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[3]', [1n, 2n, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[1]', [2 ** 32 - 1])).toEqual([2n ** 32n - 1n])
+    expect(encodeThenDecodeValue('uint64[2]', [2n ** 64n - 1n, 1])).toEqual([2n ** 64n - 1n, 1n])
   })
 
   test('(uint32,uint64,(uint32,uint64),uint32[],uint64[])', () => {
     const type = '(uint32,uint64,(uint32,uint64),uint32[],uint64[])'
-    expect(getABIResult(type, [0, 0, [0, 0], [0], [0]]).returnValue).toEqual([0, 0n, [0, 0n], [0], [0n]])
-    expect(getABIResult(type, [1, 1, [1, 1], [1], [1]]).returnValue).toEqual([1, 1n, [1, 1n], [1], [1n]])
-    expect(getABIResult(type, [2 ** 32 - 1, 2n ** 64n - 1n, [2 ** 32 - 1, 2n ** 64n - 1n], [1, 2, 3], [1, 2, 3]]).returnValue).toEqual([
+    expect(encodeThenDecodeValue(type, [0, 0, [0, 0], [0], [0]])).toEqual([0, 0n, [0, 0n], [0], [0n]])
+    expect(encodeThenDecodeValue(type, [1, 1, [1, 1], [1], [1]])).toEqual([1, 1n, [1, 1n], [1], [1n]])
+    expect(encodeThenDecodeValue(type, [2 ** 32 - 1, 2n ** 64n - 1n, [2 ** 32 - 1, 2n ** 64n - 1n], [1, 2, 3], [1, 2, 3]])).toEqual([
       2 ** 32 - 1,
       2n ** 64n - 1n,
       [2 ** 32 - 1, 2n ** 64n - 1n],
@@ -1316,8 +1313,8 @@ describe('access references', () => {
   let appClient: AppClient
   let externalClient: AppClient
 
-  let alice: algosdk.Address
-  let getTestAccounts: (count: number) => Promise<algosdk.Address[]>
+  let alice: Address
+  let getTestAccounts: (count: number) => Promise<Address[]>
 
   beforeEach(fixture.newScope)
 

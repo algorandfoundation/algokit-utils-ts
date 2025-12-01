@@ -1,5 +1,6 @@
+import { ABIMethod } from '@algorandfoundation/algokit-abi'
+import { getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'
@@ -23,7 +24,7 @@ import {
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
-const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
+const getMethodCallForLog = ({ method, args }: { method: ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
     typeof a === 'object'
       ? asJson(a, (k, v) => {
@@ -158,7 +159,7 @@ export class AlgorandClientTransactionSender {
       return {
         ...result,
         appId: BigInt(result.confirmation.appId!),
-        appAddress: algosdk.getApplicationAddress(result.confirmation.appId!),
+        appAddress: getApplicationAddress(result.confirmation.appId!),
       }
     }
   }

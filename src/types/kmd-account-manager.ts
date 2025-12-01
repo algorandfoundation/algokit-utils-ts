@@ -1,5 +1,5 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { SigningAccount } from './account'
 import { AlgoAmount } from './amount'

@@ -1,9 +1,9 @@
 import { Buffer } from 'buffer'
 import { describe, expect, test } from 'vitest'
-import { getABIMethod, getABIMethodSelector, getABIMethodSignature } from './abi-method'
+import { ABIMethod } from './abi-method'
 import { parseTupleContent } from './abi-type'
 
-describe('getABIMethod', () => {
+describe('ABIMethod.fromSignature', () => {
   test.each([
     ['add(uint64,uint64)uint64', 'add', 'uint64', 2],
     ['getName()string', 'getName', 'string', 0],
@@ -12,7 +12,7 @@ describe('getABIMethod', () => {
   ])(
     'should parse method signature %s correctly',
     (signature: string, expectedName: string, expectedReturn: string, expectedArgCount: number) => {
-      const method = getABIMethod(signature)
+      const method = ABIMethod.fromSignature(signature)
 
       expect(method.name).toBe(expectedName)
       expect(method.args).toHaveLength(expectedArgCount)
@@ -27,15 +27,15 @@ describe('getABIMethod', () => {
   )
 })
 
-describe('getABIMethodSelector', () => {
+describe('ABIMethod.getSelector', () => {
   test.each([
     ['add(uint64,uint64)uint64', 'fe6bdf69'],
     ['optIn()void', '29314d95'],
     ['deposit(pay,uint64)void', 'f2355b55'],
     ['bootstrap(pay,pay,application)void', '895c2a3b'],
   ])('should generate correct selector for %s', (signature: string, expectedHex: string) => {
-    const method = getABIMethod(signature)
-    const selector = getABIMethodSelector(method)
+    const method = ABIMethod.fromSignature(signature)
+    const selector = method.getSelector()
 
     expect(selector).toHaveLength(4)
     expect(Buffer.from(selector).toString('hex')).toBe(expectedHex)
@@ -53,10 +53,10 @@ describe('parseTupleContent', () => {
   })
 })
 
-describe('getABIMethodSignature round trip', () => {
+describe('ABIMethod.getSignature round trip', () => {
   test.each([['add(uint64,uint64)uint64'], ['optIn()void']])('should round trip signature %s correctly', (signature: string) => {
-    const method = getABIMethod(signature)
-    const regeneratedSignature = getABIMethodSignature(method)
+    const method = ABIMethod.fromSignature(signature)
+    const regeneratedSignature = method.getSignature()
     expect(regeneratedSignature).toBe(signature)
   })
 })

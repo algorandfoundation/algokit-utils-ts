@@ -1,8 +1,27 @@
+import {
+  ABIDefaultValue,
+  ABIStorageKey,
+  ABIStorageMap,
+  ABIType,
+  ABIValue,
+  Arc56Contract,
+  ProgramSourceInfo,
+  argTypeIsTransaction,
+  getABIDecodedValue,
+  getABIEncodedValue,
+  getABIMethod,
+  getBoxABIStorageKey,
+  getBoxABIStorageKeys,
+  getBoxABIStorageMap,
+  getGlobalABIStorageKeys,
+  getGlobalABIStorageMaps,
+  getLocalABIStorageKeys,
+  getLocalABIStorageMaps,
+} from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
+import { Address, ReadableAddress, getAddress, getApplicationAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIType, ABIValue, Address, Indexer, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
+import { Indexer, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, binaryStartsWith } from '../util'
@@ -22,19 +41,6 @@ import {
   SendAppTransactionResult,
   TealTemplateParams,
 } from './app'
-import {
-  ABIStruct,
-  Arc56Contract,
-  Arc56Method,
-  ProgramSourceInfo,
-  StorageKey,
-  StorageMap,
-  getABIDecodedValue,
-  getABIEncodedValue,
-  getABITupleFromABIStruct,
-  getArc56Method,
-  getArc56ReturnValue,
-} from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
@@ -323,7 +329,7 @@ export type AppClientMethodCallParams = Expand<
      * * Another method call (via method call params object)
      * * undefined (this represents a placeholder for either a default argument or a transaction argument that is fulfilled by another method call argument)
      */
-    args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
+    args?: (ABIValue | AppMethodCallTransactionArgument | undefined)[]
   }
 >
 
@@ -427,7 +433,7 @@ export class AppClient {
   private _approvalSourceMap: ProgramSourceMap | undefined
   private _clearSourceMap: ProgramSourceMap | undefined
 
-  private _localStateMethods: (address: string | Address) => ReturnType<AppClient['getStateMethods']>
+  private _localStateMethods: (address: ReadableAddress) => ReturnType<AppClient['getStateMethods']>
   private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
   private _boxStateMethods: ReturnType<AppClient['getBoxMethods']>
 
@@ -456,7 +462,7 @@ export class AppClient {
    */
   constructor(params: AppClientParams) {
     this._appId = params.appId
-    this._appAddress = algosdk.getApplicationAddress(this._appId)
+    this._appAddress = getApplicationAddress(this._appId)
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
@@ -467,16 +473,16 @@ export class AppClient {
 
     this._approvalSourceMap = params.approvalSourceMap
     this._clearSourceMap = params.clearSourceMap
-    this._localStateMethods = (address: string | Address) =>
+    this._localStateMethods = (address: ReadableAddress) =>
       this.getStateMethods(
         () => this.getLocalState(address),
-        () => this._appSpec.state.keys.local,
-        () => this._appSpec.state.maps.local,
+        () => getLocalABIStorageKeys(this._appSpec),
+        () => getLocalABIStorageMaps(this._appSpec),
       )
     this._globalStateMethods = this.getStateMethods(
       () => this.getGlobalState(),
-      () => this._appSpec.state.keys.global,
-      () => this._appSpec.state.maps.global,
+      () => getGlobalABIStorageKeys(this._appSpec),
+      () => getGlobalABIStorageMaps(this._appSpec),
     )
     this._boxStateMethods = this.getBoxMethods()
 
@@ -854,7 +860,7 @@ export class AppClient {
    * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
    */
   public getABIMethod(methodNameOrSignature: string) {
-    return getArc56Method(methodNameOrSignature, this._appSpec)
+    return getABIMethod(methodNameOrSignature, this._appSpec)
   }
 
   /**
@@ -868,11 +874,11 @@ export class AppClient {
    * @returns The smart contract response with an updated return value
    */
   public async processMethodCallReturn<
-    TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
+    TReturn extends ABIValue | undefined,
     TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
+  >(result: Promise<TResult> | TResult): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
     const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) }
+    return { ...resultValue, return: resultValue.return?.returnValue as TReturn }
   }
 
   /**
@@ -1052,28 +1058,27 @@ export class AppClient {
     args: AppClientMethodCallParams['args'] | undefined,
     sender: ReadableAddress,
   ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
-    const m = getArc56Method(methodNameOrSignature, this._appSpec)
+    const m = getABIMethod(methodNameOrSignature, this._appSpec)
     return await Promise.all(
-      args?.map(async (a, i) => {
-        const arg = m.args[i]
-        if (!arg) {
+      args?.map(async (arg, i) => {
+        const methodArg = m.args[i]
+        if (!methodArg) {
           throw new Error(`Unexpected arg at position ${i}. ${m.name} only expects ${m.args.length} args`)
         }
-        if (a !== undefined) {
-          // If a struct then convert to tuple for the underlying call
-          return arg.struct && typeof a === 'object' && !Array.isArray(a)
-            ? getABITupleFromABIStruct(a as ABIStruct, this._appSpec.structs[arg.struct], this._appSpec.structs)
-            : (a as ABIValue | AppMethodCallTransactionArgument)
+        if (argTypeIsTransaction(methodArg.type)) {
+          return arg
         }
-        const defaultValue = arg.defaultValue
+        if (arg !== undefined) {
+          return arg
+        }
+        const defaultValue = methodArg.defaultValue
         if (defaultValue) {
           switch (defaultValue.source) {
-            case 'literal':
-              return getABIDecodedValue(
-                Buffer.from(defaultValue.data, 'base64'),
-                m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
-                this._appSpec.structs,
-              ) as ABIValue
+            case 'literal': {
+              const bytes = Buffer.from(defaultValue.data, 'base64')
+              const value_type = defaultValue.type ?? methodArg.type
+              return getABIDecodedValue(value_type, bytes)
+            }
             case 'method': {
               const method = this.getABIMethod(defaultValue.data)
               const result = await this.send.call({
@@ -1085,48 +1090,52 @@ export class AppClient {
               if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
-              if (
-                typeof result.return === 'object' &&
-                !(result.return instanceof Uint8Array) &&
-                !Array.isArray(result.return) &&
-                !(result.return instanceof Address)
-              ) {
-                return getABITupleFromABIStruct(result.return, this._appSpec.structs[method.returns.struct!], this._appSpec.structs)
-              }
               return result.return
             }
             case 'local':
-            case 'global': {
-              const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
-              const value = Object.values(state).find((s) => s.keyBase64 === defaultValue.data)
-              if (!value) {
-                throw new Error(
-                  `Preparing default value for argument ${arg.name ?? `arg${i + 1}`} resulted in the failure: The key '${defaultValue.data}' could not be found in ${defaultValue.source} storage`,
-                )
-              }
-              return 'valueRaw' in value
-                ? (getABIDecodedValue(
-                    value.valueRaw,
-                    m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
-                    this._appSpec.structs,
-                  ) as ABIValue)
-                : value.value
-            }
+            case 'global':
             case 'box': {
-              const value = await this.getBoxValue(Buffer.from(defaultValue.data, 'base64'))
-              return getABIDecodedValue(
-                value,
-                m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
-                this._appSpec.structs,
-              ) as ABIValue
+              return await this.getDefaultValueFromStorage(
+                { data: defaultValue.data, source: defaultValue.source },
+                methodArg.name ?? `arg${i + 1}`,
+                sender,
+              )
             }
           }
         }
-        if (!algosdk.abiTypeIsTransaction(arg.type)) {
-          throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
-        }
       }) ?? [],
     )
+  }
+
+  private async getDefaultValueFromStorage(defaultValue: ABIDefaultValue, argName: string, sender: ReadableAddress): Promise<ABIValue> {
+    const keys =
+      defaultValue.source === 'box'
+        ? getBoxABIStorageKeys(this.appSpec)
+        : defaultValue.source === 'global'
+          ? getGlobalABIStorageKeys(this.appSpec)
+          : getLocalABIStorageKeys(this.appSpec)
+
+    const key = Object.values(keys).find((s) => s.key === defaultValue.data)
+    if (!key) {
+      throw new Error(
+        `Unable to find default value for argument '${argName}': The storage key (base64: '${defaultValue.data}') is not defined in the contract's ${defaultValue.source} storage schema`,
+      )
+    }
+
+    if (defaultValue.source === 'box') {
+      const value = await this.getBoxValue(Buffer.from(defaultValue.data, 'base64'))
+      return getABIDecodedValue(key.valueType, value)
+    }
+
+    const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
+    const value = Object.values(state).find((s) => s.keyBase64 === defaultValue.data)
+    if (!value) {
+      throw new Error(
+        `Unable to find default value for argument '${argName}': No value exists in ${defaultValue.source} storage for key (base64: '${defaultValue.data}')`,
+      )
+    }
+
+    return 'valueRaw' in value ? getABIDecodedValue(key.valueType, value.valueRaw) : value.value
   }
 
   private getBareParamsMethods() {
@@ -1305,10 +1314,7 @@ export class AppClient {
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
         const compiled = await this.compile(params)
         return {
-          ...(await this.processMethodCallReturn(
-            this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })),
-            getArc56Method(params.method, this._appSpec),
-          )),
+          ...(await this.processMethodCallReturn(this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })))),
           ...(compiled as Partial<AppCompilationResult>),
         }
       },
@@ -1318,10 +1324,7 @@ export class AppClient {
        * @returns The result of sending the opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams & SendParams) => {
-        return this.processMethodCallReturn(
-          this._algorand.send.appCallMethodCall(await this.params.optIn(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this.processMethodCallReturn(this._algorand.send.appCallMethodCall(await this.params.optIn(params)))
       },
       /**
        * Sign and send transactions for a delete ABI call
@@ -1329,10 +1332,7 @@ export class AppClient {
        * @returns The result of sending the delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams & SendParams) => {
-        return this.processMethodCallReturn(
-          this._algorand.send.appDeleteMethodCall(await this.params.delete(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this.processMethodCallReturn(this._algorand.send.appDeleteMethodCall(await this.params.delete(params)))
       },
       /**
        * Sign and send transactions for a close out ABI call
@@ -1340,10 +1340,7 @@ export class AppClient {
        * @returns The result of sending the close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams & SendParams) => {
-        return this.processMethodCallReturn(
-          this._algorand.send.appCallMethodCall(await this.params.closeOut(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this.processMethodCallReturn(this._algorand.send.appCallMethodCall(await this.params.closeOut(params)))
       },
       /**
        * Sign and send transactions for a call (defaults to no-op)
@@ -1354,7 +1351,7 @@ export class AppClient {
         // Read-only call - do it via simulate
         if (
           (params.onComplete === OnApplicationComplete.NoOp || !params.onComplete) &&
-          getArc56Method(params.method, this._appSpec).method.readonly
+          getABIMethod(params.method, this._appSpec).readonly
         ) {
           const readonlyParams = {
             ...params,
@@ -1381,16 +1378,12 @@ export class AppClient {
                 // Simulate calls for a readonly method can use the max opcode budget
                 extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
-            return this.processMethodCallReturn(
-              {
-                ...result,
-                transaction: result.transactions.at(-1)!,
-                confirmation: result.confirmations.at(-1)!,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-                return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
-              } satisfies SendAppTransactionResult,
-              getArc56Method(params.method, this._appSpec),
-            )
+            return this.processMethodCallReturn({
+              ...result,
+              transaction: result.transactions.at(-1)!,
+              confirmation: result.confirmations.at(-1)!,
+              return: result.returns && result.returns.length > 0 ? result.returns.at(-1)! : undefined,
+            })
           } catch (e) {
             const error = e as Error
             // For read-only calls with max opcode budget, fee issues should be rare
@@ -1401,11 +1394,7 @@ export class AppClient {
             throw e
           }
         }
-
-        return this.processMethodCallReturn(
-          this._algorand.send.appCallMethodCall(await this.params.call(params)),
-          getArc56Method(params.method, this._appSpec),
-        )
+        return this.processMethodCallReturn(this._algorand.send.appCallMethodCall(await this.params.call(params)))
       },
     }
   }
@@ -1504,7 +1493,7 @@ export class AppClient {
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     const sender = this.getSender(params.sender)
-    const method = getArc56Method(params.method, this._appSpec)
+    const method = getABIMethod(params.method, this._appSpec)
     const args = await this.getABIArgsWithDefaultValues(params.method, params.args, sender)
     return {
       ...params,
@@ -1583,9 +1572,9 @@ export class AppClient {
        * @returns
        */
       getValue: async (name: string) => {
-        const metadata = that._appSpec.state.keys.box[name]
+        const metadata = getBoxABIStorageKey(that._appSpec, name)
         const value = await that.getBoxValue(Buffer.from(metadata.key, 'base64'))
-        return getABIDecodedValue(value, metadata.valueType, that._appSpec.structs)
+        return getABIDecodedValue(metadata.valueType, value)
       },
       /**
        *
@@ -1596,12 +1585,12 @@ export class AppClient {
        */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getMapValue: async (mapName: string, key: Uint8Array | any) => {
-        const metadata = that._appSpec.state.maps.box[mapName]
+        const metadata = getBoxABIStorageMap(that._appSpec, mapName)
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
+        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(metadata.keyType, key)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = await that.getBoxValue(Buffer.from(base64Key, 'base64'))
-        return getABIDecodedValue(value, metadata.valueType, that._appSpec.structs)
+        return getABIDecodedValue(metadata.valueType, value)
       },
 
       /**
@@ -1613,7 +1602,7 @@ export class AppClient {
        * @param appState
        */
       getMap: async (mapName: string) => {
-        const metadata = that._appSpec.state.maps.box[mapName]
+        const metadata = getBoxABIStorageMap(that._appSpec, mapName)
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
         const boxNames = await that.getBoxNames()
 
@@ -1623,8 +1612,8 @@ export class AppClient {
               .filter((b) => binaryStartsWith(b.nameRaw, prefix))
               .map(async (b) => {
                 return [
-                  getABIDecodedValue(b.nameRaw.slice(prefix.length), metadata.keyType, that._appSpec.structs),
-                  getABIDecodedValue(await that.getBoxValue(b.nameRaw), metadata.valueType, that._appSpec.structs),
+                  getABIDecodedValue(metadata.keyType, b.nameRaw.slice(prefix.length)),
+                  getABIDecodedValue(metadata.valueType, await that.getBoxValue(b.nameRaw)),
                 ] as const
               }),
           ),
@@ -1637,14 +1626,12 @@ export class AppClient {
   private getStateMethods(
     stateGetter: () => Promise<AppState>,
     keyGetter: () => {
-      [name: string]: StorageKey
+      [name: string]: ABIStorageKey
     },
     mapGetter: () => {
-      [name: string]: StorageMap
+      [name: string]: ABIStorageMap
     },
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this
     const stateMethods = {
       /**
        * Returns all single-key state values in a record keyed by the key name and the value a decoded ABI value.
@@ -1670,7 +1657,7 @@ export class AppClient {
         const value = state.find((s) => s.keyBase64 === metadata.key)
 
         if (value && 'valueRaw' in value) {
-          return getABIDecodedValue(value.valueRaw, metadata.valueType, that._appSpec.structs)
+          return getABIDecodedValue(metadata.valueType, value.valueRaw)
         }
 
         return value?.value
@@ -1689,12 +1676,12 @@ export class AppClient {
         const metadata = mapGetter()[mapName]
 
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
+        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(metadata.keyType, key)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = state.find((s) => s.keyBase64 === base64Key)
 
         if (value && 'valueRaw' in value) {
-          return getABIDecodedValue(value.valueRaw, metadata.valueType, that._appSpec.structs)
+          return getABIDecodedValue(metadata.valueType, value.valueRaw)
         }
 
         return value?.value
@@ -1718,8 +1705,8 @@ export class AppClient {
             .map((s) => {
               const key = s.keyRaw.slice(prefix.length)
               return [
-                getABIDecodedValue(key, metadata.keyType, this._appSpec.structs),
-                getABIDecodedValue('valueRaw' in s ? s.valueRaw : s.value, metadata.valueType, this._appSpec.structs),
+                getABIDecodedValue(metadata.keyType, key),
+                'valueRaw' in s ? getABIDecodedValue(metadata.valueType, s.valueRaw) : s.value,
               ] as const
             }),
         )

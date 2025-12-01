@@ -1,7 +1,9 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { Address, ReadableAddress, getAddress } from '@algorandfoundation/algokit-common'
+import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
+import { LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount } from './account'
@@ -11,8 +13,6 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {

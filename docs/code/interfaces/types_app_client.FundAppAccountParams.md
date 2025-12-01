@@ -23,7 +23,7 @@ Parameters for funding an app account
 
 #### Defined in
 
-[src/types/app-client.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L222)
+[src/types/app-client.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L228)
 
 ___
 
@@ -35,7 +35,7 @@ The transaction note for the smart contract call
 
 #### Defined in
 
-[src/types/app-client.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L226)
+[src/types/app-client.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L232)
 
 ___
 
@@ -47,7 +47,7 @@ Parameters to control transaction sending
 
 #### Defined in
 
-[src/types/app-client.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L228)
+[src/types/app-client.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L234)
 
 ___
 
@@ -59,4 +59,4 @@ The optional sender to send the transaction from, will use the application clien
 
 #### Defined in
 
-[src/types/app-client.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L224)
+[src/types/app-client.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L230)

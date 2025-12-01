@@ -25,7 +25,7 @@
 
 #### Defined in
 
-[src/indexer-lookup.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L4)
+[src/indexer-lookup.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L5)
 
 ## Functions
 
@@ -53,7 +53,7 @@
 
 #### Defined in
 
-[src/indexer-lookup.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L123)
+[src/indexer-lookup.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L124)
 
 ___
 
@@ -80,7 +80,7 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L16)
+[src/indexer-lookup.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L17)
 
 ___
 
@@ -107,7 +107,7 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L50)
+[src/indexer-lookup.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L51)
 
 ___
 
@@ -133,4 +133,4 @@ The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L89)
+[src/indexer-lookup.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L90)

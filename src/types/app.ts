@@ -1,6 +1,8 @@
+import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { Address } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
 import { BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
@@ -82,7 +84,7 @@ export type ABIAppCallArg =
  */
 export type ABIAppCallArgs = CoreAppCallArgs & {
   /** The ABI method to call */
-  method: ABIMethodParams | ABIMethod
+  method: ABIMethod
   /** The ABI method args to pass in */
   methodArgs: ABIAppCallArg[]
 }
@@ -144,16 +146,6 @@ export interface AppCallTransactionResultOfType<T> extends SendTransactionResult
 
 /** Result from calling an app */
 export type AppCallTransactionResult = AppCallTransactionResultOfType<ABIReturn>
-
-/** The return value of an ABI method call */
-export type ABIReturn =
-  | {
-      rawReturnValue: Uint8Array
-      returnValue: ABIValue
-      method: ABIMethod
-      decodeError: undefined
-    }
-  | { rawReturnValue?: undefined; returnValue?: undefined; method?: undefined; decodeError: Error }
 
 /**
  * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.

@@ -1,4 +1,4 @@
-import * as algosdk from '@algorandfoundation/sdk'
+import { getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
@@ -22,7 +22,7 @@ describe('app', () => {
     })
 
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(app.confirmation).toBeTruthy()
     expect(BigInt(app.confirmation?.appId ?? 0)).toBe(app.appId)
   })

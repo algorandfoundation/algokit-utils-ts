@@ -1,3 +1,4 @@
+import { getABIMethod } from '@algorandfoundation/algokit-abi'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
@@ -148,7 +149,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(txnRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
   })
 
   test('method with method call arg', async () => {
@@ -191,7 +192,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr.toString())
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.addr.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
@@ -223,7 +224,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
     expect(nestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
@@ -254,8 +255,8 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
-    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.toString()).toBe(alice.toString())
     expect(doubleNestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
@@ -271,11 +272,9 @@ describe('AlgorandClient', () => {
   })
 
   test('methodCall create', async () => {
-    const contract = new algosdk.ABIContract(APP_SPEC)
-
     await algorand.send.appCreateMethodCall({
       sender: alice,
-      method: contract.getMethodByName('createApplication'),
+      method: getABIMethod('createApplication', APP_SPEC),
       approvalProgram: await compileProgram(algorand, APP_SPEC.source!.approval),
       clearStateProgram: await compileProgram(algorand, APP_SPEC.source!.clear),
     })

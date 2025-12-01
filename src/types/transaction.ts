@@ -1,3 +1,4 @@
+import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
 import {
@@ -18,7 +19,6 @@ import {
 import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
 import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
 import { AlgoAmount } from './amount'
-import { ABIReturn } from './app'
 import { TransactionComposer } from './composer'
 import { Expand } from './expand'
 

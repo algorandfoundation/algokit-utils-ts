@@ -1,6 +1,7 @@
+import { ABIReturn } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
 import { calculateExtraProgramPages } from '../util'
@@ -9,7 +10,6 @@ import {
   APP_DEPLOY_NOTE_DAPP,
   OnSchemaBreak,
   OnUpdate,
-  type ABIReturn,
   type AppDeployMetadata,
   type SendAppCreateTransactionResult,
   type SendAppUpdateTransactionResult,
@@ -320,7 +320,7 @@ export class AppDeployer {
 
       const appMetadata: AppMetadata = {
         appId: confirmation.appId!,
-        appAddress: algosdk.getApplicationAddress(confirmation.appId!),
+        appAddress: getApplicationAddress(confirmation.appId!),
         ...metadata,
         createdMetadata: metadata,
         createdRound: BigInt(confirmation.confirmedRound!),
@@ -580,7 +580,7 @@ export class AppDeployer {
           if (creationNote?.name) {
             appLookup[creationNote.name] = {
               appId: createdApp.id,
-              appAddress: algosdk.getApplicationAddress(createdApp.id),
+              appAddress: getApplicationAddress(createdApp.id),
               createdMetadata: creationNote,
               createdRound: appCreationTransaction.confirmedRound ?? 0n,
               ...(updateNote ?? creationNote),
