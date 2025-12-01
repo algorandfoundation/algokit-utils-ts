@@ -164,7 +164,7 @@ export interface AppSpec {
   /** The TEAL source */
   source: AppSources
   /** The ABI-0004 contract definition see https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md */
-  contract: ContractDefinition
+  contract: ABIContractParams
   /** The values that make up the local and global state */
   schema: SchemaSpec
   /** The rolled-up schema allocation values for local and global state */
@@ -173,21 +173,22 @@ export interface AppSpec {
   bare_call_config: CallConfig
 }
 
-interface ContractDefinition {
+interface ABIContractParams {
   name: string
   desc?: string
-  networks?: ContractNetworks
+  networks?: ABIContractNetworks
   methods: ABIMethodParams[]
   events?: ARC28Event[]
 }
 
-interface ContractNetworks {
-  [network: string]: ContractNetworkInfo
+interface ABIContractNetworks {
+  [network: string]: ABIContractNetworkInfo
 }
 
-interface ContractNetworkInfo {
+interface ABIContractNetworkInfo {
   appID: number
 }
+
 interface ABIMethodParams {
   name: string
   desc?: string
