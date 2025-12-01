@@ -26,9 +26,9 @@ describe('ArrayModelCodec', () => {
           { value: [], description: 'empty array (default value)' },
           { value: undefined, description: 'undefined' },
           { value: null, description: 'null' },
-        ])('should encode $description to undefined', ({ value }) => {
-          expect(codec.encode(value, 'json')).toBeUndefined()
-          expect(codec.encode(value, 'msgpack')).toBeUndefined()
+        ])('should encode $description to empty array', ({ value }) => {
+          expect(codec.encode(value, 'json')).toEqual([])
+          expect(codec.encode(value, 'msgpack')).toEqual([])
         })
       })
 
@@ -241,9 +241,9 @@ describe('ArrayModelCodec', () => {
           { value: [], description: 'empty array (default value)' },
           { value: undefined, description: 'undefined' },
           { value: null, description: 'null' },
-        ])('should encode $description to undefined', ({ value }) => {
-          expect(codec.encode(value, 'json')).toBeUndefined()
-          expect(codec.encode(value, 'msgpack')).toBeUndefined()
+        ])('should encode $description to empty array', ({ value }) => {
+          expect(codec.encode(value, 'json')).toEqual([])
+          expect(codec.encode(value, 'msgpack')).toEqual([])
         })
       })
 

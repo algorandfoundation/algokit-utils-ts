@@ -25,13 +25,23 @@ export class PrimitiveModelCodec<T = unknown, TWire = T> extends Codec<T, TWire>
     return metadata.codec.isDefaultValue(value)
   }
 
-  protected toEncoded(value: T, format: EncodingFormat): TWire {
+  public encode(value: T | undefined | null, format: EncodingFormat): TWire {
     const metadata = this.getMetadata()
-    return metadata.codec.encodeOptional(value, format) as TWire
+    return metadata.codec.encode(value, format) as TWire
   }
 
-  protected fromEncoded(value: TWire, format: EncodingFormat): T {
+  public encodeOptional(value: T | undefined | null, format: EncodingFormat): TWire | undefined {
+    const metadata = this.getMetadata()
+    return metadata.codec.encodeOptional(value, format) as TWire | undefined
+  }
+
+  public decode(value: TWire | undefined | null, format: EncodingFormat): T {
     const metadata = this.getMetadata()
     return metadata.codec.decode(value, format) as T
+  }
+
+  public decodeOptional(value: TWire | undefined | null, format: EncodingFormat): T | undefined {
+    const metadata = this.getMetadata()
+    return metadata.codec.decodeOptional(value, format) as T | undefined
   }
 }

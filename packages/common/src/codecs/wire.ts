@@ -29,7 +29,7 @@ export type WireBigInt = number | bigint
 export type WireString = Uint8Array | string
 
 function normalizeWireKey(key: string | WireMapKey): string {
-  return key instanceof Uint8Array ? normalizeWireString(key) : typeof key === 'string' ? key : String(key)
+  return key instanceof Uint8Array ? normalizeWireString(key) : key.toString()
 }
 
 export function normalizeWireString(value: WireString): string {

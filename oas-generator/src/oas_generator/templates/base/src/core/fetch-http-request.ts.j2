@@ -91,16 +91,14 @@ export class FetchHttpRequest extends BaseHttpRequest {
 
     const status = extractStatus(error);
     if (status !== undefined) {
-      const retryStatuses = RETRY_STATUS_CODES;
-      if (retryStatuses.includes(status)) {
+      if (RETRY_STATUS_CODES.includes(status)) {
         return true;
       }
     }
 
     const code = extractCode(error);
     if (code) {
-      const retryCodes = RETRY_ERROR_CODES;
-      if (retryCodes.includes(code)) {
+      if (RETRY_ERROR_CODES.includes(code)) {
         return true;
       }
     }

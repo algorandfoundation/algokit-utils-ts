@@ -23,9 +23,9 @@ describe('PrimitiveModelCodec', () => {
           { value: 0, description: '0 (default value)' },
           { value: undefined, description: 'undefined' },
           { value: null, description: 'null' },
-        ])('should encode $description to undefined', ({ value }) => {
-          expect(codec.encode(value, 'json')).toBeUndefined()
-          expect(codec.encode(value, 'msgpack')).toBeUndefined()
+        ])('should encode $description to default', ({ value }) => {
+          expect(codec.encode(value, 'json')).toBe(0)
+          expect(codec.encode(value, 'msgpack')).toBe(0)
         })
       })
 
@@ -185,9 +185,9 @@ describe('PrimitiveModelCodec', () => {
           { value: '', description: 'empty string (default value)' },
           { value: undefined, description: 'undefined' },
           { value: null, description: 'null' },
-        ])('should encode $description to undefined', ({ value }) => {
-          expect(codec.encode(value, 'json')).toBeUndefined()
-          expect(codec.encode(value, 'msgpack')).toBeUndefined()
+        ])('should encode $description to default', ({ value }) => {
+          expect(codec.encode(value, 'json')).toBe('')
+          expect(codec.encode(value, 'msgpack')).toBe('')
         })
       })
 

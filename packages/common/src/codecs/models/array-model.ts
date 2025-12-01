@@ -16,20 +16,32 @@ export class ArrayModelCodec<T extends unknown[] = unknown[]> extends Codec<T, u
   }
 
   public defaultValue(): T {
-    return [] as unknown as T
+    const metadata = this.getMetadata()
+    return metadata.codec.defaultValue() as T
   }
 
   public isDefaultValue(value: T): boolean {
-    return value.length === 0
+    const metadata = this.getMetadata()
+    return metadata.codec.isDefaultValue(value)
   }
 
-  protected toEncoded(value: T, format: EncodingFormat): unknown[] | undefined {
+  public encode(value: T | undefined | null, format: EncodingFormat): unknown[] | undefined {
+    const metadata = this.getMetadata()
+    return metadata.codec.encode(value, format)
+  }
+
+  public encodeOptional(value: T | undefined | null, format: EncodingFormat): unknown[] | undefined {
     const metadata = this.getMetadata()
     return metadata.codec.encodeOptional(value, format)
   }
 
-  protected fromEncoded(value: unknown[] | undefined, format: EncodingFormat): T {
+  public decode(value: unknown[] | undefined | null, format: EncodingFormat): T {
     const metadata = this.getMetadata()
     return metadata.codec.decode(value, format) as T
+  }
+
+  public decodeOptional(value: unknown[] | undefined | null, format: EncodingFormat): T | undefined {
+    const metadata = this.getMetadata()
+    return metadata.codec.decodeOptional(value, format) as T | undefined
   }
 }
