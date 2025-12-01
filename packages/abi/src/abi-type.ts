@@ -104,12 +104,12 @@ export abstract class ABIType {
     if (str.endsWith(']')) {
       const stringMatches = str.match(STATIC_ARRAY_REGEX)
       if (!stringMatches || stringMatches.length !== 3) {
-        throw new Error(`Validation Error: malformed static array string: ${str}`)
+        throw new Error(`malformed static array string: ${str}`)
       }
       const arrayLengthStr = stringMatches[2]
       const arrayLength = parseInt(arrayLengthStr, 10)
       if (arrayLength > MAX_LEN) {
-        throw new Error(`Validation Error: array length exceeds limit ${MAX_LEN}`)
+        throw new Error(`array length exceeds limit ${MAX_LEN}`)
       }
       const childType = ABIType.from(stringMatches[1])
       return new ABIArrayStaticType(childType, arrayLength)
@@ -118,11 +118,11 @@ export abstract class ABIType {
       const digitsOnly = (s: string) => [...s].every((c) => '0123456789'.includes(c))
       const typeSizeStr = str.slice(4, str.length)
       if (!digitsOnly(typeSizeStr)) {
-        throw new Error(`Validation Error: malformed uint string: ${typeSizeStr}`)
+        throw new Error(`malformed uint string: ${typeSizeStr}`)
       }
       const bitSize = parseInt(typeSizeStr, 10)
       if (bitSize > MAX_LEN) {
-        throw new Error(`Validation Error: malformed uint string: ${bitSize}`)
+        throw new Error(`malformed uint string: ${bitSize}`)
       }
       return new ABIUintType(bitSize)
     }
@@ -175,7 +175,7 @@ export class ABIUintType extends ABIType {
   constructor(public readonly bitSize: number) {
     super()
     if (bitSize % 8 !== 0 || bitSize < 8 || bitSize > 512) {
-      throw new Error(`Validation Error: unsupported uint type bitSize: ${bitSize}`)
+      throw new Error(`unsupported uint type bitSize: ${bitSize}`)
     }
   }
 
@@ -233,10 +233,10 @@ export class ABIUfixedType extends ABIType {
   ) {
     super()
     if (bitSize % 8 !== 0 || bitSize < 8 || bitSize > 512) {
-      throw new Error(`Validation Error: unsupported ufixed type bitSize: ${bitSize}`)
+      throw new Error(`unsupported ufixed type bitSize: ${bitSize}`)
     }
     if (precision > 160 || precision < 1) {
-      throw new Error(`Validation Error: unsupported ufixed type precision: ${precision}`)
+      throw new Error(`unsupported ufixed type precision: ${precision}`)
     }
   }
 
@@ -307,7 +307,7 @@ export class ABIAddressType extends ABIType {
       return value.publicKey
     }
 
-    throw new Error(`Encoding Error: Cannot encode value as address: ${value}`)
+    throw new Error(`Cannot encode value as address: ${value}`)
   }
 
   decode(bytes: Uint8Array): ABIValue {
@@ -345,7 +345,7 @@ export class ABIBoolType extends ABIType {
 
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length !== 1) {
-      throw new Error(`DecodingError: Expected 1 byte for bool, got ${bytes.length}`)
+      throw new Error(`Expected 1 byte for bool, got ${bytes.length}`)
     }
 
     return (bytes[0] & 0x80) !== 0
@@ -374,11 +374,11 @@ export class ABIByteType extends ABIType {
 
   encode(value: ABIValue): Uint8Array {
     if (typeof value !== 'number' && typeof value !== 'bigint') {
-      throw new Error(`Validation Error: Cannot encode value as byte: ${value}`)
+      throw new Error(`Cannot encode value as byte: ${value}`)
     }
     const numberValue = typeof value === 'bigint' ? Number(value) : value
     if (value < 0 || value > 255) {
-      throw new Error(`Encoding Error: Byte value must be between 0 and 255, got ${numberValue}`)
+      throw new Error(`Byte value must be between 0 and 255, got ${numberValue}`)
     }
 
     return new Uint8Array([numberValue])
@@ -386,7 +386,7 @@ export class ABIByteType extends ABIType {
 
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length !== 1) {
-      throw new Error(`DecodingError: Expected 1 byte for byte type, got ${bytes.length}`)
+      throw new Error(`Expected 1 byte for byte type, got ${bytes.length}`)
     }
 
     return bytes[0]
@@ -410,12 +410,12 @@ export class ABIStringType extends ABIType {
   }
 
   byteLen(): number {
-    throw new Error(`Validation Error: Failed to get size, string is a dynamic type`)
+    throw new Error(`Failed to get size, string is a dynamic type`)
   }
 
   encode(value: ABIValue): Uint8Array {
     if (typeof value !== 'string' && !(value instanceof Uint8Array)) {
-      throw new Error(`Encoding Error: Cannot encode value as string: ${value}`)
+      throw new Error(`Cannot encode value as string: ${value}`)
     }
 
     let encodedBytes: Uint8Array
@@ -462,7 +462,7 @@ export class ABITupleType extends ABIType {
   constructor(public readonly childTypes: ABIType[]) {
     super()
     if (childTypes.length > MAX_LEN) {
-      throw new Error(`Validation Error: tuple has too many child types: ${childTypes.length}`)
+      throw new Error(`tuple has too many child types: ${childTypes.length}`)
     }
   }
 
@@ -510,7 +510,7 @@ export class ABITupleType extends ABIType {
     const values = Array.from(value)
 
     if (this.childTypes.length !== values.length) {
-      throw new Error('Encoding Error: Mismatch lengths between the values and types')
+      throw new Error('Mismatch lengths between the values and types')
     }
 
     const heads: Uint8Array[] = []
@@ -548,7 +548,7 @@ export class ABITupleType extends ABIType {
       if (isDynamicIndex.get(i)) {
         const headValue = headLength + tailLength
         if (headValue > 0xffff) {
-          throw new Error(`Encoding Error: Value ${headValue} cannot fit in u16`)
+          throw new Error(`Value ${headValue} cannot fit in u16`)
         }
         heads[i] = new Uint8Array([(headValue >> 8) & 0xff, headValue & 0xff])
       }
@@ -602,7 +602,7 @@ export class ABIArrayStaticType extends ABIType {
   ) {
     super()
     if (length < 0 || length > MAX_LEN) {
-      throw new Error(`Validation Error: invalid static array length: ${length}`)
+      throw new Error(`invalid static array length: ${length}`)
     }
   }
 
@@ -682,7 +682,7 @@ export class ABIArrayDynamicType extends ABIType {
   }
 
   byteLen(): number {
-    throw new Error(`Validation Error: Failed to get size, dynamic array is a dynamic type`)
+    throw new Error(`Failed to get size, dynamic array is a dynamic type`)
   }
 
   /**
@@ -892,13 +892,13 @@ export class ABIStructType extends ABIType {
 
 function compressBools(values: ABIValue[]): number {
   if (values.length > 8) {
-    throw new Error(`Encoding Error: Expected no more than 8 bool values, received ${values.length}`)
+    throw new Error(`Expected no more than 8 bool values, received ${values.length}`)
   }
 
   let result = 0
   for (let i = 0; i < values.length; i++) {
     if (typeof values[i] !== 'boolean') {
-      throw new Error('Encoding Error: Expected all values to be boolean')
+      throw new Error('Expected all values to be boolean')
     }
     if (values[i]) {
       result |= 1 << (7 - i)
@@ -934,7 +934,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
 
     if (childType.isDynamic()) {
       if (bytes.length - bytesCursor < LENGTH_ENCODE_BYTE_SIZE) {
-        throw new Error('DecodingError: Byte array is too short to be decoded')
+        throw new Error('Byte array is too short to be decoded')
       }
 
       const dynamicIndex = (bytes[bytesCursor] << 8) | bytes[bytesCursor + 1]
@@ -942,7 +942,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
       if (dynamicSegments.length > 0) {
         const lastSegment = dynamicSegments[dynamicSegments.length - 1]
         if (dynamicIndex < lastSegment.left) {
-          throw new Error('DecodingError: Dynamic index segment miscalculation: left is greater than right index')
+          throw new Error('Dynamic index segment miscalculation: left is greater than right index')
         }
         lastSegment.right = dynamicIndex
       }
@@ -967,7 +967,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
         const childTypeSize = childType.byteLen()
         if (bytesCursor + childTypeSize > bytes.length) {
           throw new Error(
-            `DecodingError: Index out of bounds, trying to access bytes[${bytesCursor}..${bytesCursor + childTypeSize}] but slice has length ${bytes.length}`,
+            `Index out of bounds, trying to access bytes[${bytesCursor}..${bytesCursor + childTypeSize}] but slice has length ${bytes.length}`,
           )
         }
         valuePartitions.push(bytes.slice(bytesCursor, bytesCursor + childTypeSize))
@@ -976,7 +976,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
     }
 
     if (abiTypesCursor !== abiTypes.length - 1 && bytesCursor >= bytes.length) {
-      throw new Error('DecodingError: Input bytes not enough to decode')
+      throw new Error('Input bytes not enough to decode')
     }
     abiTypesCursor += 1
   }
@@ -985,16 +985,16 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
     const lastSegment = dynamicSegments[dynamicSegments.length - 1]
     lastSegment.right = bytes.length
   } else if (bytesCursor < bytes.length) {
-    throw new Error('DecodingError: Input bytes not fully consumed')
+    throw new Error('Input bytes not fully consumed')
   }
 
   for (let i = 0; i < dynamicSegments.length; i++) {
     const segment = dynamicSegments[i]
     if (segment.left > segment.right) {
-      throw new Error('DecodingError: Dynamic segment should display a [l, r] space with l <= r')
+      throw new Error('Dynamic segment should display a [l, r] space with l <= r')
     }
     if (i !== dynamicSegments.length - 1 && segment.right !== dynamicSegments[i + 1].left) {
-      throw new Error('DecodingError: Dynamic segments should be consecutive')
+      throw new Error('Dynamic segments should be consecutive')
     }
   }
 
@@ -1011,7 +1011,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
   for (let i = 0; i < valuePartitions.length; i++) {
     const partition = valuePartitions[i]
     if (partition === null) {
-      throw new Error(`DecodingError: Value partition at index ${i} is None`)
+      throw new Error(`Value partition at index ${i} is None`)
     }
     result.push(partition)
   }
@@ -1025,13 +1025,13 @@ export function parseTupleContent(content: string): string[] {
   }
 
   if (content.startsWith(',')) {
-    throw new Error('Validation Error: the content should not start with comma')
+    throw new Error('the content should not start with comma')
   }
   if (content.endsWith(',')) {
-    throw new Error('Validation Error: the content should not end with comma')
+    throw new Error('the content should not end with comma')
   }
   if (content.includes(',,')) {
-    throw new Error('Validation Error: the content should not have consecutive commas')
+    throw new Error('the content should not have consecutive commas')
   }
 
   const tupleStrings: string[] = []
@@ -1056,7 +1056,7 @@ export function parseTupleContent(content: string): string[] {
   }
 
   if (depth !== 0) {
-    throw new Error('Validation Error: the content has mismatched parentheses')
+    throw new Error('the content has mismatched parentheses')
   }
 
   return tupleStrings
