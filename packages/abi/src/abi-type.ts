@@ -104,12 +104,12 @@ export abstract class ABIType {
     if (str.endsWith(']')) {
       const stringMatches = str.match(STATIC_ARRAY_REGEX)
       if (!stringMatches || stringMatches.length !== 3) {
-        throw new Error(`malformed static array string: ${str}`)
+        throw new Error(`Malformed static array string: ${str}`)
       }
       const arrayLengthStr = stringMatches[2]
       const arrayLength = parseInt(arrayLengthStr, 10)
       if (arrayLength > MAX_LEN) {
-        throw new Error(`array length exceeds limit ${MAX_LEN}`)
+        throw new Error(`Array length exceeds limit ${MAX_LEN}`)
       }
       const childType = ABIType.from(stringMatches[1])
       return new ABIArrayStaticType(childType, arrayLength)
@@ -118,11 +118,11 @@ export abstract class ABIType {
       const digitsOnly = (s: string) => [...s].every((c) => '0123456789'.includes(c))
       const typeSizeStr = str.slice(4, str.length)
       if (!digitsOnly(typeSizeStr)) {
-        throw new Error(`malformed uint string: ${typeSizeStr}`)
+        throw new Error(`Malformed uint string: ${typeSizeStr}`)
       }
       const bitSize = parseInt(typeSizeStr, 10)
       if (bitSize > MAX_LEN) {
-        throw new Error(`malformed uint string: ${bitSize}`)
+        throw new Error(`Malformed uint string: ${bitSize}`)
       }
       return new ABIUintType(bitSize)
     }
@@ -132,7 +132,7 @@ export abstract class ABIType {
     if (str.startsWith('ufixed')) {
       const stringMatches = str.match(UFIXED_REGEX)
       if (!stringMatches || stringMatches.length !== 3) {
-        throw new Error(`malformed ufixed type: ${str}`)
+        throw new Error(`Malformed ufixed type: ${str}`)
       }
       const bitSize = parseInt(stringMatches[1], 10)
       const precision = parseInt(stringMatches[2], 10)
@@ -156,7 +156,7 @@ export abstract class ABIType {
       }
       return new ABITupleType(childTypes)
     }
-    throw new Error(`cannot convert a string ${str} to an ABI type`)
+    throw new Error(`Cannot convert a string ${str} to an ABI type`)
   }
 }
 
@@ -175,7 +175,7 @@ export class ABIUintType extends ABIType {
   constructor(public readonly bitSize: number) {
     super()
     if (bitSize % 8 !== 0 || bitSize < 8 || bitSize > 512) {
-      throw new Error(`unsupported uint type bitSize: ${bitSize}`)
+      throw new Error(`Unsupported uint type bitSize: ${bitSize}`)
     }
   }
 
@@ -211,7 +211,7 @@ export class ABIUintType extends ABIType {
 
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length !== this.bitSize / 8) {
-      throw new Error(`byte string must correspond to a ${this.name}`)
+      throw new Error(`Byte string must correspond to a ${this.name}`)
     }
     const value = bytesToBigInt(bytes)
     return this.bitSize < 53 ? Number(value) : value
@@ -233,10 +233,10 @@ export class ABIUfixedType extends ABIType {
   ) {
     super()
     if (bitSize % 8 !== 0 || bitSize < 8 || bitSize > 512) {
-      throw new Error(`unsupported ufixed type bitSize: ${bitSize}`)
+      throw new Error(`Unsupported ufixed type bitSize: ${bitSize}`)
     }
     if (precision > 160 || precision < 1) {
-      throw new Error(`unsupported ufixed type precision: ${precision}`)
+      throw new Error(`Unsupported ufixed type precision: ${precision}`)
     }
   }
 
@@ -271,7 +271,7 @@ export class ABIUfixedType extends ABIType {
 
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length !== this.bitSize / 8) {
-      throw new Error(`byte string must correspond to a ${this.name}`)
+      throw new Error(`Byte string must correspond to a ${this.name}`)
     }
     const value = bytesToBigInt(bytes)
     return this.bitSize < 53 ? Number(value) : value
@@ -434,14 +434,14 @@ export class ABIStringType extends ABIType {
   decode(bytes: Uint8Array): ABIValue {
     if (bytes.length < LENGTH_ENCODE_BYTE_SIZE) {
       throw new Error(
-        `byte string is too short to be decoded. Actual length is ${bytes.length}, but expected at least ${LENGTH_ENCODE_BYTE_SIZE}`,
+        `Byte string is too short to be decoded. Actual length is ${bytes.length}, but expected at least ${LENGTH_ENCODE_BYTE_SIZE}`,
       )
     }
     const view = new DataView(bytes.buffer, bytes.byteOffset, LENGTH_ENCODE_BYTE_SIZE)
     const byteLength = view.getUint16(0)
     const byteValue = bytes.slice(LENGTH_ENCODE_BYTE_SIZE, bytes.length)
     if (byteLength !== byteValue.length) {
-      throw new Error(`string length bytes do not match the actual length of string. Expected ${byteLength}, got ${byteValue.length}`)
+      throw new Error(`String length bytes do not match the actual length of string. Expected ${byteLength}, got ${byteValue.length}`)
     }
     return new TextDecoder('utf-8').decode(byteValue)
   }
@@ -462,7 +462,7 @@ export class ABITupleType extends ABIType {
   constructor(public readonly childTypes: ABIType[]) {
     super()
     if (childTypes.length > MAX_LEN) {
-      throw new Error(`tuple has too many child types: ${childTypes.length}`)
+      throw new Error(`Tuple has too many child types: ${childTypes.length}`)
     }
   }
 
@@ -602,7 +602,7 @@ export class ABIArrayStaticType extends ABIType {
   ) {
     super()
     if (length < 0 || length > MAX_LEN) {
-      throw new Error(`invalid static array length: ${length}`)
+      throw new Error(`Invalid static array length: ${length}`)
     }
   }
 
@@ -1025,13 +1025,13 @@ export function parseTupleContent(content: string): string[] {
   }
 
   if (content.startsWith(',')) {
-    throw new Error('the content should not start with comma')
+    throw new Error('The content should not start with comma')
   }
   if (content.endsWith(',')) {
-    throw new Error('the content should not end with comma')
+    throw new Error('The content should not end with comma')
   }
   if (content.includes(',,')) {
-    throw new Error('the content should not have consecutive commas')
+    throw new Error('The content should not have consecutive commas')
   }
 
   const tupleStrings: string[] = []
@@ -1056,7 +1056,7 @@ export function parseTupleContent(content: string): string[] {
   }
 
   if (depth !== 0) {
-    throw new Error('the content has mismatched parentheses')
+    throw new Error('The content has mismatched parentheses')
   }
 
   return tupleStrings
