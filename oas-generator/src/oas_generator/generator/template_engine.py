@@ -524,7 +524,7 @@ class OperationProcessor:
     }
     return this._rawTransaction(rawTransactions);
   }'''
-            create_wallet = '''/**
+            get_application_box_by_name = '''/**
    * Given an application ID and box name, it returns the round, box name, and value.
    */
   async getApplicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
@@ -569,7 +569,7 @@ class OperationProcessor:
     });
   }'''
 
-            custom_methods = [send_raw_transaction_method, create_wallet, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
+            custom_methods = [send_raw_transaction_method, get_application_box_by_name, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
 
         if service_class_name == "IndexerApi":
             lookup_application_box_by_id_and_name = '''/**

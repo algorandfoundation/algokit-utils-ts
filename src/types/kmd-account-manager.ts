@@ -99,7 +99,6 @@ export class KmdAccountManager {
     const accountKey = (
       await kmd.exportKey({
         walletHandleToken: walletHandle,
-        walletPassword: '',
         address: addresses[i],
       })
     ).privateKey
