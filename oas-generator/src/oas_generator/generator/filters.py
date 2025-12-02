@@ -12,6 +12,7 @@ from typing import Any
 
 from oas_generator import constants
 from oas_generator.constants import MediaType, OperationKey, SchemaKey, TypeScriptType
+from oas_generator.generator.codec_processor import CodecProcessor
 
 type Schema = Mapping[str, Any]
 type Schemas = Mapping[str, Schema]
@@ -198,8 +199,15 @@ def _map_primitive(schema_type: str, schema_format: str | None, schema: Schema) 
     elif schema_type == "number":
         result = TypeScriptType.NUMBER
     elif schema_type == "string":
+        algorand_format = schema.get(constants.X_ALGORAND_FORMAT)
+        is_address = algorand_format == "Address"
         is_byte = schema_format == "byte" or schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
-        result = TypeScriptType.UINT8ARRAY if is_byte else TypeScriptType.STRING
+        if is_address:
+            result = TypeScriptType.ADDRESS
+        elif is_byte:
+            result = TypeScriptType.UINT8ARRAY
+        else:
+            result = TypeScriptType.STRING
     elif schema_type == "boolean":
         result = TypeScriptType.BOOLEAN
     else:
@@ -440,4 +448,7 @@ FILTERS: dict[str, Any] = {
     "ts_array_item_type": ts_array_item_type,
     "ts_is_builtin_or_primitive": ts_is_builtin_or_primitive,
     "ts_is_model_type": ts_is_model_type,
+    # Codec generation filters
+    "field_codec_expr": CodecProcessor.field_codec_expr,
+    "array_item_codec_expr": CodecProcessor.array_item_codec_expr,
 }

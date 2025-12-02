@@ -12,7 +12,6 @@
     "importHelpers": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
     "paths": {
       "@algorandfoundation/algokit-common": ["./packages/common/src"],
       "@algorandfoundation/algokit-common/*": ["./packages/common/src/*"],

@@ -1,4 +1,15 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  numberCodec,
+  bigIntCodec,
+  bytesCodec,
+  ArrayCodec,
+  bigIntArrayCodec,
+  addressArrayCodec,
+  stringArrayCodec,
+  ObjectModelCodec,
+  PrimitiveModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
 import type { OnCompletion } from './on-completion'
@@ -34,7 +45,7 @@ export type TransactionApplication = {
   /**
    * \[apat\] List of accounts in addition to the sender that may be accessed from the application's approval-program and clear-state-program.
    */
-  accounts?: string[]
+  accounts?: Address[]
 
   /**
    * \[apbx\] the boxes that can be accessed by this transaction (and others in the same group).
@@ -74,7 +85,7 @@ export type TransactionApplication = {
   rejectVersion?: number
 }
 
-export const TransactionApplicationMeta: ModelMetadata = {
+export const TransactionApplicationMeta: ObjectModelMetadata<TransactionApplication> = {
   name: 'TransactionApplication',
   kind: 'object',
   fields: [
@@ -82,99 +93,85 @@ export const TransactionApplicationMeta: ModelMetadata = {
       name: 'applicationId',
       wireKey: 'application-id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'onCompletion',
       wireKey: 'on-completion',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => OnCompletionMeta },
+      codec: new PrimitiveModelCodec(OnCompletionMeta),
     },
     {
       name: 'applicationArgs',
       wireKey: 'application-args',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: stringArrayCodec,
     },
     {
       name: 'access',
       wireKey: 'access',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ResourceRefMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ResourceRefMeta)),
     },
     {
       name: 'accounts',
       wireKey: 'accounts',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: addressArrayCodec,
     },
     {
       name: 'boxReferences',
       wireKey: 'box-references',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => BoxReferenceMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(BoxReferenceMeta)),
     },
     {
       name: 'foreignApps',
       wireKey: 'foreign-apps',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: bigIntArrayCodec,
     },
     {
       name: 'foreignAssets',
       wireKey: 'foreign-assets',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
+      codec: bigIntArrayCodec,
     },
     {
       name: 'localStateSchema',
       wireKey: 'local-state-schema',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => StateSchemaMeta },
+      codec: new ObjectModelCodec(StateSchemaMeta),
     },
     {
       name: 'globalStateSchema',
       wireKey: 'global-state-schema',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => StateSchemaMeta },
+      codec: new ObjectModelCodec(StateSchemaMeta),
     },
     {
       name: 'approvalProgram',
       wireKey: 'approval-program',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'clearStateProgram',
       wireKey: 'clear-state-program',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'extraProgramPages',
       wireKey: 'extra-program-pages',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'rejectVersion',
       wireKey: 'reject-version',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

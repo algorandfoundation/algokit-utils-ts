@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, booleanCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationParams } from './application-params'
 import { ApplicationParamsMeta } from './application-params'
 
@@ -28,7 +29,7 @@ export type Application = {
   params: ApplicationParams
 }
 
-export const ApplicationMeta: ModelMetadata = {
+export const ApplicationMeta: ObjectModelMetadata<Application> = {
   name: 'Application',
   kind: 'object',
   fields: [
@@ -36,36 +37,31 @@ export const ApplicationMeta: ModelMetadata = {
       name: 'id',
       wireKey: 'id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'createdAtRound',
       wireKey: 'created-at-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'deletedAtRound',
       wireKey: 'deleted-at-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationParamsMeta },
+      codec: new ObjectModelCodec(ApplicationParamsMeta),
     },
   ],
 }

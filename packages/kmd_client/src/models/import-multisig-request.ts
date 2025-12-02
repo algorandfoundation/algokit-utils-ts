@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, ArrayCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 
@@ -12,7 +13,7 @@ export type ImportMultisigRequest = {
   walletHandleToken?: string
 }
 
-export const ImportMultisigRequestMeta: ModelMetadata = {
+export const ImportMultisigRequestMeta: ObjectModelMetadata<ImportMultisigRequest> = {
   name: 'ImportMultisigRequest',
   kind: 'object',
   fields: [
@@ -20,29 +21,25 @@ export const ImportMultisigRequestMeta: ModelMetadata = {
       name: 'multisigVersion',
       wireKey: 'multisig_version',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'pks',
       wireKey: 'pks',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => PublicKeyMeta } },
+      codec: new ArrayCodec(new PrimitiveModelCodec(PublicKeyMeta)),
     },
     {
       name: 'threshold',
       wireKey: 'threshold',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

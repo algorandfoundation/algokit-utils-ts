@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { addressCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AvmKeyValue } from './avm-key-value'
 import { AvmKeyValueMeta } from './avm-key-value'
 
@@ -14,10 +15,10 @@ export type ApplicationKvStorage = {
   /**
    * The address of the account associated with the local state.
    */
-  account?: string
+  account?: Address
 }
 
-export const ApplicationKvStorageMeta: ModelMetadata = {
+export const ApplicationKvStorageMeta: ObjectModelMetadata<ApplicationKvStorage> = {
   name: 'ApplicationKvStorage',
   kind: 'object',
   fields: [
@@ -25,15 +26,13 @@ export const ApplicationKvStorageMeta: ModelMetadata = {
       name: 'kvs',
       wireKey: 'kvs',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AvmKeyValueMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AvmKeyValueMeta)),
     },
     {
       name: 'account',
       wireKey: 'account',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
   ],
 }

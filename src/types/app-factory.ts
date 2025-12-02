@@ -1,23 +1,9 @@
+import { Arc56Contract, argTypeIsTransaction, getABIDecodedValue, getABIMethod } from '@algorandfoundation/algokit-abi'
+import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
-import { ABIValue, Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
+import { ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { type AlgorandClient } from './algorand-client'
-import {
-  AppCompilationResult,
-  AppReturn,
-  DELETABLE_TEMPLATE_NAME,
-  SendAppTransactionResult,
-  TealTemplateParams,
-  UPDATABLE_TEMPLATE_NAME,
-} from './app'
-import {
-  ABIStruct,
-  Arc56Contract,
-  Arc56Method,
-  getABIDecodedValue,
-  getABITupleFromABIStruct,
-  getArc56Method,
-  getArc56ReturnValue,
-} from './app-arc56'
+import { AppCompilationResult, DELETABLE_TEMPLATE_NAME, TealTemplateParams, UPDATABLE_TEMPLATE_NAME } from './app'
 import {
   AppClient,
   AppClientBareCallParams,
@@ -35,10 +21,9 @@ import {
   DeployAppUpdateParams,
 } from './app-deployer'
 import { AppSpec } from './app-spec'
-import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
+import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
-import { getAddress, getOptionalAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {
@@ -312,12 +297,15 @@ export class AppFactory {
       const deletable = params?.deletable ?? this._deletable
       const deployTimeParams = params?.deployTimeParams ?? this._deployTimeParams
       const compiled = await this.compile({ deployTimeParams, updatable, deletable })
-      const result = await this.handleCallErrors(async () =>
-        this.parseMethodCallReturn(
-          this._algorand.send.appCreateMethodCall(await this.params.create({ ...params, updatable, deletable, deployTimeParams })),
-          getArc56Method(params.method, this._appSpec),
-        ),
-      )
+      const result = await this.handleCallErrors(async () => {
+        const result = await this._algorand.send.appCreateMethodCall(
+          await this.params.create({ ...params, updatable, deletable, deployTimeParams }),
+        )
+        return {
+          ...result,
+          return: result.return?.returnValue,
+        }
+      })
       return {
         appClient: this.getAppClientById({
           appId: result.appId,
@@ -360,7 +348,6 @@ export class AppFactory {
    *   deleteParams: {
    *     sender: 'SENDER_ADDRESS'
    *   },
-   *   metadata: { name: 'my_app', version: '2.0', updatable: false, deletable: false },
    *   onSchemaBreak: 'append',
    *   onUpdate: 'append'
    *  })
@@ -412,16 +399,14 @@ export class AppFactory {
           'return' in result
             ? result.operationPerformed === 'update'
               ? params.updateParams && 'method' in params.updateParams
-                ? getArc56ReturnValue(result.return, getArc56Method(params.updateParams.method, this._appSpec), this._appSpec.structs)
+                ? result.return?.returnValue
                 : undefined
               : params.createParams && 'method' in params.createParams
-                ? getArc56ReturnValue(result.return, getArc56Method(params.createParams.method, this._appSpec), this._appSpec.structs)
+                ? result.return?.returnValue
                 : undefined
             : undefined,
         deleteReturn:
-          'deleteReturn' in result && params.deleteParams && 'method' in params.deleteParams
-            ? getArc56ReturnValue(result.deleteReturn, getArc56Method(params.deleteParams.method, this._appSpec), this._appSpec.structs)
-            : undefined,
+          'deleteReturn' in result && params.deleteParams && 'method' in params.deleteParams ? result.deleteReturn?.returnValue : undefined,
       },
     }
   }
@@ -652,7 +637,7 @@ export class AppFactory {
       ...params,
       sender: this.getSender(params.sender),
       signer: this.getSigner(params.sender, params.signer),
-      method: getArc56Method(params.method, this._appSpec),
+      method: getABIMethod(params.method, this._appSpec),
       args: this.getCreateABIArgsWithDefaultValues(params.method, params.args),
       onComplete,
     }
@@ -662,25 +647,28 @@ export class AppFactory {
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
   ): AppMethodCall<CommonAppCallParams>['args'] {
-    const m = getArc56Method(methodNameOrSignature, this._appSpec)
-    return args?.map((a, i) => {
-      const arg = m.args[i]
-      if (a !== undefined) {
-        // If a struct then convert to tuple for the underlying call
-        return arg.struct && typeof a === 'object' && !Array.isArray(a)
-          ? getABITupleFromABIStruct(a as ABIStruct, this._appSpec.structs[arg.struct], this._appSpec.structs)
-          : (a as ABIValue | AppMethodCallTransactionArgument)
+    const m = getABIMethod(methodNameOrSignature, this._appSpec)
+    return args?.map((arg, i) => {
+      const methodArg = m.args[i]
+      if (arg !== undefined) {
+        return arg
       }
-      const defaultValue = arg.defaultValue
+      if (argTypeIsTransaction(methodArg.type)) {
+        return arg
+      }
+      const defaultValue = methodArg.defaultValue
       if (defaultValue) {
         switch (defaultValue.source) {
-          case 'literal':
-            return getABIDecodedValue(Buffer.from(defaultValue.data, 'base64'), m.method.args[i].type, this._appSpec.structs) as ABIValue
+          case 'literal': {
+            const bytes = Buffer.from(defaultValue.data, 'base64')
+            const value_type = defaultValue.type ?? methodArg.type
+            return getABIDecodedValue(value_type, bytes)
+          }
           default:
             throw new Error(`Can't provide default value for ${defaultValue.source} for a contract creation call`)
         }
       }
-      throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
+      throw new Error(`No value provided for required argument ${methodArg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
     })
   }
 
@@ -701,23 +689,5 @@ export class AppFactory {
     signer: TransactionSigner | AddressWithTransactionSigner | undefined,
   ): TransactionSigner | AddressWithTransactionSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
-  }
-
-  /**
-   * Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
-   * on the ARC-56 method.
-   *
-   * If the return type is a struct then the struct will be returned.
-   *
-   * @param result The SendAppTransactionResult to be mapped
-   * @param method The method that was called
-   * @returns The smart contract response with an updated return value
-   */
-  async parseMethodCallReturn<
-    TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
-    TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
-    const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) }
   }
 }

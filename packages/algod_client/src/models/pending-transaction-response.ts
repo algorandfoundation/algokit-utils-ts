@@ -1,5 +1,14 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  bigIntCodec,
+  ArrayCodec,
+  bytesArrayCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
+import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import type { AccountStateDelta } from './account-state-delta'
 import { AccountStateDeltaMeta } from './account-state-delta'
 import type { StateDelta } from './state-delta'
@@ -76,7 +85,7 @@ export type PendingTransactionResponse = {
   txn: SignedTransaction
 }
 
-export const PendingTransactionResponseMeta: ModelMetadata = {
+export const PendingTransactionResponseMeta: ObjectModelMetadata<PendingTransactionResponse> = {
   name: 'PendingTransactionResponse',
   kind: 'object',
   fields: [
@@ -84,99 +93,85 @@ export const PendingTransactionResponseMeta: ModelMetadata = {
       name: 'assetId',
       wireKey: 'asset-index',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'appId',
       wireKey: 'application-index',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closeRewards',
       wireKey: 'close-rewards',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closingAmount',
       wireKey: 'closing-amount',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'assetClosingAmount',
       wireKey: 'asset-closing-amount',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'confirmedRound',
       wireKey: 'confirmed-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'poolError',
       wireKey: 'pool-error',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'receiverRewards',
       wireKey: 'receiver-rewards',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'senderRewards',
       wireKey: 'sender-rewards',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'localStateDelta',
       wireKey: 'local-state-delta',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AccountStateDeltaMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AccountStateDeltaMeta)),
     },
     {
       name: 'globalStateDelta',
       wireKey: 'global-state-delta',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => StateDeltaMeta },
+      codec: new ArrayModelCodec(StateDeltaMeta),
     },
     {
       name: 'logs',
       wireKey: 'logs',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
+      codec: bytesArrayCodec,
     },
     {
       name: 'innerTxns',
       wireKey: 'inner-txns',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => PendingTransactionResponseMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(() => PendingTransactionResponseMeta)),
     },
     {
       name: 'txn',
       wireKey: 'txn',
       optional: false,
-      nullable: false,
-      type: { kind: 'codec', codecKey: 'SignedTransaction' },
+      codec: new ObjectModelCodec(SignedTransactionMeta),
     },
   ],
 }

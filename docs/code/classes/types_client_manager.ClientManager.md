@@ -250,7 +250,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | `params` | `Object` | The parameters to create the app client |
 | `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
-| `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
+| `params.appSpec` | `string` \| `Arc56Contract` \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.creatorAddress` | `ReadableAddress` | The address of the creator account for the app |
@@ -293,7 +293,7 @@ Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-
 | `params` | `Object` | The parameters to create the app client |
 | `params.appId` | `bigint` | The ID of the app instance this client should make calls against. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
-| `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
+| `params.appSpec` | `string` \| `Arc56Contract` \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
@@ -336,7 +336,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
-| `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
+| `params.appSpec` | `string` \| `Arc56Contract` \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
@@ -375,7 +375,7 @@ Returns a new `AppFactory` client
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app factory |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name. |
-| `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
+| `params.appSpec` | `string` \| `Arc56Contract` \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.defaultSender?` | `ReadableAddress` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.deletable?` | `boolean` | Whether or not the contract should have deploy-time permanence control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |

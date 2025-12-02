@@ -38,6 +38,7 @@ class TypeScriptType(StrEnum):
     OBJECT = "object"
     NUMBER_OR_BIGINT = "number | bigint"
     NEVER = "never"
+    ADDRESS = "Address"
 
 
 class SchemaKey(StrEnum):
@@ -170,6 +171,7 @@ TS_BUILTIN_TYPES: Final[frozenset[str]] = frozenset(
         TypeScriptType.BIGINT,
         TypeScriptType.BOOLEAN,
         TypeScriptType.NEVER,
+        TypeScriptType.ADDRESS,
     ]
 )
 
@@ -213,6 +215,7 @@ BACKUP_DIR_PREFIX: Final[str] = "tsgen_bak_"
 X_ALGOKIT_BIGINT: Final[str] = "x-algokit-bigint"
 X_ALGOKIT_SIGNED_TXN: Final[str] = "x-algokit-signed-txn"
 X_ALGOKIT_BYTES_BASE64: Final[str] = "x-algokit-bytes-base64"
+X_ALGORAND_FORMAT: Final[str] = "x-algorand-format"
 
 # Template configuration
 TEMPLATE_TRIM_BLOCKS: Final[bool] = True

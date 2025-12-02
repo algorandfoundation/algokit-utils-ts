@@ -1,31 +1,10 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, Indexer } from '@algorandfoundation/sdk'
+import { Indexer } from '@algorandfoundation/sdk'
 import { LookupAssetHoldingsOptions } from './types/indexer'
 export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
-
-/**
- * @deprecated Use `indexer.lookupTransactionByID(transactionId).do()`.
- * Looks up a transaction by ID using Indexer.
- * @param transactionId The ID of the transaction to look up
- * @param indexer An indexer client
- * @returns The result of the look-up
- */
-export async function lookupTransactionById(transactionId: string, indexer: Indexer) {
-  return await indexer.lookupTransactionByID(transactionId).do()
-}
-
-/**
- * @deprecated Use `indexer.lookupAccountByID(accountAddress).do()`.
- * Looks up an account by address using Indexer.
- * @param accountAddress The address of the account to look up
- * @param indexer An indexer client
- * @returns The result of the look-up
- */
-export async function lookupAccountByAddress(accountAddress: string | Address, indexer: Indexer) {
-  return await indexer.lookupAccountByID(accountAddress).do()
-}
 
 /**
  * Looks up applications that were created by the given address; will automatically paginate through all data.

@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateSchema } from './application-state-schema'
 import { ApplicationStateSchemaMeta } from './application-state-schema'
 import type { TealKeyValueStore } from './teal-key-value-store'
@@ -16,7 +17,7 @@ export type ApplicationLocalState = {
   keyValue?: TealKeyValueStore
 }
 
-export const ApplicationLocalStateMeta: ModelMetadata = {
+export const ApplicationLocalStateMeta: ObjectModelMetadata<ApplicationLocalState> = {
   name: 'ApplicationLocalState',
   kind: 'object',
   fields: [
@@ -24,22 +25,19 @@ export const ApplicationLocalStateMeta: ModelMetadata = {
       name: 'id',
       wireKey: 'id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'schema',
       wireKey: 'schema',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationStateSchemaMeta },
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'keyValue',
       wireKey: 'key-value',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => TealKeyValueStoreMeta },
+      codec: new ArrayModelCodec(TealKeyValueStoreMeta),
     },
   ],
 }

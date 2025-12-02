@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTMultisigTransactionSignResponse is the response to `POST /v1/multisig/sign`
@@ -10,7 +11,7 @@ export type PostMultisigTransactionSignResponse = {
   multisig?: Uint8Array
 }
 
-export const PostMultisigTransactionSignResponseMeta: ModelMetadata = {
+export const PostMultisigTransactionSignResponseMeta: ObjectModelMetadata<PostMultisigTransactionSignResponse> = {
   name: 'PostMultisigTransactionSignResponse',
   kind: 'object',
   fields: [
@@ -18,22 +19,19 @@ export const PostMultisigTransactionSignResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'multisig',
       wireKey: 'multisig',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

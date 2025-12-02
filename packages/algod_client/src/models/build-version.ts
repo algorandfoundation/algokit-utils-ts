@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec } from '@algorandfoundation/algokit-common'
 
 export type BuildVersion = {
   branch: string
@@ -9,7 +10,7 @@ export type BuildVersion = {
   minor: number
 }
 
-export const BuildVersionMeta: ModelMetadata = {
+export const BuildVersionMeta: ObjectModelMetadata<BuildVersion> = {
   name: 'BuildVersion',
   kind: 'object',
   fields: [
@@ -17,43 +18,37 @@ export const BuildVersionMeta: ModelMetadata = {
       name: 'branch',
       wireKey: 'branch',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'buildNumber',
       wireKey: 'build_number',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'channel',
       wireKey: 'channel',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'commitHash',
       wireKey: 'commit_hash',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'major',
       wireKey: 'major',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'minor',
       wireKey: 'minor',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

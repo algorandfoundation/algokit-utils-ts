@@ -1,4 +1,13 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  booleanCodec,
+  addressCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
 import type { AccountParticipation } from './account-participation'
 import { AccountParticipationMeta } from './account-participation'
 import type { Application } from './application'
@@ -22,7 +31,7 @@ export type Account = {
   /**
    * the account public key
    */
-  address: string
+  address: Address
 
   /**
    * \[algo\] total number of MicroAlgos in the account
@@ -150,7 +159,7 @@ export type Account = {
   /**
    * \[spend\] the address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field.
    */
-  authAddr?: string
+  authAddr?: Address
 
   /**
    * The round in which this account last proposed the block.
@@ -163,7 +172,7 @@ export type Account = {
   lastHeartbeat?: bigint
 }
 
-export const AccountMeta: ModelMetadata = {
+export const AccountMeta: ObjectModelMetadata<Account> = {
   name: 'Account',
   kind: 'object',
   fields: [
@@ -171,190 +180,163 @@ export const AccountMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'amount',
       wireKey: 'amount',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'minBalance',
       wireKey: 'min-balance',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'amountWithoutPendingRewards',
       wireKey: 'amount-without-pending-rewards',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'appsLocalState',
       wireKey: 'apps-local-state',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationLocalStateMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLocalStateMeta)),
     },
     {
       name: 'totalAppsOptedIn',
       wireKey: 'total-apps-opted-in',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'appsTotalSchema',
       wireKey: 'apps-total-schema',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => ApplicationStateSchemaMeta },
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
     },
     {
       name: 'appsTotalExtraPages',
       wireKey: 'apps-total-extra-pages',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'assets',
       wireKey: 'assets',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetHoldingMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AssetHoldingMeta)),
     },
     {
       name: 'totalAssetsOptedIn',
       wireKey: 'total-assets-opted-in',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'createdApps',
       wireKey: 'created-apps',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationMeta)),
     },
     {
       name: 'totalCreatedApps',
       wireKey: 'total-created-apps',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'createdAssets',
       wireKey: 'created-assets',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AssetMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AssetMeta)),
     },
     {
       name: 'totalCreatedAssets',
       wireKey: 'total-created-assets',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'totalBoxes',
       wireKey: 'total-boxes',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'totalBoxBytes',
       wireKey: 'total-box-bytes',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'participation',
       wireKey: 'participation',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => AccountParticipationMeta },
+      codec: new ObjectModelCodec(AccountParticipationMeta),
     },
     {
       name: 'incentiveEligible',
       wireKey: 'incentive-eligible',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'pendingRewards',
       wireKey: 'pending-rewards',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'rewardBase',
       wireKey: 'reward-base',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'rewards',
       wireKey: 'rewards',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'status',
       wireKey: 'status',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'sigType',
       wireKey: 'sig-type',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'authAddr',
       wireKey: 'auth-addr',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'lastProposed',
       wireKey: 'last-proposed',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'lastHeartbeat',
       wireKey: 'last-heartbeat',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Participation account data that needs to be checked/acted on by the network.
@@ -15,7 +16,7 @@ export type ParticipationUpdates = {
   absentParticipationAccounts?: string[]
 }
 
-export const ParticipationUpdatesMeta: ModelMetadata = {
+export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
   name: 'ParticipationUpdates',
   kind: 'object',
   fields: [
@@ -23,15 +24,13 @@ export const ParticipationUpdatesMeta: ModelMetadata = {
       name: 'expiredParticipationAccounts',
       wireKey: 'expired-participation-accounts',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: stringArrayCodec,
     },
     {
       name: 'absentParticipationAccounts',
       wireKey: 'absent-participation-accounts',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: stringArrayCodec,
     },
   ],
 }

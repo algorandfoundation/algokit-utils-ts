@@ -45,4 +45,4 @@ const signer = getAccountTransactionSigner(account)
 
 #### Defined in
 
-[src/types/account-manager.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L36)
+[src/types/account-manager.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L41)

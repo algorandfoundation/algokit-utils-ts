@@ -1,11 +1,12 @@
+import { getABIMethod } from '@algorandfoundation/algokit-abi'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
-import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
+import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/example-contracts/client/TestContractClient'
 import { algorandFixture } from '../testing'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
-import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   // Decode the base64-encoded TEAL source code
@@ -31,17 +32,15 @@ describe('AlgorandClient', () => {
     bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.MicroAlgo(100_000) })
 
     algorand = fixture.algorand
-    appClient = new TestContractClient(
-      {
-        sender: alice,
-        resolveBy: 'id',
-        id: 0,
-      },
-      algorand.client.algod,
-    )
 
-    const app = await appClient.create.createApplication({})
-    appId = BigInt(app.appId)
+    const appFactory = new TestContractFactory({
+      algorand: algorand,
+      defaultSender: alice,
+    })
+
+    const deployResult = await appFactory.deploy({ createParams: { method: 'createApplication', args: [] } })
+    appClient = deployResult.appClient
+    appId = BigInt(deployResult.result.appId)
   }, 10_000)
 
   test('sendPayment', async () => {
@@ -61,15 +60,19 @@ describe('AlgorandClient', () => {
     expect(createResult.assetId).toBeGreaterThan(0)
   })
 
-  test('addAtc from generated client', async () => {
+  test('addTransactionComposer from generated client', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance
     const bobPreBalance = (await algorand.account.getInformation(bob)).balance
 
-    const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
+    const doMathComposer = await appClient
+      .newGroup()
+      .doMath({ args: { a: 1, b: 2, operation: 'sum' } })
+      .composer()
+
     const result = await algorand
       .newGroup()
       .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
-      .addAtc(doMathAtc)
+      .addTransactionComposer(doMathComposer)
       .send()
 
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
@@ -124,7 +127,7 @@ describe('AlgorandClient', () => {
         ],
         note: 'addAppCall',
       })
-      .execute()
+      .send()
 
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
@@ -146,7 +149,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(txnRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
   })
 
   test('method with method call arg', async () => {
@@ -189,7 +192,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr.toString())
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.addr.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
@@ -221,7 +224,7 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
     expect(nestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
@@ -252,8 +255,8 @@ describe('AlgorandClient', () => {
       })
       .send()
 
-    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
-    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.toString()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.toString()).toBe(alice.toString())
     expect(doubleNestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
@@ -269,13 +272,11 @@ describe('AlgorandClient', () => {
   })
 
   test('methodCall create', async () => {
-    const contract = new algosdk.ABIContract(APP_SPEC.contract)
-
     await algorand.send.appCreateMethodCall({
       sender: alice,
-      method: contract.getMethodByName('createApplication'),
-      approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
-      clearStateProgram: await compileProgram(algorand, APP_SPEC.source.clear),
+      method: getABIMethod('createApplication', APP_SPEC),
+      approvalProgram: await compileProgram(algorand, APP_SPEC.source!.approval),
+      clearStateProgram: await compileProgram(algorand, APP_SPEC.source!.clear),
     })
   })
 

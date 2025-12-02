@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 
@@ -19,7 +20,7 @@ export type SignTransactionRequest = {
   walletPassword?: string
 }
 
-export const SignTransactionRequestMeta: ModelMetadata = {
+export const SignTransactionRequestMeta: ObjectModelMetadata<SignTransactionRequest> = {
   name: 'SignTransactionRequest',
   kind: 'object',
   fields: [
@@ -27,29 +28,25 @@ export const SignTransactionRequestMeta: ModelMetadata = {
       name: 'publicKey',
       wireKey: 'public_key',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => PublicKeyMeta },
+      codec: new PrimitiveModelCodec(PublicKeyMeta),
     },
     {
       name: 'transaction',
       wireKey: 'transaction',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

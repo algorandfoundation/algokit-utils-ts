@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTWalletInitRequest is the request for `POST /v1/wallet/init`
@@ -8,7 +9,7 @@ export type InitWalletHandleTokenRequest = {
   walletPassword?: string
 }
 
-export const InitWalletHandleTokenRequestMeta: ModelMetadata = {
+export const InitWalletHandleTokenRequestMeta: ObjectModelMetadata<InitWalletHandleTokenRequest> = {
   name: 'InitWalletHandleTokenRequest',
   kind: 'object',
   fields: [
@@ -16,15 +17,13 @@ export const InitWalletHandleTokenRequestMeta: ModelMetadata = {
       name: 'walletId',
       wireKey: 'wallet_id',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

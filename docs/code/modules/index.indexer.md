@@ -13,10 +13,8 @@
 ### Functions
 
 - [executePaginatedRequest](index.indexer.md#executepaginatedrequest)
-- [lookupAccountByAddress](index.indexer.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.indexer.md#lookupaccountcreatedapplicationbyaddress)
 - [lookupAssetHoldings](index.indexer.md#lookupassetholdings)
-- [lookupTransactionById](index.indexer.md#lookuptransactionbyid)
 - [searchTransactions](index.indexer.md#searchtransactions)
 
 ## Type Aliases
@@ -27,7 +25,7 @@
 
 #### Defined in
 
-[src/indexer-lookup.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L4)
+[src/indexer-lookup.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L5)
 
 ## Functions
 
@@ -55,35 +53,7 @@
 
 #### Defined in
 
-[src/indexer-lookup.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L145)
-
-___
-
-### lookupAccountByAddress
-
-▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`\<`AccountResponse`\>
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `accountAddress` | `string` \| `Address` | The address of the account to look up |
-| `indexer` | `IndexerClient` | An indexer client |
-
-#### Returns
-
-`Promise`\<`AccountResponse`\>
-
-The result of the look-up
-
-**`Deprecated`**
-
-Use `indexer.lookupAccountByID(accountAddress).do()`.
-Looks up an account by address using Indexer.
-
-#### Defined in
-
-[src/indexer-lookup.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L26)
+[src/indexer-lookup.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L124)
 
 ___
 
@@ -110,7 +80,7 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L38)
+[src/indexer-lookup.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L17)
 
 ___
 
@@ -137,35 +107,7 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L72)
-
-___
-
-### lookupTransactionById
-
-▸ **lookupTransactionById**(`transactionId`, `indexer`): `Promise`\<`TransactionResponse`\>
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transactionId` | `string` | The ID of the transaction to look up |
-| `indexer` | `IndexerClient` | An indexer client |
-
-#### Returns
-
-`Promise`\<`TransactionResponse`\>
-
-The result of the look-up
-
-**`Deprecated`**
-
-Use `indexer.lookupTransactionByID(transactionId).do()`.
-Looks up a transaction by ID using Indexer.
-
-#### Defined in
-
-[src/indexer-lookup.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L15)
+[src/indexer-lookup.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L51)
 
 ___
 
@@ -191,4 +133,4 @@ The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L111)
+[src/indexer-lookup.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L90)

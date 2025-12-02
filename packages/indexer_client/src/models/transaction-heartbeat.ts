@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { HbProofFields } from './hb-proof-fields'
 import { HbProofFieldsMeta } from './hb-proof-fields'
 
@@ -31,7 +32,7 @@ export type TransactionHeartbeat = {
   hbKeyDilution: bigint
 }
 
-export const TransactionHeartbeatMeta: ModelMetadata = {
+export const TransactionHeartbeatMeta: ObjectModelMetadata<TransactionHeartbeat> = {
   name: 'TransactionHeartbeat',
   kind: 'object',
   fields: [
@@ -39,36 +40,31 @@ export const TransactionHeartbeatMeta: ModelMetadata = {
       name: 'hbAddress',
       wireKey: 'hb-address',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'hbProof',
       wireKey: 'hb-proof',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => HbProofFieldsMeta },
+      codec: new ObjectModelCodec(HbProofFieldsMeta),
     },
     {
       name: 'hbSeed',
       wireKey: 'hb-seed',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbVoteId',
       wireKey: 'hb-vote-id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'hbKeyDilution',
       wireKey: 'hb-key-dilution',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

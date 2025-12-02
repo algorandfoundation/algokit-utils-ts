@@ -1,2 +1,2 @@
-export * from './perform-atomic-transaction-composer-simulate'
+export * from './perform-transaction-composer-simulate'
 export * from './transaction'

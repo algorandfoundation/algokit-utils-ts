@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for a payment transaction.
@@ -28,7 +29,7 @@ export type TransactionPayment = {
   receiver: string
 }
 
-export const TransactionPaymentMeta: ModelMetadata = {
+export const TransactionPaymentMeta: ObjectModelMetadata<TransactionPayment> = {
   name: 'TransactionPayment',
   kind: 'object',
   fields: [
@@ -36,29 +37,25 @@ export const TransactionPaymentMeta: ModelMetadata = {
       name: 'amount',
       wireKey: 'amount',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closeAmount',
       wireKey: 'close-amount',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'closeRemainderTo',
       wireKey: 'close-remainder-to',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'receiver',
       wireKey: 'receiver',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

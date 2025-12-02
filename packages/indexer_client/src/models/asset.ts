@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, booleanCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetParams } from './asset-params'
 import { AssetParamsMeta } from './asset-params'
 
@@ -9,7 +10,7 @@ export type Asset = {
   /**
    * unique asset identifier
    */
-  index: bigint
+  id: bigint
 
   /**
    * Whether or not this asset is currently deleted.
@@ -28,44 +29,39 @@ export type Asset = {
   params: AssetParams
 }
 
-export const AssetMeta: ModelMetadata = {
+export const AssetMeta: ObjectModelMetadata<Asset> = {
   name: 'Asset',
   kind: 'object',
   fields: [
     {
-      name: 'index',
+      name: 'id',
       wireKey: 'index',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'createdAtRound',
       wireKey: 'created-at-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'destroyedAtRound',
       wireKey: 'destroyed-at-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      codec: new ObjectModelCodec(AssetParamsMeta),
     },
   ],
 }

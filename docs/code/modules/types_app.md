@@ -15,33 +15,26 @@
 - [AppCallTransactionResultOfType](../interfaces/types_app.AppCallTransactionResultOfType.md)
 - [AppCompilationResult](../interfaces/types_app.AppCompilationResult.md)
 - [AppDeployMetadata](../interfaces/types_app.AppDeployMetadata.md)
-- [AppDeploymentParams](../interfaces/types_app.AppDeploymentParams.md)
 - [AppLookup](../interfaces/types_app.AppLookup.md)
 - [AppMetadata](../interfaces/types_app.AppMetadata.md)
 - [AppReference](../interfaces/types_app.AppReference.md)
 - [AppState](../interfaces/types_app.AppState.md)
 - [AppStorageSchema](../interfaces/types_app.AppStorageSchema.md)
 - [BoxName](../interfaces/types_app.BoxName.md)
-- [BoxReference](../interfaces/types_app.BoxReference.md)
 - [BoxValueRequestParams](../interfaces/types_app.BoxValueRequestParams.md)
 - [BoxValuesRequestParams](../interfaces/types_app.BoxValuesRequestParams.md)
 - [CompiledTeal](../interfaces/types_app.CompiledTeal.md)
 - [CoreAppCallArgs](../interfaces/types_app.CoreAppCallArgs.md)
-- [CreateAppParams](../interfaces/types_app.CreateAppParams.md)
 - [RawAppCallArgs](../interfaces/types_app.RawAppCallArgs.md)
 - [TealTemplateParams](../interfaces/types_app.TealTemplateParams.md)
-- [UpdateAppParams](../interfaces/types_app.UpdateAppParams.md)
 
 ### Type Aliases
 
 - [ABIAppCallArg](types_app.md#abiappcallarg)
 - [ABIAppCallArgs](types_app.md#abiappcallargs)
-- [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
 - [AppCallTransactionResult](types_app.md#appcalltransactionresult)
-- [AppCallType](types_app.md#appcalltype)
 - [AppReturn](types_app.md#appreturn)
-- [BoxIdentifier](types_app.md#boxidentifier)
 - [SendAppCreateTransactionResult](types_app.md#sendappcreatetransactionresult)
 - [SendAppTransactionResult](types_app.md#sendapptransactionresult)
 - [SendAppUpdateTransactionResult](types_app.md#sendappupdatetransactionresult)
@@ -58,37 +51,25 @@
 
 ### ABIAppCallArg
 
-Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| [`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`
+Ƭ **ABIAppCallArg**: `ABIValue` \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| [`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`
 
 An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult`
 
 #### Defined in
 
-[src/types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
+[src/types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
 
 ___
 
 ### ABIAppCallArgs
 
-Ƭ **ABIAppCallArgs**: [`CoreAppCallArgs`](../interfaces/types_app.CoreAppCallArgs.md) & \{ `method`: `ABIMethodParams` \| `ABIMethod` ; `methodArgs`: [`ABIAppCallArg`](types_app.md#abiappcallarg)[]  }
+Ƭ **ABIAppCallArgs**: [`CoreAppCallArgs`](../interfaces/types_app.CoreAppCallArgs.md) & \{ `method`: `ABIMethod` ; `methodArgs`: [`ABIAppCallArg`](types_app.md#abiappcallarg)[]  }
 
 App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L106)
-
-___
-
-### ABIReturn
-
-Ƭ **ABIReturn**: \{ `decodeError`: `undefined` ; `method`: `ABIMethod` ; `rawReturnValue`: `Uint8Array` ; `returnValue`: `ABIValue`  } \| \{ `decodeError`: `Error` ; `method?`: `undefined` ; `rawReturnValue?`: `undefined` ; `returnValue?`: `undefined`  }
-
-The return value of an ABI method call
-
-#### Defined in
-
-[src/types/app.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L228)
+[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
 
 ___
 
@@ -102,44 +83,19 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L117)
+[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
 
 ___
 
 ### AppCallTransactionResult
 
-Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<[`ABIReturn`](types_app.md#abireturn)\>
+Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<`ABIReturn`\>
 
 Result from calling an app
 
 #### Defined in
 
-[src/types/app.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L225)
-
-___
-
-### AppCallType
-
-Ƭ **AppCallType**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"update_application"`` \| ``"delete_application"``
-
-**`Deprecated`**
-
-Use `OnApplicationComplete` directly instead.
-
-The type of call / [on-completion action](https://dev.algorand.co/concepts/smart-contracts/overview#smart-contract-lifecycle) for a smart contract call.
-
-Equivalent of `OnApplicationComplete`, but as a more convenient string enum.
-
-* `no_op`: Normal smart contract call, no special on-complete action
-* `opt_in`: Opt-in to smart contract local storage
-* `close_out`: Close-out local storage storage
-* `clear_state`: Clear local storage state
-* `update_application`: Update the smart contract
-* `delete_application`: Delete the smart contract
-
-#### Defined in
-
-[src/types/app.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L173)
+[src/types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
 
 ___
 
@@ -161,26 +117,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L333)
-
-___
-
-### BoxIdentifier
-
-Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)
-
-**`Deprecated`**
-
-Use `types/app-manager/BoxIdentifier` instead.
-
-Something that identifies a box name - either a:
- * `Uint8Array`
- * `string` (that will be encoded to a Uint8Array)
- * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
-
-#### Defined in
-
-[src/types/app.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L63)
+[src/types/app.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L223)
 
 ___
 
@@ -192,19 +129,19 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L350)
+[src/types/app.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L240)
 
 ___
 
 ### SendAppTransactionResult
 
-Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: [`ABIReturn`](types_app.md#abireturn)  }\>
+Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: `ABIReturn`  }\>
 
 Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L339)
+[src/types/app.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L229)
 
 ___
 
@@ -216,7 +153,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L347)
+[src/types/app.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L237)
 
 ## Variables
 
@@ -228,7 +165,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L29)
+[src/types/app.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L33)
 
 ___
 
@@ -240,7 +177,7 @@ The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/ma
 
 #### Defined in
 
-[src/types/app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L23)
+[src/types/app.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L27)
 
 ___
 
@@ -252,7 +189,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L26)
+[src/types/app.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L30)
 
 ___
 
@@ -264,7 +201,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L20)
+[src/types/app.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L24)
 
 ___
 
@@ -276,4 +213,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L17)
+[src/types/app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L21)

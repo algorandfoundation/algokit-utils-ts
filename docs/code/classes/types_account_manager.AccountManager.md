@@ -75,7 +75,7 @@ const accountManager = new AccountManager(clientManager)
 
 #### Defined in
 
-[src/types/account-manager.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L61)
+[src/types/account-manager.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L66)
 
 ## Properties
 
@@ -89,7 +89,7 @@ const accountManager = new AccountManager(clientManager)
 
 #### Defined in
 
-[src/types/account-manager.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L50)
+[src/types/account-manager.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L55)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/types/account-manager.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L48)
+[src/types/account-manager.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L53)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/types/account-manager.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L51)
+[src/types/account-manager.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L56)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/types/account-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L49)
+[src/types/account-manager.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L54)
 
 ## Accessors
 
@@ -143,7 +143,7 @@ const kmdManager = accountManager.kmd;
 
 #### Defined in
 
-[src/types/account-manager.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L82)
+[src/types/account-manager.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L87)
 
 ## Methods
 
@@ -163,7 +163,7 @@ const kmdManager = accountManager.kmd;
 
 #### Defined in
 
-[src/types/account-manager.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L66)
+[src/types/account-manager.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L71)
 
 ___
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[src/types/account-manager.ts:531](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L531)
+[src/types/account-manager.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L535)
 
 ___
 
@@ -215,13 +215,13 @@ const account = await accountManager.dispenserFromEnvironment()
 
 #### Defined in
 
-[src/types/account-manager.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L444)
+[src/types/account-manager.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L448)
 
 ___
 
 ### ensureFunded
 
-▸ **ensureFunded**(`accountToFund`, `dispenserAccount`, `minSpendingBalance`, `options?`): `Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
+▸ **ensureFunded**(`accountToFund`, `dispenserAccount`, `minSpendingBalance`, `options?`): `Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
 
 Funds a given account using a dispenser account as a funding source such that
 the given account has a certain amount of Algo free to spend (accounting for
@@ -240,7 +240,7 @@ https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Returns
 
-`Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
+`Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
 
 - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
 - `undefined` if no funds were needed.
@@ -258,13 +258,13 @@ await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.
 
 #### Defined in
 
-[src/types/account-manager.ts:564](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L564)
+[src/types/account-manager.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L568)
 
 ___
 
 ### ensureFundedFromEnvironment
 
-▸ **ensureFundedFromEnvironment**(`accountToFund`, `minSpendingBalance`, `options?`): `Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
+▸ **ensureFundedFromEnvironment**(`accountToFund`, `minSpendingBalance`, `options?`): `Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
 
 Funds a given account using a dispenser account retrieved from the environment,
 per the `dispenserFromEnvironment` method, as a funding source such that
@@ -289,7 +289,7 @@ https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Returns
 
-`Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
+`Promise`\<`undefined` \| \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  } & [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
 
 - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
 - `undefined` if no funds were needed.
@@ -307,7 +307,7 @@ await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(
 
 #### Defined in
 
-[src/types/account-manager.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L626)
+[src/types/account-manager.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L630)
 
 ___
 
@@ -351,7 +351,7 @@ await accountManager.ensureFundedFromTestNetDispenserApi("ACCOUNTADDRESS", algor
 
 #### Defined in
 
-[src/types/account-manager.ts:682](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L682)
+[src/types/account-manager.ts:686](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L686)
 
 ___
 
@@ -396,7 +396,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/types/account-manager.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L337)
+[src/types/account-manager.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L341)
 
 ___
 
@@ -430,7 +430,7 @@ const defaultDispenserAccount = await accountManager.fromKmd('unencrypted-defaul
 
 #### Defined in
 
-[src/types/account-manager.ts:373](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L373)
+[src/types/account-manager.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L377)
 
 ___
 
@@ -462,7 +462,7 @@ const rekeyedAccount = accountManager.fromMnemonic("mnemonic secret ...", "SENDE
 
 #### Defined in
 
-[src/types/account-manager.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L289)
+[src/types/account-manager.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L293)
 
 ___
 
@@ -497,7 +497,7 @@ const account = accountManager.getAccount(sender)
 
 #### Defined in
 
-[src/types/account-manager.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L223)
+[src/types/account-manager.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L228)
 
 ___
 
@@ -530,7 +530,7 @@ const accountInfo = await accountManager.getInformation(address);
 
 #### Defined in
 
-[src/types/account-manager.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L242)
+[src/types/account-manager.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L247)
 
 ___
 
@@ -563,7 +563,7 @@ const signer = accountManager.getSigner("SENDERADDRESS")
 
 #### Defined in
 
-[src/types/account-manager.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L203)
+[src/types/account-manager.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L208)
 
 ___
 
@@ -587,7 +587,7 @@ const account = await accountManager.localNetDispenser()
 
 #### Defined in
 
-[src/types/account-manager.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L463)
+[src/types/account-manager.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L467)
 
 ___
 
@@ -618,7 +618,7 @@ const account = accountManager.logicsig(program, [new Uint8Array(3, ...)])
 
 #### Defined in
 
-[src/types/account-manager.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L411)
+[src/types/account-manager.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L415)
 
 ___
 
@@ -650,7 +650,7 @@ const account = accountManager.multisig({version: 1, threshold: 1, addrs: ["ADDR
 
 #### Defined in
 
-[src/types/account-manager.ts:396](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L396)
+[src/types/account-manager.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L400)
 
 ___
 
@@ -674,13 +674,13 @@ const account = accountManager.random()
 
 #### Defined in
 
-[src/types/account-manager.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L424)
+[src/types/account-manager.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L428)
 
 ___
 
 ### rekeyAccount
 
-▸ **rekeyAccount**(`account`, `rekeyTo`, `options?`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **rekeyAccount**(`account`, `rekeyTo`, `options?`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
 
 Rekey an account to a new address.
 
@@ -696,7 +696,7 @@ Rekey an account to a new address.
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
 
 The result of the transaction and the transaction that was sent
 
@@ -734,7 +734,7 @@ await accountManager.rekeyAccount({
 
 #### Defined in
 
-[src/types/account-manager.ts:506](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L506)
+[src/types/account-manager.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L510)
 
 ___
 
@@ -766,7 +766,7 @@ const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
 
 #### Defined in
 
-[src/types/account-manager.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L306)
+[src/types/account-manager.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L310)
 
 ___
 
@@ -803,7 +803,7 @@ const signer = accountManager.getSigner("SENDERADDRESS")
 
 #### Defined in
 
-[src/types/account-manager.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L102)
+[src/types/account-manager.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L107)
 
 ___
 
@@ -835,7 +835,7 @@ const accountManager = new AccountManager(clientManager)
 
 #### Defined in
 
-[src/types/account-manager.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L166)
+[src/types/account-manager.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L171)
 
 ___
 
@@ -873,7 +873,7 @@ const accountManager = new AccountManager(clientManager)
 
 #### Defined in
 
-[src/types/account-manager.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L150)
+[src/types/account-manager.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L155)
 
 ___
 
@@ -906,7 +906,7 @@ accountManager2.setSigners(accountManager1);
 
 #### Defined in
 
-[src/types/account-manager.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L183)
+[src/types/account-manager.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L188)
 
 ___
 
@@ -935,4 +935,4 @@ retrieval and returns a `AddressWithSigner` along with the original account in a
 
 #### Defined in
 
-[src/types/account-manager.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L112)
+[src/types/account-manager.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L117)

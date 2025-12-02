@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1DELETEMultisigRequest is the request for `DELETE /v1/multisig`
@@ -9,7 +10,7 @@ export type DeleteMultisigRequest = {
   walletPassword?: string
 }
 
-export const DeleteMultisigRequestMeta: ModelMetadata = {
+export const DeleteMultisigRequestMeta: ObjectModelMetadata<DeleteMultisigRequest> = {
   name: 'DeleteMultisigRequest',
   kind: 'object',
   fields: [
@@ -17,22 +18,19 @@ export const DeleteMultisigRequestMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

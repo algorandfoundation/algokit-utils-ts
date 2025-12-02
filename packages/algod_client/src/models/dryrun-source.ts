@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * DryrunSource is TEAL source text that gets uploaded, compiled, and inserted into transactions or application state.
@@ -13,7 +14,7 @@ export type DryrunSource = {
   appId: bigint
 }
 
-export const DryrunSourceMeta: ModelMetadata = {
+export const DryrunSourceMeta: ObjectModelMetadata<DryrunSource> = {
   name: 'DryrunSource',
   kind: 'object',
   fields: [
@@ -21,29 +22,25 @@ export const DryrunSourceMeta: ModelMetadata = {
       name: 'fieldName',
       wireKey: 'field-name',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'source',
       wireKey: 'source',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'txnIndex',
       wireKey: 'txn-index',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'appId',
       wireKey: 'app-index',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

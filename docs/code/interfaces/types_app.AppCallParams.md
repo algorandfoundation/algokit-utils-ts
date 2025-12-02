@@ -18,7 +18,6 @@ Parameters representing a call to an app.
 
 - [appId](types_app.AppCallParams.md#appid)
 - [args](types_app.AppCallParams.md#args)
-- [atc](types_app.AppCallParams.md#atc)
 - [callType](types_app.AppCallParams.md#calltype)
 - [fee](types_app.AppCallParams.md#fee)
 - [from](types_app.AppCallParams.md#from)
@@ -29,6 +28,7 @@ Parameters representing a call to an app.
 - [skipSending](types_app.AppCallParams.md#skipsending)
 - [skipWaiting](types_app.AppCallParams.md#skipwaiting)
 - [suppressLog](types_app.AppCallParams.md#suppresslog)
+- [transactionComposer](types_app.AppCallParams.md#transactioncomposer)
 - [transactionParams](types_app.AppCallParams.md#transactionparams)
 
 ## Properties
@@ -41,7 +41,7 @@ The id of the app to call
 
 #### Defined in
 
-[src/types/app.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L178)
+[src/types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)
 
 ___
 
@@ -53,35 +53,19 @@ The arguments passed in to the app call
 
 #### Defined in
 
-[src/types/app.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L188)
-
-___
-
-### atc
-
-• `Optional` **atc**: `AtomicTransactionComposer`
-
-An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
-
-#### Inherited from
-
-[SendTransactionParams](types_transaction.SendTransactionParams.md).[atc](types_transaction.SendTransactionParams.md#atc)
-
-#### Defined in
-
-[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
+[src/types/app.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L111)
 
 ___
 
 ### callType
 
-• **callType**: `NoOp` \| `OptIn` \| `CloseOut` \| `ClearState` \| `DeleteApplication` \| ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"delete_application"``
+• **callType**: `NoOp` \| `OptIn` \| `CloseOut` \| `ClearState` \| `DeleteApplication`
 
 The type of call, everything except create (see `createApp`) and update (see `updateApp`)
 
 #### Defined in
 
-[src/types/app.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L180)
+[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
 
 ___
 
@@ -109,7 +93,7 @@ The account to make the call from
 
 #### Defined in
 
-[src/types/app.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L182)
+[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
 
 ___
 
@@ -153,7 +137,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/app.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L186)
+[src/types/app.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L109)
 
 ___
 
@@ -222,6 +206,22 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 ___
 
+### transactionComposer
+
+• `Optional` **transactionComposer**: [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+An optional `TransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[transactionComposer](types_transaction.SendTransactionParams.md#transactioncomposer)
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
+
+___
+
 ### transactionParams
 
 • `Optional` **transactionParams**: `Object`
@@ -243,4 +243,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/app.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L184)
+[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)

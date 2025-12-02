@@ -1,7 +1,15 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { Address, ReadableAddress, getAddress } from '@algorandfoundation/algokit-common'
+import {
+  AddressWithSigners,
+  AddressWithTransactionSigner,
+  MultisigAccount,
+  MultisigMetadata,
+  TransactionSigner,
+} from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
+import { LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, SigningAccount } from './account'
@@ -11,9 +19,6 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import { AddressWithSigners, AddressWithTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
-import { MultisigAccount, MultisigMetadata } from '@algorandfoundation/algokit-transact'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -251,9 +256,8 @@ export class AccountManager {
 
     return {
       ...account,
-      // None of the Number types can practically overflow 2^53
-      authAddr: account.authAddr ? Address.fromString(account.authAddr) : undefined,
-      address: Address.fromString(address),
+      authAddr: account.authAddr,
+      address,
       balance: AlgoAmount.MicroAlgo(Number(account.amount)),
       amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),
       minBalance: AlgoAmount.MicroAlgo(Number(account.minBalance)),

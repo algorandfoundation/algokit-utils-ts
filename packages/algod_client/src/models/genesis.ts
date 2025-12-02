@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, booleanCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { GenesisAllocation } from './genesis-allocation'
 import { GenesisAllocationMeta } from './genesis-allocation'
 
@@ -11,10 +12,10 @@ export type Genesis = {
   network: string
   proto: string
   rwd: string
-  timestamp: number
+  timestamp?: number
 }
 
-export const GenesisMeta: ModelMetadata = {
+export const GenesisMeta: ObjectModelMetadata<Genesis> = {
   name: 'Genesis',
   kind: 'object',
   fields: [
@@ -22,64 +23,55 @@ export const GenesisMeta: ModelMetadata = {
       name: 'alloc',
       wireKey: 'alloc',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => GenesisAllocationMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(GenesisAllocationMeta)),
     },
     {
       name: 'comment',
       wireKey: 'comment',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'devmode',
       wireKey: 'devmode',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'fees',
       wireKey: 'fees',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'id',
       wireKey: 'id',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'network',
       wireKey: 'network',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'proto',
       wireKey: 'proto',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'rwd',
       wireKey: 'rwd',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'timestamp',
       wireKey: 'timestamp',
-      optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      optional: true,
+      codec: numberCodec,
     },
   ],
 }

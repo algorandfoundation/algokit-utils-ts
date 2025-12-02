@@ -1,6 +1,7 @@
+import { ABIReturn } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
 import { calculateExtraProgramPages } from '../util'
@@ -9,7 +10,6 @@ import {
   APP_DEPLOY_NOTE_DAPP,
   OnSchemaBreak,
   OnUpdate,
-  type ABIReturn,
   type AppDeployMetadata,
   type SendAppCreateTransactionResult,
   type SendAppUpdateTransactionResult,
@@ -320,7 +320,7 @@ export class AppDeployer {
 
       const appMetadata: AppMetadata = {
         appId: confirmation.appId!,
-        appAddress: algosdk.getApplicationAddress(confirmation.appId!),
+        appAddress: getApplicationAddress(confirmation.appId!),
         ...metadata,
         createdMetadata: metadata,
         createdRound: BigInt(confirmation.confirmedRound!),
@@ -367,7 +367,7 @@ export class AppDeployer {
     const existingAppRecord = await this._appManager.getById(existingApp.appId)
     const existingApproval = Buffer.from(existingAppRecord.approvalProgram).toString('base64')
     const existingClear = Buffer.from(existingAppRecord.clearStateProgram).toString('base64')
-    const existingExtraPages = calculateExtraProgramPages(existingAppRecord.approvalProgram, existingAppRecord.clearStateProgram)
+    const extraPages = existingAppRecord.extraProgramPages ?? 0
 
     const newApprovalBytes = Buffer.from(approvalProgram)
     const newClearBytes = Buffer.from(clearStateProgram)
@@ -383,7 +383,7 @@ export class AppDeployer {
       existingAppRecord.globalInts < (createParams.schema?.globalInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0) ||
       existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0) ||
-      existingExtraPages < newExtraPages
+      extraPages < newExtraPages
 
     if (isSchemaBreak) {
       Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
@@ -392,7 +392,7 @@ export class AppDeployer {
           globalByteSlices: existingAppRecord.globalByteSlices,
           localInts: existingAppRecord.localInts,
           localByteSlices: existingAppRecord.localByteSlices,
-          extraProgramPages: existingExtraPages,
+          extraProgramPages: extraPages,
         },
         to: { ...createParams.schema, extraProgramPages: newExtraPages },
       })
@@ -580,7 +580,7 @@ export class AppDeployer {
           if (creationNote?.name) {
             appLookup[creationNote.name] = {
               appId: createdApp.id,
-              appAddress: algosdk.getApplicationAddress(createdApp.id),
+              appAddress: getApplicationAddress(createdApp.id),
               createdMetadata: creationNote,
               createdRound: appCreationTransaction.confirmedRound ?? 0n,
               ...(updateNote ?? creationNote),

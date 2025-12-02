@@ -1,5 +1,5 @@
+import { Address } from '@algorandfoundation/algokit-common'
 import { getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Address } from '@algorandfoundation/sdk'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as indexer from './indexer-lookup'

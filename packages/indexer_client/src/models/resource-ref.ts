@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, addressCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { BoxReference } from './box-reference'
 import { BoxReferenceMeta } from './box-reference'
 import type { HoldingRef } from './holding-ref'
@@ -13,7 +14,7 @@ export type ResourceRef = {
   /**
    * \[d\] Account whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram.
    */
-  address?: string
+  address?: Address
 
   /**
    * \[p\] Application id whose GlobalState may be read by the executing
@@ -31,7 +32,7 @@ export type ResourceRef = {
   local?: LocalsRef
 }
 
-export const ResourceRefMeta: ModelMetadata = {
+export const ResourceRefMeta: ObjectModelMetadata<ResourceRef> = {
   name: 'ResourceRef',
   kind: 'object',
   fields: [
@@ -39,43 +40,37 @@ export const ResourceRefMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: addressCodec,
     },
     {
       name: 'applicationId',
       wireKey: 'application-id',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'box',
       wireKey: 'box',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => BoxReferenceMeta },
+      codec: new ObjectModelCodec(BoxReferenceMeta),
     },
     {
       name: 'holding',
       wireKey: 'holding',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => HoldingRefMeta },
+      codec: new ObjectModelCodec(HoldingRefMeta),
     },
     {
       name: 'local',
       wireKey: 'local',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => LocalsRefMeta },
+      codec: new ObjectModelCodec(LocalsRefMeta),
     },
   ],
 }

@@ -1,18 +1,17 @@
+import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
+import { Address, ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
-import { getABIReturnValue } from '../transaction/transaction'
+import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import {
+  ABI_RETURN_PREFIX,
   BoxName,
   DELETABLE_TEMPLATE_NAME,
   UPDATABLE_TEMPLATE_NAME,
-  type ABIReturn,
   type AppState,
   type CompiledTeal,
   type TealTemplateParams,
 } from './app'
-import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Information about an app. */
 export interface AppInformation {
@@ -81,7 +80,7 @@ export interface BoxValueRequestParams {
   /** The name of the box to return either as a string, binary array or `BoxName` */
   boxName: BoxIdentifier
   /** The ABI type to decode the value using */
-  type: algosdk.ABIType
+  type: ABIType
 }
 
 /**
@@ -93,7 +92,7 @@ export interface BoxValuesRequestParams {
   /** The names of the boxes to return either as a string, binary array or BoxName` */
   boxNames: BoxIdentifier[]
   /** The ABI type to decode the value using */
-  type: algosdk.ABIType
+  type: ABIType
 }
 
 /** Allows management of application information. */
@@ -210,10 +209,10 @@ export class AppManager {
 
     return {
       appId: BigInt(app.id),
-      appAddress: algosdk.getApplicationAddress(app.id),
+      appAddress: getApplicationAddress(app.id),
       approvalProgram: app.params.approvalProgram,
       clearStateProgram: app.params.clearStateProgram,
-      creator: Address.fromString(app.params.creator),
+      creator: app.params.creator,
       localInts: Number(app.params.localStateSchema?.numUint ?? 0),
       localByteSlices: Number(app.params.localStateSchema?.numByteSlice ?? 0),
       globalInts: Number(app.params.globalStateSchema?.numUint ?? 0),
@@ -328,7 +327,7 @@ export class AppManager {
    * const boxValue = await appManager.getBoxValueFromABIType({ appId: 12353n, boxName: 'boxName', type: new ABIUintType(32) });
    * ```
    */
-  public async getBoxValueFromABIType(request: BoxValueRequestParams): Promise<algosdk.ABIValue> {
+  public async getBoxValueFromABIType(request: BoxValueRequestParams): Promise<ABIValue> {
     const { appId, boxName, type } = request
     const value = await this.getBoxValue(appId, boxName)
     return type.decode(value)
@@ -343,7 +342,7 @@ export class AppManager {
    * const boxValues = await appManager.getBoxValuesFromABIType({ appId: 12353n, boxNames: ['boxName1', 'boxName2'], type: new ABIUintType(32) });
    * ```
    */
-  public async getBoxValuesFromABIType(request: BoxValuesRequestParams): Promise<algosdk.ABIValue[]> {
+  public async getBoxValuesFromABIType(request: BoxValuesRequestParams): Promise<ABIValue[]> {
     const { appId, boxNames, type } = request
     return await Promise.all(boxNames.map(async (boxName) => await this.getBoxValueFromABIType({ appId, boxName, type })))
   }
@@ -428,21 +427,48 @@ export class AppManager {
    * const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignature('hello(string)void'));
    * ```
    */
-  public static getABIReturn(
-    confirmation: PendingTransactionResponse | undefined,
-    method: algosdk.ABIMethod | undefined,
-  ): ABIReturn | undefined {
-    if (!method || !confirmation || method.returns.type === 'void') {
+  public static getABIReturn(confirmation: PendingTransactionResponse, method: ABIMethod | undefined): ABIReturn | undefined {
+    if (!method || method.returns.type === 'void') {
       return undefined
     }
 
-    // The parseMethodResponse method mutates the second parameter :(
-    const resultDummy: algosdk.ABIResult = {
-      txID: '',
-      method,
-      rawReturnValue: new Uint8Array(),
+    try {
+      const logs = confirmation.logs || []
+      if (logs.length === 0) {
+        throw new Error(`App call transaction did not log a return value`)
+      }
+      const lastLog = logs[logs.length - 1]
+      if (!AppManager.hasAbiReturnPrefix(lastLog)) {
+        throw new Error(`App call transaction did not log an ABI return value`)
+      }
+
+      const rawReturnValue = new Uint8Array(lastLog.slice(4))
+      return {
+        method: method,
+        rawReturnValue,
+        decodeError: undefined,
+        returnValue: method.returns.type.decode(rawReturnValue),
+      }
+    } catch (err) {
+      return {
+        method: method,
+        rawReturnValue: undefined,
+        decodeError: err as Error,
+        returnValue: undefined,
+      }
     }
-    return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation), method.returns.type)
+  }
+
+  private static hasAbiReturnPrefix(log: Uint8Array): boolean {
+    if (log.length < ABI_RETURN_PREFIX.length) {
+      return false
+    }
+    for (let i = 0; i < ABI_RETURN_PREFIX.length; i++) {
+      if (log[i] !== ABI_RETURN_PREFIX[i]) {
+        return false
+      }
+    }
+    return true
   }
 
   /**

@@ -8,10 +8,6 @@
 
 - [SigningAccount](../classes/types_account.SigningAccount.md)
 
-### Interfaces
-
-- [AccountConfig](../interfaces/types_account.AccountConfig.md)
-
 ### Type Aliases
 
 - [AccountAssetInformation](types_account.md#accountassetinformation)
@@ -41,7 +37,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L217)
+[src/types/account.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L218)
 
 ___
 
@@ -84,7 +80,7 @@ Account information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L68)
+[src/types/account.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L69)
 
 ___
 
@@ -98,7 +94,7 @@ Use AddressWithSigner
 
 #### Defined in
 
-[src/types/account.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L65)
+[src/types/account.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L66)
 
 ## Variables
 
@@ -110,4 +106,4 @@ The account name identifier used for fund dispensing in test environments
 
 #### Defined in
 
-[src/types/account.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L18)
+[src/types/account.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L19)

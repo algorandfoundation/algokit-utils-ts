@@ -1,12 +1,13 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ArrayModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * MasterDerivationKey is used to derive ed25519 keys for use in wallets
  */
 export type MasterDerivationKey = number[]
 
-export const MasterDerivationKeyMeta: ModelMetadata = {
+export const MasterDerivationKeyMeta: ArrayModelMetadata = {
   name: 'MasterDerivationKey',
   kind: 'array',
-  arrayItems: { kind: 'scalar' },
+  codec: numberArrayCodec,
 }

@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * APIV1POSTKeyExportRequest is the request for `POST /v1/key/export`
@@ -9,7 +10,7 @@ export type ExportKeyRequest = {
   walletPassword?: string
 }
 
-export const ExportKeyRequestMeta: ModelMetadata = {
+export const ExportKeyRequestMeta: ObjectModelMetadata<ExportKeyRequest> = {
   name: 'ExportKeyRequest',
   kind: 'object',
   fields: [
@@ -17,22 +18,19 @@ export const ExportKeyRequestMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

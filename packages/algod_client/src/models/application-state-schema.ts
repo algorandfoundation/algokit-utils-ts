@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Specifies maximums on the number of each type that may be stored.
@@ -15,7 +16,7 @@ export type ApplicationStateSchema = {
   numByteSlice: number
 }
 
-export const ApplicationStateSchemaMeta: ModelMetadata = {
+export const ApplicationStateSchemaMeta: ObjectModelMetadata<ApplicationStateSchema> = {
   name: 'ApplicationStateSchema',
   kind: 'object',
   fields: [
@@ -23,15 +24,13 @@ export const ApplicationStateSchemaMeta: ModelMetadata = {
       name: 'numUint',
       wireKey: 'num-uint',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'numByteSlice',
       wireKey: 'num-byte-slice',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

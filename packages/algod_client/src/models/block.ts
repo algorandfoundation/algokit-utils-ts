@@ -1,13 +1,214 @@
-import type { ModelMetadata } from '../core/model-runtime'
-import type { SignedTxnInBlock } from './signed-txn-in-block'
-import { SignedTxnInBlockMeta } from './signed-txn-in-block'
-import type { BlockStateProofTracking } from './block_state_proof_tracking'
-import { BlockStateProofTrackingMeta } from './block_state_proof_tracking'
+import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
+import {
+  addressArrayCodec,
+  addressCodec,
+  Address,
+  ArrayCodec,
+  bigIntCodec,
+  booleanCodec,
+  bytesArrayCodec,
+  bytesCodec,
+  MapCodec,
+  ObjectModelCodec,
+  numberCodec,
+  stringCodec,
+  type ObjectModelMetadata,
+} from '@algorandfoundation/algokit-common'
+
+/** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
+export type BlockEvalDelta = {
+  /** [at] delta action. */
+  action: number
+  /** [bs] bytes value. */
+  bytes?: Uint8Array
+  /** [ui] uint value. */
+  uint?: bigint
+}
+
+export const BlockEvalDeltaMeta: ObjectModelMetadata<BlockEvalDelta> = {
+  name: 'BlockEvalDelta',
+  kind: 'object',
+  fields: [
+    { name: 'action', wireKey: 'at', optional: false, codec: numberCodec },
+    { name: 'bytes', wireKey: 'bs', optional: true, codec: bytesCodec },
+    { name: 'uint', wireKey: 'ui', optional: true, codec: bigIntCodec },
+  ],
+}
 
 /**
- * Block contains the BlockHeader and the list of transactions (Payset).
+ * State changes from application execution, including inner transactions and logs.
  */
-export interface Block {
+export type BlockAppEvalDelta = {
+  /** [gd] Global state delta for the application. */
+  globalDelta?: Map<Uint8Array, BlockEvalDelta>
+  /** [ld] Local state deltas keyed by address index. */
+  localDeltas?: Map<number, Map<Uint8Array, BlockEvalDelta>>
+  /** [itx] Inner transactions produced by this application execution. */
+  innerTxns?: SignedTxnInBlock[]
+  /** [sa] Shared accounts referenced by local deltas. */
+  sharedAccounts?: string[]
+  /** [lg] Application log outputs. */
+  logs?: Uint8Array[]
+}
+
+export const BlockAppEvalDeltaMeta: ObjectModelMetadata<BlockAppEvalDelta> = {
+  name: 'BlockAppEvalDelta',
+  kind: 'object',
+  fields: [
+    {
+      name: 'globalDelta',
+      wireKey: 'gd',
+      optional: true,
+      codec: new MapCodec(bytesCodec, new ObjectModelCodec(BlockEvalDeltaMeta)),
+    },
+    {
+      name: 'localDeltas',
+      wireKey: 'ld',
+      optional: true,
+      codec: new MapCodec(numberCodec, new MapCodec(bytesCodec, new ObjectModelCodec(BlockEvalDeltaMeta))),
+    },
+    {
+      name: 'innerTxns',
+      wireKey: 'itx',
+      optional: true,
+      codec: new ArrayCodec(new ObjectModelCodec(() => SignedTxnInBlockMeta)),
+    },
+    {
+      name: 'sharedAccounts',
+      wireKey: 'sa',
+      optional: true,
+      codec: addressArrayCodec,
+    },
+    { name: 'logs', wireKey: 'lg', optional: true, codec: bytesArrayCodec },
+  ],
+}
+
+/** Tracking metadata for a specific StateProofType. */
+export type BlockStateProofTrackingData = {
+  /** [v] Vector commitment root of state proof voters. */
+  stateProofVotersCommitment?: Uint8Array
+  /** [t] Online total weight during state proof round. */
+  stateProofOnlineTotalWeight?: bigint
+  /** [n] Next round for which state proofs are accepted. */
+  stateProofNextRound?: bigint
+}
+
+export const BlockStateProofTrackingDataMeta: ObjectModelMetadata<BlockStateProofTrackingData> = {
+  name: 'BlockStateProofTrackingData',
+  kind: 'object',
+  fields: [
+    { name: 'stateProofVotersCommitment', wireKey: 'v', optional: true, codec: bytesCodec },
+    { name: 'stateProofOnlineTotalWeight', wireKey: 't', optional: true, codec: bigIntCodec },
+    { name: 'stateProofNextRound', wireKey: 'n', optional: true, codec: bigIntCodec },
+  ],
+}
+
+export type ApplyData = {
+  closingAmount?: bigint
+  assetClosingAmount?: bigint
+  senderRewards?: bigint
+  receiverRewards?: bigint
+  closeRewards?: bigint
+  evalDelta?: BlockAppEvalDelta
+  configAsset?: bigint
+  applicationId?: bigint
+}
+
+export const ApplyDataMeta: ObjectModelMetadata<ApplyData> = {
+  name: 'SignedTxnInBlock',
+  kind: 'object',
+  fields: [
+    { name: 'closingAmount', wireKey: 'ca', optional: true, codec: bigIntCodec },
+    { name: 'assetClosingAmount', wireKey: 'aca', optional: true, codec: bigIntCodec },
+    { name: 'senderRewards', wireKey: 'rs', optional: true, codec: bigIntCodec },
+    { name: 'receiverRewards', wireKey: 'rr', optional: true, codec: bigIntCodec },
+    { name: 'closeRewards', wireKey: 'rc', optional: true, codec: bigIntCodec },
+    { name: 'evalDelta', wireKey: 'dt', optional: true, codec: new ObjectModelCodec(BlockAppEvalDeltaMeta) },
+    { name: 'configAsset', wireKey: 'caid', optional: true, codec: bigIntCodec },
+    { name: 'applicationId', wireKey: 'apid', optional: true, codec: bigIntCodec },
+  ],
+}
+
+/**
+ * SignedTxnWithAD is a SignedTransaction with additional ApplyData.
+ */
+export type SignedTxnWithAD = {
+  /** The signed transaction. */
+  signedTxn: SignedTransaction
+  /** Apply data containing transaction execution information. */
+  applyData?: ApplyData
+}
+
+export const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
+  name: 'SignedTxnWithAD',
+  kind: 'object',
+  fields: [
+    {
+      name: 'signedTransaction',
+      flattened: true,
+      optional: false,
+      codec: new ObjectModelCodec(SignedTransactionMeta),
+    },
+    {
+      name: 'applyData',
+      flattened: true,
+      optional: true,
+      codec: new ObjectModelCodec(ApplyDataMeta),
+    },
+  ],
+}
+
+/**
+ * SignedTxnInBlock is a SignedTransaction with additional ApplyData and block-specific metadata.
+ */
+export type SignedTxnInBlock = {
+  signedTransaction: SignedTxnWithAD
+  hasGenesisId?: boolean
+  hasGenesisHash?: boolean
+}
+
+export const SignedTxnInBlockMeta: ObjectModelMetadata<SignedTxnInBlock> = {
+  name: 'SignedTxnInBlock',
+  kind: 'object',
+  fields: [
+    {
+      name: 'signedTransaction',
+      flattened: true,
+      optional: false,
+      codec: new ObjectModelCodec(SignedTxnWithADMeta),
+    },
+    { name: 'hasGenesisId', wireKey: 'hgi', optional: true, codec: booleanCodec },
+    { name: 'hasGenesisHash', wireKey: 'hgh', optional: true, codec: booleanCodec },
+  ],
+}
+
+export type ParticipationUpdates = {
+  /** [partupdrmv] Expired participation accounts. */
+  expiredParticipationAccounts?: string[]
+  /** [partupdabs] Absent participation accounts. */
+  absentParticipationAccounts?: string[]
+}
+
+export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
+  name: 'ParticipationUpdates',
+  kind: 'object',
+  fields: [
+    {
+      name: 'expiredParticipationAccounts',
+      wireKey: 'partupdrmv',
+      optional: true,
+      codec: addressArrayCodec,
+    },
+    {
+      name: 'absentParticipationAccounts',
+      wireKey: 'partupdabs',
+      optional: true,
+      codec: addressArrayCodec,
+    },
+  ],
+}
+
+export type BlockHeader = {
   /** [rnd] Round number. */
   round?: bigint
   /** [prev] Previous block hash. */
@@ -29,7 +230,7 @@ export interface Block {
   /** [gh] Genesis hash. */
   genesisHash?: Uint8Array
   /** [prp] Proposer address. */
-  proposer?: Uint8Array
+  proposer?: Address
   /** [fc] Fees collected in this block. */
   feesCollected?: bigint
   /** [bi] Bonus incentive for block proposal. */
@@ -37,9 +238,9 @@ export interface Block {
   /** [pp] Proposer payout. */
   proposerPayout?: bigint
   /** [fees] FeeSink address. */
-  feeSink?: Uint8Array
+  feeSink?: Address
   /** [rwd] RewardsPool address. */
-  rewardsPool?: Uint8Array
+  rewardsPool?: Address
   /** [earn] Rewards level. */
   rewardsLevel?: bigint
   /** [rate] Rewards rate. */
@@ -67,75 +268,80 @@ export interface Block {
   /** [tc] Transaction counter. */
   txnCounter?: bigint
   /** [spt] State proof tracking data keyed by state proof type. */
-  stateProofTracking?: BlockStateProofTracking
-  /** [partupdrmv] Expired participation accounts. */
-  expiredParticipationAccounts?: Uint8Array[]
-  /** [partupdabs] Absent participation accounts. */
-  absentParticipationAccounts?: Uint8Array[]
-  /** [txns] Block transactions (Payset). */
-  transactions?: SignedTxnInBlock[]
+  stateProofTracking?: Map<number, BlockStateProofTrackingData>
+  /** Represents participation account data that needs to be checked/acted on by the network */
+  participationUpdates?: ParticipationUpdates
 }
 
-export const BlockMeta: ModelMetadata = {
-  name: 'Block',
+export const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
+  name: 'BlockHeader',
   kind: 'object',
   fields: [
-    { name: 'round', wireKey: 'rnd', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'previousBlockHash', wireKey: 'prev', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'seed', wireKey: 'seed', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'transactionsRoot', wireKey: 'txn', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'timestamp', wireKey: 'ts', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'genesisId', wireKey: 'gen', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'genesisHash', wireKey: 'gh', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'proposer', wireKey: 'prp', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'feesCollected', wireKey: 'fc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'bonus', wireKey: 'bi', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'proposerPayout', wireKey: 'pp', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'feeSink', wireKey: 'fees', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'rewardsPool', wireKey: 'rwd', optional: true, nullable: false, type: { kind: 'scalar', isBytes: true } },
-    { name: 'rewardsLevel', wireKey: 'earn', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'rewardsRate', wireKey: 'rate', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'rewardsResidue', wireKey: 'frac', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'currentProtocol', wireKey: 'proto', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'nextProtocol', wireKey: 'nextproto', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'nextProtocolSwitchOn', wireKey: 'nextswitch', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'upgradePropose', wireKey: 'upgradeprop', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
-    { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, nullable: false, type: { kind: 'scalar' } },
-    { name: 'txnCounter', wireKey: 'tc', optional: true, nullable: false, type: { kind: 'scalar', isBigint: true } },
+    { name: 'round', wireKey: 'rnd', optional: true, codec: bigIntCodec },
+    { name: 'previousBlockHash', wireKey: 'prev', optional: true, codec: bytesCodec },
+    { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, codec: bytesCodec },
+    { name: 'seed', wireKey: 'seed', optional: true, codec: bytesCodec },
+    { name: 'transactionsRoot', wireKey: 'txn', optional: false, codec: bytesCodec },
+    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, codec: bytesCodec },
+    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, codec: bytesCodec },
+    { name: 'timestamp', wireKey: 'ts', optional: true, codec: bigIntCodec },
+    { name: 'genesisId', wireKey: 'gen', optional: true, codec: stringCodec },
+    { name: 'genesisHash', wireKey: 'gh', optional: true, codec: bytesCodec },
+    { name: 'proposer', wireKey: 'prp', optional: true, codec: addressCodec },
+    { name: 'feesCollected', wireKey: 'fc', optional: true, codec: bigIntCodec },
+    { name: 'bonus', wireKey: 'bi', optional: true, codec: bigIntCodec },
+    { name: 'proposerPayout', wireKey: 'pp', optional: true, codec: bigIntCodec },
+    { name: 'feeSink', wireKey: 'fees', optional: true, codec: addressCodec },
+    { name: 'rewardsPool', wireKey: 'rwd', optional: true, codec: addressCodec },
+    { name: 'rewardsLevel', wireKey: 'earn', optional: true, codec: bigIntCodec },
+    { name: 'rewardsRate', wireKey: 'rate', optional: true, codec: bigIntCodec },
+    { name: 'rewardsResidue', wireKey: 'frac', optional: true, codec: bigIntCodec },
+    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, codec: bigIntCodec },
+    { name: 'currentProtocol', wireKey: 'proto', optional: true, codec: stringCodec },
+    { name: 'nextProtocol', wireKey: 'nextproto', optional: true, codec: stringCodec },
+    { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, codec: bigIntCodec },
+    { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, codec: bigIntCodec },
+    { name: 'nextProtocolSwitchOn', wireKey: 'nextswitch', optional: true, codec: bigIntCodec },
+    { name: 'upgradePropose', wireKey: 'upgradeprop', optional: true, codec: stringCodec },
+    { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, codec: bigIntCodec },
+    { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, codec: booleanCodec },
+    { name: 'txnCounter', wireKey: 'tc', optional: true, codec: bigIntCodec },
     {
       name: 'stateProofTracking',
       wireKey: 'spt',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => BlockStateProofTrackingMeta },
+      codec: new MapCodec(numberCodec, new ObjectModelCodec(BlockStateProofTrackingDataMeta)),
     },
     {
-      name: 'expiredParticipationAccounts',
-      wireKey: 'partupdrmv',
+      name: 'participationUpdates',
+      flattened: true,
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
+      codec: new ObjectModelCodec(ParticipationUpdatesMeta),
     },
+  ],
+}
+
+/**
+ * Block contains the BlockHeader and the list of transactions (Payset).
+ */
+export type Block = {
+  /** The block information (Header) */
+  header: BlockHeader
+
+  /** [txns] Block transactions (Payset). */
+  payset?: SignedTxnInBlock[]
+}
+
+export const BlockMeta: ObjectModelMetadata<Block> = {
+  name: 'Block',
+  kind: 'object',
+  fields: [
+    { name: 'header', flattened: true, optional: false, codec: new ObjectModelCodec(BlockHeaderMeta) },
     {
-      name: 'absentParticipationAccounts',
-      wireKey: 'partupdabs',
-      optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
-    },
-    {
-      name: 'transactions',
+      name: 'payset',
       wireKey: 'txns',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => SignedTxnInBlockMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(SignedTxnInBlockMeta)),
     },
   ],
 }

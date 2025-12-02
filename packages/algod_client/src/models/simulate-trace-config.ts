@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * An object that configures simulation execution trace.
@@ -25,7 +26,7 @@ export type SimulateTraceConfig = {
   stateChange?: boolean
 }
 
-export const SimulateTraceConfigMeta: ModelMetadata = {
+export const SimulateTraceConfigMeta: ObjectModelMetadata<SimulateTraceConfig> = {
   name: 'SimulateTraceConfig',
   kind: 'object',
   fields: [
@@ -33,29 +34,25 @@ export const SimulateTraceConfigMeta: ModelMetadata = {
       name: 'enable',
       wireKey: 'enable',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'stackChange',
       wireKey: 'stack-change',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'scratchChange',
       wireKey: 'scratch-change',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'stateChange',
       wireKey: 'state-change',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
   ],
 }

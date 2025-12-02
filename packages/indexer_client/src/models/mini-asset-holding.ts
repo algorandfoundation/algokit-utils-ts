@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, booleanCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * A simplified version of AssetHolding
@@ -24,7 +25,7 @@ export type MiniAssetHolding = {
   optedOutAtRound?: bigint
 }
 
-export const MiniAssetHoldingMeta: ModelMetadata = {
+export const MiniAssetHoldingMeta: ObjectModelMetadata<MiniAssetHolding> = {
   name: 'MiniAssetHolding',
   kind: 'object',
   fields: [
@@ -32,43 +33,37 @@ export const MiniAssetHoldingMeta: ModelMetadata = {
       name: 'address',
       wireKey: 'address',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'amount',
       wireKey: 'amount',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'isFrozen',
       wireKey: 'is-frozen',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'deleted',
       wireKey: 'deleted',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'optedInAtRound',
       wireKey: 'opted-in-at-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'optedOutAtRound',
       wireKey: 'opted-out-at-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

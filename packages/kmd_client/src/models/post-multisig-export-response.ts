@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, booleanCodec, ArrayCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
 import type { PublicKey } from './public-key'
 import { PublicKeyMeta } from './public-key'
 
@@ -14,7 +15,7 @@ export type PostMultisigExportResponse = {
   threshold?: number
 }
 
-export const PostMultisigExportResponseMeta: ModelMetadata = {
+export const PostMultisigExportResponseMeta: ObjectModelMetadata<PostMultisigExportResponse> = {
   name: 'PostMultisigExportResponse',
   kind: 'object',
   fields: [
@@ -22,36 +23,31 @@ export const PostMultisigExportResponseMeta: ModelMetadata = {
       name: 'error',
       wireKey: 'error',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'message',
       wireKey: 'message',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'multisigVersion',
       wireKey: 'multisig_version',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'pks',
       wireKey: 'pks',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => PublicKeyMeta } },
+      codec: new ArrayCodec(new PrimitiveModelCodec(PublicKeyMeta)),
     },
     {
       name: 'threshold',
       wireKey: 'threshold',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }

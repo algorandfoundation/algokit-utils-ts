@@ -1,5 +1,7 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec, ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
+import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import type { Account } from './account'
 import { AccountMeta } from './account'
 import type { Application } from './application'
@@ -32,7 +34,7 @@ export type DryrunRequest = {
   sources: DryrunSource[]
 }
 
-export const DryrunRequestMeta: ModelMetadata = {
+export const DryrunRequestMeta: ObjectModelMetadata<DryrunRequest> = {
   name: 'DryrunRequest',
   kind: 'object',
   fields: [
@@ -40,50 +42,43 @@ export const DryrunRequestMeta: ModelMetadata = {
       name: 'txns',
       wireKey: 'txns',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'codec', codecKey: 'SignedTransaction' } },
+      codec: new ArrayCodec(new ObjectModelCodec(SignedTransactionMeta)),
     },
     {
       name: 'accounts',
       wireKey: 'accounts',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AccountMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AccountMeta)),
     },
     {
       name: 'apps',
       wireKey: 'apps',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationMeta)),
     },
     {
       name: 'protocolVersion',
       wireKey: 'protocol-version',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'round',
       wireKey: 'round',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'latestTimestamp',
       wireKey: 'latest-timestamp',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'sources',
       wireKey: 'sources',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => DryrunSourceMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(DryrunSourceMeta)),
     },
   ],
 }

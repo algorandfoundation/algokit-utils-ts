@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { AssetParams } from './asset-params'
 import { AssetParamsMeta } from './asset-params'
 
@@ -20,7 +21,7 @@ export type TransactionAssetConfig = {
   params?: AssetParams
 }
 
-export const TransactionAssetConfigMeta: ModelMetadata = {
+export const TransactionAssetConfigMeta: ObjectModelMetadata<TransactionAssetConfig> = {
   name: 'TransactionAssetConfig',
   kind: 'object',
   fields: [
@@ -28,15 +29,13 @@ export const TransactionAssetConfigMeta: ModelMetadata = {
       name: 'assetId',
       wireKey: 'asset-id',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'params',
       wireKey: 'params',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => AssetParamsMeta },
+      codec: new ObjectModelCodec(AssetParamsMeta),
     },
   ],
 }

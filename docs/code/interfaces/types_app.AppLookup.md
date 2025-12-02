@@ -21,7 +21,7 @@ A lookup of name -> Algorand app for a creator
 
 #### Defined in
 
-[src/types/app.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L266)
+[src/types/app.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L179)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L265)
+[src/types/app.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L178)

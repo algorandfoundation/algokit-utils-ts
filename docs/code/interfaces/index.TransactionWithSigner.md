@@ -4,6 +4,8 @@
 
 [index](../modules/index.md).TransactionWithSigner
 
+Represents an unsigned transactions and a signer that can authorize that transaction.
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,11 @@
 
 • **signer**: `TransactionSigner`
 
+A transaction signer that can authorize txn
+
 #### Defined in
 
-[src/transaction/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L42)
+[src/transaction/transaction.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L18)
 
 ___
 
@@ -27,6 +31,8 @@ ___
 
 • **txn**: `Transaction`
 
+An unsigned transaction
+
 #### Defined in
 
-[src/transaction/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L41)
+[src/transaction/transaction.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L16)

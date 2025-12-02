@@ -43,7 +43,7 @@ The Algorand address of the account associated with the app
 
 #### Defined in
 
-[src/types/app.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L36)
+[src/types/app.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L40)
 
 ___
 
@@ -59,7 +59,7 @@ The id of the app
 
 #### Defined in
 
-[src/types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
+[src/types/app.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L38)
 
 ___
 
@@ -71,7 +71,7 @@ The metadata when the app was created
 
 #### Defined in
 
-[src/types/app.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L258)
+[src/types/app.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L171)
 
 ___
 
@@ -83,7 +83,7 @@ The round the app was created
 
 #### Defined in
 
-[src/types/app.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L254)
+[src/types/app.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L167)
 
 ___
 
@@ -99,7 +99,7 @@ Whether or not the app is deletable / permanent / unspecified
 
 #### Defined in
 
-[src/types/app.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L246)
+[src/types/app.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L159)
 
 ___
 
@@ -111,7 +111,7 @@ Whether or not the app is deleted
 
 #### Defined in
 
-[src/types/app.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L260)
+[src/types/app.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L173)
 
 ___
 
@@ -127,7 +127,7 @@ The unique name identifier of the app within the creator account
 
 #### Defined in
 
-[src/types/app.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L242)
+[src/types/app.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L155)
 
 ___
 
@@ -143,7 +143,7 @@ Whether or not the app is updatable / immutable / unspecified
 
 #### Defined in
 
-[src/types/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L248)
+[src/types/app.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L161)
 
 ___
 
@@ -155,7 +155,7 @@ The last round that the app was updated
 
 #### Defined in
 
-[src/types/app.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L256)
+[src/types/app.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L169)
 
 ___
 
@@ -171,4 +171,4 @@ The version of app that is / will be deployed
 
 #### Defined in
 
-[src/types/app.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L244)
+[src/types/app.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L157)

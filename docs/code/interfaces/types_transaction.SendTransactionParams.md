@@ -12,23 +12,10 @@ The sending configuration for a transaction
 
   ↳ [`AppCallParams`](types_app.AppCallParams.md)
 
-  ↳ [`CreateAssetParams`](types_asset.CreateAssetParams.md)
-
-  ↳ [`AssetOptInParams`](types_asset.AssetOptInParams.md)
-
-  ↳ [`AlgoTransferParams`](types_transfer.AlgoTransferParams.md)
-
-  ↳ [`AlgoRekeyParams`](types_transfer.AlgoRekeyParams.md)
-
-  ↳ [`EnsureFundedParams`](types_transfer.EnsureFundedParams.md)
-
-  ↳ [`TransferAssetParams`](types_transfer.TransferAssetParams.md)
-
 ## Table of contents
 
 ### Properties
 
-- [atc](types_transaction.SendTransactionParams.md#atc)
 - [fee](types_transaction.SendTransactionParams.md#fee)
 - [maxFee](types_transaction.SendTransactionParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transaction.SendTransactionParams.md#maxroundstowaitforconfirmation)
@@ -36,20 +23,9 @@ The sending configuration for a transaction
 - [skipSending](types_transaction.SendTransactionParams.md#skipsending)
 - [skipWaiting](types_transaction.SendTransactionParams.md#skipwaiting)
 - [suppressLog](types_transaction.SendTransactionParams.md#suppresslog)
+- [transactionComposer](types_transaction.SendTransactionParams.md#transactioncomposer)
 
 ## Properties
-
-### atc
-
-• `Optional` **atc**: `AtomicTransactionComposer`
-
-An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
-
-#### Defined in
-
-[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
-
-___
 
 ### fee
 
@@ -133,3 +109,15 @@ Whether to suppress log messages from transaction send, default: do not suppress
 #### Defined in
 
 [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
+
+___
+
+### transactionComposer
+
+• `Optional` **transactionComposer**: [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+An optional `TransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)

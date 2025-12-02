@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * VersionsResponse is the response to `GET /versions`
@@ -8,7 +9,7 @@ export type VersionsResponse = {
   versions?: string[]
 }
 
-export const VersionsResponseMeta: ModelMetadata = {
+export const VersionsResponseMeta: ObjectModelMetadata<VersionsResponse> = {
   name: 'VersionsResponse',
   kind: 'object',
   fields: [
@@ -16,8 +17,7 @@ export const VersionsResponseMeta: ModelMetadata = {
       name: 'versions',
       wireKey: 'versions',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: stringArrayCodec,
     },
   ],
 }

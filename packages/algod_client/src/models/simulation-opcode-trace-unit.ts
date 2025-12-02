@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec, ArrayCodec, numberArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { ApplicationStateOperation } from './application-state-operation'
 import { ApplicationStateOperationMeta } from './application-state-operation'
 import type { AvmValue } from './avm-value'
@@ -41,7 +42,7 @@ export type SimulationOpcodeTraceUnit = {
   stackAdditions?: AvmValue[]
 }
 
-export const SimulationOpcodeTraceUnitMeta: ModelMetadata = {
+export const SimulationOpcodeTraceUnitMeta: ObjectModelMetadata<SimulationOpcodeTraceUnit> = {
   name: 'SimulationOpcodeTraceUnit',
   kind: 'object',
   fields: [
@@ -49,43 +50,37 @@ export const SimulationOpcodeTraceUnitMeta: ModelMetadata = {
       name: 'pc',
       wireKey: 'pc',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'scratchChanges',
       wireKey: 'scratch-changes',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ScratchChangeMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ScratchChangeMeta)),
     },
     {
       name: 'stateChanges',
       wireKey: 'state-changes',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => ApplicationStateOperationMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationStateOperationMeta)),
     },
     {
       name: 'spawnedInners',
       wireKey: 'spawned-inners',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: numberArrayCodec,
     },
     {
       name: 'stackPopCount',
       wireKey: 'stack-pop-count',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'stackAdditions',
       wireKey: 'stack-additions',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'model', meta: () => AvmValueMeta } },
+      codec: new ArrayCodec(new ObjectModelCodec(AvmValueMeta)),
     },
   ],
 }

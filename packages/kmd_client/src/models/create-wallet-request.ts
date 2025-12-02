@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, ArrayModelCodec } from '@algorandfoundation/algokit-common'
 import type { MasterDerivationKey } from './master-derivation-key'
 import { MasterDerivationKeyMeta } from './master-derivation-key'
 
@@ -12,7 +13,7 @@ export type CreateWalletRequest = {
   walletPassword?: string
 }
 
-export const CreateWalletRequestMeta: ModelMetadata = {
+export const CreateWalletRequestMeta: ObjectModelMetadata<CreateWalletRequest> = {
   name: 'CreateWalletRequest',
   kind: 'object',
   fields: [
@@ -20,29 +21,25 @@ export const CreateWalletRequestMeta: ModelMetadata = {
       name: 'masterDerivationKey',
       wireKey: 'master_derivation_key',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => MasterDerivationKeyMeta },
+      codec: new ArrayModelCodec(MasterDerivationKeyMeta),
     },
     {
       name: 'walletDriverName',
       wireKey: 'wallet_driver_name',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletName',
       wireKey: 'wallet_name',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
   ],
 }

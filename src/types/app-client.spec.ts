@@ -1,7 +1,7 @@
-import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
-import { AddressWithTransactionSigner, OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Account, Indexer, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { ABIMethod, ABIStructType, ABIType, ABIValue, getABIMethod } from '@algorandfoundation/algokit-abi'
+import { getApplicationAddress } from '@algorandfoundation/algokit-common'
+import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
+import { TransactionSigner } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
@@ -10,54 +10,43 @@ import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMa
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
-import { ABIAppCallArg } from './app'
-import { getABIDecodedValue } from './app-arc56'
-import { AppClient, ApplicationClient } from './app-client'
+import { AppClient } from './app-client'
+import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
 
-describe('application-client', () => {
+describe('app-client', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
+  beforeEach(async () => {
+    await localnet.newScope()
+    defaultFactory = localnet.algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: localnet.context.testAccount,
+    })
+  }, 10_000)
 
   let appSpec: AppSpec
+  let defaultFactory: AppFactory
   beforeAll(async () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: AddressWithTransactionSigner, algod: AlgodClient, indexer: Indexer) => {
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: account,
-        creatorAddress: account,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-    const app = await client.deploy({
+  const deploy = async (appName?: string) => {
+    const appFactory = localnet.algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: localnet.context.testAccount,
+      appName,
+    })
+
+    const { result, appClient } = await appFactory.deploy({
       deployTimeParams: { VALUE: 1 },
     })
-    return { client, app }
+
+    return { result, client: appClient }
   }
 
   test('Create app', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-
-    const app = await client.create({
-      //allowUpdate: true,
-      //allowDelete: true,
+    const { result } = await defaultFactory.send.bare.create({
       deployTimeParams: {
         // It should strip off the TMPL_
         TMPL_UPDATABLE: 0,
@@ -66,49 +55,34 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
-    expect(app.compiledApproval).toBeTruthy()
+    expect(result.appId).toBeGreaterThan(0n)
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
+    expect(result.confirmation?.appId ?? 0n).toBe(result.appId)
+    expect(result.compiledApproval).toBeTruthy()
   })
 
   test('Create app with constructor deployTimeParams', async () => {
-    const { algod, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'id',
-        app: appSpec,
-        sender: testAccount,
-        id: 0,
-        deployTimeParams: {
-          UPDATABLE: 0,
-          DELETABLE: 0,
-          VALUE: 1,
-        },
+    const { algorand, testAccount } = localnet.context
+
+    const newFactory = algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: testAccount,
+      deployTimeParams: {
+        UPDATABLE: 0,
+        DELETABLE: 0,
+        VALUE: 1,
       },
-      algod,
-    )
+    })
 
-    const app = await client.create()
+    const { result, appClient } = await newFactory.send.bare.create()
 
-    expect(app.appId).toBeGreaterThan(0)
+    expect(result.appId).toBeGreaterThan(0n)
+    expect(appClient.appId).toBe(result.appId)
   })
 
   test('Create app with oncomplete overload', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-
-    const app = await client.create({
-      onCompleteAction: 'opt_in',
+    const { result } = await defaultFactory.send.bare.create({
+      onComplete: OnApplicationComplete.OptIn,
       updatable: true,
       deletable: true,
       deployTimeParams: {
@@ -116,29 +90,16 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptIn)
-    expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
+    expect(result.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptIn)
+    expect(result.appId).toBeGreaterThan(0n)
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
+    expect(result.confirmation?.appId ?? 0n).toBe(result.appId)
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-
-    await client.deploy({
-      allowDelete: false,
-      allowUpdate: false,
+    await defaultFactory.deploy({
+      deletable: false,
+      updatable: false,
       onSchemaBreak: 'fail',
       onUpdate: 'fail',
       deployTimeParams: {
@@ -148,241 +109,151 @@ describe('application-client', () => {
   })
 
   test('Deploy app - create', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-
-    const app = await client.deploy({
-      version: '1.0',
+    const { result } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 1,
       },
     })
 
-    invariant(app.operationPerformed === 'create')
-    expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
-    expect(app.compiledApproval).toBeTruthy()
+    invariant(result.operationPerformed === 'create')
+    expect(result.appId).toBeGreaterThan(0n)
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
+    expect(result.confirmation?.appId ?? 0n).toBe(result.appId)
+    expect(result.compiledApproval).toBeTruthy()
   })
 
   test('Deploy app - create (abi)', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-
-    const app = await client.deploy({
-      version: '1.0',
+    const { result } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 1,
       },
-      createArgs: {
+      createParams: {
         method: 'create_abi',
-        methodArgs: ['arg_io'],
+        args: ['arg_io'],
       },
     })
 
-    invariant(app.operationPerformed === 'create')
-    expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
-    expect(app.return?.returnValue).toBe('arg_io')
+    invariant(result.operationPerformed === 'create')
+    expect(result.appId).toBeGreaterThan(0n)
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
+    expect(result.confirmation?.appId ?? 0n).toBe(result.appId)
+    expect(result.return).toBe('arg_io')
   })
 
   test('Deploy app - update', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-    const createdApp = await client.deploy({
-      version: '1.0',
+    const { result: createdResult } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 1,
       },
-      allowUpdate: true,
+      updatable: true,
     })
-    const app = await client.deploy({
-      version: '1.0',
+    const { result } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 2,
       },
       onUpdate: 'update',
     })
 
-    invariant(app.operationPerformed === 'update')
-    expect(app.appId).toBe(createdApp.appId)
-    expect(app.appAddress).toBe(createdApp.appAddress)
-    invariant(app.confirmation)
-    expect(app.createdRound).toBe(createdApp.createdRound)
-    expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
+    invariant(result.operationPerformed === 'update')
+    expect(result.appId).toBe(createdResult.appId)
+    expect(result.appAddress).toBe(createdResult.appAddress)
+    invariant(result.confirmation)
+    expect(result.createdRound).toBe(createdResult.createdRound)
+    expect(result.updatedRound).not.toBe(result.createdRound)
+    expect(result.updatedRound).toBe(result.confirmation.confirmedRound ?? 0n)
   })
 
   test('Deploy app - update (abi)', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-    const createdApp = await client.deploy({
-      version: '1.0',
+    const { result: createdResult } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 1,
       },
-      allowUpdate: true,
+      updatable: true,
     })
-    const app = await client.deploy({
-      version: '1.0',
+    const { result } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 2,
       },
       onUpdate: 'update',
-      updateArgs: {
+      updateParams: {
         method: 'update_abi',
-        methodArgs: ['arg_io'],
+        args: ['arg_io'],
       },
     })
 
-    invariant(app.operationPerformed === 'update')
-    expect(app.appId).toBe(createdApp.appId)
-    expect(app.appAddress).toBe(createdApp.appAddress)
-    invariant(app.confirmation)
-    expect(app.createdRound).toBe(createdApp.createdRound)
-    expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
-    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
-    expect(app.return?.returnValue).toBe('arg_io')
+    invariant(result.operationPerformed === 'update')
+    expect(result.appId).toBe(createdResult.appId)
+    expect(result.appAddress).toBe(createdResult.appAddress)
+    invariant(result.confirmation)
+    expect(result.createdRound).toBe(createdResult.createdRound)
+    expect(result.updatedRound).not.toBe(result.createdRound)
+    expect(result.updatedRound).toBe(result.confirmation.confirmedRound ?? 0n)
+    expect(result.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
+    expect(result.return).toBe('arg_io')
   })
 
   test('Deploy app - replace', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-    const createdApp = await client.deploy({
-      version: '1.0',
+    const { result: createdResult } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 1,
       },
-      allowDelete: true,
+      deletable: true,
     })
-    const app = await client.deploy({
-      version: '1.0',
+    const { result } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 2,
       },
       onUpdate: 'replace',
     })
 
-    invariant(app.operationPerformed === 'replace')
-    expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId).toString())
-    invariant(app.confirmation)
-    invariant(app.deleteResult)
-    invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
+    invariant(result.operationPerformed === 'replace')
+    expect(result.appId).toBeGreaterThan(createdResult.appId)
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
+    invariant(result.confirmation)
+    invariant(result.deleteResult)
+    invariant(result.deleteResult.confirmation)
+    expect(result.deleteResult.transaction.appCall?.appId).toBe(createdResult.appId)
+    expect(result.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
   })
 
   test('Deploy app - replace (abi)', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'creatorAndName',
-        app: appSpec,
-        sender: testAccount,
-        creatorAddress: testAccount,
-        findExistingUsing: indexer,
-      },
-      algod,
-    )
-    const createdApp = await client.deploy({
-      version: '1.0',
+    const { result: createdResult } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 1,
       },
-      allowDelete: true,
-      sendParams: { populateAppCallResources: false },
+      deletable: true,
+      populateAppCallResources: false,
     })
-    const app = await client.deploy({
-      version: '1.0',
+    const { result } = await defaultFactory.deploy({
       deployTimeParams: {
         VALUE: 2,
       },
       onUpdate: 'replace',
-      createArgs: {
+      createParams: {
         method: 'create_abi',
-        methodArgs: ['arg_io'],
+        args: ['arg_io'],
       },
-      deleteArgs: {
+      deleteParams: {
         method: 'delete_abi',
-        methodArgs: ['arg2_io'],
+        args: ['arg2_io'],
       },
-      sendParams: { populateAppCallResources: false },
+      populateAppCallResources: false,
     })
 
-    invariant(app.operationPerformed === 'replace')
-    expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId).toString())
-    invariant(app.confirmation)
-    invariant(app.deleteResult)
-    invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
-    expect(app.return?.returnValue).toBe('arg_io')
-    expect(app.deleteReturn?.returnValue).toBe('arg2_io')
+    invariant(result.operationPerformed === 'replace')
+    expect(result.appId).toBeGreaterThan(createdResult.appId)
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
+    invariant(result.confirmation)
+    invariant(result.deleteResult)
+    invariant(result.deleteResult.confirmation)
+    expect(result.deleteResult.transaction.appCall?.appId).toBe(createdResult.appId)
+    expect(result.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
+    expect(result.return).toBe('arg_io')
+    expect(result.deleteReturn).toBe('arg2_io')
   })
 
   test('Create then call app', async () => {
-    const { algod, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'id',
-        app: appSpec,
-        sender: testAccount,
-        id: 0,
-      },
-      algod,
-    )
-    await client.create({
+    const { appClient } = await defaultFactory.send.bare.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
@@ -390,38 +261,29 @@ describe('application-client', () => {
       },
     })
 
-    const call = await client.call({
+    const call = await appClient.send.call({
       method: 'call_abi',
-      methodArgs: ['test'],
+      args: ['test'],
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('Hello, test')
+    expect(call.return).toBe('Hello, test')
   })
 
   test('Call app with rekey', async () => {
-    const { algod, testAccount, algorand } = localnet.context
+    const { testAccount, algorand } = localnet.context
     const rekeyTo = algorand.account.random()
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'id',
-        app: appSpec,
-        sender: testAccount,
-        id: 0,
-      },
-      algod,
-    )
-    await client.create({
+
+    const { appClient } = await defaultFactory.send.bare.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
         VALUE: 1,
       },
     })
-    await client.optIn({
+
+    await appClient.send.optIn({
       method: 'opt_in',
-      methodArgs: [],
       rekeyTo,
     })
 
@@ -435,76 +297,43 @@ describe('application-client', () => {
   })
 
   test('Create app with abi', async () => {
-    const { algod, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'id',
-        app: appSpec,
-        sender: testAccount,
-        id: 0,
-      },
-      algod,
-    )
-
-    const call = await client.create({
+    const { result: call } = await defaultFactory.send.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
         VALUE: 1,
       },
       method: 'create_abi',
-      methodArgs: ['string_io'],
+      args: ['string_io'],
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('string_io')
+    expect(call.return).toBe('string_io')
   })
 
   test('Update app with abi', async () => {
-    const { algod, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'id',
-        app: appSpec,
-        sender: testAccount,
-        id: 0,
-      },
-      algod,
-    )
     const deployTimeParams = {
       UPDATABLE: 1,
       DELETABLE: 0,
       VALUE: 1,
     }
-    await client.create({
+    const { appClient } = await defaultFactory.send.bare.create({
       deployTimeParams,
     })
 
-    const call = await client.update({
+    const call = await appClient.send.update({
       method: 'update_abi',
-      methodArgs: ['string_io'],
+      args: ['string_io'],
       deployTimeParams,
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('string_io')
+    expect(call.return).toBe('string_io')
     expect(call.compiledApproval).toBeTruthy()
   })
 
   test('Delete app with abi', async () => {
-    const { algod, testAccount } = localnet.context
-    const client = algokit.getAppClient(
-      {
-        resolveBy: 'id',
-        app: appSpec,
-        sender: testAccount,
-        id: 0,
-      },
-      algod,
-    )
-    await client.create({
+    const { appClient } = await defaultFactory.send.bare.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 1,
@@ -512,111 +341,108 @@ describe('application-client', () => {
       },
     })
 
-    const call = await client.delete({
+    const call = await appClient.send.delete({
       method: 'delete_abi',
-      methodArgs: ['string_io'],
+      args: ['string_io'],
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('string_io')
+    expect(call.return).toBe('string_io')
   })
 
   test('Construct transaction with boxes', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const { client } = await deploy(testAccount, algod, indexer)
+    const { client } = await deploy()
 
-    const call = await client.call({
+    const call = await client.createTransaction.call({
       method: 'call_abi',
-      methodArgs: ['test'],
-      boxes: [{ appId: 0, name: '1' }],
-      sendParams: { skipSending: true },
+      args: ['test'],
+      boxReferences: [{ appId: 0n, name: '1' }],
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
+    expect(call.transactions[0].appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
-    const { algod, algorand, indexer, testAccount } = localnet.context
+    const { algorand, testAccount } = localnet.context
     const txn = await algorand.createTransaction.payment({
       sender: testAccount,
       receiver: testAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
-    const { client } = await deploy(testAccount, algod, indexer)
+    const { client } = await deploy()
 
-    const result = await client.call({
+    const result = await client.send.call({
       method: 'call_abi_txn',
-      methodArgs: [txn, 'test'],
+      args: [txn, 'test'],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    const returnValue = AppManager.getABIReturn(result.confirmations[1], client.getABIMethod('call_abi_txn')!)
-    expect(returnValue?.returnValue).toBe(`Sent ${txn.payment?.amount}. test`)
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], getABIMethod('call_abi_txn', client.appSpec))
+    expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
+    expect(returnValue?.returnValue).toBe(result.return)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
-    const { algod, algorand, indexer, testAccount } = localnet.context
+    const { algorand, testAccount } = localnet.context
     const txn = await algorand.createTransaction.payment({
       sender: testAccount,
       receiver: testAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
-    const { client } = await deploy(testAccount, algod, indexer)
+    const { client } = await deploy()
 
     let indexes: number[] = []
     const signer: TransactionSigner = (group, indxs) => {
       indexes = indxs
-      return testAccount.signer(group, indexes)
+      return algorand.account.getSigner(testAccount)(group, indexes)
     }
 
-    await client.call({
+    await client.send.call({
       method: 'call_abi_txn',
-      methodArgs: [txn, 'test'],
-      sender: { addr: testAccount, signer },
+      args: [txn, 'test'],
+      sender: testAccount,
+      signer,
     })
 
     expect(indexes).toEqual([0, 1])
   })
 
   test('Sign transaction in group with different signer if provided', async () => {
-    const { algod, algorand, indexer, testAccount, generateAccount } = localnet.context
-    const signer = await generateAccount({ initialFunds: (1).algo() })
-    const transaction = await algorand.createTransaction.payment({
-      sender: signer,
-      receiver: signer,
+    const { algorand, generateAccount } = localnet.context
+    const signerAccount = await generateAccount({ initialFunds: (1).algo() })
+    const txn = await algorand.createTransaction.payment({
+      sender: signerAccount,
+      receiver: signerAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
-    const { client } = await deploy(testAccount, algod, indexer)
+    const { client } = await deploy()
 
-    await client.call({
+    await client.send.call({
       method: 'call_abi_txn',
-      methodArgs: [{ transaction, signer }, 'test'],
-      sender: testAccount,
+      args: [{ txn, signer: signerAccount.signer }, 'test'],
     })
   })
 
   test('Construct transaction with abi encoding including foreign references not in signature', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const { client } = await deploy(testAccount, algod, indexer)
+    const { testAccount } = localnet.context
+    const { client } = await deploy()
 
-    const result = await client.call({
+    const result = await client.send.call({
       method: 'call_abi_foreign_refs',
-      methodArgs: [],
-      apps: [345],
-      accounts: [testAccount],
-      assets: [567],
+      appReferences: [345n],
+      accountReferences: [testAccount],
+      assetReferences: [567n],
+      populateAppCallResources: false,
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const returnValue = AppManager.getABIReturn(result.confirmations[0], client.getABIMethod('call_abi_foreign_refs')!)
     const testAccountPublicKey = testAccount.publicKey
-    expect(returnValue?.returnValue).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
+    expect(result.return).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
   })
 
   describe('Errors', () => {
@@ -625,37 +451,31 @@ describe('application-client', () => {
     afterEach(logging.afterEach)
 
     test('Export and import of source map works', async () => {
-      const { algod, indexer, testAccount } = localnet.context
-      const { client, app } = await deploy(testAccount, algod, indexer)
+      const { algorand, testAccount } = localnet.context
+      const { client, result } = await deploy()
 
       const oldSourceMaps = client.exportSourceMaps()
-      const newClient = algokit.getAppClient(
-        {
-          resolveBy: 'id',
-          id: app.appId,
-          sender: testAccount,
-          app: appSpec,
-        },
-        algod,
-      )
+      const newClient = algorand.client.getAppClientById({
+        appId: result.appId,
+        defaultSender: testAccount,
+        appSpec,
+      })
 
       try {
-        await newClient.call({
+        await newClient.send.call({
           method: 'error',
-          methodArgs: [],
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(e.stack).toContain('assert failed')
+        expect(e.message).toContain('assert failed')
       }
 
       newClient.importSourceMaps(JSON.parse(JSON.stringify(oldSourceMaps)))
 
       try {
-        await newClient.call({
+        await newClient.send.call({
           method: 'error',
-          methodArgs: [],
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -681,13 +501,12 @@ describe('application-client', () => {
     })
 
     test('Display nice error messages when there is a logic error', async () => {
-      const { algod, indexer, testAccount } = localnet.context
-      const { client, app } = await deploy(testAccount, algod, indexer)
+      const { testAccount } = localnet.context
+      const { client, result } = await deploy()
 
       try {
-        await client.call({
+        await client.send.call({
           method: 'error',
-          methodArgs: [],
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -713,8 +532,8 @@ describe('application-client', () => {
         expect(
           logging.testLogger.getLogSnapshot({
             accounts: [testAccount],
-            transactions: app.operationPerformed === 'create' ? [app.transaction, e.led.txId] : [],
-            apps: [app.appId],
+            transactions: result.operationPerformed === 'create' ? [result.transaction, e.led.txId] : [],
+            apps: [result.appId],
           }),
         ).toMatchSnapshot()
       }
@@ -722,27 +541,27 @@ describe('application-client', () => {
   })
 
   test('Fund app account', async () => {
-    const { algod, indexer, testAccount } = localnet.context
+    const { testAccount } = localnet.context
     const fundAmount = algokit.microAlgo(200_000)
-    const { client, app } = await deploy(testAccount, algod, indexer)
+    const { client, result: deployResult } = await deploy()
 
-    const result = await client.fundAppAccount({
+    const fundResult = await client.fundAppAccount({
       amount: fundAmount,
     })
 
-    expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
-    expect(result.transaction.type).toBe(TransactionType.Payment)
-    expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress)
-    expect(result.transaction.sender.toString()).toBe(testAccount.toString())
-    invariant(result.confirmation)
-    expect(result.confirmation.confirmedRound).toBeGreaterThan(0n)
+    expect(fundResult.transaction.payment?.amount).toBe(fundAmount.microAlgo)
+    expect(fundResult.transaction.type).toBe(TransactionType.Payment)
+    expect(fundResult.transaction.payment?.receiver?.toString()).toBe(deployResult.appAddress.toString())
+    expect(fundResult.transaction.sender.toString()).toBe(testAccount.toString())
+    invariant(fundResult.confirmation)
+    expect(fundResult.confirmation.confirmedRound).toBeGreaterThan(0n)
   })
 
   test('Retrieve state', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const { client } = await deploy(testAccount, algod, indexer)
+    const { testAccount } = localnet.context
+    const { client } = await deploy()
 
-    await client.call({ method: 'set_global', methodArgs: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+    await client.send.call({ method: 'set_global', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
     const globalState = await client.getGlobalState()
 
     invariant(globalState.int1)
@@ -756,8 +575,8 @@ describe('application-client', () => {
     expect(globalState.bytes1.value).toBe('asdf')
     expect(globalState.bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 
-    await client.optIn({ method: 'opt_in', methodArgs: [] })
-    await client.call({ method: 'set_local', methodArgs: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+    await client.send.optIn({ method: 'opt_in' })
+    await client.send.call({ method: 'set_local', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
     const localState = await client.getLocalState(testAccount)
 
     invariant(localState.local_int1)
@@ -775,16 +594,16 @@ describe('application-client', () => {
     const boxName1Base64 = Buffer.from(boxName1).toString('base64')
     const boxName2 = new Uint8Array([0, 0, 0, 2])
     const boxName2Base64 = Buffer.from(boxName2).toString('base64')
-    await client.fundAppAccount(algokit.algo(1))
-    await client.call({
+    await client.fundAppAccount({ amount: algokit.algo(1) })
+    await client.send.call({
       method: 'set_box',
-      methodArgs: [boxName1, 'value1'],
-      boxes: [boxName1],
+      args: [boxName1, 'value1'],
+      boxReferences: [boxName1],
     })
-    await client.call({
+    await client.send.call({
       method: 'set_box',
-      methodArgs: [boxName2, 'value2'],
-      boxes: [boxName2],
+      args: [boxName2, 'value2'],
+      boxReferences: [boxName2],
     })
 
     const boxValues = await client.getBoxValues()
@@ -797,13 +616,13 @@ describe('application-client', () => {
     expect(box2!.value).toEqual(new Uint8Array(Buffer.from('value2')))
 
     const expectedValue = 1234524352
-    await client.call({
+    await client.send.call({
       method: 'set_box',
-      methodArgs: [boxName1, new ABIUintType(32).encode(expectedValue)],
-      boxes: [boxName1],
+      args: [boxName1, ABIType.from('uint32').encode(expectedValue)],
+      boxReferences: [boxName1],
     })
-    const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
-    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
+    const boxes = await client.getBoxValuesFromABIType(ABIType.from('uint32'), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueFromABIType(boxName1, ABIType.from('uint32'))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
@@ -821,7 +640,7 @@ describe('application-client', () => {
       const globalInt1 = 456n
 
       await testAbiWithDefaultArgMethod('default_value_from_global_state(uint64)uint64', 123, 123n, globalInt1, async (client) => {
-        await client.call({ method: 'set_global', methodArgs: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+        await client.send.call({ method: 'set_global', args: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
       })
     })
     test('from local state', async () => {
@@ -832,65 +651,39 @@ describe('application-client', () => {
         'Local state, defined value',
         `Local state, ${localBytes1}`,
         async (client) => {
-          await client.optIn({ method: 'opt_in', methodArgs: [] })
-          await client.call({ method: 'set_local', methodArgs: [1, 2, localBytes1, new Uint8Array([1, 2, 3, 4])] })
+          await client.send.optIn({ method: 'opt_in' })
+          await client.send.call({ method: 'set_local', args: [1, 2, localBytes1, new Uint8Array([1, 2, 3, 4])] })
         },
       )
     })
 
-    async function testAbiWithDefaultArgMethod<TArg extends ABIAppCallArg, TResult>(
+    async function testAbiWithDefaultArgMethod<TArg extends ABIValue, TResult>(
       methodSignature: string,
       definedValue: TArg,
       definedValueReturnValue: TResult,
       defaultValueReturnValue: TResult,
-      setup?: (client: ApplicationClient) => Promise<void>,
+      setup?: (client: AppClient) => Promise<void>,
     ) {
-      const { algod, indexer, testAccount } = localnet.context
-      const { client } = await deploy(testAccount, algod, indexer)
+      const { client } = await deploy()
 
       await setup?.(client)
 
-      const definedValueResult = await client.call({
+      const definedValueResult = await client.send.call({
         method: methodSignature,
-        methodArgs: [definedValue],
+        args: [definedValue],
       })
-      expect(definedValueResult.return?.returnValue).toBe(definedValueReturnValue)
-      const defaultValueResult = await client.call({
+      expect(definedValueResult.return).toBe(definedValueReturnValue)
+      const defaultValueResult = await client.send.call({
         method: methodSignature,
-        methodArgs: [undefined],
+        args: [undefined],
       })
-      expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
+      expect(defaultValueResult.return).toBe(defaultValueReturnValue)
     }
   })
-})
-
-describe('app-client', () => {
-  const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
-
-  let appSpec: AppSpec
-  beforeAll(async () => {
-    appSpec = (await getTestingAppContract()).appSpec
-  })
-
-  const deploy = async (account: Account, appName?: string) => {
-    const appFactory = localnet.algorand.client.getAppFactory({
-      appSpec,
-      defaultSender: account.addr,
-      appName: appName,
-    })
-
-    const { appClient } = await appFactory.deploy({
-      deployTimeParams: { VALUE: 1 },
-    })
-
-    return appClient
-  }
 
   test('clone overriding the defaultSender and inheriting appName', async () => {
-    const { testAccount } = localnet.context
-    const appClient = await deploy(testAccount, 'overridden')
-    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(0.1) })
+    const { client: appClient } = await deploy('overridden')
+    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(2) })
 
     const clonedAppClient = appClient.clone({
       defaultSender: testAccount2.addr,
@@ -903,8 +696,7 @@ describe('app-client', () => {
   })
 
   test('clone overriding appName', async () => {
-    const { testAccount } = localnet.context
-    const appClient = await deploy(testAccount)
+    const { client: appClient } = await deploy()
 
     const clonedAppClient = appClient.clone({
       appName: 'cloned',
@@ -914,8 +706,7 @@ describe('app-client', () => {
   })
 
   test('clone inheriting appName based on default handling', async () => {
-    const { testAccount } = localnet.context
-    const appClient = await deploy(testAccount, 'overridden')
+    const { client: appClient } = await deploy('overridden')
 
     const clonedAppClient = appClient.clone({
       appName: undefined,
@@ -928,12 +719,12 @@ describe('app-client', () => {
 
   test('simulated transaction group result should match sent transaction group result', async () => {
     const { testAccount } = localnet.context
-    const appClient = await deploy(testAccount)
+    const { client: appClient } = await deploy()
 
     const appCall1Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: algosdk.ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
+      method: ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
       args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
     }
 
@@ -946,7 +737,7 @@ describe('app-client', () => {
     const appCall2Params = {
       sender: testAccount,
       appId: appClient.appId,
-      method: algosdk.ABIMethod.fromSignature('call_abi(string)string'),
+      method: ABIMethod.fromSignature('call_abi(string)string'),
       args: ['test'],
     }
 
@@ -971,21 +762,17 @@ describe('app-client', () => {
   })
 
   describe('ARC56', () => {
-    beforeEach(async () => {
-      localnet.newScope()
-    })
-
     describe('BoxMap', () => {
       let appClient: AppClient
 
       beforeEach(async () => {
         const { testAccount, algorand } = localnet.context
-        const factory = algorand.client.getAppFactory({
+        const boxMapFactory = algorand.client.getAppFactory({
           appSpec: JSON.stringify(boxMapAppSpec),
           defaultSender: testAccount,
         })
 
-        appClient = (await factory.send.create({ method: 'createApplication' })).appClient
+        appClient = (await boxMapFactory.send.create({ method: 'createApplication' })).appClient
 
         await algorand.account.ensureFunded(appClient.appAddress, testAccount, AlgoAmount.Algo(1))
 
@@ -1003,12 +790,17 @@ describe('app-client', () => {
 
     describe('getABIDecodedValue', () => {
       test('correctly decodes a struct containing a uint16', () => {
-        const decoded = getABIDecodedValue(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100]), 'User', {
+        const structType = ABIStructType.fromStruct('User', {
           User: [
             { name: 'userId', type: 'uint16' },
             { name: 'name', type: 'string' },
           ],
-        }) as { userId: number; name: string }
+        })
+
+        const decoded = structType.decode(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100])) as {
+          userId: number
+          name: string
+        }
 
         expect(typeof decoded.userId).toBe('number')
         expect(decoded.userId).toBe(1)
@@ -1020,8 +812,9 @@ describe('app-client', () => {
         // Generate all valid ABI uint bit lengths
         Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
       )('correctly decodes a uint%i', (bitLength) => {
-        const encoded = new ABIUintType(bitLength).encode(1)
-        const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
+        const abiType = ABIType.from(`uint${bitLength}`)
+        const encoded = abiType.encode(1)
+        const decoded = abiType.decode(encoded)
 
         if (bitLength < 53) {
           expect(typeof decoded).toBe('number')

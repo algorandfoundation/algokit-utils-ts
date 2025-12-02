@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for a keyreg transaction.
@@ -43,7 +44,7 @@ export type TransactionKeyreg = {
   stateProofKey?: Uint8Array
 }
 
-export const TransactionKeyregMeta: ModelMetadata = {
+export const TransactionKeyregMeta: ObjectModelMetadata<TransactionKeyreg> = {
   name: 'TransactionKeyreg',
   kind: 'object',
   fields: [
@@ -51,50 +52,43 @@ export const TransactionKeyregMeta: ModelMetadata = {
       name: 'nonParticipation',
       wireKey: 'non-participation',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'selectionParticipationKey',
       wireKey: 'selection-participation-key',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'voteFirstValid',
       wireKey: 'vote-first-valid',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'voteKeyDilution',
       wireKey: 'vote-key-dilution',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'voteLastValid',
       wireKey: 'vote-last-valid',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'voteParticipationKey',
       wireKey: 'vote-participation-key',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'stateProofKey',
       wireKey: 'state-proof-key',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

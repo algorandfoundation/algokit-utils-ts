@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * AssetParams specifies the parameters for an asset.
@@ -85,7 +86,7 @@ export type AssetParams = {
   urlB64?: Uint8Array
 }
 
-export const AssetParamsMeta: ModelMetadata = {
+export const AssetParamsMeta: ObjectModelMetadata<AssetParams> = {
   name: 'AssetParams',
   kind: 'object',
   fields: [
@@ -93,106 +94,91 @@ export const AssetParamsMeta: ModelMetadata = {
       name: 'clawback',
       wireKey: 'clawback',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'creator',
       wireKey: 'creator',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'decimals',
       wireKey: 'decimals',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
     {
       name: 'defaultFrozen',
       wireKey: 'default-frozen',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: booleanCodec,
     },
     {
       name: 'freeze',
       wireKey: 'freeze',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'manager',
       wireKey: 'manager',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'metadataHash',
       wireKey: 'metadata-hash',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'name',
       wireKey: 'name',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'nameB64',
       wireKey: 'name-b64',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'reserve',
       wireKey: 'reserve',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'total',
       wireKey: 'total',
       optional: false,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'unitName',
       wireKey: 'unit-name',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'unitNameB64',
       wireKey: 'unit-name-b64',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'url',
       wireKey: 'url',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: stringCodec,
     },
     {
       name: 'urlB64',
       wireKey: 'url-b64',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
   ],
 }

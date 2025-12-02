@@ -19,6 +19,11 @@ jobs:
         pipx install algokit
         algokit localnet start
         npx --yes wait-on tcp:4001 -t 30000
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source "$HOME/.cargo/env"
+        cargo install polytest
+        npm run polytest:validate-algod
+        npm run mock-server:start-algod
       audit-script: |
         npm run audit
   check_docs:

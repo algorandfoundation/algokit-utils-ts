@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { LedgerStateDelta } from './ledger-state-delta'
 import { LedgerStateDeltaMeta } from './ledger-state-delta'
 
@@ -10,7 +11,7 @@ export type LedgerStateDeltaForTransactionGroup = {
   ids: string[]
 }
 
-export const LedgerStateDeltaForTransactionGroupMeta: ModelMetadata = {
+export const LedgerStateDeltaForTransactionGroupMeta: ObjectModelMetadata<LedgerStateDeltaForTransactionGroup> = {
   name: 'LedgerStateDeltaForTransactionGroup',
   kind: 'object',
   fields: [
@@ -18,15 +19,13 @@ export const LedgerStateDeltaForTransactionGroupMeta: ModelMetadata = {
       name: 'delta',
       wireKey: 'Delta',
       optional: false,
-      nullable: false,
-      type: { kind: 'model', meta: () => LedgerStateDeltaMeta },
+      codec: new ObjectModelCodec(LedgerStateDeltaMeta),
     },
     {
       name: 'ids',
       wireKey: 'Ids',
       optional: false,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      codec: stringArrayCodec,
     },
   ],
 }

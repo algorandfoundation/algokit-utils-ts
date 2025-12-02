@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 export type IndexerStateProofMessage = {
   /**
@@ -27,7 +28,7 @@ export type IndexerStateProofMessage = {
   latestAttestedRound?: bigint
 }
 
-export const IndexerStateProofMessageMeta: ModelMetadata = {
+export const IndexerStateProofMessageMeta: ObjectModelMetadata<IndexerStateProofMessage> = {
   name: 'IndexerStateProofMessage',
   kind: 'object',
   fields: [
@@ -35,36 +36,31 @@ export const IndexerStateProofMessageMeta: ModelMetadata = {
       name: 'blockHeadersCommitment',
       wireKey: 'block-headers-commitment',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'votersCommitment',
       wireKey: 'voters-commitment',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBytes: true },
+      codec: bytesCodec,
     },
     {
       name: 'lnProvenWeight',
       wireKey: 'ln-proven-weight',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'firstAttestedRound',
       wireKey: 'first-attested-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
     {
       name: 'latestAttestedRound',
       wireKey: 'latest-attested-round',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      codec: bigIntCodec,
     },
   ],
 }

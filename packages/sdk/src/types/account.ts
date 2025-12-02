@@ -1,4 +1,4 @@
-import { Address } from '../encoding/address.js'
+import { Address } from '@algorandfoundation/algokit-common'
 
 /**
  * An Algorand account object.

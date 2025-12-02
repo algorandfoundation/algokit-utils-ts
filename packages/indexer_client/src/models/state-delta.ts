@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ArrayModelMetadata } from '@algorandfoundation/algokit-common'
+import { ArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { EvalDeltaKeyValue } from './eval-delta-key-value'
 import { EvalDeltaKeyValueMeta } from './eval-delta-key-value'
 
@@ -7,8 +8,8 @@ import { EvalDeltaKeyValueMeta } from './eval-delta-key-value'
  */
 export type StateDelta = EvalDeltaKeyValue[]
 
-export const StateDeltaMeta: ModelMetadata = {
+export const StateDeltaMeta: ArrayModelMetadata = {
   name: 'StateDelta',
   kind: 'array',
-  arrayItems: { kind: 'model', meta: () => EvalDeltaKeyValueMeta },
+  codec: new ArrayCodec(new ObjectModelCodec(EvalDeltaKeyValueMeta)),
 }

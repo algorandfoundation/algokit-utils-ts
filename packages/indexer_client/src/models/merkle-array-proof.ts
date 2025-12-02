@@ -1,4 +1,5 @@
-import type { ModelMetadata } from '../core/model-runtime'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { numberCodec, bytesArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { HashFactory } from './hash-factory'
 import { HashFactoryMeta } from './hash-factory'
 
@@ -15,7 +16,7 @@ export type MerkleArrayProof = {
   treeDepth?: number
 }
 
-export const MerkleArrayProofMeta: ModelMetadata = {
+export const MerkleArrayProofMeta: ObjectModelMetadata<MerkleArrayProof> = {
   name: 'MerkleArrayProof',
   kind: 'object',
   fields: [
@@ -23,22 +24,19 @@ export const MerkleArrayProofMeta: ModelMetadata = {
       name: 'path',
       wireKey: 'path',
       optional: true,
-      nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar', isBytes: true } },
+      codec: bytesArrayCodec,
     },
     {
       name: 'hashFactory',
       wireKey: 'hash-factory',
       optional: true,
-      nullable: false,
-      type: { kind: 'model', meta: () => HashFactoryMeta },
+      codec: new ObjectModelCodec(HashFactoryMeta),
     },
     {
       name: 'treeDepth',
       wireKey: 'tree-depth',
       optional: true,
-      nullable: false,
-      type: { kind: 'scalar' },
+      codec: numberCodec,
     },
   ],
 }
