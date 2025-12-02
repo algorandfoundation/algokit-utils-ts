@@ -36,12 +36,12 @@ const MSIG_PROGRAM_TAG = new TextEncoder().encode('MsigProgram')
 const SIGN_PROGRAM_DATA_PREFIX = new TextEncoder().encode('ProgData')
 
 /** Function for signing logic signatures for delegation */
-export type DelegatedLsigSigner = (lsig: LogicSig, msig?: MultisigAccount) => Promise<Uint8Array>
+export type DelegatedLsigSigner = (lsig: LogicSigAccount, msig?: MultisigAccount) => Promise<Uint8Array>
 
 /** Function for signing program data for a logic signature */
-export type ProgramDataSigner = (data: Uint8Array, lsig: LogicSig) => Promise<Uint8Array>
+export type ProgramDataSigner = (data: Uint8Array, lsig: LogicSigAccount) => Promise<Uint8Array>
 
-export class LogicSig {
+export class LogicSigAccount {
   logic: Uint8Array
   args: Uint8Array[]
   sig?: Uint8Array
