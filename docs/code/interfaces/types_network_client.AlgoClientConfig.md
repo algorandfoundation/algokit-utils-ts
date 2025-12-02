@@ -24,7 +24,7 @@ The port to use e.g. 4001, 443, etc.
 
 #### Defined in
 
-[src/types/network-client.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L8)
+[src/types/network-client.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L6)
 
 ___
 
@@ -36,16 +36,16 @@ Base URL of the server e.g. http://localhost, https://testnet-api.algonode.cloud
 
 #### Defined in
 
-[src/types/network-client.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L6)
+[src/types/network-client.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L4)
 
 ___
 
 ### token
 
-• `Optional` **token**: `string` \| `TokenHeader`
+• `Optional` **token**: `string` \| \{ `[name: string]`: `string`;  }
 
 The token to use for API authentication (or undefined if none needed) - can be a string, or an object with the header key => value
 
 #### Defined in
 
-[src/types/network-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L10)
+[src/types/network-client.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L8)

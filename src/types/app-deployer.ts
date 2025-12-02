@@ -1,7 +1,7 @@
 import { ABIReturn } from '@algorandfoundation/algokit-abi'
-import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
+import { Address, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
 import { calculateExtraProgramPages } from '../util'
@@ -27,7 +27,6 @@ import {
 } from './composer'
 import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'
-import { getAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
@@ -115,7 +114,7 @@ export type AppDeployResult =
 export class AppDeployer {
   private _appManager: AppManager
   private _transactionSender: AlgorandClientTransactionSender
-  private _indexer?: algosdk.Indexer
+  private _indexer?: IndexerClient
   private _appLookups = new Map<string, AppLookup>()
 
   /**
@@ -128,7 +127,7 @@ export class AppDeployer {
    * const deployer = new AppDeployer(appManager, transactionSender, indexer)
    * ```
    */
-  constructor(appManager: AppManager, transactionSender: AlgorandClientTransactionSender, indexer?: algosdk.Indexer) {
+  constructor(appManager: AppManager, transactionSender: AlgorandClientTransactionSender, indexer?: IndexerClient) {
     this._appManager = appManager
     this._transactionSender = transactionSender
     this._indexer = indexer
@@ -519,15 +518,14 @@ export class AppDeployer {
     const apps = await Promise.all(
       createdApps.map(async (createdApp) => {
         // Find any app transactions for that app in the round it was created (should always just be a single creation transaction)
-        const appTransactions = await indexer.searchTransactions(this._indexer!, (s) =>
-          s
-            .minRound(createdApp.createdAtRound)
-            .txType(TransactionType.AppCall)
-            .applicationID(Number(createdApp.id))
-            .address(creatorAddress)
-            .addressRole('sender')
-            .notePrefix(Buffer.from(APP_DEPLOY_NOTE_DAPP).toString('base64')),
-        )
+        const appTransactions = await indexer.searchTransactions(this._indexer!, {
+          minRound: createdApp.createdAtRound,
+          txType: TransactionType.AppCall,
+          applicationId: createdApp.id,
+          address: creatorAddress,
+          addressRole: 'sender',
+          notePrefix: Buffer.from(APP_DEPLOY_NOTE_DAPP).toString('base64'),
+        })
 
         // Triple check the transaction is intact by filtering for the one we want:
         //  * application-id is 0 when the app is first created

@@ -77,6 +77,7 @@ export class FetchHttpRequest extends BaseHttpRequest {
         if (backoff > 0) {
            await delay(backoff);
         }
+        this.config.logger?.warn(`Request failed ${attempt} times. Retrying in ${backoff}ms: ${error}`);
         attempt += 1;
       }
     }

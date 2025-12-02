@@ -203,8 +203,10 @@
             "description": "account string",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "x-algorand-format": "Address"
+            },
+            "x-algokit-field-rename": "account"
           },
           {
             "name": "round",
@@ -294,8 +296,10 @@
             "description": "account string",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "x-algorand-format": "Address"
+            },
+            "x-algokit-field-rename": "account"
           },
           {
             "name": "asset-id",
@@ -387,8 +391,10 @@
             "description": "account string",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "x-algorand-format": "Address"
+            },
+            "x-algokit-field-rename": "account"
           },
           {
             "name": "asset-id",
@@ -480,8 +486,10 @@
             "description": "account string",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "x-algorand-format": "Address"
+            },
+            "x-algokit-field-rename": "account"
           },
           {
             "name": "application-id",
@@ -573,8 +581,10 @@
             "description": "account string",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "x-algorand-format": "Address"
+            },
+            "x-algokit-field-rename": "account"
           },
           {
             "name": "application-id",
@@ -709,7 +719,8 @@
             "description": "Lookup the specific transaction by ID.",
             "schema": {
               "type": "string"
-            }
+            },
+            "x-algokit-field-rename": "txId"
           },
           {
             "name": "round",
@@ -793,8 +804,10 @@
             "description": "account string",
             "required": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "x-algorand-format": "Address"
+            },
+            "x-algokit-field-rename": "account"
           },
           {
             "name": "rekey-to",
@@ -1153,7 +1166,8 @@
             "description": "Lookup the specific transaction by ID.",
             "schema": {
               "type": "string"
-            }
+            },
+            "x-algokit-field-rename": "txId"
           },
           {
             "name": "min-round",
@@ -1511,7 +1525,8 @@
             "description": "Lookup the specific transaction by ID.",
             "schema": {
               "type": "string"
-            }
+            },
+            "x-algokit-field-rename": "txId"
           },
           {
             "name": "round",
@@ -1861,7 +1876,7 @@
       "get": {
         "tags": ["lookup"],
         "description": "Lookup a single transaction.",
-        "operationId": "lookupTransaction",
+        "operationId": "lookupTransactionByID",
         "parameters": [
           {
             "name": "txid",
@@ -1869,7 +1884,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "x-algokit-field-rename": "txId"
           }
         ],
         "responses": {
@@ -1981,7 +1997,8 @@
             "description": "Lookup the specific transaction by ID.",
             "schema": {
               "type": "string"
-            }
+            },
+            "x-algokit-field-rename": "txId"
           },
           {
             "name": "round",
@@ -2522,7 +2539,8 @@
         "properties": {
           "txid": {
             "type": "string",
-            "description": "Transaction ID"
+            "description": "Transaction ID",
+            "x-algokit-field-rename": "txId"
           },
           "logs": {
             "type": "array",
@@ -4457,8 +4475,10 @@
         "description": "account string",
         "required": true,
         "schema": {
-          "type": "string"
-        }
+          "type": "string",
+          "x-algorand-format": "Address"
+        },
+        "x-algokit-field-rename": "account"
       },
       "address": {
         "name": "address",
@@ -4700,7 +4720,8 @@
         "description": "Lookup the specific transaction by ID.",
         "schema": {
           "type": "string"
-        }
+        },
+        "x-algokit-field-rename": "txId"
       },
       "tx-type": {
         "name": "tx-type",

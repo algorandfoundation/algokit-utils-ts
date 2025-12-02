@@ -24,7 +24,7 @@ Algod client configuration
 
 #### Defined in
 
-[src/types/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L16)
+[src/types/network-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L14)
 
 ___
 
@@ -36,7 +36,7 @@ Indexer client configuration
 
 #### Defined in
 
-[src/types/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L18)
+[src/types/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L16)
 
 ___
 
@@ -48,4 +48,4 @@ Kmd configuration
 
 #### Defined in
 
-[src/types/network-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L20)
+[src/types/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L18)

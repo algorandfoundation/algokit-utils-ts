@@ -1,6 +1,6 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Indexer } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
 
@@ -55,17 +55,17 @@ export class TransactionLogger {
   }
 
   /** Wait until all logged transactions IDs appear in the given `Indexer`. */
-  async waitForIndexer(indexer: Indexer) {
+  async waitForIndexer(indexer: IndexerClient) {
     if (this._sentTransactionIds.length === 0) return
     const lastTxId = this._sentTransactionIds[this._sentTransactionIds.length - 1]
     await runWhenIndexerCaughtUp(async () => {
       try {
-        await indexer.lookupTransactionByID(lastTxId).do()
+        await indexer.lookupTransactionById(lastTxId)
       } catch (e) {
         // If the txid lookup failed, then try to look up the last valid round
         // If that round exists, then we know indexer is caught up
         if (this._latestLastValidRound) {
-          await indexer.lookupBlock(this._latestLastValidRound).do()
+          await indexer.lookupBlock(this._latestLastValidRound)
           Config.getLogger().debug(
             `waitForIndexer has waited until the last valid round ${this._latestLastValidRound} was indexed, but did not find transaction ${lastTxId} in the indexer.`,
           )

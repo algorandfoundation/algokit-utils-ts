@@ -78,7 +78,7 @@ Partial.algodConfig
 
 #### Defined in
 
-[src/types/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L16)
+[src/types/network-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L14)
 
 ___
 
@@ -106,7 +106,7 @@ Partial.indexerConfig
 
 #### Defined in
 
-[src/types/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L18)
+[src/types/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L16)
 
 ___
 
@@ -134,7 +134,7 @@ Partial.kmdConfig
 
 #### Defined in
 
-[src/types/network-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L20)
+[src/types/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L18)
 
 ___
 

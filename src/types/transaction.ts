@@ -7,17 +7,17 @@ import {
   AssetConfigTransactionFields,
   AssetFreezeTransactionFields,
   AssetTransferTransactionFields,
+  getTransactionId,
+  HeartbeatTransactionFields,
   KeyRegistrationTransactionFields,
   PaymentTransactionFields,
   SendingAddress,
   SignedTransaction,
+  StateProofTransactionFields,
   Transaction,
   TransactionSigner,
   TransactionType,
-  getTransactionId,
 } from '@algorandfoundation/algokit-transact'
-import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
-import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
 import { AlgoAmount } from './amount'
 import { TransactionComposer } from './composer'
 import { Expand } from './expand'

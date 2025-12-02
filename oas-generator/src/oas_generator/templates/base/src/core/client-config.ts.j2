@@ -1,3 +1,5 @@
+import { Logger } from '@algorandfoundation/algokit-common';
+
 export interface ClientConfig {
   baseUrl: string;
   port?: string | number;
@@ -5,4 +7,5 @@ export interface ClientConfig {
   headers?: Record<string, string>;
   /** Optional override for retry attempts. Defaults to 4 retries. Set to 0 to disable retries. */
   maxRetries?: number;
+  logger?: Logger;
 }

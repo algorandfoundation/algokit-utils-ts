@@ -60,8 +60,6 @@ export { default as generateAccount } from './account'
 export * from './client'
 // Export client classes with algosdk-compatible names
 export { KmdClient as Kmd } from './client/kmd'
-export { IndexerClient as Indexer } from './client/v2/indexer/index'
-export * as indexerModels from './client/v2/indexer/models/types'
 export * from './convert'
 export { base64ToBytes, bytesToBase64, bytesToHex, bytesToString, coerceToBytes, hexToBytes } from './encoding/binarydata'
 export * from './encoding/encoding'

@@ -1,7 +1,8 @@
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Indexer, Kmd } from '@algorandfoundation/sdk'
-import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
+import { Kmd } from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
 import { AppFactory, AppFactoryParams } from './app-factory'
@@ -14,7 +15,7 @@ export interface AlgoSdkClients {
   /** Algod client, see https://dev.algorand.co/reference/rest-apis/algod/ */
   algod: AlgodClient
   /** Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer */
-  indexer?: algosdk.Indexer
+  indexer?: IndexerClient
   /** Optional KMD client, see https://dev.algorand.co/reference/rest-apis/kmd/ */
   kmd?: algosdk.Kmd
 }
@@ -46,7 +47,7 @@ export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algoran
 /** Exposes access to various API clients. */
 export class ClientManager {
   private _algod: AlgodClient
-  private _indexer?: algosdk.Indexer
+  private _indexer?: IndexerClient
   private _kmd?: algosdk.Kmd
   private _algorand?: AlgorandClient
 
@@ -86,7 +87,7 @@ export class ClientManager {
   }
 
   /**
-   * Returns an algosdk Algod API client.
+   * Returns an Algod API client.
    * @returns The Algod client
    */
   public get algod(): AlgodClient {
@@ -94,25 +95,25 @@ export class ClientManager {
   }
 
   /**
-   * Returns an algosdk Indexer API client or throws an error if it's not been provided.
+   * Returns an Indexer API client or throws an error if it's not been provided.
    * @returns The Indexer client
    * @throws Error if no Indexer client is configured
    */
-  public get indexer(): algosdk.Indexer {
+  public get indexer(): IndexerClient {
     if (!this._indexer) throw new Error('Attempt to use Indexer client in AlgoKit instance with no Indexer configured')
     return this._indexer
   }
 
   /**
-   * Returns an algosdk Indexer API client or `undefined` if it's not been provided.
+   * Returns an Indexer API client or `undefined` if it's not been provided.
    * @returns The Indexer client or `undefined`
    */
-  public get indexerIfPresent(): algosdk.Indexer | undefined {
+  public get indexerIfPresent(): IndexerClient | undefined {
     return this._indexer
   }
 
   /**
-   * Returns an algosdk KMD API client or throws an error if it's not been provided.
+   * Returns a KMD API client or throws an error if it's not been provided.
    * @returns The KMD client
    * @throws Error if no KMD client is configured
    */
@@ -588,13 +589,11 @@ export class ClientManager {
    */
   public static getAlgodClient(config: AlgoClientConfig): AlgodClient {
     const { token, server, port } = config
-    const baseUrl = port !== undefined ? `${server}:${port}` : server
-
-    const tokenHeader: algosdk.TokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
-
     return new AlgodClient({
-      baseUrl: baseUrl,
-      headers: { ...tokenHeader },
+      baseUrl: server,
+      port,
+      token,
+      logger: Config.logger,
     })
   }
 
@@ -634,11 +633,14 @@ export class ClientManager {
    *  await indexer.makeHealthCheck().do()
    * ```
    */
-  public static getIndexerClient(config: AlgoClientConfig): Indexer {
+  public static getIndexerClient(config: AlgoClientConfig): IndexerClient {
     const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : (token ?? {})
-    const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
-    return new Indexer(httpClientWithRetry)
+    return new IndexerClient({
+      baseUrl: server,
+      port,
+      token,
+      logger: Config.logger,
+    })
   }
 
   /**
@@ -653,7 +655,7 @@ export class ClientManager {
    *  await indexer.makeHealthCheck().do()
    *  ```
    */
-  public static getIndexerClientFromEnvironment(): Indexer {
+  public static getIndexerClientFromEnvironment(): IndexerClient {
     return ClientManager.getIndexerClient(ClientManager.getIndexerConfigFromEnvironment())
   }
 
