@@ -997,7 +997,22 @@ class CodeGenerator:
                 "\n"
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { Block } from './block';\n"
-                "export { BlockMeta } from './block';\n"
+                "export type { BlockHeader } from './block';\n"
+                "export { BlockHeaderMeta } from './block';\n"
+                "export type { SignedTxnInBlock } from './block';\n"
+                "export { SignedTxnInBlockMeta } from './block';\n"
+                "export type { SignedTxnWithAD } from './block';\n"
+                "export { SignedTxnWithADMeta } from './block';\n"
+                "export type { ApplyData } from './block';\n"
+                "export { ApplyDataMeta } from './block';\n"
+                "export type { BlockAppEvalDelta } from './block';\n"
+                "export { BlockAppEvalDeltaMeta } from './block';\n"
+                "export type { BlockEvalDelta } from './block';\n"
+                "export { BlockEvalDeltaMeta } from './block';\n"
+                "export type { BlockStateProofTrackingData } from './block';\n"
+                "export { BlockStateProofTrackingDataMeta } from './block';\n"
+                "export type { ParticipationUpdates } from './block';\n"
+                "export { ParticipationUpdatesMeta } from './block';\n"
             )
             files[index_path] = base_index + extras
         files.update(self._generate_client_files(output_dir, client_class, service_class))

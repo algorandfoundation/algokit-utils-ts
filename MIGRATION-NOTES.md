@@ -57,3 +57,6 @@ A collection of random notes pop up during the migration process.
 - Does lmsig stand for logicMultiSignature? We use logicMultiSignature in our code, as we use multiSignature instead of msig in the Transaction type. An alternative is to use msig and lmsig, like algosdk does?
 - searchCriteria param for indexer-lookup.ts searchTransactions() method is an object, rather than a function which allows chained configuration
 - Doc: Mock server + Rust + polytest
+- subscriber:
+  - transform-complex-txn.spec.ts calls `txId` but the type is Transaction, not wrapper
+  - signedTransaction nested twice in block data
