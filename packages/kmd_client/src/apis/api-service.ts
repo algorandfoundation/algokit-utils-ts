@@ -1,7 +1,8 @@
+import type { BaseHttpRequest } from '../core/base-http-request'
+import { encodeJson, decodeJson } from '../core/model-runtime'
 import { type EncodingFormat } from '@algorandfoundation/algokit-common'
 import { encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
-import type { BaseHttpRequest } from '../core/base-http-request'
-import { decodeJson, encodeJson } from '../core/model-runtime'
+import type { SignMultisigRequest, SignTransactionRequest } from '../models/index'
 import type {
   CreateWalletRequest,
   CreateWalletResponse,
@@ -31,14 +32,12 @@ import type {
   RenameWalletResponse,
   RenewWalletHandleTokenRequest,
   RenewWalletHandleTokenResponse,
-  SignMultisigRequest,
   SignMultisigResponse,
   SignMultisigTxnRequest,
   SignProgramMultisigRequest,
   SignProgramMultisigResponse,
   SignProgramRequest,
   SignProgramResponse,
-  SignTransactionRequest,
   SignTransactionResponse,
   SignTxnRequest,
   VersionsResponse,
