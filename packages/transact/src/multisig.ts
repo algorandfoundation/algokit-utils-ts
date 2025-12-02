@@ -142,7 +142,7 @@ export const MULTISIG_SIGNATURE_LENGTH_ERROR_MSG = 'Cannot add multisig signatur
 const MULTISIG_KEY_NOT_EXIST_ERROR_MSG = 'Key does not exist'
 
 /**
- * createMultisigTransaction creates a raw, unsigned multisig transaction blob.
+ * creates a raw, unsigned multisig transaction blob.
  * @param txn - the actual transaction.
  * @param version - multisig version
  * @param threshold - multisig threshold
@@ -194,7 +194,7 @@ interface MultisigMetadataWithPks extends Omit<MultisigMetadata, 'addrs'> {
 }
 
 /**
- * createMultisigTransactionWithSignature creates a multisig transaction blob with an included signature.
+ * creates a multisig transaction blob with an included signature.
  * @param txn - the actual transaction to sign.
  * @param rawSig - a Uint8Array raw signature of that transaction
  * @param myPk - a public key that corresponds with rawSig
@@ -244,7 +244,7 @@ function createMultisigTransactionWithSignature(
 }
 
 /**
- * mergeMultisigTransactions takes a list of multisig transaction blobs, and merges them.
+ * takes a list of multisig transaction blobs, and merges them.
  * @param multisigTxnBlobs - a list of blobs representing encoded multisig txns
  * @returns typed array msg-pack encoded multisig txn
  */
@@ -323,7 +323,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
 }
 
 /**
- * partialSignWithMultisigSignature partially signs this transaction with an external raw multisig signature and returns
+ * Partially signs this transaction with an external raw multisig signature and returns
  * a partially-signed multisig transaction, encoded with msgpack as a typed array.
  * @param transaction - The transaction to sign
  * @param metadata - multisig metadata
@@ -352,7 +352,7 @@ function partialSignWithMultisigSignature(
 }
 
 /**
- * appendMultisigTransactionSignature takes a multisig transaction blob, and appends a given raw signature to it.
+ * Takes a multisig transaction blob, and appends a given raw signature to it.
  * This makes it possible to compile a multisig signature using only raw signatures from external methods.
  * @param multisigTxnBlob - an encoded multisig txn. Supports non-payment txn types.
  * @param version - multisig version
@@ -379,7 +379,7 @@ export function appendSignRawMultisigSignature(
 }
 
 /**
- * fromMultisigPreImg takes multisig parameters and returns a 32 byte typed array public key,
+ * Takes multisig parameters and returns a 32 byte typed array public key,
  * representing an address that identifies the "exact group, version, and public keys" that are required for signing.
  * Hash("MultisigAddr" || version uint8 || threshold uint8 || PK1 || PK2 || ...)
  * Encoding this output yields a human readable address.
@@ -419,7 +419,7 @@ export function addressFromMultisigPreImg({
 }
 
 /**
- * fromMultisigPreImgAddrs takes multisig parameters and returns a human readable Algorand address.
+ * Takes multisig parameters and returns a human readable Algorand address.
  * This is equivalent to fromMultisigPreImg, but interfaces with encoded addresses.
  * @param version - multisig version
  * @param threshold - multisig threshold
@@ -434,7 +434,7 @@ export function addressFromMultisigPreImgAddrs({ version, threshold, addrs }: Mu
 }
 
 /**
- * multisigAddress takes multisig metadata (preimage) and returns the corresponding human readable Algorand address.
+ * Takes multisig metadata (preimage) and returns the corresponding human readable Algorand address.
  * @param version - multisig version
  * @param threshold - multisig threshold
  * @param addrs - list of Algorand addresses
