@@ -1,6 +1,9 @@
 import { Address, concatArrays, hash, isValidAddress } from '@algorandfoundation/algokit-common'
 import { MultisigAccount } from './multisig'
-import { MultisigSignature } from './transactions/signed-transaction'
+import { encodeSignedTransaction, MultisigSignature } from './transactions/signed-transaction'
+import { TransactionSigner } from './signer'
+import { Transaction } from './transactions/transaction'
+import { SignedTransaction } from './transactions/signed-transaction'
 
 // base64regex is the regex to test for base64 strings
 const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
@@ -60,6 +63,28 @@ export class LogicSigAccount {
 
     this.logic = program
     this.args = args
+  }
+
+  get signer(): TransactionSigner {
+    return async (txns: Transaction[], indexes: number[]) => {
+      const signedTxns: Uint8Array[] = []
+      for (const index of indexes) {
+        const txn = txns[index]
+
+        const stxn: SignedTransaction = {
+          txn,
+          logicSignature: { logic: this.logic, args: this.args, multiSignature: this.msig ?? this.lmsig, signature: this.sig },
+        }
+
+        signedTxns.push(encodeSignedTransaction(stxn))
+      }
+
+      return signedTxns
+    }
+  }
+
+  get addr(): Address {
+    return this.address()
   }
 
   /**

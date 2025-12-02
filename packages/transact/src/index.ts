@@ -38,3 +38,4 @@ export * from './transactions/key-registration'
 export * from './transactions/payment'
 
 export * from './multisig'
+export * from './logicsig'

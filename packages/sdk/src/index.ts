@@ -67,7 +67,6 @@ export { base64ToBytes, bytesToBase64, bytesToHex, bytesToString, coerceToBytes,
 export * from './encoding/encoding'
 export { decodeUint64, encodeUint64 } from './encoding/uint64'
 export * from './logic/sourcemap'
-export * from './logicsig'
 export {
   masterDerivationKeyToMnemonic,
   mnemonicFromSeed,
@@ -76,9 +75,6 @@ export {
   secretKeyToMnemonic,
   seedFromMnemonic,
 } from './mnemonic/mnemonic'
-export * from './multisig'
-export * from './signer'
-export { signLogicSigTransaction, signLogicSigTransactionObject } from './signing'
 export * from './types/account'
 export type { default as Account } from './types/account'
 export * from './types/intDecoding'

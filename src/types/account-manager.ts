@@ -3,13 +3,14 @@ import { Address, ReadableAddress, getAddress } from '@algorandfoundation/algoki
 import {
   AddressWithSigners,
   AddressWithTransactionSigner,
+  LogicSigAccount,
+  makeBasicAccountTransactionSigner,
   MultisigAccount,
   MultisigMetadata,
   TransactionSigner,
 } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, SigningAccount } from './account'
@@ -41,11 +42,7 @@ export interface EnsureFundedResult {
 export const getAccountTransactionSigner = memoize(function (
   account: AddressWithTransactionSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount,
 ): TransactionSigner {
-  return 'signer' in account
-    ? account.signer
-    : 'lsig' in account
-      ? algosdk.makeLogicSigAccountTransactionSigner(account)
-      : algosdk.makeBasicAccountTransactionSigner(account)
+  return 'signer' in account ? account.signer : makeBasicAccountTransactionSigner(account)
 })
 
 /** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
@@ -122,7 +119,7 @@ export class AccountManager {
     } {
     const signer = getAccountTransactionSigner(account)
     const acc: AddressWithTransactionSigner = {
-      addr: 'addr' in account ? account.addr : account.address(),
+      addr: account.addr,
       signer: signer,
     }
     this._accounts[acc.addr.toString()] = acc

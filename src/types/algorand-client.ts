@@ -1,9 +1,8 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithTransactionSigner, MultisigAccount } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, LogicSigAccount, MultisigAccount, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { LogicSigAccount } from '@algorandfoundation/sdk'
 import { SigningAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
@@ -74,7 +73,7 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
    * ```
    */
-  public setDefaultSigner(signer: algosdk.TransactionSigner | AddressWithTransactionSigner): AlgorandClient {
+  public setDefaultSigner(signer: TransactionSigner | AddressWithTransactionSigner): AlgorandClient {
     this._accountManager.setDefaultSigner(signer)
     return this
   }
@@ -110,7 +109,7 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setSigner(signer.addr, signer.signer)
    * ```
    */
-  public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
+  public setSigner(sender: string | Address, signer: TransactionSigner) {
     this._accountManager.setSigner(sender, signer)
     return this
   }

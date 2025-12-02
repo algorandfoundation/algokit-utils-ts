@@ -22,6 +22,7 @@ import {
   encodeTransactionRaw,
   getTransactionId,
   groupTransactions,
+  makeEmptyTransactionSigner,
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
@@ -199,7 +200,7 @@ export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: AlgodClient
   /** The function used to get the TransactionSigner for a given address */
-  getSigner: (address: ReadableAddress) => algosdk.TransactionSigner
+  getSigner: (address: ReadableAddress) => TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
   getSuggestedParams?: () => Promise<SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
@@ -226,7 +227,7 @@ export interface BuiltTransactions {
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
-  signers: Map<number, algosdk.TransactionSigner>
+  signers: Map<number, TransactionSigner>
 }
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
@@ -241,7 +242,7 @@ export class TransactionComposer {
   private getSuggestedParams: () => Promise<SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
-  private getSigner: (address: ReadableAddress) => algosdk.TransactionSigner
+  private getSigner: (address: ReadableAddress) => TransactionSigner
 
   /** The default transaction validity window */
   private defaultValidityWindow = 10n
@@ -1346,7 +1347,7 @@ export class TransactionComposer {
       !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisId ?? 'unknown')
         ? 1000n
         : this.defaultValidityWindow
-    const signers = new Map<number, algosdk.TransactionSigner>()
+    const signers = new Map<number, TransactionSigner>()
     const transactions = new Array<Transaction>()
 
     let transactionIndex = 0
@@ -1884,7 +1885,7 @@ export class TransactionComposer {
 
         const transactionsWithEmptySigners: TransactionWithSigner[] = sentTransactions.map((txn) => ({
           txn,
-          signer: algosdk.makeEmptyTransactionSigner(),
+          signer: makeEmptyTransactionSigner(),
         }))
         const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
         const simulateResponse = await this.algod.simulateTransactions({
@@ -1979,14 +1980,12 @@ export class TransactionComposer {
 
       transactionsWithSigner = transactions.map((txn, index) => ({
         txn: txn,
-        signer: skipSignatures
-          ? algosdk.makeEmptyTransactionSigner()
-          : (builtTransactions.signers.get(index) ?? algosdk.makeEmptyTransactionSigner()),
+        signer: skipSignatures ? makeEmptyTransactionSigner() : (builtTransactions.signers.get(index) ?? makeEmptyTransactionSigner()),
       }))
     } else {
       transactionsWithSigner = this.transactionsWithSigners.map((e) => ({
         txn: e.txn,
-        signer: skipSignatures ? algosdk.makeEmptyTransactionSigner() : e.signer,
+        signer: skipSignatures ? makeEmptyTransactionSigner() : e.signer,
       }))
     }
 

@@ -2,6 +2,8 @@ import { Address, Addressable, concatArrays, ReadableAddress } from '@algorandfo
 import { encodeTransaction, Transaction } from './transactions/transaction'
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
 import { encodeSignedTransaction, SignedTransaction } from './transactions/signed-transaction'
+import { Account } from '@algorandfoundation/sdk'
+import nacl from 'tweetnacl'
 
 /** Function for signing a group of transactions */
 export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
@@ -81,4 +83,33 @@ export function generateAddressWithSigners(
   }
 
   return { addr, signer, lsigSigner, programDataSigner, mxBytesSigner }
+}
+
+export function makeBasicAccountTransactionSigner(account: Account): TransactionSigner {
+  const pubkey = account.addr.publicKey
+  const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+    return nacl.sign.detached(bytesToSign, account.sk)
+  }
+
+  return generateAddressWithSigners(pubkey, rawSigner).signer
+}
+
+/**
+ * Create a makeEmptyTransactionSigner that does not specify any signer or
+ * signing capabilities. This should only be used to simulate transactions.
+ */
+export function makeEmptyTransactionSigner(): TransactionSigner {
+  return (txnGroup: Transaction[], indexesToSign: number[]) => {
+    const unsigned: Uint8Array[] = []
+
+    for (const index of indexesToSign) {
+      const stxn: SignedTransaction = {
+        txn: txnGroup[index],
+        signature: new Uint8Array(64).fill(0),
+      }
+      unsigned.push(encodeSignedTransaction(stxn))
+    }
+
+    return Promise.resolve(unsigned)
+  }
 }

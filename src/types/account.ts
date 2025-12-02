@@ -7,10 +7,9 @@ import {
   AssetHolding,
 } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, makeBasicAccountTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { TransactionSigner } from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 
 /**
@@ -58,7 +57,7 @@ export class SigningAccount implements Account {
   constructor(account: Account, sender: string | Address | undefined) {
     this._account = account
     this._sender = typeof sender === 'string' ? Address.fromString(sender) : (sender ?? account.addr)
-    this._signer = algosdk.makeBasicAccountTransactionSigner(account)
+    this._signer = makeBasicAccountTransactionSigner(account)
   }
 }
 
