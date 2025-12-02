@@ -1,4 +1,4 @@
-import { Address, Addressable, concatArrays, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { Address, Addressable, concatArrays, Expand, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { encodeTransaction, Transaction } from './transactions/transaction'
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
 import { encodeSignedTransaction, SignedTransaction } from './transactions/signed-transaction'
@@ -31,11 +31,9 @@ export interface AddressWithMxBytesSigner extends Addressable {
   mxBytesSigner: MxBytesSigner
 }
 
-export type AddressWithSigners = Addressable &
-  AddressWithTransactionSigner &
-  AddressWithDelegatedLsigSigner &
-  AddressWithProgramDataSigner &
-  AddressWithMxBytesSigner
+export type AddressWithSigners = Expand<
+  Addressable & AddressWithTransactionSigner & AddressWithDelegatedLsigSigner & AddressWithProgramDataSigner & AddressWithMxBytesSigner
+>
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
