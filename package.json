@@ -31,6 +31,36 @@
       "import": "./testing/index.mjs",
       "require": "./testing/index.js"
     },
+    "./abi": {
+      "types": "./abi/index.d.ts",
+      "import": "./abi/index.mjs",
+      "require": "./abi/index.js"
+    },
+    "./common": {
+      "types": "./common/index.d.ts",
+      "import": "./common/index.mjs",
+      "require": "./common/index.js"
+    },
+    "./transact": {
+      "types": "./transact/index.d.ts",
+      "import": "./transact/index.mjs",
+      "require": "./transact/index.js"
+    },
+    "./algod-client": {
+      "types": "./algod-client/index.d.ts",
+      "import": "./algod-client/index.mjs",
+      "require": "./algod-client/index.js"
+    },
+    "./indexer-client": {
+      "types": "./indexer-client/index.d.ts",
+      "import": "./indexer-client/index.mjs",
+      "require": "./indexer-client/index.js"
+    },
+    "./kmd-client": {
+      "types": "./kmd-client/index.d.ts",
+      "import": "./kmd-client/index.mjs",
+      "require": "./kmd-client/index.js"
+    },
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
