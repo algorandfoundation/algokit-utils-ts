@@ -1,12 +1,14 @@
+import { Address, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import {
   addressFromMultisigSignature,
   applyMultisigSubsignature,
+  decodeMultiSignature,
   mergeMultisignatures,
   newMultisigSignature,
   participantsFromMultisigSignature,
 } from './multisig'
-import { Address } from '@algorandfoundation/algokit-common'
+import { multiSignatureCodec } from './transactions/signed-transaction-meta'
 
 describe('multisig', () => {
   describe('newMultisigSignature', () => {
@@ -188,6 +190,30 @@ describe('multisig', () => {
       const multisig2 = newMultisigSignature(2, 2, participants)
 
       expect(() => mergeMultisignatures(multisig1, multisig2)).toThrow('Cannot merge multisig signatures with different versions')
+    })
+  })
+
+  describe('decodeMultiSignature', () => {
+    test('should decode encoded multisig signature', () => {
+      const participants = [
+        Address.fromString('RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'),
+        Address.fromString('ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA'),
+      ]
+
+      const emptyMultisignature = newMultisigSignature(1, 2, participants)
+      const signature = new Uint8Array(64).fill(42)
+      const signedMultiSig = applyMultisigSubsignature(emptyMultisignature, participants[0], signature)
+      const encoded = encodeMsgpack(multiSignatureCodec.encode(signedMultiSig, 'msgpack'))
+
+      const decoded = decodeMultiSignature(encoded)
+
+      expect(decoded.version).toBe(emptyMultisignature.version)
+      expect(decoded.threshold).toBe(emptyMultisignature.threshold)
+      expect(decoded.subsignatures).toHaveLength(emptyMultisignature.subsignatures.length)
+      expect(decoded.subsignatures[0].address.toString()).toBe(participants[0].toString())
+      expect(decoded.subsignatures[1].address.toString()).toBe(participants[1].toString())
+      expect(decoded.subsignatures[0].signature).toEqual(signature)
+      expect(decoded.subsignatures[1].signature).toBeUndefined()
     })
   })
 

@@ -2,11 +2,11 @@ import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTMasterKeyExportRequest is the request for `POST /v1/master-key/export`
+ * The request for `POST /v1/master-key/export`
  */
 export type ExportMasterKeyRequest = {
   walletHandleToken: string
-  walletPassword: string
+  walletPassword?: string
 }
 
 export const ExportMasterKeyRequestMeta: ObjectModelMetadata<ExportMasterKeyRequest> = {
@@ -22,7 +22,7 @@ export const ExportMasterKeyRequestMeta: ObjectModelMetadata<ExportMasterKeyRequ
     {
       name: 'walletPassword',
       wireKey: 'wallet_password',
-      optional: false,
+      optional: true,
       codec: stringCodec,
     },
   ],

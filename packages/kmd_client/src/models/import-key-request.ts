@@ -2,7 +2,7 @@ import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTKeyImportRequest is the request for `POST /v1/key/import`
+ * The request for `POST /v1/key/import`
  */
 export type ImportKeyRequest = {
   privateKey: Uint8Array

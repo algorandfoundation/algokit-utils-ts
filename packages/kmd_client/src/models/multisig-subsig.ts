@@ -6,8 +6,8 @@ import { bytesCodec } from '@algorandfoundation/algokit-common'
  * signatures may be empty
  */
 export type MultisigSubsig = {
-  key: Uint8Array
-  sig: Uint8Array
+  publicKey: Uint8Array
+  signature?: Uint8Array
 }
 
 export const MultisigSubsigMeta: ObjectModelMetadata<MultisigSubsig> = {
@@ -15,15 +15,15 @@ export const MultisigSubsigMeta: ObjectModelMetadata<MultisigSubsig> = {
   kind: 'object',
   fields: [
     {
-      name: 'key',
-      wireKey: 'Key',
+      name: 'publicKey',
+      wireKey: 'pk',
       optional: false,
       codec: bytesCodec,
     },
     {
-      name: 'sig',
-      wireKey: 'Sig',
-      optional: false,
+      name: 'signature',
+      wireKey: 's',
+      optional: true,
       codec: bytesCodec,
     },
   ],

@@ -2,11 +2,11 @@ import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { stringCodec, numberCodec, bytesArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTMultisigImportRequest is the request for `POST /v1/multisig/import`
+ * The request for `POST /v1/multisig/import`
  */
 export type ImportMultisigRequest = {
   multisigVersion: number
-  pks: Uint8Array[]
+  publicKeys: Uint8Array[]
   threshold: number
   walletHandleToken: string
 }
@@ -22,7 +22,7 @@ export const ImportMultisigRequestMeta: ObjectModelMetadata<ImportMultisigReques
       codec: numberCodec,
     },
     {
-      name: 'pks',
+      name: 'publicKeys',
       wireKey: 'pks',
       optional: false,
       codec: bytesArrayCodec,

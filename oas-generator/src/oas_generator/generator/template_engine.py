@@ -572,7 +572,7 @@ class OperationProcessor:
             custom_methods = [send_raw_transaction_method, create_wallet, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
 
         if service_class_name == "IndexerApi":
-            create_wallet = '''/**
+            lookup_application_box_by_id_and_name = '''/**
    * Given an application ID and box name, it returns the round, box name, and value.
    */
   async lookupApplicationBoxByIdAndName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
@@ -581,9 +581,13 @@ class OperationProcessor:
   }
 '''
 
-            custom_methods = [create_wallet]
+            custom_methods = [lookup_application_box_by_id_and_name]
 
         if service_class_name == "KmdApi":
+            custom_imports = [
+                "import { encodeTransactionRaw } from '@algorandfoundation/algokit-transact';",
+                "import type { SignMultisigRequest, SignTransactionRequest } from '../models/index';",
+            ]
             create_wallet = '''/**
    * Create a new wallet (collection of keys) with the given parameters.
    */
@@ -595,8 +599,35 @@ class OperationProcessor:
     return await this._createWallet(requestBody)
   }
 '''
+            sign_multisig_transaction = '''/**
+   * Enables the signing of a transaction using the provided wallet and multisig info.
+   * The public key is used to identify which multisig account key to use for signing.
+   * When a signer is provided it is used to resolve the private key and sign the transaction, enabling rekeyed account signing.
+   * @returns A multisig signature or partial signature, which can be used to form a signed transaction.
+   */
+  async signMultisigTransaction(body: SignMultisigRequest): Promise<SignMultisigResponse> {
+    const requestBody = {
+      ...body,
+      transaction: encodeTransactionRaw(body.transaction),
+    } satisfies SignMultisigTxnRequest
+    return this._signMultisigTransaction(requestBody)
+  }
+'''
+            sign_transaction = '''/**
+   * Enables the signing of a transaction using the provided wallet info.
+   * When a public key is provided it is used to resolve the private key and sign the transaction, enabling rekeyed account signing.
+   * @returns An encoded, signed transaction.
+   */
+  async signTransaction(body: SignTransactionRequest): Promise<SignTransactionResponse> {
+    const requestBody = {
+      ...body,
+      transaction: encodeTransactionRaw(body.transaction),
+    } satisfies SignTxnRequest
+    return this._signTransaction(requestBody)
+  }
+'''
 
-            custom_methods = [create_wallet]
+            custom_methods = [create_wallet, sign_multisig_transaction, sign_transaction]
 
         return custom_imports, custom_methods
 
@@ -613,7 +644,9 @@ class OperationProcessor:
                 "lookupApplicationBoxByIDAndName" # Wrapped by custom method
             },
             "KmdApi": {
-                'CreateWallet'  # Wrapped by custom method
+                "CreateWallet",  # Wrapped by custom method
+                "SignMultisigTransaction",  # Wrapped by custom method
+                "SignTransaction",  # Wrapped by custom method
             },
         }
 
@@ -1009,41 +1042,55 @@ class CodeGenerator:
         used_schemas = {name: schema for name, schema in all_schemas.items()
                        if ts_pascal_case(name) in all_used_types}
 
-
         # Generate components (only used schemas)
         files.update(self.schema_processor.generate_models(output_dir, used_schemas))
 
-        if service_class == "AlgodApi":
-            models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
+        models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
+        index_path = models_dir / constants.INDEX_FILE
 
+        if service_class == "AlgodApi":
             # Generate the custom typed models
             files[models_dir / "suggested-params.ts"] = self.renderer.render(
-                "models/custom/suggested-params.ts.j2",
+                "models/custom/algod/suggested-params.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block.ts"] = self.renderer.render(
-                "models/custom/block.ts.j2",
+                "models/custom/algod/block.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block-response.ts"] = self.renderer.render(
-                "models/custom/block-response.ts.j2",
+                "models/custom/algod/block-response.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "ledger-state-delta.ts"] = self.renderer.render(
-                "models/custom/ledger-state-delta.ts.j2",
+                "models/custom/algod/ledger-state-delta.ts.j2",
                 {"spec": spec},
             )
 
             # Ensure index exports include the custom models
-            index_path = models_dir / constants.INDEX_FILE
-            base_index = self.renderer.render(constants.MODELS_INDEX_TEMPLATE, {"schemas": used_schemas})
             extras = (
-                "\n"
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { Block } from './block';\n"
                 "export { BlockMeta } from './block';\n"
             )
-            files[index_path] = base_index + extras
+            files[index_path] = files[index_path] + extras
+        elif service_class == "KmdApi":
+            # Generate the custom typed models
+            files[models_dir / "sign-multisig-request.ts"] = self.renderer.render(
+                "models/custom/kmd/sign-multisig-request.ts.j2",
+                {"spec": spec},
+            )
+            files[models_dir / "sign-transaction-request.ts"] = self.renderer.render(
+                "models/custom/kmd/sign-transaction-request.ts.j2",
+                {"spec": spec},
+            )
+
+            # Ensure index exports include the custom models
+            extras = (
+                "export type { SignMultisigRequest } from './sign-multisig-request';\n"
+                "export type { SignTransactionRequest } from './sign-transaction-request';\n"
+            )
+            files[index_path] = files[index_path] + extras
         files.update(self._generate_client_files(output_dir, client_class, service_class))
 
         return files

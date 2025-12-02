@@ -6,7 +6,7 @@ import { numberCodec, bytesArrayCodec } from '@algorandfoundation/algokit-common
  */
 export type ExportMultisigResponse = {
   multisigVersion: number
-  pks: Uint8Array[]
+  publicKeys: Uint8Array[]
   threshold: number
 }
 
@@ -21,7 +21,7 @@ export const ExportMultisigResponseMeta: ObjectModelMetadata<ExportMultisigRespo
       codec: numberCodec,
     },
     {
-      name: 'pks',
+      name: 'publicKeys',
       wireKey: 'pks',
       optional: false,
       codec: bytesArrayCodec,

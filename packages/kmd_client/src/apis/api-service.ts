@@ -1,6 +1,8 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
 import { encodeJson, decodeJson } from '../core/model-runtime'
 import { type EncodingFormat } from '@algorandfoundation/algokit-common'
+import { encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
+import type { SignMultisigRequest, SignTransactionRequest } from '../models/index'
 import type {
   CreateWalletRequest,
   CreateWalletResponse,
@@ -30,14 +32,14 @@ import type {
   RenameWalletResponse,
   RenewWalletHandleTokenRequest,
   RenewWalletHandleTokenResponse,
-  SignMultisigRequest,
   SignMultisigResponse,
+  SignMultisigTxnRequest,
   SignProgramMultisigRequest,
   SignProgramMultisigResponse,
   SignProgramRequest,
   SignProgramResponse,
-  SignTransactionRequest,
   SignTransactionResponse,
+  SignTxnRequest,
   VersionsResponse,
   WalletInfoRequest,
   WalletInfoResponse,
@@ -71,14 +73,14 @@ import {
   RenameWalletResponseMeta,
   RenewWalletHandleTokenRequestMeta,
   RenewWalletHandleTokenResponseMeta,
-  SignMultisigRequestMeta,
   SignMultisigResponseMeta,
+  SignMultisigTxnRequestMeta,
   SignProgramMultisigRequestMeta,
   SignProgramMultisigResponseMeta,
   SignProgramRequestMeta,
   SignProgramResponseMeta,
-  SignTransactionRequestMeta,
   SignTransactionResponseMeta,
+  SignTxnRequestMeta,
   VersionsResponseMeta,
   WalletInfoRequestMeta,
   WalletInfoResponseMeta,
@@ -550,12 +552,12 @@ export class KmdApi {
   /**
    * Start a multisig signature, or add a signature to a partially completed multisig signature object.
    */
-  async signMultisigTransaction(body: SignMultisigRequest): Promise<SignMultisigResponse> {
+  private async _signMultisigTransaction(body: SignMultisigTxnRequest): Promise<SignMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const bodyMeta = SignMultisigRequestMeta
+    const bodyMeta = SignMultisigTxnRequestMeta
     const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
@@ -600,12 +602,12 @@ export class KmdApi {
   /**
    * Signs the passed transaction with a key from the wallet, determined by the sender encoded in the transaction.
    */
-  async signTransaction(body: SignTransactionRequest): Promise<SignTransactionResponse> {
+  private async _signTransaction(body: SignTxnRequest): Promise<SignTransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: EncodingFormat = 'json'
     headers['Accept'] = this.mimeTypeFor(responseFormat)
 
-    const bodyMeta = SignTransactionRequestMeta
+    const bodyMeta = SignTxnRequestMeta
     const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
     if (mediaType) headers['Content-Type'] = mediaType
     const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
@@ -631,5 +633,32 @@ export class KmdApi {
       walletDriverName: body.walletDriverName ?? 'sqlite',
     }
     return await this._createWallet(requestBody)
+  }
+
+  /**
+   * Enables the signing of a transaction using the provided wallet and multisig info.
+   * The public key is used to identify which multisig account key to use for signing.
+   * When a signer is provided it is used to resolve the private key and sign the transaction, enabling rekeyed account signing.
+   * @returns A multisig signature or partial signature, which can be used to form a signed transaction.
+   */
+  async signMultisigTransaction(body: SignMultisigRequest): Promise<SignMultisigResponse> {
+    const requestBody = {
+      ...body,
+      transaction: encodeTransactionRaw(body.transaction),
+    } satisfies SignMultisigTxnRequest
+    return this._signMultisigTransaction(requestBody)
+  }
+
+  /**
+   * Enables the signing of a transaction using the provided wallet info.
+   * When a public key is provided it is used to resolve the private key and sign the transaction, enabling rekeyed account signing.
+   * @returns An encoded, signed transaction.
+   */
+  async signTransaction(body: SignTransactionRequest): Promise<SignTransactionResponse> {
+    const requestBody = {
+      ...body,
+      transaction: encodeTransactionRaw(body.transaction),
+    } satisfies SignTxnRequest
+    return this._signTransaction(requestBody)
   }
 }

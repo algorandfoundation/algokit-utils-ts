@@ -2,7 +2,7 @@ import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTKeyListRequest is the request for `POST /v1/key/list`
+ * The request for `POST /v1/key/list`
  */
 export type ListKeysRequest = {
   walletHandleToken: string

@@ -1,37 +1,24 @@
-import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, booleanCodec, bytesCodec, addressCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSig } from './multisig-sig'
 import { MultisigSigMeta } from './multisig-sig'
 
 /**
- * The request for `POST /v1/multisig/signprogram`
+ * The request for `POST /v1/multisig/sign`
  */
-export type SignProgramMultisigRequest = {
-  address: Address
-  program: Uint8Array
+export type SignMultisigTxnRequest = {
   partialMultisig?: MultisigSig
   publicKey: Uint8Array
-  useLegacyMsig?: boolean
+  signer?: Uint8Array
+  transaction: Uint8Array
   walletHandleToken: string
   walletPassword?: string
 }
 
-export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMultisigRequest> = {
-  name: 'SignProgramMultisigRequest',
+export const SignMultisigTxnRequestMeta: ObjectModelMetadata<SignMultisigTxnRequest> = {
+  name: 'SignMultisigTxnRequest',
   kind: 'object',
   fields: [
-    {
-      name: 'address',
-      wireKey: 'address',
-      optional: false,
-      codec: addressCodec,
-    },
-    {
-      name: 'program',
-      wireKey: 'data',
-      optional: false,
-      codec: bytesCodec,
-    },
     {
       name: 'partialMultisig',
       wireKey: 'partial_multisig',
@@ -45,10 +32,16 @@ export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMult
       codec: bytesCodec,
     },
     {
-      name: 'useLegacyMsig',
-      wireKey: 'use_legacy_msig',
+      name: 'signer',
+      wireKey: 'signer',
       optional: true,
-      codec: booleanCodec,
+      codec: bytesCodec,
+    },
+    {
+      name: 'transaction',
+      wireKey: 'transaction',
+      optional: false,
+      codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',

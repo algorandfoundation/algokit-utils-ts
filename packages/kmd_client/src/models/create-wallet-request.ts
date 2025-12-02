@@ -2,7 +2,7 @@ import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTWalletRequest is the request for `POST /v1/wallet`
+ * The request for `POST /v1/wallet`
  */
 export type CreateWalletRequest = {
   masterDerivationKey?: Uint8Array

@@ -1,11 +1,11 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * GenerateKeyResponse is the response to `POST /v1/key`
  */
 export type GenerateKeyResponse = {
-  address: string
+  address: Address
 }
 
 export const GenerateKeyResponseMeta: ObjectModelMetadata<GenerateKeyResponse> = {
@@ -16,7 +16,7 @@ export const GenerateKeyResponseMeta: ObjectModelMetadata<GenerateKeyResponse> =
       name: 'address',
       wireKey: 'address',
       optional: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
   ],
 }

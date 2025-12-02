@@ -1,11 +1,11 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
  * ImportMultisigResponse is the response to `POST /v1/multisig/import`
  */
 export type ImportMultisigResponse = {
-  address: string
+  address: Address
 }
 
 export const ImportMultisigResponseMeta: ObjectModelMetadata<ImportMultisigResponse> = {
@@ -16,7 +16,7 @@ export const ImportMultisigResponseMeta: ObjectModelMetadata<ImportMultisigRespo
       name: 'address',
       wireKey: 'address',
       optional: false,
-      codec: stringCodec,
+      codec: addressCodec,
     },
   ],
 }

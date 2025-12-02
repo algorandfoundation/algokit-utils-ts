@@ -2,7 +2,7 @@ import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { stringCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTWalletRenameRequest is the request for `POST /v1/wallet/rename`
+ * The request for `POST /v1/wallet/rename`
  */
 export type RenameWalletRequest = {
   walletId: string
