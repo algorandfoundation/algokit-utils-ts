@@ -142,7 +142,7 @@ export const MULTISIG_SIGNATURE_LENGTH_ERROR_MSG = 'Cannot add multisig signatur
 const MULTISIG_KEY_NOT_EXIST_ERROR_MSG = 'Key does not exist'
 
 /**
- * creates a raw, unsigned multisig transaction blob.
+ * creates a raw, multisig transaction blob without any signatures.
  * @param txn - the actual transaction.
  * @param version - multisig version
  * @param threshold - multisig threshold
