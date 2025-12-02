@@ -101,7 +101,7 @@ export class LogicSigAccount {
     this.sig = await signer(this)
   }
 
-  async deletegateMultisig(msig: MultisigAccount) {
+  async delegateMultisig(msig: MultisigAccount) {
     if (this.lmsig == undefined) {
       this.lmsig = {
         subsignatures: [],
