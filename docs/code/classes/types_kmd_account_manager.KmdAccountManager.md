@@ -20,6 +20,7 @@ that makes it easier to get and manage accounts using KMD.
 
 ### Methods
 
+- [findWalletAccount](types_kmd_account_manager.KmdAccountManager.md#findwalletaccount)
 - [getLocalNetDispenserAccount](types_kmd_account_manager.KmdAccountManager.md#getlocalnetdispenseraccount)
 - [getOrCreateWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getorcreatewalletaccount)
 - [getWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getwalletaccount)
@@ -69,6 +70,28 @@ ___
 
 ## Methods
 
+### findWalletAccount
+
+▸ **findWalletAccount**(`walletName`, `predicateOrAddress?`, `sender?`): `Promise`\<`undefined` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `walletName` | `string` |
+| `predicateOrAddress?` | `string` \| `Address` \| (`account`: `Record`\<`string`, `any`\>) => `boolean` |
+| `sender?` | `string` \| `Address` |
+
+#### Returns
+
+`Promise`\<`undefined` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+
+#### Defined in
+
+[src/types/kmd-account-manager.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L71)
+
+___
+
 ### getLocalNetDispenserAccount
 
 ▸ **getLocalNetDispenserAccount**(): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
@@ -89,7 +112,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L216)
+[src/types/kmd-account-manager.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L197)
 
 ___
 
@@ -130,7 +153,7 @@ const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('accoun
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L165)
+[src/types/kmd-account-manager.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L146)
 
 ___
 
@@ -166,37 +189,6 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 #### Defined in
 
 [src/types/kmd-account-manager.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L62)
-
-▸ **getWalletAccount**(`walletName`, `address`, `sender?`): `Promise`\<`undefined` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
-
-Returns the Algorand signing account matching the provided address with private key loaded from the given KMD wallet (identified by name).
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `walletName` | `string` | The name of the wallet to retrieve an account from |
-| `address` | `string` \| `Address` | The address of the account to retrieve from the wallet |
-| `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
-
-#### Returns
-
-`Promise`\<`undefined` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
-
-The signing account (with private key loaded) or undefined if no matching wallet or account was found
-
-**`Example`**
-
-```typescript
-const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
-  'unencrypted-default-wallet',
-  'SOMEADDRESS'
-)
-```
-
-#### Defined in
-
-[src/types/kmd-account-manager.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L84)
 
 ___
 
