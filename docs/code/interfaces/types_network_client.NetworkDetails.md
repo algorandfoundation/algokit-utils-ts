@@ -26,7 +26,7 @@ The base64 genesis hash of the current network.
 
 #### Defined in
 
-[src/types/network-client.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L34)
+[src/types/network-client.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L32)
 
 ___
 
@@ -38,7 +38,7 @@ The genesis ID of the current network.
 
 #### Defined in
 
-[src/types/network-client.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L32)
+[src/types/network-client.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L30)
 
 ___
 
@@ -50,7 +50,7 @@ Whether or not the network is LocalNet.
 
 #### Defined in
 
-[src/types/network-client.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L30)
+[src/types/network-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L28)
 
 ___
 
@@ -62,7 +62,7 @@ Whether or not the network is MainNet.
 
 #### Defined in
 
-[src/types/network-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L28)
+[src/types/network-client.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L26)
 
 ___
 
@@ -74,4 +74,4 @@ Whether or not the network is TestNet.
 
 #### Defined in
 
-[src/types/network-client.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L26)
+[src/types/network-client.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L24)

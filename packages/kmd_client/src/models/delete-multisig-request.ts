@@ -1,12 +1,12 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1DELETEMultisigRequest is the request for `DELETE /v1/multisig`
+ * The request for `DELETE /v1/multisig`
  */
 export type DeleteMultisigRequest = {
-  address?: string
-  walletHandleToken?: string
+  address: Address
+  walletHandleToken: string
   walletPassword?: string
 }
 
@@ -17,13 +17,13 @@ export const DeleteMultisigRequestMeta: ObjectModelMetadata<DeleteMultisigReques
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
-      codec: stringCodec,
+      optional: false,
+      codec: addressCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {

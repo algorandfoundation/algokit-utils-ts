@@ -1,13 +1,13 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, bytesCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTProgramSignRequest is the request for `POST /v1/program/sign`
+ * The request for `POST /v1/program/sign`
  */
 export type SignProgramRequest = {
-  address?: string
-  data?: Uint8Array
-  walletHandleToken?: string
+  address: Address
+  program: Uint8Array
+  walletHandleToken: string
   walletPassword?: string
 }
 
@@ -18,19 +18,19 @@ export const SignProgramRequestMeta: ObjectModelMetadata<SignProgramRequest> = {
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
-      codec: stringCodec,
+      optional: false,
+      codec: addressCodec,
     },
     {
-      name: 'data',
+      name: 'program',
       wireKey: 'data',
-      optional: true,
+      optional: false,
       codec: bytesCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {

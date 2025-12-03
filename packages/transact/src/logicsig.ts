@@ -4,6 +4,9 @@ import { encodeSignedTransaction, MultisigSignature } from './transactions/signe
 import { TransactionSigner } from './signer'
 import { Transaction } from './transactions/transaction'
 import { SignedTransaction } from './transactions/signed-transaction'
+import { decodeMsgpack } from '@algorandfoundation/algokit-common'
+import { LogicSignature } from './transactions/signed-transaction'
+import { logicSignatureCodec } from './transactions/signed-transaction-meta'
 
 // base64regex is the regex to test for base64 strings
 const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
@@ -132,4 +135,15 @@ export class LogicSigAccount {
   programDataToSign(data: Uint8Array): Uint8Array {
     return concatArrays(SIGN_PROGRAM_DATA_PREFIX, this.address().publicKey, data)
   }
+}
+
+/**
+ * Decodes MsgPack bytes into a logic signature.
+ *
+ * @param encodedLogicSignature - The MsgPack encoded logic signature
+ * @returns The decoded LogicSignature or an error if decoding fails.
+ */
+export function decodeLogicSignature(encodedLogicSignature: Uint8Array): LogicSignature {
+  const decodedData = decodeMsgpack(encodedLogicSignature)
+  return logicSignatureCodec.decode(decodedData, 'msgpack')
 }

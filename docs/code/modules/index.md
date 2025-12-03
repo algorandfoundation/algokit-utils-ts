@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L23)
+[src/transaction/transaction.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L22)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L22)
+[src/transaction/transaction.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L21)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L21)
+[src/transaction/transaction.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L20)
 
 ## Functions
 
@@ -248,7 +248,7 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 
 #### Defined in
 
-[src/transaction/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L33)
+[src/transaction/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L32)
 
 ___
 
@@ -352,7 +352,7 @@ app call resources populated into it
 
 #### Defined in
 
-[src/transaction/transaction.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L79)
+[src/transaction/transaction.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L78)
 
 ___
 
@@ -384,7 +384,7 @@ based on the supplied sendParams to prepare it for sending.
 
 #### Defined in
 
-[src/transaction/transaction.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L100)
+[src/transaction/transaction.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L99)
 
 ___
 
@@ -411,7 +411,7 @@ Signs and sends transactions that have been collected by an `TransactionComposer
 
 #### Defined in
 
-[src/transaction/transaction.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L126)
+[src/transaction/transaction.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L125)
 
 ___
 
@@ -464,4 +464,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L145)
+[src/transaction/transaction.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L144)

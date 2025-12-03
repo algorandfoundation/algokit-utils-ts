@@ -7,9 +7,9 @@ import { MultisigSubsigMeta } from './multisig-subsig'
  * MultisigSig is the structure that holds multiple Subsigs
  */
 export type MultisigSig = {
-  subsigs?: MultisigSubsig[]
-  threshold?: number
-  version?: number
+  subsignatures: MultisigSubsig[]
+  threshold: number
+  version: number
 }
 
 export const MultisigSigMeta: ObjectModelMetadata<MultisigSig> = {
@@ -17,21 +17,21 @@ export const MultisigSigMeta: ObjectModelMetadata<MultisigSig> = {
   kind: 'object',
   fields: [
     {
-      name: 'subsigs',
-      wireKey: 'Subsigs',
-      optional: true,
+      name: 'subsignatures',
+      wireKey: 'subsig',
+      optional: false,
       codec: new ArrayCodec(new ObjectModelCodec(MultisigSubsigMeta)),
     },
     {
       name: 'threshold',
-      wireKey: 'Threshold',
-      optional: true,
+      wireKey: 'thr',
+      optional: false,
       codec: numberCodec,
     },
     {
       name: 'version',
-      wireKey: 'Version',
-      optional: true,
+      wireKey: 'v',
+      optional: false,
       codec: numberCodec,
     },
   ],

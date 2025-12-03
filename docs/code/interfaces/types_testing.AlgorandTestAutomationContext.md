@@ -48,13 +48,13 @@ ___
 
 ### generateAccount
 
-• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner`\>
+• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & \{ `addr`: `Readonly`\<`Address`\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
 
 Generate and fund an additional ephemerally created account
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner`\>
+▸ (`params`): `Promise`\<`Address` & `default` & \{ `addr`: `Readonly`\<`Address`\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
 
 ##### Parameters
 
@@ -64,7 +64,7 @@ Generate and fund an additional ephemerally created account
 
 ##### Returns
 
-`Promise`\<`Address` & `default` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner`\>
+`Promise`\<`Address` & `default` & \{ `addr`: `Readonly`\<`Address`\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
 
 #### Defined in
 
@@ -98,7 +98,7 @@ ___
 
 ### testAccount
 
-• **testAccount**: `Address` & `Addressable` & `AddressWithTransactionSigner` & `AddressWithDelegatedLsigSigner` & `AddressWithProgramDataSigner` & `AddressWithMxBytesSigner` & `default`
+• **testAccount**: `Address` & \{ `addr`: `Readonly`\<`Address`\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  } & `default`
 
 Default, funded test account that is ephemerally created
 

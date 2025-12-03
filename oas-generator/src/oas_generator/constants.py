@@ -185,7 +185,7 @@ DEFAULT_TEMPLATE_DIR: Final[str] = "templates"
 
 # File names
 INDEX_FILE: Final[str] = "index.ts"
-API_SERVICE_FILE: Final[str] = "api.service.ts"
+API_SERVICE_FILE: Final[str] = "api-service.ts"
 MODEL_FILE_EXTENSION: Final[str] = ".ts"
 
 # Template file names

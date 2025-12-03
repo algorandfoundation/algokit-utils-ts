@@ -21,7 +21,8 @@ import {
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getApplicationAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, OnApplicationComplete, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { Indexer, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
+import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, binaryStartsWith } from '../util'
@@ -74,7 +75,7 @@ export type ResolveAppByCreatorAndNameBase = {
    *  * An indexer instance to search the creator account apps; or
    *  * The cached value of the existing apps for the given creator from `getCreatorAppsByName`
    */
-  findExistingUsing: Indexer | LegacyAppLookup
+  findExistingUsing: IndexerClient | LegacyAppLookup
 }
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */

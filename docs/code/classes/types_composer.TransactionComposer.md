@@ -1717,7 +1717,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:2061](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2061)
+[src/types/composer.ts:2059](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2059)
 
 ___
 
@@ -1737,7 +1737,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:2116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2116)
+[src/types/composer.ts:2114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2114)
 
 ___
 
@@ -1891,7 +1891,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:2136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2136)
+[src/types/composer.ts:2134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2134)
 
 ___
 
@@ -1911,7 +1911,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:2076](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2076)
+[src/types/composer.ts:2074](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2074)
 
 ___
 
@@ -2044,4 +2044,4 @@ The binary encoded transaction note
 
 #### Defined in
 
-[src/types/composer.ts:2055](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2055)
+[src/types/composer.ts:2053](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2053)

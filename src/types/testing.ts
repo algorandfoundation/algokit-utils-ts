@@ -3,8 +3,8 @@ import { Address } from '@algorandfoundation/algokit-common'
 import { AddressWithSigners, AddressWithTransactionSigner, LogicSigAccount, Transaction } from '@algorandfoundation/algokit-transact'
 import { MultisigAccount } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Indexer, Kmd } from '@algorandfoundation/sdk'
+import { IndexerClient, TransactionResponse } from '@algorandfoundation/algokit-indexer-client'
+import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
@@ -21,9 +21,9 @@ export interface AlgorandTestAutomationContext {
   /** Algod client instance that will log transactions in `transactionLogger` */
   algod: AlgodClient
   /** Indexer client instance */
-  indexer: Indexer
+  indexer: IndexerClient
   /** KMD client instance */
-  kmd: Kmd
+  kmd: KmdClient
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
@@ -33,7 +33,7 @@ export interface AlgorandTestAutomationContext {
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
-  waitForIndexerTransaction: (transactionId: string) => Promise<algosdk.indexerModels.TransactionResponse>
+  waitForIndexerTransaction: (transactionId: string) => Promise<TransactionResponse>
 }
 
 /**
@@ -53,13 +53,13 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** An optional algod client, if not specified then it will create one against `algodConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   algod?: AlgodClient
   /** An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
-  indexer?: Indexer
+  indexer?: IndexerClient
   /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
-  kmd?: Kmd
+  kmd?: KmdClient
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algod: AlgodClient, kmd?: Kmd) => Promise<Account>
+  accountGetter?: (algod: AlgodClient, kmd?: KmdClient) => Promise<Account>
 }
 
 /** An Algorand automated testing fixture */

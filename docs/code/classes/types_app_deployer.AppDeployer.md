@@ -53,7 +53,7 @@ const deployer = new AppDeployer(appManager, transactionSender, indexer)
 
 #### Defined in
 
-[src/types/app-deployer.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L131)
+[src/types/app-deployer.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L130)
 
 ## Properties
 
@@ -63,7 +63,7 @@ const deployer = new AppDeployer(appManager, transactionSender, indexer)
 
 #### Defined in
 
-[src/types/app-deployer.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L119)
+[src/types/app-deployer.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L118)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L116)
+[src/types/app-deployer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L115)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L118)
+[src/types/app-deployer.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L117)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L117)
+[src/types/app-deployer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L116)
 
 ## Methods
 
@@ -165,7 +165,7 @@ const deployResult = await deployer.deploy({
 
 #### Defined in
 
-[src/types/app-deployer.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L175)
+[src/types/app-deployer.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L174)
 
 ___
 
@@ -201,7 +201,7 @@ const result = await deployer.getCreatorAppsByName(creator)
 
 #### Defined in
 
-[src/types/app-deployer.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L498)
+[src/types/app-deployer.ts:497](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L497)
 
 ___
 
@@ -222,4 +222,4 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L472)
+[src/types/app-deployer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L471)

@@ -3,6 +3,7 @@ import {
   ALGORAND_ADDRESS_BYTE_LENGTH,
   ALGORAND_CHECKSUM_BYTE_LENGTH,
   arrayEqual,
+  decodeMsgpack,
   getAddress,
   hash,
   PUBLIC_KEY_BYTE_LENGTH,
@@ -17,6 +18,7 @@ import {
 } from './transactions/signed-transaction'
 import { getTransactionId, Transaction } from './transactions/transaction'
 import { AddressWithDelegatedLsigSigner, AddressWithTransactionSigner, TransactionSigner } from './signer'
+import { multiSignatureCodec } from './transactions/signed-transaction-meta'
 
 /**
  * Creates an empty multisignature signature from a list of participant addresses.
@@ -516,4 +518,14 @@ export class MultisigAccount implements AddressWithTransactionSigner {
       return signedMsigTxns
     }
   }
+}
+/**
+ * Decodes MsgPack bytes into a multi signature.
+ *
+ * @param encodedMultiSignature - The MsgPack encoded multi signature
+ * @returns The decoded MultisigSignature or an error if decoding fails.
+ */
+export function decodeMultiSignature(encodedMultiSignature: Uint8Array): MultisigSignature {
+  const decodedData = decodeMsgpack(encodedMultiSignature)
+  return multiSignatureCodec.decode(decodedData, 'msgpack')
 }

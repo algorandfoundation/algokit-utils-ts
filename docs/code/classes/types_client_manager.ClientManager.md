@@ -159,7 +159,7 @@ ___
 
 • `get` **algod**(): `AlgodClient`
 
-Returns an algosdk Algod API client.
+Returns an Algod API client.
 
 #### Returns
 
@@ -177,7 +177,7 @@ ___
 
 • `get` **indexer**(): `IndexerClient`
 
-Returns an algosdk Indexer API client or throws an error if it's not been provided.
+Returns an Indexer API client or throws an error if it's not been provided.
 
 #### Returns
 
@@ -199,7 +199,7 @@ ___
 
 • `get` **indexerIfPresent**(): `undefined` \| `IndexerClient`
 
-Returns an algosdk Indexer API client or `undefined` if it's not been provided.
+Returns an Indexer API client or `undefined` if it's not been provided.
 
 #### Returns
 
@@ -217,7 +217,7 @@ ___
 
 • `get` **kmd**(): `KmdClient`
 
-Returns an algosdk KMD API client or throws an error if it's not been provided.
+Returns a KMD API client or throws an error if it's not been provided.
 
 #### Returns
 
@@ -912,7 +912,7 @@ The Algod client
 
 #### Defined in
 
-[src/types/client-manager.ts:612](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L612)
+[src/types/client-manager.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L610)
 
 ___
 
@@ -1050,7 +1050,7 @@ The Indexer client
 
 #### Defined in
 
-[src/types/client-manager.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L637)
+[src/types/client-manager.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L635)
 
 ___
 
@@ -1076,7 +1076,7 @@ The Indexer client
 
 #### Defined in
 
-[src/types/client-manager.ts:656](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L656)
+[src/types/client-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L657)
 
 ___
 
@@ -1138,7 +1138,7 @@ The KMD client
 
 #### Defined in
 
-[src/types/client-manager.ts:672](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L672)
+[src/types/client-manager.ts:673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L673)
 
 ___
 
@@ -1163,4 +1163,4 @@ The KMD client
 
 #### Defined in
 
-[src/types/client-manager.ts:687](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L687)
+[src/types/client-manager.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L693)

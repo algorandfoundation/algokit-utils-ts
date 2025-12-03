@@ -1,8 +1,14 @@
 import { Address } from '@algorandfoundation/algokit-common'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Indexer } from '@algorandfoundation/sdk'
+import {
+  Application,
+  ApplicationsResponse,
+  AssetBalancesResponse,
+  IndexerClient,
+  MiniAssetHolding,
+  TransactionsResponse,
+} from '@algorandfoundation/algokit-indexer-client'
 import { LookupAssetHoldingsOptions } from './types/indexer'
-export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>
+export type SearchForTransactionsCriteria = Omit<NonNullable<Parameters<IndexerClient['searchForTransactions']>[0]>, 'limit' | 'next'>
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
 
@@ -10,32 +16,29 @@ const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerA
  * Looks up applications that were created by the given address; will automatically paginate through all data.
  * @param indexer An indexer instance
  * @param address The address of the creator to look up
- * @param getAll Whether or not to include deleted applications
+ * @param getAll Whether or not to include deleted applications. Default true.
  * @param paginationLimit The number of records to return per paginated request, default 1000
  * @returns The list of application results
  */
 export async function lookupAccountCreatedApplicationByAddress(
-  indexer: Indexer,
+  indexer: IndexerClient,
   address: string | Address,
-  getAll: boolean | undefined = undefined,
+  getAll: boolean = true,
   paginationLimit?: number,
-): Promise<algosdk.indexerModels.Application[]> {
+): Promise<Application[]> {
   return await executePaginatedRequest(
-    (response: algosdk.indexerModels.ApplicationsResponse | { message: string }) => {
+    (response: ApplicationsResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
       return response.applications
     },
     (nextToken) => {
-      let s = indexer
-        .lookupAccountCreatedApplications(address)
-        .includeAll(getAll)
-        .limit(paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT)
-      if (nextToken) {
-        s = s.nextToken(nextToken)
-      }
-      return s
+      return indexer.lookupAccountCreatedApplications(address, {
+        includeAll: getAll,
+        limit: paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT,
+        ...(nextToken && { next: nextToken }),
+      })
     },
   )
 }
@@ -49,33 +52,26 @@ export async function lookupAccountCreatedApplicationByAddress(
  * @returns The list of application results
  */
 export async function lookupAssetHoldings(
-  indexer: Indexer,
+  indexer: IndexerClient,
   assetId: number | bigint,
   options?: LookupAssetHoldingsOptions,
   paginationLimit?: number,
-): Promise<algosdk.indexerModels.MiniAssetHolding[]> {
+): Promise<MiniAssetHolding[]> {
   return await executePaginatedRequest(
-    (response: algosdk.indexerModels.AssetBalancesResponse | { message: string }) => {
+    (response: AssetBalancesResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
       return response.balances
     },
     (nextToken) => {
-      let s = indexer.lookupAssetBalances(Number(assetId)).limit(paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT)
-      if (options?.currencyGreaterThan !== undefined) {
-        s = s.currencyGreaterThan(options.currencyGreaterThan)
-      }
-      if (options?.currencyLessThan !== undefined) {
-        s = s.currencyLessThan(options.currencyLessThan)
-      }
-      if (options?.includeAll !== undefined) {
-        s = s.includeAll(options.includeAll)
-      }
-      if (nextToken) {
-        s = s.nextToken(nextToken)
-      }
-      return s
+      return indexer.lookupAssetBalances(assetId, {
+        limit: paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT,
+        ...(options?.currencyGreaterThan !== undefined && { currencyGreaterThan: options.currencyGreaterThan }),
+        ...(options?.currencyLessThan !== undefined && { currencyLessThan: options.currencyLessThan }),
+        ...(options?.includeAll !== undefined && { includeAll: options.includeAll }),
+        ...(nextToken && { next: nextToken }),
+      })
     },
   )
 }
@@ -88,13 +84,13 @@ export async function lookupAssetHoldings(
  * @returns The search results
  */
 export async function searchTransactions(
-  indexer: Indexer,
-  searchCriteria: (s: SearchForTransactions) => SearchForTransactions,
+  indexer: IndexerClient,
+  searchCriteria: SearchForTransactionsCriteria,
   paginationLimit?: number,
-): Promise<algosdk.indexerModels.TransactionsResponse> {
+): Promise<TransactionsResponse> {
   let currentRound = 0n
   const transactions = await executePaginatedRequest(
-    (response: algosdk.indexerModels.TransactionsResponse | { message: string }) => {
+    (response: TransactionsResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
@@ -104,24 +100,24 @@ export async function searchTransactions(
       return response.transactions
     },
     (nextToken) => {
-      let s = searchCriteria(indexer.searchForTransactions()).limit(paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT)
-      if (nextToken) {
-        s = s.nextToken(nextToken)
-      }
-      return s
+      return indexer.searchForTransactions({
+        ...searchCriteria,
+        limit: paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT,
+        next: nextToken,
+      })
     },
   )
 
-  return new algosdk.indexerModels.TransactionsResponse({
+  return {
     currentRound,
     nextToken: undefined,
-    transactions: transactions,
-  })
+    transactions,
+  } satisfies TransactionsResponse
 }
 
 // https://dev.algorand.co/reference/rest-apis/indexer
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function executePaginatedRequest<TResult, TRequest extends { do: () => Promise<any> }>(
+export async function executePaginatedRequest<TResult, TRequest extends Promise<any>>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extractItems: (response: any) => TResult[],
   buildRequest: (nextToken?: string) => TRequest,
@@ -131,7 +127,7 @@ export async function executePaginatedRequest<TResult, TRequest extends { do: ()
   let nextToken: string | undefined = undefined
   while (true) {
     const request = buildRequest(nextToken)
-    const response = await request.do()
+    const response = await request
     const items = extractItems(response)
     if (items == null || items.length === 0) {
       break

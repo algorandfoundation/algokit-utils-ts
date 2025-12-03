@@ -23,7 +23,7 @@ describe('indexer-lookup', () => {
     const { transaction } = await sendTestTransaction()
     await waitForIndexer()
 
-    const txn = await algorand.client.indexer.lookupTransactionByID(transaction.txID()).do()
+    const txn = await algorand.client.indexer.lookupTransactionById(transaction.txID())
 
     expect(txn.transaction.id).toBe(transaction.txID())
     expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
@@ -31,9 +31,9 @@ describe('indexer-lookup', () => {
 
   test('Account is found by id', async () => {
     const { algorand, testAccount } = localnet.context
-    await runWhenIndexerCaughtUp(() => algorand.client.indexer.lookupAccountByID(testAccount.addr).do())
+    await runWhenIndexerCaughtUp(() => algorand.client.indexer.lookupAccountById(testAccount.addr))
 
-    const account = await algorand.client.indexer.lookupAccountByID(testAccount.addr).do()
+    const account = await algorand.client.indexer.lookupAccountById(testAccount.addr)
 
     expect(account.account.address).toBe(testAccount.addr.toString())
   }, 20_000)
@@ -51,7 +51,11 @@ describe('indexer-lookup', () => {
 
     const transactions = await indexer.searchTransactions(
       algorand.client.indexer,
-      (s) => s.txType('pay').addressRole('sender').address(testAccount),
+      {
+        txType: 'pay',
+        addressRole: 'sender',
+        address: testAccount.addr,
+      },
       1,
     )
 

@@ -1,5 +1,3 @@
-import { TokenHeader } from '@algorandfoundation/sdk'
-
 /** Config for an Algorand SDK client. */
 export interface AlgoClientConfig {
   /** Base URL of the server e.g. http://localhost, https://testnet-api.algonode.cloud/, etc. */
@@ -7,7 +5,7 @@ export interface AlgoClientConfig {
   /** The port to use e.g. 4001, 443, etc. */
   port?: string | number
   /** The token to use for API authentication (or undefined if none needed) - can be a string, or an object with the header key => value */
-  token?: string | TokenHeader
+  token?: string | { [name: string]: string }
 }
 
 /** Configuration for algod, indexer and kmd clients. */

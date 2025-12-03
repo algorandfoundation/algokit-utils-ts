@@ -57,6 +57,9 @@ const LogicSignatureMeta: ObjectModelMetadata<LogicSignature> = {
   ],
 }
 
+export const multiSignatureCodec = new ObjectModelCodec<MultisigSignature>(MultisigSignatureMeta)
+export const logicSignatureCodec = new ObjectModelCodec<LogicSignature>(LogicSignatureMeta)
+
 /**
  * Metadata for SignedTransaction
  */
@@ -75,14 +78,16 @@ export const SignedTransactionMeta: ObjectModelMetadata<SignedTransaction> = {
       name: 'multiSignature',
       wireKey: 'msig',
       optional: true,
-      codec: new ObjectModelCodec(MultisigSignatureMeta),
+      codec: multiSignatureCodec,
     },
     {
       name: 'logicSignature',
       wireKey: 'lsig',
       optional: true,
-      codec: new ObjectModelCodec(LogicSignatureMeta),
+      codec: logicSignatureCodec,
     },
     { name: 'authAddress', wireKey: 'sgnr', optional: true, codec: addressCodec },
   ],
 }
+
+export const signedTransactionCodec = new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta)

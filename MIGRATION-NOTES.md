@@ -55,3 +55,5 @@ A collection of random notes pop up during the migration process.
 - TODO: move ProgramSourceMap
 - trace field at err.traces[].trace is now a typed value, rather than a map.
 - Does lmsig stand for logicMultiSignature? We use logicMultiSignature in our code, as we use multiSignature instead of msig in the Transaction type. An alternative is to use msig and lmsig, like algosdk does?
+- searchCriteria param for indexer-lookup.ts searchTransactions() method is an object, rather than a function which allows chained configuration
+- In multisig subsignatures we use address. Should we call this publicKey and use a Uint8Array value? This would make interop/consistenct between KMD and Indexer nicer too.

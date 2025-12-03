@@ -36,4 +36,4 @@ Whether the given genesis ID is associated with a LocalNet network
 
 #### Defined in
 
-[src/types/network-client.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L42)
+[src/types/network-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L40)

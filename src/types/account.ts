@@ -9,7 +9,6 @@ import {
 import { Address } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, makeBasicAccountTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
-import * as algosdk from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 
 /**

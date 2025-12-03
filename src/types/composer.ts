@@ -24,7 +24,6 @@ import {
   groupTransactions,
   makeEmptyTransactionSigner,
 } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'

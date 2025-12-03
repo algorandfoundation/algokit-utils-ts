@@ -36,7 +36,7 @@ General purpose logger type, compatible with Winston and others.
 
 #### Defined in
 
-[src/types/logging.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L5)
+[packages/common/src/logger.ts:2](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/logger.ts#L2)
 
 ## Variables
 
@@ -48,7 +48,7 @@ A logger implementation that writes to console
 
 #### Defined in
 
-[src/types/logging.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L14)
+[src/types/logging.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L8)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/types/logging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L22)
+[src/types/logging.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L16)
 
 ___
 
@@ -70,7 +70,7 @@ A logger implementation that does nothing
 
 #### Defined in
 
-[src/types/logging.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L47)
+[src/types/logging.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L41)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/types/logging.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L30)
+[src/types/logging.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L24)
 
 ___
 
@@ -90,4 +90,4 @@ ___
 
 #### Defined in
 
-[src/types/logging.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L38)
+[src/types/logging.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L32)
