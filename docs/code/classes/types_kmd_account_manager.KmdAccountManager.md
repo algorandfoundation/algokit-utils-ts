@@ -79,7 +79,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `walletName` | `string` |
-| `predicateOrAddress?` | `string` \| `Address` \| (`account`: `Record`\<`string`, `any`\>) => `boolean` |
+| `predicateOrAddress?` | `string` \| (`account`: `Record`\<`string`, `any`\>) => `boolean` |
 | `sender?` | `string` \| `Address` |
 
 #### Returns

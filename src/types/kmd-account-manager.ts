@@ -71,7 +71,7 @@ export class KmdAccountManager {
   private async findWalletAccount(
     walletName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    predicateOrAddress?: ((account: Record<string, any>) => boolean) | string | Address,
+    predicateOrAddress?: ((account: Record<string, any>) => boolean) | string,
     sender?: string | Address,
   ): Promise<(TransactionSignerAccount & { account: SigningAccount }) | undefined> {
     const kmd = await this.kmd()
