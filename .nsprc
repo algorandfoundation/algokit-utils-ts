@@ -1,1 +1,7 @@
-{}
+{
+  "1109842": {
+    "active": true,
+    "notes": "Bundled dependency in NPM, which cannot be overriden and has no update available yet.",
+    "expiry": "2026-01-28"
+  }
+}
