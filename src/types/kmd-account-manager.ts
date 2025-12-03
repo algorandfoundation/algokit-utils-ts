@@ -1,3 +1,4 @@
+import { Account } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
@@ -64,8 +65,7 @@ export class KmdAccountManager {
    */
   public async getWalletAccount(
     walletName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    predicate?: (account: Record<string, any>) => boolean,
+    predicate?: (account: Account) => boolean,
     sender?: string | Address,
   ): Promise<(AddressWithSigner & { account: SigningAccount }) | undefined> {
     const kmd = await this.kmd()

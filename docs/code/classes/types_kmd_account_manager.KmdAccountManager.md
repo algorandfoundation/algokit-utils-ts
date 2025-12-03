@@ -45,7 +45,7 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L21)
+[src/types/kmd-account-manager.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L22)
 
 ## Properties
 
@@ -55,7 +55,7 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L14)
+[src/types/kmd-account-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L15)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L15)
+[src/types/kmd-account-manager.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L16)
 
 ## Methods
 
@@ -145,7 +145,7 @@ Returns an Algorand signing account with private key loaded from the given KMD w
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `walletName` | `string` | The name of the wallet to retrieve an account from |
-| `predicate?` | (`account`: `Record`\<`string`, `any`\>) => `boolean` | An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
+| `predicate?` | (`account`: `Account`) => `boolean` | An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
 | `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
 
 #### Returns
@@ -165,7 +165,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L65)
+[src/types/kmd-account-manager.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L66)
 
 ___
 
@@ -179,4 +179,4 @@ ___
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L30)
+[src/types/kmd-account-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L31)
