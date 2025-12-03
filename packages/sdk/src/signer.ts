@@ -1,4 +1,4 @@
-import type { SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
+import type { SignedTransaction, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { encodeSignedTransaction, encodeTransaction } from '@algorandfoundation/algokit-transact'
 import { LogicSigAccount } from './logicsig.js'
 import { MultisigMetadata } from './multisig.js'
@@ -6,16 +6,6 @@ import { mergeMultisigTransactions, signMultisigTransaction } from './multisigSi
 import * as nacl from './nacl/naclWrappers.js'
 import { signLogicSigTransactionObject } from './signing.js'
 import Account from './types/account.js'
-
-/**
- * This type represents a function which can sign transactions from an atomic transaction group.
- * @param txnGroup - The atomic group containing transactions to be signed
- * @param indexesToSign - An array of indexes in the atomic transaction group that should be signed
- * @returns A promise which resolves an array of encoded signed transactions. The length of the
- *   array will be the same as the length of indexesToSign, and each index i in the array
- *   corresponds to the signed transaction from txnGroup[indexesToSign[i]]
- */
-export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
 
 /**
  * Create a TransactionSigner that can sign transactions for the provided basic Account.
