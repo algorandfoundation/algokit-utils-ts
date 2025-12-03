@@ -1,19 +1,19 @@
-import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import {
-  addressArrayCodec,
-  addressCodec,
   Address,
   ArrayCodec,
+  MapCodec,
+  ObjectModelCodec,
+  addressArrayCodec,
+  addressCodec,
   bigIntCodec,
   booleanCodec,
   bytesArrayCodec,
   bytesCodec,
-  MapCodec,
-  ObjectModelCodec,
   numberCodec,
   stringCodec,
   type ObjectModelMetadata,
 } from '@algorandfoundation/algokit-common'
+import { SignedTransactionMeta, type SignedTransaction } from '@algorandfoundation/algokit-transact'
 
 /** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
 export type BlockEvalDelta = {
@@ -144,7 +144,7 @@ export const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
   kind: 'object',
   fields: [
     {
-      name: 'signedTransaction',
+      name: 'signedTxn',
       flattened: true,
       optional: false,
       codec: new ObjectModelCodec(SignedTransactionMeta),
@@ -162,7 +162,7 @@ export const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
  * SignedTxnInBlock is a SignedTransaction with additional ApplyData and block-specific metadata.
  */
 export type SignedTxnInBlock = {
-  signedTransaction: SignedTxnWithAD
+  signedTxn: SignedTxnWithAD
   hasGenesisId?: boolean
   hasGenesisHash?: boolean
 }
@@ -172,7 +172,7 @@ export const SignedTxnInBlockMeta: ObjectModelMetadata<SignedTxnInBlock> = {
   kind: 'object',
   fields: [
     {
-      name: 'signedTransaction',
+      name: 'signedTxn',
       flattened: true,
       optional: false,
       codec: new ObjectModelCodec(SignedTxnWithADMeta),
