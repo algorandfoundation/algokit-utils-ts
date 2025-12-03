@@ -1,17 +1,19 @@
+import { Account } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
+import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
+import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { SigningAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { TransactionComposer } from './composer'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
 export class KmdAccountManager {
   private _clientManager: Omit<ClientManager, 'kmd'>
-  private _kmd?: algosdk.Kmd | null
+  private _kmd?: KmdClient | null
 
   /**
    * Create a new KMD manager.
@@ -26,7 +28,7 @@ export class KmdAccountManager {
     }
   }
 
-  async kmd(): Promise<algosdk.Kmd> {
+  async kmd(): Promise<KmdClient> {
     if (this._kmd === undefined) {
       if (await this._clientManager.isLocalNet()) {
         const { kmdConfig } = ClientManager.getConfigFromEnvironmentOrLocalNet()
@@ -63,24 +65,21 @@ export class KmdAccountManager {
    */
   public async getWalletAccount(
     walletName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    predicate?: (account: Record<string, any>) => boolean,
+    predicate?: (account: Account) => boolean,
     sender?: string | Address,
   ): Promise<(AddressWithSigner & { account: SigningAccount }) | undefined> {
     const kmd = await this.kmd()
 
     const walletsResponse = await kmd.listWallets()
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wallet = walletsResponse.wallets.filter((w: any) => w.name === walletName)
+    const wallet = walletsResponse.wallets.filter((w) => w.name === walletName)
     if (wallet.length === 0) {
       return undefined
     }
 
     const walletId = wallet[0].id
 
-    const walletHandle = (await kmd.initWalletHandle(walletId, '')).wallet_handle_token
-    const addresses = (await kmd.listKeys(walletHandle)).addresses
+    const walletHandle = (await kmd.initWalletHandle({ walletId, walletPassword: '' })).walletHandleToken
+    const addresses = (await kmd.listKeysInWallet({ walletHandleToken: walletHandle })).addresses
 
     let i = 0
     if (predicate) {
@@ -97,7 +96,12 @@ export class KmdAccountManager {
       return undefined
     }
 
-    const accountKey = (await kmd.exportKey(walletHandle, '', addresses[i])).private_key
+    const accountKey = (
+      await kmd.exportKey({
+        walletHandleToken: walletHandle,
+        address: addresses[i],
+      })
+    ).privateKey
 
     const accountMnemonic = algosdk.secretKeyToMnemonic(accountKey)
 
@@ -144,9 +148,9 @@ export class KmdAccountManager {
     const kmd = await this.kmd()
 
     // None existed: create the KMD wallet instead
-    const walletId = (await kmd.createWallet(name, '')).wallet.id
-    const walletHandle = (await kmd.initWalletHandle(walletId, '')).wallet_handle_token
-    await kmd.generateKey(walletHandle)
+    const walletId = (await kmd.createWallet({ walletName: name, walletPassword: '' })).wallet.id
+    const walletHandle = (await kmd.initWalletHandle({ walletId, walletPassword: '' })).walletHandleToken
+    await kmd.generateKey({ walletHandleToken: walletHandle })
 
     // Get the account from the new KMD wallet
     const account = (await this.getWalletAccount(name))!

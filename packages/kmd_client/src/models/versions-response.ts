@@ -6,7 +6,7 @@ import { stringArrayCodec } from '@algorandfoundation/algokit-common'
  * friendly:VersionsResponse
  */
 export type VersionsResponse = {
-  versions?: string[]
+  versions: string[]
 }
 
 export const VersionsResponseMeta: ObjectModelMetadata<VersionsResponse> = {
@@ -16,7 +16,7 @@ export const VersionsResponseMeta: ObjectModelMetadata<VersionsResponse> = {
     {
       name: 'versions',
       wireKey: 'versions',
-      optional: true,
+      optional: false,
       codec: stringArrayCodec,
     },
   ],

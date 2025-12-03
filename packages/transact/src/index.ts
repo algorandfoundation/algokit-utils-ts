@@ -42,6 +42,7 @@ export * from './transactions/state-proof'
 export {
   addressFromMultisigSignature,
   applyMultisigSubsignature,
+  decodeMultiSignature,
   mergeMultisignatures,
   newMultisigSignature,
   participantsFromMultisigSignature,

@@ -15,6 +15,7 @@ from pathlib import Path
 
 from oas_generator import constants
 from oas_generator.generator.template_engine import CodeGenerator
+from oas_generator.loader import resolve_spec
 from oas_generator.utils.file_utils import write_files_to_disk
 
 # Exit codes for better error reporting
@@ -32,15 +33,15 @@ def parse_command_line_args(args: list[str] | None = None) -> argparse.Namespace
         epilog="""
 Examples:
   %(prog)s ../specs/algod.oas3.json --output ./packages/algod_client --package-name algod_client
-  %(prog)s ../specs/indexer.oas3.json -o ./packages/indexer_client -p indexer_client
+  %(prog)s https://example.com/spec.json -o ./packages/client -p client
         """,
     )
 
     parser.add_argument(
-        "spec_file",
-        type=Path,
-        help="Path to OpenAPI specification file (JSON or YAML)",
-        metavar="SPEC_FILE",
+        "spec",
+        type=str,
+        help="Path or URL to OpenAPI specification",
+        metavar="SPEC",
     )
     parser.add_argument(
         "--output",
@@ -78,10 +79,6 @@ Examples:
     )
 
     parsed_args = parser.parse_args(args)
-
-    # Validate inputs
-    if not parsed_args.spec_file.exists():
-        parser.error(f"Specification file not found: {parsed_args.spec_file!s}")
 
     return parsed_args
 
@@ -129,11 +126,14 @@ def main(args: list[str] | None = None) -> int:
     parsed_args = parse_command_line_args(args)
 
     try:
+        # Resolve spec (handles local paths and URLs)
+        spec_path = resolve_spec(parsed_args.spec)
+
         with backup_and_prepare_output_dir(parsed_args.output_dir):
             generator = CodeGenerator(template_dir=parsed_args.template_dir)
 
             generated_files = generator.generate(
-                parsed_args.spec_file,
+                spec_path,
                 parsed_args.output_dir,
                 parsed_args.package_name,
                 custom_description=parsed_args.custom_description,
@@ -155,7 +155,7 @@ def main(args: list[str] | None = None) -> int:
 
     except FileNotFoundError:
         print(
-            f"Error: Specification file not found: {parsed_args.spec_file!s}",
+            f"Error: Specification file not found: {parsed_args.spec!s}",
             file=sys.stderr,
         )
         return EXIT_FILE_NOT_FOUND

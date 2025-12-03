@@ -2,8 +2,6 @@
 
 Client management is one of the core capabilities provided by AlgoKit Utils. It allows you to create (auto-retry) [algod](https://dev.algorand.co/reference/rest-apis/algod), [indexer](https://dev.algorand.co/reference/rest-apis/indexer) and [kmd](https://dev.algorand.co/reference/rest-apis/kmd) clients against various networks resolved from environment or specified configuration.
 
-Any AlgoKit Utils function that needs one of these clients will take the underlying algosdk classes (`algosdk.Algodv2`, `algosdk.Indexer`, `algosdk.Kmd`) so inline with the [Modularity](../README.md#core-principles) principle you can use existing logic to get instances of these clients without needing to use the Client management capability if you prefer, including use of libraries like [useWallet](https://github.com/TxnLab/use-wallet) that have their own configuration mechanism.
-
 To see some usage examples check out the [automated tests](../../src/types/client-manager.spec.ts).
 
 ## `ClientManager`
@@ -27,7 +25,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 ## Network configuration
 
-The network configuration is specified using the [`AlgoClientConfig`](../code/interfaces/types_network_client.AlgoClientConfig.md) interface. This same interface is used to specify the config for [algod](https://algorand.github.io/js-algorand-sdk/classes/Algodv2.html), [indexer](https://algorand.github.io/js-algorand-sdk/classes/Indexer.html) and [kmd](https://algorand.github.io/js-algorand-sdk/classes/Kmd.html) SDK clients.
+The network configuration is specified using the [`AlgoClientConfig`](../code/interfaces/types_network_client.AlgoClientConfig.md) interface.
 
 There are a number of ways to produce one of these configuration objects:
 

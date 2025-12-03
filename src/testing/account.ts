@@ -1,9 +1,9 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
+import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Kmd } from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
 import { GetTestAccountParams } from '../types/testing'
 
@@ -22,7 +22,7 @@ import { GetTestAccountParams } from '../types/testing'
 export async function getTestAccount(
   params: GetTestAccountParams,
   algod: AlgodClient,
-  kmd?: Kmd,
+  kmd?: KmdClient,
 ): Promise<Address & Account & AddressWithSigner>
 /**
  * Creates an ephemeral Algorand account for the purposes of testing.
@@ -37,7 +37,7 @@ export async function getTestAccount(params: GetTestAccountParams, algorand: Alg
 export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
   algodOrAlgorandClient: AlgodClient | AlgorandClient,
-  kmd?: Kmd,
+  kmd?: KmdClient,
 ): Promise<Address & Account & AddressWithSigner> {
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient

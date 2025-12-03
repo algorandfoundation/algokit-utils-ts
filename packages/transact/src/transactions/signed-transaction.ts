@@ -1,7 +1,6 @@
-import { ObjectModelCodec, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
-import { SignedTransactionMeta } from './signed-transaction-meta'
+import { Address, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { signedTransactionCodec } from './signed-transaction-meta'
 import { Transaction, validateTransaction } from './transaction'
-import { Address } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a signed Algorand transaction
@@ -103,8 +102,6 @@ export type LogicSignature = {
    */
   logicMultiSignature?: MultisigSignature
 }
-
-const signedTransactionCodec = new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta)
 
 /**
  * Encode signed transactions to MsgPack for sending on the network.

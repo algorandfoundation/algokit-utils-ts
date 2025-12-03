@@ -1,2 +1,2 @@
 // Barrel file for services
-export { KmdApi } from './api.service'
+export { KmdApi } from './api-service'

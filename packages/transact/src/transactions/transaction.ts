@@ -1,7 +1,6 @@
 import {
   Address,
   MAX_TX_GROUP_SIZE,
-  ObjectModelCodec,
   SIGNATURE_ENCODING_INCR,
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
@@ -21,7 +20,7 @@ import { HeartbeatTransactionFields } from './heartbeat'
 import { KeyRegistrationTransactionFields, validateKeyRegistrationTransaction } from './key-registration'
 import { PaymentTransactionFields } from './payment'
 import { StateProofTransactionFields } from './state-proof'
-import { TransactionMeta } from './transaction-meta'
+import { transactionCodec } from './transaction-meta'
 import { TransactionType } from './transaction-type'
 
 /**
@@ -237,8 +236,6 @@ export function validateTransaction(transaction: Transaction): void {
     throw new Error(`${typeName} validation failed: ${errorMessages.join('\n')}`)
   }
 }
-
-const transactionCodec = new ObjectModelCodec<Transaction>(TransactionMeta)
 
 /**
  * Encode the transaction without the domain separation (e.g. "TX") prefix

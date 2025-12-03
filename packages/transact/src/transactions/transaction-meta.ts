@@ -874,3 +874,5 @@ export const TransactionMeta: ObjectModelMetadata<Transaction> = {
     },
   ],
 }
+
+export const transactionCodec = new ObjectModelCodec<Transaction>(TransactionMeta)

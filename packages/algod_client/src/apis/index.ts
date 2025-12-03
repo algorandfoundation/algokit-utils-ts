@@ -1,2 +1,2 @@
 // Barrel file for services
-export { AlgodApi } from './api.service'
+export { AlgodApi } from './api-service'

@@ -1,12 +1,12 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1DELETEKeyRequest is the request for `DELETE /v1/key`
+ * The request for `DELETE /v1/key`
  */
 export type DeleteKeyRequest = {
-  address?: string
-  walletHandleToken?: string
+  address: Address
+  walletHandleToken: string
   walletPassword?: string
 }
 
@@ -17,13 +17,13 @@ export const DeleteKeyRequestMeta: ObjectModelMetadata<DeleteKeyRequest> = {
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
-      codec: stringCodec,
+      optional: false,
+      codec: addressCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {

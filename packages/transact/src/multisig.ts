@@ -1,5 +1,6 @@
-import { Address, MULTISIG_DOMAIN_SEPARATOR, PUBLIC_KEY_BYTE_LENGTH, hash } from '@algorandfoundation/algokit-common'
+import { Address, MULTISIG_DOMAIN_SEPARATOR, PUBLIC_KEY_BYTE_LENGTH, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
 import { MultisigSignature, MultisigSubsignature } from './transactions/signed-transaction'
+import { multiSignatureCodec } from './transactions/signed-transaction-meta'
 
 /**
  * Creates an empty multisignature signature from a list of participant addresses.
@@ -123,4 +124,15 @@ export function mergeMultisignatures(multisigSignatureA: MultisigSignature, mult
     threshold: multisigSignatureA.threshold,
     subsignatures: mergedSubsignatures,
   }
+}
+
+/**
+ * Decodes MsgPack bytes into a multi signature.
+ *
+ * @param encodedMultiSignature - The MsgPack encoded multi signature
+ * @returns The decoded MultisigSignature or an error if decoding fails.
+ */
+export function decodeMultiSignature(encodedMultiSignature: Uint8Array): MultisigSignature {
+  const decodedData = decodeMsgpack(encodedMultiSignature)
+  return multiSignatureCodec.decode(decodedData, 'msgpack')
 }
