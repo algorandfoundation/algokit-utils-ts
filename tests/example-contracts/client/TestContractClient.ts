@@ -6,8 +6,7 @@
  */
 import { Arc56Contract } from '@algorandfoundation/algokit-abi'
 import { SimulateResponse } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionSigner } from '@algorandfoundation/sdk'
+import { OnApplicationComplete, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { type AlgorandClient } from '../../../src/types/algorand-client'
 import {
   AppClientBareCallParams,

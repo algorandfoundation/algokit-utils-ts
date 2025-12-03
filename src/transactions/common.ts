@@ -1,7 +1,6 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
-import { TransactionSigner } from '@algorandfoundation/sdk'
+import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { encodeLease } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 
