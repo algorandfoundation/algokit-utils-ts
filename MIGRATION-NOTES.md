@@ -59,4 +59,4 @@ A collection of random notes pop up during the migration process.
 - Doc: Mock server + Rust + polytest
 - subscriber:
   - transform-complex-txn.spec.ts calls `txId` but the type is Transaction, not wrapper
-  - signedTransaction nested twice in block data
+- TODO: PD - re export and rename TransactionWrapper to Transaction
