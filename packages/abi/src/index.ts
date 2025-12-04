@@ -1,5 +1,6 @@
 export {
   ABIMethod,
+  arc56MethodToABIMethod,
   argTypeIsAbiType,
   argTypeIsReference,
   argTypeIsTransaction,

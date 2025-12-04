@@ -202,7 +202,7 @@ export function getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contra
   }
 }
 
-function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {
+export function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {
   if (typeof method.name !== 'string' || typeof method.returns !== 'object' || !Array.isArray(method.args)) {
     throw new Error('Invalid ABIMethod parameters')
   }
