@@ -1,5 +1,5 @@
 import type { BaseHttpRequest } from '../core/base-http-request'
-import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime'
+import { encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime'
 import { ReadableAddress, type EncodingFormat } from '@algorandfoundation/algokit-common'
 import { concatArrays } from '@algorandfoundation/algokit-common'
 import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact'
@@ -16,8 +16,6 @@ import type {
   BoxesResponse,
   CompileResponse,
   DisassembleResponse,
-  DryrunRequest,
-  DryrunResponse,
   Genesis,
   GetBlockTimeStampOffsetResponse,
   GetSyncRoundResponse,
@@ -50,8 +48,6 @@ import {
   BoxesResponseMeta,
   CompileResponseMeta,
   DisassembleResponseMeta,
-  DryrunRequestMeta,
-  DryrunResponseMeta,
   GenesisMeta,
   GetBlockTimeStampOffsetResponseMeta,
   GetSyncRoundResponseMeta,
@@ -738,31 +734,6 @@ export class AlgodApi {
     })
 
     return decodeJson(payload, DisassembleResponseMeta)
-  }
-
-  /**
-   * Executes TEAL program(s) in context and returns debugging information about the execution. This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
-   */
-  async tealDryrun(body?: DryrunRequest): Promise<DryrunResponse> {
-    const headers: Record<string, string> = {}
-    const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = this.mimeTypeFor(responseFormat)
-
-    const bodyMeta = DryrunRequestMeta
-    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
-    if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
-
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
-      method: 'POST',
-      url: '/v2/teal/dryrun',
-      path: {},
-      query: {},
-      headers,
-      body: serializedBody,
-    })
-
-    return decodeJson(payload, DryrunResponseMeta)
   }
 
   private async _transactionParams(): Promise<TransactionParametersResponse> {
