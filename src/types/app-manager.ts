@@ -45,6 +45,8 @@ export interface AppInformation {
   globalByteSlices: number
   /** Any extra pages that are needed for the smart contract. */
   extraProgramPages?: number
+  /** The number of updates to the application programs */
+  version?: number
 }
 
 /**
@@ -251,6 +253,7 @@ export class AppManager {
       globalByteSlices: Number(app.params.globalStateSchema?.numByteSlice ?? 0),
       extraProgramPages: Number(app.params.extraProgramPages ?? 0),
       globalState: AppManager.decodeAppState(app.params.globalState ?? []),
+      version: app.params.version,
     }
   }
 
