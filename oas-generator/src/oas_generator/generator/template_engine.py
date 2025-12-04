@@ -123,6 +123,11 @@ class SchemaProcessor:
             {"schemas": filtered_schemas},
         )
 
+        files[models_dir / constants.MODELS_META_FILE] = self.renderer.render(
+            constants.MODELS_META_TEMPLATE,
+            {"schemas": filtered_schemas},
+        )
+
         return files
 
     def _create_model_context(
@@ -1067,28 +1072,34 @@ class CodeGenerator:
                 {"spec": spec},
             )
 
-            # Ensure index exports include the custom models
-            extras = (
+            # Ensure index exports include the custom models (types only)
+            index_extras = (
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { Block } from './block';\n"
                 "export type { BlockHeader } from './block';\n"
-                "export { BlockHeaderMeta } from './block';\n"
                 "export type { SignedTxnInBlock } from './block';\n"
-                "export { SignedTxnInBlockMeta } from './block';\n"
                 "export type { SignedTxnWithAD } from './block';\n"
-                "export { SignedTxnWithADMeta } from './block';\n"
                 "export type { ApplyData } from './block';\n"
-                "export { ApplyDataMeta } from './block';\n"
                 "export type { BlockAppEvalDelta } from './block';\n"
-                "export { BlockAppEvalDeltaMeta } from './block';\n"
                 "export type { BlockEvalDelta } from './block';\n"
-                "export { BlockEvalDeltaMeta } from './block';\n"
                 "export type { BlockStateProofTrackingData } from './block';\n"
-                "export { BlockStateProofTrackingDataMeta } from './block';\n"
                 "export type { ParticipationUpdates } from './block';\n"
+            )
+            files[index_path] = files[index_path] + index_extras
+
+            # Add Meta exports for nested types in block.ts to model-meta.ts
+            meta_path = models_dir / constants.MODELS_META_FILE
+            meta_extras = (
+                "export { BlockHeaderMeta } from './block';\n"
+                "export { SignedTxnInBlockMeta } from './block';\n"
+                "export { SignedTxnWithADMeta } from './block';\n"
+                "export { ApplyDataMeta } from './block';\n"
+                "export { BlockAppEvalDeltaMeta } from './block';\n"
+                "export { BlockEvalDeltaMeta } from './block';\n"
+                "export { BlockStateProofTrackingDataMeta } from './block';\n"
                 "export { ParticipationUpdatesMeta } from './block';\n"
             )
-            files[index_path] = files[index_path] + extras
+            files[meta_path] = files[meta_path] + meta_extras
         elif service_class == "KmdApi":
             # Generate the custom typed models
             files[models_dir / "sign-multisig-request.ts"] = self.renderer.render(
