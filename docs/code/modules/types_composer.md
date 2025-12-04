@@ -348,7 +348,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L164)
+[src/types/composer.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L157)
 
 ___
 
@@ -427,7 +427,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L135)
+[src/types/composer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L128)
 
 ___
 
@@ -439,7 +439,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L141)
+[src/types/composer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L134)
 
 ___
 
@@ -451,7 +451,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L123)
+[src/types/composer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L116)
 
 ___
 
@@ -468,7 +468,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L178)
+[src/types/composer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L171)
 
 ___
 
@@ -492,7 +492,7 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:198](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L198)
+[src/types/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L191)
 
 ## Variables
 
@@ -502,4 +502,4 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L94)
+[src/types/composer.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L87)

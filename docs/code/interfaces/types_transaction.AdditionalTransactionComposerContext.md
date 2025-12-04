@@ -22,4 +22,4 @@ A map of transaction index in the `TransactionComposer` to the max fee that can 
 
 #### Defined in
 
-[src/types/transaction.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L155)
+[src/types/transaction.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L138)

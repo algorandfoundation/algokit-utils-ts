@@ -116,7 +116,7 @@ ___
 
 ### appCall
 
-• **appCall**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  } & \{ `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `ClearState` \| `DeleteApplication`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appCall**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  } & \{ `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `ClearState` \| `DeleteApplication`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Call a smart contract.
 
@@ -161,7 +161,7 @@ await algorand.send.appCall({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -171,7 +171,7 @@ await algorand.send.appCall({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -181,7 +181,7 @@ ___
 
 ### appCallMethodCall
 
-• **appCallMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appCallMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Call a smart contract via an ABI method.
 
@@ -238,7 +238,7 @@ await algorand.send.appCallMethodCall({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -248,7 +248,7 @@ await algorand.send.appCallMethodCall({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -258,7 +258,7 @@ ___
 
 ### appCreate
 
-• **appCreate**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appCreate**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Create a smart contract.
 
@@ -313,7 +313,7 @@ await algorand.send.appCreate({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -323,7 +323,7 @@ await algorand.send.appCreate({
 
 ##### Returns
 
-`Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -333,7 +333,7 @@ ___
 
 ### appCreateMethodCall
 
-• **appCreateMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appCreateMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Create a smart contract via an ABI method.
 
@@ -400,7 +400,7 @@ await algorand.send.appCreateMethodCall({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -410,7 +410,7 @@ await algorand.send.appCreateMethodCall({
 
 ##### Returns
 
-`Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -420,7 +420,7 @@ ___
 
 ### appDelete
 
-• **appDelete**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  } & \{ `onComplete?`: `DeleteApplication`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appDelete**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  } & \{ `onComplete?`: `DeleteApplication`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Delete a smart contract.
 
@@ -465,7 +465,7 @@ await algorand.send.appDelete({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -475,7 +475,7 @@ await algorand.send.appDelete({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -485,7 +485,7 @@ ___
 
 ### appDeleteMethodCall
 
-• **appDeleteMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appDeleteMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Delete a smart contract via an ABI method.
 
@@ -542,7 +542,7 @@ await algorand.send.appDeleteMethodCall({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -552,7 +552,7 @@ await algorand.send.appDeleteMethodCall({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -562,7 +562,7 @@ ___
 
 ### appUpdate
 
-• **appUpdate**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appUpdate**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Update a smart contract.
 
@@ -609,7 +609,7 @@ await algorand.send.appUpdate({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -619,7 +619,7 @@ await algorand.send.appUpdate({
 
 ##### Returns
 
-`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -629,7 +629,7 @@ ___
 
 ### appUpdateMethodCall
 
-• **appUpdateMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **appUpdateMethodCall**: (`params`: \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: (`undefined` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOp` \| `OptIn` \| `CloseOut` \| `UpdateApplication` \| `DeleteApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: BoxIdentifier \| BoxReference[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: ReadableAddress \| undefined ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `ABIMethod` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplication` ; `rejectVersion?`: `number` ; `rekeyTo?`: `ReadableAddress` ; `sender`: `ReadableAddress` ; `signer?`: `AddressWithSigner` \| `TransactionSigner` ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Update a smart contract via an ABI method.
 
@@ -688,7 +688,7 @@ await algorand.send.appUpdateMethodCall({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -698,7 +698,7 @@ await algorand.send.appUpdateMethodCall({
 
 ##### Returns
 
-`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -708,7 +708,7 @@ ___
 
 ### assetConfig
 
-• **assetConfig**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: `ReadableAddress` ; `freeze?`: `ReadableAddress` ; `manager?`: `ReadableAddress` ; `reserve?`: `ReadableAddress`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **assetConfig**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: `ReadableAddress` ; `freeze?`: `ReadableAddress` ; `manager?`: `ReadableAddress` ; `reserve?`: `ReadableAddress`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Configure an existing Algorand Standard Asset.
 
@@ -753,7 +753,7 @@ await algorand.send.assetConfig({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -763,7 +763,7 @@ await algorand.send.assetConfig({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -773,7 +773,7 @@ ___
 
 ### assetDestroy
 
-• **assetDestroy**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **assetDestroy**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Destroys an Algorand Standard Asset.
 
@@ -814,7 +814,7 @@ await algorand.send.assetDestroy({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -824,7 +824,7 @@ await algorand.send.assetDestroy({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -834,7 +834,7 @@ ___
 
 ### assetFreeze
 
-• **assetFreeze**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `account`: `ReadableAddress` ; `assetId`: `bigint` ; `frozen`: `boolean`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **assetFreeze**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `account`: `ReadableAddress` ; `assetId`: `bigint` ; `frozen`: `boolean`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Freeze or unfreeze an Algorand Standard Asset for an account.
 
@@ -873,7 +873,7 @@ await algorand.send.assetFreeze({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -883,7 +883,7 @@ await algorand.send.assetFreeze({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -893,7 +893,7 @@ ___
 
 ### assetOptIn
 
-• **assetOptIn**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **assetOptIn**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Opt an account into an Algorand Standard Asset.
 
@@ -930,7 +930,7 @@ await algorand.send.assetOptIn({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -940,7 +940,7 @@ await algorand.send.assetOptIn({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -950,7 +950,7 @@ ___
 
 ### assetTransfer
 
-• **assetTransfer**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: `ReadableAddress` ; `closeAssetTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **assetTransfer**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: `ReadableAddress` ; `closeAssetTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Transfer an Algorand Standard Asset.
 
@@ -992,7 +992,7 @@ await algorand.send.assetTransfer({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1002,7 +1002,7 @@ await algorand.send.assetTransfer({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1012,7 +1012,7 @@ ___
 
 ### offlineKeyRegistration
 
-• **offlineKeyRegistration**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **offlineKeyRegistration**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Register an offline key.
 
@@ -1046,7 +1046,7 @@ const result = await algorand.send.offlineKeyRegistration({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1056,7 +1056,7 @@ const result = await algorand.send.offlineKeyRegistration({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1066,7 +1066,7 @@ ___
 
 ### onlineKeyRegistration
 
-• **onlineKeyRegistration**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **onlineKeyRegistration**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Register an online key.
 
@@ -1112,7 +1112,7 @@ const result = await algorand.send.onlineKeyRegistration({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1122,7 +1122,7 @@ const result = await algorand.send.onlineKeyRegistration({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1132,7 +1132,7 @@ ___
 
 ### payment
 
-• **payment**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `closeRemainderTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+• **payment**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `closeRemainderTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Send a payment transaction to transfer Algo between accounts.
 
@@ -1177,7 +1177,7 @@ const result = await algorand.send.payment({
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1187,7 +1187,7 @@ const result = await algorand.send.payment({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1197,7 +1197,7 @@ const result = await algorand.send.payment({
 
 ### \_send
 
-▸ **_send**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **_send**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Type parameters
 
@@ -1211,14 +1211,14 @@ const result = await algorand.send.payment({
 | :------ | :------ |
 | `c` | (`c`: [`TransactionComposer`](types_composer.TransactionComposer.md)) => (`params`: `T`) => [`TransactionComposer`](types_composer.TransactionComposer.md) |
 | `log?` | `Object` |
-| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }) => `string` |
+| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }) => `string` |
 | `log.preLog?` | (`params`: `T`, `transaction`: `Transaction`) => `string` |
 
 #### Returns
 
 `fn`
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1228,7 +1228,7 @@ const result = await algorand.send.payment({
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1238,7 +1238,7 @@ ___
 
 ### \_sendAppCall
 
-▸ **_sendAppCall**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **_sendAppCall**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Type parameters
 
@@ -1252,14 +1252,14 @@ ___
 | :------ | :------ |
 | `c` | (`c`: [`TransactionComposer`](types_composer.TransactionComposer.md)) => (`params`: `T`) => [`TransactionComposer`](types_composer.TransactionComposer.md) |
 | `log?` | `Object` |
-| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }) => `string` |
+| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }) => `string` |
 | `log.preLog?` | (`params`: `T`, `transaction`: `Transaction`) => `string` |
 
 #### Returns
 
 `fn`
 
-▸ (`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1269,7 +1269,7 @@ ___
 
 ##### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1279,7 +1279,7 @@ ___
 
 ### \_sendAppCreateCall
 
-▸ **_sendAppCreateCall**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **_sendAppCreateCall**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Type parameters
 
@@ -1293,14 +1293,14 @@ ___
 | :------ | :------ |
 | `c` | (`c`: [`TransactionComposer`](types_composer.TransactionComposer.md)) => (`params`: `T`) => [`TransactionComposer`](types_composer.TransactionComposer.md) |
 | `log?` | `Object` |
-| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }) => `string` |
+| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }) => `string` |
 | `log.preLog?` | (`params`: `T`, `transaction`: `Transaction`) => `string` |
 
 #### Returns
 
 `fn`
 
-▸ (`params`): `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1310,7 +1310,7 @@ ___
 
 ##### Returns
 
-`Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `appAddress`: `Address` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1320,7 +1320,7 @@ ___
 
 ### \_sendAppUpdateCall
 
-▸ **_sendAppUpdateCall**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **_sendAppUpdateCall**\<`T`\>(`c`, `log?`): (`params`: `T` & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Type parameters
 
@@ -1334,14 +1334,14 @@ ___
 | :------ | :------ |
 | `c` | (`c`: [`TransactionComposer`](types_composer.TransactionComposer.md)) => (`params`: `T`) => [`TransactionComposer`](types_composer.TransactionComposer.md) |
 | `log?` | `Object` |
-| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }) => `string` |
+| `log.postLog?` | (`params`: `T`, `result`: \{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }) => `string` |
 | `log.preLog?` | (`params`: `T`, `transaction`: `Transaction`) => `string` |
 
 #### Returns
 
 `fn`
 
-▸ (`params`): `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ (`params`): `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 ##### Parameters
 
@@ -1351,7 +1351,7 @@ ___
 
 ##### Returns
 
-`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `return?`: `ABIReturn` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 #### Defined in
 
@@ -1361,7 +1361,7 @@ ___
 
 ### assetCreate
 
-▸ **assetCreate**(`params`): `Promise`\<\{ `assetId`: `bigint` ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **assetCreate**(`params`): `Promise`\<\{ `assetId`: `bigint` ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Create a new Algorand Standard Asset.
 
@@ -1376,7 +1376,7 @@ opted in to the asset and will hold all units after creation.
 
 #### Returns
 
-`Promise`\<\{ `assetId`: `bigint` ; `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `assetId`: `bigint` ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 The result of the asset create transaction and the transaction that was sent
 
@@ -1429,7 +1429,7 @@ ___
 
 ### assetOptOut
 
-▸ **assetOptOut**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+▸ **assetOptOut**(`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 Opt an account out of an Algorand Standard Asset.
 
@@ -1445,7 +1445,7 @@ is set to `false` (but then the account will lose the assets).
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper) ; `confirmations`: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md) ; `transactions`: [`TransactionWrapper`](types_transaction.TransactionWrapper.md)[] ; `txIds`: `string`[]  }\>
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `undefined` \| `string` ; `returns?`: `ABIReturn`[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
 
 The result of the asset opt-out transaction and the transaction that was sent
 

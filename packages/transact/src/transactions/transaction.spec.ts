@@ -56,7 +56,10 @@ describe('Transaction Validation', () => {
       ['encodeTransactionRaw', (params: TransactionParams) => encodeTransactionRaw(new Transaction(params))],
       ['estimateTransactionSize', (params: TransactionParams) => estimateTransactionSize(new Transaction(params))],
       ['txID', (params: TransactionParams) => new Transaction(params).txID()],
-      ['encodeSignedTransaction', (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), signature: EMPTY_SIGNATURE })],
+      [
+        'encodeSignedTransaction',
+        (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), signature: EMPTY_SIGNATURE }),
+      ],
     ])('should validate when calling %s', (_, sut) => {
       const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,

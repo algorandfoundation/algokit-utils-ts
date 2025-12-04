@@ -465,8 +465,7 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the asset opt-in transaction and the transaction that was sent
    */
   assetOptIn = this._send((c) => c.addAssetOptIn, {
-    preLog: (params, transaction) =>
-      `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
   })
   /**
    * Opt an account out of an Algorand Standard Asset.
