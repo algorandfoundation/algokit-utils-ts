@@ -1,6 +1,6 @@
 import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import { Transaction, validateTransaction } from '../src/transactions/transaction'
+import { TransactionParams, validateTransaction } from '../src/transactions/transaction'
 import { TransactionType } from '../src/transactions/transaction-type'
 import { testData } from './common'
 import {
@@ -71,7 +71,7 @@ describe('Payment', () => {
 
   describe('Payment Transaction Validation', () => {
     test('should validate valid payment transaction', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.Payment,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -86,7 +86,7 @@ describe('Payment', () => {
     })
 
     test('should validate payment transaction with zero amount', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.Payment,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -101,7 +101,7 @@ describe('Payment', () => {
     })
 
     test('should validate payment transaction with close remainder', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.Payment,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -118,7 +118,7 @@ describe('Payment', () => {
 
     test('should validate self-payment transaction', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.Payment,
         sender: senderAddress,
         firstValid: 1000n,

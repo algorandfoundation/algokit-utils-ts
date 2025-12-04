@@ -1,6 +1,6 @@
 import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import { Transaction, validateTransaction } from '../src/transactions/transaction'
+import { TransactionParams, validateTransaction } from '../src/transactions/transaction'
 import { TransactionType } from '../src/transactions/transaction-type'
 import { testData } from './common'
 import {
@@ -71,7 +71,7 @@ describe('AssetTransfer', () => {
 
   describe('Asset Transfer Validation', () => {
     test('should throw error when asset ID is zero', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -87,7 +87,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate valid asset transfer transaction', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -104,7 +104,7 @@ describe('AssetTransfer', () => {
 
     test('should validate asset opt-in transaction', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: senderAddress,
         firstValid: 1000n,
@@ -120,7 +120,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate asset transfer with clawback', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Clawback address
         firstValid: 1000n,
@@ -137,7 +137,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate asset opt-out transaction', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -154,7 +154,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate asset transfer with both clawback and close remainder', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -173,7 +173,7 @@ describe('AssetTransfer', () => {
 
     test('should validate asset transfer to self', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: senderAddress,
         firstValid: 1000n,
@@ -189,7 +189,7 @@ describe('AssetTransfer', () => {
     })
 
     test('should validate asset close-out transaction (zero amount with close remainder)', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,

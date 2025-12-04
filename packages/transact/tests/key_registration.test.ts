@@ -1,6 +1,6 @@
 import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import { Transaction, validateTransaction } from '../src/transactions/transaction'
+import { TransactionParams, validateTransaction } from '../src/transactions/transaction'
 import { TransactionType } from '../src/transactions/transaction-type'
 import { testData } from './common'
 import {
@@ -74,7 +74,7 @@ describe('Key Registration', () => {
   describe('Key Registration Validation', () => {
     describe('Online Key Registration Validation', () => {
       test('should throw error when vote key is missing for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -93,7 +93,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when selection key is missing for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -112,7 +112,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when state proof key is missing for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -131,7 +131,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when vote first is missing for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -150,7 +150,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when vote last is missing for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -169,7 +169,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when vote key dilution is missing for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -188,7 +188,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when vote first is equal to vote last', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -207,7 +207,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when vote first is greater than vote last', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -226,7 +226,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw error when non participation is set for online registration', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -248,7 +248,7 @@ describe('Key Registration', () => {
       })
 
       test('should throw multiple errors for online registration with multiple missing fields', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -279,7 +279,7 @@ describe('Key Registration', () => {
       })
 
       test('should validate valid online key registration transaction', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -298,7 +298,7 @@ describe('Key Registration', () => {
       })
 
       test('should validate online key registration with non participation false', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -320,7 +320,7 @@ describe('Key Registration', () => {
 
     describe('Offline Key Registration Validation', () => {
       test('should validate offline key registration (no fields)', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -334,7 +334,7 @@ describe('Key Registration', () => {
       })
 
       test('should validate offline key registration with non participation', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,
@@ -348,7 +348,7 @@ describe('Key Registration', () => {
       })
 
       test('should validate offline key registration with non participation false', () => {
-        const transaction: Transaction = {
+        const transaction: TransactionParams = {
           type: TransactionType.KeyRegistration,
           sender: Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI'),
           firstValid: 1000n,

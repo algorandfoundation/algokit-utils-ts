@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
   Transaction,
+  TransactionParams,
   decodeTransaction,
   encodeTransaction,
   encodeTransactionRaw,
@@ -18,7 +19,7 @@ const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7
 describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
     test('should throw error when multiple transaction type specific fields are set', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -38,7 +39,7 @@ describe('Transaction Validation', () => {
     })
 
     test('should validate valid payment transaction', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -53,14 +54,14 @@ describe('Transaction Validation', () => {
     })
 
     test.each([
-      ['encodeTransaction', encodeTransaction],
-      ['encodeTransactionRaw', encodeTransactionRaw],
-      ['estimateTransactionSize', estimateTransactionSize],
-      ['getTransactionIdRaw', getTransactionIdRaw],
-      ['getTransactionId', getTransactionId],
-      ['encodeSignedTransaction', (transaction: Transaction) => encodeSignedTransaction({ txn: transaction, signature: EMPTY_SIGNATURE })],
+      ['encodeTransaction', (params: TransactionParams) => encodeTransaction(new Transaction(params))],
+      ['encodeTransactionRaw', (params: TransactionParams) => encodeTransactionRaw(new Transaction(params))],
+      ['estimateTransactionSize', (params: TransactionParams) => estimateTransactionSize(new Transaction(params))],
+      ['getTransactionIdRaw', (params: TransactionParams) => getTransactionIdRaw(new Transaction(params))],
+      ['getTransactionId', (params: TransactionParams) => getTransactionId(new Transaction(params))],
+      ['encodeSignedTransaction', (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), signature: EMPTY_SIGNATURE })],
     ])('should validate when calling %s', (_, sut) => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -96,9 +97,23 @@ describe('decodeTransaction', () => {
     const decodedTransaction = decodeTransaction(encodedTransaction)
 
     expect(decodedTransaction).toMatchInlineSnapshot(`
-      {
+      Transaction {
+        "appCall": undefined,
+        "assetConfig": undefined,
+        "assetFreeze": undefined,
+        "assetTransfer": undefined,
+        "fee": undefined,
         "firstValid": 1000n,
+        "genesisHash": undefined,
+        "genesisId": undefined,
+        "group": undefined,
+        "heartbeat": undefined,
+        "keyRegistration": undefined,
         "lastValid": 2000n,
+        "lease": undefined,
+        "note": undefined,
+        "payment": undefined,
+        "rekeyTo": undefined,
         "sender": Address {
           "publicKey": Uint8Array [
             230,
@@ -136,7 +151,9 @@ describe('decodeTransaction', () => {
           ],
           Symbol(algokit_common:Address): true,
         },
+        "stateProof": undefined,
         "type": "unknown",
+        Symbol(algokit_transact:Transaction): true,
       }
     `)
   })

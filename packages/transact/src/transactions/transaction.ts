@@ -257,6 +257,29 @@ class TransactionCodec extends Codec<Transaction, Record<string, unknown>, WireO
     })
   }
 
+  // Override decode to preserve all decoded fields without applying default value substitution
+  public decode(value: WireObject | undefined | null, format: EncodingFormat): Transaction {
+    if (value === undefined || value === null) return this.defaultValue()
+    return this.fromEncoded(value, format)
+  }
+
+  // Override decodeOptional to preserve all decoded fields without applying default value substitution
+  public decodeOptional(value: WireObject | undefined | null, format: EncodingFormat): Transaction | undefined {
+    if (value === undefined || value === null) return undefined
+    return this.fromEncoded(value, format)
+  }
+
+  public encode(value: Transaction | undefined | null, format: EncodingFormat): Record<string, unknown> {
+    if (value === undefined || value === null || this.isDefaultValue(value)) return this.toEncoded(this.defaultValue(), format)
+    return this.toEncoded(value, format)
+  }
+
+  public encodeOptional(value: Transaction | undefined | null, format: EncodingFormat): Record<string, unknown> | undefined {
+    if (value === undefined || value === null) return undefined
+    if (this.isDefaultValue(value)) return undefined
+    return this.toEncoded(value, format)
+  }
+
   protected toEncoded(value: Transaction, format: EncodingFormat): Record<string, unknown> {
     return transactionParamsCodec.encode(value.toParams(), format)
   }
@@ -316,7 +339,7 @@ export function encodeTransactions(transactions: Transaction[]): Uint8Array[] {
 /**
  * Validate a transaction
  */
-export function validateTransaction(transaction: Transaction): void {
+export function validateTransaction(transaction: TransactionParams): void {
   // Validate that only one transaction type specific field is set
   const typeFields = [
     transaction.payment,

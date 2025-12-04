@@ -1,6 +1,6 @@
 import { Address } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import { Transaction, validateTransaction } from '../src/transactions/transaction'
+import { TransactionParams, validateTransaction } from '../src/transactions/transaction'
 import { TransactionType } from '../src/transactions/transaction-type'
 import { testData } from './common'
 import {
@@ -67,7 +67,7 @@ describe('Asset Freeze', () => {
 
   describe('Asset Freeze Validation', () => {
     test('should throw error when asset ID is zero', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetFreeze,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -83,7 +83,7 @@ describe('Asset Freeze', () => {
     })
 
     test('should validate valid asset freeze transaction', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetFreeze,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -99,7 +99,7 @@ describe('Asset Freeze', () => {
     })
 
     test('should validate asset unfreeze transaction', () => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetFreeze,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -116,7 +116,7 @@ describe('Asset Freeze', () => {
 
     test('should validate freezing the sender themselves', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetFreeze,
         sender: senderAddress,
         firstValid: 1000n,
@@ -133,7 +133,7 @@ describe('Asset Freeze', () => {
 
     test('should validate unfreezing the sender themselves', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetFreeze,
         sender: senderAddress,
         firstValid: 1000n,
