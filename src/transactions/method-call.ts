@@ -506,7 +506,7 @@ export const buildAppCreateMethodCall = async (
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AppCall,
     appCall: {
@@ -528,7 +528,7 @@ export const buildAppCreateMethodCall = async (
           }),
       rejectVersion: params.rejectVersion,
     },
-  } satisfies Transaction
+  })
 }
 
 export const buildAppUpdateMethodCall = async (
@@ -562,7 +562,7 @@ export const buildAppUpdateMethodCall = async (
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AppCall,
     appCall: {
@@ -581,7 +581,7 @@ export const buildAppUpdateMethodCall = async (
           }),
       rejectVersion: params.rejectVersion,
     },
-  }
+  })
 }
 
 export const buildAppCallMethodCall = async (
@@ -606,7 +606,7 @@ export const buildAppCallMethodCall = async (
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AppCall,
     appCall: {
@@ -623,5 +623,5 @@ export const buildAppCallMethodCall = async (
           }),
       rejectVersion: params.rejectVersion,
     },
-  } satisfies Transaction
+  })
 }

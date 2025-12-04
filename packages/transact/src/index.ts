@@ -11,7 +11,8 @@ export {
   getTransactionId,
   getTransactionIdRaw,
   groupTransactions,
-  type Transaction,
+  Transaction,
+  type TransactionParams,
 } from './transactions/transaction'
 export { TransactionType } from './transactions/transaction-type'
 
@@ -27,7 +28,8 @@ export {
 } from './transactions/signed-transaction'
 
 export { SignedTransactionMeta } from './transactions/signed-transaction-meta'
-export { TransactionMeta } from './transactions/transaction-meta'
+export { TransactionParamsMeta, transactionParamsCodec } from './transactions/transaction-meta'
+export { transactionCodec } from './transactions/transaction'
 
 export * from './signer'
 export * from './transactions/app-call'

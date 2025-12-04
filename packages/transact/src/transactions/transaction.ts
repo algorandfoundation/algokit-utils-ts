@@ -1,5 +1,7 @@
+import type { EncodingFormat, WireObject } from '@algorandfoundation/algokit-common'
 import {
   Address,
+  Codec,
   MAX_TX_GROUP_SIZE,
   SIGNATURE_ENCODING_INCR,
   TRANSACTION_DOMAIN_SEPARATOR,
@@ -20,16 +22,19 @@ import { HeartbeatTransactionFields } from './heartbeat'
 import { KeyRegistrationTransactionFields, validateKeyRegistrationTransaction } from './key-registration'
 import { PaymentTransactionFields } from './payment'
 import { StateProofTransactionFields } from './state-proof'
-import { transactionCodec } from './transaction-meta'
+import { transactionParamsCodec } from './transaction-meta'
 import { TransactionType } from './transaction-type'
 
+/** Symbol used for instanceof checks across packages (CJS/ESM) */
+const TXN_SYMBOL = Symbol.for('algokit_transact:Transaction')
+
 /**
- * Represents a complete Algorand transaction.
+ * Represents the parameters for a complete Algorand transaction.
  *
  * This structure contains the fields that are present in every transaction,
  * regardless of transaction type, plus transaction-type-specific fields.
  */
-export type Transaction = {
+export type TransactionParams = {
   /**
    * The type of transaction
    */
@@ -148,6 +153,125 @@ export type Transaction = {
    */
   stateProof?: StateProofTransactionFields
 }
+
+/**
+ * Represents a complete Algorand transaction.
+ */
+export class Transaction implements TransactionParams {
+  /** @internal */
+  [TXN_SYMBOL]: boolean
+
+  type: TransactionType
+  sender: Address
+  fee?: bigint
+  firstValid: bigint
+  lastValid: bigint
+  genesisHash?: Uint8Array
+  genesisId?: string
+  note?: Uint8Array
+  rekeyTo?: Address
+  lease?: Uint8Array
+  group?: Uint8Array
+  payment?: PaymentTransactionFields
+  assetTransfer?: AssetTransferTransactionFields
+  assetConfig?: AssetConfigTransactionFields
+  appCall?: AppCallTransactionFields
+  keyRegistration?: KeyRegistrationTransactionFields
+  assetFreeze?: AssetFreezeTransactionFields
+  heartbeat?: HeartbeatTransactionFields
+  stateProof?: StateProofTransactionFields
+
+  constructor(params: TransactionParams) {
+    this[TXN_SYMBOL] = true
+    this.type = params.type
+    this.sender = params.sender
+    this.fee = params.fee
+    this.firstValid = params.firstValid
+    this.lastValid = params.lastValid
+    this.genesisHash = params.genesisHash
+    this.genesisId = params.genesisId
+    this.note = params.note
+    this.rekeyTo = params.rekeyTo
+    this.lease = params.lease
+    this.group = params.group
+    this.payment = params.payment
+    this.assetTransfer = params.assetTransfer
+    this.assetConfig = params.assetConfig
+    this.appCall = params.appCall
+    this.keyRegistration = params.keyRegistration
+    this.assetFreeze = params.assetFreeze
+    this.heartbeat = params.heartbeat
+    this.stateProof = params.stateProof
+  }
+
+  /**
+   * Get the transaction ID as a base32-encoded string.
+   */
+  txID(): string {
+    return getTransactionId(this)
+  }
+
+  /**
+   * Convert the Transaction to a plain TransactionParams object.
+   */
+  toParams(): TransactionParams {
+    return {
+      type: this.type,
+      sender: this.sender,
+      fee: this.fee,
+      firstValid: this.firstValid,
+      lastValid: this.lastValid,
+      genesisHash: this.genesisHash,
+      genesisId: this.genesisId,
+      note: this.note,
+      rekeyTo: this.rekeyTo,
+      lease: this.lease,
+      group: this.group,
+      payment: this.payment,
+      assetTransfer: this.assetTransfer,
+      assetConfig: this.assetConfig,
+      appCall: this.appCall,
+      keyRegistration: this.keyRegistration,
+      assetFreeze: this.assetFreeze,
+      heartbeat: this.heartbeat,
+      stateProof: this.stateProof,
+    }
+  }
+
+  static [Symbol.hasInstance](obj: unknown) {
+    return Boolean(obj && typeof obj === 'object' && TXN_SYMBOL in obj && obj[TXN_SYMBOL as keyof typeof obj])
+  }
+}
+
+/**
+ * Codec for Transaction class.
+ * Handles encoding/decoding between Transaction class instances and wire format.
+ */
+class TransactionCodec extends Codec<Transaction, Record<string, unknown>, WireObject> {
+  public defaultValue(): Transaction {
+    return new Transaction({
+      type: TransactionType.Unknown,
+      sender: Address.zeroAddress(),
+      firstValid: 0n,
+      lastValid: 0n,
+    })
+  }
+
+  protected toEncoded(value: Transaction, format: EncodingFormat): Record<string, unknown> {
+    return transactionParamsCodec.encode(value.toParams(), format)
+  }
+
+  protected fromEncoded(value: WireObject, format: EncodingFormat): Transaction {
+    const params = transactionParamsCodec.decode(value, format)
+    return new Transaction(params)
+  }
+
+  public isDefaultValue(value: Transaction): boolean {
+    return value.type === TransactionType.Unknown
+  }
+}
+
+export const transactionCodec = new TransactionCodec()
 
 export type FeeParams = {
   feePerByte: bigint
@@ -322,18 +446,21 @@ export function getTransactionId(transaction: Transaction): string {
  */
 export function groupTransactions(transactions: Transaction[]): Transaction[] {
   const group = computeGroup(transactions)
-  return transactions.map((tx) => ({
-    ...tx,
-    group,
-  }))
+  return transactions.map(
+    (tx) =>
+      new Transaction({
+        ...tx.toParams(),
+        group,
+      }),
+  )
 }
 
 export function assignFee(transaction: Transaction, feeParams: FeeParams): Transaction {
   const fee = calculateFee(transaction, feeParams)
-  return {
-    ...transaction,
+  return new Transaction({
+    ...transaction.toParams(),
     fee,
-  }
+  })
 }
 
 function computeGroup(transactions: Transaction[]): Uint8Array {
