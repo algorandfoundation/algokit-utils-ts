@@ -2,6 +2,7 @@ import { Address, EMPTY_SIGNATURE, encodeMsgpack } from '@algorandfoundation/alg
 import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
+  TXN_SYMBOL,
   Transaction,
   TransactionParams,
   decodeTransaction,
@@ -158,3 +159,25 @@ describe('decodeTransaction', () => {
     `)
   })
 })
+
+// Compile-time check: Ensure Transaction class has all keys from TransactionParams
+// This will error if a field is added to TransactionParams but not to Transaction
+type _AssertTransactionHasAllParamsKeys =
+  Exclude<keyof TransactionParams, keyof Transaction> extends never
+    ? true
+    : { error: 'Transaction class is missing keys from TransactionParams'; missing: Exclude<keyof TransactionParams, keyof Transaction> }
+const _checkTransactionKeys: _AssertTransactionHasAllParamsKeys = true
+void _checkTransactionKeys
+
+// Compile-time check: Ensure TransactionParams has all keys from Transaction (excluding internal symbol and methods)
+// This will error if a field is added to Transaction but not to TransactionParams
+type TransactionPropertyKeys = Exclude<keyof Transaction, typeof TXN_SYMBOL | 'txID' | 'toParams'>
+type _AssertParamsHasAllTransactionKeys =
+  Exclude<TransactionPropertyKeys, keyof TransactionParams> extends never
+    ? true
+    : {
+        error: 'TransactionParams is missing keys from Transaction class'
+        missing: Exclude<TransactionPropertyKeys, keyof TransactionParams>
+      }
+const _checkParamsKeys: _AssertParamsHasAllTransactionKeys = true
+void _checkParamsKeys

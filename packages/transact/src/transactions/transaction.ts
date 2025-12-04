@@ -26,7 +26,7 @@ import { transactionParamsCodec } from './transaction-meta'
 import { TransactionType } from './transaction-type'
 
 /** Symbol used for instanceof checks across packages (CJS/ESM) */
-const TXN_SYMBOL = Symbol.for('algokit_transact:Transaction')
+export const TXN_SYMBOL = Symbol.for('algokit_transact:Transaction')
 
 /**
  * Represents the parameters for a complete Algorand transaction.
