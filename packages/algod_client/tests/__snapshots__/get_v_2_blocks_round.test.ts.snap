@@ -996,7 +996,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
               166,
               11,
             ],
-            "txn": {
+            "txn": Transaction {
               "appCall": {
                 "accountReferences": [
                   Address {
@@ -1156,9 +1156,21 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                 ],
                 "onComplete": 0,
               },
+              "assetConfig": undefined,
+              "assetFreeze": undefined,
+              "assetTransfer": undefined,
               "fee": 1000n,
               "firstValid": 24099445n,
+              "genesisHash": undefined,
+              "genesisId": undefined,
+              "group": undefined,
+              "heartbeat": undefined,
+              "keyRegistration": undefined,
               "lastValid": 24100445n,
+              "lease": undefined,
+              "note": undefined,
+              "payment": undefined,
+              "rekeyTo": undefined,
               "sender": Address {
                 "publicKey": Uint8Array [
                   240,
@@ -1196,7 +1208,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                 ],
                 Symbol(algokit_common:Address): true,
               },
+              "stateProof": undefined,
               "type": "appl",
+              Symbol(algokit_transact:Transaction): true,
             },
           },
         },
@@ -1271,10 +1285,20 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
               199,
               15,
             ],
-            "txn": {
+            "txn": Transaction {
+              "appCall": undefined,
+              "assetConfig": undefined,
+              "assetFreeze": undefined,
+              "assetTransfer": undefined,
               "fee": 1000n,
               "firstValid": 24099445n,
+              "genesisHash": undefined,
+              "genesisId": undefined,
+              "group": undefined,
+              "heartbeat": undefined,
+              "keyRegistration": undefined,
               "lastValid": 24099450n,
+              "lease": undefined,
               "note": Uint8Array [
                 219,
                 239,
@@ -1320,6 +1344,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                   Symbol(algokit_common:Address): true,
                 },
               },
+              "rekeyTo": undefined,
               "sender": Address {
                 "publicKey": Uint8Array [
                   9,
@@ -1357,7 +1382,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                 ],
                 Symbol(algokit_common:Address): true,
               },
+              "stateProof": undefined,
               "type": "pay",
+              Symbol(algokit_transact:Transaction): true,
             },
           },
         },
@@ -1432,10 +1459,20 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
               104,
               4,
             ],
-            "txn": {
+            "txn": Transaction {
+              "appCall": undefined,
+              "assetConfig": undefined,
+              "assetFreeze": undefined,
+              "assetTransfer": undefined,
               "fee": 1000n,
               "firstValid": 24099446n,
+              "genesisHash": undefined,
+              "genesisId": undefined,
+              "group": undefined,
+              "heartbeat": undefined,
+              "keyRegistration": undefined,
               "lastValid": 24099451n,
+              "lease": undefined,
               "note": Uint8Array [
                 220,
                 239,
@@ -1481,6 +1518,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                   Symbol(algokit_common:Address): true,
                 },
               },
+              "rekeyTo": undefined,
               "sender": Address {
                 "publicKey": Uint8Array [
                   9,
@@ -1518,7 +1556,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                 ],
                 Symbol(algokit_common:Address): true,
               },
+              "stateProof": undefined,
               "type": "pay",
+              Symbol(algokit_transact:Transaction): true,
             },
           },
         },
@@ -1593,10 +1633,20 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
               138,
               7,
             ],
-            "txn": {
+            "txn": Transaction {
+              "appCall": undefined,
+              "assetConfig": undefined,
+              "assetFreeze": undefined,
+              "assetTransfer": undefined,
               "fee": 1000n,
               "firstValid": 24099446n,
+              "genesisHash": undefined,
+              "genesisId": undefined,
+              "group": undefined,
+              "heartbeat": undefined,
+              "keyRegistration": undefined,
               "lastValid": 24099451n,
+              "lease": undefined,
               "note": Uint8Array [
                 221,
                 239,
@@ -1642,6 +1692,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                   Symbol(algokit_common:Address): true,
                 },
               },
+              "rekeyTo": undefined,
               "sender": Address {
                 "publicKey": Uint8Array [
                   9,
@@ -1679,7 +1730,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                 ],
                 Symbol(algokit_common:Address): true,
               },
+              "stateProof": undefined,
               "type": "pay",
+              Symbol(algokit_transact:Transaction): true,
             },
           },
         },
@@ -1754,10 +1807,20 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
               219,
               5,
             ],
-            "txn": {
+            "txn": Transaction {
+              "appCall": undefined,
+              "assetConfig": undefined,
+              "assetFreeze": undefined,
+              "assetTransfer": undefined,
               "fee": 1000n,
               "firstValid": 24099446n,
+              "genesisHash": undefined,
+              "genesisId": undefined,
+              "group": undefined,
+              "heartbeat": undefined,
+              "keyRegistration": undefined,
               "lastValid": 24099451n,
+              "lease": undefined,
               "note": Uint8Array [
                 222,
                 239,
@@ -1803,6 +1866,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                   Symbol(algokit_common:Address): true,
                 },
               },
+              "rekeyTo": undefined,
               "sender": Address {
                 "publicKey": Uint8Array [
                   9,
@@ -1840,7 +1904,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
                 ],
                 Symbol(algokit_common:Address): true,
               },
+              "stateProof": undefined,
               "type": "pay",
+              Symbol(algokit_transact:Transaction): true,
             },
           },
         },
