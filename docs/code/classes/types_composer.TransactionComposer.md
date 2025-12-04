@@ -367,7 +367,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.onComplete?` | `NoOp` \| `OptIn` \| `CloseOut` \| `DeleteApplication` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
 | `params.rejectVersion?` | `number` | The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. |
 | `params.rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
-| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `params.signer?` | `AddressWithTransactionSigner` \| `TransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
@@ -463,7 +463,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.schema.globalInts` | `number` | The number of integers saved in global state. |
 | `params.schema.localByteSlices` | `number` | The number of byte slices saved in local state. |
 | `params.schema.localInts` | `number` | The number of integers saved in local state. |
-| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `params.signer?` | `AddressWithTransactionSigner` \| `TransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
@@ -563,7 +563,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.schema.globalInts` | `number` | The number of integers saved in global state. |
 | `params.schema.localByteSlices` | `number` | The number of byte slices saved in local state. |
 | `params.schema.localInts` | `number` | The number of integers saved in local state. |
-| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `params.signer?` | `AddressWithTransactionSigner` \| `TransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
@@ -719,7 +719,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.onComplete?` | `DeleteApplication` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
 | `params.rejectVersion?` | `number` | The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. |
 | `params.rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
-| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `params.signer?` | `AddressWithTransactionSigner` \| `TransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
@@ -810,7 +810,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.onComplete?` | `UpdateApplication` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
 | `params.rejectVersion?` | `number` | The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. |
 | `params.rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
-| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `params.signer?` | `AddressWithTransactionSigner` \| `TransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
@@ -892,7 +892,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 | `params.onComplete?` | `UpdateApplication` | The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. |
 | `params.rejectVersion?` | `number` | The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. |
 | `params.rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
-| `params.sender` | `SendingAddress` | The address of the account sending the transaction. |
+| `params.sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `params.signer?` | `AddressWithTransactionSigner` \| `TransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
 | `params.validityWindow?` | `number` \| `bigint` | How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. |
