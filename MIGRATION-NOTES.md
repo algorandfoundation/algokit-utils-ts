@@ -59,5 +59,4 @@ A collection of random notes pop up during the migration process.
 - Doc: Mock server + Rust + polytest
 - subscriber:
   - transform-complex-txn.spec.ts calls `txId` but the type is Transaction, not wrapper
-- TODO: PD - re export and rename TransactionWrapper to Transaction
 - In multisig subsignatures we use address. Should we call this publicKey and use a Uint8Array value? This would make interop/consistenct between KMD and Indexer nicer too.

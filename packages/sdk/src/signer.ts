@@ -24,7 +24,7 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
 
       const signedTxn: SignedTransaction = {
         txn: txn,
-        signature,
+        sig: signature,
         authAddress: !authAddress.equals(txn.sender) ? authAddress : undefined,
       }
 
@@ -91,7 +91,7 @@ export function makeEmptyTransactionSigner(): TransactionSigner {
     for (const index of indexesToSign) {
       const stxn: SignedTransaction = {
         txn: txnGroup[index],
-        signature: new Uint8Array(64),
+        sig: new Uint8Array(64),
       }
       unsigned.push(encodeSignedTransaction(stxn))
     }
