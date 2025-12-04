@@ -1,12 +1,12 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, addressCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTMultisigExportRequest is the request for `POST /v1/multisig/export`
+ * The request for `POST /v1/multisig/export`
  */
 export type ExportMultisigRequest = {
-  address?: string
-  walletHandleToken?: string
+  address: Address
+  walletHandleToken: string
 }
 
 export const ExportMultisigRequestMeta: ObjectModelMetadata<ExportMultisigRequest> = {
@@ -16,13 +16,13 @@ export const ExportMultisigRequestMeta: ObjectModelMetadata<ExportMultisigReques
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
-      codec: stringCodec,
+      optional: false,
+      codec: addressCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

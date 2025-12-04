@@ -1,7 +1,6 @@
 import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Kmd } from '@algorandfoundation/sdk'
+import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { Config } from '../config'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
@@ -17,7 +16,7 @@ export interface AlgoSdkClients {
   /** Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer */
   indexer?: IndexerClient
   /** Optional KMD client, see https://dev.algorand.co/reference/rest-apis/kmd/ */
-  kmd?: algosdk.Kmd
+  kmd?: KmdClient
 }
 
 /** Params to get an app factory from `ClientManager`. */
@@ -48,7 +47,7 @@ export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algoran
 export class ClientManager {
   private _algod: AlgodClient
   private _indexer?: IndexerClient
-  private _kmd?: algosdk.Kmd
+  private _kmd?: KmdClient
   private _algorand?: AlgorandClient
 
   /**
@@ -117,7 +116,7 @@ export class ClientManager {
    * @returns The KMD client
    * @throws Error if no KMD client is configured
    */
-  public get kmd(): algosdk.Kmd {
+  public get kmd(): KmdClient {
     if (!this._kmd) throw new Error('Attempt to use Kmd client in AlgoKit instance with no Kmd configured')
     return this._kmd
   }
@@ -671,9 +670,14 @@ export class ClientManager {
    *  const kmd = ClientManager.getKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
    * ```
    */
-  public static getKmdClient(config: AlgoClientConfig): Kmd {
+  public static getKmdClient(config: AlgoClientConfig): KmdClient {
     const { token, server, port } = config
-    return new Kmd(token as string, server, port)
+    return new KmdClient({
+      baseUrl: server,
+      port,
+      token,
+      logger: Config.logger,
+    })
   }
 
   /**
@@ -686,7 +690,7 @@ export class ClientManager {
    *  const kmd = ClientManager.getKmdClientFromEnvironment()
    *  ```
    */
-  public static getKmdClientFromEnvironment(): Kmd {
+  public static getKmdClientFromEnvironment(): KmdClient {
     // We can only use Kmd on the LocalNet otherwise it's not exposed so this makes some assumptions
     // (e.g. same token and server as algod and port 4002 by default)
     return ClientManager.getKmdClient({ ...ClientManager.getAlgodConfigFromEnvironment(), port: process?.env?.KMD_PORT ?? '4002' })

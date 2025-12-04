@@ -1,20 +1,18 @@
-import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, booleanCodec, bytesCodec, ObjectModelCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import { stringCodec, booleanCodec, bytesCodec, addressCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { MultisigSig } from './multisig-sig'
 import { MultisigSigMeta } from './multisig-sig'
-import type { PublicKey } from './public-key'
-import { PublicKeyMeta } from './public-key'
 
 /**
- * APIV1POSTMultisigProgramSignRequest is the request for `POST /v1/multisig/signprogram`
+ * The request for `POST /v1/multisig/signprogram`
  */
 export type SignProgramMultisigRequest = {
-  address?: string
-  data?: Uint8Array
+  address: Address
+  program: Uint8Array
   partialMultisig?: MultisigSig
-  publicKey?: PublicKey
+  publicKey: Uint8Array
   useLegacyMsig?: boolean
-  walletHandleToken?: string
+  walletHandleToken: string
   walletPassword?: string
 }
 
@@ -25,13 +23,13 @@ export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMult
     {
       name: 'address',
       wireKey: 'address',
-      optional: true,
-      codec: stringCodec,
+      optional: false,
+      codec: addressCodec,
     },
     {
-      name: 'data',
+      name: 'program',
       wireKey: 'data',
-      optional: true,
+      optional: false,
       codec: bytesCodec,
     },
     {
@@ -43,8 +41,8 @@ export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMult
     {
       name: 'publicKey',
       wireKey: 'public_key',
-      optional: true,
-      codec: new PrimitiveModelCodec(PublicKeyMeta),
+      optional: false,
+      codec: bytesCodec,
     },
     {
       name: 'useLegacyMsig',
@@ -55,7 +53,7 @@ export const SignProgramMultisigRequestMeta: ObjectModelMetadata<SignProgramMult
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
     {

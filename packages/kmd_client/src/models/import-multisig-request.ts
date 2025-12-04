@@ -1,16 +1,14 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, numberCodec, ArrayCodec, PrimitiveModelCodec } from '@algorandfoundation/algokit-common'
-import type { PublicKey } from './public-key'
-import { PublicKeyMeta } from './public-key'
+import { stringCodec, numberCodec, bytesArrayCodec } from '@algorandfoundation/algokit-common'
 
 /**
- * APIV1POSTMultisigImportRequest is the request for `POST /v1/multisig/import`
+ * The request for `POST /v1/multisig/import`
  */
 export type ImportMultisigRequest = {
-  multisigVersion?: number
-  pks?: PublicKey[]
-  threshold?: number
-  walletHandleToken?: string
+  multisigVersion: number
+  publicKeys: Uint8Array[]
+  threshold: number
+  walletHandleToken: string
 }
 
 export const ImportMultisigRequestMeta: ObjectModelMetadata<ImportMultisigRequest> = {
@@ -20,25 +18,25 @@ export const ImportMultisigRequestMeta: ObjectModelMetadata<ImportMultisigReques
     {
       name: 'multisigVersion',
       wireKey: 'multisig_version',
-      optional: true,
+      optional: false,
       codec: numberCodec,
     },
     {
-      name: 'pks',
+      name: 'publicKeys',
       wireKey: 'pks',
-      optional: true,
-      codec: new ArrayCodec(new PrimitiveModelCodec(PublicKeyMeta)),
+      optional: false,
+      codec: bytesArrayCodec,
     },
     {
       name: 'threshold',
       wireKey: 'threshold',
-      optional: true,
+      optional: false,
       codec: numberCodec,
     },
     {
       name: 'walletHandleToken',
       wireKey: 'wallet_handle_token',
-      optional: true,
+      optional: false,
       codec: stringCodec,
     },
   ],

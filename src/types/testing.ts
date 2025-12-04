@@ -1,9 +1,10 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
 import { IndexerClient, TransactionResponse } from '@algorandfoundation/algokit-indexer-client'
+import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { AddressWithSigner, Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
-import { Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
+import { LogicSigAccount } from '@algorandfoundation/sdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
@@ -22,7 +23,7 @@ export interface AlgorandTestAutomationContext {
   /** Indexer client instance */
   indexer: IndexerClient
   /** KMD client instance */
-  kmd: Kmd
+  kmd: KmdClient
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
@@ -54,11 +55,11 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   indexer?: IndexerClient
   /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
-  kmd?: Kmd
+  kmd?: KmdClient
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algod: AlgodClient, kmd?: Kmd) => Promise<Account>
+  accountGetter?: (algod: AlgodClient, kmd?: KmdClient) => Promise<Account>
 }
 
 /** An Algorand automated testing fixture */

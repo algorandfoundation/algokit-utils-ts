@@ -12,6 +12,7 @@ from oas_generator import constants
 from oas_generator.generator.codec_processor import CodecProcessor, register_model_kind
 from oas_generator.generator.filters import (
     FILTERS,
+    is_array_of_uint8_schema,
     ts_camel_case,
     ts_kebab_case,
     ts_pascal_case,
@@ -89,8 +90,15 @@ class SchemaProcessor:
         models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
         files: FileMap = {}
 
+        # Filter out schemas that are just arrays of uint8 (these should be inlined)
+        filtered_schemas = {
+            name: schema
+            for name, schema in schemas.items()
+            if not is_array_of_uint8_schema(schema, schemas)
+        }
+
         # First pass: Register all model kinds for the codec processor
-        for name, schema in schemas.items():
+        for name, schema in filtered_schemas.items():
             descriptor = self._build_model_descriptor(name, schema, schemas)
             model_name = ts_pascal_case(name)
 
@@ -103,7 +111,7 @@ class SchemaProcessor:
                 register_model_kind(model_name, "primitive")
 
         # Second pass: Generate individual model files
-        for name, schema in schemas.items():
+        for name, schema in filtered_schemas.items():
             descriptor = self._build_model_descriptor(name, schema, schemas)
             context = self._create_model_context(name, schema, schemas, descriptor)
             content = self.renderer.render(constants.MODEL_TEMPLATE, context)
@@ -112,7 +120,7 @@ class SchemaProcessor:
 
         files[models_dir / constants.INDEX_FILE] = self.renderer.render(
             constants.MODELS_INDEX_TEMPLATE,
-            {"schemas": schemas},
+            {"schemas": filtered_schemas},
         )
 
         return files
@@ -216,9 +224,19 @@ class SchemaProcessor:
             canonical = prop_schema.get(constants.X_ALGOKIT_FIELD_RENAME) or prop_name
             name_camel = ts_camel_case(canonical)
 
-            ts_t = ts_type(prop_schema, all_schemas)
-            is_array = prop_schema.get(constants.SchemaKey.TYPE) == "array"
-            items = prop_schema.get(constants.SchemaKey.ITEMS, {}) if is_array else None
+            # Resolve $ref and check if it's an array of uint8 that should be inlined
+            resolved_schema = prop_schema
+            if "$ref" in prop_schema:
+                ref_name = prop_schema["$ref"].split("/")[-1]
+                if ref_name in all_schemas:
+                    ref_schema = all_schemas[ref_name]
+                    # If the referenced schema is an array of uint8, inline it
+                    if is_array_of_uint8_schema(ref_schema, all_schemas):
+                        resolved_schema = {"type": "string", "format": "byte"}
+
+            ts_t = ts_type(resolved_schema, all_schemas)
+            is_array = resolved_schema.get(constants.SchemaKey.TYPE) == "array"
+            items = resolved_schema.get(constants.SchemaKey.ITEMS, {}) if is_array else None
             ref_model = None
             signed_txn = False
             bytes_flag = False
@@ -230,60 +248,69 @@ class SchemaProcessor:
 
             if is_array and isinstance(items, dict):
                 if "$ref" in items:
-                    ref_model = ts_pascal_case(items["$ref"].split("/")[-1])
-                fmt = items.get(constants.SchemaKey.FORMAT)
-                item_type = items.get(constants.SchemaKey.TYPE)
-                algorand_format = items.get(constants.X_ALGORAND_FORMAT)
-                bytes_flag = fmt == "byte" or items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
-                bigint_flag = bool(items.get(constants.X_ALGOKIT_BIGINT) is True)
-                address_flag = algorand_format == "Address"
-                number_flag = item_type in ("number", "integer") and not bigint_flag
-                boolean_flag = item_type == "boolean"
-                signed_txn = bool(items.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+                    ref_name = items["$ref"].split("/")[-1]
+                    # Check if the referenced schema is an array of uint8
+                    if ref_name in all_schemas and is_array_of_uint8_schema(all_schemas[ref_name], all_schemas):
+                        # This is an array of Uint8Array (bytes), not a model reference
+                        bytes_flag = True
+                        ref_model = None
+                    else:
+                        ref_model = ts_pascal_case(ref_name)
+                else:
+                    fmt = items.get(constants.SchemaKey.FORMAT)
+                    item_type = items.get(constants.SchemaKey.TYPE)
+                    algorand_format = items.get(constants.X_ALGORAND_FORMAT)
+                    bytes_flag = fmt == "byte" or items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+                    bigint_flag = bool(items.get(constants.X_ALGOKIT_BIGINT) is True)
+                    address_flag = algorand_format == "Address"
+                    number_flag = item_type in ("number", "integer") and not bigint_flag
+                    boolean_flag = item_type == "boolean"
+                    signed_txn = bool(items.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
             else:
-                if "$ref" in (prop_schema or {}):
-                    ref_model = ts_pascal_case(prop_schema["$ref"].split("/")[-1])
+                if "$ref" in resolved_schema and resolved_schema is prop_schema:
+                    # Only set ref_model if we didn't inline the schema
+                    ref_model = ts_pascal_case(resolved_schema["$ref"].split("/")[-1])
                 # Check for special codec flags first
-                elif bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True):
+                elif bool(resolved_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True):
                     signed_txn = True
                 # For inline nested objects, store the schema for inline metadata generation
-                elif (prop_schema.get(constants.SchemaKey.TYPE) == "object" and
-                      "properties" in prop_schema and
-                      "$ref" not in prop_schema and
-                      prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is not True):
+                elif (resolved_schema.get(constants.SchemaKey.TYPE) == "object" and
+                      "properties" in resolved_schema and
+                      "$ref" not in resolved_schema and
+                      resolved_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is not True):
                     # Check if it's an empty object (no properties or empty properties dict)
-                    props = prop_schema.get(constants.SchemaKey.PROPERTIES, {})
-                    if not props or (isinstance(props, dict) and len(props) == 0):
+                    props_inner = resolved_schema.get(constants.SchemaKey.PROPERTIES, {})
+                    if not props_inner or (isinstance(props_inner, dict) and len(props_inner) == 0):
                         # Empty object - treat as Record<string, unknown>
                         # Don't set inline_object_schema, but mark as empty object
                         pass  # Will be handled by is_empty_object flag
                     else:
                         # Store the inline object schema for metadata generation
-                        inline_object_schema = prop_schema
+                        inline_object_schema = resolved_schema
                 else:
-                    fmt = prop_schema.get(constants.SchemaKey.FORMAT)
-                    prop_type = prop_schema.get(constants.SchemaKey.TYPE)
-                    algorand_format = prop_schema.get(constants.X_ALGORAND_FORMAT)
-                    bytes_flag = fmt == "byte" or prop_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
-                    bigint_flag = bool(prop_schema.get(constants.X_ALGOKIT_BIGINT) is True)
+                    fmt = resolved_schema.get(constants.SchemaKey.FORMAT)
+                    prop_type = resolved_schema.get(constants.SchemaKey.TYPE)
+                    algorand_format = resolved_schema.get(constants.X_ALGORAND_FORMAT)
+                    bytes_flag = fmt == "byte" or resolved_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+                    bigint_flag = bool(resolved_schema.get(constants.X_ALGOKIT_BIGINT) is True)
                     address_flag = algorand_format == "Address"
                     number_flag = prop_type in ("number", "integer") and not bigint_flag
                     boolean_flag = prop_type == "boolean"
-                    signed_txn = bool(prop_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+                    signed_txn = bool(resolved_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
-            is_nullable = bool(prop_schema.get(constants.SchemaKey.NULLABLE) is True)
+            is_nullable = bool(resolved_schema.get(constants.SchemaKey.NULLABLE) is True)
 
             # Check if this is an empty object type (no properties and no special x-algokit-* or x-algorand-* attributes)
             has_special_attributes = any(
                 key.startswith("x-algokit-") or key.startswith("x-algorand-")
-                for key in prop_schema.keys()
+                for key in resolved_schema.keys()
             )
             is_empty_object = (
-                prop_schema.get(constants.SchemaKey.TYPE) == "object" and
-                "properties" in prop_schema and
-                not prop_schema.get(constants.SchemaKey.PROPERTIES, {}) and
+                resolved_schema.get(constants.SchemaKey.TYPE) == "object" and
+                "properties" in resolved_schema and
+                not resolved_schema.get(constants.SchemaKey.PROPERTIES, {}) and
                 not has_special_attributes
             )
 
@@ -497,7 +524,7 @@ class OperationProcessor:
     }
     return this._rawTransaction(rawTransactions);
   }'''
-            get_application_box_by_name_method = '''/**
+            get_application_box_by_name = '''/**
    * Given an application ID and box name, it returns the round, box name, and value.
    */
   async getApplicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
@@ -542,10 +569,10 @@ class OperationProcessor:
     });
   }'''
 
-            custom_methods = [send_raw_transaction_method, get_application_box_by_name_method, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
+            custom_methods = [send_raw_transaction_method, get_application_box_by_name, suggested_params_method, get_transaction_params_method, simulate_raw_transactions_method]
 
         if service_class_name == "IndexerApi":
-            get_application_box_by_name_method = '''/**
+            lookup_application_box_by_id_and_name = '''/**
    * Given an application ID and box name, it returns the round, box name, and value.
    */
   async lookupApplicationBoxByIdAndName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
@@ -554,7 +581,53 @@ class OperationProcessor:
   }
 '''
 
-            custom_methods = [get_application_box_by_name_method]
+            custom_methods = [lookup_application_box_by_id_and_name]
+
+        if service_class_name == "KmdApi":
+            custom_imports = [
+                "import { encodeTransactionRaw } from '@algorandfoundation/algokit-transact';",
+                "import type { SignMultisigRequest, SignTransactionRequest } from '../models/index';",
+            ]
+            create_wallet = '''/**
+   * Create a new wallet (collection of keys) with the given parameters.
+   */
+  async createWallet(body: CreateWalletRequest): Promise<CreateWalletResponse> {
+    const requestBody = {
+      ...body,
+      walletDriverName: body.walletDriverName ?? 'sqlite',
+    }
+    return await this._createWallet(requestBody)
+  }
+'''
+            sign_multisig_transaction = '''/**
+   * Enables the signing of a transaction using the provided wallet and multisig info.
+   * The public key is used to identify which multisig account key to use for signing.
+   * When a signer is provided it is used to resolve the private key and sign the transaction, enabling rekeyed account signing.
+   * @returns A multisig signature or partial signature, which can be used to form a signed transaction.
+   */
+  async signMultisigTransaction(body: SignMultisigRequest): Promise<SignMultisigResponse> {
+    const requestBody = {
+      ...body,
+      transaction: encodeTransactionRaw(body.transaction),
+    } satisfies SignMultisigTxnRequest
+    return this._signMultisigTransaction(requestBody)
+  }
+'''
+            sign_transaction = '''/**
+   * Enables the signing of a transaction using the provided wallet info.
+   * When a public key is provided it is used to resolve the private key and sign the transaction, enabling rekeyed account signing.
+   * @returns An encoded, signed transaction.
+   */
+  async signTransaction(body: SignTransactionRequest): Promise<SignTransactionResponse> {
+    const requestBody = {
+      ...body,
+      transaction: encodeTransactionRaw(body.transaction),
+    } satisfies SignTxnRequest
+    return this._signTransaction(requestBody)
+  }
+'''
+
+            custom_methods = [create_wallet, sign_multisig_transaction, sign_transaction]
 
         return custom_imports, custom_methods
 
@@ -570,7 +643,11 @@ class OperationProcessor:
             "IndexerApi": {
                 "lookupApplicationBoxByIDAndName" # Wrapped by custom method
             },
-            "KmdApi": set(),  # No private methods by default
+            "KmdApi": {
+                "CreateWallet",  # Wrapped by custom method
+                "SignMultisigTransaction",  # Wrapped by custom method
+                "SignTransaction",  # Wrapped by custom method
+            },
         }
 
         return private_method_config.get(service_class_name, set())
@@ -614,7 +691,7 @@ class OperationProcessor:
             # Skip generation for operations tagged with "private" or "experimental"
             # or with specific operation IDs
             if (any(tag in context.tags for tag in ("private", "experimental")) or
-                context.operation_id in ("Metrics", "SwaggerJSON", "GetBlockLogs")):
+                context.operation_id in ("Metrics", "SwaggerJSON", "GetBlockLogs", "SwaggerHandler")):
                 context.skip_generation = True
 
             operations.append(context)
@@ -965,36 +1042,33 @@ class CodeGenerator:
         used_schemas = {name: schema for name, schema in all_schemas.items()
                        if ts_pascal_case(name) in all_used_types}
 
-
         # Generate components (only used schemas)
         files.update(self.schema_processor.generate_models(output_dir, used_schemas))
 
-        if service_class == "AlgodApi":
-            models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
+        models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
+        index_path = models_dir / constants.INDEX_FILE
 
+        if service_class == "AlgodApi":
             # Generate the custom typed models
             files[models_dir / "suggested-params.ts"] = self.renderer.render(
-                "models/custom/suggested-params.ts.j2",
+                "models/custom/algod/suggested-params.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block.ts"] = self.renderer.render(
-                "models/custom/block.ts.j2",
+                "models/custom/algod/block.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "block-response.ts"] = self.renderer.render(
-                "models/custom/block-response.ts.j2",
+                "models/custom/algod/block-response.ts.j2",
                 {"spec": spec},
             )
             files[models_dir / "ledger-state-delta.ts"] = self.renderer.render(
-                "models/custom/ledger-state-delta.ts.j2",
+                "models/custom/algod/ledger-state-delta.ts.j2",
                 {"spec": spec},
             )
 
             # Ensure index exports include the custom models
-            index_path = models_dir / constants.INDEX_FILE
-            base_index = self.renderer.render(constants.MODELS_INDEX_TEMPLATE, {"schemas": used_schemas})
             extras = (
-                "\n"
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { Block } from './block';\n"
                 "export type { BlockHeader } from './block';\n"
@@ -1014,7 +1088,24 @@ class CodeGenerator:
                 "export type { ParticipationUpdates } from './block';\n"
                 "export { ParticipationUpdatesMeta } from './block';\n"
             )
-            files[index_path] = base_index + extras
+            files[index_path] = files[index_path] + extras
+        elif service_class == "KmdApi":
+            # Generate the custom typed models
+            files[models_dir / "sign-multisig-request.ts"] = self.renderer.render(
+                "models/custom/kmd/sign-multisig-request.ts.j2",
+                {"spec": spec},
+            )
+            files[models_dir / "sign-transaction-request.ts"] = self.renderer.render(
+                "models/custom/kmd/sign-transaction-request.ts.j2",
+                {"spec": spec},
+            )
+
+            # Ensure index exports include the custom models
+            extras = (
+                "export type { SignMultisigRequest } from './sign-multisig-request';\n"
+                "export type { SignTransactionRequest } from './sign-transaction-request';\n"
+            )
+            files[index_path] = files[index_path] + extras
         files.update(self._generate_client_files(output_dir, client_class, service_class))
 
         return files

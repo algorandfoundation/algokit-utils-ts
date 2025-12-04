@@ -140,7 +140,6 @@ export type { DryrunResponse } from './dryrun-response'
 export { DryrunResponseMeta } from './dryrun-response'
 export type { SourceMap } from './source-map'
 export { SourceMapMeta } from './source-map'
-
 export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params'
 export type { Block } from './block'
 export type { BlockHeader } from './block'
