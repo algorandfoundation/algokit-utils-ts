@@ -1,6 +1,6 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
-import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
 
@@ -17,7 +17,7 @@ export class TransactionLogger {
     if (decoded.txn.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
       this._latestLastValidRound = decoded.txn.lastValid
     }
-    this._sentTransactionIds.push(getTransactionId(decoded.txn))
+    this._sentTransactionIds.push(decoded.txn.txID())
   }
 
   /**

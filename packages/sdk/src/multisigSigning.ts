@@ -1,5 +1,5 @@
 import type { MultisigSignature, MultisigSubsignature, SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
-import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction } from '@algorandfoundation/algokit-transact'
 import { Address, arrayEqual } from '@algorandfoundation/algokit-common'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'
@@ -177,7 +177,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   if (!refSigTx.multiSignature) {
     throw new Error('Invalid multisig transaction, multisig structure missing at index 0')
   }
-  const refTxID = getTransactionId(refSigTx.txn)
+  const refTxID = refSigTx.txn.txID()
   const refAuthAddr = refSigTx.authAddress
   const refPreImage = {
     version: refSigTx.multiSignature.version,
@@ -193,7 +193,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
       throw new Error(`Invalid multisig transaction, multisig structure missing at index ${i}`)
     }
 
-    if (getTransactionId(unisig.txn) !== refTxID) {
+    if (unisig.txn.txID() !== refTxID) {
       throw new Error(MULTISIG_MERGE_MISMATCH_ERROR_MSG)
     }
 
@@ -260,7 +260,7 @@ export function signMultisigTransaction(txn: Transaction, { version, threshold, 
   const pks = pksFromAddresses(addrs)
   const blob = partialSignTxn(txn, { version, threshold, pks }, sk)
   return {
-    txID: getTransactionId(txn),
+    txID: txn.txID(),
     blob,
   }
 }
@@ -286,7 +286,7 @@ export function appendSignMultisigTransaction(
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
   const partialSignedBlob = partialSignTxn(multisigTxObj.txn, { version, threshold, pks }, sk)
   return {
-    txID: getTransactionId(multisigTxObj.txn),
+    txID: multisigTxObj.txn.txID(),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
@@ -313,7 +313,7 @@ export function appendSignRawMultisigSignature(
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
   const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.txn, { version, threshold, pks }, signerAddr, signature)
   return {
-    txID: getTransactionId(multisigTxObj.txn),
+    txID: multisigTxObj.txn.txID(),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }

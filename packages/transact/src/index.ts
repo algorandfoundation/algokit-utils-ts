@@ -8,8 +8,6 @@ export {
   encodeTransactions,
   estimateTransactionSize,
   getEncodedTransactionType,
-  getTransactionId,
-  getTransactionIdRaw,
   groupTransactions,
   Transaction,
   type TransactionParams,

@@ -208,7 +208,10 @@ export class Transaction implements TransactionParams {
    * Get the transaction ID as a base32-encoded string.
    */
   txID(): string {
-    return getTransactionId(this)
+    const encodedBytes = encodeTransaction(this)
+    const txHash = hash(encodedBytes)
+
+    return base32.encode(txHash).slice(0, TRANSACTION_ID_LENGTH)
   }
 
   /**
@@ -449,22 +452,6 @@ export function estimateTransactionSize(transaction: Transaction): bigint {
 }
 
 /**
- * Get the raw 32-byte transaction ID for a transaction.
- */
-export function getTransactionIdRaw(transaction: Transaction): Uint8Array {
-  const encodedBytes = encodeTransaction(transaction)
-  return hash(encodedBytes)
-}
-
-/**
- * Get the base32 transaction ID string for a transaction.
- */
-export function getTransactionId(transaction: Transaction): string {
-  const hash = getTransactionIdRaw(transaction)
-  return base32.encode(hash).slice(0, TRANSACTION_ID_LENGTH)
-}
-
-/**
  * Groups a collection of transactions by calculating and assigning the group to each transaction.
  */
 export function groupTransactions(transactions: Transaction[]): Transaction[] {
@@ -499,7 +486,9 @@ function computeGroup(transactions: Transaction[]): Uint8Array {
     if (tx.group) {
       throw new Error('Transactions must not already be grouped')
     }
-    return getTransactionIdRaw(tx)
+
+    const encodedBytes = encodeTransaction(tx)
+    return hash(encodedBytes)
   })
 
   const prefixBytes = new TextEncoder().encode(TRANSACTION_GROUP_DOMAIN_SEPARATOR)

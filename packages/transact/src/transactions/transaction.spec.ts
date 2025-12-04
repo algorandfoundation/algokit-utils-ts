@@ -8,8 +8,6 @@ import {
   encodeTransaction,
   encodeTransactionRaw,
   estimateTransactionSize,
-  getTransactionId,
-  getTransactionIdRaw,
   validateTransaction,
 } from './transaction'
 import { TransactionType } from './transaction-type'
@@ -57,8 +55,7 @@ describe('Transaction Validation', () => {
       ['encodeTransaction', (params: TransactionParams) => encodeTransaction(new Transaction(params))],
       ['encodeTransactionRaw', (params: TransactionParams) => encodeTransactionRaw(new Transaction(params))],
       ['estimateTransactionSize', (params: TransactionParams) => estimateTransactionSize(new Transaction(params))],
-      ['getTransactionIdRaw', (params: TransactionParams) => getTransactionIdRaw(new Transaction(params))],
-      ['getTransactionId', (params: TransactionParams) => getTransactionId(new Transaction(params))],
+      ['txID', (params: TransactionParams) => new Transaction(params).txID()],
       ['encodeSignedTransaction', (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), signature: EMPTY_SIGNATURE })],
     ])('should validate when calling %s', (_, sut) => {
       const transaction: TransactionParams = {
