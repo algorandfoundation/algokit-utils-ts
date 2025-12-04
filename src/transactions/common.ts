@@ -6,7 +6,7 @@ import { AlgoAmount } from '../types/amount'
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
-  /** The address of the account sending the transaction. */
+  /** The address sending the transaction, optionally with an attached signer. */
   sender: SendingAddress
   /** The function used to sign transaction(s); if not specified then
    *  an attempt will be made to find a registered signer for the
