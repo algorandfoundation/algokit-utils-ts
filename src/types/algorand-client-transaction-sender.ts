@@ -1,10 +1,8 @@
-import algosdk, { Address } from 'algosdk'
+import algosdk, { Address, Algodv2, ProgramSourceMap } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'
-import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
-import { AppManager } from './app-manager'
-import { AssetManager } from './asset-manager'
+import { ABIReturn, CompiledTeal, SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import {
   AppCallMethodCall,
   AppCallParams,
@@ -20,6 +18,7 @@ import {
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
+import { getABIReturnValue } from '../transaction'
 
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
@@ -32,11 +31,27 @@ const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args
   )})`
 }
 
+function getABIReturn(
+  confirmation: algosdk.modelsv2.PendingTransactionResponse | undefined,
+  method: algosdk.ABIMethod | undefined,
+): ABIReturn | undefined {
+  if (!method || !confirmation || method.returns.type === 'void') {
+    return undefined
+  }
+
+  // The parseMethodResponse method mutates the second parameter :(
+  const resultDummy: algosdk.ABIResult = {
+    txID: '',
+    method,
+    rawReturnValue: new Uint8Array(),
+  }
+  return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation), method.returns.type)
+}
+
 /** Orchestrates sending transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionSender {
   private _newGroup: () => TransactionComposer
-  private _assetManager: AssetManager
-  private _appManager: AppManager
+  private _algod: algosdk.Algodv2
 
   /**
    * Creates a new `AlgorandClientSender`
@@ -48,10 +63,9 @@ export class AlgorandClientTransactionSender {
    * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
    * ```
    */
-  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
+  constructor(newGroup: () => TransactionComposer, algod: Algodv2) {
     this._newGroup = newGroup
-    this._assetManager = assetManager
-    this._appManager = appManager
+    this._algod = algod
   }
 
   /**
@@ -120,7 +134,19 @@ export class AlgorandClientTransactionSender {
     return async (params) => {
       const result = await this._send(c, log)(params)
 
-      return { ...result, return: AppManager.getABIReturn(result.confirmation, 'method' in params ? params.method : undefined) }
+      return { ...result, return: getABIReturn(result.confirmation, 'method' in params ? params.method : undefined) }
+    }
+  }
+
+  private async compileTeal(teal: string): Promise<CompiledTeal> {
+    const resp = await this._algod.compile(teal).do()
+    const bytes = new Uint8Array(Buffer.from(resp.result, 'base64'))
+    return {
+      compiledHash: resp.hash,
+      teal,
+      compiled: resp.result,
+      compiledBase64ToBytes: bytes,
+      sourceMap: new ProgramSourceMap(JSON.parse(algosdk.encodeJSON(resp.sourcemap!))),
     }
   }
 
@@ -134,10 +160,8 @@ export class AlgorandClientTransactionSender {
     return async (params) => {
       const result = await this._sendAppCall(c, log)(params)
 
-      const compiledApproval =
-        typeof params.approvalProgram === 'string' ? this._appManager.getCompilationResult(params.approvalProgram) : undefined
-      const compiledClear =
-        typeof params.clearStateProgram === 'string' ? this._appManager.getCompilationResult(params.clearStateProgram) : undefined
+      const compiledApproval = typeof params.approvalProgram === 'string' ? await this.compileTeal(params.approvalProgram) : undefined
+      const compiledClear = typeof params.clearStateProgram === 'string' ? await this.compileTeal(params.clearStateProgram) : undefined
 
       return { ...result, compiledApproval, compiledClear }
     }
@@ -524,8 +548,7 @@ export class AlgorandClientTransactionSender {
     if (params.ensureZeroBalance) {
       let balance = 0n
       try {
-        const accountAssetInfo = await this._assetManager.getAccountInformation(params.sender, params.assetId)
-        balance = accountAssetInfo.balance
+        balance = (await this._algod.accountAssetInformation(params.sender, params.assetId).do()).assetHolding?.amount ?? 0n
       } catch {
         throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)
       }
@@ -534,7 +557,7 @@ export class AlgorandClientTransactionSender {
       }
     }
 
-    params.creator = params.creator ?? (await this._assetManager.getById(params.assetId)).creator
+    params.creator = (await this._algod.getAssetByID(params.assetId).do()).params.creator
 
     return await this._send((c) => c.addAssetOptOut, {
       preLog: (params, transaction) =>
