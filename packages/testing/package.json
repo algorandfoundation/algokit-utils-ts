@@ -1,0 +1,27 @@
+{
+  "name": "@algorandfoundation/algokit-testing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Testing utilities for algokit client packages.",
+  "author": "Algorand Foundation",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0"
+  },
+  "type": "module",
+  "main": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./mockServer": "./mockServer.ts",
+    "./globalSetup": "./globalSetup.ts"
+  },
+  "files": [
+    "**/*"
+  ],
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.5"
+  }
+}

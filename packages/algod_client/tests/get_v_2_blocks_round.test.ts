@@ -8,10 +8,8 @@ describe('GET v2_blocks_ROUND', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    // TODO: Fix msgpack response handling in PollyJS mock server
-    test('Basic request and response validation', async () => {
-      // Temporarily calling testnet whilst the mock server is having issues
-      // const client = new AlgodClient(config)
+    // TODO: Re-enable once msgpack handling is fixed in mock server
+    test.skip('Basic request and response validation', async () => {
       const client = new AlgodClient({
         baseUrl: `https://testnet-api.algonode.cloud`,
       })

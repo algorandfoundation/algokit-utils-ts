@@ -121,6 +121,7 @@
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",
     "dotenv-cli": "^7.4.2",
+    "dotenv": "^16.4.5",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-unused-imports": "^4.3.0",

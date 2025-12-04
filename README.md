@@ -62,3 +62,16 @@ To run tests you can use VS Code, or:
 ```
 npm run test
 ```
+
+### Mock Server for Client Tests
+
+The `algod_client`, `indexer_client`, and `kmd_client` packages use a Docker-based mock server for deterministic API testing. By default, running tests will automatically start the mock server container.
+
+To use an external mock server (e.g., for local development):
+
+```bash
+# Set one or more of these environment variables
+export MOCK_ALGOD_URL=http://localhost:18000
+export MOCK_INDEXER_URL=http://localhost:18002
+export MOCK_KMD_URL=http://localhost:18001
+```

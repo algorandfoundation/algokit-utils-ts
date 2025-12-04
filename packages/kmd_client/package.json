@@ -2,7 +2,7 @@
   "name": "@algorandfoundation/algokit-kmd-client",
   "version": "0.1.0",
   "private": true,
-  "description": "Client library for interacting with kmd.",
+  "description": "Client library for interacting with KMD.",
   "author": "Algorand Foundation",
   "license": "MIT",
   "engines": {
@@ -25,5 +25,7 @@
   },
   "dependencies": {},
   "peerDependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "@algorandfoundation/algokit-testing": "*"
+  }
 }
