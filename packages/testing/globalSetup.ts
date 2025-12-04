@@ -6,7 +6,6 @@
 import { config } from 'dotenv'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { GlobalSetupContext } from 'vitest/node'
 import { startMockServer, stopAllMockServers, type ClientType, type MockServer, MOCK_PORTS } from './mockServer'
 
 const currentDir = resolve(fileURLToPath(import.meta.url), '..')
@@ -16,7 +15,7 @@ config({ path: resolve(projectRoot, '.env') })
 export function createGlobalSetup(clientType: ClientType) {
   let mockServer: MockServer | null = null
 
-  return async function setup(_ctx: GlobalSetupContext): Promise<() => Promise<void>> {
+  return async function setup(): Promise<() => Promise<void>> {
     console.log(`[MockServer] Starting ${clientType} mock server...`)
 
     try {
