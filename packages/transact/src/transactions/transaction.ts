@@ -339,7 +339,7 @@ export function encodeTransactions(transactions: Transaction[]): Uint8Array[] {
 /**
  * Validate a transaction
  */
-export function validateTransaction(transaction: TransactionParams): void {
+export function validateTransaction(transaction: Transaction): void {
   // Validate that only one transaction type specific field is set
   const typeFields = [
     transaction.payment,

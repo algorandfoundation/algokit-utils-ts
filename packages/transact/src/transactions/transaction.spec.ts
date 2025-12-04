@@ -19,7 +19,7 @@ const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7
 describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
     test('should throw error when multiple transaction type specific fields are set', () => {
-      const transaction: TransactionParams = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -33,13 +33,13 @@ describe('Transaction Validation', () => {
           amount: 1000n,
           receiver: VALID_ADDRESS_1,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).toThrow('Multiple transaction type specific fields set')
     })
 
     test('should validate valid payment transaction', () => {
-      const transaction: TransactionParams = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -48,7 +48,7 @@ describe('Transaction Validation', () => {
           amount: 1000n,
           receiver: VALID_ADDRESS_1,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
