@@ -12,12 +12,12 @@ import {
 } from '@algorandfoundation/algokit-testing'
 
 function getMockServerUrl(): string {
-  return process.env.MOCK_ALGOD_URL || process.env.MOCK_ALGOD_SERVER || `http://127.0.0.1:${MOCK_PORTS.algod.host}`
+  return process.env.MOCK_KMD_URL || process.env.MOCK_KMD_SERVER || `http://127.0.0.1:${MOCK_PORTS.kmd.host}`
 }
 
 export const config: ClientConfig = {
   baseUrl: getMockServerUrl(),
-  token: process.env.MOCK_ALGOD_TOKEN || DEFAULT_TOKEN,
+  token: process.env.MOCK_KMD_TOKEN || DEFAULT_TOKEN,
 }
 
 export { TEST_ADDRESS, TEST_APP_ID, TEST_APP_ID_WITH_BOXES, TEST_BOX_NAME, TEST_ASSET_ID, TEST_TXID, TEST_ROUND }
