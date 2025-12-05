@@ -540,7 +540,7 @@ Tracks the given signer against the given sender for later signing.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| `Address` | The sender address to use this signer for |
+| `sender` | `string` \| [`Address`](index.Address.md) | The sender address to use this signer for |
 | `signer` | `TransactionSigner` | The signer to sign transactions with for the given sender |
 
 #### Returns

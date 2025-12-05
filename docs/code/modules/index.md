@@ -22,6 +22,10 @@
 
 - [indexer](index.indexer.md)
 
+### Classes
+
+- [Address](../classes/index.Address.md)
+
 ### Interfaces
 
 - [TransactionWithSigner](../interfaces/index.TransactionWithSigner.md)
@@ -29,6 +33,7 @@
 ### Variables
 
 - [ALGORAND\_MIN\_TX\_FEE](index.md#algorand_min_tx_fee)
+- [ALGORAND\_ZERO\_ADDRESS\_STRING](index.md#algorand_zero_address_string)
 - [Config](index.md#config)
 - [MAX\_APP\_CALL\_ACCOUNT\_REFERENCES](index.md#max_app_call_account_references)
 - [MAX\_APP\_CALL\_FOREIGN\_REFERENCES](index.md#max_app_call_foreign_references)
@@ -38,6 +43,8 @@
 
 - [algo](index.md#algo)
 - [algos](index.md#algos)
+- [decodeAddress](index.md#decodeaddress)
+- [encodeAddress](index.md#encodeaddress)
 - [encodeLease](index.md#encodelease)
 - [microAlgo](index.md#microalgo)
 - [microAlgos](index.md#microalgos)
@@ -126,6 +133,16 @@ Re-exports [TealSourcesDebugEventData](../interfaces/types_debugging.TealSources
 
 ___
 
+### ALGORAND\_ZERO\_ADDRESS\_STRING
+
+• `Const` **ALGORAND\_ZERO\_ADDRESS\_STRING**: ``"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"``
+
+#### Defined in
+
+[packages/common/src/address.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L9)
+
+___
+
 ### Config
 
 • `Const` **Config**: [`UpdatableConfig`](../classes/types_config.UpdatableConfig.md)
@@ -209,6 +226,54 @@ Returns an amount of Algo using AlgoAmount
 #### Defined in
 
 [src/amount.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L61)
+
+___
+
+### decodeAddress
+
+▸ **decodeAddress**(`address`): [`Address`](../classes/index.Address.md)
+
+decodeAddress takes an Algorand address in string form and decodes it into a Uint8Array.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `address` | `string` | an Algorand address with checksum. |
+
+#### Returns
+
+[`Address`](../classes/index.Address.md)
+
+the decoded form of the address's public key and checksum
+
+#### Defined in
+
+[packages/common/src/address.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L182)
+
+___
+
+### encodeAddress
+
+▸ **encodeAddress**(`address`): `string`
+
+encodeAddress takes an Algorand address as a Uint8Array and encodes it into a string with checksum.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `address` | `Uint8Array` | a raw Algorand address |
+
+#### Returns
+
+`string`
+
+the address and checksum encoded as a string.
+
+#### Defined in
+
+[packages/common/src/address.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L191)
 
 ___
 

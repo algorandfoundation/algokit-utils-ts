@@ -33,7 +33,7 @@ ___
 
 ### creator
 
-• **creator**: `Readonly`\<`Address`\>
+• **creator**: `Readonly`\<[`Address`](../classes/index.Address.md)\>
 
 The address of the creator associated with this lookup
 
