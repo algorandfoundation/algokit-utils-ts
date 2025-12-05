@@ -478,7 +478,7 @@ If no signer has been registered for that address then an error is thrown.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `ReadableAddress` | The sender address |
+| `sender` | [`ReadableAddress`](../modules/index.md#readableaddress) | The sender address |
 
 #### Returns
 
@@ -513,7 +513,7 @@ Returns the given sender account's current status, balance and spendable amounts
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `ReadableAddress` | The account / address to look up |
+| `sender` | [`ReadableAddress`](../modules/index.md#readableaddress) | The account / address to look up |
 
 #### Returns
 
@@ -547,7 +547,7 @@ if not then an error is thrown.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `ReadableAddress` | The sender address |
+| `sender` | [`ReadableAddress`](../modules/index.md#readableaddress) | The sender address |
 
 #### Returns
 
