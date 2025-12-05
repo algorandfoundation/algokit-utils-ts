@@ -37,12 +37,22 @@ export type AddressWithSigners = Expand<
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
-/** Generate type-safe domain-separated signer callbacks given an ed25519 pubkey and a signing callback */
-export function generateAddressWithSigners(
-  ed25519Pubkey: Uint8Array,
-  rawEd25519Signer: (bytesToSign: Uint8Array) => Promise<Uint8Array>,
-): AddressWithSigners {
-  const addr = new Address(ed25519Pubkey)
+/**
+ * Generate type-safe domain-separated signer callbacks given an ed25519 pubkey and a signing callback
+ * @param args - The arguments for generating signers
+ * @param args.ed25519Pubkey - The ed25519 public key used for signing
+ * @param args.sendingAddress - The address that will be used as the sender of transactions. If not provided, defaults to the address derived from the ed25519 public key. This is useful when signing for a rekeyed account where the sending address differs from the auth address.
+ * @param args.rawEd25519Signer - A callback function that signs raw bytes using the ed25519 private key
+ * @returns An object containing the sending address and various signer functions
+ */
+export function generateAddressWithSigners(args: {
+  ed25519Pubkey: Uint8Array
+  sendingAddress?: Address
+  rawEd25519Signer: (bytesToSign: Uint8Array) => Promise<Uint8Array>
+}): AddressWithSigners {
+  const { ed25519Pubkey, rawEd25519Signer } = args
+  const authAddr = new Address(ed25519Pubkey)
+  const sendingAddress = args.sendingAddress ?? authAddr
 
   const signer: TransactionSigner = async (txnGroup: Transaction[], indexesToSign: number[]) => {
     const stxns: SignedTransaction[] = []
@@ -55,8 +65,8 @@ export function generateAddressWithSigners(
         sig: signature,
       }
 
-      if (!txn.sender.equals(addr)) {
-        stxn.authAddress = addr
+      if (!txn.sender.equals(sendingAddress)) {
+        stxn.authAddress = authAddr
       }
 
       stxns.push(stxn)
@@ -80,16 +90,16 @@ export function generateAddressWithSigners(
     return await rawEd25519Signer(bytesToSign)
   }
 
-  return { addr, signer, lsigSigner, programDataSigner, mxBytesSigner }
+  return { addr: sendingAddress, signer, lsigSigner, programDataSigner, mxBytesSigner }
 }
 
 export function makeBasicAccountTransactionSigner(account: Account): TransactionSigner {
-  const pubkey = account.addr.publicKey
-  const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+  const ed25519Pubkey = account.addr.publicKey
+  const rawEd25519Signer = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
     return nacl.sign.detached(bytesToSign, account.sk)
   }
 
-  return generateAddressWithSigners(pubkey, rawSigner).signer
+  return generateAddressWithSigners({ ed25519Pubkey, rawEd25519Signer }).signer
 }
 
 /**
