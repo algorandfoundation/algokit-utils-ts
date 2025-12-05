@@ -1,25 +1,25 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Address, ReadableAddress, getAddress } from '@algorandfoundation/algokit-common'
+import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import {
   AddressWithSigners,
   AddressWithTransactionSigner,
+  generateAddressWithSigners,
   LogicSigAccount,
-  makeBasicAccountTransactionSigner,
   MultisigAccount,
   MultisigMetadata,
   TransactionSigner,
 } from '@algorandfoundation/algokit-transact'
-import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
-import { AccountInformation, DISPENSER_ACCOUNT, SigningAccount } from './account'
+import { AccountInformation, DISPENSER_ACCOUNT } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
+import nacl from 'tweetnacl'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -40,9 +40,9 @@ export interface EnsureFundedResult {
  * ```
  */
 export const getAccountTransactionSigner = memoize(function (
-  account: AddressWithTransactionSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount,
+  account: AddressWithTransactionSigner | LogicSigAccount | MultisigAccount,
 ): TransactionSigner {
-  return 'signer' in account ? account.signer : makeBasicAccountTransactionSigner(account)
+  return account.signer
 })
 
 /** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
@@ -111,7 +111,7 @@ export class AccountManager {
    * retrieval and returns a `AddressWithSigner` along with the original account in an `account` property.
    */
 
-  private signerAccount<T extends AddressWithTransactionSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
+  private signerAccount<T extends AddressWithTransactionSigner | LogicSigAccount | MultisigAccount>(
     account: T,
   ): Address &
     AddressWithTransactionSigner & {
@@ -149,7 +149,7 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` instance for method chaining
    */
-  public setSignerFromAccount(account: AddressWithTransactionSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
+  public setSignerFromAccount(account: AddressWithTransactionSigner | LogicSigAccount | MultisigAccount) {
     this.signerAccount(account)
     return this
   }
@@ -287,9 +287,19 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string | Address) {
+  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
     const account = algosdk.mnemonicToSecretKey(mnemonicSecret)
-    return this.signerAccount(new SigningAccount(account, sender))
+    const sk = algosdk.seedFromMnemonic(mnemonicSecret)
+
+    const addrWithSigners = generateAddressWithSigners({
+      ed25519Pubkey: account.addr.publicKey,
+      sendingAddress: getOptionalAddress(sender),
+      rawEd25519Signer: async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+        return nacl.sign.detached(bytesToSign, sk)
+      },
+    })
+
+    return this.signerAccount(addrWithSigners)
   }
 
   /**
@@ -344,13 +354,12 @@ export class AccountManager {
     const sender = process.env[`${name.toUpperCase()}_SENDER`]
 
     if (accountMnemonic) {
-      const signer = algosdk.mnemonicToSecretKey(accountMnemonic)
-      return this.signerAccount(new SigningAccount(signer, sender))
+      return this.fromMnemonic(accountMnemonic, sender)
     }
 
     if (await this._clientManager.isLocalNet()) {
       const account = await this._kmdAccountManager.getOrCreateWalletAccount(name, fundWith)
-      return this.signerAccount(account.account)
+      return this.signerAccount(account)
     }
 
     throw new Error(`Missing environment variable ${name.toUpperCase()}_MNEMONIC when looking for account ${name}`)
@@ -379,7 +388,7 @@ export class AccountManager {
   ) {
     const account = await this._kmdAccountManager.getWalletAccount(name, predicate, sender)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
-    return this.signerAccount(account.account)
+    return this.signerAccount(account)
   }
 
   /**
@@ -423,7 +432,12 @@ export class AccountManager {
    * @returns The account
    */
   public random() {
-    return this.signerAccount(algosdk.generateAccount())
+    const keypair = nacl.sign.keyPair()
+    const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+      return nacl.sign.detached(bytesToSign, keypair.secretKey)
+    }
+
+    return this.signerAccount(generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner }))
   }
 
   /**
@@ -463,7 +477,7 @@ export class AccountManager {
    */
   public async localNetDispenser() {
     const dispenser = await this._kmdAccountManager.getLocalNetDispenserAccount()
-    return this.signerAccount(dispenser.account)
+    return this.signerAccount(dispenser)
   }
 
   /**

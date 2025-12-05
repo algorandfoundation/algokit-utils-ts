@@ -2,7 +2,6 @@ import { Address, Addressable, concatArrays, Expand, ReadableAddress } from '@al
 import { encodeTransaction, Transaction } from './transactions/transaction'
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
 import { encodeSignedTransaction, SignedTransaction } from './transactions/signed-transaction'
-import { Account } from '@algorandfoundation/sdk'
 import nacl from 'tweetnacl'
 
 /** Function for signing a group of transactions */
@@ -91,15 +90,6 @@ export function generateAddressWithSigners(args: {
   }
 
   return { addr: sendingAddress, signer, lsigSigner, programDataSigner, mxBytesSigner }
-}
-
-export function makeBasicAccountTransactionSigner(account: Account): TransactionSigner {
-  const ed25519Pubkey = account.addr.publicKey
-  const rawEd25519Signer = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
-    return nacl.sign.detached(bytesToSign, account.sk)
-  }
-
-  return generateAddressWithSigners({ ed25519Pubkey, rawEd25519Signer }).signer
 }
 
 /**

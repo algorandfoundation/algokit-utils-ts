@@ -1,8 +1,7 @@
-/* eslint-disable no-bitwise */
 import english from './wordlists/english.js'
 import * as nacl from '../nacl/naclWrappers.js'
-import { Address } from '../encoding/address.js'
-import Account from '../types/account.js'
+import { AddressWithSigners, generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
+import tweetnacl from 'tweetnacl'
 
 export const FAIL_TO_DECODE_MNEMONIC_ERROR_MSG = 'failed to decode mnemonic'
 export const NOT_IN_WORDS_LIST_ERROR_MSG = 'the mnemonic contains a word that is not in the wordlist'
@@ -140,11 +139,17 @@ export function seedFromMnemonic(mnemonic: string) {
  * @param mn - 25 words Algorand mnemonic
  * @throws error if fails to decode the mnemonic
  */
-export function mnemonicToSecretKey(mn: string): Account {
+export function mnemonicToSecretKey(mn: string): AddressWithSigners {
   const seed = seedFromMnemonic(mn)
   const keys = nacl.keyPairFromSeed(seed)
-  const addr = new Address(keys.publicKey)
-  return { addr, sk: keys.secretKey }
+
+  const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+    return tweetnacl.sign.detached(bytesToSign, keys.secretKey)
+  }
+
+  const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keys.publicKey, rawEd25519Signer: rawSigner })
+
+  return addressWithSigners
 }
 
 /**

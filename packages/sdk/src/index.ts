@@ -56,7 +56,6 @@ export function signBytes(bytes: Uint8Array, sk: Uint8Array) {
 export const ERROR_MULTISIG_BAD_SENDER = new Error(MULTISIG_BAD_SENDER_ERROR_MSG)
 export const ERROR_INVALID_MICROALGOS = new Error(convert.INVALID_MICROALGOS_ERROR_MSG)
 
-export { default as generateAccount } from './account'
 // Export client classes with algosdk-compatible names
 export * from './convert'
 export { base64ToBytes, bytesToBase64, bytesToHex, bytesToString, coerceToBytes, hexToBytes } from './encoding/binarydata'
@@ -71,8 +70,6 @@ export {
   secretKeyToMnemonic,
   seedFromMnemonic,
 } from './mnemonic/mnemonic'
-export * from './types/account'
-export type { default as Account } from './types/account'
 export * from './types/intDecoding'
 export { default as IntDecoding } from './types/intDecoding'
 export * from './types/transactions/index'
