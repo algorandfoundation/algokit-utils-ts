@@ -61,7 +61,7 @@ Parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L32)
+[src/transactions/method-call.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L31)
 
 ___
 
@@ -85,7 +85,7 @@ Parameters to define an ABI method call create transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L26)
+[src/transactions/method-call.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L25)
 
 ___
 
@@ -109,7 +109,7 @@ Parameters to define an ABI method call delete transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L30)
+[src/transactions/method-call.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L29)
 
 ___
 
@@ -139,7 +139,7 @@ Parameters to define an ABI method call.
 
 #### Defined in
 
-[src/transactions/method-call.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L63)
+[src/transactions/method-call.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L62)
 
 ___
 
@@ -163,7 +163,7 @@ Types that can be used to define a transaction argument for an ABI call transact
 
 #### Defined in
 
-[src/transactions/method-call.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L53)
+[src/transactions/method-call.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L52)
 
 ___
 
@@ -175,7 +175,7 @@ Parameters to define an ABI method call update transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L28)
+[src/transactions/method-call.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L27)
 
 ___
 
@@ -319,7 +319,7 @@ Common parameters for defining a transaction.
 
 #### Defined in
 
-[src/transactions/common.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/common.ts#L9)
+[src/transactions/common.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/common.ts#L8)
 
 ___
 
@@ -394,7 +394,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L46)
+[src/transactions/method-call.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L45)
 
 ___
 
@@ -404,7 +404,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L34)
+[src/transactions/method-call.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L33)
 
 ___
 
@@ -414,7 +414,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L40)
+[src/transactions/method-call.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L39)
 
 ___
 
@@ -487,7 +487,7 @@ Parameters to create an `TransactionComposer`.
 | `composerConfig?` | [`TransactionComposerConfig`](types_composer.md#transactioncomposerconfig) | - |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
 | `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)[] | An array of error transformers to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
-| `getSigner` | (`address`: `ReadableAddress`) => `algosdk.TransactionSigner` | - |
+| `getSigner` | (`address`: `ReadableAddress`) => `TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`SuggestedParams`\> | - |
 
 #### Defined in

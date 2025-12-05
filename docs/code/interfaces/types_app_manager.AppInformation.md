@@ -26,7 +26,7 @@ Information about an app.
 
 ### appAddress
 
-• **appAddress**: `Address`
+• **appAddress**: [`Address`](../classes/index.Address.md)
 
 The escrow address that the app operates with.
 
@@ -74,7 +74,7 @@ ___
 
 ### creator
 
-• **creator**: `Address`
+• **creator**: [`Address`](../classes/index.Address.md)
 
 The address that created this application. This is the address where the
 parameters and global state for this application can be found.

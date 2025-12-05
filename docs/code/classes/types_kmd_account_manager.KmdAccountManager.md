@@ -146,7 +146,7 @@ Returns an Algorand signing account with private key loaded from the given KMD w
 | :------ | :------ | :------ |
 | `walletName` | `string` | The name of the wallet to retrieve an account from |
 | `predicate?` | (`account`: `Account`) => `boolean` | An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
-| `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
+| `sender?` | `string` \| [`Address`](index.Address.md) | The optional sender address to use this signer for (aka a rekeyed account) |
 
 #### Returns
 

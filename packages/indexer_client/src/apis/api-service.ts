@@ -38,7 +38,7 @@ import {
   HealthCheckMeta,
   TransactionResponseMeta,
   TransactionsResponseMeta,
-} from '../models/index'
+} from '../models/model-meta'
 
 export class IndexerApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}

@@ -19,8 +19,8 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
   const logicSignature: LogicSignature = {
     logic: lsig.logic,
     args: lsig.args,
-    signature: lsig.sig,
-    multiSignature: lsig.lmsig
+    sig: lsig.sig,
+    msig: lsig.lmsig
       ? {
           version: lsig.lmsig.v,
           threshold: lsig.lmsig.thr,
@@ -34,7 +34,7 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
 
   const signedTxn: SignedTransaction = {
     txn: txn,
-    logicSignature,
+    lsig: logicSignature,
     authAddress,
   }
 

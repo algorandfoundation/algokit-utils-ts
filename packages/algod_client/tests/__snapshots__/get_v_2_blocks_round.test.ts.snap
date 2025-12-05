@@ -265,7 +265,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
     "payset": [
       {
         "hasGenesisId": true,
-        "signedTransaction": {
+        "signedTxn": {
           "applyData": {
             "evalDelta": {
               "localDeltas": Map {
@@ -929,8 +929,8 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
               ],
             },
           },
-          "signedTransaction": {
-            "signature": Uint8Array [
+          "signedTxn": {
+            "sig": Uint8Array [
               93,
               221,
               145,
@@ -1217,9 +1217,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
       },
       {
         "hasGenesisId": true,
-        "signedTransaction": {
-          "signedTransaction": {
-            "signature": Uint8Array [
+        "signedTxn": {
+          "signedTxn": {
+            "sig": Uint8Array [
               237,
               70,
               251,
@@ -1391,9 +1391,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
       },
       {
         "hasGenesisId": true,
-        "signedTransaction": {
-          "signedTransaction": {
-            "signature": Uint8Array [
+        "signedTxn": {
+          "signedTxn": {
+            "sig": Uint8Array [
               56,
               184,
               144,
@@ -1565,9 +1565,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
       },
       {
         "hasGenesisId": true,
-        "signedTransaction": {
-          "signedTransaction": {
-            "signature": Uint8Array [
+        "signedTxn": {
+          "signedTxn": {
+            "sig": Uint8Array [
               28,
               188,
               84,
@@ -1739,9 +1739,9 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
       },
       {
         "hasGenesisId": true,
-        "signedTransaction": {
-          "signedTransaction": {
-            "signature": Uint8Array [
+        "signedTxn": {
+          "signedTxn": {
+            "sig": Uint8Array [
               66,
               31,
               226,

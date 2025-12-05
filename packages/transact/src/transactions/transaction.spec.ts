@@ -59,7 +59,7 @@ describe('Transaction Validation', () => {
       ['txID', (params: TransactionParams) => new Transaction(params).txID()],
       [
         'encodeSignedTransaction',
-        (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), signature: EMPTY_SIGNATURE }),
+        (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), sig: EMPTY_SIGNATURE }),
       ],
     ])('should validate when calling %s', (_, sut) => {
       const transaction: TransactionParams = {

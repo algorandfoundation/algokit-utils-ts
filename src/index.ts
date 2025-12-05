@@ -1,4 +1,4 @@
-// Up to date exports
+export { ALGORAND_ZERO_ADDRESS_STRING, Address, decodeAddress, encodeAddress } from '@algorandfoundation/algokit-common'
 export * from './amount'
 export * from './config'
 export * as indexer from './indexer-lookup'

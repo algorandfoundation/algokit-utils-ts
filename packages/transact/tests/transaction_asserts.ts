@@ -18,7 +18,7 @@ import { TransactionTestData } from './common'
 export const assertExample = async (label: string, testData: TransactionTestData) => {
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,
-    signature: await ed.signAsync(encodeTransaction(testData.transaction), testData.signingPrivateKey),
+    sig: await ed.signAsync(encodeTransaction(testData.transaction), testData.signingPrivateKey),
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
   expect(encodedSignedTxn, label).toEqual(testData.signedBytes)
@@ -46,7 +46,7 @@ export const assertEncodeWithAuthAddress = async (label: string, testData: Trans
   const sig = await ed.signAsync(testData.unsignedBytes, testData.signingPrivateKey)
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,
-    signature: sig,
+    sig: sig,
     authAddress: Address.fromString(testData.rekeyedSenderAuthAddress),
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
@@ -58,7 +58,7 @@ export const assertEncodeWithSignature = async (label: string, testData: Transac
   const sig = await ed.signAsync(testData.unsignedBytes, testData.signingPrivateKey)
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,
-    signature: sig,
+    sig: sig,
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
 
@@ -107,7 +107,7 @@ export const assertMultisigExample = async (label: string, testData: Transaction
 
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,
-    multiSignature: multisigSignature,
+    msig: multisigSignature,
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
 

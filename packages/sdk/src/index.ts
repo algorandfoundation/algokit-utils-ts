@@ -31,7 +31,7 @@ export function signTransaction(txn: Transaction, sk: Uint8Array) {
 
   const signedTxn: SignedTransaction = {
     txn: txn,
-    signature,
+    sig: signature,
   }
 
   return {
