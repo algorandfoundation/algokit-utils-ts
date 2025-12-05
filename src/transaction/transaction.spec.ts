@@ -1,6 +1,6 @@
 import { ABIType } from '@algorandfoundation/algokit-abi'
 import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Account } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -1046,7 +1046,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: Address & algosdk.Account & AddressWithSigner
+  let testAccount: Address & algosdk.Account & AddressWithTransactionSigner
 
   beforeEach(fixture.newScope)
 

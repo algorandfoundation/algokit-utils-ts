@@ -22,8 +22,8 @@ import {
   encodeTransactionRaw,
   getTransactionId,
   groupTransactions,
+  makeEmptyTransactionSigner,
 } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { TransactionWithSigner, waitForConfirmation } from '../transaction'
@@ -62,6 +62,9 @@ import { FeeDelta, FeePriority, calculateInnerFeeDelta } from '../transactions/f
 import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
 import {
   AsyncTransactionParams,
+  ProcessedAppCallMethodCall,
+  ProcessedAppCreateMethodCall,
+  ProcessedAppUpdateMethodCall,
   TransactionParams,
   buildAppCallMethodCall,
   buildAppCreateMethodCall,
@@ -72,9 +75,6 @@ import {
   type AppCreateMethodCall,
   type AppDeleteMethodCall,
   type AppUpdateMethodCall,
-  type ProcessedAppCallMethodCall,
-  type ProcessedAppCreateMethodCall,
-  type ProcessedAppUpdateMethodCall,
 } from '../transactions/method-call'
 import { buildPayment, type PaymentParams } from '../transactions/payment'
 import { asJson } from '../util'
@@ -1884,7 +1884,7 @@ export class TransactionComposer {
 
         const transactionsWithEmptySigners: TransactionWithSigner[] = sentTransactions.map((txn) => ({
           txn,
-          signer: algosdk.makeEmptyTransactionSigner(),
+          signer: makeEmptyTransactionSigner(),
         }))
         const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
         const simulateResponse = await this.algod.simulateTransactions({
@@ -1979,14 +1979,12 @@ export class TransactionComposer {
 
       transactionsWithSigner = transactions.map((txn, index) => ({
         txn: txn,
-        signer: skipSignatures
-          ? algosdk.makeEmptyTransactionSigner()
-          : (builtTransactions.signers.get(index) ?? algosdk.makeEmptyTransactionSigner()),
+        signer: skipSignatures ? makeEmptyTransactionSigner() : (builtTransactions.signers.get(index) ?? makeEmptyTransactionSigner()),
       }))
     } else {
       transactionsWithSigner = this.transactionsWithSigners.map((e) => ({
         txn: e.txn,
-        signer: skipSignatures ? algosdk.makeEmptyTransactionSigner() : e.signer,
+        signer: skipSignatures ? makeEmptyTransactionSigner() : e.signer,
       }))
     }
 

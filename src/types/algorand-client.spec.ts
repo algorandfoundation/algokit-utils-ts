@@ -1,5 +1,5 @@
 import { getABIMethod } from '@algorandfoundation/algokit-abi'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/example-contracts/client/TestContractClient'
@@ -18,8 +18,8 @@ async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
 
 describe('AlgorandClient', () => {
   let algorand: AlgorandClient
-  let alice: AddressWithSigner
-  let bob: AddressWithSigner
+  let alice: AddressWithTransactionSigner
+  let bob: AddressWithTransactionSigner
   let appClient: TestContractClient
   let appId: bigint
 

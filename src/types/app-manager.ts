@@ -1,7 +1,7 @@
 import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import {
   ABI_RETURN_PREFIX,
@@ -55,7 +55,7 @@ export interface AppInformation {
  *  * `AddressWithSigner` (that will be encoded into the
  *    public key address of the corresponding account)
  */
-export type BoxIdentifier = string | Uint8Array | AddressWithSigner
+export type BoxIdentifier = string | Uint8Array | AddressWithTransactionSigner
 
 /**
  * A grouping of the app ID and name identifier to reference an app box.

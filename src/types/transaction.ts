@@ -2,7 +2,7 @@ import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
 import {
-  AddressWithSigner,
+  AddressWithTransactionSigner,
   AppCallTransactionFields,
   AssetConfigTransactionFields,
   AssetFreezeTransactionFields,
@@ -112,14 +112,14 @@ export interface ConfirmedTransactionResults extends SendTransactionResult, Send
  * @deprcated Use `SendingAddress` instead
  */
 
-export type SendTransactionFrom = AddressWithSigner
+export type SendTransactionFrom = AddressWithTransactionSigner
 
 /** Defines an unsigned transaction that will appear in a group of transactions along with its signing information */
 export interface TransactionToSign {
   /** The unsigned transaction to sign and send */
   transaction: Transaction
   /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
-  signer: AddressWithSigner | TransactionSigner
+  signer: AddressWithTransactionSigner | TransactionSigner
 }
 
 /** A group of transactions to send together as an group

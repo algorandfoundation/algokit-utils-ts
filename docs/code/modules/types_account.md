@@ -6,7 +6,6 @@
 
 ### Classes
 
-- [MultisigAccount](../classes/types_account.MultisigAccount.md)
 - [SigningAccount](../classes/types_account.SigningAccount.md)
 
 ### Type Aliases
@@ -38,7 +37,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L278)
+[src/types/account.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L216)
 
 ___
 
@@ -81,13 +80,13 @@ Account information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L129)
+[src/types/account.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L67)
 
 ___
 
 ### TransactionSignerAccount
 
-Ƭ **TransactionSignerAccount**: `AddressWithSigner`
+Ƭ **TransactionSignerAccount**: `AddressWithTransactionSigner`
 
 **`Deprecated`**
 
@@ -95,7 +94,7 @@ Use AddressWithSigner
 
 #### Defined in
 
-[src/types/account.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L126)
+[src/types/account.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L64)
 
 ## Variables
 
@@ -107,4 +106,4 @@ The account name identifier used for fund dispensing in test environments
 
 #### Defined in
 
-[src/types/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L20)
+[src/types/account.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L17)

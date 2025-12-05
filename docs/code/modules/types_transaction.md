@@ -75,7 +75,7 @@ ___
 
 ### SendTransactionFrom
 
-Ƭ **SendTransactionFrom**: `AddressWithSigner`
+Ƭ **SendTransactionFrom**: `AddressWithTransactionSigner`
 
 **`Deprcated`**
 

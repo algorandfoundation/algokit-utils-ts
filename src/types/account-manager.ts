@@ -1,12 +1,19 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import {
+  AddressWithSigners,
+  AddressWithTransactionSigner,
+  LogicSigAccount,
+  makeBasicAccountTransactionSigner,
+  MultisigAccount,
+  MultisigMetadata,
+  TransactionSigner,
+} from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { LogicSigAccount } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
-import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount } from './account'
+import { AccountInformation, DISPENSER_ACCOUNT, SigningAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
@@ -33,20 +40,16 @@ export interface EnsureFundedResult {
  * ```
  */
 export const getAccountTransactionSigner = memoize(function (
-  account: AddressWithSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount,
+  account: AddressWithTransactionSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount,
 ): TransactionSigner {
-  return 'signer' in account
-    ? account.signer
-    : 'lsig' in account
-      ? algosdk.makeLogicSigAccountTransactionSigner(account)
-      : algosdk.makeBasicAccountTransactionSigner(account)
+  return 'signer' in account ? account.signer : makeBasicAccountTransactionSigner(account)
 })
 
 /** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
 export class AccountManager {
   private _clientManager: ClientManager
   private _kmdAccountManager: KmdAccountManager
-  private _accounts: { [address: string]: AddressWithSigner } = {}
+  private _accounts: { [address: string]: AddressWithTransactionSigner } = {}
   private _defaultSigner?: TransactionSigner
 
   /**
@@ -98,7 +101,7 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` so method calls can be chained
    */
-  public setDefaultSigner(signer: TransactionSigner | AddressWithSigner): AccountManager {
+  public setDefaultSigner(signer: TransactionSigner | AddressWithTransactionSigner): AccountManager {
     this._defaultSigner = 'signer' in signer ? signer.signer : signer
     return this
   }
@@ -108,20 +111,20 @@ export class AccountManager {
    * retrieval and returns a `AddressWithSigner` along with the original account in an `account` property.
    */
 
-  private signerAccount<T extends AddressWithSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
+  private signerAccount<T extends AddressWithTransactionSigner | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
     account: T,
   ): Address &
-    AddressWithSigner & {
+    AddressWithTransactionSigner & {
       /* The underlying account that specified this address. */ account: T
     } {
     const signer = getAccountTransactionSigner(account)
-    const acc: AddressWithSigner = {
-      addr: 'addr' in account ? account.addr : account.address(),
+    const acc: AddressWithTransactionSigner = {
+      addr: account.addr,
       signer: signer,
     }
     this._accounts[acc.addr.toString()] = acc
 
-    const addressWithAccount = Address.fromString(acc.addr.toString()) as Address & AddressWithSigner & { account: T }
+    const addressWithAccount = Address.fromString(acc.addr.toString()) as Address & AddressWithTransactionSigner & { account: T }
     addressWithAccount.account = account
     addressWithAccount.addr = acc.addr
     addressWithAccount.signer = signer
@@ -146,7 +149,7 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` instance for method chaining
    */
-  public setSignerFromAccount(account: AddressWithSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
+  public setSignerFromAccount(account: AddressWithTransactionSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
     this.signerAccount(account)
     return this
   }
@@ -219,7 +222,7 @@ export class AccountManager {
    * ```
    * @returns The `AddressWithSigner` or throws an error if not found
    */
-  public getAccount(sender: ReadableAddress): AddressWithSigner {
+  public getAccount(sender: ReadableAddress): AddressWithTransactionSigner {
     const account = this._accounts[getAddress(sender).toString()]
     if (!account) throw new Error(`No signer found for address ${sender}`)
     return account
@@ -301,7 +304,7 @@ export class AccountManager {
    * @param sender The sender address to use as the new sender
    * @returns The account
    */
-  public rekeyed(sender: string | Address, account: AddressWithSigner) {
+  public rekeyed(sender: string | Address, account: AddressWithTransactionSigner) {
     return this.signerAccount({ addr: getAddress(sender), signer: account.signer })
   }
 
@@ -388,11 +391,11 @@ export class AccountManager {
    *  [(await accountManager.fromEnvironment('ACCOUNT1')).account])
    * ```
    * @param multisigParams The parameters that define the multisig account
-   * @param signingAccounts The signers that are currently present
+   * @param subSigners The signers that are currently present
    * @returns A multisig account wrapper
    */
-  public multisig(multisigParams: algosdk.MultisigMetadata, signingAccounts: (algosdk.Account | SigningAccount)[]) {
-    return this.signerAccount(new MultisigAccount(multisigParams, signingAccounts))
+  public multisig(multisigParams: MultisigMetadata, subSigners: AddressWithSigners[]) {
+    return this.signerAccount(new MultisigAccount(multisigParams, subSigners))
   }
 
   /**
@@ -503,7 +506,7 @@ export class AccountManager {
    */
   async rekeyAccount(
     account: string | Address,
-    rekeyTo: string | Address | AddressWithSigner,
+    rekeyTo: string | Address | AddressWithTransactionSigner,
     options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<SendSingleTransactionResult> {
     const result = await this._getComposer()

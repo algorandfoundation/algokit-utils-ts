@@ -108,7 +108,7 @@ describe('multisig', () => {
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
       ].map(Address.fromString)
 
-      const multisigLarge = newMultisigSignature(300, 2, participants)
+      const multisigLarge = newMultisigSignature(254, 2, participants)
       const addressLarge = addressFromMultisigSignature(multisigLarge)
 
       // Should be different from the original small values
