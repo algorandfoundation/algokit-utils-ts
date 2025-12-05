@@ -65,7 +65,7 @@ import {
   TransactionParametersResponseMeta,
   TransactionProofMeta,
   VersionMeta,
-} from '../models/index'
+} from '../models/model-meta'
 
 export class AlgodApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}

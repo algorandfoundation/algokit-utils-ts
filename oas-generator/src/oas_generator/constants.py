@@ -191,6 +191,8 @@ MODEL_FILE_EXTENSION: Final[str] = ".ts"
 # Template file names
 MODEL_TEMPLATE: Final[str] = "models/model.ts.j2"
 MODELS_INDEX_TEMPLATE: Final[str] = "models/index.ts.j2"
+MODELS_META_TEMPLATE: Final[str] = "models/model-meta.ts.j2"
+MODELS_META_FILE: Final[str] = "model-meta.ts"
 API_SERVICE_TEMPLATE: Final[str] = "apis/service.ts.j2"
 APIS_INDEX_TEMPLATE: Final[str] = "apis/index.ts.j2"
 

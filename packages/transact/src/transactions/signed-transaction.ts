@@ -14,17 +14,17 @@ export type SignedTransaction = {
   /**
    * Optional Ed25519 signature authorizing the transaction.
    */
-  signature?: Uint8Array
+  sig?: Uint8Array
 
   /**
    * Optional multisignature signature for the transaction.
    */
-  multiSignature?: MultisigSignature
+  msig?: MultisigSignature
 
   /**
    * Optional logic signature for the transaction.
    */
-  logicSignature?: LogicSignature
+  lsig?: LogicSignature
 
   /**
    * Optional auth address applicable if the transaction sender is a rekeyed account.
@@ -90,17 +90,17 @@ export type LogicSignature = {
   /**
    * Signature for delegated logic sig
    */
-  signature?: Uint8Array
+  sig?: Uint8Array
 
   /**
    * Legacy multisig for delegated logic sig
    */
-  multiSignature?: MultisigSignature
+  msig?: MultisigSignature
 
   /**
    * Multisig for delegated logic sig
    */
-  logicMultiSignature?: MultisigSignature
+  lmsig?: MultisigSignature
 }
 
 /**
@@ -157,7 +157,7 @@ function validateSignedTransaction(signedTransaction: SignedTransaction): void {
   validateTransaction(signedTransaction.txn)
 
   // Validate that only one signature type is set
-  const sigTypes = [signedTransaction.signature, signedTransaction.multiSignature, signedTransaction.logicSignature]
+  const sigTypes = [signedTransaction.sig, signedTransaction.msig, signedTransaction.lsig]
   const setSigCount = sigTypes.filter((sig) => sig !== undefined).length
 
   if (setSigCount > 1) {
@@ -165,7 +165,7 @@ function validateSignedTransaction(signedTransaction: SignedTransaction): void {
   }
 
   // Validate signature lengths
-  if (signedTransaction.signature && signedTransaction.signature.length !== 64) {
+  if (signedTransaction.sig && signedTransaction.sig.length !== 64) {
     throw new Error('Signature must be 64 bytes')
   }
 }

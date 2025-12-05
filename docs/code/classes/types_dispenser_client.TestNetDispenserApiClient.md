@@ -144,7 +144,7 @@ Sends a funding request to the dispenser API to fund the specified address with 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `address` | `string` \| `Address` | The address to fund. |
+| `address` | `string` \| [`Address`](index.Address.md) | The address to fund. |
 | `amount` | `number` \| `bigint` | The amount of µAlgo to fund. |
 
 #### Returns

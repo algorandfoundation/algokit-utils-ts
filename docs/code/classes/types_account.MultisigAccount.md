@@ -55,7 +55,7 @@ Account wrapper that supports partial or full multisig signing.
 
 ### \_addr
 
-• **\_addr**: `Address`
+• **\_addr**: [`Address`](index.Address.md)
 
 #### Defined in
 
@@ -95,13 +95,13 @@ ___
 
 ### addr
 
-• `get` **addr**(): `Readonly`\<`Address`\>
+• `get` **addr**(): `Readonly`\<[`Address`](index.Address.md)\>
 
 The address of the multisig account
 
 #### Returns
 
-`Readonly`\<`Address`\>
+`Readonly`\<[`Address`](index.Address.md)\>
 
 #### Defined in
 

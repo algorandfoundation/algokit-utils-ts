@@ -144,7 +144,7 @@ export const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
   kind: 'object',
   fields: [
     {
-      name: 'signedTransaction',
+      name: 'signedTxn',
       flattened: true,
       optional: false,
       codec: new ObjectModelCodec(SignedTransactionMeta),
@@ -162,7 +162,7 @@ export const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
  * SignedTxnInBlock is a SignedTransaction with additional ApplyData and block-specific metadata.
  */
 export type SignedTxnInBlock = {
-  signedTransaction: SignedTxnWithAD
+  signedTxn: SignedTxnWithAD
   hasGenesisId?: boolean
   hasGenesisHash?: boolean
 }
@@ -172,7 +172,7 @@ export const SignedTxnInBlockMeta: ObjectModelMetadata<SignedTxnInBlock> = {
   kind: 'object',
   fields: [
     {
-      name: 'signedTransaction',
+      name: 'signedTxn',
       flattened: true,
       optional: false,
       codec: new ObjectModelCodec(SignedTxnWithADMeta),

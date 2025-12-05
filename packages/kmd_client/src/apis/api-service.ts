@@ -84,7 +84,7 @@ import {
   VersionsResponseMeta,
   WalletInfoRequestMeta,
   WalletInfoResponseMeta,
-} from '../models/index'
+} from '../models/model-meta'
 
 export class KmdApi {
   constructor(public readonly httpRequest: BaseHttpRequest) {}

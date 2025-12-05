@@ -175,7 +175,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `sender` | `Address` |
+| `sender` | [`Address`](index.Address.md) |
 | `minSpendingBalance` | [`AlgoAmount`](types_amount.AlgoAmount.md) |
 | `minFundingIncrement?` | [`AlgoAmount`](types_amount.AlgoAmount.md) |
 
@@ -191,7 +191,7 @@ ___
 
 ### dispenserFromEnvironment
 
-▸ **dispenserFromEnvironment**(): `Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **dispenserFromEnvironment**(): `Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Returns an account (with private key loaded) that can act as a dispenser from
 environment variables, or against default LocalNet if no environment variables present.
@@ -203,7 +203,7 @@ process.env.DISPENSER_SENDER if it's a rekeyed account.
 
 #### Returns
 
-`Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The account
 
@@ -233,8 +233,8 @@ https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accountToFund` | `string` \| `Address` | The account to fund |
-| `dispenserAccount` | `string` \| `Address` | The account to use as a dispenser funding source |
+| `accountToFund` | `string` \| [`Address`](index.Address.md) | The account to fund |
+| `dispenserAccount` | `string` \| [`Address`](index.Address.md) | The account to use as a dispenser funding source |
 | `minSpendingBalance` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement) |
 | `options?` | \{ `minFundingIncrement?`: [`AlgoAmount`](types_amount.AlgoAmount.md)  } & [`SendParams`](../interfaces/types_transaction.SendParams.md) & `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> | Optional parameters to control the funding increment, transaction or execution of the transaction |
 
@@ -283,7 +283,7 @@ https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accountToFund` | `string` \| `Address` | The account to fund |
+| `accountToFund` | `string` \| [`Address`](index.Address.md) | The account to fund |
 | `minSpendingBalance` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement) |
 | `options?` | \{ `minFundingIncrement?`: [`AlgoAmount`](types_amount.AlgoAmount.md)  } & [`SendParams`](../interfaces/types_transaction.SendParams.md) & `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> | Optional parameters to control the funding increment, transaction or execution of the transaction |
 
@@ -325,7 +325,7 @@ https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accountToFund` | `string` \| `Address` | The account to fund |
+| `accountToFund` | `string` \| [`Address`](index.Address.md) | The account to fund |
 | `dispenserClient` | [`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md) | The TestNet dispenser funding client |
 | `minSpendingBalance` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement) |
 | `options?` | `Object` | Optional parameters to control the funding increment, transaction or execution of the transaction |
@@ -357,7 +357,7 @@ ___
 
 ### fromEnvironment
 
-▸ **fromEnvironment**(`name`, `fundWith?`): `Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **fromEnvironment**(`name`, `fundWith?`): `Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Tracks and returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
 
@@ -380,7 +380,7 @@ This allows you to write code that will work seamlessly in production and local 
 
 #### Returns
 
-`Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The account
 
@@ -402,7 +402,7 @@ ___
 
 ### fromKmd
 
-▸ **fromKmd**(`name`, `predicate?`, `sender?`): `Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **fromKmd**(`name`, `predicate?`, `sender?`): `Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Tracks and returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
 
@@ -412,11 +412,11 @@ Tracks and returns an Algorand account with private key loaded from the given KM
 | :------ | :------ | :------ |
 | `name` | `string` | The name of the wallet to retrieve an account from |
 | `predicate?` | (`account`: `Record`\<`string`, `any`\>) => `boolean` | An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
-| `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
+| `sender?` | `string` \| [`Address`](index.Address.md) | The optional sender address to use this signer for (aka a rekeyed account) |
 
 #### Returns
 
-`Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The account
 
@@ -436,7 +436,7 @@ ___
 
 ### fromMnemonic
 
-▸ **fromMnemonic**(`mnemonicSecret`, `sender?`): `Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }
+▸ **fromMnemonic**(`mnemonicSecret`, `sender?`): [`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }
 
 Tracks and returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
 
@@ -445,11 +445,11 @@ Tracks and returns an Algorand account with secret key loaded (i.e. that can sig
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `mnemonicSecret` | `string` | The mnemonic secret representing the private key of an account; **Note: Be careful how the mnemonic is handled**, never commit it into source control and ideally load it from the environment (ideally via a secret storage service) rather than the file system. |
-| `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
+| `sender?` | `string` \| [`Address`](index.Address.md) | The optional sender address to use this signer for (aka a rekeyed account) |
 
 #### Returns
 
-`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }
+[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }
 
 The account
 
@@ -569,13 +569,13 @@ ___
 
 ### localNetDispenser
 
-▸ **localNetDispenser**(): `Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **localNetDispenser**(): `Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
 
 #### Returns
 
-`Promise`\<`Address` & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The account
 
@@ -593,7 +593,7 @@ ___
 
 ### logicsig
 
-▸ **logicsig**(`program`, `args?`): `Address` & `AddressWithSigner` & \{ `account`: `LogicSigAccount`  }
+▸ **logicsig**(`program`, `args?`): [`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: `LogicSigAccount`  }
 
 Tracks and returns an account that represents a logic signature.
 
@@ -606,7 +606,7 @@ Tracks and returns an account that represents a logic signature.
 
 #### Returns
 
-`Address` & `AddressWithSigner` & \{ `account`: `LogicSigAccount`  }
+[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: `LogicSigAccount`  }
 
 A logic signature account wrapper
 
@@ -624,7 +624,7 @@ ___
 
 ### multisig
 
-▸ **multisig**(`multisigParams`, `signingAccounts`): `Address` & `AddressWithSigner` & \{ `account`: [`MultisigAccount`](types_account.MultisigAccount.md)  }
+▸ **multisig**(`multisigParams`, `signingAccounts`): [`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`MultisigAccount`](types_account.MultisigAccount.md)  }
 
 Tracks and returns an account that supports partial or full multisig signing.
 
@@ -637,7 +637,7 @@ Tracks and returns an account that supports partial or full multisig signing.
 
 #### Returns
 
-`Address` & `AddressWithSigner` & \{ `account`: [`MultisigAccount`](types_account.MultisigAccount.md)  }
+[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: [`MultisigAccount`](types_account.MultisigAccount.md)  }
 
 A multisig account wrapper
 
@@ -656,13 +656,13 @@ ___
 
 ### random
 
-▸ **random**(): `Address` & `AddressWithSigner` & \{ `account`: `default`  }
+▸ **random**(): [`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: `default`  }
 
 Tracks and returns a new, random Algorand account with secret key loaded.
 
 #### Returns
 
-`Address` & `AddressWithSigner` & \{ `account`: `default`  }
+[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: `default`  }
 
 The account
 
@@ -690,8 +690,8 @@ Rekey an account to a new address.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| `Address` | The account to rekey |
-| `rekeyTo` | `string` \| `Address` \| `AddressWithSigner` | The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward. If a signing account is provided that will now be tracked as the signer for `account` in this `AccountManager` |
+| `account` | `string` \| [`Address`](index.Address.md) | The account to rekey |
+| `rekeyTo` | `string` \| [`Address`](index.Address.md) \| `AddressWithSigner` | The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward. If a signing account is provided that will now be tracked as the signer for `account` in this `AccountManager` |
 | `options?` | `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) | Any parameters to control the transaction or execution of the transaction |
 
 #### Returns
@@ -740,7 +740,7 @@ ___
 
 ### rekeyed
 
-▸ **rekeyed**(`sender`, `account`): `Address` & `AddressWithSigner` & \{ `account`: \{ `addr`: `Address` ; `signer`: `TransactionSigner` = account.signer }  }
+▸ **rekeyed**(`sender`, `account`): [`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: \{ `addr`: [`Address`](index.Address.md) ; `signer`: `TransactionSigner` = account.signer }  }
 
 Tracks and returns an Algorand account that is a rekeyed version of the given account to a new sender.
 
@@ -748,12 +748,12 @@ Tracks and returns an Algorand account that is a rekeyed version of the given ac
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| `Address` | The sender address to use as the new sender |
+| `sender` | `string` \| [`Address`](index.Address.md) | The sender address to use as the new sender |
 | `account` | `AddressWithSigner` | The account to use as the signer for this new rekeyed account |
 
 #### Returns
 
-`Address` & `AddressWithSigner` & \{ `account`: \{ `addr`: `Address` ; `signer`: `TransactionSigner` = account.signer }  }
+[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: \{ `addr`: [`Address`](index.Address.md) ; `signer`: `TransactionSigner` = account.signer }  }
 
 The account
 
@@ -817,7 +817,7 @@ Tracks the given `TransactionSigner` against the given sender address for later 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| `Address` | The sender address to use this signer for |
+| `sender` | `string` \| [`Address`](index.Address.md) | The sender address to use this signer for |
 | `signer` | `TransactionSigner` | The `TransactionSigner` to sign transactions with for the given sender |
 
 #### Returns
@@ -912,7 +912,7 @@ ___
 
 ### signerAccount
 
-▸ **signerAccount**\<`T`\>(`account`): `Address` & `AddressWithSigner` & \{ `account`: `T`  }
+▸ **signerAccount**\<`T`\>(`account`): [`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: `T`  }
 
 Records the given account (that can sign) against the address of the provided account for later
 retrieval and returns a `AddressWithSigner` along with the original account in an `account` property.
@@ -931,7 +931,7 @@ retrieval and returns a `AddressWithSigner` along with the original account in a
 
 #### Returns
 
-`Address` & `AddressWithSigner` & \{ `account`: `T`  }
+[`Address`](index.Address.md) & `AddressWithSigner` & \{ `account`: `T`  }
 
 #### Defined in
 

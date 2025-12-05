@@ -31,7 +31,7 @@ The metadata that can be collected about a deployed app
 
 ### appAddress
 
-• **appAddress**: `Address`
+• **appAddress**: [`Address`](../classes/index.Address.md)
 
 The Algorand address of the account associated with the app
 

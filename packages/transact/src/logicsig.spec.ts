@@ -11,16 +11,16 @@ describe('logicsig', () => {
       const logicSignature = {
         logic: new Uint8Array([1, 32, 1, 1, 34]),
         args: [new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])],
-        signature: signature,
+        sig: signature,
       } satisfies LogicSignature
       const encoded = encodeMsgpack(logicSignatureCodec.encode(logicSignature, 'msgpack'))
 
       const decoded = decodeLogicSignature(encoded)
 
       expect(decoded.logic).toEqual(logicSignature.logic)
-      expect(decoded.signature).toEqual(signature)
+      expect(decoded.sig).toEqual(signature)
       expect(decoded.args).toEqual(logicSignature.args)
-      expect(decoded.multiSignature).toBeUndefined()
+      expect(decoded.msig).toBeUndefined()
     })
   })
 })
