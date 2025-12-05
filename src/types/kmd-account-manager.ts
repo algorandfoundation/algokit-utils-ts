@@ -1,13 +1,12 @@
 import { Account } from '@algorandfoundation/algokit-algod-client'
-import { Address } from '@algorandfoundation/algokit-common'
+import { Address, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Config } from '../config'
-import { SigningAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { TransactionComposer } from './composer'
-import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
+import nacl from 'tweetnacl'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
@@ -67,7 +66,7 @@ export class KmdAccountManager {
     walletName: string,
     predicate?: (account: Account) => boolean,
     sender?: string | Address,
-  ): Promise<(AddressWithTransactionSigner & { account: SigningAccount }) | undefined> {
+  ): Promise<AddressWithTransactionSigner | undefined> {
     const kmd = await this.kmd()
 
     const walletsResponse = await kmd.listWallets()
@@ -103,16 +102,16 @@ export class KmdAccountManager {
       })
     ).privateKey
 
-    const accountMnemonic = algosdk.secretKeyToMnemonic(accountKey)
-
-    const account = algosdk.mnemonicToSecretKey(accountMnemonic)
-    const signingAccount = new SigningAccount(account, sender)
-
-    return {
-      account: signingAccount,
-      addr: signingAccount.addr,
-      signer: signingAccount.signer,
+    const keys = nacl.sign.keyPair.fromSecretKey(accountKey)
+    const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+      return nacl.sign.detached(bytesToSign, keys.secretKey)
     }
+
+    return generateAddressWithSigners({
+      ed25519Pubkey: keys.publicKey,
+      sendingAddress: getOptionalAddress(sender),
+      rawEd25519Signer: rawSigner,
+    })
   }
 
   /**
@@ -138,10 +137,7 @@ export class KmdAccountManager {
    *
    * @returns An Algorand account with private key loaded - either one that already existed in the given KMD wallet, or a new one that is funded for you
    */
-  public async getOrCreateWalletAccount(
-    name: string,
-    fundWith?: AlgoAmount,
-  ): Promise<AddressWithTransactionSigner & { account: SigningAccount }> {
+  public async getOrCreateWalletAccount(name: string, fundWith?: AlgoAmount): Promise<AddressWithTransactionSigner> {
     // Get an existing account from the KMD wallet
     const existing = await this.getWalletAccount(name)
     if (existing) {

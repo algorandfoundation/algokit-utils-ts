@@ -3,6 +3,8 @@ import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algo } from '../amount'
 import { algorandFixture } from '../testing'
+import nacl from 'tweetnacl'
+import { generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()
@@ -27,21 +29,22 @@ describe('AccountManager', () => {
 
     expect(account).not.toBe(account2)
     expect(account.addr).toEqual(account2.addr)
-    expect(account.account.sk).toEqual(account2.account.sk)
   }, 10e6)
 
   test('Environment is used in preference to kmd', async () => {
     const { algorand } = localnet.context
-    const name = uuid()
-    const account = await algorand.account.fromEnvironment(name)
+    const keys = nacl.sign.keyPair()
+    const account = generateAddressWithSigners({
+      ed25519Pubkey: keys.publicKey,
+      rawEd25519Signer: async (b) => nacl.sign.detached(b, keys.secretKey),
+    })
 
     const name2 = 'TEST'
-    process.env.TEST_MNEMONIC = algosdk.secretKeyToMnemonic(account.account.sk)
+    process.env.TEST_MNEMONIC = algosdk.secretKeyToMnemonic(keys.secretKey)
     const account2 = await algorand.account.fromEnvironment(name2)
 
     expect(account).not.toBe(account2)
     expect(account.addr).toEqual(account2.addr)
-    expect(account.account.sk).toEqual(account2.account.sk)
   }, 10e6)
 
   test('Rekeyed account is retrievable', async () => {

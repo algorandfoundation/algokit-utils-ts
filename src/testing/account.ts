@@ -2,8 +2,6 @@ import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
 import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
-import type { Account } from '@algorandfoundation/sdk'
-import * as algosdk from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
 import { GetTestAccountParams } from '../types/testing'
 
@@ -23,7 +21,7 @@ export async function getTestAccount(
   params: GetTestAccountParams,
   algod: AlgodClient,
   kmd?: KmdClient,
-): Promise<Address & Account & AddressWithTransactionSigner>
+): Promise<Address & AddressWithTransactionSigner>
 /**
  * Creates an ephemeral Algorand account for the purposes of testing.
  * Returns a newly created random test account that is funded from the dispenser
@@ -33,15 +31,12 @@ export async function getTestAccount(
  * @param algorand An AlgorandClient client
  * @returns The account, with private key loaded
  */
-export async function getTestAccount(
-  params: GetTestAccountParams,
-  algorand: AlgorandClient,
-): Promise<Address & Account & AddressWithSigners>
+export async function getTestAccount(params: GetTestAccountParams, algorand: AlgorandClient): Promise<Address & AddressWithSigners>
 export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
   algodOrAlgorandClient: AlgodClient | AlgorandClient,
   kmd?: KmdClient,
-): Promise<Address & Account & AddressWithTransactionSigner> {
+): Promise<Address & AddressWithTransactionSigner> {
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient
@@ -50,11 +45,9 @@ export async function getTestAccount(
           kmd,
         })
 
-  const account = accountGetter ? await accountGetter(algorand) : algosdk.generateAccount()
+  const account = accountGetter ? await accountGetter(algorand) : algorand.account.random()
 
-  Config.getLogger(suppressLog).info(
-    `New test account created with address '${account.addr}' and mnemonic '${algosdk.secretKeyToMnemonic(account.sk)}'.`,
-  )
+  Config.getLogger(suppressLog).info(`New test account created with address '${account.addr}'.`)
 
   const dispenser = await algorand.account.dispenserFromEnvironment()
 
@@ -75,7 +68,6 @@ export async function getTestAccount(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const address = Address.fromString(account.addr.toString()) as any
   address.addr = account.addr
-  address.sk = account.sk
   address.signer = algorand.account.getSigner(address)
 
   return address

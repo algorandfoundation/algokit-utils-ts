@@ -1,8 +1,6 @@
 import { ABIType } from '@algorandfoundation/algokit-abi'
 import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Account } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -788,7 +786,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
     Config.configure({ populateAppCallResources: false })
   })
 
-  let alice: Address & Account
+  let alice: Address
 
   describe('accounts', () => {
     test('addressBalance: unavailable Account', async () => {
@@ -800,7 +798,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
     })
 
     test('addressBalance', async () => {
-      await appClient.send.call({ method: 'addressBalance', args: [alice.addr] })
+      await appClient.send.call({ method: 'addressBalance', args: [alice] })
     })
   })
 
@@ -890,19 +888,23 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
 
   describe('sendTransaction', () => {
     test('addressBalance: unavailable Account', async () => {
+      const { algorand } = fixture.context
+
       await expect(
         appClient.send.call({
           method: 'addressBalance',
-          args: [algosdk.generateAccount().addr.toString()],
+          args: [algorand.account.random().addr.toString()],
           populateAppCallResources: false,
         }),
       ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {
+      const { algorand } = fixture.context
+
       const result = await appClient.send.call({
         method: 'addressBalance',
-        args: [algosdk.generateAccount().addr.toString()],
+        args: [algorand.account.random().addr.toString()],
         onComplete: OnApplicationComplete.NoOp,
       })
 
@@ -958,7 +960,7 @@ describe('Resource population: Mixed', () => {
   describe('mixed', () => {
     test('same account', async () => {
       const { algorand, testAccount } = fixture.context
-      const acct = algosdk.generateAccount()
+      const acct = algorand.account.random()
 
       const rekeyedTo = algorand.account.random()
       await algorand.account.rekeyAccount(testAccount, rekeyedTo)
@@ -1046,7 +1048,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: Address & algosdk.Account & AddressWithTransactionSigner
+  let testAccount: Address & AddressWithTransactionSigner
 
   beforeEach(fixture.newScope)
 

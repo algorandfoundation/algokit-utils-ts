@@ -39,7 +39,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L90)
+[src/types/testing.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L88)
 
 ___
 
@@ -95,7 +95,7 @@ describe('MY MODULE', () => {
 
 #### Defined in
 
-[src/types/testing.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L130)
+[src/types/testing.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L128)
 
 ## Accessors
 
@@ -111,7 +111,7 @@ Retrieve an `AlgorandClient` loaded with the current context, including testAcco
 
 #### Defined in
 
-[src/types/testing.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L84)
+[src/types/testing.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L82)
 
 ___
 
@@ -138,4 +138,4 @@ test('My test', () => {
 
 #### Defined in
 
-[src/types/testing.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L79)
+[src/types/testing.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L77)
