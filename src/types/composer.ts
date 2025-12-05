@@ -1635,7 +1635,7 @@ export class TransactionComposer {
       (txn) =>
         ({
           txn: txn,
-          signature: EMPTY_SIGNATURE,
+          sig: EMPTY_SIGNATURE,
         }) satisfies SignedTransaction,
     )
 

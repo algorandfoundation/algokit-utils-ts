@@ -9,7 +9,7 @@ import { ReadableAddress, type EncodingFormat } from '@algorandfoundation/algoki
 {% if import_types and import_types|length > 0 %}
 {% set sorted = import_types | sort %}
 import type { {{ sorted | join(', ') }} } from '../models/index';
-import { {% for t in sorted | reject('equalto', 'SuggestedParams') %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/index';
+import { {% for t in sorted | reject('equalto', 'SuggestedParams') %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/model-meta';
 {% endif %}
 
 {% macro base_meta(type_name) -%}

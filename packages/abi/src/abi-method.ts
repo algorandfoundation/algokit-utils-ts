@@ -24,7 +24,7 @@ export type ABIMethodReturnType = ABIType | 'void'
 export type ABIMethodArg = {
   type: ABIMethodArgType
   name?: string
-  desciption?: string
+  description?: string
   defaultValue?: ABIDefaultValue
 }
 
@@ -202,7 +202,7 @@ export function getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contra
   }
 }
 
-function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {
+export function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {
   if (typeof method.name !== 'string' || typeof method.returns !== 'object' || !Array.isArray(method.args)) {
     throw new Error('Invalid ABIMethod parameters')
   }
@@ -220,7 +220,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
       return {
         type: type as ABIMethodArgType,
         name,
-        desciption: desc,
+        description: desc,
         defaultValue: convertedDefaultValue,
       } satisfies ABIMethodArg
     }
@@ -229,7 +229,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
       return {
         type: ABIStructType.fromStruct(struct, appSpec.structs),
         name,
-        desciption: desc,
+        description: desc,
         defaultValue: convertedDefaultValue,
       } satisfies ABIMethodArg
     }
@@ -237,7 +237,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
     return {
       type: ABIType.from(type),
       name,
-      desciption: desc,
+      description: desc,
       defaultValue: convertedDefaultValue,
     } satisfies ABIMethodArg
   })

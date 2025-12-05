@@ -40,7 +40,7 @@ Account wrapper that supports a rekeyed account
 | Name | Type |
 | :------ | :------ |
 | `account` | `default` |
-| `sender` | `undefined` \| `string` \| `Address` |
+| `sender` | `undefined` \| `string` \| [`Address`](index.Address.md) |
 
 #### Returns
 
@@ -64,7 +64,7 @@ ___
 
 ### \_sender
 
-• `Private` **\_sender**: `Address`
+• `Private` **\_sender**: [`Address`](index.Address.md)
 
 #### Defined in
 
@@ -84,13 +84,13 @@ ___
 
 ### addr
 
-• `get` **addr**(): `Readonly`\<`Address`\>
+• `get` **addr**(): `Readonly`\<[`Address`](index.Address.md)\>
 
 Algorand address of the sender
 
 #### Returns
 
-`Readonly`\<`Address`\>
+`Readonly`\<[`Address`](index.Address.md)\>
 
 #### Implementation of
 

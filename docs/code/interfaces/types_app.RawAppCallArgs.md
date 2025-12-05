@@ -29,7 +29,7 @@ App call args with non-ABI (raw) values (minus some processing like encoding str
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| `Address`)[]
+• `Optional` **accounts**: (`string` \| [`Address`](../classes/index.Address.md))[]
 
 The address of any accounts to load in
 

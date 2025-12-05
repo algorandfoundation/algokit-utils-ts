@@ -68,7 +68,7 @@ Looks up applications that were created by the given address; will automatically
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `indexer` | `IndexerClient` | `undefined` | An indexer instance |
-| `address` | `string` \| `Address` | `undefined` | The address of the creator to look up |
+| `address` | `string` \| [`Address`](../classes/index.Address.md) | `undefined` | The address of the creator to look up |
 | `getAll` | `boolean` | `true` | Whether or not to include deleted applications. Default true. |
 | `paginationLimit?` | `number` | `undefined` | The number of records to return per paginated request, default 1000 |
 

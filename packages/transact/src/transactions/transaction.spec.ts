@@ -58,7 +58,7 @@ describe('Transaction Validation', () => {
       ['estimateTransactionSize', estimateTransactionSize],
       ['getTransactionIdRaw', getTransactionIdRaw],
       ['getTransactionId', getTransactionId],
-      ['encodeSignedTransaction', (transaction: Transaction) => encodeSignedTransaction({ txn: transaction, signature: EMPTY_SIGNATURE })],
+      ['encodeSignedTransaction', (transaction: Transaction) => encodeSignedTransaction({ txn: transaction, sig: EMPTY_SIGNATURE })],
     ])('should validate when calling %s', (_, sut) => {
       const transaction: Transaction = {
         type: TransactionType.AssetTransfer,

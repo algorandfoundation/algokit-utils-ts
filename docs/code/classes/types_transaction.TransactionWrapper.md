@@ -274,7 +274,7 @@ ___
 
 ### rekeyTo
 
-• `Optional` **rekeyTo**: `Address`
+• `Optional` **rekeyTo**: [`Address`](index.Address.md)
 
 #### Implementation of
 
@@ -288,7 +288,7 @@ ___
 
 ### sender
 
-• **sender**: `Address`
+• **sender**: [`Address`](index.Address.md)
 
 #### Implementation of
 

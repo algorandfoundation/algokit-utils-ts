@@ -95,7 +95,7 @@ Transactions will be sent in batches of 16 as transaction groups.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| `Address` | The account to opt-in |
+| `account` | `string` \| [`Address`](index.Address.md) | The account to opt-in |
 | `assetIds` | `bigint`[] | The list of asset IDs to opt-in to |
 | `options?` | `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) | Any parameters to control the transaction or execution of the transaction |
 
@@ -132,7 +132,7 @@ Transactions will be sent in batches of 16 as transaction groups.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| `Address` | The account to opt-in |
+| `account` | `string` \| [`Address`](index.Address.md) | The account to opt-in |
 | `assetIds` | `bigint`[] | The list of asset IDs to opt-out of |
 | `options?` | `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `ensureZeroBalance?`: `boolean`  } | Any parameters to control the transaction or execution of the transaction |
 
@@ -167,7 +167,7 @@ Returns the given sender account's asset holding for a given asset.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| `Address` | The address of the sender/account to look up |
+| `sender` | `string` \| [`Address`](index.Address.md) | The address of the sender/account to look up |
 | `assetId` | `bigint` | The ID of the asset to return a holding for |
 
 #### Returns

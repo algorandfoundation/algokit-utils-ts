@@ -31,6 +31,36 @@
       "import": "./testing/index.mjs",
       "require": "./testing/index.js"
     },
+    "./abi": {
+      "types": "./abi/index.d.ts",
+      "import": "./abi/index.mjs",
+      "require": "./abi/index.js"
+    },
+    "./transact": {
+      "types": "./transact/index.d.ts",
+      "import": "./transact/index.mjs",
+      "require": "./transact/index.js"
+    },
+    "./algod-client": {
+      "types": "./algod-client/index.d.ts",
+      "import": "./algod-client/index.mjs",
+      "require": "./algod-client/index.js"
+    },
+    "./indexer-client": {
+      "types": "./indexer-client/index.d.ts",
+      "import": "./indexer-client/index.mjs",
+      "require": "./indexer-client/index.js"
+    },
+    "./kmd-client": {
+      "types": "./kmd-client/index.d.ts",
+      "import": "./kmd-client/index.mjs",
+      "require": "./kmd-client/index.js"
+    },
+    "./sdk": {
+      "types": "./sdk/index.d.ts",
+      "import": "./sdk/index.mjs",
+      "require": "./sdk/index.js"
+    },
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
@@ -47,7 +77,7 @@
     "test": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch --coverage --passWithNoTests",
     "lint": "eslint ./src/ && npm run lint --workspaces --if-present",
-    "lint:fix": "eslint ./src/ --fix && npm run lint --workspaces --if-present",
+    "lint:fix": "eslint ./src/ --fix && npm run lint:fix --workspaces --if-present",
     "check-types": "tsc --project tsconfig.typecheck.json --noEmit",
     "audit": "better-npm-audit audit",
     "format": "prettier --write . && npm run format --workspaces --if-present",
@@ -60,8 +90,8 @@
     "generate:client-indexer": "cd oas-generator && uv run oas-generator https://raw.githubusercontent.com/algorandfoundation/algokit-oas-generator/fix/more-tweaks/specs/indexer.oas3.json --output ../packages/indexer_client/ --package-name indexer_client --description \"TypeScript client for indexer interaction.\" --verbose && cd ../packages/indexer_client/ && npm run lint:fix && npm run format && cd ..",
     "generate:client-kmd": "cd oas-generator && uv run oas-generator https://raw.githubusercontent.com/algorandfoundation/algokit-oas-generator/fix/more-tweaks/specs/kmd.oas3.json --output ../packages/kmd_client/ --package-name kmd_client --description \"TypeScript client for kmd interaction.\" --verbose && cd ../packages/kmd_client/ && npm run lint:fix && npm run format && cd ..",
     "mock-server:start-algod": "./.polytest_algokit-polytest/resources/mock-server/scripts/start_server.sh algod",
-    "polytest:validate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#start-server-permissions' validate -t vitest",
-    "polytest:generate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#start-server-permissions' generate -t vitest"
+    "polytest:validate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#main' validate -t vitest",
+    "polytest:generate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#main' generate -t vitest"
   },
   "overrides": {
     "esbuild": "0.25.0"

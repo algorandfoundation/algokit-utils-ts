@@ -27,7 +27,7 @@
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| `Address`)[]
+• `Optional` **accounts**: (`string` \| [`Address`](../classes/index.Address.md))[]
 
 The address of any accounts to load in
 

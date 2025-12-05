@@ -76,7 +76,7 @@ export class LogicSigAccount {
 
         const stxn: SignedTransaction = {
           txn,
-          logicSignature: { logic: this.logic, args: this.args, multiSignature: this.msig ?? this.lmsig, signature: this.sig },
+          lsig: { logic: this.logic, args: this.args, msig: this.msig, lmsig: this.lmsig, sig: this.sig },
         }
 
         signedTxns.push(encodeSignedTransaction(stxn))

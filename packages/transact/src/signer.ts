@@ -52,7 +52,7 @@ export function generateAddressWithSigners(
       const signature = await rawEd25519Signer(bytesToSign)
       const stxn: SignedTransaction = {
         txn,
-        signature,
+        sig: signature,
       }
 
       if (!txn.sender.equals(addr)) {
@@ -103,7 +103,7 @@ export function makeEmptyTransactionSigner(): TransactionSigner {
     for (const index of indexesToSign) {
       const stxn: SignedTransaction = {
         txn: txnGroup[index],
-        signature: new Uint8Array(64).fill(0),
+        sig: new Uint8Array(64).fill(0),
       }
       unsigned.push(encodeSignedTransaction(stxn))
     }
