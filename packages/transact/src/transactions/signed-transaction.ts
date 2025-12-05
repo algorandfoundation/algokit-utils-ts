@@ -1,4 +1,5 @@
-import { Address, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import type { Address } from '@algorandfoundation/algokit-common'
+import { decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { signedTransactionCodec } from './signed-transaction-meta'
 import { Transaction, validateTransaction } from './transaction'
 
@@ -35,13 +36,13 @@ export type SignedTransaction = {
 /**
  * Represents a single subsignature in a multisignature transaction.
  *
- * Each subsignature contains the address of a participant and an optional signature.
+ * Each subsignature contains the public key of a participant and an optional signature.
  */
 export type MultisigSubsignature = {
   /**
-   * Address of a keypair account participant that is sub-signing a multisignature transaction.
+   * Public key of a keypair account participant that is sub-signing a multisignature transaction.
    */
-  address: Address
+  publicKey: Uint8Array
 
   /**
    * Optional Ed25519 signature for the transaction.

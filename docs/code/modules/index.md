@@ -28,7 +28,12 @@
 
 ### Interfaces
 
+- [Addressable](../interfaces/index.Addressable.md)
 - [TransactionWithSigner](../interfaces/index.TransactionWithSigner.md)
+
+### Type Aliases
+
+- [ReadableAddress](index.md#readableaddress)
 
 ### Variables
 
@@ -46,6 +51,9 @@
 - [decodeAddress](index.md#decodeaddress)
 - [encodeAddress](index.md#encodeaddress)
 - [encodeLease](index.md#encodelease)
+- [getAddress](index.md#getaddress)
+- [getApplicationAddress](index.md#getapplicationaddress)
+- [getOptionalAddress](index.md#getoptionaladdress)
 - [microAlgo](index.md#microalgo)
 - [microAlgos](index.md#microalgos)
 - [performTransactionComposerSimulate](index.md#performtransactioncomposersimulate)
@@ -120,6 +128,16 @@ ___
 ### TealSourcesDebugEventData
 
 Re-exports [TealSourcesDebugEventData](../interfaces/types_debugging.TealSourcesDebugEventData.md)
+
+## Type Aliases
+
+### ReadableAddress
+
+Ƭ **ReadableAddress**: [`Addressable`](../interfaces/index.Addressable.md) \| [`Address`](../classes/index.Address.md) \| `string`
+
+#### Defined in
+
+[packages/common/src/address.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L130)
 
 ## Variables
 
@@ -314,6 +332,70 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 #### Defined in
 
 [src/transaction/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L32)
+
+___
+
+### getAddress
+
+▸ **getAddress**(`addr`): [`Address`](../classes/index.Address.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `addr` | [`ReadableAddress`](index.md#readableaddress) |
+
+#### Returns
+
+[`Address`](../classes/index.Address.md)
+
+#### Defined in
+
+[packages/common/src/address.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L132)
+
+___
+
+### getApplicationAddress
+
+▸ **getApplicationAddress**(`appID`): [`Address`](../classes/index.Address.md)
+
+Get the escrow address of an application.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appID` | `number` \| `bigint` | The ID of the application. |
+
+#### Returns
+
+[`Address`](../classes/index.Address.md)
+
+The address corresponding to that application's escrow account.
+
+#### Defined in
+
+[packages/common/src/address.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L171)
+
+___
+
+### getOptionalAddress
+
+▸ **getOptionalAddress**(`addr`): [`Address`](../classes/index.Address.md) \| `undefined`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `addr` | `undefined` \| [`ReadableAddress`](index.md#readableaddress) |
+
+#### Returns
+
+[`Address`](../classes/index.Address.md) \| `undefined`
+
+#### Defined in
+
+[packages/common/src/address.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L142)
 
 ___
 

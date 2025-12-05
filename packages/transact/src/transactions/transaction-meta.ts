@@ -39,7 +39,7 @@ import {
   StateProofMessage,
   StateProofTransactionFields,
 } from './state-proof'
-import { Transaction } from './transaction'
+import type { TransactionParams } from './transaction'
 import { TransactionType } from './transaction-type'
 
 type WireBoxReference = {
@@ -804,10 +804,10 @@ const HeartbeatTransactionFieldsMeta: ObjectModelMetadata<HeartbeatTransactionFi
 }
 
 /**
- * Metadata for Transaction
+ * Metadata for TransactionParams
  */
-export const TransactionMeta: ObjectModelMetadata<Transaction> = {
-  name: 'Transaction',
+export const TransactionParamsMeta: ObjectModelMetadata<TransactionParams> = {
+  name: 'TransactionParams',
   kind: 'object',
   fields: [
     // Common transaction fields
@@ -875,4 +875,4 @@ export const TransactionMeta: ObjectModelMetadata<Transaction> = {
   ],
 }
 
-export const transactionCodec = new ObjectModelCodec<Transaction>(TransactionMeta)
+export const transactionParamsCodec = new ObjectModelCodec<TransactionParams>(TransactionParamsMeta)

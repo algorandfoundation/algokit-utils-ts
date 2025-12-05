@@ -1,6 +1,6 @@
 import { Address, arrayEqual } from '@algorandfoundation/algokit-common'
 import type { MultisigSignature, MultisigSubsignature, SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
-import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction } from '@algorandfoundation/algokit-transact'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'
 import * as utils from './utils/utils.js'
@@ -27,7 +27,7 @@ export function createMultisigTransaction(txn: Transaction, { version, threshold
   // construct the appendable multisigned transaction format
   const pks = pksFromAddresses(addrs)
   const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
-    address: new Address(pk),
+    publicKey: pk,
     signature: undefined,
   }))
 
@@ -95,7 +95,7 @@ function createMultisigTransactionWithSignature(
 
   // append the multisig signature to the corresponding public key in the multisig blob
   const updatedSubsigs = signedTxn.msig!.subsignatures.map((subsig) => {
-    if (arrayEqual(subsig.address.publicKey, myPk)) {
+    if (arrayEqual(subsig.publicKey, myPk)) {
       keyExist = true
       return { ...subsig, signature: rawSig }
     }
@@ -177,12 +177,12 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   if (!refSigTx.msig) {
     throw new Error('Invalid multisig transaction, multisig structure missing at index 0')
   }
-  const refTxID = getTransactionId(refSigTx.txn)
+  const refTxID = refSigTx.txn.txID()
   const refAuthAddr = refSigTx.authAddress
   const refPreImage = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.address.publicKey),
+    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
@@ -193,7 +193,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
       throw new Error(`Invalid multisig transaction, multisig structure missing at index ${i}`)
     }
 
-    if (getTransactionId(unisig.txn) !== refTxID) {
+    if (unisig.txn.txID() !== refTxID) {
       throw new Error(MULTISIG_MERGE_MISMATCH_ERROR_MSG)
     }
 
@@ -209,7 +209,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
     const preimg: MultisigMetadataWithPks = {
       version: unisig.msig.version,
       threshold: unisig.msig.threshold,
-      pks: unisig.msig.subsignatures.map((subsig) => subsig.address.publicKey),
+      pks: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
     if (refMsigAddr.toString() !== msgigAddr.toString()) {
@@ -260,7 +260,7 @@ export function signMultisigTransaction(txn: Transaction, { version, threshold, 
   const pks = pksFromAddresses(addrs)
   const blob = partialSignTxn(txn, { version, threshold, pks }, sk)
   return {
-    txID: getTransactionId(txn),
+    txID: txn.txID(),
     blob,
   }
 }
@@ -286,7 +286,7 @@ export function appendSignMultisigTransaction(
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
   const partialSignedBlob = partialSignTxn(multisigTxObj.txn, { version, threshold, pks }, sk)
   return {
-    txID: getTransactionId(multisigTxObj.txn),
+    txID: multisigTxObj.txn.txID(),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
@@ -313,7 +313,7 @@ export function appendSignRawMultisigSignature(
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
   const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.txn, { version, threshold, pks }, signerAddr, signature)
   return {
-    txID: getTransactionId(multisigTxObj.txn),
+    txID: multisigTxObj.txn.txID(),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }

@@ -27,7 +27,7 @@ The result of sending and confirming one or more transactions, but where there i
 
 ### confirmation
 
-• **confirmation**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)
+• **confirmation**: `PendingTransactionResponse`
 
 The response from sending and waiting for the primary transaction
 
@@ -37,13 +37,13 @@ The response from sending and waiting for the primary transaction
 
 #### Defined in
 
-[src/types/transaction.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L106)
+[src/types/transaction.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L89)
 
 ___
 
 ### confirmations
 
-• **confirmations**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[]
+• **confirmations**: `PendingTransactionResponse`[]
 
 The response from sending and waiting for the transactions
 
@@ -53,13 +53,13 @@ The response from sending and waiting for the transactions
 
 #### Defined in
 
-[src/types/transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L108)
+[src/types/transaction.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L91)
 
 ___
 
 ### transaction
 
-• **transaction**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)
+• **transaction**: `Transaction`
 
 The transaction
 
@@ -69,13 +69,13 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L68)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
 ___
 
 ### transactions
 
-• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
+• **transactions**: `Transaction`[]
 
 The transactions that have been prepared and/or sent
 
@@ -85,4 +85,4 @@ The transactions that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L76)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)

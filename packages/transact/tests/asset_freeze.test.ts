@@ -67,7 +67,7 @@ describe('Asset Freeze', () => {
 
   describe('Asset Freeze Validation', () => {
     test('should throw error when asset ID is zero', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.AssetFreeze,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -77,13 +77,13 @@ describe('Asset Freeze', () => {
           freezeTarget: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           frozen: true,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).toThrow('Asset freeze validation failed: Asset ID must not be 0')
     })
 
     test('should validate valid asset freeze transaction', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.AssetFreeze,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -93,13 +93,13 @@ describe('Asset Freeze', () => {
           freezeTarget: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           frozen: true,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test('should validate asset unfreeze transaction', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.AssetFreeze,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -109,14 +109,14 @@ describe('Asset Freeze', () => {
           freezeTarget: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           frozen: false, // Unfreeze
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test('should validate freezing the sender themselves', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.AssetFreeze,
         sender: senderAddress,
         firstValid: 1000n,
@@ -126,14 +126,14 @@ describe('Asset Freeze', () => {
           freezeTarget: senderAddress, // Freeze self
           frozen: true,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test('should validate unfreezing the sender themselves', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.AssetFreeze,
         sender: senderAddress,
         firstValid: 1000n,
@@ -143,7 +143,7 @@ describe('Asset Freeze', () => {
           freezeTarget: senderAddress, // Unfreeze self
           frozen: false,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })

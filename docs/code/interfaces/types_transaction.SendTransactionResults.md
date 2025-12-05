@@ -25,23 +25,23 @@ The result of preparing and/or sending multiple transactions
 
 ### confirmations
 
-• `Optional` **confirmations**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[]
+• `Optional` **confirmations**: `PendingTransactionResponse`[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction
 
 #### Defined in
 
-[src/types/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L80)
+[src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
 
 ___
 
 ### transactions
 
-• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
+• **transactions**: `Transaction`[]
 
 The transactions that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L76)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)

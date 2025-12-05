@@ -31,7 +31,7 @@ export const buildKeyReg = (
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   if ('voteKey' in params) {
-    return {
+    return new Transaction({
       ...commonData,
       type: TransactionType.KeyRegistration,
       keyRegistration: {
@@ -43,14 +43,14 @@ export const buildKeyReg = (
         nonParticipation: false,
         stateProofKey: params.stateProofKey,
       },
-    }
+    })
   } else {
-    return {
+    return new Transaction({
       ...commonData,
       type: TransactionType.KeyRegistration,
       keyRegistration: {
         nonParticipation: params.preventAccountFromEverParticipatingAgain,
       },
-    }
+    })
   }
 }

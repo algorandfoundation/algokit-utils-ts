@@ -10,8 +10,6 @@ import {
   encodeTransaction,
   estimateTransactionSize,
   getEncodedTransactionType,
-  getTransactionId,
-  getTransactionIdRaw,
   mergeMultisignatures,
   newMultisigSignature,
 } from '../src'
@@ -27,8 +25,7 @@ export const assertExample = async (label: string, testData: TransactionTestData
 }
 
 export const assertTransactionId = (label: string, testData: TransactionTestData) => {
-  expect(getTransactionIdRaw(testData.transaction), label).toEqual(testData.idRaw)
-  expect(getTransactionId(testData.transaction), label).toEqual(testData.id)
+  expect(testData.transaction.txID(), label).toEqual(testData.id)
 }
 
 export const assertEncodedTransactionType = (label: string, testData: TransactionTestData) => {
@@ -93,16 +90,16 @@ export const assertMultisigExample = async (label: string, testData: Transaction
   const unsignedMultisigSignature = newMultisigSignature(
     1,
     2,
-    testData.multisigAddresses.map((addr) => Address.fromString(addr)),
+    testData.multisigAddresses.map((addr) => Address.fromString(addr).publicKey),
   )
   const multisigSignature0 = applyMultisigSubsignature(
     unsignedMultisigSignature,
-    Address.fromString(testData.multisigAddresses[0]),
+    Address.fromString(testData.multisigAddresses[0]).publicKey,
     singleSig,
   )
   const multisigSignature1 = applyMultisigSubsignature(
     unsignedMultisigSignature,
-    Address.fromString(testData.multisigAddresses[1]),
+    Address.fromString(testData.multisigAddresses[1]).publicKey,
     singleSig,
   )
 

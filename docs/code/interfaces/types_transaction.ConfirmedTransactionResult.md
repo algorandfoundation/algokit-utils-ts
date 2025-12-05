@@ -23,7 +23,7 @@ The result of sending and confirming a transaction
 
 ### confirmation
 
-• **confirmation**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)
+• **confirmation**: `PendingTransactionResponse`
 
 The response from sending and waiting for the transaction
 
@@ -33,13 +33,13 @@ The response from sending and waiting for the transaction
 
 #### Defined in
 
-[src/types/transaction.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L100)
+[src/types/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L83)
 
 ___
 
 ### transaction
 
-• **transaction**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)
+• **transaction**: `Transaction`
 
 The transaction
 
@@ -49,4 +49,4 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L68)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)

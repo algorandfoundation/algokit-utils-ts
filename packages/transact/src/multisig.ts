@@ -3,9 +3,9 @@ import { MultisigSignature, MultisigSubsignature } from './transactions/signed-t
 import { multiSignatureCodec } from './transactions/signed-transaction-meta'
 
 /**
- * Creates an empty multisignature signature from a list of participant addresses.
+ * Creates an empty multisignature signature from a list of participant public keys.
  */
-export function newMultisigSignature(version: number, threshold: number, participants: Address[]): MultisigSignature {
+export function newMultisigSignature(version: number, threshold: number, participants: Uint8Array[]): MultisigSignature {
   if (version === 0) {
     throw new Error('Version cannot be zero')
   }
@@ -19,15 +19,15 @@ export function newMultisigSignature(version: number, threshold: number, partici
   return {
     version,
     threshold,
-    subsignatures: participants.map((address) => ({ address })),
+    subsignatures: participants.map((publicKey) => ({ publicKey })),
   }
 }
 
 /**
- * Returns the list of participant addresses from a multisignature signature.
+ * Returns the list of participant public keys from a multisignature signature.
  */
-export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): Address[] {
-  return multisigSignature.subsignatures.map((subsig) => subsig.address)
+export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): Uint8Array[] {
+  return multisigSignature.subsignatures.map((subsig) => subsig.publicKey)
 }
 
 /**
@@ -35,9 +35,9 @@ export function participantsFromMultisigSignature(multisigSignature: MultisigSig
  */
 export function addressFromMultisigSignature(multisigSignature: MultisigSignature): Address {
   const prefixBytes = new TextEncoder().encode(MULTISIG_DOMAIN_SEPARATOR)
-  const participantAddresses = multisigSignature.subsignatures.map((subsig) => subsig.address)
+  const participantPublicKeys = multisigSignature.subsignatures.map((subsig) => subsig.publicKey)
 
-  const bufferLength = prefixBytes.length + 2 + participantAddresses.length * PUBLIC_KEY_BYTE_LENGTH
+  const bufferLength = prefixBytes.length + 2 + participantPublicKeys.length * PUBLIC_KEY_BYTE_LENGTH
   const addressBytes = new Uint8Array(bufferLength)
 
   let offset = 0
@@ -52,9 +52,8 @@ export function addressFromMultisigSignature(multisigSignature: MultisigSignatur
   addressBytes[offset] = multisigSignature.threshold
   offset += 1
 
-  // Add participant public keys (extracted from their addresses)
-  for (const address of participantAddresses) {
-    const publicKey = address.publicKey
+  // Add participant public keys
+  for (const publicKey of participantPublicKeys) {
     addressBytes.set(publicKey, offset)
     offset += PUBLIC_KEY_BYTE_LENGTH
   }
@@ -65,17 +64,17 @@ export function addressFromMultisigSignature(multisigSignature: MultisigSignatur
 /**
  * Applies a subsignature for a participant to a multisignature signature, replacing any existing signature.
  *
- * This method applies the signature to ALL instances of the given address (to support weighted multisig).
+ * This method applies the signature to ALL instances of the given public key (to support weighted multisig).
  * Since ed25519 signatures are deterministic, there's only one valid signature for a given message and public key.
  */
 export function applyMultisigSubsignature(
   multisigSignature: MultisigSignature,
-  participant: Address,
+  participant: Uint8Array,
   signature: Uint8Array,
 ): MultisigSignature {
   let found = false
   const newSubsignatures = multisigSignature.subsignatures.map((subsig) => {
-    if (subsig.address.equals(participant)) {
+    if (arraysEqual(subsig.publicKey, participant)) {
       found = true
       return { ...subsig, signature }
     }
@@ -83,13 +82,21 @@ export function applyMultisigSubsignature(
   })
 
   if (!found) {
-    throw new Error('Address not found in multisig signature')
+    throw new Error('Public key not found in multisig signature')
   }
 
   return {
     ...multisigSignature,
     subsignatures: newSubsignatures,
   }
+}
+
+function arraysEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false
+  }
+  return true
 }
 
 /**
@@ -104,17 +111,19 @@ export function mergeMultisignatures(multisigSignatureA: MultisigSignature, mult
     throw new Error('Cannot merge multisig signatures with different thresholds')
   }
 
-  // Check participants match exactly (same addresses in same order)
+  // Check participants match exactly (same public keys in same order)
   const participantsA = participantsFromMultisigSignature(multisigSignatureA)
   const participantsB = participantsFromMultisigSignature(multisigSignatureB)
-  if (JSON.stringify(participantsA) !== JSON.stringify(participantsB)) {
+  const participantsMatch =
+    participantsA.length === participantsB.length && participantsA.every((pk, i) => arraysEqual(pk, participantsB[i]))
+  if (!participantsMatch) {
     throw new Error('Cannot merge multisig signatures with different participants')
   }
 
   const mergedSubsignatures: MultisigSubsignature[] = multisigSignatureA.subsignatures.map((s1, index) => {
     const s2 = multisigSignatureB.subsignatures[index]
     return {
-      address: s1.address,
+      publicKey: s1.publicKey,
       signature: s2.signature || s1.signature, // Prefer s2, fall back to s1
     }
   })
