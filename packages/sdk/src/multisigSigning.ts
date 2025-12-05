@@ -27,7 +27,7 @@ export function createMultisigTransaction(txn: Transaction, { version, threshold
   // construct the appendable multisigned transaction format
   const pks = pksFromAddresses(addrs)
   const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
-    address: new Address(pk),
+    publicKey: pk,
     signature: undefined,
   }))
 
@@ -95,7 +95,7 @@ function createMultisigTransactionWithSignature(
 
   // append the multisig signature to the corresponding public key in the multisig blob
   const updatedSubsigs = signedTxn.msig!.subsignatures.map((subsig) => {
-    if (arrayEqual(subsig.address.publicKey, myPk)) {
+    if (arrayEqual(subsig.publicKey, myPk)) {
       keyExist = true
       return { ...subsig, signature: rawSig }
     }
@@ -182,7 +182,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   const refPreImage = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.address.publicKey),
+    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
@@ -209,7 +209,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
     const preimg: MultisigMetadataWithPks = {
       version: unisig.msig.version,
       threshold: unisig.msig.threshold,
-      pks: unisig.msig.subsignatures.map((subsig) => subsig.address.publicKey),
+      pks: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
     if (refMsigAddr.toString() !== msgigAddr.toString()) {

@@ -25,7 +25,7 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
           version: lsig.lmsig.v,
           threshold: lsig.lmsig.thr,
           subsignatures: lsig.lmsig.subsig.map((subsig) => ({
-            address: new Address(subsig.pk),
+            publicKey: subsig.pk,
             signature: subsig.s,
           })),
         }

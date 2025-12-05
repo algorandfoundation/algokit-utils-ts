@@ -5,6 +5,7 @@ import {
   addressCodec,
   bytesArrayCodec,
   bytesCodec,
+  fixedBytes32Codec,
   fixedBytes64Codec,
   numberCodec,
 } from '@algorandfoundation/algokit-common'
@@ -15,7 +16,7 @@ const MultisigSubsignatureMeta: ObjectModelMetadata<MultisigSubsignature> = {
   name: 'MultisigSubsignature',
   kind: 'object',
   fields: [
-    { name: 'address', wireKey: 'pk', optional: false, codec: addressCodec },
+    { name: 'publicKey', wireKey: 'pk', optional: false, codec: fixedBytes32Codec },
     { name: 'signature', wireKey: 's', optional: true, codec: fixedBytes64Codec },
   ],
 }
