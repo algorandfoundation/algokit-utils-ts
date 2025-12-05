@@ -14,10 +14,10 @@ export default defineConfig({
       reporter: ['text', 'html'],
     },
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
+    maxWorkers: 1,
+    isolate: false,
+    sequence: {
+      groupOrder: 2,
     },
   },
 })

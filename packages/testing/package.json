@@ -9,11 +9,9 @@
     "node": ">=20.0"
   },
   "type": "module",
-  "main": "./index.ts",
+  "main": "./src/index.ts",
   "exports": {
-    ".": "./index.ts",
-    "./mockServer": "./mockServer.ts",
-    "./globalSetup": "./globalSetup.ts"
+    ".": "./src/index.ts"
   },
   "files": [
     "**/*"

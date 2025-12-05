@@ -1,3 +1,3 @@
-import { algodGlobalSetup } from '../../testing/globalSetup'
+import { algodGlobalSetup } from '@algorandfoundation/algokit-testing'
 
 export default algodGlobalSetup

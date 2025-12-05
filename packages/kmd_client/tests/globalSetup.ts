@@ -1,3 +1,3 @@
-import { kmdGlobalSetup } from '../../testing/globalSetup'
+import { kmdGlobalSetup } from '@algorandfoundation/algokit-testing'
 
 export default kmdGlobalSetup

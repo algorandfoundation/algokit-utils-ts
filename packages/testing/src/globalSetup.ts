@@ -9,27 +9,30 @@ import { fileURLToPath } from 'node:url'
 import { startMockServer, stopAllMockServers, type ClientType, type MockServer, MOCK_PORTS } from './mockServer'
 
 const currentDir = resolve(fileURLToPath(import.meta.url), '..')
-const projectRoot = resolve(currentDir, '..', '..')
+const projectRoot = resolve(currentDir, '..', '..', '..')
 config({ path: resolve(projectRoot, '.env') })
+
+const debug = process.env.DEBUG_MOCK_SERVER === 'true'
+const log = debug ? console.log.bind(console) : () => {}
 
 export function createGlobalSetup(clientType: ClientType) {
   let mockServer: MockServer | null = null
 
   return async function setup(): Promise<() => Promise<void>> {
-    console.log(`[MockServer] Starting ${clientType} mock server...`)
+    log(`[MockServer] Starting ${clientType} mock server...`)
 
     try {
       mockServer = await startMockServer(clientType)
-      console.log(`[MockServer] ${clientType} server ready at ${mockServer.baseUrl}`)
+      log(`[MockServer] ${clientType} server ready at ${mockServer.baseUrl}`)
 
       process.env[`MOCK_${clientType.toUpperCase()}_SERVER`] = mockServer.baseUrl
       process.env[`MOCK_${clientType.toUpperCase()}_PORT`] = String(MOCK_PORTS[clientType].host)
 
       return async () => {
-        console.log(`[MockServer] Stopping ${clientType} mock server...`)
+        log(`[MockServer] Stopping ${clientType} mock server...`)
         if (mockServer) await mockServer.stop()
         await stopAllMockServers()
-        console.log(`[MockServer] ${clientType} server stopped`)
+        log(`[MockServer] ${clientType} server stopped`)
       }
     } catch (error) {
       console.error(`[MockServer] Failed to start ${clientType} server:`, error)

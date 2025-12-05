@@ -25,7 +25,5 @@
   },
   "dependencies": {},
   "peerDependencies": {},
-  "devDependencies": {
-    "@algorandfoundation/algokit-testing": "*"
-  }
+  "devDependencies": {}
 }

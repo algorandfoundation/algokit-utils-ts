@@ -22,6 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # TODO: Change to algorandfoundation/algokit-polytest once https://github.com/algorandfoundation/algokit-polytest/pull/18 is merged
       - name: Setup Polytest
         uses: aorumbayev/algokit-polytest/.github/actions/setup-polytest@main
 

@@ -9,7 +9,7 @@ import {
   TEST_ASSET_ID,
   TEST_TXID,
   TEST_ROUND,
-} from '../../testing'
+} from '@algorandfoundation/algokit-testing'
 
 function getMockServerUrl(): string {
   return process.env.MOCK_KMD_URL || process.env.MOCK_KMD_SERVER || `http://127.0.0.1:${MOCK_PORTS.kmd.host}`
