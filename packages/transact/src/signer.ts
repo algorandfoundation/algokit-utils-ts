@@ -2,7 +2,6 @@ import { Address, Addressable, concatArrays, Expand, ReadableAddress } from '@al
 import { encodeTransaction, Transaction } from './transactions/transaction'
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
 import { encodeSignedTransaction, SignedTransaction } from './transactions/signed-transaction'
-import nacl from 'tweetnacl'
 
 /** Function for signing a group of transactions */
 export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
