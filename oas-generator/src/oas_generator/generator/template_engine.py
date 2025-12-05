@@ -693,10 +693,8 @@ class OperationProcessor:
 
             context.tags = operation.get(constants.OperationKey.TAGS, [constants.DEFAULT_TAG])
 
-            # Skip generation for operations tagged with "private" or "experimental"
-            # or with specific operation IDs
-            if (any(tag in context.tags for tag in ("private", "experimental")) or
-                context.operation_id in ("Metrics", "SwaggerJSON", "GetBlockLogs", "SwaggerHandler")):
+            # Skip generation for specifically tagged operations
+            if any(tag in context.tags for tag in ("private", "experimental", "skip")):
                 context.skip_generation = True
 
             operations.append(context)
