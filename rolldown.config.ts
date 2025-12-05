@@ -10,7 +10,6 @@ export default createConfig(
     '!src/types/*.spec.ts',
     // Package re-exports
     'src/abi/index.ts',
-    'src/common/index.ts',
     'src/transact/index.ts',
     'src/algod-client/index.ts',
     'src/indexer-client/index.ts',

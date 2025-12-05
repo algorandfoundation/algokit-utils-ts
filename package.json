@@ -36,11 +36,6 @@
       "import": "./abi/index.mjs",
       "require": "./abi/index.js"
     },
-    "./common": {
-      "types": "./common/index.d.ts",
-      "import": "./common/index.mjs",
-      "require": "./common/index.js"
-    },
     "./transact": {
       "types": "./transact/index.d.ts",
       "import": "./transact/index.mjs",
