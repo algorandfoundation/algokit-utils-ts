@@ -260,13 +260,11 @@ class TransactionCodec extends Codec<Transaction, Record<string, unknown>, WireO
     })
   }
 
-  // Override decode to preserve all decoded fields without applying default value substitution
   public decode(value: WireObject | undefined | null, format: EncodingFormat): Transaction {
     if (value === undefined || value === null) return this.defaultValue()
     return this.fromEncoded(value, format)
   }
 
-  // Override decodeOptional to preserve all decoded fields without applying default value substitution
   public decodeOptional(value: WireObject | undefined | null, format: EncodingFormat): Transaction | undefined {
     if (value === undefined || value === null) return undefined
     return this.fromEncoded(value, format)

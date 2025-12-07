@@ -61,4 +61,3 @@ A collection of random notes pop up during the migration process.
   - transform-complex-txn.spec.ts calls `txId` but the type is Transaction, not wrapper
 - In multisig subsignatures we use address. Should we call this publicKey and use a Uint8Array value? This would make interop/consistenct between KMD and Indexer nicer too.
 - TODO: review naming of the tree logic sig -> MultisigSubsignature
-- TODO: change multiSignature.subsignatures[].address to publicKey and type Uint8Array

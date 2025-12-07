@@ -600,7 +600,7 @@ describe('App Call', () => {
   describe('Encoding / decoding tests', () => {
     test('should decode access list', () => {
       const addr1 = Address.fromString('FDMKB5D72THLYSJEBHBDHUE7XFRDOM5IHO44SOJ7AWPD6EZMWOQ2WKN7HQ')
-      const txn: TransactionParams = {
+      const txnParams: TransactionParams = {
         sender: Address.fromString('BH55E5RMBD4GYWXGX5W5PJ5JAHPGM5OXKDQH5DC4O2MGI7NW4H6VOE4CP4'),
         firstValid: 322575n,
         lastValid: 322575n,
@@ -629,7 +629,7 @@ describe('App Call', () => {
       // This code is here to demonstrate the problem.
       // When encoding, the cross product references are added first,
       // so modify the access list encoding data to simulate how it may be encoded on chain.
-      const txnDto = transactionCodec.encode(new Transaction(txn), 'msgpack')
+      const txnDto = transactionCodec.encode(new Transaction(txnParams), 'msgpack')
 
       const accessList = txnDto.al! as ResourceHoldingReference[]
       // Index 2 is actually the holding reference.
@@ -644,37 +644,38 @@ describe('App Call', () => {
 
       const decodedTxn = transactionCodec.decode(txnDto, 'msgpack')
 
-      assert.deepStrictEqual(decodedTxn?.appCall!.accessReferences, txn?.appCall!.accessReferences)
+      assert.deepStrictEqual(decodedTxn?.appCall!.accessReferences, txnParams?.appCall!.accessReferences)
     })
 
     test('should skip empty access local item', () => {
       const sender = Address.fromString('BH55E5RMBD4GYWXGX5W5PJ5JAHPGM5OXKDQH5DC4O2MGI7NW4H6VOE4CP4')
 
-      const txn: TransactionParams = {
-        sender: sender,
-        firstValid: 322575n,
-        lastValid: 322575n,
-        fee: 1000n,
-        genesisId: 'testnet-v1.0',
-        genesisHash: new Uint8Array(Buffer.from('SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=', 'base64')),
-        type: TransactionType.AppCall,
-        appCall: {
-          appId: 111n,
-          onComplete: OnApplicationComplete.NoOp,
-          accessReferences: [
-            {
-              // When the appId is the current app and the address is ZERO_ADDRESS
-              // They are converted to zero values and should be skipped from the msgpack encode
-              locals: {
-                appId: 111n,
-                address: Address.zeroAddress(),
+      const txnDto = transactionCodec.encode(
+        new Transaction({
+          sender: sender,
+          firstValid: 322575n,
+          lastValid: 322575n,
+          fee: 1000n,
+          genesisId: 'testnet-v1.0',
+          genesisHash: new Uint8Array(Buffer.from('SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=', 'base64')),
+          type: TransactionType.AppCall,
+          appCall: {
+            appId: 111n,
+            onComplete: OnApplicationComplete.NoOp,
+            accessReferences: [
+              {
+                // When the appId is the current app and the address is ZERO_ADDRESS
+                // They are converted to zero values and should be skipped from the msgpack encode
+                locals: {
+                  appId: 111n,
+                  address: Address.zeroAddress(),
+                },
               },
-            },
-          ],
-        },
-      }
-
-      const txnDto = transactionCodec.encode(new Transaction(txn), 'msgpack')
+            ],
+          },
+        }),
+        'msgpack',
+      )
       assert.isUndefined(txnDto.al)
     })
   })

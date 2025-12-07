@@ -74,7 +74,7 @@ export function applyMultisigSubsignature(
 ): MultisigSignature {
   let found = false
   const newSubsignatures = multisigSignature.subsignatures.map((subsig) => {
-    if (arraysEqual(subsig.publicKey, participant)) {
+    if (arrayEqual(subsig.publicKey, participant)) {
       found = true
       return { ...subsig, signature }
     }
@@ -89,14 +89,6 @@ export function applyMultisigSubsignature(
     ...multisigSignature,
     subsignatures: newSubsignatures,
   }
-}
-
-function arraysEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.length !== b.length) return false
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false
-  }
-  return true
 }
 
 /**
@@ -115,7 +107,7 @@ export function mergeMultisignatures(multisigSignatureA: MultisigSignature, mult
   const participantsA = participantsFromMultisigSignature(multisigSignatureA)
   const participantsB = participantsFromMultisigSignature(multisigSignatureB)
   const participantsMatch =
-    participantsA.length === participantsB.length && participantsA.every((pk, i) => arraysEqual(pk, participantsB[i]))
+    participantsA.length === participantsB.length && participantsA.every((pk, i) => arrayEqual(pk, participantsB[i]))
   if (!participantsMatch) {
     throw new Error('Cannot merge multisig signatures with different participants')
   }
