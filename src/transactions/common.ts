@@ -1,18 +1,18 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, SendingAddress, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { encodeLease } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
-  /** The address of the account sending the transaction. */
-  sender: ReadableAddress
+  /** The address sending the transaction, optionally with an attached signer. */
+  sender: SendingAddress
   /** The function used to sign transaction(s); if not specified then
    *  an attempt will be made to find a registered signer for the
    *  given `sender` or use a default signer (if configured).
    */
-  signer?: TransactionSigner | AddressWithSigner
+  signer?: TransactionSigner | AddressWithTransactionSigner
   /** Change the signing key of the sender to the given address.
    *
    * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).

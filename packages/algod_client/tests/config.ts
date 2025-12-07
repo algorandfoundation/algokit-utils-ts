@@ -1,12 +1,23 @@
 import type { ClientConfig } from '../src/core/client-config'
+import {
+  DEFAULT_TOKEN,
+  MOCK_PORTS,
+  TEST_ADDRESS,
+  TEST_APP_ID,
+  TEST_APP_ID_WITH_BOXES,
+  TEST_BOX_NAME,
+  TEST_ASSET_ID,
+  TEST_TXID,
+  TEST_ROUND,
+} from '@algorandfoundation/algokit-testing'
 
-export const config: ClientConfig = {
-  baseUrl: process.env.MOCK_ALGOD_SERVER || 'http://localhost',
-  port: 8000,
-  token: process.env.MOCK_ALGOD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+function getMockServerUrl(): string {
+  return process.env.MOCK_ALGOD_URL || process.env.MOCK_ALGOD_SERVER || `http://127.0.0.1:${MOCK_PORTS.algod.host}`
 }
 
-export const TEST_ADDRESS = '25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE'
-export const TEST_APP_ID = 718348254
-export const TEST_ASSET_ID = 705457144
-export const TEST_ROUND = 24099447
+export const config: ClientConfig = {
+  baseUrl: getMockServerUrl(),
+  token: process.env.MOCK_ALGOD_TOKEN || DEFAULT_TOKEN,
+}
+
+export { TEST_ADDRESS, TEST_APP_ID, TEST_APP_ID_WITH_BOXES, TEST_BOX_NAME, TEST_ASSET_ID, TEST_TXID, TEST_ROUND }

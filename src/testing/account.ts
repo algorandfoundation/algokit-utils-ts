@@ -1,7 +1,7 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
+import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
-import { AddressWithSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
@@ -23,7 +23,7 @@ export async function getTestAccount(
   params: GetTestAccountParams,
   algod: AlgodClient,
   kmd?: KmdClient,
-): Promise<Address & Account & AddressWithSigner>
+): Promise<Address & Account & AddressWithTransactionSigner>
 /**
  * Creates an ephemeral Algorand account for the purposes of testing.
  * Returns a newly created random test account that is funded from the dispenser
@@ -33,12 +33,15 @@ export async function getTestAccount(
  * @param algorand An AlgorandClient client
  * @returns The account, with private key loaded
  */
-export async function getTestAccount(params: GetTestAccountParams, algorand: AlgorandClient): Promise<Address & Account & AddressWithSigner>
+export async function getTestAccount(
+  params: GetTestAccountParams,
+  algorand: AlgorandClient,
+): Promise<Address & Account & AddressWithSigners>
 export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
   algodOrAlgorandClient: AlgodClient | AlgorandClient,
   kmd?: KmdClient,
-): Promise<Address & Account & AddressWithSigner> {
+): Promise<Address & Account & AddressWithTransactionSigner> {
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient

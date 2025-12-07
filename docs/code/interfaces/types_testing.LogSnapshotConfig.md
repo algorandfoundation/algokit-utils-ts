@@ -21,7 +21,7 @@ This helps ensure that the provided configuration items won't appear
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| [`Address`](../classes/index.Address.md) \| `AddressWithSigner` \| `default` \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`SigningAccount`](../classes/types_account.SigningAccount.md))[]
+• `Optional` **accounts**: (`string` \| [`Address`](../classes/index.Address.md) \| `MultisigAccount` \| `AddressWithTransactionSigner` \| `LogicSigAccount` \| `default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md))[]
 
 Any accounts/addresses to replace the address for predictably
 

@@ -7,76 +7,14 @@ import {
   AssetHolding,
 } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, makeBasicAccountTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
-import * as algosdk from '@algorandfoundation/sdk'
-import { MultisigMetadata } from '@algorandfoundation/sdk'
-import { appendSignMultisigTransaction, signMultisigTransaction } from '@algorandfoundation/sdk/src/multisigSigning'
 import { AlgoAmount } from './amount'
 
 /**
  * The account name identifier used for fund dispensing in test environments
  */
 export const DISPENSER_ACCOUNT = 'DISPENSER'
-
-/** Account wrapper that supports partial or full multisig signing. */
-export class MultisigAccount {
-  _params: algosdk.MultisigMetadata
-  _signingAccounts: (algosdk.Account | SigningAccount)[]
-  _addr: Address
-  _signer: TransactionSigner
-
-  /** The parameters for the multisig account */
-  get params(): Readonly<algosdk.MultisigMetadata> {
-    return this._params
-  }
-
-  /** The list of accounts that are present to sign */
-  get signingAccounts(): Readonly<(algosdk.Account | SigningAccount)[]> {
-    return this._signingAccounts
-  }
-
-  /** The address of the multisig account */
-  get addr(): Readonly<Address> {
-    return this._addr
-  }
-
-  /** The transaction signer for the multisig account */
-  get signer(): TransactionSigner {
-    return this._signer
-  }
-
-  constructor(multisigParams: MultisigMetadata, signingAccounts: (Account | SigningAccount)[]) {
-    this._params = multisigParams
-    this._signingAccounts = signingAccounts
-    this._addr = algosdk.multisigAddress(multisigParams)
-    this._signer = algosdk.makeMultiSigAccountTransactionSigner(
-      multisigParams,
-      signingAccounts.map((a) => a.sk),
-    )
-  }
-
-  /**
-   * Sign the given transaction
-   * @param transaction Either a transaction object or a raw, partially signed transaction
-   * @returns The transaction signed by the present signers
-   * @example
-   * ```typescript
-   * const signedTxn = multisigAccount.sign(myTransaction)
-   * ```
-   */
-  public sign(transaction: Transaction | Uint8Array): Uint8Array {
-    let signedTxn = 'sender' in transaction ? undefined : transaction
-    for (const signer of this._signingAccounts) {
-      if (signedTxn) {
-        signedTxn = appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
-      } else {
-        signedTxn = signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
-      }
-    }
-    return signedTxn!
-  }
-}
 
 /** Account wrapper that supports a rekeyed account */
 export class SigningAccount implements Account {
@@ -118,12 +56,12 @@ export class SigningAccount implements Account {
   constructor(account: Account, sender: string | Address | undefined) {
     this._account = account
     this._sender = typeof sender === 'string' ? Address.fromString(sender) : (sender ?? account.addr)
-    this._signer = algosdk.makeBasicAccountTransactionSigner(account)
+    this._signer = makeBasicAccountTransactionSigner(account)
   }
 }
 
 /** @deprecated Use AddressWithSigner */
-export type TransactionSignerAccount = AddressWithSigner
+export type TransactionSignerAccount = AddressWithTransactionSigner
 
 /** Account information at a given round. */
 export type AccountInformation = {

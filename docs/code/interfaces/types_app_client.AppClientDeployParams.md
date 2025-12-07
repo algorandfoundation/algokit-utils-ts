@@ -194,7 +194,7 @@ ___
 
 ### sender
 
-• `Optional` **sender**: `AddressWithSigner`
+• `Optional` **sender**: `AddressWithTransactionSigner`
 
 The optional sender to send the transaction from, will use the application client's default sender by default if specified
 

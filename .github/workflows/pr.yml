@@ -8,7 +8,29 @@ permissions:
   contents: read
 
 jobs:
+  setup-polytest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      # TODO: Change to algorandfoundation/algokit-polytest once https://github.com/algorandfoundation/algokit-polytest/pull/18 is merged
+      - name: Setup Polytest
+        uses: aorumbayev/algokit-polytest/.github/actions/setup-polytest@main
+
+      - name: Validate polytest algod_client tests
+        run: npm run polytest:validate-algod
+
   pull_request:
+    needs: setup-polytest
     uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
     with:
       node-version: 20.x
@@ -19,11 +41,6 @@ jobs:
         pipx install algokit
         algokit localnet start
         npx --yes wait-on tcp:4001 -t 30000
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        source "$HOME/.cargo/env"
-        cargo install polytest
-        npm run polytest:validate-algod
-        npm run mock-server:start-algod
 
         # Ensure Transaction class has all keys from TransactionParams
         npm run check-types

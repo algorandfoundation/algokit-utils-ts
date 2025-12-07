@@ -1,6 +1,6 @@
 import { Arc56Contract, argTypeIsTransaction, getABIDecodedValue, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithSigner, OnApplicationComplete, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, OnApplicationComplete, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import { type AlgorandClient } from './algorand-client'
 import { AppCompilationResult, DELETABLE_TEMPLATE_NAME, TealTemplateParams, UPDATABLE_TEMPLATE_NAME } from './app'
@@ -613,7 +613,7 @@ export class AppFactory {
   }
 
   private getBareParams<
-    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithSigner } | undefined,
+    TParams extends { sender?: ReadableAddress; signer?: TransactionSigner | AddressWithTransactionSigner } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -628,7 +628,7 @@ export class AppFactory {
     TParams extends {
       method: string
       sender?: ReadableAddress
-      signer?: TransactionSigner | AddressWithSigner
+      signer?: TransactionSigner | AddressWithTransactionSigner
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,
@@ -686,8 +686,8 @@ export class AppFactory {
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
     sender: ReadableAddress | undefined,
-    signer: TransactionSigner | AddressWithSigner | undefined,
-  ): TransactionSigner | AddressWithSigner | undefined {
+    signer: TransactionSigner | AddressWithTransactionSigner | undefined,
+  ): TransactionSigner | AddressWithTransactionSigner | undefined {
     return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 }
