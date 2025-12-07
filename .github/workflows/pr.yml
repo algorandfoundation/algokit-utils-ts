@@ -24,6 +24,9 @@ jobs:
         cargo install polytest
         npm run polytest:validate-algod
         npm run mock-server:start-algod
+
+        # Ensure Transaction class has all keys from TransactionParams
+        npm run check-types
       audit-script: |
         npm run audit
   check_docs:
