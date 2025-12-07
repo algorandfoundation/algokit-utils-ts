@@ -124,7 +124,7 @@ export type TransactionTestData = {
   signingPrivateKey: Uint8Array
   rekeyedSenderAuthAddress: string
   rekeyedSenderSignedBytes: Uint8Array
-  multisigAddresses: [string, string]
+  multisigPublicKeys: [Uint8Array, Uint8Array]
   multisigSignedBytes: Uint8Array
 }
 
