@@ -13,10 +13,8 @@ describe('GET v2_blocks_ROUND', () => {
       // const client = new AlgodClient({
       //   baseUrl: `https://testnet-api.algonode.cloud`,
       // })
-
       // const result = await client.getBlock(TEST_ROUND)
       // expect(result).toMatchSnapshot()
-
       // This can be removed once we have a good selection of mocked blocks
       // const mainnetClient = new AlgodClient({
       //   baseUrl: `https://mainnet-api.4160.nodely.dev`,
