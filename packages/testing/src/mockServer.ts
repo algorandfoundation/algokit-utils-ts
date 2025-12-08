@@ -99,7 +99,7 @@ export async function getMockServer(clientType: ClientType): Promise<MockServer>
     throw new Error(
       `Environment variable ${envVar} is not set. ` +
         `Please start the mock server externally and set the URL. ` +
-        `For local development, run: bun run mock-server:${clientType}`,
+        `See the "Mock Server for Client Tests" section in README.md for local development setup.`,
     )
   }
 
