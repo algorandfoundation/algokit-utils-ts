@@ -16,11 +16,10 @@ export type {
   ABIMethodArgType,
   ABIMethodReturn,
   ABIMethodReturnType,
-  ABIReferenceType,
   ABIReturn,
-  ABITransactionType,
   DefaultValueSource,
 } from './abi-method'
+export { ABIReferenceType, ABITransactionType } from './abi-method'
 export {
   ABIAddressType,
   ABIArrayDynamicType,
