@@ -150,7 +150,7 @@ ___
 
 ### onUpdate
 
-• `Optional` **onUpdate**: ``"replace"`` \| ``"update"`` \| ``"fail"`` \| ``"append"`` \| [`OnUpdate`](../enums/types_app.OnUpdate.md)
+• `Optional` **onUpdate**: ``"update"`` \| ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnUpdate`](../enums/types_app.OnUpdate.md)
 
 What action to perform if a TEAL update is detected
 
