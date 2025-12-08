@@ -7,58 +7,13 @@ import {
   AssetHolding,
 } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import { AddressWithTransactionSigner, makeBasicAccountTransactionSigner, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import type { Account } from '@algorandfoundation/sdk'
+import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AlgoAmount } from './amount'
 
 /**
  * The account name identifier used for fund dispensing in test environments
  */
 export const DISPENSER_ACCOUNT = 'DISPENSER'
-
-/** Account wrapper that supports a rekeyed account */
-export class SigningAccount implements Account {
-  private _account: Account
-  private _signer: TransactionSigner
-  private _sender: Address
-
-  /**
-   * Algorand address of the sender
-   */
-  get addr(): Readonly<Address> {
-    return this._sender
-  }
-
-  /**
-   * Secret key belonging to the signer
-   */
-  get sk(): Readonly<Uint8Array> {
-    return this._account.sk
-  }
-
-  /**
-   * Transaction signer for the underlying signing account
-   */
-  get signer(): TransactionSigner {
-    return this._signer
-  }
-
-  /**
-   * Algorand account of the sender address and signer private key
-   */
-  get sender(): Account {
-    return {
-      addr: this._sender,
-      sk: this._account.sk,
-    }
-  }
-
-  constructor(account: Account, sender: string | Address | undefined) {
-    this._account = account
-    this._sender = typeof sender === 'string' ? Address.fromString(sender) : (sender ?? account.addr)
-    this._signer = makeBasicAccountTransactionSigner(account)
-  }
-}
 
 /** @deprecated Use AddressWithSigner */
 export type TransactionSignerAccount = AddressWithTransactionSigner

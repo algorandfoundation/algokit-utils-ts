@@ -1,8 +1,6 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, LogicSigAccount, TransactionSigner, MultisigAccount } from '@algorandfoundation/algokit-transact'
-import type { Account } from '@algorandfoundation/sdk'
-import { SigningAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
@@ -92,7 +90,7 @@ export class AlgorandClient {
    * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(account: AddressWithTransactionSigner | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
+  public setSignerFromAccount(account: AddressWithTransactionSigner | LogicSigAccount | MultisigAccount) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }
