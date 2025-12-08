@@ -3,6 +3,7 @@ export {
   type MockServer,
   EXTERNAL_URL_ENV_VARS,
   DEFAULT_TOKEN,
+  MOCK_PORTS,
   getMockServer,
   checkServerHealth,
   TEST_ADDRESS,

@@ -20,13 +20,20 @@ export const EXTERNAL_URL_ENV_VARS: Record<ClientType, string> = {
 /** Default token used for mock server authentication */
 export const DEFAULT_TOKEN = 'a'.repeat(64)
 
+/** Default ports for mock servers when running locally */
+export const MOCK_PORTS = {
+  algod: { host: 4001 },
+  indexer: { host: 8980 },
+  kmd: { host: 4002 },
+} as const
+
 /** Mock server instance representing a connection to an external server */
 export interface MockServer {
   /** Base URL of the mock server */
   baseUrl: string
   /** Type of client this server mocks */
   clientType: ClientType
-  /** Stop the mock server (no-op, server lifecycle is managed externally) */
+  /** Stop/disconnect from the mock server (no-op for external servers) */
   stop: () => Promise<void>
 }
 
@@ -48,8 +55,9 @@ export async function checkServerHealth(url: string, timeout = 5000): Promise<bo
       try {
         const response = await fetch(healthUrl, { method: 'GET', signal: controller.signal })
         clearTimeout(timeoutId)
-        // Consider any response (even non-2xx) as server being reachable
-        return response.ok || response.status < 500
+        // Any HTTP response (including 500) indicates the server is reachable
+        // The mock server returns 500 for unrecorded endpoints like /health
+        return true
       } catch (error) {
         clearTimeout(timeoutId)
         // If it's a network error, retry
@@ -81,7 +89,6 @@ export async function checkServerHealth(url: string, timeout = 5000): Promise<bo
  * const server = await getMockServer('algod')
  * const client = new AlgodClient(DEFAULT_TOKEN, server.baseUrl)
  * // ... run tests ...
- * await server.stop() // No-op, but included for consistent interface
  * ```
  */
 export async function getMockServer(clientType: ClientType): Promise<MockServer> {
@@ -92,15 +99,14 @@ export async function getMockServer(clientType: ClientType): Promise<MockServer>
     throw new Error(
       `Environment variable ${envVar} is not set. ` +
         `Please start the mock server externally and set the URL. ` +
-        `For local development, run: bun run mock-server:${clientType}`
+        `For local development, run: bun run mock-server:${clientType}`,
     )
   }
 
   const isHealthy = await checkServerHealth(externalUrl)
   if (!isHealthy) {
     throw new Error(
-      `Mock ${clientType} server at ${externalUrl} is not reachable. ` +
-        `Please ensure the server is running and accessible.`
+      `Mock ${clientType} server at ${externalUrl} is not reachable. ` + `Please ensure the server is running and accessible.`,
     )
   }
 
@@ -108,7 +114,7 @@ export async function getMockServer(clientType: ClientType): Promise<MockServer>
     baseUrl: externalUrl.replace(/\/$/, ''),
     clientType,
     stop: async () => {
-      // No-op: server lifecycle is managed externally
+      // No-op for external servers - they are managed externally
     },
   }
 }
