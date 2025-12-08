@@ -20,11 +20,11 @@ export const EXTERNAL_URL_ENV_VARS: Record<ClientType, string> = {
 /** Default token used for mock server authentication */
 export const DEFAULT_TOKEN = 'a'.repeat(64)
 
-/** Default ports for mock servers when running locally */
+/** Default ports for mock servers when running locally (matches algokit-polytest defaults) */
 export const MOCK_PORTS = {
-  algod: { host: 4001 },
-  indexer: { host: 8980 },
-  kmd: { host: 4002 },
+  algod: { host: 8000 },
+  indexer: { host: 8002 },
+  kmd: { host: 8001 },
 } as const
 
 /** Mock server instance representing a connection to an external server */
@@ -51,7 +51,7 @@ export async function checkServerHealth(url: string, timeout = 5000): Promise<bo
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 2000)
       try {
-        const response = await fetch(healthUrl, { method: 'GET', signal: controller.signal })
+        await fetch(healthUrl, { signal: controller.signal })
         clearTimeout(timeoutId)
         // Any HTTP response (including 500) indicates the server is reachable
         // The mock server returns 500 for unrecorded endpoints like /health
