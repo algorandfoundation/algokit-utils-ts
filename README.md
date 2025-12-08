@@ -82,7 +82,7 @@ cd algokit-polytest/resources/mock-server
 ./scripts/start_all_servers.sh
 ```
 
-This starts algod (port 8000), kmd (port 8001), and indexer (port 8002) in the background.
+This starts algod (port 8000), indexer (port 8002), and kmd (port 8001) in the background.
 
 2. Set environment variables and run tests:
 
