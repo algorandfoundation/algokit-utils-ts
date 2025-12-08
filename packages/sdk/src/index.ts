@@ -62,14 +62,6 @@ export { base64ToBytes, bytesToBase64, bytesToHex, bytesToString, coerceToBytes,
 export * from './encoding/encoding'
 export { decodeUint64, encodeUint64 } from './encoding/uint64'
 export * from './logic/sourcemap'
-export {
-  masterDerivationKeyToMnemonic,
-  mnemonicFromSeed,
-  mnemonicToMasterDerivationKey,
-  mnemonicToSecretKey,
-  secretKeyToMnemonic,
-  seedFromMnemonic,
-} from './mnemonic/mnemonic'
 export * from './types/intDecoding'
 export { default as IntDecoding } from './types/intDecoding'
 export * from './types/transactions/index'

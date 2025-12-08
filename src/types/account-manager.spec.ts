@@ -1,10 +1,10 @@
-import * as algosdk from '@algorandfoundation/sdk'
 import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algo } from '../amount'
 import { algorandFixture } from '../testing'
 import nacl from 'tweetnacl'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
+import { secretKeyToMnemonic } from '@algorandfoundation/algokit-algo25'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()
@@ -40,7 +40,7 @@ describe('AccountManager', () => {
     })
 
     const name2 = 'TEST'
-    process.env.TEST_MNEMONIC = algosdk.secretKeyToMnemonic(keys.secretKey)
+    process.env.TEST_MNEMONIC = secretKeyToMnemonic(keys.secretKey)
     const account2 = await algorand.account.fromEnvironment(name2)
 
     expect(account).not.toBe(account2)
