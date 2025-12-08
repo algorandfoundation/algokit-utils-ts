@@ -27,7 +27,6 @@ export function createGlobalSetup(clientType: ClientType) {
 
       return async () => {
         log(`[MockServer] Disconnecting from ${clientType} mock server...`)
-        if (mockServer) await mockServer.stop()
         log(`[MockServer] ${clientType} server disconnected`)
       }
     } catch (error) {

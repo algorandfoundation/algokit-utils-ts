@@ -2,7 +2,7 @@ name: Pull Request
 
 on:
   pull_request:
-    branches: [main, decoupling]
+    branches: [main, decoupling, decoupling-bun-mock-server]
 
 permissions:
   contents: read
@@ -62,30 +62,24 @@ jobs:
           algokit localnet start
           npx --yes wait-on tcp:4001 -t 30000
 
-      # Start mock servers using composite action (consistent with Python)
-      - name: Checkout algokit-polytest
-        uses: actions/checkout@v4
-        with:
-          repository: algorandfoundation/algokit-polytest
-          path: .polytest
-
+      # Start mock servers using composite action
       - name: Start algod mock server
-        uses: ./.polytest/.github/actions/run-mock-server
+        uses: algorandfoundation/algokit-polytest/.github/actions/run-mock-server@main
         with:
           client: algod
 
       - name: Start indexer mock server
-        uses: ./.polytest/.github/actions/run-mock-server
+        uses: algorandfoundation/algokit-polytest/.github/actions/run-mock-server@main
         with:
           client: indexer
 
       - name: Start kmd mock server
-        uses: ./.polytest/.github/actions/run-mock-server
+        uses: algorandfoundation/algokit-polytest/.github/actions/run-mock-server@main
         with:
           client: kmd
 
       - name: Run tests
-        run: npm run test --if-present
+        run: npm run test --if-present -- --silent
 
       - name: Audit
         run: npm run audit
