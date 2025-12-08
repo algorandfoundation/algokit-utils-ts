@@ -45,7 +45,7 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L22)
+[src/types/kmd-account-manager.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L21)
 
 ## Properties
 
@@ -55,7 +55,7 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L15)
+[src/types/kmd-account-manager.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L14)
 
 ___
 
@@ -65,19 +65,19 @@ ___
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L16)
+[src/types/kmd-account-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L15)
 
 ## Methods
 
 ### getLocalNetDispenserAccount
 
-▸ **getLocalNetDispenserAccount**(): `Promise`\<`AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **getLocalNetDispenserAccount**(): `Promise`\<`AddressWithTransactionSigner`\>
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
 
 #### Returns
 
-`Promise`\<`AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<`AddressWithTransactionSigner`\>
 
 The default LocalNet dispenser account
 
@@ -89,13 +89,13 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L192)
+[src/types/kmd-account-manager.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L188)
 
 ___
 
 ### getOrCreateWalletAccount
 
-▸ **getOrCreateWalletAccount**(`name`, `fundWith?`): `Promise`\<`AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **getOrCreateWalletAccount**(`name`, `fundWith?`): `Promise`\<`AddressWithTransactionSigner`\>
 
 Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
 
@@ -114,7 +114,7 @@ If this is used via `mnemonicAccountFromEnvironment`, then you can even use the 
 
 #### Returns
 
-`Promise`\<`AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<`AddressWithTransactionSigner`\>
 
 An Algorand account with private key loaded - either one that already existed in the given KMD wallet, or a new one that is funded for you
 
@@ -130,13 +130,13 @@ const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('accoun
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L141)
+[src/types/kmd-account-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L140)
 
 ___
 
 ### getWalletAccount
 
-▸ **getWalletAccount**(`walletName`, `predicate?`, `sender?`): `Promise`\<`undefined` \| `AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+▸ **getWalletAccount**(`walletName`, `predicate?`, `sender?`): `Promise`\<`undefined` \| `AddressWithTransactionSigner`\>
 
 Returns an Algorand signing account with private key loaded from the given KMD wallet (identified by name).
 
@@ -150,7 +150,7 @@ Returns an Algorand signing account with private key loaded from the given KMD w
 
 #### Returns
 
-`Promise`\<`undefined` \| `AddressWithTransactionSigner` & \{ `account`: [`SigningAccount`](types_account.SigningAccount.md)  }\>
+`Promise`\<`undefined` \| `AddressWithTransactionSigner`\>
 
 The signing account (with private key loaded) or undefined if no matching wallet or account was found
 
@@ -165,7 +165,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L66)
+[src/types/kmd-account-manager.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L65)
 
 ___
 
@@ -179,4 +179,4 @@ ___
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L31)
+[src/types/kmd-account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L30)

@@ -9,7 +9,7 @@ describe('signer', () => {
       return nacl.sign.detached(bytesToSign, keypair.secretKey)
     }
 
-    const addressWithSigners = generateAddressWithSigners(keypair.publicKey, rawSigner)
+    const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner })
 
     expect(addressWithSigners.addr.publicKey).toEqual(keypair.publicKey)
     expect(addressWithSigners.signer).toBeDefined()

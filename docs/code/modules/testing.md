@@ -151,7 +151,7 @@ ___
 
 ### getTestAccount
 
-▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<[`Address`](../classes/index.Address.md) & `Account` & `AddressWithTransactionSigner`\>
+▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner`\>
 
 #### Parameters
 
@@ -163,7 +163,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`Address`](../classes/index.Address.md) & `Account` & `AddressWithTransactionSigner`\>
+`Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner`\>
 
 The account, with private key loaded
 
@@ -178,9 +178,9 @@ Note: By default this will log the mnemonic of the account.
 
 #### Defined in
 
-[src/testing/account.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L22)
+[src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
 
-▸ **getTestAccount**(`params`, `algorand`): `Promise`\<[`Address`](../classes/index.Address.md) & `Account` & `AddressWithSigners`\>
+▸ **getTestAccount**(`params`, `algorand`): `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithSigners`\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -196,13 +196,13 @@ Note: By default this will log the mnemonic of the account.
 
 #### Returns
 
-`Promise`\<[`Address`](../classes/index.Address.md) & `Account` & `AddressWithSigners`\>
+`Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithSigners`\>
 
 The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L36)
+[src/testing/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L34)
 
 ___
 

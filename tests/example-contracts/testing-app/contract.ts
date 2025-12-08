@@ -8,6 +8,7 @@ import { AppManager } from '../../../src/types/app-manager'
 import { AppSpec } from '../../../src/types/app-spec'
 import { AppCreateParams, TransactionComposer } from '../../../src/types/composer'
 import { Arc2TransactionNote } from '../../../src/types/transaction'
+import { AddressWithSigners } from '@algorandfoundation/algokit-transact'
 
 export const getTestingAppContract = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'), 'utf-8')
@@ -26,7 +27,7 @@ export const getTestingAppContract = async () => {
   }
 }
 
-export const getTestingAppCreateParams = async (from: algosdk.Account, metadata: AppDeployMetadata) => {
+export const getTestingAppCreateParams = async (from: AddressWithSigners, metadata: AppDeployMetadata) => {
   const contract = await getTestingAppContract()
   return {
     sender: from.addr,
