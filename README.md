@@ -74,36 +74,28 @@ The `algod_client`, `indexer_client`, and `kmd_client` packages use a mock serve
 1. Clone algokit-polytest and start the mock servers:
 
 ```bash
-# Clone algokit-polytest (if not already)
-git clone https://github.com/algorandfoundation/algokit-polytest.git
-
-# Start all mock servers (recommended)
-cd algokit-polytest/resources/mock-server
-./scripts/start_all_servers.sh
+npm run polytest:start-mock-servers
 ```
 
 This starts algod (port 8000), indexer (port 8002), and kmd (port 8001) in the background.
 
-2. Set environment variables and run tests:
+2. Set environment variables and run tests.
+
+| Environment Variable | Description             | Default Port |
+| -------------------- | ----------------------- | ------------ |
+| `MOCK_ALGOD_URL`     | Algod mock server URL   | 8000         |
+| `MOCK_INDEXER_URL`   | Indexer mock server URL | 8002         |
+| `MOCK_KMD_URL`       | KMD mock server URL     | 8001         |
+
+Environment variables can also be set via `.env` file in project root (copy from `.env.template`).
 
 ```bash
-export MOCK_ALGOD_URL=http://localhost:8000
-export MOCK_INDEXER_URL=http://localhost:8002
-export MOCK_KMD_URL=http://localhost:8001
+# after setting env vars via export or .env file
 npm run test
 ```
 
 3. Stop servers when done:
 
 ```bash
-cd algokit-polytest/resources/mock-server
-./scripts/stop_all_servers.sh
+npm run polytest:stop-mock-servers
 ```
-
-| Environment Variable | Description | Default Port |
-|---------------------|-------------|--------------|
-| `MOCK_ALGOD_URL` | Algod mock server URL | 8000 |
-| `MOCK_INDEXER_URL` | Indexer mock server URL | 8002 |
-| `MOCK_KMD_URL` | KMD mock server URL | 8001 |
-
-Environment variables can also be set via `.env` file in project root (copy from `.env.template`).
