@@ -56,7 +56,7 @@ describe('Transaction Validation', () => {
       ['encodeTransaction', (params: TransactionParams) => encodeTransaction(new Transaction(params))],
       ['encodeTransactionRaw', (params: TransactionParams) => encodeTransactionRaw(new Transaction(params))],
       ['estimateTransactionSize', (params: TransactionParams) => estimateTransactionSize(new Transaction(params))],
-      ['txID', (params: TransactionParams) => new Transaction(params).txID()],
+      ['txId', (params: TransactionParams) => new Transaction(params).txId()],
       [
         'encodeSignedTransaction',
         (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), sig: EMPTY_SIGNATURE }),

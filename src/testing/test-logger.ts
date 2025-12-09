@@ -48,7 +48,7 @@ export class TestLogger implements Logger {
     const { transactions: transactionIds, accounts, apps } = config ?? {}
     let snapshot = this.capturedLogs.filter(config?.filterPredicate ?? (() => true)).join('\n')
     transactionIds?.forEach(
-      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txID(), 'g'), `TXID_${id + 1}`)),
+      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txId(), 'g'), `TXID_${id + 1}`)),
     )
     accounts?.forEach(
       (sender, id) =>

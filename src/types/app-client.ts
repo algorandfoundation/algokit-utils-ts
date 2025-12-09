@@ -1516,7 +1516,7 @@ export class AppClient {
 
       const txns = e.sentTransactions
 
-      const txn = txns.find((t) => e.message.includes(t.txID()))
+      const txn = txns.find((t) => e.message.includes(t.txId()))
 
       const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
         if (a === undefined || b === undefined) return false

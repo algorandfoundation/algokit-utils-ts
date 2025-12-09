@@ -260,7 +260,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   if (!refSigTx.msig) {
     throw new Error('Invalid multisig transaction, multisig structure missing at index 0')
   }
-  const refTxID = refSigTx.txn.txID()
+  const refTxID = refSigTx.txn.txId()
   const refAuthAddr = refSigTx.authAddress
   const refPreImage = {
     version: refSigTx.msig.version,
@@ -276,7 +276,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
       throw new Error(`Invalid multisig transaction, multisig structure missing at index ${i}`)
     }
 
-    if (unisig.txn.txID() !== refTxID) {
+    if (unisig.txn.txId() !== refTxID) {
       throw new Error(MULTISIG_MERGE_MISMATCH_ERROR_MSG)
     }
 
@@ -377,7 +377,7 @@ export function appendSignRawMultisigSignature(
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
   const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.txn, { version, threshold, pks }, signerAddr, signature)
   return {
-    txID: multisigTxObj.txn.txID(),
+    txID: multisigTxObj.txn.txId(),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
@@ -507,7 +507,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
 
           if (!sig) {
             throw new Error(
-              `Signer for address ${subSigner.addr.toString()} did not produce a valid signature when signing ${txn.txID()} for multisig account ${this._addr.toString()}`,
+              `Signer for address ${subSigner.addr.toString()} did not produce a valid signature when signing ${txn.txId()} for multisig account ${this._addr.toString()}`,
             )
           }
 

@@ -134,9 +134,9 @@ describe('transaction', () => {
     const { algorand, algod } = localnet.context
     const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
-      await waitForConfirmation(txn.txID(), 5, algod)
+      await waitForConfirmation(txn.txId(), 5, algod)
     } catch (e: unknown) {
-      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
+      expect((e as Error).message).toEqual(`Transaction ${txn.txId()} not confirmed after 5 rounds`)
     }
   })
 
@@ -150,7 +150,7 @@ describe('transaction', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const messageRegex = new RegExp(
-        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${txn2.txId()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
@@ -466,7 +466,7 @@ describe('transaction', () => {
       await Promise.all(
         result.transactions.map(async (txn) => {
           expect(Buffer.from(txn.group!).toString('base64')).toBe(result.groupId)
-          await localnet.context.waitForIndexerTransaction(txn.txID())
+          await localnet.context.waitForIndexerTransaction(txn.txId())
         }),
       )
     })

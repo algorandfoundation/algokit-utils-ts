@@ -17,7 +17,7 @@ export class TransactionLogger {
     if (decoded.txn.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
       this._latestLastValidRound = decoded.txn.lastValid
     }
-    this._sentTransactionIds.push(decoded.txn.txID())
+    this._sentTransactionIds.push(decoded.txn.txId())
   }
 
   /**

@@ -161,24 +161,122 @@ export class Transaction implements TransactionParams {
   /** @internal */
   [TXN_SYMBOL]: boolean
 
+  /**
+   * The type of transaction
+   */
   type: TransactionType
+
+  /**
+   * The account that authorized the transaction.
+   *
+   * Fees are deducted from this account.
+   */
   sender: Address
+
+  /**
+   * Optional transaction fee in microALGO.
+   *
+   * When not set, the fee will be interpreted as 0 by the network.
+   */
   fee?: bigint
+
+  /**
+   * First round for when the transaction is valid.
+   */
   firstValid: bigint
+
+  /**
+   * Last round for when the transaction is valid.
+   *
+   * After this round, the transaction will be expired.
+   */
   lastValid: bigint
+
+  /**
+   * Hash of the genesis block of the network.
+   *
+   * Used to identify which network the transaction is for.
+   */
   genesisHash?: Uint8Array
+
+  /**
+   * Genesis ID of the network.
+   *
+   * A human-readable string used alongside genesis hash to identify the network.
+   */
   genesisId?: string
+
+  /**
+   * Optional user-defined note field.
+   *
+   * Can contain arbitrary data up to 1KB in size.
+   */
   note?: Uint8Array
+
+  /**
+   * Optional authorized account for future transactions.
+   *
+   * If set, only this account will be used for transaction authorization going forward.
+   * Reverting back control to the original address must be done by setting this field to
+   * the original address.
+   */
   rekeyTo?: Address
+
+  /**
+   * Optional lease value to enforce mutual transaction exclusion.
+   *
+   * When a transaction with a non-empty lease field is confirmed, the lease is acquired.
+   * A lease X is acquired by the sender, generating the (sender, X) lease.
+   * The lease is kept active until the last_valid round of the transaction has elapsed.
+   * No other transaction sent by the same sender can be confirmed until the lease expires.
+   */
   lease?: Uint8Array
+
+  /**
+   * Optional group ID for atomic transaction grouping.
+   *
+   * Transactions with the same group ID must execute together or not at all.
+   */
   group?: Uint8Array
+
+  /**
+   * Payment specific fields
+   */
   payment?: PaymentTransactionFields
+
+  /**
+   * Asset transfer specific fields
+   */
   assetTransfer?: AssetTransferTransactionFields
+
+  /**
+   * Asset config specific fields
+   */
   assetConfig?: AssetConfigTransactionFields
+
+  /**
+   * App call specific fields
+   */
   appCall?: AppCallTransactionFields
+
+  /**
+   * Key registration specific fields
+   */
   keyRegistration?: KeyRegistrationTransactionFields
+
+  /**
+   * Asset freeze specific fields
+   */
   assetFreeze?: AssetFreezeTransactionFields
+
+  /**
+   * Heartbeat specific fields
+   */
   heartbeat?: HeartbeatTransactionFields
+
+  /**
+   * State proof specific fields
+   */
   stateProof?: StateProofTransactionFields
 
   constructor(params: TransactionParams) {
@@ -204,41 +302,18 @@ export class Transaction implements TransactionParams {
     this.stateProof = params.stateProof
   }
 
-  /**
-   * Get the transaction ID as a base32-encoded string.
-   */
-  txID(): string {
+  private rawTxId(): Uint8Array {
     const encodedBytes = encodeTransaction(this)
-    const txHash = hash(encodedBytes)
-
-    return base32.encode(txHash).slice(0, TRANSACTION_ID_LENGTH)
+    return hash(encodedBytes)
   }
 
   /**
-   * Convert the Transaction to a plain TransactionParams object.
+   * Get the transaction ID as a base32-encoded string.
    */
-  toParams(): TransactionParams {
-    return {
-      type: this.type,
-      sender: this.sender,
-      fee: this.fee,
-      firstValid: this.firstValid,
-      lastValid: this.lastValid,
-      genesisHash: this.genesisHash,
-      genesisId: this.genesisId,
-      note: this.note,
-      rekeyTo: this.rekeyTo,
-      lease: this.lease,
-      group: this.group,
-      payment: this.payment,
-      assetTransfer: this.assetTransfer,
-      assetConfig: this.assetConfig,
-      appCall: this.appCall,
-      keyRegistration: this.keyRegistration,
-      assetFreeze: this.assetFreeze,
-      heartbeat: this.heartbeat,
-      stateProof: this.stateProof,
-    }
+  txId(): string {
+    const rawTxId = this.rawTxId()
+
+    return base32.encode(rawTxId).slice(0, TRANSACTION_ID_LENGTH)
   }
 
   static [Symbol.hasInstance](obj: unknown) {
@@ -260,29 +335,8 @@ class TransactionCodec extends Codec<Transaction, Record<string, unknown>, WireO
     })
   }
 
-  public decode(value: WireObject | undefined | null, format: EncodingFormat): Transaction {
-    if (value === undefined || value === null) return this.defaultValue()
-    return this.fromEncoded(value, format)
-  }
-
-  public decodeOptional(value: WireObject | undefined | null, format: EncodingFormat): Transaction | undefined {
-    if (value === undefined || value === null) return undefined
-    return this.fromEncoded(value, format)
-  }
-
-  public encode(value: Transaction | undefined | null, format: EncodingFormat): Record<string, unknown> {
-    if (value === undefined || value === null || this.isDefaultValue(value)) return this.toEncoded(this.defaultValue(), format)
-    return this.toEncoded(value, format)
-  }
-
-  public encodeOptional(value: Transaction | undefined | null, format: EncodingFormat): Record<string, unknown> | undefined {
-    if (value === undefined || value === null) return undefined
-    if (this.isDefaultValue(value)) return undefined
-    return this.toEncoded(value, format)
-  }
-
   protected toEncoded(value: Transaction, format: EncodingFormat): Record<string, unknown> {
-    return transactionParamsCodec.encode(value.toParams(), format)
+    return transactionParamsCodec.encode({ ...value }, format)
   }
 
   protected fromEncoded(value: WireObject, format: EncodingFormat): Transaction {
@@ -290,8 +344,8 @@ class TransactionCodec extends Codec<Transaction, Record<string, unknown>, WireO
     return new Transaction(params)
   }
 
-  public isDefaultValue(value: Transaction): boolean {
-    return value.type === TransactionType.Unknown
+  public isDefaultValue(_: Transaction): boolean {
+    return false
   }
 }
 
@@ -457,7 +511,7 @@ export function groupTransactions(transactions: Transaction[]): Transaction[] {
   return transactions.map(
     (tx) =>
       new Transaction({
-        ...tx.toParams(),
+        ...tx,
         group,
       }),
   )
@@ -466,7 +520,7 @@ export function groupTransactions(transactions: Transaction[]): Transaction[] {
 export function assignFee(transaction: Transaction, feeParams: FeeParams): Transaction {
   const fee = calculateFee(transaction, feeParams)
   return new Transaction({
-    ...transaction.toParams(),
+    ...transaction,
     fee,
   })
 }

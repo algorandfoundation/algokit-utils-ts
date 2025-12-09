@@ -35,7 +35,7 @@ export function signTransaction(txn: Transaction, sk: Uint8Array) {
   }
 
   return {
-    txID: txn.txID(),
+    txID: txn.txId(),
     blob: encodeSignedTransaction(signedTxn),
   }
 }

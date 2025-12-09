@@ -25,7 +25,7 @@ export const assertExample = async (label: string, testData: TransactionTestData
 }
 
 export const assertTransactionId = (label: string, testData: TransactionTestData) => {
-  expect(testData.transaction.txID(), label).toEqual(testData.id)
+  expect(testData.transaction.txId(), label).toEqual(testData.id)
 }
 
 export const assertEncodedTransactionType = (label: string, testData: TransactionTestData) => {

@@ -1598,7 +1598,7 @@ export class TransactionComposer {
 
     let transactionsToSimulate = transactions.map((txn, groupIndex) => {
       const ctxn = this.txns[groupIndex]
-      const params = txn.toParams()
+      const params = { ...txn }
       delete params.group
       if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.AppCall) {
         const logicalMaxFee = getLogicalMaxFee(ctxn)
@@ -1784,7 +1784,7 @@ export class TransactionComposer {
       }
 
       const transactionsToSend = this.transactionsWithSigners.map((stxn) => stxn.txn)
-      const transactionIds = transactionsToSend.map((txn) => txn.txID())
+      const transactionIds = transactionsToSend.map((txn) => txn.txId())
 
       if (transactionsToSend.length > 1) {
         const groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
@@ -1830,7 +1830,7 @@ export class TransactionComposer {
         )
       } else {
         Config.getLogger(params?.suppressLog).verbose(
-          `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
+          `Sent transaction ID ${transactionsToSend[0].txId()} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
         )
       }
 
@@ -2029,7 +2029,7 @@ export class TransactionComposer {
     return {
       confirmations: simulateResult.txnResults.map((t) => t.txnResult),
       transactions: transactions,
-      txIds: transactions.map((t) => t.txID()),
+      txIds: transactions.map((t) => t.txId()),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
       returns: abiReturns,
