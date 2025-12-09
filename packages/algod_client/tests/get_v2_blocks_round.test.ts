@@ -1,6 +1,4 @@
-import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { TEST_ROUND } from './config'
+import { describe, test } from 'vitest'
 
 describe('GET v2_blocks_ROUND', () => {
   // Polytest Suite: GET v2_blocks_ROUND

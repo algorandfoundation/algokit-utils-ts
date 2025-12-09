@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { AlgodClient } from '../src/client'
-import { config, TEST_ADDRESS } from './config'
+import { TEST_ADDRESS, config } from './config'
 
 describe('GET v2_accounts_ADDRESS_transactions_pending', () => {
   // Polytest Suite: GET v2_accounts_ADDRESS_transactions_pending

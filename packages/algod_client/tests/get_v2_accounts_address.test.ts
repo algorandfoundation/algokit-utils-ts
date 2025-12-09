@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
 import { AlgodClient } from '../src/client'
-import { config, TEST_APP_ID } from './config'
+import { TEST_ADDRESS, config } from './config'
 
-describe('GET v2_applications_APPLICATION-ID', () => {
-  // Polytest Suite: GET v2_applications_APPLICATION-ID
+describe('GET v2_accounts_ADDRESS', () => {
+  // Polytest Suite: GET v2_accounts_ADDRESS
 
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
@@ -11,7 +11,7 @@ describe('GET v2_applications_APPLICATION-ID', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getApplicationById(TEST_APP_ID)
+      const result = await client.accountInformation(TEST_ADDRESS)
 
       expect(result).toMatchSnapshot()
     })
