@@ -71,7 +71,7 @@ describe('Payment', () => {
 
   describe('Payment Transaction Validation', () => {
     test('should validate valid payment transaction', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -80,13 +80,13 @@ describe('Payment', () => {
           amount: 1000000n, // 1 ALGO
           receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test('should validate payment transaction with zero amount', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -95,13 +95,13 @@ describe('Payment', () => {
           amount: 0n, // Zero payment is allowed
           receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test('should validate payment transaction with close remainder', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
         firstValid: 1000n,
@@ -111,14 +111,14 @@ describe('Payment', () => {
           receiver: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'),
           closeRemainderTo: Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'), // Close account
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test('should validate self-payment transaction', () => {
       const senderAddress = Address.fromString('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: senderAddress,
         firstValid: 1000n,
@@ -127,7 +127,7 @@ describe('Payment', () => {
           amount: 1000000n,
           receiver: senderAddress, // Self-payment
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })

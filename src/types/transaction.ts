@@ -1,23 +1,6 @@
 import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
-import { Address } from '@algorandfoundation/algokit-common'
-import {
-  AddressWithTransactionSigner,
-  AppCallTransactionFields,
-  AssetConfigTransactionFields,
-  AssetFreezeTransactionFields,
-  AssetTransferTransactionFields,
-  getTransactionId,
-  HeartbeatTransactionFields,
-  KeyRegistrationTransactionFields,
-  PaymentTransactionFields,
-  SendingAddress,
-  SignedTransaction,
-  StateProofTransactionFields,
-  Transaction,
-  TransactionSigner,
-  TransactionType,
-} from '@algorandfoundation/algokit-transact'
+import { AddressWithTransactionSigner, SendingAddress, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AlgoAmount } from './amount'
 import { TransactionComposer } from './composer'
 import { Expand } from './expand'
@@ -65,19 +48,19 @@ export type SendSingleTransactionResult = Expand<SendTransactionComposerResults 
 /** The result of sending a transaction */
 export interface SendTransactionResult {
   /** The transaction */
-  transaction: TransactionWrapper
+  transaction: Transaction
   /** The response if the transaction was sent and waited for */
-  confirmation?: PendingTransactionResponseWrapper
+  confirmation?: PendingTransactionResponse
 }
 
 /** The result of preparing and/or sending multiple transactions */
 export interface SendTransactionResults {
   /** The transactions that have been prepared and/or sent */
-  transactions: TransactionWrapper[]
+  transactions: Transaction[]
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations?: PendingTransactionResponseWrapper[]
+  confirmations?: PendingTransactionResponse[]
 }
 
 /** The result of preparing and/or sending multiple transactions using an `TransactionComposer` */
@@ -91,21 +74,21 @@ export interface SendTransactionComposerResults extends Omit<SendTransactionResu
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: PendingTransactionResponseWrapper[]
+  confirmations: PendingTransactionResponse[]
 }
 
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
-  confirmation: PendingTransactionResponseWrapper
+  confirmation: PendingTransactionResponse
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
 export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
-  confirmation: PendingTransactionResponseWrapper
+  confirmation: PendingTransactionResponse
   /** The response from sending and waiting for the transactions */
-  confirmations: PendingTransactionResponseWrapper[]
+  confirmations: PendingTransactionResponse[]
 }
 
 /**
@@ -159,88 +142,4 @@ export interface AdditionalTransactionComposerContext {
 export interface TransactionComposerToSend extends SendParams {
   /** The `TransactionComposer` with transactions loaded to send */
   transactionComposer: TransactionComposer
-}
-
-export class TransactionWrapper implements Transaction {
-  type: TransactionType
-  sender: Address
-  fee?: bigint
-  firstValid: bigint
-  lastValid: bigint
-  genesisHash?: Uint8Array
-  genesisId?: string
-  note?: Uint8Array
-  rekeyTo?: Address
-  lease?: Uint8Array
-  group?: Uint8Array
-  payment?: PaymentTransactionFields
-  assetTransfer?: AssetTransferTransactionFields
-  assetConfig?: AssetConfigTransactionFields
-  appCall?: AppCallTransactionFields
-  keyRegistration?: KeyRegistrationTransactionFields
-  assetFreeze?: AssetFreezeTransactionFields
-  heartbeat?: HeartbeatTransactionFields
-  stateProof?: StateProofTransactionFields
-
-  constructor(transaction: Transaction) {
-    this.type = transaction.type
-    this.sender = transaction.sender
-    this.fee = transaction.fee
-    this.firstValid = transaction.firstValid
-    this.lastValid = transaction.lastValid
-    this.genesisHash = transaction.genesisHash
-    this.genesisId = transaction.genesisId
-    this.note = transaction.note
-    this.rekeyTo = transaction.rekeyTo
-    this.lease = transaction.lease
-    this.group = transaction.group
-    this.payment = transaction.payment
-    this.assetTransfer = transaction.assetTransfer
-    this.assetConfig = transaction.assetConfig
-    this.appCall = transaction.appCall
-    this.keyRegistration = transaction.keyRegistration
-    this.assetFreeze = transaction.assetFreeze
-    this.heartbeat = transaction.heartbeat
-    this.stateProof = transaction.stateProof
-  }
-
-  /**
-   * Get the transaction ID
-   * @returns The transaction ID as a base64-encoded string
-   */
-  txID(): string {
-    return getTransactionId(this)
-  }
-}
-
-export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
-  txn: TransactionWrapper
-}
-
-export type PendingTransactionResponseWrapper = Omit<PendingTransactionResponse, 'txn' | 'innerTxns'> & {
-  txn: SignedTransactionWrapper
-  innerTxns?: PendingTransactionResponseWrapper[]
-}
-
-function wrapSignedTransaction(signedTransaction: SignedTransaction): SignedTransactionWrapper {
-  return {
-    ...signedTransaction,
-    txn: new TransactionWrapper(signedTransaction.txn),
-  }
-}
-
-export function wrapPendingTransactionResponse(response: PendingTransactionResponse): PendingTransactionResponseWrapper {
-  return {
-    ...response,
-    txn: wrapSignedTransaction(response.txn),
-    innerTxns: response.innerTxns?.map(wrapPendingTransactionResponse),
-  }
-}
-
-export function wrapPendingTransactionResponseOptional(
-  response?: PendingTransactionResponse,
-): PendingTransactionResponseWrapper | undefined {
-  if (!response) return undefined
-
-  return wrapPendingTransactionResponse(response)
 }

@@ -16,28 +16,28 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
       expect(multisig.subsignatures).toHaveLength(2)
-      expect(multisig.subsignatures[0].address).toBe(participants[0])
-      expect(multisig.subsignatures[1].address).toBe(participants[1])
+      expect(multisig.subsignatures[0].publicKey).toEqual(participants[0])
+      expect(multisig.subsignatures[1].publicKey).toEqual(participants[1])
       expect(multisig.subsignatures[0].signature).toBeUndefined()
       expect(multisig.subsignatures[1].signature).toBeUndefined()
     })
 
     test('should handle single participant', () => {
-      const participants = ['RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'].map(Address.fromString)
+      const participants = ['RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 1, participants)
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(1)
       expect(multisig.subsignatures).toHaveLength(1)
-      expect(multisig.subsignatures[0].address).toBe(participants[0])
+      expect(multisig.subsignatures[0].publicKey).toEqual(participants[0])
     })
   })
 
@@ -46,7 +46,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
       const extractedParticipants = participantsFromMultisigSignature(multisig)
@@ -58,7 +58,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
       const signature = new Uint8Array(64).fill(42) // Mock signature
@@ -75,7 +75,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
       const address = addressFromMultisigSignature(multisig)
@@ -87,11 +87,11 @@ describe('multisig', () => {
       const participants1 = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
       const participants2 = [
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig1 = newMultisigSignature(1, 2, participants1)
       const multisig2 = newMultisigSignature(1, 2, participants2)
@@ -106,7 +106,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisigLarge = newMultisigSignature(254, 2, participants)
       const addressLarge = addressFromMultisigSignature(multisigLarge)
@@ -123,7 +123,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
       const signature = new Uint8Array(64).fill(42)
@@ -140,7 +140,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
       const signature1 = new Uint8Array(64).fill(42)
@@ -161,7 +161,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig1 = newMultisigSignature(1, 2, participants)
       const multisig2 = newMultisigSignature(1, 2, participants)
@@ -184,7 +184,7 @@ describe('multisig', () => {
       const participants = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig1 = newMultisigSignature(1, 2, participants)
       const multisig2 = newMultisigSignature(2, 2, participants)
@@ -196,8 +196,8 @@ describe('multisig', () => {
   describe('decodeMultiSignature', () => {
     test('should decode encoded multisig signature', () => {
       const participants = [
-        Address.fromString('RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'),
-        Address.fromString('ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA'),
+        Address.fromString('RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q').publicKey,
+        Address.fromString('ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA').publicKey,
       ]
 
       const emptyMultisignature = newMultisigSignature(1, 2, participants)
@@ -210,8 +210,8 @@ describe('multisig', () => {
       expect(decoded.version).toBe(emptyMultisignature.version)
       expect(decoded.threshold).toBe(emptyMultisignature.threshold)
       expect(decoded.subsignatures).toHaveLength(emptyMultisignature.subsignatures.length)
-      expect(decoded.subsignatures[0].address.toString()).toBe(participants[0].toString())
-      expect(decoded.subsignatures[1].address.toString()).toBe(participants[1].toString())
+      expect(decoded.subsignatures[0].publicKey).toEqual(participants[0])
+      expect(decoded.subsignatures[1].publicKey).toEqual(participants[1])
       expect(decoded.subsignatures[0].signature).toEqual(signature)
       expect(decoded.subsignatures[1].signature).toBeUndefined()
     })
@@ -222,7 +222,7 @@ describe('multisig', () => {
       const participants = [
         'AXJVIQR43APV5HZ6F3J4MYNYR3GRRFHU56WTRFLJXFNNUJHDAX5SCGF3SQ',
         'QKR2CYWG4MQQAYCAF4LQARVQLLUF2JIDQO42OQ5YN2E7CHTLDURSJGNQRU',
-      ].map(Address.fromString)
+      ].map((s) => Address.fromString(s).publicKey)
 
       const multisig = newMultisigSignature(1, 2, participants)
 
@@ -246,8 +246,8 @@ describe('multisig', () => {
       expect(signedMultisig.version).toBe(1)
       expect(signedMultisig.threshold).toBe(2)
       expect(signedMultisig.subsignatures).toHaveLength(2)
-      expect(signedMultisig.subsignatures[0].address).toBe(participants[0])
-      expect(signedMultisig.subsignatures[1].address).toBe(participants[1])
+      expect(signedMultisig.subsignatures[0].publicKey).toEqual(participants[0])
+      expect(signedMultisig.subsignatures[1].publicKey).toEqual(participants[1])
       expect(signedMultisig.subsignatures[0].signature).toEqual(signature1)
       expect(signedMultisig.subsignatures[1].signature).toEqual(signature2)
     })

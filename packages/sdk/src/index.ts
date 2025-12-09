@@ -1,5 +1,5 @@
 import type { SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
-import { encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { encodeSignedTransaction, encodeTransaction } from '@algorandfoundation/algokit-transact'
 import * as convert from './convert'
 import * as nacl from './nacl/naclWrappers'
 import * as utils from './utils/utils'
@@ -35,7 +35,7 @@ export function signTransaction(txn: Transaction, sk: Uint8Array) {
   }
 
   return {
-    txID: getTransactionId(txn),
+    txID: txn.txId(),
     blob: encodeSignedTransaction(signedTxn),
   }
 }

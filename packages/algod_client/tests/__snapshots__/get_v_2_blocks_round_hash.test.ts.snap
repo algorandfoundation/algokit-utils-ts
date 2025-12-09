@@ -1,7 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`GET v2_blocks_ROUND_hash > Common Tests > Basic request and response validation 1`] = `
-{
-  "blockHash": "PKZ7LQO6KNISFUVXN3HFZQKF4GJV7XKFHFZNNKC6DAHUEZZM3IQQ",
-}
-`;

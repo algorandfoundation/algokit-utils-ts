@@ -24,7 +24,7 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 
 #### Defined in
 
-[src/types/composer.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L227)
+[src/types/composer.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L220)
 
 ___
 
@@ -36,16 +36,16 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 
 #### Defined in
 
-[src/types/composer.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L229)
+[src/types/composer.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L222)
 
 ___
 
 ### transactions
 
-• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
+• **transactions**: `Transaction`[]
 
 The built transactions
 
 #### Defined in
 
-[src/types/composer.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L225)
+[src/types/composer.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L218)

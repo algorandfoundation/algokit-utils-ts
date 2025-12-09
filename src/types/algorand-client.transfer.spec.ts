@@ -232,7 +232,7 @@ describe('Transfer capability', () => {
     const accountInfo = await algorand.account.getInformation(secondAccount)
 
     invariant(result)
-    expect(result.transactionId).toBe(result.transaction.txID())
+    expect(result.transactionId).toBe(result.transaction.txId())
     expect(result.amountFunded.microAlgo).toBe(100_001n)
     expect(accountInfo.balance.microAlgo).toBe(100_001n)
   })

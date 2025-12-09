@@ -53,7 +53,7 @@
 
 ### AppClientBareCallParams
 
-Ƭ **AppClientBareCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"onComplete"``\> & \{ `sender?`: `ReadableAddress`  }\>
+Ƭ **AppClientBareCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"onComplete"``\> & \{ `sender?`: [`ReadableAddress`](index.md#readableaddress)  }\>
 
 AppClient common parameters for a bare app call
 
@@ -141,7 +141,7 @@ ___
 
 ### AppClientMethodCallParams
 
-Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: `ReadableAddress`  }\>
+Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: [`ReadableAddress`](index.md#readableaddress)  }\>
 
 AppClient common parameters for an ABI method call
 
@@ -281,7 +281,7 @@ ___
 
 ### FundAppParams
 
-Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `sender?`: `ReadableAddress`  }\>
+Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `sender?`: [`ReadableAddress`](index.md#readableaddress)  }\>
 
 Parameters for funding an app account
 
@@ -313,7 +313,7 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `creatorAddress` | `ReadableAddress` | The address of the app creator account to resolve the app by |
+| `creatorAddress` | [`ReadableAddress`](index.md#readableaddress) | The address of the app creator account to resolve the app by |
 | `findExistingUsing` | `IndexerClient` \| [`AppLookup`](../interfaces/types_app.AppLookup.md) | The mechanism to find an existing app instance metadata for the given creator and name; either: * An indexer instance to search the creator account apps; or * The cached value of the existing apps for the given creator from `getCreatorAppsByName` |
 | `name?` | `string` | The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) |
 
@@ -325,7 +325,7 @@ ___
 
 ### ResolveAppClientByCreatorAndName
 
-Ƭ **ResolveAppClientByCreatorAndName**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"appId"``\> & \{ `appLookupCache?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `creatorAddress`: `ReadableAddress` ; `ignoreCache?`: `boolean`  }\>
+Ƭ **ResolveAppClientByCreatorAndName**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"appId"``\> & \{ `appLookupCache?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `creatorAddress`: [`ReadableAddress`](index.md#readableaddress) ; `ignoreCache?`: `boolean`  }\>
 
 Resolve an app client instance by looking up an app created by the given creator with the given name
 

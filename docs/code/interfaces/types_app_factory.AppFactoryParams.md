@@ -64,7 +64,7 @@ ___
 
 ### defaultSender
 
-• `Optional` **defaultSender**: `ReadableAddress`
+• `Optional` **defaultSender**: [`ReadableAddress`](../modules/index.md#readableaddress)
 
 Optional address to use for the account to use as the default sender for calls.
 

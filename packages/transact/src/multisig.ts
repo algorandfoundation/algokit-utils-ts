@@ -9,6 +9,7 @@ import {
   PUBLIC_KEY_BYTE_LENGTH,
   SIGNATURE_BYTE_LENGTH,
 } from '@algorandfoundation/algokit-common'
+import { AddressWithDelegatedLsigSigner, AddressWithTransactionSigner, TransactionSigner } from './signer'
 import {
   decodeSignedTransaction,
   encodeSignedTransaction,
@@ -16,14 +17,13 @@ import {
   MultisigSubsignature,
   SignedTransaction,
 } from './transactions/signed-transaction'
-import { getTransactionId, Transaction } from './transactions/transaction'
-import { AddressWithDelegatedLsigSigner, AddressWithTransactionSigner, TransactionSigner } from './signer'
 import { multiSignatureCodec } from './transactions/signed-transaction-meta'
+import { Transaction } from './transactions/transaction'
 
 /**
- * Creates an empty multisignature signature from a list of participant addresses.
+ * Creates an empty multisignature signature from a list of participant public keys.
  */
-export function newMultisigSignature(version: number, threshold: number, participants: Address[]): MultisigSignature {
+export function newMultisigSignature(version: number, threshold: number, participants: Uint8Array[]): MultisigSignature {
   if (version === 0) {
     throw new Error('Version cannot be zero')
   }
@@ -37,15 +37,15 @@ export function newMultisigSignature(version: number, threshold: number, partici
   return {
     version,
     threshold,
-    subsignatures: participants.map((address) => ({ address })),
+    subsignatures: participants.map((publicKey) => ({ publicKey })),
   }
 }
 
 /**
- * Returns the list of participant addresses from a multisignature signature.
+ * Returns the list of participant public keys from a multisignature signature.
  */
-export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): Address[] {
-  return multisigSignature.subsignatures.map((subsig) => subsig.address)
+export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): Uint8Array[] {
+  return multisigSignature.subsignatures.map((subsig) => subsig.publicKey)
 }
 
 const toPublicKeys = (addrs: Array<string | Address>): Uint8Array[] => addrs.map((addr) => getAddress(addr).publicKey)
@@ -57,24 +57,24 @@ export function addressFromMultisigSignature(multisigSignature: MultisigSignatur
   return addressFromMultisigPreImg({
     version: multisigSignature.version,
     threshold: multisigSignature.threshold,
-    pks: multisigSignature.subsignatures.map((subsig) => subsig.address.publicKey),
+    pks: multisigSignature.subsignatures.map((subsig) => subsig.publicKey),
   })
 }
 
 /**
  * Applies a subsignature for a participant to a multisignature signature, replacing any existing signature.
  *
- * This method applies the signature to ALL instances of the given address (to support weighted multisig).
+ * This method applies the signature to ALL instances of the given public key (to support weighted multisig).
  * Since ed25519 signatures are deterministic, there's only one valid signature for a given message and public key.
  */
 export function applyMultisigSubsignature(
   multisigSignature: MultisigSignature,
-  participant: Address,
+  participant: Uint8Array,
   signature: Uint8Array,
 ): MultisigSignature {
   let found = false
   const newSubsignatures = multisigSignature.subsignatures.map((subsig) => {
-    if (subsig.address.equals(participant)) {
+    if (arrayEqual(subsig.publicKey, participant)) {
       found = true
       return { ...subsig, signature }
     }
@@ -82,7 +82,7 @@ export function applyMultisigSubsignature(
   })
 
   if (!found) {
-    throw new Error('Address not found in multisig signature')
+    throw new Error('Public key not found in multisig signature')
   }
 
   return {
@@ -103,17 +103,19 @@ export function mergeMultisignatures(multisigSignatureA: MultisigSignature, mult
     throw new Error('Cannot merge multisig signatures with different thresholds')
   }
 
-  // Check participants match exactly (same addresses in same order)
+  // Check participants match exactly (same public keys in same order)
   const participantsA = participantsFromMultisigSignature(multisigSignatureA)
   const participantsB = participantsFromMultisigSignature(multisigSignatureB)
-  if (JSON.stringify(participantsA) !== JSON.stringify(participantsB)) {
+  const participantsMatch =
+    participantsA.length === participantsB.length && participantsA.every((pk, i) => arrayEqual(pk, participantsB[i]))
+  if (!participantsMatch) {
     throw new Error('Cannot merge multisig signatures with different participants')
   }
 
   const mergedSubsignatures: MultisigSubsignature[] = multisigSignatureA.subsignatures.map((s1, index) => {
     const s2 = multisigSignatureB.subsignatures[index]
     return {
-      address: s1.address,
+      publicKey: s1.publicKey,
       signature: s2.signature || s1.signature, // Prefer s2, fall back to s1
     }
   })
@@ -155,7 +157,7 @@ export function createMultisigTransaction(txn: Transaction, { version, threshold
   // construct the appendable multisigned transaction format
   const pks = toPublicKeys(addrs)
   const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
-    address: new Address(pk),
+    publicKey: pk,
     signature: undefined,
   }))
 
@@ -223,7 +225,7 @@ function createMultisigTransactionWithSignature(
 
   // append the multisig signature to the corresponding public key in the multisig blob
   const updatedSubsigs = signedTxn.msig!.subsignatures.map((subsig) => {
-    if (arrayEqual(subsig.address.publicKey, myPk)) {
+    if (arrayEqual(subsig.publicKey, myPk)) {
       keyExist = true
       return { ...subsig, signature: rawSig }
     }
@@ -258,12 +260,12 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   if (!refSigTx.msig) {
     throw new Error('Invalid multisig transaction, multisig structure missing at index 0')
   }
-  const refTxID = getTransactionId(refSigTx.txn)
+  const refTxID = refSigTx.txn.txId()
   const refAuthAddr = refSigTx.authAddress
   const refPreImage = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.address.publicKey),
+    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
@@ -274,7 +276,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
       throw new Error(`Invalid multisig transaction, multisig structure missing at index ${i}`)
     }
 
-    if (getTransactionId(unisig.txn) !== refTxID) {
+    if (unisig.txn.txId() !== refTxID) {
       throw new Error(MULTISIG_MERGE_MISMATCH_ERROR_MSG)
     }
 
@@ -290,7 +292,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
     const preimg: MultisigMetadataWithPks = {
       version: unisig.msig.version,
       threshold: unisig.msig.threshold,
-      pks: unisig.msig.subsignatures.map((subsig) => subsig.address.publicKey),
+      pks: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
     if (refMsigAddr.toString() !== msgigAddr.toString()) {
@@ -375,7 +377,7 @@ export function appendSignRawMultisigSignature(
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
   const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.txn, { version, threshold, pks }, signerAddr, signature)
   return {
-    txID: getTransactionId(multisigTxObj.txn),
+    txID: multisigTxObj.txn.txId(),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
@@ -505,7 +507,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
 
           if (!sig) {
             throw new Error(
-              `Signer for address ${subSigner.addr.toString()} did not produce a valid signature when signing ${getTransactionId(txn)} for multisig account ${this._addr.toString()}`,
+              `Signer for address ${subSigner.addr.toString()} did not produce a valid signature when signing ${txn.txId()} for multisig account ${this._addr.toString()}`,
             )
           }
 

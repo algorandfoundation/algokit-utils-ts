@@ -48,7 +48,7 @@ export const buildAssetTransfer = (
   defaultValidityWindow: bigint,
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetTransfer,
     assetTransfer: {
@@ -58,12 +58,12 @@ export const buildAssetTransfer = (
       assetSender: getOptionalAddress(params.clawbackTarget),
       closeRemainderTo: getOptionalAddress(params.closeAssetTo),
     },
-  }
+  })
 }
 
 export const buildAssetOptIn = (params: AssetOptInParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetTransfer,
     assetTransfer: {
@@ -71,7 +71,7 @@ export const buildAssetOptIn = (params: AssetOptInParams, suggestedParams: Sugge
       amount: 0n,
       receiver: commonData.sender,
     },
-  }
+  })
 }
 
 export const buildAssetOptOut = (
@@ -80,7 +80,7 @@ export const buildAssetOptOut = (
   defaultValidityWindow: bigint,
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetTransfer,
     assetTransfer: {
@@ -89,5 +89,5 @@ export const buildAssetOptOut = (
       receiver: commonData.sender,
       closeRemainderTo: getOptionalAddress(params.creator),
     },
-  }
+  })
 }

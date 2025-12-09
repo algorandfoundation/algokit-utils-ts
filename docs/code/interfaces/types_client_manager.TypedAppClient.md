@@ -53,7 +53,7 @@ Interface to identify a typed client that can be used to interact with an applic
 
 | Name | Type |
 | :------ | :------ |
-| `params` | `Omit`\<\{ `algorand`: [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) ; `appLookupCache?`: [`AppLookup`](types_app_deployer.AppLookup.md) ; `appName?`: `string` ; `appSpec`: `string` \| `Arc56Contract` \| [`AppSpec`](types_app_spec.AppSpec.md) ; `approvalSourceMap?`: `ProgramSourceMap` ; `clearSourceMap?`: `ProgramSourceMap` ; `creatorAddress`: `ReadableAddress` ; `defaultSender?`: `ReadableAddress` ; `defaultSigner?`: `TransactionSigner` ; `ignoreCache?`: `boolean`  }, ``"appSpec"``\> |
+| `params` | `Omit`\<\{ `algorand`: [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) ; `appLookupCache?`: [`AppLookup`](types_app_deployer.AppLookup.md) ; `appName?`: `string` ; `appSpec`: `string` \| `Arc56Contract` \| [`AppSpec`](types_app_spec.AppSpec.md) ; `approvalSourceMap?`: `ProgramSourceMap` ; `clearSourceMap?`: `ProgramSourceMap` ; `creatorAddress`: [`ReadableAddress`](../modules/index.md#readableaddress) ; `defaultSender?`: [`ReadableAddress`](../modules/index.md#readableaddress) ; `defaultSigner?`: `TransactionSigner` ; `ignoreCache?`: `boolean`  }, ``"appSpec"``\> |
 
 #### Returns
 

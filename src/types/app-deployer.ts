@@ -312,7 +312,7 @@ export class AppDeployer {
       const deleteTransaction = result.transactions.at(-1)!
 
       Config.getLogger(sendParams?.suppressLog).warn(
-        `Sent transactions ${transaction.txID()} to create app with id ${confirmation.appId} and ${deleteTransaction.txID()} to delete app with id ${
+        `Sent transactions ${transaction.txId()} to create app with id ${confirmation.appId} and ${deleteTransaction.txId()} to delete app with id ${
           existingApp.appId
         } from ${createParams.sender} account.`,
       )
