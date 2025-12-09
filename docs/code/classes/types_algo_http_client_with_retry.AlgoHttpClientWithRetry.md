@@ -57,7 +57,7 @@ URLTokenBaseHTTPClient.constructor
 
 #### Defined in
 
-node_modules/algosdk/types/client/urlTokenBaseHTTPClient.d.ts:27
+node_modules/algosdk/dist/types/client/urlTokenBaseHTTPClient.d.ts:27
 
 ## Properties
 
