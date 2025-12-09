@@ -6,7 +6,7 @@
 import { config } from 'dotenv'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { startMockServer, stopAllMockServers, type ClientType, type MockServer, MOCK_PORTS } from './mockServer'
+import { getMockServer, type ClientType, type MockServer } from './mockServer'
 
 const currentDir = resolve(fileURLToPath(import.meta.url), '..')
 const projectRoot = resolve(currentDir, '..', '..', '..')
@@ -19,23 +19,18 @@ export function createGlobalSetup(clientType: ClientType) {
   let mockServer: MockServer | null = null
 
   return async function setup(): Promise<() => Promise<void>> {
-    log(`[MockServer] Starting ${clientType} mock server...`)
+    log(`[MockServer] Connecting to ${clientType} mock server...`)
 
     try {
-      mockServer = await startMockServer(clientType)
+      mockServer = await getMockServer(clientType)
       log(`[MockServer] ${clientType} server ready at ${mockServer.baseUrl}`)
 
-      process.env[`MOCK_${clientType.toUpperCase()}_SERVER`] = mockServer.baseUrl
-      process.env[`MOCK_${clientType.toUpperCase()}_PORT`] = String(MOCK_PORTS[clientType].host)
-
       return async () => {
-        log(`[MockServer] Stopping ${clientType} mock server...`)
-        if (mockServer) await mockServer.stop()
-        await stopAllMockServers()
-        log(`[MockServer] ${clientType} server stopped`)
+        log(`[MockServer] Disconnecting from ${clientType} mock server...`)
+        log(`[MockServer] ${clientType} server disconnected`)
       }
     } catch (error) {
-      console.error(`[MockServer] Failed to start ${clientType} server:`, error)
+      console.error(`[MockServer] Failed to connect to ${clientType} server:`, error)
       throw error
     }
   }

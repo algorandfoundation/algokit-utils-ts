@@ -1,80 +1,68 @@
 /**
  * Mock server infrastructure for algod/indexer/kmd client testing.
  *
- * Uses Docker-based mock servers that replay pre-recorded HAR files.
- * Set MOCK_ALGOD_URL / MOCK_INDEXER_URL / MOCK_KMD_URL to use an external server.
+ * Connects to externally managed mock servers that replay pre-recorded HAR files.
+ * The mock server must be started separately (via GitHub Action in CI, or manually via bun for local dev).
+ *
+ * Set MOCK_ALGOD_URL / MOCK_INDEXER_URL / MOCK_KMD_URL environment variables to specify server URLs.
  */
 
-import { execSync } from 'node:child_process'
-import { createConnection } from 'node:net'
-
+/** Supported client types for mock servers */
 export type ClientType = 'algod' | 'indexer' | 'kmd'
 
-export const MOCK_PORTS: Record<ClientType, { host: number; container: number }> = {
-  algod: { host: 18000, container: 8000 },
-  indexer: { host: 18002, container: 8002 },
-  kmd: { host: 18001, container: 8001 },
-}
-
+/** Environment variable names for external mock server URLs */
 export const EXTERNAL_URL_ENV_VARS: Record<ClientType, string> = {
   algod: 'MOCK_ALGOD_URL',
   indexer: 'MOCK_INDEXER_URL',
   kmd: 'MOCK_KMD_URL',
 }
 
+/** Default token used for mock server authentication */
 export const DEFAULT_TOKEN = 'a'.repeat(64)
-export const CONTAINER_PREFIX = 'algokit_utils_ts_mock'
-export const MOCK_SERVER_IMAGE = 'ghcr.io/aorumbayev/polytest-mock-server:latest'
 
-const startedContainers = new Set<string>()
+/** Default ports for mock servers when running locally (matches algokit-polytest defaults) */
+export const MOCK_PORTS = {
+  algod: { host: 8000 },
+  indexer: { host: 8002 },
+  kmd: { host: 8001 },
+} as const
 
+/** Mock server instance representing a connection to an external server */
 export interface MockServer {
-  containerId: string
-  name: string
-  clientType: ClientType
-  port: number
-  isOwner: boolean
+  /** Base URL of the mock server */
   baseUrl: string
-  stop: () => Promise<void>
+  /** Type of client this server mocks */
+  clientType: ClientType
 }
 
-async function waitForPort(port: number, timeout = 30000): Promise<boolean> {
+/**
+ * Check if a server is reachable by performing a health check.
+ *
+ * @param url - The base URL of the server to check
+ * @param timeout - Maximum time to wait for the server to respond (default: 5000ms)
+ * @returns Promise resolving to true if server is healthy, false otherwise
+ */
+export async function checkServerHealth(url: string, timeout = 5000): Promise<boolean> {
+  const healthUrl = `${url.replace(/\/$/, '')}/health`
   const start = Date.now()
-  while (Date.now() - start < timeout) {
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const socket = createConnection({ host: '127.0.0.1', port }, () => {
-          socket.destroy()
-          resolve()
-        })
-        socket.on('error', reject)
-        socket.setTimeout(1000, () => {
-          socket.destroy()
-          reject(new Error('timeout'))
-        })
-      })
-      return true
-    } catch {
-      await new Promise((resolve) => setTimeout(resolve, 100))
-    }
-  }
-  return false
-}
-
-async function waitForHealth(port: number, timeout = 30000): Promise<boolean> {
-  const start = Date.now()
-  const url = `http://127.0.0.1:${port}/health`
 
   while (Date.now() - start < timeout) {
     try {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 2000)
       try {
-        await fetch(url, { method: 'GET', signal: controller.signal })
+        await fetch(healthUrl, { signal: controller.signal })
         clearTimeout(timeoutId)
+        // Any HTTP response (including 500) indicates the server is reachable
+        // The mock server returns 500 for unrecorded endpoints like /health
         return true
       } catch (error) {
         clearTimeout(timeoutId)
+        // If it's a network error, retry
+        if (error instanceof Error && error.name === 'AbortError') {
+          await new Promise((resolve) => setTimeout(resolve, 200))
+          continue
+        }
         throw error
       }
     } catch {
@@ -84,161 +72,46 @@ async function waitForHealth(port: number, timeout = 30000): Promise<boolean> {
   return false
 }
 
-function getContainerId(name: string): string | null {
-  try {
-    const result = execSync(`docker ps -q -f "name=^${name}$"`, {
-      encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'pipe'],
-    })
-    return result.trim() || null
-  } catch {
-    return null
-  }
-}
-
-function getExternalServerUrl(clientType: ClientType): string | undefined {
-  return process.env[EXTERNAL_URL_ENV_VARS[clientType]]
-}
-
-async function checkExternalServer(url: string, timeout = 5000): Promise<{ isHealthy: boolean; port: number }> {
-  const parsedUrl = new URL(url)
-  const port = parsedUrl.port ? parseInt(parsedUrl.port) : 80
-  const healthUrl = `${url.replace(/\/$/, '')}/health`
-
-  const start = Date.now()
-  while (Date.now() - start < timeout) {
-    try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 2000)
-      try {
-        await fetch(healthUrl, { method: 'GET', signal: controller.signal })
-        clearTimeout(timeoutId)
-        return { isHealthy: true, port }
-      } catch (error) {
-        clearTimeout(timeoutId)
-        if (error instanceof TypeError && error.message.includes('fetch')) {
-          await new Promise((resolve) => setTimeout(resolve, 200))
-          continue
-        }
-        return { isHealthy: true, port }
-      }
-    } catch {
-      await new Promise((resolve) => setTimeout(resolve, 200))
-    }
-  }
-  return { isHealthy: false, port }
-}
-
-function createMockServer(containerId: string, name: string, clientType: ClientType, port: number, isOwner: boolean): MockServer {
-  return {
-    containerId,
-    name,
-    clientType,
-    port,
-    isOwner,
-    baseUrl: `http://127.0.0.1:${port}`,
-    stop: async () => {
-      if (!isOwner) return
-      if (startedContainers.has(name)) {
-        try {
-          execSync(`docker rm -f ${containerId}`, { stdio: 'pipe' })
-        } catch {
-          // Ignore cleanup errors
-        }
-        startedContainers.delete(name)
-      }
-    },
-  }
-}
-
 /**
- * Start or connect to a mock server.
- * Priority: external URL > existing container > new container
+ * Get a mock server instance for the specified client type.
+ *
+ * Reads the appropriate environment variable (MOCK_ALGOD_URL, MOCK_INDEXER_URL, or MOCK_KMD_URL)
+ * and validates that the server is reachable before returning a MockServer instance.
+ *
+ * @param clientType - The type of client to get a mock server for ('algod', 'indexer', or 'kmd')
+ * @returns Promise resolving to a MockServer instance
+ * @throws Error if the environment variable is not set or the server is not reachable
+ *
+ * @example
+ * ```typescript
+ * const server = await getMockServer('algod')
+ * const client = new AlgodClient(DEFAULT_TOKEN, server.baseUrl)
+ * // ... run tests ...
+ * ```
  */
-export async function startMockServer(clientType: ClientType): Promise<MockServer> {
-  const externalUrl = getExternalServerUrl(clientType)
-  if (externalUrl) {
-    const { isHealthy, port } = await checkExternalServer(externalUrl)
-    if (isHealthy) {
-      return createMockServer('external', 'external', clientType, port, false)
-    }
-    throw new Error(`${EXTERNAL_URL_ENV_VARS[clientType]}=${externalUrl} set but server not responding`)
+export async function getMockServer(clientType: ClientType): Promise<MockServer> {
+  const envVar = EXTERNAL_URL_ENV_VARS[clientType]
+  const externalUrl = process.env[envVar]
+
+  if (!externalUrl) {
+    throw new Error(
+      `Environment variable ${envVar} is not set. ` +
+        `Please start the mock server externally and set the URL. ` +
+        `See the "Mock Server for Client Tests" section in README.md for local development setup.`,
+    )
   }
 
-  const { host: hostPort, container: containerPort } = MOCK_PORTS[clientType]
-  const containerName = `${CONTAINER_PREFIX}_${clientType}`
-
-  const existingId = getContainerId(containerName)
-  if (existingId) {
-    const isReady = await waitForPort(hostPort)
-    if (!isReady) {
-      throw new Error(`Existing ${clientType} server not responding on port ${hostPort}`)
-    }
-    return createMockServer(existingId, containerName, clientType, hostPort, false)
+  const isHealthy = await checkServerHealth(externalUrl)
+  if (!isHealthy) {
+    throw new Error(
+      `Mock ${clientType} server at ${externalUrl} is not reachable. ` + `Please ensure the server is running and accessible.`,
+    )
   }
 
-  try {
-    execSync(`docker rm -f ${containerName}`, { stdio: 'pipe' })
-  } catch {
-    // Container doesn't exist
-  }
-
-  const cmd = [
-    'docker run -d',
-    `--name ${containerName}`,
-    `-p ${hostPort}:${containerPort}`,
-    `-e ${clientType.toUpperCase()}_PORT=${containerPort}`,
-    MOCK_SERVER_IMAGE,
+  return {
+    baseUrl: externalUrl.replace(/\/$/, ''),
     clientType,
-  ].join(' ')
-
-  let containerId: string
-  try {
-    containerId = execSync(cmd, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim()
-  } catch (error) {
-    throw new Error(`Failed to start ${clientType} mock server: ${error instanceof Error ? error.message : error}`)
   }
-
-  startedContainers.add(containerName)
-
-  const portReady = await waitForPort(hostPort)
-  if (!portReady) {
-    try {
-      execSync(`docker rm -f ${containerId}`, { stdio: 'pipe' })
-    } catch {
-      // Ignore
-    }
-    startedContainers.delete(containerName)
-    throw new Error(`${clientType} mock server failed to start`)
-  }
-
-  const healthReady = await waitForHealth(hostPort, 30000)
-  if (!healthReady) {
-    try {
-      execSync(`docker rm -f ${containerId}`, { stdio: 'pipe' })
-    } catch {
-      // Ignore
-    }
-    startedContainers.delete(containerName)
-    throw new Error(`${clientType} mock server health check failed`)
-  }
-
-  return createMockServer(containerId, containerName, clientType, hostPort, true)
-}
-
-export async function stopAllMockServers(): Promise<void> {
-  for (const name of startedContainers) {
-    try {
-      execSync(`docker rm -f ${name}`, { stdio: 'pipe' })
-    } catch {
-      // Ignore
-    }
-  }
-  startedContainers.clear()
-}
-
-export function getStartedContainers(): string[] {
-  return Array.from(startedContainers)
 }
 
 // Test data constants matching mock server recordings
