@@ -679,11 +679,12 @@ export async function prepareGroupForSending(
         if (appCallHasAccessReferences(t.txn)) return false
 
         const accounts = t.txn.applicationCall?.accounts?.length ?? 0
-        if (type === 'account') return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES
-
         const assets = t.txn.applicationCall?.foreignAssets?.length ?? 0
         const apps = t.txn.applicationCall?.foreignApps?.length ?? 0
         const boxes = t.txn.applicationCall?.boxes?.length ?? 0
+
+        if (type === 'account')
+          return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES && accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
 
         // If we're adding local state or asset holding, we need space for the acocunt and the other reference
         if (type === 'assetHolding' || type === 'appLocal') {
