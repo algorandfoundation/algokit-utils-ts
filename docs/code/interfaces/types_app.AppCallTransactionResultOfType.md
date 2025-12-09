@@ -34,7 +34,7 @@ The result of preparing and/or sending multiple transactions
 
 ### confirmation
 
-• `Optional` **confirmation**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)
+• `Optional` **confirmation**: `PendingTransactionResponse`
 
 The response if the transaction was sent and waited for
 
@@ -44,13 +44,13 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L70)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
 ___
 
 ### confirmations
 
-• `Optional` **confirmations**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[]
+• `Optional` **confirmations**: `PendingTransactionResponse`[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction
@@ -61,7 +61,7 @@ the index of the confirmation will match the index of the underlying transaction
 
 #### Defined in
 
-[src/types/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L80)
+[src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 ### transaction
 
-• **transaction**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)
+• **transaction**: `Transaction`
 
 The transaction
 
@@ -89,13 +89,13 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L68)
+[src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
 ___
 
 ### transactions
 
-• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
+• **transactions**: `Transaction`[]
 
 The transactions that have been prepared and/or sent
 
@@ -105,4 +105,4 @@ The transactions that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L76)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)

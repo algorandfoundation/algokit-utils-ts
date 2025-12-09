@@ -1,12 +1,9 @@
-import { Address, concatArrays, hash, isValidAddress } from '@algorandfoundation/algokit-common'
+import { Address, concatArrays, decodeMsgpack, hash, isValidAddress } from '@algorandfoundation/algokit-common'
 import { MultisigAccount } from './multisig'
-import { encodeSignedTransaction, MultisigSignature } from './transactions/signed-transaction'
 import { TransactionSigner } from './signer'
-import { Transaction } from './transactions/transaction'
-import { SignedTransaction } from './transactions/signed-transaction'
-import { decodeMsgpack } from '@algorandfoundation/algokit-common'
-import { LogicSignature } from './transactions/signed-transaction'
+import { LogicSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
 import { logicSignatureCodec } from './transactions/signed-transaction-meta'
+import { Transaction } from './transactions/transaction'
 
 // base64regex is the regex to test for base64 strings
 const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
@@ -116,7 +113,7 @@ export class LogicSigAccount {
       const { lsigSigner, addr } = addrWithSigner
       const signature = await lsigSigner(this, msig)
 
-      this.lmsig.subsignatures.push({ address: addr, signature })
+      this.lmsig.subsignatures.push({ publicKey: addr.publicKey, signature })
     }
   }
 

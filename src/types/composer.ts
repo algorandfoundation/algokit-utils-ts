@@ -20,7 +20,6 @@ import {
   decodeTransaction,
   encodeSignedTransactions,
   encodeTransactionRaw,
-  getTransactionId,
   groupTransactions,
   makeEmptyTransactionSigner,
 } from '@algorandfoundation/algokit-transact'
@@ -83,13 +82,7 @@ import { AppManager } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
-import {
-  Arc2TransactionNote,
-  SendParams,
-  SendTransactionComposerResults,
-  TransactionWrapper,
-  wrapPendingTransactionResponse,
-} from './transaction'
+import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction'
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
@@ -222,7 +215,7 @@ export type TransactionComposerParams = {
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: TransactionWrapper[]
+  transactions: Transaction[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
@@ -1467,7 +1460,7 @@ export class TransactionComposer {
     const buildResult = await this._buildTransactions(suggestedParams)
     return {
       ...buildResult,
-      transactions: buildResult.transactions.map((t) => new TransactionWrapper(t)),
+      transactions: buildResult.transactions,
     }
   }
 
@@ -1605,18 +1598,18 @@ export class TransactionComposer {
 
     let transactionsToSimulate = transactions.map((txn, groupIndex) => {
       const ctxn = this.txns[groupIndex]
-      const txnToSimulate = { ...txn }
-      delete txnToSimulate.group
+      const params = { ...txn }
+      delete params.group
       if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.AppCall) {
         const logicalMaxFee = getLogicalMaxFee(ctxn)
         if (logicalMaxFee !== undefined) {
-          txnToSimulate.fee = logicalMaxFee
+          params.fee = logicalMaxFee
         } else {
           appCallIndexesWithoutMaxFees.push(groupIndex)
         }
       }
 
-      return txnToSimulate
+      return new Transaction(params)
     })
 
     // Regroup the transactions, as the transactions have likely been adjusted
@@ -1791,7 +1784,7 @@ export class TransactionComposer {
       }
 
       const transactionsToSend = this.transactionsWithSigners.map((stxn) => stxn.txn)
-      const transactionIds = transactionsToSend.map((txn) => getTransactionId(txn))
+      const transactionIds = transactionsToSend.map((txn) => txn.txId())
 
       if (transactionsToSend.length > 1) {
         const groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
@@ -1837,7 +1830,7 @@ export class TransactionComposer {
         )
       } else {
         Config.getLogger(params?.suppressLog).verbose(
-          `Sent transaction ID ${getTransactionId(transactionsToSend[0])} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
+          `Sent transaction ID ${transactionsToSend[0].txId()} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
         )
       }
 
@@ -1850,10 +1843,10 @@ export class TransactionComposer {
 
       return {
         groupId: group ? Buffer.from(group).toString('base64') : undefined,
-        transactions: transactionsToSend.map((t) => new TransactionWrapper(t)),
+        transactions: transactionsToSend,
         txIds: transactionIds,
         returns: abiReturns,
-        confirmations: confirmations.map((c) => wrapPendingTransactionResponse(c)),
+        confirmations: confirmations,
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (originalError: any) {
@@ -1926,7 +1919,7 @@ export class TransactionComposer {
       }
 
       // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = (sentTransactions ?? []).map((txn) => new TransactionWrapper(txn))
+      err.sentTransactions = sentTransactions ?? []
 
       throw await this.transformError(err)
     }
@@ -2034,9 +2027,9 @@ export class TransactionComposer {
     const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
 
     return {
-      confirmations: simulateResult.txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
-      transactions: transactions.map((t) => new TransactionWrapper(t)),
-      txIds: transactions.map((t) => getTransactionId(t)),
+      confirmations: simulateResult.txnResults.map((t) => t.txnResult),
+      transactions: transactions,
+      txIds: transactions.map((t) => t.txId()),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
       returns: abiReturns,

@@ -41,6 +41,9 @@ jobs:
         pipx install algokit
         algokit localnet start
         npx --yes wait-on tcp:4001 -t 30000
+
+        # Ensure Transaction class has all keys from TransactionParams
+        npm run check-types
       audit-script: |
         npm run audit
   check_docs:

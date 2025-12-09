@@ -19,7 +19,7 @@ export type PaymentParams = CommonTransactionParams & {
 
 export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.Payment,
     payment: {
@@ -27,5 +27,5 @@ export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedPa
       amount: params.amount.microAlgos,
       closeRemainderTo: getOptionalAddress(params.closeRemainderTo),
     },
-  }
+  })
 }

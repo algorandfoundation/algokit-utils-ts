@@ -2,13 +2,13 @@ import { Address, EMPTY_SIGNATURE, encodeMsgpack } from '@algorandfoundation/alg
 import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
+  TXN_SYMBOL,
   Transaction,
+  TransactionParams,
   decodeTransaction,
   encodeTransaction,
   encodeTransactionRaw,
   estimateTransactionSize,
-  getTransactionId,
-  getTransactionIdRaw,
   validateTransaction,
 } from './transaction'
 import { TransactionType } from './transaction-type'
@@ -18,7 +18,7 @@ const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7
 describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
     test('should throw error when multiple transaction type specific fields are set', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -32,13 +32,13 @@ describe('Transaction Validation', () => {
           amount: 1000n,
           receiver: VALID_ADDRESS_1,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).toThrow('Multiple transaction type specific fields set')
     })
 
     test('should validate valid payment transaction', () => {
-      const transaction: Transaction = {
+      const transaction = new Transaction({
         type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -47,20 +47,22 @@ describe('Transaction Validation', () => {
           amount: 1000n,
           receiver: VALID_ADDRESS_1,
         },
-      }
+      })
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
     test.each([
-      ['encodeTransaction', encodeTransaction],
-      ['encodeTransactionRaw', encodeTransactionRaw],
-      ['estimateTransactionSize', estimateTransactionSize],
-      ['getTransactionIdRaw', getTransactionIdRaw],
-      ['getTransactionId', getTransactionId],
-      ['encodeSignedTransaction', (transaction: Transaction) => encodeSignedTransaction({ txn: transaction, sig: EMPTY_SIGNATURE })],
+      ['encodeTransaction', (params: TransactionParams) => encodeTransaction(new Transaction(params))],
+      ['encodeTransactionRaw', (params: TransactionParams) => encodeTransactionRaw(new Transaction(params))],
+      ['estimateTransactionSize', (params: TransactionParams) => estimateTransactionSize(new Transaction(params))],
+      ['txId', (params: TransactionParams) => new Transaction(params).txId()],
+      [
+        'encodeSignedTransaction',
+        (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), sig: EMPTY_SIGNATURE }),
+      ],
     ])('should validate when calling %s', (_, sut) => {
-      const transaction: Transaction = {
+      const transaction: TransactionParams = {
         type: TransactionType.AssetTransfer,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -96,9 +98,23 @@ describe('decodeTransaction', () => {
     const decodedTransaction = decodeTransaction(encodedTransaction)
 
     expect(decodedTransaction).toMatchInlineSnapshot(`
-      {
+      Transaction {
+        "appCall": undefined,
+        "assetConfig": undefined,
+        "assetFreeze": undefined,
+        "assetTransfer": undefined,
+        "fee": undefined,
         "firstValid": 1000n,
+        "genesisHash": undefined,
+        "genesisId": undefined,
+        "group": undefined,
+        "heartbeat": undefined,
+        "keyRegistration": undefined,
         "lastValid": 2000n,
+        "lease": undefined,
+        "note": undefined,
+        "payment": undefined,
+        "rekeyTo": undefined,
         "sender": Address {
           "publicKey": Uint8Array [
             230,
@@ -136,8 +152,32 @@ describe('decodeTransaction', () => {
           ],
           Symbol(algokit_common:Address): true,
         },
+        "stateProof": undefined,
         "type": "unknown",
+        Symbol(algokit_transact:Transaction): true,
       }
     `)
   })
 })
+
+// Compile-time check: Ensure Transaction class has all keys from TransactionParams
+// This will error if a field is added to TransactionParams but not to Transaction
+type _AssertTransactionHasAllParamsKeys =
+  Exclude<keyof TransactionParams, keyof Transaction> extends never
+    ? true
+    : { error: 'Transaction class is missing keys from TransactionParams'; missing: Exclude<keyof TransactionParams, keyof Transaction> }
+const _checkTransactionKeys: _AssertTransactionHasAllParamsKeys = true
+void _checkTransactionKeys
+
+// Compile-time check: Ensure TransactionParams has all keys from Transaction (excluding internal symbol and methods)
+// This will error if a field is added to Transaction but not to TransactionParams
+type TransactionPropertyKeys = Exclude<keyof Transaction, typeof TXN_SYMBOL | 'txId'>
+type _AssertParamsHasAllTransactionKeys =
+  Exclude<TransactionPropertyKeys, keyof TransactionParams> extends never
+    ? true
+    : {
+        error: 'TransactionParams is missing keys from Transaction class'
+        missing: Exclude<TransactionPropertyKeys, keyof TransactionParams>
+      }
+const _checkParamsKeys: _AssertParamsHasAllTransactionKeys = true
+void _checkParamsKeys

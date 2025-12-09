@@ -3,25 +3,13 @@
 A collection of random notes pop up during the migration process.
 
 - explain the type differences between transact and algod
-- Fee calc inside the txn constructor
-- error messages changed, for example, asset tests
-- `AssetHoldingReference` replaced by `HoldingReference`
-- `ApplicationLocalReference` replaced by `LocalsReference`
-- TODO: add interface for breaking change, for example, Transaction
-- TODO: take notes of the legacy functions to be removed and communicate with devrels
-- TODO: keep track of the changes we make to algokit_transact to fit with algosdk
-- For integration with lora to work:
-  - need to update subscriber to use the new utils and remove algosdk
+- Transaction fee calc
+  - In algosdk, fee calc happens inside the Transaction ctor. This requires the suggested params to be passed in.
+  - In transact, transaction fee isn't required. When building the transaction with composer, the fee is calculated during the composer build step.
 - `encodeUnsignedSimulateTransaction` was removed from sdk
 - can't addatc into the composer anymore, can addTransactionComposer to composer. Adding composer is just cloning the txns from the param composer to the caller composer
 - SendAtomicTransactionComposerResults.group is string | undefined
 - buildTransactions will include the signer for nested txn now, this was done at the ATC before
-- Discuss the inconsistency of transaction and txn, txIds, txID
-- Disucss the naming of foreignApps vs appReferences + access references
-- Discuss appCall vs applicationCall
-- SourceMap was renamed to ProgramSourceMap
-- OnApplicationComplete.UpdateApplicationOC was renamed to OnApplicationComplete.UpdateApplication
-- ResourceReference (algod) vs AccessReference (utils)
 - check for buffer polyfill
 - transaction.ts
   - sendTransaction takes composer
@@ -31,7 +19,6 @@ A collection of random notes pop up during the migration process.
 - suggestedParams was removed from AdditionalAtomicTransactionComposerContext
 - generated app client will be changed, no references to atc anymore (this was for v2, confirm for v3)
 - atc.parseMethodResponse was replaced by app-manager.getABIReturn
-- transaction_asserts uses 'noble/ed25519' while composer uses nacl, which one should we use?
 - additionalAtcContext was removed from AtomicTransactionComposerToSend
 - ABI
   - ABIStruct can't be constructed from string.
@@ -48,15 +35,7 @@ A collection of random notes pop up during the migration process.
 - TODO: docs for composer simulate workflow
   - without calling `build` first => simulate without resource population
   - call `build` -> resource population into transactions with signers -> simulate will use the transactions with signers
-- review the names of SignedTransactionWrapper
-- TODO: re-export transact under utils/transact folder
-- integration:
-  - need to remove `decodeReturnValue` from the client generator
 - TODO: move ProgramSourceMap
 - trace field at err.traces[].trace is now a typed value, rather than a map.
-- Does lmsig stand for logicMultiSignature? We use logicMultiSignature in our code, as we use multiSignature instead of msig in the Transaction type. An alternative is to use msig and lmsig, like algosdk does?
 - searchCriteria param for indexer-lookup.ts searchTransactions() method is an object, rather than a function which allows chained configuration
 - Doc: Mock server + Rust + polytest
-- subscriber:
-  - transform-complex-txn.spec.ts calls `txId` but the type is Transaction, not wrapper
-- In multisig subsignatures we use address. Should we call this publicKey and use a Uint8Array value? This would make interop/consistenct between KMD and Indexer nicer too.

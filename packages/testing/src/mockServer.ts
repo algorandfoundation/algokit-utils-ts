@@ -129,13 +129,7 @@ async function checkExternalServer(url: string, timeout = 5000): Promise<{ isHea
   return { isHealthy: false, port }
 }
 
-function createMockServer(
-  containerId: string,
-  name: string,
-  clientType: ClientType,
-  port: number,
-  isOwner: boolean
-): MockServer {
+function createMockServer(containerId: string, name: string, clientType: ClientType, port: number, isOwner: boolean): MockServer {
   return {
     containerId,
     name,

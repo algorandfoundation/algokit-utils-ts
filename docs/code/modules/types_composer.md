@@ -193,7 +193,7 @@ ___
 
 ### AssetConfigParams
 
-Ƭ **AssetConfigParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: `ReadableAddress` ; `freeze?`: `ReadableAddress` ; `manager?`: `ReadableAddress` ; `reserve?`: `ReadableAddress`  }
+Ƭ **AssetConfigParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: [`ReadableAddress`](index.md#readableaddress) ; `freeze?`: [`ReadableAddress`](index.md#readableaddress) ; `manager?`: [`ReadableAddress`](index.md#readableaddress) ; `reserve?`: [`ReadableAddress`](index.md#readableaddress)  }
 
 Parameters to define an asset reconfiguration transaction.
 
@@ -209,7 +209,7 @@ ___
 
 ### AssetCreateParams
 
-Ƭ **AssetCreateParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetName?`: `string` ; `clawback?`: `ReadableAddress` ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: `ReadableAddress` ; `manager?`: `ReadableAddress` ; `metadataHash?`: `string` \| `Uint8Array` ; `reserve?`: `ReadableAddress` ; `total`: `bigint` ; `unitName?`: `string` ; `url?`: `string`  }
+Ƭ **AssetCreateParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetName?`: `string` ; `clawback?`: [`ReadableAddress`](index.md#readableaddress) ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: [`ReadableAddress`](index.md#readableaddress) ; `manager?`: [`ReadableAddress`](index.md#readableaddress) ; `metadataHash?`: `string` \| `Uint8Array` ; `reserve?`: [`ReadableAddress`](index.md#readableaddress) ; `total`: `bigint` ; `unitName?`: `string` ; `url?`: `string`  }
 
 Parameters to define an asset create transaction.
 
@@ -237,7 +237,7 @@ ___
 
 ### AssetFreezeParams
 
-Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: `ReadableAddress` ; `assetId`: `bigint` ; `frozen`: `boolean`  }
+Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: [`ReadableAddress`](index.md#readableaddress) ; `assetId`: `bigint` ; `frozen`: `boolean`  }
 
 Parameters to define an asset freeze transaction.
 
@@ -261,7 +261,7 @@ ___
 
 ### AssetOptOutParams
 
-Ƭ **AssetOptOutParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `creator`: `ReadableAddress`  }
+Ƭ **AssetOptOutParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `creator`: [`ReadableAddress`](index.md#readableaddress)  }
 
 Parameters to define an asset opt-out transaction.
 
@@ -273,7 +273,7 @@ ___
 
 ### AssetTransferParams
 
-Ƭ **AssetTransferParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: `ReadableAddress` ; `closeAssetTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  }
+Ƭ **AssetTransferParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: [`ReadableAddress`](index.md#readableaddress) ; `closeAssetTo?`: [`ReadableAddress`](index.md#readableaddress) ; `receiver`: [`ReadableAddress`](index.md#readableaddress)  }
 
 Parameters to define an asset transfer transaction.
 
@@ -285,7 +285,7 @@ ___
 
 ### CommonAppCallParams
 
-Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: `ReadableAddress`[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
+Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
 
 Common parameters for defining an application call transaction.
 
@@ -311,7 +311,7 @@ Common parameters for defining a transaction.
 | `lease?` | `Uint8Array` \| `string` | Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios). |
 | `maxFee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. |
 | `note?` | `Uint8Array` \| `string` | Note to attach to the transaction. Max of 1000 bytes. |
-| `rekeyTo?` | `ReadableAddress` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
+| `rekeyTo?` | [`ReadableAddress`](index.md#readableaddress) | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
 | `sender` | `SendingAddress` | The address sending the transaction, optionally with an attached signer. |
 | `signer?` | `TransactionSigner` \| `AddressWithTransactionSigner` | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `staticFee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
@@ -348,7 +348,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L164)
+[src/types/composer.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L157)
 
 ___
 
@@ -378,7 +378,7 @@ ___
 
 ### PaymentParams
 
-Ƭ **PaymentParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `closeRemainderTo?`: `ReadableAddress` ; `receiver`: `ReadableAddress`  }
+Ƭ **PaymentParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `closeRemainderTo?`: [`ReadableAddress`](index.md#readableaddress) ; `receiver`: [`ReadableAddress`](index.md#readableaddress)  }
 
 Parameters to define a payment transaction.
 
@@ -427,7 +427,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L135)
+[src/types/composer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L128)
 
 ___
 
@@ -439,7 +439,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L141)
+[src/types/composer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L134)
 
 ___
 
@@ -451,7 +451,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L123)
+[src/types/composer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L116)
 
 ___
 
@@ -468,7 +468,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L178)
+[src/types/composer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L171)
 
 ___
 
@@ -487,12 +487,12 @@ Parameters to create an `TransactionComposer`.
 | `composerConfig?` | [`TransactionComposerConfig`](types_composer.md#transactioncomposerconfig) | - |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
 | `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)[] | An array of error transformers to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
-| `getSigner` | (`address`: `ReadableAddress`) => `TransactionSigner` | - |
+| `getSigner` | (`address`: [`ReadableAddress`](index.md#readableaddress)) => `TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`SuggestedParams`\> | - |
 
 #### Defined in
 
-[src/types/composer.ts:198](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L198)
+[src/types/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L191)
 
 ## Variables
 
@@ -502,4 +502,4 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L94)
+[src/types/composer.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L87)

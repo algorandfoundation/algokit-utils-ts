@@ -1,5 +1,7 @@
+import type { EncodingFormat, WireObject } from '@algorandfoundation/algokit-common'
 import {
   Address,
+  Codec,
   MAX_TX_GROUP_SIZE,
   SIGNATURE_ENCODING_INCR,
   TRANSACTION_DOMAIN_SEPARATOR,
@@ -20,16 +22,19 @@ import { HeartbeatTransactionFields } from './heartbeat'
 import { KeyRegistrationTransactionFields, validateKeyRegistrationTransaction } from './key-registration'
 import { PaymentTransactionFields } from './payment'
 import { StateProofTransactionFields } from './state-proof'
-import { transactionCodec } from './transaction-meta'
+import { transactionParamsCodec } from './transaction-meta'
 import { TransactionType } from './transaction-type'
 
+/** Symbol used for instanceof checks across packages (CJS/ESM) */
+export const TXN_SYMBOL = Symbol.for('algokit_transact:Transaction')
+
 /**
- * Represents a complete Algorand transaction.
+ * Represents the parameters for a complete Algorand transaction.
  *
  * This structure contains the fields that are present in every transaction,
  * regardless of transaction type, plus transaction-type-specific fields.
  */
-export type Transaction = {
+export type TransactionParams = {
   /**
    * The type of transaction
    */
@@ -148,6 +153,203 @@ export type Transaction = {
    */
   stateProof?: StateProofTransactionFields
 }
+
+/**
+ * Represents a complete Algorand transaction.
+ */
+export class Transaction implements TransactionParams {
+  /** @internal */
+  [TXN_SYMBOL]: boolean
+
+  /**
+   * The type of transaction
+   */
+  type: TransactionType
+
+  /**
+   * The account that authorized the transaction.
+   *
+   * Fees are deducted from this account.
+   */
+  sender: Address
+
+  /**
+   * Optional transaction fee in microALGO.
+   *
+   * When not set, the fee will be interpreted as 0 by the network.
+   */
+  fee?: bigint
+
+  /**
+   * First round for when the transaction is valid.
+   */
+  firstValid: bigint
+
+  /**
+   * Last round for when the transaction is valid.
+   *
+   * After this round, the transaction will be expired.
+   */
+  lastValid: bigint
+
+  /**
+   * Hash of the genesis block of the network.
+   *
+   * Used to identify which network the transaction is for.
+   */
+  genesisHash?: Uint8Array
+
+  /**
+   * Genesis ID of the network.
+   *
+   * A human-readable string used alongside genesis hash to identify the network.
+   */
+  genesisId?: string
+
+  /**
+   * Optional user-defined note field.
+   *
+   * Can contain arbitrary data up to 1KB in size.
+   */
+  note?: Uint8Array
+
+  /**
+   * Optional authorized account for future transactions.
+   *
+   * If set, only this account will be used for transaction authorization going forward.
+   * Reverting back control to the original address must be done by setting this field to
+   * the original address.
+   */
+  rekeyTo?: Address
+
+  /**
+   * Optional lease value to enforce mutual transaction exclusion.
+   *
+   * When a transaction with a non-empty lease field is confirmed, the lease is acquired.
+   * A lease X is acquired by the sender, generating the (sender, X) lease.
+   * The lease is kept active until the last_valid round of the transaction has elapsed.
+   * No other transaction sent by the same sender can be confirmed until the lease expires.
+   */
+  lease?: Uint8Array
+
+  /**
+   * Optional group ID for atomic transaction grouping.
+   *
+   * Transactions with the same group ID must execute together or not at all.
+   */
+  group?: Uint8Array
+
+  /**
+   * Payment specific fields
+   */
+  payment?: PaymentTransactionFields
+
+  /**
+   * Asset transfer specific fields
+   */
+  assetTransfer?: AssetTransferTransactionFields
+
+  /**
+   * Asset config specific fields
+   */
+  assetConfig?: AssetConfigTransactionFields
+
+  /**
+   * App call specific fields
+   */
+  appCall?: AppCallTransactionFields
+
+  /**
+   * Key registration specific fields
+   */
+  keyRegistration?: KeyRegistrationTransactionFields
+
+  /**
+   * Asset freeze specific fields
+   */
+  assetFreeze?: AssetFreezeTransactionFields
+
+  /**
+   * Heartbeat specific fields
+   */
+  heartbeat?: HeartbeatTransactionFields
+
+  /**
+   * State proof specific fields
+   */
+  stateProof?: StateProofTransactionFields
+
+  constructor(params: TransactionParams) {
+    this[TXN_SYMBOL] = true
+    this.type = params.type
+    this.sender = params.sender
+    this.fee = params.fee
+    this.firstValid = params.firstValid
+    this.lastValid = params.lastValid
+    this.genesisHash = params.genesisHash
+    this.genesisId = params.genesisId
+    this.note = params.note
+    this.rekeyTo = params.rekeyTo
+    this.lease = params.lease
+    this.group = params.group
+    this.payment = params.payment
+    this.assetTransfer = params.assetTransfer
+    this.assetConfig = params.assetConfig
+    this.appCall = params.appCall
+    this.keyRegistration = params.keyRegistration
+    this.assetFreeze = params.assetFreeze
+    this.heartbeat = params.heartbeat
+    this.stateProof = params.stateProof
+  }
+
+  private rawTxId(): Uint8Array {
+    const encodedBytes = encodeTransaction(this)
+    return hash(encodedBytes)
+  }
+
+  /**
+   * Get the transaction ID as a base32-encoded string.
+   */
+  txId(): string {
+    const rawTxId = this.rawTxId()
+
+    return base32.encode(rawTxId).slice(0, TRANSACTION_ID_LENGTH)
+  }
+
+  static [Symbol.hasInstance](obj: unknown) {
+    return Boolean(obj && typeof obj === 'object' && TXN_SYMBOL in obj && obj[TXN_SYMBOL as keyof typeof obj])
+  }
+}
+
+/**
+ * Codec for Transaction class.
+ * Handles encoding/decoding between Transaction class instances and wire format.
+ */
+class TransactionCodec extends Codec<Transaction, Record<string, unknown>, WireObject> {
+  public defaultValue(): Transaction {
+    return new Transaction({
+      type: TransactionType.Unknown,
+      sender: Address.zeroAddress(),
+      firstValid: 0n,
+      lastValid: 0n,
+    })
+  }
+
+  protected toEncoded(value: Transaction, format: EncodingFormat): Record<string, unknown> {
+    return transactionParamsCodec.encode({ ...value }, format)
+  }
+
+  protected fromEncoded(value: WireObject, format: EncodingFormat): Transaction {
+    const params = transactionParamsCodec.decode(value, format)
+    return new Transaction(params)
+  }
+
+  public isDefaultValue(_: Transaction): boolean {
+    return false
+  }
+}
+
+export const transactionCodec = new TransactionCodec()
 
 export type FeeParams = {
   feePerByte: bigint
@@ -302,38 +504,25 @@ export function estimateTransactionSize(transaction: Transaction): bigint {
 }
 
 /**
- * Get the raw 32-byte transaction ID for a transaction.
- */
-export function getTransactionIdRaw(transaction: Transaction): Uint8Array {
-  const encodedBytes = encodeTransaction(transaction)
-  return hash(encodedBytes)
-}
-
-/**
- * Get the base32 transaction ID string for a transaction.
- */
-export function getTransactionId(transaction: Transaction): string {
-  const hash = getTransactionIdRaw(transaction)
-  return base32.encode(hash).slice(0, TRANSACTION_ID_LENGTH)
-}
-
-/**
  * Groups a collection of transactions by calculating and assigning the group to each transaction.
  */
 export function groupTransactions(transactions: Transaction[]): Transaction[] {
   const group = computeGroup(transactions)
-  return transactions.map((tx) => ({
-    ...tx,
-    group,
-  }))
+  return transactions.map(
+    (tx) =>
+      new Transaction({
+        ...tx,
+        group,
+      }),
+  )
 }
 
 export function assignFee(transaction: Transaction, feeParams: FeeParams): Transaction {
   const fee = calculateFee(transaction, feeParams)
-  return {
+  return new Transaction({
     ...transaction,
     fee,
-  }
+  })
 }
 
 function computeGroup(transactions: Transaction[]): Uint8Array {
@@ -349,7 +538,9 @@ function computeGroup(transactions: Transaction[]): Uint8Array {
     if (tx.group) {
       throw new Error('Transactions must not already be grouped')
     }
-    return getTransactionIdRaw(tx)
+
+    const encodedBytes = encodeTransaction(tx)
+    return hash(encodedBytes)
   })
 
   const prefixBytes = new TextEncoder().encode(TRANSACTION_GROUP_DOMAIN_SEPARATOR)

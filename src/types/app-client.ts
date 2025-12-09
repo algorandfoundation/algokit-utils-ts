@@ -20,8 +20,8 @@ import {
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getApplicationAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithTransactionSigner, OnApplicationComplete, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
+import { AddressWithTransactionSigner, OnApplicationComplete, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
@@ -60,7 +60,7 @@ import {
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
-import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote, TransactionWrapper } from './transaction'
+import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
@@ -1508,7 +1508,7 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private handleCallErrors = async (e: Error & { sentTransactions?: TransactionWrapper[] }) => {
+  private handleCallErrors = async (e: Error & { sentTransactions?: Transaction[] }) => {
     // We can't use the app ID in an error to identify new apps, so instead we check the programs
     // to identify if this is the correct app
     if (this.appId === 0n) {
@@ -1516,7 +1516,7 @@ export class AppClient {
 
       const txns = e.sentTransactions
 
-      const txn = txns.find((t) => e.message.includes(t.txID()))
+      const txn = txns.find((t) => e.message.includes(t.txId()))
 
       const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
         if (a === undefined || b === undefined) return false

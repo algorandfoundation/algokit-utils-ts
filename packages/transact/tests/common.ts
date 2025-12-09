@@ -2,7 +2,7 @@
 import { Address } from '@algorandfoundation/algokit-common'
 import * as fs from 'fs'
 import * as path from 'path'
-import { OnApplicationComplete, Transaction, TransactionType } from '../src'
+import { OnApplicationComplete, Transaction, TransactionParams, TransactionType } from '../src'
 import { Reveal, SigslotCommit } from '../src/transactions/state-proof'
 
 const jsonString = fs.readFileSync(path.join(__dirname, 'test_data.json'), 'utf-8')
@@ -124,29 +124,42 @@ export type TransactionTestData = {
   signingPrivateKey: Uint8Array
   rekeyedSenderAuthAddress: string
   rekeyedSenderSignedBytes: Uint8Array
-  multisigAddresses: [string, string]
+  multisigPublicKeys: [Uint8Array, Uint8Array]
   multisigSignedBytes: Uint8Array
 }
 
-export const testData =
-  parseJson<
-    Record<
-      | 'simplePayment'
-      | 'optInAssetTransfer'
-      | 'assetCreate'
-      | 'assetDestroy'
-      | 'assetConfig'
-      | 'appCall'
-      | 'appCreate'
-      | 'appUpdate'
-      | 'appDelete'
-      | 'onlineKeyRegistration'
-      | 'offlineKeyRegistration'
-      | 'nonParticipationKeyRegistration'
-      | 'assetFreeze'
-      | 'assetUnfreeze'
-      | 'heartbeat'
-      | 'stateProof',
-      TransactionTestData
-    >
-  >(jsonString)
+export type TransactionTestDataRaw = Omit<TransactionTestData, 'transaction'> & {
+  transaction: Record<string, unknown>
+}
+
+type TestDataKeys =
+  | 'simplePayment'
+  | 'optInAssetTransfer'
+  | 'assetCreate'
+  | 'assetDestroy'
+  | 'assetConfig'
+  | 'appCall'
+  | 'appCreate'
+  | 'appUpdate'
+  | 'appDelete'
+  | 'onlineKeyRegistration'
+  | 'offlineKeyRegistration'
+  | 'nonParticipationKeyRegistration'
+  | 'assetFreeze'
+  | 'assetUnfreeze'
+  | 'heartbeat'
+  | 'stateProof'
+
+// Parse raw JSON data
+const rawTestData = parseJson<Record<TestDataKeys, TransactionTestDataRaw>>(jsonString)
+
+// Transform raw data to wrap transactions in Transaction class instances
+export const testData: Record<TestDataKeys, TransactionTestData> = Object.fromEntries(
+  Object.entries(rawTestData).map(([key, value]) => [
+    key,
+    {
+      ...value,
+      transaction: new Transaction(value.transaction as unknown as TransactionParams),
+    },
+  ]),
+) as Record<TestDataKeys, TransactionTestData>

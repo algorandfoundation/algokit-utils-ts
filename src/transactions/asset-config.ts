@@ -192,7 +192,7 @@ export const buildAssetCreate = (
   defaultValidityWindow: bigint,
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetConfig,
     assetConfig: {
@@ -209,7 +209,7 @@ export const buildAssetCreate = (
       freeze: getOptionalAddress(params.freeze),
       clawback: getOptionalAddress(params.clawback),
     },
-  }
+  })
 }
 
 export const buildAssetConfig = (
@@ -218,7 +218,7 @@ export const buildAssetConfig = (
   defaultValidityWindow: bigint,
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetConfig,
     assetConfig: {
@@ -228,7 +228,7 @@ export const buildAssetConfig = (
       freeze: getOptionalAddress(params.freeze),
       clawback: getOptionalAddress(params.clawback),
     },
-  }
+  })
 }
 
 export const buildAssetFreeze = (
@@ -237,7 +237,7 @@ export const buildAssetFreeze = (
   defaultValidityWindow: bigint,
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetFreeze,
     assetFreeze: {
@@ -245,7 +245,7 @@ export const buildAssetFreeze = (
       freezeTarget: getAddress(params.account),
       frozen: params.frozen,
     },
-  }
+  })
 }
 
 export const buildAssetDestroy = (
@@ -254,11 +254,11 @@ export const buildAssetDestroy = (
   defaultValidityWindow: bigint,
 ): Transaction => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
-  return {
+  return new Transaction({
     ...commonData,
     type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: params.assetId,
     },
-  }
+  })
 }

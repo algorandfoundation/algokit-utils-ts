@@ -26,14 +26,14 @@ The result of preparing and/or sending multiple transactions using an `Transacti
 
 ### confirmations
 
-• **confirmations**: [`PendingTransactionResponseWrapper`](../modules/types_transaction.md#pendingtransactionresponsewrapper)[]
+• **confirmations**: `PendingTransactionResponse`[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction
 
 #### Defined in
 
-[src/types/transaction.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L94)
+[src/types/transaction.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L77)
 
 ___
 
@@ -45,7 +45,7 @@ base64 encoded representation of the group ID of the group
 
 #### Defined in
 
-[src/types/transaction.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L86)
+[src/types/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L69)
 
 ___
 
@@ -57,13 +57,13 @@ If ABI method(s) were called the processed return values
 
 #### Defined in
 
-[src/types/transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L90)
+[src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)
 
 ___
 
 ### transactions
 
-• **transactions**: [`TransactionWrapper`](../classes/types_transaction.TransactionWrapper.md)[]
+• **transactions**: `Transaction`[]
 
 The transactions that have been prepared and/or sent
 
@@ -73,7 +73,7 @@ Omit.transactions
 
 #### Defined in
 
-[src/types/transaction.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L76)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
@@ -85,4 +85,4 @@ The transaction IDs that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L88)
+[src/types/transaction.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L71)
