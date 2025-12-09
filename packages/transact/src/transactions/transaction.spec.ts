@@ -171,7 +171,7 @@ void _checkTransactionKeys
 
 // Compile-time check: Ensure TransactionParams has all keys from Transaction (excluding internal symbol and methods)
 // This will error if a field is added to Transaction but not to TransactionParams
-type TransactionPropertyKeys = Exclude<keyof Transaction, typeof TXN_SYMBOL | 'txID' | 'toParams'>
+type TransactionPropertyKeys = Exclude<keyof Transaction, typeof TXN_SYMBOL | 'txId'>
 type _AssertParamsHasAllTransactionKeys =
   Exclude<TransactionPropertyKeys, keyof TransactionParams> extends never
     ? true
