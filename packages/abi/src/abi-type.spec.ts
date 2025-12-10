@@ -586,6 +586,18 @@ describe('ABIType encode decode', () => {
       expect((result as Uint8Array).length).toBe(0)
     })
   })
-})
 
-// TODO: add failed tests
+  test('should fail for bad values during encoding', () => {
+    expect(() => new ABIUintType(8).encode(BigInt(-1))).toThrow()
+    expect(() => new ABIUintType(512).encode(BigInt(2 ** 512))).toThrow()
+    expect(() => new ABIUfixedType(512, 10).encode(BigInt(-1))).toThrow()
+    expect(() => new ABIByteType().encode(-1)).toThrow()
+    expect(() => new ABIByteType().encode(256)).toThrow()
+    expect(() => new ABIAddressType().encode('BADADDRESS')).toThrow()
+    expect(() => new ABIArrayStaticType(new ABIBoolType(), 3).encode([true])).toThrow()
+    expect(() => new ABIArrayStaticType(new ABIStringType(), 1).encode([true])).toThrow()
+    expect(() => new ABIArrayStaticType(new ABIUintType(256), 1).encode(['hello'])).toThrow()
+    expect(() => new ABIArrayDynamicType(new ABIAddressType()).encode([false])).toThrow()
+    expect(() => new ABITupleType([new ABIBoolType(), new ABIUfixedType(128, 20)]).encode([BigInt(3), true])).toThrow()
+  })
+})
