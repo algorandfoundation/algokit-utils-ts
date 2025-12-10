@@ -1,0 +1,76 @@
+name: 'CI'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '20.x'
+  commit-lint-from:
+    description: 'Git SHA to lint commits from'
+    required: false
+    default: ''
+  commit-lint-to:
+    description: 'Git SHA to lint commits to'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Commit lint
+      shell: bash
+      run: npx commitlint --from ${{ inputs.commit-lint-from }} --to ${{ inputs.commit-lint-to }} --verbose
+
+    - name: Lint
+      shell: bash
+      run: npm run lint
+
+    - name: Check types
+      shell: bash
+      run: npm run check-types
+
+    # Start localnet for integration tests
+    - name: Start LocalNet
+      shell: bash
+      run: |
+        pipx install algokit
+        algokit localnet start
+        npx --yes wait-on tcp:4001 -t 30000
+
+    # Start mock servers using composite action
+    - name: Start algod mock server
+      uses: algorandfoundation/algokit-polytest/.github/actions/run-mock-server@main
+      with:
+        client: algod
+
+    - name: Start indexer mock server
+      uses: algorandfoundation/algokit-polytest/.github/actions/run-mock-server@main
+      with:
+        client: indexer
+
+    - name: Start kmd mock server
+      uses: algorandfoundation/algokit-polytest/.github/actions/run-mock-server@main
+      with:
+        client: kmd
+
+    - name: Run tests
+      shell: bash
+      run: npm run test -- --silent
+
+    - name: Audit
+      shell: bash
+      run: npm run audit
+
+    - name: Build
+      shell: bash
+      run: npm run build

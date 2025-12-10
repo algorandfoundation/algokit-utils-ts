@@ -17,19 +17,19 @@ permissions:
 jobs:
   ci:
     name: Continuous Integration
-    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
-    with:
-      node-version: 20.x
-      run-commit-lint: true
-      pre-test-script: |
-        pipx install algokit
-        algokit localnet start
-        npx --yes wait-on tcp:4001 -t 30000
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-        # Ensure Transaction class has all keys from TransactionParams
-        npm run check-types
-      audit-script: |
-        npm run audit
+      - name: Run CI
+        uses: ./.github/actions/ci
+        with:
+          node-version: 20.x
+          commit-lint-from: ${{ github.event.before }}
+          commit-lint-to: ${{ github.sha }}
 
   check_docs:
     runs-on: ubuntu-latest
