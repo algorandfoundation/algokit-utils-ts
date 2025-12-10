@@ -17,10 +17,6 @@ export interface TransactionWithSigner {
   signer: TransactionSigner
 }
 
-export const MAX_TRANSACTION_GROUP_SIZE = 16
-export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
-export const MAX_APP_CALL_ACCOUNT_REFERENCES = 4
-
 /** Encodes a transaction lease into a 32-byte array ready to be included in an Algorand transaction.
  *
  * @param lease The transaction lease as a string or binary array or null/undefined if there is no lease
