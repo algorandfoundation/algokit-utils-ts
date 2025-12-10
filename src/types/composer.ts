@@ -36,6 +36,7 @@ import {
   type AppCreateParams,
   type AppDeleteParams,
   type AppUpdateParams,
+  type CommonAppCallParams,
 } from '../transactions/app-call'
 import {
   buildAssetOptIn,
@@ -275,6 +276,22 @@ export class TransactionComposer {
     }
 
     return transformedError
+  }
+
+  private validateReferenceParams(
+    params: Pick<CommonAppCallParams, 'accessReferences' | 'appReferences' | 'assetReferences' | 'boxReferences'>,
+  ) {
+    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+    const hasLegacyReferences =
+      (params.appReferences && params.appReferences.length > 0) ||
+      (params.assetReferences && params.assetReferences.length > 0) ||
+      (params.boxReferences && params.boxReferences.length > 0)
+
+    if (hasAccessReferences && hasLegacyReferences) {
+      throw new Error(
+        'Cannot specify both `accessReferences` and legacy reference arrays (`appReferences`, `assetReferences`, `boxReferences`).',
+      )
+    }
   }
 
   /**
@@ -822,6 +839,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
+    this.validateReferenceParams(params)
     this.push({ data: params, type: 'appCall' })
 
     return this
@@ -864,6 +882,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
+    this.validateReferenceParams(params)
     this.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
 
     return this
@@ -904,6 +923,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
+    this.validateReferenceParams(params)
     this.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
 
     return this
@@ -946,6 +966,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
+    this.validateReferenceParams(params)
     this.push({ data: params, type: 'appCall' })
 
     return this
@@ -1007,6 +1028,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
+    this.validateReferenceParams(params)
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
 
     // Push all transaction arguments and the method call itself
@@ -1067,6 +1089,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
+    this.validateReferenceParams(params)
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
 
     // Push all transaction arguments and the method call itself
@@ -1125,6 +1148,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
+    this.validateReferenceParams(params)
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
 
     // Push all transaction arguments and the method call itself
@@ -1183,6 +1207,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
+    this.validateReferenceParams(params)
     const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
 
     // Push all transaction arguments and the method call itself
