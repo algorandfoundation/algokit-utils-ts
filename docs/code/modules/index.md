@@ -40,9 +40,6 @@
 - [ALGORAND\_MIN\_TX\_FEE](index.md#algorand_min_tx_fee)
 - [ALGORAND\_ZERO\_ADDRESS\_STRING](index.md#algorand_zero_address_string)
 - [Config](index.md#config)
-- [MAX\_APP\_CALL\_ACCOUNT\_REFERENCES](index.md#max_app_call_account_references)
-- [MAX\_APP\_CALL\_FOREIGN\_REFERENCES](index.md#max_app_call_foreign_references)
-- [MAX\_TRANSACTION\_GROUP\_SIZE](index.md#max_transaction_group_size)
 
 ### Functions
 
@@ -170,36 +167,6 @@ The AlgoKit config. To update it use the configure method.
 #### Defined in
 
 [src/config.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/config.ts#L4)
-
-___
-
-### MAX\_APP\_CALL\_ACCOUNT\_REFERENCES
-
-• `Const` **MAX\_APP\_CALL\_ACCOUNT\_REFERENCES**: ``4``
-
-#### Defined in
-
-[src/transaction/transaction.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L22)
-
-___
-
-### MAX\_APP\_CALL\_FOREIGN\_REFERENCES
-
-• `Const` **MAX\_APP\_CALL\_FOREIGN\_REFERENCES**: ``8``
-
-#### Defined in
-
-[src/transaction/transaction.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L21)
-
-___
-
-### MAX\_TRANSACTION\_GROUP\_SIZE
-
-• `Const` **MAX\_TRANSACTION\_GROUP\_SIZE**: ``16``
-
-#### Defined in
-
-[src/transaction/transaction.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L20)
 
 ## Functions
 
@@ -331,7 +298,7 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 
 #### Defined in
 
-[src/transaction/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L32)
+[src/transaction/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L28)
 
 ___
 
@@ -499,7 +466,7 @@ app call resources populated into it
 
 #### Defined in
 
-[src/transaction/transaction.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L78)
+[src/transaction/transaction.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L74)
 
 ___
 
@@ -531,7 +498,7 @@ based on the supplied sendParams to prepare it for sending.
 
 #### Defined in
 
-[src/transaction/transaction.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L99)
+[src/transaction/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L95)
 
 ___
 
@@ -558,7 +525,7 @@ Signs and sends transactions that have been collected by an `TransactionComposer
 
 #### Defined in
 
-[src/transaction/transaction.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L125)
+[src/transaction/transaction.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L121)
 
 ___
 
@@ -611,4 +578,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L144)
+[src/transaction/transaction.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L140)
