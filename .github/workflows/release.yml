@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - release
-      - decoupling-alpha
+      - decoupling
   workflow_dispatch:
 
 concurrency: release
@@ -102,7 +102,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: 'Semantic release'
-        run: npx semantic-release --dry-run
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

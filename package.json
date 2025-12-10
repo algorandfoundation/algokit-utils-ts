@@ -155,7 +155,7 @@
         "name": "release"
       },
       {
-        "name": "decoupling-alpha",
+        "name": "decoupling",
         "prerelease": "alpha"
       }
     ],
