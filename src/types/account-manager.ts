@@ -20,6 +20,7 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import nacl from 'tweetnacl'
+import { seedFromMnemonic } from '@algorandfoundation/algokit-algo25'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -288,14 +289,15 @@ export class AccountManager {
    * @returns The account
    */
   public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
-    const account = algosdk.mnemonicToSecretKey(mnemonicSecret)
-    const sk = algosdk.seedFromMnemonic(mnemonicSecret)
+    const seed = seedFromMnemonic(mnemonicSecret)
+
+    const keypair = nacl.sign.keyPair.fromSeed(seed)
 
     const addrWithSigners = generateAddressWithSigners({
-      ed25519Pubkey: account.addr.publicKey,
+      ed25519Pubkey: keypair.publicKey,
       sendingAddress: getOptionalAddress(sender),
       rawEd25519Signer: async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
-        return nacl.sign.detached(bytesToSign, sk)
+        return nacl.sign.detached(bytesToSign, keypair.secretKey)
       },
     })
 

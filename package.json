@@ -56,6 +56,11 @@
       "import": "./kmd-client/index.mjs",
       "require": "./kmd-client/index.js"
     },
+    "./algo25": {
+      "types": "./algo25/index.d.ts",
+      "import": "./algo25/index.mjs",
+      "require": "./algo25/index.js"
+    },
     "./sdk": {
       "types": "./sdk/index.d.ts",
       "import": "./sdk/index.mjs",
