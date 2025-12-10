@@ -40,7 +40,7 @@ Something that identifies an app box name - either a:
 
 #### Defined in
 
-[src/types/app-manager.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L57)
+[src/types/app-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L59)
 
 ## Functions
 
@@ -62,4 +62,4 @@ Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
 
 #### Defined in
 
-[src/types/app-manager.ts:593](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L593)
+[src/types/app-manager.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L596)

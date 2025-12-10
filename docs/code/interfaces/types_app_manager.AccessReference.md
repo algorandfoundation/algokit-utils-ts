@@ -27,7 +27,7 @@ Any account addresses whose balance record is accessible by the executing Approv
 
 #### Defined in
 
-[src/types/app-manager.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L122)
+[src/types/app-manager.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L124)
 
 ___
 
@@ -39,7 +39,7 @@ Application ID whose GlobalState may be read by the executing ApprovalProgram or
 
 #### Defined in
 
-[src/types/app-manager.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L124)
+[src/types/app-manager.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L126)
 
 ___
 
@@ -51,7 +51,7 @@ Asset ID whose AssetParams may be read by the executing ApprovalProgram or Clear
 
 #### Defined in
 
-[src/types/app-manager.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L126)
+[src/types/app-manager.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L128)
 
 ___
 
@@ -63,7 +63,7 @@ Defines a box by its name and the application ID it belongs to.
 
 #### Defined in
 
-[src/types/app-manager.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L132)
+[src/types/app-manager.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L134)
 
 ___
 
@@ -75,7 +75,7 @@ Defines a holding by referring to an Address and Asset it belongs to.
 
 #### Defined in
 
-[src/types/app-manager.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L128)
+[src/types/app-manager.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L130)
 
 ___
 
@@ -87,4 +87,4 @@ Defines a local state by referring to an Address and App it belongs to.
 
 #### Defined in
 
-[src/types/app-manager.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L130)
+[src/types/app-manager.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L132)
