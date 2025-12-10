@@ -4,9 +4,9 @@ import {
   bigIntCodec,
   bytesCodec,
   ArrayCodec,
+  bytesArrayCodec,
   bigIntArrayCodec,
   addressArrayCodec,
-  stringArrayCodec,
   ObjectModelCodec,
   PrimitiveModelCodec,
 } from '@algorandfoundation/algokit-common'
@@ -35,7 +35,7 @@ export type TransactionApplication = {
   /**
    * \[apaa\] transaction specific arguments accessed from the application's approval-program and clear-state-program.
    */
-  applicationArgs?: string[]
+  applicationArgs?: Uint8Array[]
 
   /**
    * \[al\] Access unifies `accounts`, `foreign-apps`, `foreign-assets`, and `box-references` under a single list. If access is non-empty, these lists must be empty. If access is empty, those lists may be non-empty.
@@ -105,7 +105,7 @@ export const TransactionApplicationMeta: ObjectModelMetadata<TransactionApplicat
       name: 'applicationArgs',
       wireKey: 'application-args',
       optional: true,
-      codec: stringArrayCodec,
+      codec: bytesArrayCodec,
     },
     {
       name: 'access',
