@@ -63,6 +63,22 @@ To run tests you can use VS Code, or:
 npm run test
 ```
 
+### Prerequisites
+
+- [Rust](https://rust-lang.org/tools/install/) - Required for building native dependencies
+- [Bun](https://bun.sh/docs/installation) - JavaScript runtime and package manager
+- [Polytest](https://github.com/algorandfoundation/algokit-polytest) - Install via Cargo:
+
+  ```bash
+  cargo install polytest
+  ```
+
+  To update to a specific version if required:
+
+  ```bash
+  cargo install polytest --version {X}
+  ```
+
 ### Mock Server for Client Tests
 
 The `algod_client`, `indexer_client`, and `kmd_client` packages use a mock server for deterministic API testing against pre-recorded HAR files. The mock server is managed externally (not by the test framework).
@@ -71,13 +87,13 @@ The `algod_client`, `indexer_client`, and `kmd_client` packages use a mock serve
 
 **Local development:**
 
-1. Run the below command to clone algokit-polytest and validate polytest
+1. Init algokit-polytest
 
 ```bash
-npm run polytest:validate-algod
+npm run polytest:init
 ```
 
-1. Start the mock servers:
+2. Start the mock servers:
 
 ```bash
 npm run polytest:start-mock-servers
@@ -85,7 +101,7 @@ npm run polytest:start-mock-servers
 
 This starts algod (port 8000), indexer (port 8002), and kmd (port 8001) in the background.
 
-1. Set environment variables and run tests.
+3. Set environment variables and run tests.
 
 | Environment Variable | Description             | Default Port |
 | -------------------- | ----------------------- | ------------ |
@@ -100,7 +116,7 @@ Environment variables can also be set via `.env` file in project root (copy from
 npm run test
 ```
 
-1. Stop servers when done:
+4. Stop servers when done:
 
 ```bash
 npm run polytest:stop-mock-servers
