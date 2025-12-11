@@ -1323,8 +1323,9 @@ export class TransactionComposer {
       const suggestedParams = await this.getSuggestedParams()
       const builtTransactions = await this._buildTransactions(suggestedParams)
 
-      // Cache the raw transactions before resource population for error handling
-      this.rawBuildTransactions = builtTransactions.transactions
+      // Cache copies of the raw transactions before resource population for error handling.
+      // We need copies because populateTransactionAndGroupResources mutates the transactions (sets .group).
+      this.rawBuildTransactions = builtTransactions.transactions.map((txn) => new Transaction({ ...txn }))
 
       const groupAnalysis =
         (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
