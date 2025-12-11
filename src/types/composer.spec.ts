@@ -253,6 +253,6 @@ describe('TransactionComposer', () => {
         assetReferences: [124n],
         accessReferences: [{ appId: 1n }, { assetId: 124n }, { address: Address.fromString(foreignAcct) }],
       }),
-    ).toThrow('Cannot specify both `accessReferences` and legacy reference arrays (`appReferences`, `assetReferences`, `boxReferences`).')
+    ).toThrow('Cannot specify both `accessReferences` and reference arrays (`appReferences`, `assetReferences`, `boxReferences`).')
   })
 })

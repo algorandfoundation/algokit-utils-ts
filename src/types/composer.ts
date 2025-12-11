@@ -286,9 +286,7 @@ export class TransactionComposer {
       (params.boxReferences && params.boxReferences.length > 0)
 
     if (hasAccessReferences && hasLegacyReferences) {
-      throw new Error(
-        'Cannot specify both `accessReferences` and legacy reference arrays (`appReferences`, `assetReferences`, `boxReferences`).',
-      )
+      throw new Error('Cannot specify both `accessReferences` and reference arrays (`appReferences`, `assetReferences`, `boxReferences`).')
     }
   }
 

@@ -87,7 +87,7 @@ The `algod_client`, `indexer_client`, and `kmd_client` packages use a mock serve
 
 **Local development:**
 
-1. Init algokit-polytest
+1. Init algokit-polytest on first run
 
 ```bash
 npm run polytest:init
