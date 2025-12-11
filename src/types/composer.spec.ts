@@ -197,6 +197,37 @@ describe('TransactionComposer', () => {
     expect(txn.appCall?.accountReferences?.[0]).toEqual(Address.fromString(foreignAcct))
   })
 
+  test('should properly populate foreign array objects in addAppCallMethodCall', async () => {
+    const { algorand, context } = fixture
+    const sender = context.testAccount
+
+    const method = ABIMethod.fromSignature('call_with_references(asset,account,application)uint64')
+
+    const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+    // Create method call using TransactionComposer.
+    // The foreign apps array argument should be packed before the method argument.
+    composer.addAppCallMethodCall({
+      appId: 7n,
+      method,
+      sender,
+      args: [1234n, context.testAccount.addr.toString(), 123n],
+    })
+
+    const built = await composer.build()
+    const txn = built.transactions[0].txn
+
+    expect(txn.appCall?.assetReferences?.length).toBe(1)
+    expect(txn.appCall?.assetReferences?.[0]).toBe(1234n)
+
+    expect(txn.appCall?.accountReferences?.length).toBe(0)
+
+    expect(txn.appCall?.appReferences?.length).toBe(1)
+    expect(txn.appCall?.appReferences?.[0]).toBe(123n)
+
+    expect(txn.appCall?.args).toEqual([new Uint8Array([254, 253, 241, 30]), new Uint8Array([0]), new Uint8Array([0]), new Uint8Array([1])])
+  })
+
   test('should properly accept accessReferences parameter in addAppCallMethodCall', async () => {
     const { algorand, context } = fixture
     const sender = context.testAccount

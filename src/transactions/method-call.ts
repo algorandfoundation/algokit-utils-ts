@@ -234,9 +234,9 @@ function populateMethodArgsIntoReferenceArrays(
   appReferences?: bigint[],
   assetReferences?: bigint[],
 ): { accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
-  const accounts = accountReferences ?? []
-  const assets = assetReferences ?? []
-  const apps = appReferences ?? []
+  const accounts = [...(accountReferences ?? [])]
+  const assets = [...(assetReferences ?? [])]
+  const apps = [...(appReferences ?? [])]
 
   methodArgs.forEach((arg, i) => {
     const argType = method.args[i].type
@@ -525,9 +525,9 @@ export const buildAppCreateMethodCall = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
-            appReferences: params.appReferences,
-            assetReferences: params.assetReferences,
+            accountReferences: common.accountReferences,
+            appReferences: common.appReferences,
+            assetReferences: common.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
       rejectVersion: params.rejectVersion,
@@ -578,9 +578,9 @@ export const buildAppUpdateMethodCall = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
-            appReferences: params.appReferences,
-            assetReferences: params.assetReferences,
+            accountReferences: common.accountReferences,
+            appReferences: common.appReferences,
+            assetReferences: common.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
       rejectVersion: params.rejectVersion,
@@ -620,9 +620,9 @@ export const buildAppCallMethodCall = async (
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: params.accountReferences?.map((a) => getAddress(a)),
-            appReferences: params.appReferences,
-            assetReferences: params.assetReferences,
+            accountReferences: common.accountReferences,
+            appReferences: common.appReferences,
+            assetReferences: common.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
       rejectVersion: params.rejectVersion,

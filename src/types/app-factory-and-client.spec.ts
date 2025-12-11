@@ -13,6 +13,7 @@ import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/ar
 import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
 import nestedStruct from '../../tests/example-contracts/nested_struct/artifacts/NestedStruct.arc56.json'
+import stateAppArc56Json from '../../tests/example-contracts/state/application.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
@@ -26,7 +27,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   const localnet = algorandFixture()
   beforeEach(async () => {
     await localnet.newScope()
-    factory = await localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount })
+    factory = localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount })
   }, 10_000)
 
   let appSpec: AppSpec
@@ -1106,6 +1107,33 @@ retsub
 
         expect(result.return).toStrictEqual({ x: { a: 'hello' } })
       })
+    })
+  })
+
+  describe('State', async () => {
+    const appSpec = stateAppArc56Json as Arc56Contract
+
+    await localnet.newScope()
+    const factory = new AppFactory({
+      algorand: localnet.algorand,
+      appSpec,
+      defaultSender: localnet.context.testAccount,
+    })
+
+    const { appClient } = await factory.deploy({ deployTimeParams: { VALUE: 1 } })
+
+    test('ABI methods which take references can be called', async () => {
+      const { testAccount } = localnet.context
+
+      const result = await appClient.send.call({
+        method: 'call_with_references',
+        args: [1234n, testAccount.addr.toString(), appClient.appId],
+      })
+
+      invariant(result.confirmations)
+      invariant(result.confirmations[0])
+      expect(result.transactions.length).toBe(1)
+      expect(result.return).toBe(1n)
     })
   })
 })
