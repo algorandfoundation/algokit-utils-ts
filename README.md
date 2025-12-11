@@ -52,16 +52,32 @@ This is an open source project managed by the Algorand Foundation. See the [Algo
 
 To successfully run the tests in this repository you need to be running LocalNet via [AlgoKit](https://github.com/algorandfoundation/algokit-cli) and also have package dependencies and `.env.template` copied to `.env` (both of which `algokit bootstrap all` can do for you):
 
-```
+```bash
 algokit bootstrap all
 algokit localnet start
 ```
 
 To run tests you can use VS Code, or:
 
-```
+```bash
 npm run test
 ```
+
+### Prerequisites
+
+- [Rust](https://rust-lang.org/tools/install/) - Required for building native dependencies
+- [Bun](https://bun.sh/docs/installation) - JavaScript runtime and package manager
+- [Polytest](https://github.com/algorandfoundation/algokit-polytest) - Install via Cargo:
+
+  ```bash
+  cargo install polytest
+  ```
+
+  To update to a specific version if required:
+
+  ```bash
+  cargo install polytest --version {X}
+  ```
 
 ### Mock Server for Client Tests
 
@@ -71,7 +87,13 @@ The `algod_client`, `indexer_client`, and `kmd_client` packages use a mock serve
 
 **Local development:**
 
-1. Clone algokit-polytest and start the mock servers:
+1. Init algokit-polytest on first run
+
+```bash
+npm run polytest:init
+```
+
+2. Start the mock servers:
 
 ```bash
 npm run polytest:start-mock-servers
@@ -79,7 +101,7 @@ npm run polytest:start-mock-servers
 
 This starts algod (port 8000), indexer (port 8002), and kmd (port 8001) in the background.
 
-2. Set environment variables and run tests.
+3. Set environment variables and run tests.
 
 | Environment Variable | Description             | Default Port |
 | -------------------- | ----------------------- | ------------ |
@@ -94,7 +116,7 @@ Environment variables can also be set via `.env` file in project root (copy from
 npm run test
 ```
 
-3. Stop servers when done:
+4. Stop servers when done:
 
 ```bash
 npm run polytest:stop-mock-servers
