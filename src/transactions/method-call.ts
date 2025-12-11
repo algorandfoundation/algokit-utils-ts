@@ -207,6 +207,11 @@ function isAppCallMethodCallArg(
 const isAbiValue = (x: unknown): x is ABIValue => {
   if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
+  // If x is a POJO literal
+  if (Object.getPrototypeOf(x) === Object.getPrototypeOf({})) {
+    return Object.values(x as object).every(isAbiValue)
+  }
+
   return (
     typeof x === 'bigint' ||
     typeof x === 'boolean' ||

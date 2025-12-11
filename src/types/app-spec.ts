@@ -153,8 +153,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
 
 function getABIMethodParamsSignature(params: ABIMethodParams) {
   const args = params.args.map((a) => a.type).join(',')
-  const returns = params.returns.type === 'void' ? '' : params.returns.type
-  return `${params.name}(${args})${returns}`
+  return `${params.name}(${args})${params.returns.type}`
 }
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
