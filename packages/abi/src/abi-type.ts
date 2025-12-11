@@ -644,7 +644,7 @@ export class ABIArrayStaticType extends ABIType {
     return convertedTuple.encode(value)
   }
 
-  decode(bytes: Uint8Array): ABIValue {
+  decode(bytes: Uint8Array): ABIValue[] | Uint8Array {
     const convertedTuple = this.toABITupleType()
     const decoded = convertedTuple.decode(bytes)
 
@@ -704,7 +704,7 @@ export class ABIArrayDynamicType extends ABIType {
     return concatArrays(encodedLength, encodedTuple)
   }
 
-  decode(bytes: Uint8Array): ABIValue {
+  decode(bytes: Uint8Array): ABIValue[] | Uint8Array {
     const view = new DataView(bytes.buffer, 0, LENGTH_ENCODE_BYTE_SIZE)
     const byteLength = view.getUint16(0)
     const convertedTuple = this.toABITupleType(byteLength)
