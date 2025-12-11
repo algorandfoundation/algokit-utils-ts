@@ -1,15 +1,16 @@
+import { seedFromMnemonic } from '@algorandfoundation/algokit-algo25'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import {
   AddressWithSigners,
   AddressWithTransactionSigner,
-  generateAddressWithSigners,
   LogicSigAccount,
   MultisigAccount,
   MultisigMetadata,
   TransactionSigner,
+  generateAddressWithSigners,
 } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
+import nacl from 'tweetnacl'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT } from './account'
@@ -19,8 +20,6 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import nacl from 'tweetnacl'
-import { seedFromMnemonic } from '@algorandfoundation/algokit-algo25'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
