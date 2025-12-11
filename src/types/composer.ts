@@ -47,7 +47,7 @@ import {
   type AssetTransferParams,
 } from '../transactions/asset-transfer'
 
-import { ReadableAddress } from '@algorandfoundation/algokit-common'
+import { MAX_TRANSACTION_GROUP_SIZE, ReadableAddress } from '@algorandfoundation/algokit-common'
 import {
   buildAssetConfig,
   buildAssetCreate,
@@ -84,8 +84,6 @@ import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction'
-
-export const MAX_TRANSACTION_GROUP_SIZE = 16
 
 // Re-export transaction parameter types
 export type {

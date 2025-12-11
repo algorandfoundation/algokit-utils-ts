@@ -294,11 +294,6 @@ export function populateTransactionResources(
     assetsCount = transaction.appCall.assetReferences.length
   }
 
-  // Validate reference limits
-  if (accountsCount > MAX_ACCOUNT_REFERENCES) {
-    throw new Error(`Account reference limit of ${MAX_ACCOUNT_REFERENCES} exceeded in transaction ${groupIndex}`)
-  }
-
   if (accountsCount + assetsCount + appsCount + boxesCount > MAX_OVERALL_REFERENCES) {
     throw new Error(`Resource reference limit of ${MAX_OVERALL_REFERENCES} exceeded in transaction ${groupIndex}`)
   }
@@ -538,10 +533,10 @@ function populateGroupResource(
 
     switch (resource.type) {
       case GroupResourceType.Account:
-        return accountsCount < MAX_ACCOUNT_REFERENCES
+        return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES
       case GroupResourceType.AssetHolding:
       case GroupResourceType.AppLocal:
-        return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1 && accountsCount < MAX_ACCOUNT_REFERENCES
+        return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1
       case GroupResourceType.Box:
         if (resource.data.appId !== 0n) {
           return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1
