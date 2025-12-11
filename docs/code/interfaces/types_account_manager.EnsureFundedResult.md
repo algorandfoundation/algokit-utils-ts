@@ -23,7 +23,7 @@ The amount that was sent to the account.
 
 #### Defined in
 
-[src/types/account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L30)
+[src/types/account-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L29)
 
 ___
 
@@ -35,4 +35,4 @@ The transaction ID of the transaction that funded the account.
 
 #### Defined in
 
-[src/types/account-manager.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L28)
+[src/types/account-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L27)
