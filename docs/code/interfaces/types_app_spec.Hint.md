@@ -23,7 +23,7 @@ Hint information for a given method call to allow client generation
 
 #### Defined in
 
-[src/types/app-spec.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L253)
+[src/types/app-spec.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L252)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[src/types/app-spec.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L252)
+[src/types/app-spec.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L251)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/types/app-spec.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L251)
+[src/types/app-spec.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L250)
 
 ___
 
@@ -55,4 +55,4 @@ Any user-defined struct/tuple types used in the method call, keyed by parameter 
 
 #### Defined in
 
-[src/types/app-spec.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L250)
+[src/types/app-spec.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L249)
