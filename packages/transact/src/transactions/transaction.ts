@@ -2,7 +2,7 @@ import type { EncodingFormat, WireObject } from '@algorandfoundation/algokit-com
 import {
   Address,
   Codec,
-  MAX_TX_GROUP_SIZE,
+  MAX_TRANSACTION_GROUP_SIZE,
   SIGNATURE_ENCODING_INCR,
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
@@ -530,8 +530,8 @@ function computeGroup(transactions: Transaction[]): Uint8Array {
     throw new Error('Transaction group size cannot be 0')
   }
 
-  if (transactions.length > MAX_TX_GROUP_SIZE) {
-    throw new Error(`Transaction group size exceeds the max limit of ${MAX_TX_GROUP_SIZE}`)
+  if (transactions.length > MAX_TRANSACTION_GROUP_SIZE) {
+    throw new Error(`Transaction group size exceeds the max limit of ${MAX_TRANSACTION_GROUP_SIZE}`)
   }
 
   const txHashes = transactions.map((tx) => {

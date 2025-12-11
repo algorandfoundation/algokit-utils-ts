@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { bytesCodec, stringArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
+import { bytesCodec, bytesArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TransactionSignatureMultisig } from './transaction-signature-multisig'
 import { TransactionSignatureMultisigMeta } from './transaction-signature-multisig'
 
@@ -13,7 +13,7 @@ export type TransactionSignatureLogicsig = {
   /**
    * \[arg\] Logic arguments, base64 encoded.
    */
-  args?: string[]
+  args?: Uint8Array[]
 
   /**
    * \[l\] Program signed by a signature or multi signature, or hashed to be the address of an account. Base64 encoded TEAL program.
@@ -36,7 +36,7 @@ export const TransactionSignatureLogicsigMeta: ObjectModelMetadata<TransactionSi
       name: 'args',
       wireKey: 'args',
       optional: true,
-      codec: stringArrayCodec,
+      codec: bytesArrayCodec,
     },
     {
       name: 'logic',

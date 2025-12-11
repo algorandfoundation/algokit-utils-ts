@@ -47,10 +47,6 @@
 - [TransactionComposerConfig](types_composer.md#transactioncomposerconfig)
 - [TransactionComposerParams](types_composer.md#transactioncomposerparams)
 
-### Variables
-
-- [MAX\_TRANSACTION\_GROUP\_SIZE](types_composer.md#max_transaction_group_size)
-
 ## Type Aliases
 
 ### AppCallMethodCall
@@ -348,7 +344,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L157)
+[src/types/composer.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L155)
 
 ___
 
@@ -427,7 +423,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L128)
+[src/types/composer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L126)
 
 ___
 
@@ -439,7 +435,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L134)
+[src/types/composer.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L132)
 
 ___
 
@@ -451,7 +447,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L116)
+[src/types/composer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L114)
 
 ___
 
@@ -468,7 +464,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L171)
+[src/types/composer.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L169)
 
 ___
 
@@ -492,14 +488,4 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L191)
-
-## Variables
-
-### MAX\_TRANSACTION\_GROUP\_SIZE
-
-• `Const` **MAX\_TRANSACTION\_GROUP\_SIZE**: ``16``
-
-#### Defined in
-
-[src/types/composer.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L87)
+[src/types/composer.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L189)

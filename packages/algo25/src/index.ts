@@ -1,10 +1,9 @@
-import english from './wordlists/english.js'
-import * as nacl from '../nacl/naclWrappers.js'
-import { AddressWithSigners, generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
-import tweetnacl from 'tweetnacl'
-
+import english from './english.js'
+import { hash } from '@algorandfoundation/algokit-common'
 export const FAIL_TO_DECODE_MNEMONIC_ERROR_MSG = 'failed to decode mnemonic'
 export const NOT_IN_WORDS_LIST_ERROR_MSG = 'the mnemonic contains a word that is not in the wordlist'
+
+const SEED_BTYES_LENGTH = 32
 
 // https://stackoverflow.com/a/51452614
 function toUint11Array(buffer8: Uint8Array | number[]): number[] {
@@ -36,7 +35,7 @@ function applyWords(nums: number[]): string[] {
 }
 
 function computeChecksum(seed: Uint8Array): string {
-  const hashBuffer = nacl.genericHash(seed)
+  const hashBuffer = hash(seed)
   const uint11Hash = toUint11Array(hashBuffer)
   const words = applyWords(uint11Hash)
 
@@ -51,8 +50,8 @@ function computeChecksum(seed: Uint8Array): string {
  */
 export function mnemonicFromSeed(seed: Uint8Array) {
   // Sanity length check
-  if (seed.length !== nacl.SEED_BTYES_LENGTH) {
-    throw new RangeError(`Seed length must be ${nacl.SEED_BTYES_LENGTH}`)
+  if (seed.length !== SEED_BTYES_LENGTH) {
+    throw new RangeError(`Seed length must be ${SEED_BTYES_LENGTH}`)
   }
 
   const uint11Array = toUint11Array(seed)
@@ -135,31 +134,13 @@ export function seedFromMnemonic(mnemonic: string) {
 }
 
 /**
- * mnemonicToSecretKey takes a mnemonic string and returns the corresponding Algorand address and its secret key.
- * @param mn - 25 words Algorand mnemonic
- * @throws error if fails to decode the mnemonic
- */
-export function mnemonicToSecretKey(mn: string): AddressWithSigners {
-  const seed = seedFromMnemonic(mn)
-  const keys = nacl.keyPairFromSeed(seed)
-
-  const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
-    return tweetnacl.sign.detached(bytesToSign, keys.secretKey)
-  }
-
-  const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keys.publicKey, rawEd25519Signer: rawSigner })
-
-  return addressWithSigners
-}
-
-/**
  * secretKeyToMnemonic takes an Algorand secret key and returns the corresponding mnemonic.
  * @param sk - Algorand secret key
  * @returns Secret key's associated mnemonic
  */
 export function secretKeyToMnemonic(sk: Uint8Array) {
   // get the seed from the sk
-  const seed = sk.slice(0, nacl.SEED_BTYES_LENGTH)
+  const seed = sk.slice(0, SEED_BTYES_LENGTH)
   return mnemonicFromSeed(seed)
 }
 
