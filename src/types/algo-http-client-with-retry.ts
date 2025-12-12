@@ -22,6 +22,20 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     'EPROTO', // We get this intermittently with AlgoNode API
   ]
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAlgoHttpClientWithRetry = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AlgoHttpClientWithRetry)._isAlgoHttpClientWithRetry === true)
+  }
+
   private async callWithRetry(func: () => Promise<BaseHTTPClientResponse>): Promise<BaseHTTPClientResponse> {
     let response: BaseHTTPClientResponse | undefined
     let numTries = 1
