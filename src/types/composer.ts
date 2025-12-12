@@ -4,7 +4,7 @@ import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '.
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { AppManager, BoxIdentifier, BoxReference, getAccessReference, ResourceReference } from './app-manager'
+import { AppManager, BoxIdentifier, BoxReference, getTransactionResourceReference, ResourceReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -1636,7 +1636,7 @@ export class TransactionComposer {
       appForeignApps: params.appReferences?.map((x) => Number(x)),
       appForeignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      access: params.accessReferences?.map(getTransactionResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
       extraPages:
@@ -1794,7 +1794,7 @@ export class TransactionComposer {
       foreignApps: params.appReferences?.map((x) => Number(x)),
       foreignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      access: params.accessReferences?.map(getTransactionResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
     }

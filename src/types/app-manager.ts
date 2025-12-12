@@ -590,7 +590,7 @@ function getLocalsReference(localsReference: LocalsReference): algosdk.Transacti
 /**
  * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
  */
-export function getAccessReference(accessReference: ResourceReference): algosdk.TransactionResourceReference {
+export function getTransactionResourceReference(accessReference: ResourceReference): algosdk.TransactionResourceReference {
   return {
     address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
     appIndex: accessReference.appId,

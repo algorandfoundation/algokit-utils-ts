@@ -24,7 +24,7 @@
 
 ### Functions
 
-- [getAccessReference](types_app_manager.md#getaccessreference)
+- [getTransactionResourceReference](types_app_manager.md#gettransactionresourcereference)
 
 ## Type Aliases
 
@@ -44,9 +44,9 @@ Something that identifies an app box name - either a:
 
 ## Functions
 
-### getAccessReference
+### getTransactionResourceReference
 
-▸ **getAccessReference**(`accessReference`): `algosdk.TransactionResourceReference`
+▸ **getTransactionResourceReference**(`accessReference`): `algosdk.TransactionResourceReference`
 
 Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
 
