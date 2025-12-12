@@ -112,12 +112,12 @@ exports[`GET v2_accounts_ADDRESS_applications_APPLICATION-ID > Common Tests > Ba
       Symbol(algokit_common:Address): true,
     },
     "globalStateSchema": {
-      "numByteSlice": 0,
-      "numUint": 0,
+      "numByteSlices": 0,
+      "numUints": 0,
     },
     "localStateSchema": {
-      "numByteSlice": 0,
-      "numUint": 0,
+      "numByteSlices": 0,
+      "numUints": 0,
     },
   },
   "round": 57711496n,
