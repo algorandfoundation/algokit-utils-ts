@@ -4,11 +4,34 @@
 {% set isArray = descriptor.is_array %}
 {% set refTypes = schema | collect_schema_refs(schema_name) %}
 {% set uses_signed_txn = schema | schema_uses_signed_txn %}
+{% set uses_box_reference = schema | schema_uses_box_reference %}
+{% set uses_holding_reference = schema | schema_uses_holding_reference %}
+{% set uses_locals_reference = schema | schema_uses_locals_reference %}
 {% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
+{% set schemaBoxReference = schema.get('x-algokit-box-reference') is true %}
+{% set schemaHoldingReference = schema.get('x-algokit-holding-reference') is true %}
+{% set schemaLocalsReference = schema.get('x-algokit-locals-reference') is true %}
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
 {% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
-
+{# Check if this schema is a re-export from transact (top-level vendor extension) #}
+{% set isTransactReexport = schemaSignedTxn or schemaBoxReference or schemaHoldingReference or schemaLocalsReference %}
+{% if isTransactReexport %}
+{# For schemas that are vendor extension types, just re-export from transact #}
+{% if schemaSignedTxn %}
+export type { SignedTransaction as {{ modelName }} } from '@algorandfoundation/algokit-transact';
+export { SignedTransactionMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
+{% elif schemaBoxReference %}
+export type { BoxReference as {{ modelName }} } from '@algorandfoundation/algokit-transact';
+export { BoxReferenceMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
+{% elif schemaHoldingReference %}
+export type { HoldingReference as {{ modelName }} } from '@algorandfoundation/algokit-transact';
+export { HoldingReferenceMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
+{% elif schemaLocalsReference %}
+export type { LocalsReference as {{ modelName }} } from '@algorandfoundation/algokit-transact';
+export { LocalsReferenceMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
+{% endif %}
+{% else %}
 import type { Address, ObjectModelMetadata, ArrayModelMetadata, PrimitiveModelMetadata } from '@algorandfoundation/algokit-common';
 import {
   stringCodec,
@@ -30,9 +53,27 @@ import {
   RecordCodec,
   unknownCodec,
 } from '@algorandfoundation/algokit-common';
+{% if uses_signed_txn or uses_box_reference or uses_holding_reference or uses_locals_reference %}
+{% set transact_types = [] %}
+{% set transact_metas = [] %}
 {% if uses_signed_txn %}
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact';
-import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact';
+{% set transact_types = transact_types + ['SignedTransaction'] %}
+{% set transact_metas = transact_metas + ['SignedTransactionMeta'] %}
+{% endif %}
+{% if uses_box_reference %}
+{% set transact_types = transact_types + ['BoxReference'] %}
+{% set transact_metas = transact_metas + ['BoxReferenceMeta'] %}
+{% endif %}
+{% if uses_holding_reference %}
+{% set transact_types = transact_types + ['HoldingReference'] %}
+{% set transact_metas = transact_metas + ['HoldingReferenceMeta'] %}
+{% endif %}
+{% if uses_locals_reference %}
+{% set transact_types = transact_types + ['LocalsReference'] %}
+{% set transact_metas = transact_metas + ['LocalsReferenceMeta'] %}
+{% endif %}
+import type { {{ transact_types | join(', ') }} } from '@algorandfoundation/algokit-transact';
+import { {{ transact_metas | join(', ') }} } from '@algorandfoundation/algokit-transact';
 {% endif %}
 {% set ns = namespace(refs_with_meta=[]) %}
 {% if descriptor.is_object %}
@@ -114,10 +155,16 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {%   endfor %}
   ],
 {% elif isArray %}
-  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address) }},
+  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference) }},
 {% else %}
 {%   if schemaSignedTxn %}
   codec: new ObjectModelCodec(SignedTransactionMeta),
+{%   elif schemaBoxReference %}
+  codec: new ObjectModelCodec(BoxReferenceMeta),
+{%   elif schemaHoldingReference %}
+  codec: new ObjectModelCodec(HoldingReferenceMeta),
+{%   elif schemaLocalsReference %}
+  codec: new ObjectModelCodec(LocalsReferenceMeta),
 {%   elif schemaBytes %}
   codec: bytesCodec,
 {%   elif schemaBigint %}
@@ -127,3 +174,4 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {%   endif %}
 {% endif %}
 };
+{% endif %}

@@ -326,8 +326,8 @@ export function populateGroupResources(
     groupResources.appLocals.forEach((appLocal) => {
       populateGroupResource(transactions, { type: GroupResourceType.AppLocal, data: appLocal })
       // Remove resources from remaining if we're adding them here
-      remainingAccounts = remainingAccounts.filter((acc) => acc !== appLocal.account)
-      remainingApps = remainingApps.filter((app) => app !== appLocal.app)
+      remainingAccounts = remainingAccounts.filter((acc) => acc !== appLocal.address)
+      remainingApps = remainingApps.filter((app) => app !== appLocal.appId)
     })
   }
 
@@ -335,8 +335,8 @@ export function populateGroupResources(
     groupResources.assetHoldings.forEach((assetHolding) => {
       populateGroupResource(transactions, { type: GroupResourceType.AssetHolding, data: assetHolding })
       // Remove resources from remaining if we're adding them here
-      remainingAccounts = remainingAccounts.filter((acc) => acc !== assetHolding.account)
-      remainingAssets = remainingAssets.filter((asset) => asset !== assetHolding.asset)
+      remainingAccounts = remainingAccounts.filter((acc) => acc !== assetHolding.address)
+      remainingAssets = remainingAssets.filter((asset) => asset !== assetHolding.assetId)
     })
   }
 
@@ -350,12 +350,12 @@ export function populateGroupResources(
     populateGroupResource(transactions, {
       type: GroupResourceType.Box,
       data: {
-        appId: boxRef.app,
+        appId: boxRef.appId,
         name: boxRef.name,
       },
     })
     // Remove apps as resource if we're adding it here
-    remainingApps = remainingApps.filter((app) => app !== boxRef.app)
+    remainingApps = remainingApps.filter((app) => app !== boxRef.appId)
   })
 
   // Process assets
@@ -413,7 +413,7 @@ function populateGroupResource(
 ): void {
   // For asset holdings and app locals, first try to find a transaction that already has the account available
   if (resource.type === GroupResourceType.AssetHolding || resource.type === GroupResourceType.AppLocal) {
-    const address = resource.data.account
+    const address = resource.data.address
 
     // Try to find a transaction that already has the account available
     const groupIndex1 = transactions.findIndex((txn) => {
@@ -449,13 +449,13 @@ function populateGroupResource(
       const appCall = transactions[groupIndex1].appCall!
       if (resource.type === GroupResourceType.AssetHolding) {
         appCall.assetReferences = appCall.assetReferences ?? []
-        if (!appCall.assetReferences.includes(resource.data.asset)) {
-          appCall.assetReferences.push(resource.data.asset)
+        if (!appCall.assetReferences.includes(resource.data.assetId)) {
+          appCall.assetReferences.push(resource.data.assetId)
         }
       } else {
         appCall.appReferences = appCall.appReferences ?? []
-        if (!appCall.appReferences.includes(resource.data.app)) {
-          appCall.appReferences.push(resource.data.app)
+        if (!appCall.appReferences.includes(resource.data.appId)) {
+          appCall.appReferences.push(resource.data.appId)
         }
       }
       return
@@ -473,9 +473,9 @@ function populateGroupResource(
       }
 
       if (resource.type === GroupResourceType.AssetHolding) {
-        return appCall.assetReferences?.includes(resource.data.asset) || false
+        return appCall.assetReferences?.includes(resource.data.assetId) || false
       } else {
-        return appCall.appReferences?.includes(resource.data.app) || appCall.appId === resource.data.app
+        return appCall.appReferences?.includes(resource.data.appId) || appCall.appId === resource.data.appId
       }
     })
 
@@ -594,10 +594,10 @@ function populateGroupResource(
       break
     case GroupResourceType.AssetHolding: {
       appCall.assetReferences = appCall.assetReferences ?? []
-      if (!appCall.assetReferences.includes(resource.data.asset)) {
-        appCall.assetReferences.push(resource.data.asset)
+      if (!appCall.assetReferences.includes(resource.data.assetId)) {
+        appCall.assetReferences.push(resource.data.assetId)
       }
-      const address = resource.data.account
+      const address = resource.data.address
       appCall.accountReferences = appCall.accountReferences ?? []
       if (!appCall.accountReferences.some((a) => a.equals(address))) {
         appCall.accountReferences.push(address)
@@ -606,10 +606,10 @@ function populateGroupResource(
     }
     case GroupResourceType.AppLocal: {
       appCall.appReferences = appCall.appReferences ?? []
-      if (!appCall.appReferences.includes(resource.data.app)) {
-        appCall.appReferences.push(resource.data.app)
+      if (!appCall.appReferences.includes(resource.data.appId)) {
+        appCall.appReferences.push(resource.data.appId)
       }
-      const address = resource.data.account
+      const address = resource.data.address
       appCall.accountReferences = appCall.accountReferences ?? []
       if (!appCall.accountReferences.some((a) => a.equals(address))) {
         appCall.accountReferences.push(address)

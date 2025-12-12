@@ -8,12 +8,12 @@ export type ApplicationStateSchema = {
   /**
    * number of uints.
    */
-  numUint: number
+  numUints: number
 
   /**
    * number of byte slices.
    */
-  numByteSlice: number
+  numByteSlices: number
 }
 
 export const ApplicationStateSchemaMeta: ObjectModelMetadata<ApplicationStateSchema> = {
@@ -21,13 +21,13 @@ export const ApplicationStateSchemaMeta: ObjectModelMetadata<ApplicationStateSch
   kind: 'object',
   fields: [
     {
-      name: 'numUint',
+      name: 'numUints',
       wireKey: 'num-uint',
       optional: false,
       codec: numberCodec,
     },
     {
-      name: 'numByteSlice',
+      name: 'numByteSlices',
       wireKey: 'num-byte-slice',
       optional: false,
       codec: numberCodec,

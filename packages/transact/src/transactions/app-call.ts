@@ -217,7 +217,7 @@ export interface ResourceReference {
 /**
  * A grouping of the asset index and address of the account
  */
-export interface HoldingReference {
+export type HoldingReference = {
   /** The asset index of the holding */
   assetId: bigint
 
@@ -227,7 +227,7 @@ export interface HoldingReference {
 
 /** A grouping of the application index and address of the account
  */
-export interface LocalsReference {
+export type LocalsReference = {
   /** The application index of the local state */
   appId: bigint
 
