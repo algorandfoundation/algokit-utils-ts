@@ -2180,7 +2180,7 @@ export class TransactionComposer {
 }
 
 /**
- * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
+ * Returns an `algosdk.TransactionResourceReference` given a `ResourceReference`.
  */
 function getResourceReference(accessReference: ResourceReference): algosdk.TransactionResourceReference {
   return {
