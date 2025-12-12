@@ -1109,31 +1109,72 @@ retsub
       })
     })
   })
+})
 
-  describe('State', async () => {
-    const appSpec = stateAppArc56Json as Arc56Contract
+describe('State', async () => {
+  const localnet = algorandFixture()
 
+  const appSpec = stateAppArc56Json as Arc56Contract
+  let appClient: AppClient
+
+  beforeEach(async () => {
     await localnet.newScope()
+
     const factory = new AppFactory({
       algorand: localnet.algorand,
       appSpec,
       defaultSender: localnet.context.testAccount,
     })
 
-    const { appClient } = await factory.deploy({ deployTimeParams: { VALUE: 1 } })
+    const deployResult = await factory.deploy({ deployTimeParams: { VALUE: 1 } })
+    appClient = deployResult.appClient
+  })
 
-    test('ABI methods which take references can be called', async () => {
-      const { testAccount } = localnet.context
+  test('ABI methods which take references can be called', async () => {
+    const { testAccount } = localnet.context
 
-      const result = await appClient.send.call({
+    const result = await appClient.send.call({
+      method: 'call_with_references',
+      args: [1234n, testAccount.addr.toString(), appClient.appId],
+    })
+
+    invariant(result.confirmations)
+    invariant(result.confirmations[0])
+    expect(result.transactions.length).toBe(1)
+    expect(result.return).toBe(1n)
+  })
+
+  test('returns undefined returnValue for void ABI method', async () => {
+    const { testAccount, algorand } = localnet.context
+
+    const composer = algorand.newGroup()
+
+    composer.addAppCallMethodCall(
+      await appClient.params.call({
         method: 'call_with_references',
         args: [1234n, testAccount.addr.toString(), appClient.appId],
-      })
+        lease: 'call_with_references 1',
+      }),
+    )
+    composer.addAppCallMethodCall(
+      await appClient.params.call({
+        method: 'set_global',
+        args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
+      }),
+    )
+    composer.addAppCallMethodCall(
+      await appClient.params.call({
+        method: 'call_with_references',
+        args: [1234n, testAccount.addr.toString(), appClient.appId],
+        lease: 'call_with_references 2',
+      }),
+    )
 
-      invariant(result.confirmations)
-      invariant(result.confirmations[0])
-      expect(result.transactions.length).toBe(1)
-      expect(result.return).toBe(1n)
-    })
+    const result = await composer.send()
+
+    expect(result.returns).toHaveLength(3)
+    expect(result.returns?.[0]?.returnValue).toBe(1n)
+    expect(result.returns?.[1]?.returnValue).toBeUndefined()
+    expect(result.returns?.[2]?.returnValue).toBe(1n)
   })
 })

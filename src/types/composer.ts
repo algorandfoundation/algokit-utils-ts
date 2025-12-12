@@ -2135,11 +2135,9 @@ export class TransactionComposer {
       if (txn?.type !== 'methodCall') continue
 
       const method = txn.data.method
-      if (method.returns.type !== 'void') {
-        const abiReturn = AppManager.getABIReturn(confirmation, method)
-        if (abiReturn !== undefined) {
-          abiReturns.push(abiReturn)
-        }
+      const abiReturn = AppManager.getABIReturn(confirmation, method)
+      if (abiReturn !== undefined) {
+        abiReturns.push(abiReturn)
       }
     }
 
