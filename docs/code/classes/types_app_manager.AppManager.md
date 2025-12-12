@@ -472,7 +472,7 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `confirmation` | `PendingTransactionResponse` | The transaction confirmation from algod |
+| `confirmation` | `undefined` \| `PendingTransactionResponse` | The transaction confirmation from algod |
 | `method` | `undefined` \| `ABIMethod` | The ABI method |
 
 #### Returns
@@ -539,7 +539,7 @@ ___
 
 #### Defined in
 
-[src/types/app-manager.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L462)
+[src/types/app-manager.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L466)
 
 ___
 
@@ -578,7 +578,7 @@ const tealCode = AppManager.replaceTealTemplateDeployTimeControlParams(tealTempl
 
 #### Defined in
 
-[src/types/app-manager.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L491)
+[src/types/app-manager.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L495)
 
 ___
 
@@ -611,7 +611,7 @@ const tealCode = AppManager.replaceTealTemplateParams(tealTemplate, { TMPL_APP_I
 
 #### Defined in
 
-[src/types/app-manager.ts:526](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L526)
+[src/types/app-manager.ts:530](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L530)
 
 ___
 
@@ -641,4 +641,4 @@ const stripped = AppManager.stripTealComments(tealProgram);
 
 #### Defined in
 
-[src/types/app-manager.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L565)
+[src/types/app-manager.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L569)

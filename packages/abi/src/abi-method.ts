@@ -64,7 +64,7 @@ export type ABIReturn =
       returnValue: ABIValue
       decodeError: undefined
     }
-  | { rawReturnValue?: undefined; returnValue?: undefined; method: ABIMethod; decodeError: Error }
+  | { rawReturnValue?: undefined; returnValue?: undefined; method: ABIMethod; decodeError?: Error }
 
 /** Decoded ARC-56 struct as a struct rather than a tuple. */
 export type ABIStruct = {

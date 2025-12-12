@@ -427,9 +427,13 @@ export class AppManager {
    * const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignature('hello(string)void'));
    * ```
    */
-  public static getABIReturn(confirmation: PendingTransactionResponse, method: ABIMethod | undefined): ABIReturn | undefined {
-    if (!method || method.returns.type === 'void') {
+  public static getABIReturn(confirmation: PendingTransactionResponse | undefined, method: ABIMethod | undefined): ABIReturn | undefined {
+    if (!method || !confirmation) {
       return undefined
+    }
+
+    if (method.returns.type === 'void') {
+      return { method, rawReturnValue: undefined, returnValue: undefined }
     }
 
     try {
