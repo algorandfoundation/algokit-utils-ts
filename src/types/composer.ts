@@ -4,7 +4,7 @@ import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '.
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
+import { AppManager, BoxIdentifier, BoxReference, HoldingReference, LocalsReference, ResourceReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -360,7 +360,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
    */
   boxReferences?: (BoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
-  accessReferences?: AccessReference[]
+  accessReferences?: ResourceReference[]
 }
 
 /** Parameters to define an app create transaction */
@@ -1636,7 +1636,7 @@ export class TransactionComposer {
       appForeignApps: params.appReferences?.map((x) => Number(x)),
       appForeignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      access: params.accessReferences?.map(getResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
       extraPages:
@@ -1794,7 +1794,7 @@ export class TransactionComposer {
       foreignApps: params.appReferences?.map((x) => Number(x)),
       foreignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      access: params.accessReferences?.map(getResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
     }
@@ -2177,4 +2177,32 @@ export class TransactionComposer {
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   }
+}
+
+/**
+ * Returns an `algosdk.TransactionResourceReference` given a `ResourceReference`.
+ */
+function getResourceReference(accessReference: ResourceReference): algosdk.TransactionResourceReference {
+  return {
+    address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
+    appIndex: accessReference.appId,
+    assetIndex: accessReference.assetId,
+    holding: accessReference.holding ? getHoldingReference(accessReference.holding) : undefined,
+    locals: accessReference.locals ? getLocalsReference(accessReference.locals) : undefined,
+    box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
+  } as algosdk.TransactionResourceReference
+}
+
+function getHoldingReference(holdingReference: HoldingReference): algosdk.TransactionHoldingReference {
+  return {
+    assetIndex: holdingReference.assetId,
+    address: typeof holdingReference.address === 'string' ? Address.fromString(holdingReference.address) : holdingReference.address!,
+  } satisfies algosdk.TransactionHoldingReference
+}
+
+function getLocalsReference(localsReference: LocalsReference): algosdk.TransactionLocalsReference {
+  return {
+    appIndex: localsReference.appId,
+    address: typeof localsReference.address === 'string' ? Address.fromString(localsReference.address) : localsReference.address!,
+  } satisfies algosdk.TransactionLocalsReference
 }

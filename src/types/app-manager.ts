@@ -117,7 +117,7 @@ export interface LocalsReference {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface AccessReference {
+export interface ResourceReference {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: string | Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
@@ -571,34 +571,6 @@ export class AppManager {
       .map((line) => stripCommentFromLine(line))
       .join('\n')
   }
-}
-
-function getHoldingReference(holdingReference: HoldingReference): algosdk.TransactionHoldingReference {
-  return {
-    assetIndex: holdingReference.assetId,
-    address: typeof holdingReference.address === 'string' ? Address.fromString(holdingReference.address) : holdingReference.address!,
-  } satisfies algosdk.TransactionHoldingReference
-}
-
-function getLocalsReference(localsReference: LocalsReference): algosdk.TransactionLocalsReference {
-  return {
-    appIndex: localsReference.appId,
-    address: typeof localsReference.address === 'string' ? Address.fromString(localsReference.address) : localsReference.address!,
-  } satisfies algosdk.TransactionLocalsReference
-}
-
-/**
- * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
- */
-export function getAccessReference(accessReference: AccessReference): algosdk.TransactionResourceReference {
-  return {
-    address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
-    appIndex: accessReference.appId,
-    assetIndex: accessReference.assetId,
-    holding: accessReference.holding ? getHoldingReference(accessReference.holding) : undefined,
-    locals: accessReference.locals ? getLocalsReference(accessReference.locals) : undefined,
-    box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
-  } as algosdk.TransactionResourceReference
 }
 
 /**
