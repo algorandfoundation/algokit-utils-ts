@@ -22,10 +22,6 @@
 
 - [BoxIdentifier](types_app_manager.md#boxidentifier)
 
-### Functions
-
-- [getTransactionResourceReference](types_app_manager.md#gettransactionresourcereference)
-
 ## Type Aliases
 
 ### BoxIdentifier
@@ -41,25 +37,3 @@ Something that identifies an app box name - either a:
 #### Defined in
 
 [src/types/app-manager.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L57)
-
-## Functions
-
-### getTransactionResourceReference
-
-▸ **getTransactionResourceReference**(`accessReference`): `algosdk.TransactionResourceReference`
-
-Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `accessReference` | [`ResourceReference`](../interfaces/types_app_manager.ResourceReference.md) |
-
-#### Returns
-
-`algosdk.TransactionResourceReference`
-
-#### Defined in
-
-[src/types/app-manager.ts:593](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L593)
