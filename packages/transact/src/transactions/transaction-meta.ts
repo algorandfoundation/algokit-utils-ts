@@ -19,7 +19,7 @@ import {
   numberCodec,
   stringCodec,
 } from '@algorandfoundation/algokit-common'
-import { AccessReference, AppCallTransactionFields, BoxReference, StateSchema } from './app-call'
+import { AppCallTransactionFields, BoxReference, ResourceReference, StateSchema } from './app-call'
 import { AssetConfigTransactionFields } from './asset-config'
 import { AssetFreezeTransactionFields } from './asset-freeze'
 import { AssetTransferTransactionFields } from './asset-transfer'
@@ -240,7 +240,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
 
   private encodeAccessReferences(
     appId: bigint,
-    accessReferences: AccessReference[] | undefined,
+    accessReferences: ResourceReference[] | undefined,
     format: EncodingFormat,
   ): WireAccessReference[] | undefined {
     if (!accessReferences || accessReferences.length === 0) return undefined
@@ -248,7 +248,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
     const accessList: WireAccessReference[] = []
 
     // Helper to find or add a simple reference and return its 1-based index
-    const ensure = (target: Pick<AccessReference, 'address' | 'assetId' | 'appId'>): number => {
+    const ensure = (target: Pick<ResourceReference, 'address' | 'assetId' | 'appId'>): number => {
       // Search for existing entry
       for (let idx = 0; idx < accessList.length; idx++) {
         const entry = accessList[idx]
@@ -350,10 +350,10 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
     return accessList.length > 0 ? accessList : undefined
   }
 
-  private decodeAccessReferences(_wireAccessReferences: WireAccessReference[] | undefined, format: EncodingFormat): AccessReference[] {
+  private decodeAccessReferences(_wireAccessReferences: WireAccessReference[] | undefined, format: EncodingFormat): ResourceReference[] {
     if (!_wireAccessReferences || _wireAccessReferences.length === 0) return []
 
-    const result: AccessReference[] = []
+    const result: ResourceReference[] = []
 
     // Process each entry in the access list
 

@@ -233,7 +233,7 @@ ___
 
 ### AssetFreezeParams
 
-Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: [`ReadableAddress`](index.md#readableaddress) ; `assetId`: `bigint` ; `frozen`: `boolean`  }
+Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `freezeTarget`: [`ReadableAddress`](index.md#readableaddress) ; `frozen`: `boolean`  }
 
 Parameters to define an asset freeze transaction.
 
@@ -281,7 +281,7 @@ ___
 
 ### CommonAppCallParams
 
-Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
+Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `ResourceReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
 
 Common parameters for defining an application call transaction.
 

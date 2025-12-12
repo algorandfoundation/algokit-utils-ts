@@ -13,8 +13,8 @@ import {
   getApplicationAddress,
 } from '@algorandfoundation/algokit-common'
 import {
-  AccessReference,
   OnApplicationComplete,
+  ResourceReference,
   BoxReference as TransactBoxReference,
   Transaction,
   TransactionType,
@@ -45,7 +45,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
    */
   boxReferences?: (UtilsBoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
-  accessReferences?: AccessReference[]
+  accessReferences?: ResourceReference[]
   /** The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. */
   rejectVersion?: number
 }
