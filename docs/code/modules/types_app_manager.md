@@ -10,13 +10,13 @@
 
 ### Interfaces
 
-- [AccessReference](../interfaces/types_app_manager.AccessReference.md)
 - [AppInformation](../interfaces/types_app_manager.AppInformation.md)
 - [BoxReference](../interfaces/types_app_manager.BoxReference.md)
 - [BoxValueRequestParams](../interfaces/types_app_manager.BoxValueRequestParams.md)
 - [BoxValuesRequestParams](../interfaces/types_app_manager.BoxValuesRequestParams.md)
 - [HoldingReference](../interfaces/types_app_manager.HoldingReference.md)
 - [LocalsReference](../interfaces/types_app_manager.LocalsReference.md)
+- [ResourceReference](../interfaces/types_app_manager.ResourceReference.md)
 
 ### Type Aliases
 
@@ -54,7 +54,7 @@ Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
 
 | Name | Type |
 | :------ | :------ |
-| `accessReference` | [`AccessReference`](../interfaces/types_app_manager.AccessReference.md) |
+| `accessReference` | [`ResourceReference`](../interfaces/types_app_manager.ResourceReference.md) |
 
 #### Returns
 

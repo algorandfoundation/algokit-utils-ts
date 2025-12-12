@@ -117,7 +117,7 @@ export interface LocalsReference {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface AccessReference {
+export interface ResourceReference {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: string | Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
@@ -590,7 +590,7 @@ function getLocalsReference(localsReference: LocalsReference): algosdk.Transacti
 /**
  * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
  */
-export function getAccessReference(accessReference: AccessReference): algosdk.TransactionResourceReference {
+export function getAccessReference(accessReference: ResourceReference): algosdk.TransactionResourceReference {
   return {
     address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
     appIndex: accessReference.appId,

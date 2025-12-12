@@ -1,8 +1,8 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/app-manager](../modules/types_app_manager.md) / AccessReference
+[@algorandfoundation/algokit-utils](../README.md) / [types/app-manager](../modules/types_app_manager.md) / ResourceReference
 
-# Interface: AccessReference
+# Interface: ResourceReference
 
-[types/app-manager](../modules/types_app_manager.md).AccessReference
+[types/app-manager](../modules/types_app_manager.md).ResourceReference
 
 Names a single resource reference. Only one of the fields should be set.
 
@@ -10,12 +10,12 @@ Names a single resource reference. Only one of the fields should be set.
 
 ### Properties
 
-- [address](types_app_manager.AccessReference.md#address)
-- [appId](types_app_manager.AccessReference.md#appid)
-- [assetId](types_app_manager.AccessReference.md#assetid)
-- [box](types_app_manager.AccessReference.md#box)
-- [holding](types_app_manager.AccessReference.md#holding)
-- [locals](types_app_manager.AccessReference.md#locals)
+- [address](types_app_manager.ResourceReference.md#address)
+- [appId](types_app_manager.ResourceReference.md#appid)
+- [assetId](types_app_manager.ResourceReference.md#assetid)
+- [box](types_app_manager.ResourceReference.md#box)
+- [holding](types_app_manager.ResourceReference.md#holding)
+- [locals](types_app_manager.ResourceReference.md#locals)
 
 ## Properties
 

@@ -4,7 +4,7 @@ import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '.
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
+import { AppManager, BoxIdentifier, BoxReference, getAccessReference, ResourceReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -360,7 +360,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
    */
   boxReferences?: (BoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
-  accessReferences?: AccessReference[]
+  accessReferences?: ResourceReference[]
 }
 
 /** Parameters to define an app create transaction */
