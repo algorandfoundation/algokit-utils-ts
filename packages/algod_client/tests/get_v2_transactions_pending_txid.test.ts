@@ -7,7 +7,7 @@ describe('GET v2_transactions_pending_TXID', () => {
     // Polytest Group: Common Tests
 
     test('Basic request and response validation', () => {
-      // TODO: Implement test
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })

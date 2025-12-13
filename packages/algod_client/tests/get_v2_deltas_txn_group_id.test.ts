@@ -7,7 +7,7 @@ describe('GET v2_deltas_txn_group_ID', () => {
     // Polytest Group: Common Tests
 
     test('Basic request and response validation', () => {
-      // TODO: Implement test
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })

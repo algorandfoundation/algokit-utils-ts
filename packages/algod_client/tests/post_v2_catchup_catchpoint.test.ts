@@ -7,7 +7,7 @@ describe('POST v2_catchup_CATCHPOINT', () => {
     // Polytest Group: Common Tests
 
     test('Basic request and response validation', () => {
-      // TODO: Implement test
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })

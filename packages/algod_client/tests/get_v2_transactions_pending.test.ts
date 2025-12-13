@@ -1,6 +1,4 @@
-import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { config } from './config'
+import { describe, test } from 'vitest'
 
 describe('GET v2_transactions_pending', () => {
   // Polytest Suite: GET v2_transactions_pending
@@ -8,19 +6,8 @@ describe('GET v2_transactions_pending', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test('Basic request and response validation', () => {})
-
-    test.skip('Basic request and response validation', () => {
+    test('Basic request and response validation', () => {
       throw new Error('TEST NOT IMPLEMENTED')
-    })
-
-    // TODO: Fix msgpack response handling in PollyJS mock server
-    test.skip('Basic request and response validation', async () => {
-      const client = new AlgodClient(config)
-
-      const result = await client.pendingTransactions()
-
-      expect(result).toMatchSnapshot()
     })
   })
 })

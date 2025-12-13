@@ -7,7 +7,7 @@ describe('GET v2_blocks_ROUND_transactions_TXID_proof', () => {
     // Polytest Group: Common Tests
 
     test('Basic request and response validation', () => {
-      // TODO: Implement test
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })

@@ -1,6 +1,4 @@
-import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { config } from './config'
+import { describe, test } from 'vitest'
 
 describe('GET health', () => {
   // Polytest Suite: GET health
@@ -8,12 +6,8 @@ describe('GET health', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test('Basic request and response validation', async () => {
-      const client = new AlgodClient(config)
-
-      const result = await client.healthCheck()
-
-      expect(result).toMatchSnapshot()
+    test('Basic request and response validation', () => {
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })
