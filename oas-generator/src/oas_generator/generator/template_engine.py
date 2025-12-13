@@ -90,11 +90,25 @@ class SchemaProcessor:
         models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
         files: FileMap = {}
 
-        # Filter out schemas that are just arrays of uint8 (these should be inlined)
+        # Filter out schemas that should not have generated files:
+        # - Arrays of uint8 (these should be inlined as Uint8Array)
+        # - Resource reference schemas (BoxReference, HoldingReference, LocalsReference) - these come from transact
+        def should_generate_model(schema: Schema) -> bool:
+            if is_array_of_uint8_schema(schema, schemas):
+                return False
+            # Skip resource reference schemas - they come from transact
+            if schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                return False
+            if schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                return False
+            if schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                return False
+            return True
+
         filtered_schemas = {
             name: schema
             for name, schema in schemas.items()
-            if not is_array_of_uint8_schema(schema, schemas)
+            if should_generate_model(schema)
         }
 
         # First pass: Register all model kinds for the codec processor
@@ -268,6 +282,17 @@ class SchemaProcessor:
                         # This is an array of Uint8Array (bytes), not a model reference
                         bytes_flag = True
                         ref_model = None
+                    elif ref_name in all_schemas:
+                        # Check if referenced schema has vendor extensions for resource reference types
+                        ref_schema = all_schemas[ref_name]
+                        if ref_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                            box_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                            holding_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                            locals_reference = True
+                        else:
+                            ref_model = ts_pascal_case(ref_name)
                     else:
                         ref_model = ts_pascal_case(ref_name)
                 else:
@@ -286,7 +311,20 @@ class SchemaProcessor:
             else:
                 if "$ref" in resolved_schema and resolved_schema is prop_schema:
                     # Only set ref_model if we didn't inline the schema
-                    ref_model = ts_pascal_case(resolved_schema["$ref"].split("/")[-1])
+                    ref_name = resolved_schema["$ref"].split("/")[-1]
+                    # Check if referenced schema has vendor extensions for resource reference types
+                    if ref_name in all_schemas:
+                        ref_schema = all_schemas[ref_name]
+                        if ref_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                            box_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                            holding_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                            locals_reference = True
+                        else:
+                            ref_model = ts_pascal_case(ref_name)
+                    else:
+                        ref_model = ts_pascal_case(ref_name)
                 # Check for special codec flags first
                 elif bool(resolved_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True):
                     signed_txn = True

@@ -261,6 +261,14 @@ def ts_type(schema: Schema | None, schemas: Schemas | None = None) -> str:
             ref_schema = schemas[ref_name]
             if is_array_of_uint8_schema(ref_schema, schemas):
                 return TypeScriptType.UINT8ARRAY
+            # Check if referenced schema has vendor extension - use canonical type name
+            # (Resource reference types come from transact, not generated locally)
+            if ref_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                return "BoxReference"
+            if ref_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                return "HoldingReference"
+            if ref_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                return "LocalsReference"
 
         return ts_pascal_case(ref_name)
 
@@ -428,9 +436,16 @@ def collect_schema_refs(schema: Schema, current_schema_name: str | None = None) 
     return sorted(refs)
 
 
-def _schema_uses_vendor_extension(schema: Schema, extension_key: str) -> bool:
-    """Detect if a schema (recursively) uses a specific vendor extension."""
+def _schema_uses_vendor_extension(schema: Schema, extension_key: str, schemas: Schemas | None = None) -> bool:
+    """Detect if a schema (recursively) uses a specific vendor extension.
+
+    Args:
+        schema: The schema to check
+        extension_key: The vendor extension key to look for
+        schemas: Optional dictionary of all schemas to resolve $ref links
+    """
     stack: list[Any] = [schema]
+    visited_refs: set[str] = set()
 
     while stack:
         node = stack.pop()
@@ -439,6 +454,16 @@ def _schema_uses_vendor_extension(schema: Schema, extension_key: str) -> bool:
         if node.get(extension_key) is True:
             return True
         if "$ref" in node:
+            # Resolve $ref and check the referenced schema
+            ref_name = _extract_ref_name(node["$ref"])
+            if schemas and ref_name in schemas and ref_name not in visited_refs:
+                visited_refs.add(ref_name)
+                ref_schema = schemas[ref_name]
+                # Check if the referenced schema itself has the vendor extension
+                if ref_schema.get(extension_key) is True:
+                    return True
+                # Also recurse into the referenced schema
+                stack.append(ref_schema)
             continue
 
         props = node.get(constants.SchemaKey.PROPERTIES)
@@ -461,24 +486,24 @@ def _schema_uses_vendor_extension(schema: Schema, extension_key: str) -> bool:
     return False
 
 
-def schema_uses_signed_txn(schema: Schema) -> bool:
+def schema_uses_signed_txn(schema: Schema, schemas: Schemas | None = None) -> bool:
     """Detect if a schema (recursively) uses the x-algokit-signed-txn vendor extension."""
-    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_SIGNED_TXN)
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_SIGNED_TXN, schemas)
 
 
-def schema_uses_box_reference(schema: Schema) -> bool:
+def schema_uses_box_reference(schema: Schema, schemas: Schemas | None = None) -> bool:
     """Detect if a schema (recursively) uses the x-algokit-box-reference vendor extension."""
-    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_BOX_REFERENCE)
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_BOX_REFERENCE, schemas)
 
 
-def schema_uses_holding_reference(schema: Schema) -> bool:
+def schema_uses_holding_reference(schema: Schema, schemas: Schemas | None = None) -> bool:
     """Detect if a schema (recursively) uses the x-algokit-holding-reference vendor extension."""
-    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_HOLDING_REFERENCE)
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_HOLDING_REFERENCE, schemas)
 
 
-def schema_uses_locals_reference(schema: Schema) -> bool:
+def schema_uses_locals_reference(schema: Schema, schemas: Schemas | None = None) -> bool:
     """Detect if a schema (recursively) uses the x-algokit-locals-reference vendor extension."""
-    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_LOCALS_REFERENCE)
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_LOCALS_REFERENCE, schemas)
 
 
 # ---------- Type string helpers for templates ----------

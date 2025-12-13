@@ -3,35 +3,13 @@
 {% set isObject = descriptor.is_object %}
 {% set isArray = descriptor.is_array %}
 {% set refTypes = schema | collect_schema_refs(schema_name) %}
-{% set uses_signed_txn = schema | schema_uses_signed_txn %}
-{% set uses_box_reference = schema | schema_uses_box_reference %}
-{% set uses_holding_reference = schema | schema_uses_holding_reference %}
-{% set uses_locals_reference = schema | schema_uses_locals_reference %}
-{% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
-{% set schemaBoxReference = schema.get('x-algokit-box-reference') is true %}
-{% set schemaHoldingReference = schema.get('x-algokit-holding-reference') is true %}
-{% set schemaLocalsReference = schema.get('x-algokit-locals-reference') is true %}
+{% set uses_signed_txn = schema | schema_uses_signed_txn(schemas) %}
+{% set uses_box_reference = schema | schema_uses_box_reference(schemas) %}
+{% set uses_holding_reference = schema | schema_uses_holding_reference(schemas) %}
+{% set uses_locals_reference = schema | schema_uses_locals_reference(schemas) %}
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
 {% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
-{# Check if this schema is a re-export from transact (top-level vendor extension) #}
-{% set isTransactReexport = schemaSignedTxn or schemaBoxReference or schemaHoldingReference or schemaLocalsReference %}
-{% if isTransactReexport %}
-{# For schemas that are vendor extension types, just re-export from transact #}
-{% if schemaSignedTxn %}
-export type { SignedTransaction as {{ modelName }} } from '@algorandfoundation/algokit-transact';
-export { SignedTransactionMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
-{% elif schemaBoxReference %}
-export type { BoxReference as {{ modelName }} } from '@algorandfoundation/algokit-transact';
-export { BoxReferenceMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
-{% elif schemaHoldingReference %}
-export type { HoldingReference as {{ modelName }} } from '@algorandfoundation/algokit-transact';
-export { HoldingReferenceMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
-{% elif schemaLocalsReference %}
-export type { LocalsReference as {{ modelName }} } from '@algorandfoundation/algokit-transact';
-export { LocalsReferenceMeta as {{ modelName }}Meta } from '@algorandfoundation/algokit-transact';
-{% endif %}
-{% else %}
 import type { Address, ObjectModelMetadata, ArrayModelMetadata, PrimitiveModelMetadata } from '@algorandfoundation/algokit-common';
 import {
   stringCodec,
@@ -53,6 +31,7 @@ import {
   RecordCodec,
   unknownCodec,
 } from '@algorandfoundation/algokit-common';
+{# Import canonical types and Metas from transact when vendor extension types are used #}
 {% if uses_signed_txn or uses_box_reference or uses_holding_reference or uses_locals_reference %}
 {% set transact_types = [] %}
 {% set transact_metas = [] %}
@@ -88,10 +67,25 @@ import { {{ transact_metas | join(', ') }} } from '@algorandfoundation/algokit-t
 {%     set ns.refs_with_meta = ns.refs_with_meta + [descriptor.array_item_ref] %}
 {%   endif %}
 {% endif %}
+{# Identify types that are re-exports from transact #}
+{# These schemas have vendor extensions - their canonical types come directly from transact #}
+{# We don't need to import from local files for these since ts_type returns the canonical name #}
+{% set ns2 = namespace(transact_reexports=[]) %}
 {% for r in refTypes %}
+{%   set r_schema = schemas.get(r) %}
+{%   if r_schema and (r_schema.get('x-algokit-signed-txn') is true or r_schema.get('x-algokit-box-reference') is true or r_schema.get('x-algokit-holding-reference') is true or r_schema.get('x-algokit-locals-reference') is true) %}
+{%     set ns2.transact_reexports = ns2.transact_reexports + [r] %}
+{%   endif %}
+{% endfor %}
+{% for r in refTypes %}
+{%   set r_schema = schemas.get(r) %}
+{%   set is_reexport = r in ns2.transact_reexports %}
+{#   Skip vendor extension re-exports - their types come from transact directly #}
+{%   if not is_reexport %}
 import type { {{ r }} } from './{{ r | ts_kebab_case }}';
-{%   if r in ns.refs_with_meta %}
+{%     if r in ns.refs_with_meta %}
 import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
+{%     endif %}
 {%   endif %}
 {% endfor %}
 
@@ -157,15 +151,7 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {% elif isArray %}
   codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference) }},
 {% else %}
-{%   if schemaSignedTxn %}
-  codec: new ObjectModelCodec(SignedTransactionMeta),
-{%   elif schemaBoxReference %}
-  codec: new ObjectModelCodec(BoxReferenceMeta),
-{%   elif schemaHoldingReference %}
-  codec: new ObjectModelCodec(HoldingReferenceMeta),
-{%   elif schemaLocalsReference %}
-  codec: new ObjectModelCodec(LocalsReferenceMeta),
-{%   elif schemaBytes %}
+{%   if schemaBytes %}
   codec: bytesCodec,
 {%   elif schemaBigint %}
   codec: bigIntCodec,
@@ -174,4 +160,3 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {%   endif %}
 {% endif %}
 };
-{% endif %}

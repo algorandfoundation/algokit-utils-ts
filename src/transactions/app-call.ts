@@ -1,9 +1,4 @@
-import {
-  ApplicationLocalReference,
-  AssetHoldingReference,
-  SimulateUnnamedResourcesAccessed,
-  SuggestedParams,
-} from '@algorandfoundation/algokit-algod-client'
+import { SimulateUnnamedResourcesAccessed, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
   Address,
   MAX_ACCOUNT_REFERENCES,
@@ -13,6 +8,8 @@ import {
   getApplicationAddress,
 } from '@algorandfoundation/algokit-common'
 import {
+  HoldingReference,
+  LocalsReference,
   OnApplicationComplete,
   ResourceReference,
   BoxReference as TransactBoxReference,
@@ -401,8 +398,8 @@ type GroupResourceToPopulate =
   | { type: GroupResourceType.Asset; data: bigint }
   | { type: GroupResourceType.Box; data: TransactBoxReference }
   | { type: GroupResourceType.ExtraBoxRef }
-  | { type: GroupResourceType.AssetHolding; data: AssetHoldingReference }
-  | { type: GroupResourceType.AppLocal; data: ApplicationLocalReference }
+  | { type: GroupResourceType.AssetHolding; data: HoldingReference }
+  | { type: GroupResourceType.AppLocal; data: LocalsReference }
 
 /**
  * Helper function to populate a specific resource into a transaction group

@@ -1,3 +1,6 @@
-{% for name, _ in schemas.items() %}
+{% for name, schema in schemas.items() %}
+{% set metaIsFromTransactPackage = schema.get('x-algokit-signed-txn') is true or schema.get('x-algokit-box-reference') is true or schema.get('x-algokit-holding-reference') is true or schema.get('x-algokit-locals-reference') is true %}
+{% if not metaIsFromTransactPackage %}
 export { {{ name | ts_pascal_case }}Meta } from './{{ name | ts_kebab_case }}';
+{% endif %}
 {% endfor %}
