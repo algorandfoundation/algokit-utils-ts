@@ -1,134 +1,128 @@
-import { Address, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { Address, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import {
-  addressFromMultisigSignature,
-  applyMultisigSubsignature,
-  decodeMultiSignature,
-  mergeMultisignatures,
-  newMultisigSignature,
-  participantsFromMultisigSignature,
-} from './multisig'
+import { MultisigAccount } from './multisig'
+import { MultisigSignature } from './transactions/signed-transaction'
 import { multiSignatureCodec } from './transactions/signed-transaction-meta'
 
 describe('multisig', () => {
-  describe('newMultisigSignature', () => {
+  describe('MultisigAccount.createMultisigSignature', () => {
     test('should create empty multisig signature with correct structure', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
       expect(multisig.subsignatures).toHaveLength(2)
-      expect(multisig.subsignatures[0].publicKey).toEqual(participants[0])
-      expect(multisig.subsignatures[1].publicKey).toEqual(participants[1])
+      expect(multisig.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(multisig.subsignatures[1].publicKey).toEqual(addrs[1].publicKey)
       expect(multisig.subsignatures[0].signature).toBeUndefined()
       expect(multisig.subsignatures[1].signature).toBeUndefined()
     })
 
     test('should handle single participant', () => {
-      const participants = ['RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'].map((s) => Address.fromString(s).publicKey)
+      const addrs = ['RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 1, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 1, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(1)
       expect(multisig.subsignatures).toHaveLength(1)
-      expect(multisig.subsignatures[0].publicKey).toEqual(participants[0])
+      expect(multisig.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
     })
   })
 
   describe('participantsFromMultisigSignature', () => {
     test('should extract participants from multisig signature', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
-      const extractedParticipants = participantsFromMultisigSignature(multisig)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
+      const extractedParticipants = multisig.subsignatures.map((subsig) => subsig.publicKey)
 
-      expect(extractedParticipants).toEqual(participants)
+      expect(extractedParticipants).toEqual(addrs.map((a) => a.publicKey))
     })
 
     test('should extract participants even when signatures are present', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42) // Mock signature
-      const signedMultisig = applyMultisigSubsignature(multisig, participants[0], signature)
+      const signedMultisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature)
 
-      const extractedParticipants = participantsFromMultisigSignature(signedMultisig)
+      const extractedParticipants = signedMultisig.subsignatures.map((subsig) => subsig.publicKey)
 
-      expect(extractedParticipants).toEqual(participants)
+      expect(extractedParticipants).toEqual(addrs.map((a) => a.publicKey))
     })
   })
 
-  describe('addressFromMultisigSignature', () => {
+  describe('MultisigAccount.fromSignature address', () => {
     test('should derive multisig address - matches Rust reference', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
-      const address = addressFromMultisigSignature(multisig)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
+      const msigAccountFromSig = MultisigAccount.fromSignature(multisig)
 
-      expect(address.toString()).toBe('TZ6HCOKXK54E2VRU523LBTDQMQNX7DXOWENPFNBXOEU3SMEWXYNCRJUTBU')
+      expect(msigAccountFromSig.addr.toString()).toBe('TZ6HCOKXK54E2VRU523LBTDQMQNX7DXOWENPFNBXOEU3SMEWXYNCRJUTBU')
     })
 
     test('should produce different addresses for different participant orders', () => {
-      const participants1 = [
+      const addrs1 = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
-      const participants2 = [
+      ].map((s) => Address.fromString(s))
+      const addrs2 = [
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig1 = newMultisigSignature(1, 2, participants1)
-      const multisig2 = newMultisigSignature(1, 2, participants2)
+      const msigAccount1 = new MultisigAccount({ version: 1, threshold: 2, addrs: addrs1 }, [])
+      const msigAccount2 = new MultisigAccount({ version: 1, threshold: 2, addrs: addrs2 }, [])
 
-      const address1 = addressFromMultisigSignature(multisig1)
-      const address2 = addressFromMultisigSignature(multisig2)
-
-      expect(address1).not.toBe(address2)
+      expect(msigAccount1.addr.toString()).not.toBe(msigAccount2.addr.toString())
     })
 
     test('should handle large version and threshold values', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisigLarge = newMultisigSignature(254, 2, participants)
-      const addressLarge = addressFromMultisigSignature(multisigLarge)
+      const msigAccountLarge = new MultisigAccount({ version: 254, threshold: 2, addrs }, [])
+      const msigAccountSmall = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
 
-      // Should be different from the original small values
-      const multisigSmall = newMultisigSignature(1, 2, participants)
-      const addressSmall = addressFromMultisigSignature(multisigSmall)
-      expect(addressLarge).not.toBe(addressSmall)
+      expect(msigAccountLarge.addr.toString()).not.toBe(msigAccountSmall.addr.toString())
     })
   })
 
-  describe('applyMultisigSubsignature', () => {
+  describe('MultisigAccount.appplySignature', () => {
     test('should apply signature to participant', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42)
 
-      const signedMultisig = applyMultisigSubsignature(multisig, participants[0], signature)
+      const signedMultisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature)
 
       expect(signedMultisig.version).toBe(multisig.version)
       expect(signedMultisig.threshold).toBe(multisig.threshold)
@@ -137,81 +131,71 @@ describe('multisig', () => {
     })
 
     test('should replace existing signature', () => {
-      const participants = [
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const multisig = msigAccount.createMultisigSignature()
       const signature1 = new Uint8Array(64).fill(42)
       const signature2 = new Uint8Array(64).fill(84)
 
       // Apply first signature
-      const signedMultisig1 = applyMultisigSubsignature(multisig, participants[0], signature1)
+      const signedMultisig1 = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature1)
       expect(signedMultisig1.subsignatures[0].signature).toEqual(signature1)
 
       // Replace with second signature
-      const signedMultisig2 = applyMultisigSubsignature(signedMultisig1, participants[0], signature2)
+      const signedMultisig2 = msigAccount.appplySignature(signedMultisig1, addrs[0].publicKey, signature2)
       expect(signedMultisig2.subsignatures[0].signature).toEqual(signature2)
     })
   })
 
-  describe('mergeMultisignatures', () => {
-    test('should merge compatible multisignatures', () => {
-      const participants = [
+  describe('merge multisignatures via appplySignature', () => {
+    test('should merge compatible multisignatures by applying signatures individually', () => {
+      const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig1 = newMultisigSignature(1, 2, participants)
-      const multisig2 = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
 
       const signature1 = new Uint8Array(64).fill(11)
       const signature2 = new Uint8Array(64).fill(22)
 
-      const signedMultisig1 = applyMultisigSubsignature(multisig1, participants[0], signature1)
-      const signedMultisig2 = applyMultisigSubsignature(multisig2, participants[1], signature2)
+      // Apply both signatures to the same multisig
+      let multisig = msigAccount.createMultisigSignature()
+      multisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature1)
+      multisig = msigAccount.appplySignature(multisig, addrs[1].publicKey, signature2)
 
-      const merged = mergeMultisignatures(signedMultisig1, signedMultisig2)
-
-      expect(merged.version).toBe(1)
-      expect(merged.threshold).toBe(2)
-      expect(merged.subsignatures[0].signature).toEqual(signature1)
-      expect(merged.subsignatures[1].signature).toEqual(signature2)
-    })
-
-    test('should throw error for incompatible versions', () => {
-      const participants = [
-        'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
-        'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
-      ].map((s) => Address.fromString(s).publicKey)
-
-      const multisig1 = newMultisigSignature(1, 2, participants)
-      const multisig2 = newMultisigSignature(2, 2, participants)
-
-      expect(() => mergeMultisignatures(multisig1, multisig2)).toThrow('Cannot merge multisig signatures with different versions')
+      expect(multisig.version).toBe(1)
+      expect(multisig.threshold).toBe(2)
+      expect(multisig.subsignatures[0].signature).toEqual(signature1)
+      expect(multisig.subsignatures[1].signature).toEqual(signature2)
     })
   })
 
-  describe('decodeMultiSignature', () => {
+  describe('decode MultisigSignature', () => {
     test('should decode encoded multisig signature', () => {
-      const participants = [
-        Address.fromString('RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q').publicKey,
-        Address.fromString('ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA').publicKey,
+      const addrs = [
+        Address.fromString('RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q'),
+        Address.fromString('ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA'),
       ]
 
-      const emptyMultisignature = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const emptyMultisignature = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42)
-      const signedMultiSig = applyMultisigSubsignature(emptyMultisignature, participants[0], signature)
+      const signedMultiSig = msigAccount.appplySignature(emptyMultisignature, addrs[0].publicKey, signature)
       const encoded = encodeMsgpack(multiSignatureCodec.encode(signedMultiSig, 'msgpack'))
 
-      const decoded = decodeMultiSignature(encoded)
+      const decodedData = decodeMsgpack(encoded)
+      const decoded: MultisigSignature = multiSignatureCodec.decode(decodedData, 'msgpack')
 
       expect(decoded.version).toBe(emptyMultisignature.version)
       expect(decoded.threshold).toBe(emptyMultisignature.threshold)
       expect(decoded.subsignatures).toHaveLength(emptyMultisignature.subsignatures.length)
-      expect(decoded.subsignatures[0].publicKey).toEqual(participants[0])
-      expect(decoded.subsignatures[1].publicKey).toEqual(participants[1])
+      expect(decoded.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(decoded.subsignatures[1].publicKey).toEqual(addrs[1].publicKey)
       expect(decoded.subsignatures[0].signature).toEqual(signature)
       expect(decoded.subsignatures[1].signature).toBeUndefined()
     })
@@ -219,12 +203,12 @@ describe('multisig', () => {
 
   describe('example', () => {
     test('should create multisig matching observed transaction pattern', () => {
-      const participants = [
+      const addrs = [
         'AXJVIQR43APV5HZ6F3J4MYNYR3GRRFHU56WTRFLJXFNNUJHDAX5SCGF3SQ',
         'QKR2CYWG4MQQAYCAF4LQARVQLLUF2JIDQO42OQ5YN2E7CHTLDURSJGNQRU',
-      ].map((s) => Address.fromString(s).publicKey)
+      ].map((s) => Address.fromString(s))
 
-      const multisig = newMultisigSignature(1, 2, participants)
+      const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
 
       // Decode the known base64 signatures
       const signature1 = Uint8Array.from(
@@ -237,19 +221,17 @@ describe('multisig', () => {
       )
 
       // Apply signatures
-      const signedMultisig = applyMultisigSubsignature(
-        applyMultisigSubsignature(multisig, participants[0], signature1),
-        participants[1],
-        signature2,
-      )
+      let multisig = msigAccount.createMultisigSignature()
+      multisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature1)
+      multisig = msigAccount.appplySignature(multisig, addrs[1].publicKey, signature2)
 
-      expect(signedMultisig.version).toBe(1)
-      expect(signedMultisig.threshold).toBe(2)
-      expect(signedMultisig.subsignatures).toHaveLength(2)
-      expect(signedMultisig.subsignatures[0].publicKey).toEqual(participants[0])
-      expect(signedMultisig.subsignatures[1].publicKey).toEqual(participants[1])
-      expect(signedMultisig.subsignatures[0].signature).toEqual(signature1)
-      expect(signedMultisig.subsignatures[1].signature).toEqual(signature2)
+      expect(multisig.version).toBe(1)
+      expect(multisig.threshold).toBe(2)
+      expect(multisig.subsignatures).toHaveLength(2)
+      expect(multisig.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(multisig.subsignatures[1].publicKey).toEqual(addrs[1].publicKey)
+      expect(multisig.subsignatures[0].signature).toEqual(signature1)
+      expect(multisig.subsignatures[1].signature).toEqual(signature2)
     })
   })
 })
