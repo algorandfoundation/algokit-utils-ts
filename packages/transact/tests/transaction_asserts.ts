@@ -2,16 +2,14 @@ import { Address } from '@algorandfoundation/algokit-common'
 import * as ed from '@noble/ed25519'
 import { expect } from 'vitest'
 import {
+  MultisigAccount,
   SignedTransaction,
-  applyMultisigSubsignature,
   assignFee,
   decodeTransaction,
   encodeSignedTransaction,
   encodeTransaction,
   estimateTransactionSize,
   getEncodedTransactionType,
-  mergeMultisignatures,
-  newMultisigSignature,
 } from '../src'
 import { TransactionTestData } from './common'
 
@@ -87,11 +85,10 @@ export const assertAssignFee = (label: string, testData: TransactionTestData) =>
 export const assertMultisigExample = async (label: string, testData: TransactionTestData) => {
   const singleSig = await ed.signAsync(encodeTransaction(testData.transaction), testData.signingPrivateKey)
 
-  const unsignedMultisigSignature = newMultisigSignature(1, 2, testData.multisigPublicKeys)
-  const multisigSignature0 = applyMultisigSubsignature(unsignedMultisigSignature, testData.multisigPublicKeys[0], singleSig)
-  const multisigSignature1 = applyMultisigSubsignature(unsignedMultisigSignature, testData.multisigPublicKeys[1], singleSig)
-
-  const multisigSignature = mergeMultisignatures(multisigSignature0, multisigSignature1)
+  const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs: testData.multisigPublicKeys.map((pk) => new Address(pk)) }, [])
+  let multisigSignature = msigAccount.createMultisigSignature()
+  multisigSignature = msigAccount.appplySignature(multisigSignature, testData.multisigPublicKeys[0], singleSig)
+  multisigSignature = msigAccount.appplySignature(multisigSignature, testData.multisigPublicKeys[1], singleSig)
 
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,
