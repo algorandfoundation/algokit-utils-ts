@@ -256,9 +256,9 @@ def ts_type(schema: Schema | None, schemas: Schemas | None = None) -> str:
     if "$ref" in schema:
         ref_name = _extract_ref_name(schema["$ref"])
 
-        # Check if the referenced schema is an array of uint8 (should be inlined as Uint8Array)
         if schemas and ref_name in schemas:
             ref_schema = schemas[ref_name]
+            # Check if the referenced schema is an array of uint8 (should be inlined as Uint8Array)
             if is_array_of_uint8_schema(ref_schema, schemas):
                 return TypeScriptType.UINT8ARRAY
             # Check if referenced schema has vendor extension - use canonical type name
