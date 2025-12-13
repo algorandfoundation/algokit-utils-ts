@@ -19,7 +19,7 @@ import { TransactionLogger } from '../transaction-logger'
  * ```typescript
  * const fixture = algorandFixture()
  *
- * beforeEach(fixture.newScope, 10_000)
+ * beforeEach(fixture.newScope)
  *
  * test('My test', async () => {
  *     const {algod, indexer, testAccount, ...} = fixture.context
@@ -31,7 +31,7 @@ import { TransactionLogger } from '../transaction-logger'
  * ```typescript
  * const fixture = algorandFixture()
  *
- * beforeAll(fixture.newScope, 10_000)
+ * beforeAll(fixture.newScope)
  *
  * test('My test', async () => {
  *     const {algod, indexer, testAccount, ...} = fixture.context
@@ -46,7 +46,7 @@ import { TransactionLogger } from '../transaction-logger'
  *  // ...
  * })
  *
- * beforeEach(fixture.newScope, 10_000)
+ * beforeEach(fixture.newScope)
  *
  * test('My test', async () => {
  *     const {algod, indexer, testAccount, ...} = fixture.context

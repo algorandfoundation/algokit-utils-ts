@@ -77,7 +77,7 @@ The fixture
 ```typescript
 const fixture = algorandFixture()
 
-beforeEach(fixture.newScope, 10_000)
+beforeEach(fixture.newScope)
 
 test('My test', async () => {
     const {algod, indexer, testAccount, ...} = fixture.context
@@ -90,7 +90,7 @@ test('My test', async () => {
 ```typescript
 const fixture = algorandFixture()
 
-beforeAll(fixture.newScope, 10_000)
+beforeAll(fixture.newScope)
 
 test('My test', async () => {
     const {algod, indexer, testAccount, ...} = fixture.context
@@ -106,7 +106,7 @@ const fixture = algorandFixture({
  // ...
 })
 
-beforeEach(fixture.newScope, 10_000)
+beforeEach(fixture.newScope)
 
 test('My test', async () => {
     const {algod, indexer, testAccount, ...} = fixture.context

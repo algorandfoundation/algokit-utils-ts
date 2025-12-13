@@ -56,7 +56,7 @@ You can call this from any testing framework specific hook method to control whe
 ```typescript
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+  beforeEach(fixture.newScope)
 
   test('MY TEST', async () => {
     const { algorand, testAccount } = fixture.context
@@ -71,7 +71,7 @@ describe('MY MODULE', () => {
 ```typescript
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+  beforeAll(fixture.newScope)
 
   test('test1', async () => {
     const { algorand, testAccount } = fixture.context

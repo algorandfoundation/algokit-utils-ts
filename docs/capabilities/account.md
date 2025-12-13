@@ -157,7 +157,7 @@ The methods that are available are:
 
 - [`getWalletAccount(walletName, predicate?, sender?)](../code/classes/types_kmd_account_manager.KmdAccountManager.md#getwalletaccount)` - Returns an Algorand signing account with private key loaded from the given KMD wallet (identified by name).
 - [`getOrCreateWalletAccount(name, fundWith?)](../code/classes/types_kmd_account_manager.KmdAccountManager.md#getorcreatewalletaccount)` - Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
-- [`getLocalNetDispenserAccount()](../code/classes/types_kmd_account_manager.KmdAccountManager.md#getlocalnetdispenseraccount)` - Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
+- [`getLocalNetDispenserAccount()](../code/classes/types_kmd_account_manager.KmdAccountManager.md#getlocalnetdispenseraccount)` - Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts). The "Wallet1" KMD account is resolved from the genesis file and used as the dispenser account.
 
 ```typescript
 // Get a wallet account that seeded the LocalNet network

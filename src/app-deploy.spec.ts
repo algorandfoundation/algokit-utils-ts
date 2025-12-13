@@ -11,7 +11,7 @@ import { LogicError } from './types/logic-error'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
+  beforeEach(localnet.newScope)
 
   const logging = algoKitLogCaptureFixture()
   beforeEach(logging.beforeEach)

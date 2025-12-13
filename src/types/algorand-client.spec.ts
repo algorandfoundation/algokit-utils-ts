@@ -40,7 +40,7 @@ describe('AlgorandClient', () => {
 
     const app = await appClient.create.createApplication({})
     appId = BigInt(app.appId)
-  }, 10_000)
+  })
 
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance

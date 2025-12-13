@@ -34,7 +34,7 @@ import { algorandFixture } from './testing'
 
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+  beforeEach(fixture.newScope)
 
   test('MY TEST', async () => {
     const { algorand, testAccount /* ... */ } = fixture.context
@@ -43,8 +43,6 @@ describe('MY MODULE', () => {
   })
 })
 ```
-
-Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
 
 #### Test suite isolation
 
@@ -54,7 +52,7 @@ import { algorandFixture } from './testing'
 
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+  beforeAll(fixture.newScope)
 
   test('MY TEST', async () => {
     const { algorand, testAccount /* ... */ } = fixture.context
@@ -63,8 +61,6 @@ describe('MY MODULE', () => {
   })
 })
 ```
-
-Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
 
 ### Using with vitest
 
@@ -78,7 +74,7 @@ import { algorandFixture } from './testing'
 
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+  beforeEach(fixture.newScope)
 
   test('MY TEST', async () => {
     const { algorand, testAccount /* ... */ } = fixture.context
@@ -87,8 +83,6 @@ describe('MY MODULE', () => {
   })
 })
 ```
-
-Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
 
 #### Test suite isolation
 
@@ -98,7 +92,7 @@ import { algorandFixture } from './testing'
 
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+  beforeAll(fixture.newScope)
 
   test('MY TEST', async () => {
     const { algorand, testAccount /* ... */ } = fixture.context
@@ -107,8 +101,6 @@ describe('MY MODULE', () => {
   })
 })
 ```
-
-Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
 
 ### Fixture configuration
 

@@ -4,8 +4,6 @@ export default defineConfig({
   test: {
     include: ['**/*.spec.ts'],
     exclude: ['node_modules'],
-    // Sometimes indexer catchup is slowwwww...
-    testTimeout: 20_000,
     setupFiles: ['tests/setup.ts'],
     coverage: {
       include: ['src/**/*.ts'],
