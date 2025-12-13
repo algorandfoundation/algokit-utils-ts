@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-13T16:21:01.173Z
+ * Generated: 2025-12-13T16:46:23.213Z
  */
 
 import { z } from 'zod'
@@ -231,9 +231,7 @@ export const DryrunTxnResult = z.object({
 })
 
 export const ErrorResponse = z.object({
-  data: z.object({
-
-}).optional(),
+  data: z.record(z.string(), z.any()).optional(),
   message: z.string()
 })
 
@@ -326,9 +324,7 @@ export const PendingTransactionResponse: z.ZodType<any> = z.lazy(() => z.object(
   'global-state-delta': StateDelta.optional(),
   logs: z.array(z.string()).optional(),
   'inner-txns': z.array(PendingTransactionResponse).optional(),
-  txn: z.object({
-
-})
+  txn: z.record(z.string(), z.any())
 }))
 
 export const ScratchChange = z.object({
@@ -482,12 +478,8 @@ export const AccountApplicationResponse = z.object({
 })
 
 export const BlockResponse = z.object({
-  block: z.object({
-
-}),
-  cert: z.object({
-
-}).optional()
+  block: z.record(z.string(), z.any()),
+  cert: z.record(z.string(), z.any()).optional()
 })
 
 export const BlockTxidsResponse = z.object({
@@ -536,9 +528,7 @@ export const NodeStatusResponse = z.object({
 })
 
 export const PendingTransactionsResponse = z.object({
-  'top-transactions': z.array(z.object({
-
-})),
+  'top-transactions': z.array(z.record(z.string(), z.any())),
   'total-transactions': z.number().int()
 })
 
