@@ -1385,7 +1385,7 @@ describe('access references', () => {
       populateAppCallResources: false,
       accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
     })
-  })
+  }, 10_000) // Account generation can be a little slow
 
   test('throws when more than 16 access addresses are supplied', async () => {
     await expect(
@@ -1396,7 +1396,7 @@ describe('access references', () => {
         accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
-  })
+  }, 10_000) // Account generation can be a little slow
 
   test('app reference enables access', async () => {
     await appClient.send.call({
