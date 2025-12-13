@@ -26,7 +26,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   beforeEach(async () => {
     await localnet.newScope()
     factory = await localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount })
-  }, 10_000)
+  })
 
   let appSpec: AppSpec
   let factory: AppFactory
@@ -793,7 +793,7 @@ describe('ARC56: app-factory-and-app-client', () => {
       appSpec: arc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
-  }, 10_000)
+  })
 
   test('ARC56 error messages from inner app error', async () => {
     const innerFactory = localnet.algorand.client.getAppFactory({

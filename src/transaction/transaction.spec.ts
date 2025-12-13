@@ -17,7 +17,7 @@ import { getABIReturnValue, populateAppCallResources, waitForConfirmation } from
 
 describe('transaction', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
+  beforeEach(localnet.newScope)
 
   const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
     return {
@@ -1347,7 +1347,7 @@ describe('access references', () => {
     getTestAccounts = async (count: number) => {
       return await Promise.all(Array.from({ length: count }, () => fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })))
     }
-  }, 20_000) // Account generation and funding can be slow
+  })
 
   test('address reference enables access', async () => {
     await appClient.send.call({
