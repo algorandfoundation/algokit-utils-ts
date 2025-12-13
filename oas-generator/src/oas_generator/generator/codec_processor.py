@@ -59,6 +59,9 @@ class CodecProcessor:
             array_codec = CodecProcessor._get_array_codec_singleton(
                 ref_model=field.ref_model,
                 is_signed_txn=field.is_signed_txn,
+                is_box_reference=field.is_box_reference,
+                is_holding_reference=field.is_holding_reference,
+                is_locals_reference=field.is_locals_reference,
                 is_bytes=field.is_bytes,
                 is_bigint=field.is_bigint,
                 is_number=field.is_number,
@@ -72,6 +75,9 @@ class CodecProcessor:
             item_codec = CodecProcessor._base_codec_expr(
                 ref_model=field.ref_model,
                 is_signed_txn=field.is_signed_txn,
+                is_box_reference=field.is_box_reference,
+                is_holding_reference=field.is_holding_reference,
+                is_locals_reference=field.is_locals_reference,
                 is_bytes=field.is_bytes,
                 is_bigint=field.is_bigint,
                 is_number=field.is_number,
@@ -86,6 +92,9 @@ class CodecProcessor:
         return CodecProcessor._base_codec_expr(
             ref_model=field.ref_model,
             is_signed_txn=field.is_signed_txn,
+            is_box_reference=field.is_box_reference,
+            is_holding_reference=field.is_holding_reference,
+            is_locals_reference=field.is_locals_reference,
             is_bytes=field.is_bytes,
             is_bigint=field.is_bigint,
             is_number=field.is_number,
@@ -100,6 +109,9 @@ class CodecProcessor:
     def _base_codec_expr(
         ref_model: str | None,
         is_signed_txn: bool,
+        is_box_reference: bool,
+        is_holding_reference: bool,
+        is_locals_reference: bool,
         is_bytes: bool,
         is_bigint: bool,
         is_number: bool,
@@ -114,6 +126,9 @@ class CodecProcessor:
         Args:
             ref_model: Referenced model name (for model references)
             is_signed_txn: Whether this is a SignedTransaction
+            is_box_reference: Whether this is a BoxReference
+            is_holding_reference: Whether this is a HoldingReference
+            is_locals_reference: Whether this is a LocalsReference
             is_bytes: Whether this is a byte array (Uint8Array)
             is_bigint: Whether this is a bigint
             is_number: Whether this is a number
@@ -129,6 +144,14 @@ class CodecProcessor:
         # SignedTransaction uses metadata-based codec
         if is_signed_txn:
             return "new ObjectModelCodec(SignedTransactionMeta)"
+
+        # BoxReference, HoldingReference, LocalsReference use metadata-based codec
+        if is_box_reference:
+            return "new ObjectModelCodec(BoxReferenceMeta)"
+        if is_holding_reference:
+            return "new ObjectModelCodec(HoldingReferenceMeta)"
+        if is_locals_reference:
+            return "new ObjectModelCodec(LocalsReferenceMeta)"
 
         # Model references
         if ref_model:
@@ -210,6 +233,9 @@ class CodecProcessor:
         array_item_is_number: bool,
         array_item_is_boolean: bool,
         array_item_is_address: bool,
+        array_item_is_box_reference: bool = False,
+        array_item_is_holding_reference: bool = False,
+        array_item_is_locals_reference: bool = False,
     ) -> str:
         """Generate codec expression for array items (used for top-level array schemas).
 
@@ -221,6 +247,9 @@ class CodecProcessor:
             array_item_is_number: Whether items are numbers
             array_item_is_boolean: Whether items are booleans
             array_item_is_address: Whether items are addresses
+            array_item_is_box_reference: Whether items are BoxReferences
+            array_item_is_holding_reference: Whether items are HoldingReferences
+            array_item_is_locals_reference: Whether items are LocalsReferences
 
         Returns:
             Codec expression string (singleton array codec name or new ArrayCodec(...))
@@ -229,6 +258,9 @@ class CodecProcessor:
         array_codec = CodecProcessor._get_array_codec_singleton(
             ref_model=array_item_ref,
             is_signed_txn=array_item_is_signed_txn,
+            is_box_reference=array_item_is_box_reference,
+            is_holding_reference=array_item_is_holding_reference,
+            is_locals_reference=array_item_is_locals_reference,
             is_bytes=array_item_is_bytes,
             is_bigint=array_item_is_bigint,
             is_number=array_item_is_number,
@@ -242,6 +274,9 @@ class CodecProcessor:
         item_codec = CodecProcessor._base_codec_expr(
             ref_model=array_item_ref,
             is_signed_txn=array_item_is_signed_txn,
+            is_box_reference=array_item_is_box_reference,
+            is_holding_reference=array_item_is_holding_reference,
+            is_locals_reference=array_item_is_locals_reference,
             is_bytes=array_item_is_bytes,
             is_bigint=array_item_is_bigint,
             is_number=array_item_is_number,
@@ -256,6 +291,9 @@ class CodecProcessor:
     def _get_array_codec_singleton(
         ref_model: str | None,
         is_signed_txn: bool,
+        is_box_reference: bool,
+        is_holding_reference: bool,
+        is_locals_reference: bool,
         is_bytes: bool,
         is_bigint: bool,
         is_number: bool,
@@ -267,6 +305,9 @@ class CodecProcessor:
         Args:
             ref_model: Referenced model name (returns None if set)
             is_signed_txn: Whether items are SignedTransactions
+            is_box_reference: Whether items are BoxReferences
+            is_holding_reference: Whether items are HoldingReferences
+            is_locals_reference: Whether items are LocalsReferences
             is_bytes: Whether items are byte arrays
             is_bigint: Whether items are bigints
             is_number: Whether items are numbers
@@ -276,8 +317,8 @@ class CodecProcessor:
         Returns:
             Singleton array codec name or None if not a primitive array
         """
-        # Model references and signed transactions don't have singleton array codecs
-        if ref_model or is_signed_txn:
+        # Model references, signed transactions, and vendor extension types don't have singleton array codecs
+        if ref_model or is_signed_txn or is_box_reference or is_holding_reference or is_locals_reference:
             return None
 
         # Return singleton array codec names

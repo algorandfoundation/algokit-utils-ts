@@ -121,6 +121,9 @@ class FieldDescriptor:
     is_boolean: bool
     is_address: bool
     is_signed_txn: bool
+    is_box_reference: bool
+    is_holding_reference: bool
+    is_locals_reference: bool
     is_optional: bool
     is_nullable: bool
     inline_object_schema: dict | None = None
@@ -155,3 +158,6 @@ class ModelDescriptor:
     array_item_is_boolean: bool = False
     array_item_is_address: bool = False
     array_item_is_signed_txn: bool = False
+    array_item_is_box_reference: bool = False
+    array_item_is_holding_reference: bool = False
+    array_item_is_locals_reference: bool = False

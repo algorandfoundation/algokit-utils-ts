@@ -243,17 +243,32 @@ def ts_type(schema: Schema | None, schemas: Schemas | None = None) -> str:
     if not schema:
         return TypeScriptType.ANY
 
-    if isinstance(schema, dict) and schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True:
-        return "SignedTransaction"
+    if isinstance(schema, dict):
+        if schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True:
+            return "SignedTransaction"
+        if schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+            return "BoxReference"
+        if schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+            return "HoldingReference"
+        if schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+            return "LocalsReference"
 
     if "$ref" in schema:
         ref_name = _extract_ref_name(schema["$ref"])
 
-        # Check if the referenced schema is an array of uint8 (should be inlined as Uint8Array)
         if schemas and ref_name in schemas:
             ref_schema = schemas[ref_name]
+            # Check if the referenced schema is an array of uint8 (should be inlined as Uint8Array)
             if is_array_of_uint8_schema(ref_schema, schemas):
                 return TypeScriptType.UINT8ARRAY
+            # Check if referenced schema has vendor extension - use canonical type name
+            # (Resource reference types come from transact, not generated locally)
+            if ref_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                return "BoxReference"
+            if ref_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                return "HoldingReference"
+            if ref_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                return "LocalsReference"
 
         return ts_pascal_case(ref_name)
 
@@ -321,8 +336,17 @@ def _map_non_composite(schema: Schema, schemas: Schemas | None) -> str:
 
     if schema_type == "array":
         items_schema = schema.get(SchemaKey.ITEMS, {})
-        is_signed_txn = isinstance(items_schema, dict) and (items_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
-        items_type = "SignedTransaction" if is_signed_txn else ts_type(items_schema, schemas)
+        # Check for vendor extension types in array items
+        if isinstance(items_schema, dict):
+            if items_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True:
+                return "SignedTransaction[]"
+            if items_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                return "BoxReference[]"
+            if items_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                return "HoldingReference[]"
+            if items_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                return "LocalsReference[]"
+        items_type = ts_type(items_schema, schemas)
         return f"{items_type}[]"
 
     if schema_type == TypeScriptType.OBJECT or (
@@ -412,17 +436,34 @@ def collect_schema_refs(schema: Schema, current_schema_name: str | None = None) 
     return sorted(refs)
 
 
-def schema_uses_signed_txn(schema: Schema) -> bool:
-    """Detect if a schema (recursively) uses the x-algokit-signed-txn vendor extension."""
+def _schema_uses_vendor_extension(schema: Schema, extension_key: str, schemas: Schemas | None = None) -> bool:
+    """Detect if a schema (recursively) uses a specific vendor extension.
+
+    Args:
+        schema: The schema to check
+        extension_key: The vendor extension key to look for
+        schemas: Optional dictionary of all schemas to resolve $ref links
+    """
     stack: list[Any] = [schema]
+    visited_refs: set[str] = set()
 
     while stack:
         node = stack.pop()
         if not isinstance(node, dict):
             continue
-        if node.get(constants.X_ALGOKIT_SIGNED_TXN) is True:
+        if node.get(extension_key) is True:
             return True
         if "$ref" in node:
+            # Resolve $ref and check the referenced schema
+            ref_name = _extract_ref_name(node["$ref"])
+            if schemas and ref_name in schemas and ref_name not in visited_refs:
+                visited_refs.add(ref_name)
+                ref_schema = schemas[ref_name]
+                # Check if the referenced schema itself has the vendor extension
+                if ref_schema.get(extension_key) is True:
+                    return True
+                # Also recurse into the referenced schema
+                stack.append(ref_schema)
             continue
 
         props = node.get(constants.SchemaKey.PROPERTIES)
@@ -443,6 +484,26 @@ def schema_uses_signed_txn(schema: Schema) -> bool:
             stack.append(addl)
 
     return False
+
+
+def schema_uses_signed_txn(schema: Schema, schemas: Schemas | None = None) -> bool:
+    """Detect if a schema (recursively) uses the x-algokit-signed-txn vendor extension."""
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_SIGNED_TXN, schemas)
+
+
+def schema_uses_box_reference(schema: Schema, schemas: Schemas | None = None) -> bool:
+    """Detect if a schema (recursively) uses the x-algokit-box-reference vendor extension."""
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_BOX_REFERENCE, schemas)
+
+
+def schema_uses_holding_reference(schema: Schema, schemas: Schemas | None = None) -> bool:
+    """Detect if a schema (recursively) uses the x-algokit-holding-reference vendor extension."""
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_HOLDING_REFERENCE, schemas)
+
+
+def schema_uses_locals_reference(schema: Schema, schemas: Schemas | None = None) -> bool:
+    """Detect if a schema (recursively) uses the x-algokit-locals-reference vendor extension."""
+    return _schema_uses_vendor_extension(schema, constants.X_ALGOKIT_LOCALS_REFERENCE, schemas)
 
 
 # ---------- Type string helpers for templates ----------
@@ -489,6 +550,9 @@ FILTERS: dict[str, Any] = {
     "response_content_types": response_content_types,
     "collect_schema_refs": collect_schema_refs,
     "schema_uses_signed_txn": schema_uses_signed_txn,
+    "schema_uses_box_reference": schema_uses_box_reference,
+    "schema_uses_holding_reference": schema_uses_holding_reference,
+    "schema_uses_locals_reference": schema_uses_locals_reference,
     "ts_is_array_type": ts_is_array_type,
     "ts_array_item_type": ts_array_item_type,
     "ts_is_builtin_or_primitive": ts_is_builtin_or_primitive,

@@ -3,12 +3,14 @@
 {% set isObject = descriptor.is_object %}
 {% set isArray = descriptor.is_array %}
 {% set refTypes = schema | collect_schema_refs(schema_name) %}
-{% set uses_signed_txn = schema | schema_uses_signed_txn %}
+{% set uses_signed_txn = schema | schema_uses_signed_txn(schemas) %}
+{% set uses_box_reference = schema | schema_uses_box_reference(schemas) %}
+{% set uses_holding_reference = schema | schema_uses_holding_reference(schemas) %}
+{% set uses_locals_reference = schema | schema_uses_locals_reference(schemas) %}
 {% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
 {% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
-
 import type { Address, ObjectModelMetadata, ArrayModelMetadata, PrimitiveModelMetadata } from '@algorandfoundation/algokit-common';
 import {
   stringCodec,
@@ -30,9 +32,28 @@ import {
   RecordCodec,
   unknownCodec,
 } from '@algorandfoundation/algokit-common';
+{# Import canonical types and Metas from transact when vendor extension types are used #}
+{% if uses_signed_txn or uses_box_reference or uses_holding_reference or uses_locals_reference %}
+{% set transact_types = [] %}
+{% set transact_metas = [] %}
 {% if uses_signed_txn %}
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact';
-import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact';
+{% set transact_types = transact_types + ['SignedTransaction'] %}
+{% set transact_metas = transact_metas + ['SignedTransactionMeta'] %}
+{% endif %}
+{% if uses_box_reference %}
+{% set transact_types = transact_types + ['BoxReference'] %}
+{% set transact_metas = transact_metas + ['BoxReferenceMeta'] %}
+{% endif %}
+{% if uses_holding_reference %}
+{% set transact_types = transact_types + ['HoldingReference'] %}
+{% set transact_metas = transact_metas + ['HoldingReferenceMeta'] %}
+{% endif %}
+{% if uses_locals_reference %}
+{% set transact_types = transact_types + ['LocalsReference'] %}
+{% set transact_metas = transact_metas + ['LocalsReferenceMeta'] %}
+{% endif %}
+import type { {{ transact_types | join(', ') }} } from '@algorandfoundation/algokit-transact';
+import { {{ transact_metas | join(', ') }} } from '@algorandfoundation/algokit-transact';
 {% endif %}
 {% set ns = namespace(refs_with_meta=[]) %}
 {% if descriptor.is_object %}
@@ -47,10 +68,25 @@ import { SignedTransactionMeta } from '@algorandfoundation/algokit-transact';
 {%     set ns.refs_with_meta = ns.refs_with_meta + [descriptor.array_item_ref] %}
 {%   endif %}
 {% endif %}
+{# Identify types that are re-exports from transact #}
+{# These schemas have vendor extensions - their canonical types come directly from transact #}
+{# We don't need to import from local files for these since ts_type returns the canonical name #}
+{% set ns2 = namespace(transact_reexports=[]) %}
 {% for r in refTypes %}
+{%   set r_schema = schemas.get(r) %}
+{%   if r_schema and (r_schema.get('x-algokit-signed-txn') is true or r_schema.get('x-algokit-box-reference') is true or r_schema.get('x-algokit-holding-reference') is true or r_schema.get('x-algokit-locals-reference') is true) %}
+{%     set ns2.transact_reexports = ns2.transact_reexports + [r] %}
+{%   endif %}
+{% endfor %}
+{% for r in refTypes %}
+{%   set r_schema = schemas.get(r) %}
+{%   set is_reexport = r in ns2.transact_reexports %}
+{#   Skip vendor extension re-exports - their types come from transact directly #}
+{%   if not is_reexport %}
 import type { {{ r }} } from './{{ r | ts_kebab_case }}';
-{%   if r in ns.refs_with_meta %}
+{%     if r in ns.refs_with_meta %}
 import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
+{%     endif %}
 {%   endif %}
 {% endfor %}
 
@@ -114,7 +150,7 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {%   endfor %}
   ],
 {% elif isArray %}
-  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address) }},
+  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference) }},
 {% else %}
 {%   if schemaSignedTxn %}
   codec: new ObjectModelCodec(SignedTransactionMeta),

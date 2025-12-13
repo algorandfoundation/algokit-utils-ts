@@ -172,7 +172,7 @@ export type AssetFreezeParams = CommonTransactionParams & {
   /** The ID of the asset to freeze/unfreeze */
   assetId: bigint
   /** The address of the account to freeze or unfreeze */
-  account: ReadableAddress
+  freezeTarget: ReadableAddress
   /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
@@ -242,7 +242,7 @@ export const buildAssetFreeze = (
     type: TransactionType.AssetFreeze,
     assetFreeze: {
       assetId: params.assetId,
-      freezeTarget: getAddress(params.account),
+      freezeTarget: getAddress(params.freezeTarget),
       frozen: params.frozen,
     },
   })
