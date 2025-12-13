@@ -7,6 +7,7 @@
 {% set uses_box_reference = schema | schema_uses_box_reference(schemas) %}
 {% set uses_holding_reference = schema | schema_uses_holding_reference(schemas) %}
 {% set uses_locals_reference = schema | schema_uses_locals_reference(schemas) %}
+{% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
 {% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
@@ -151,7 +152,9 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {% elif isArray %}
   codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference) }},
 {% else %}
-{%   if schemaBytes %}
+{%   if schemaSignedTxn %}
+  codec: new ObjectModelCodec(SignedTransactionMeta),
+{%   elif schemaBytes %}
   codec: bytesCodec,
 {%   elif schemaBigint %}
   codec: bigIntCodec,
