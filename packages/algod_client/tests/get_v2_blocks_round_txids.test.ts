@@ -1,6 +1,4 @@
-import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { TEST_ROUND, config } from './config'
+import { describe, test } from 'vitest'
 
 describe('GET v2_blocks_ROUND_txids', () => {
   // Polytest Suite: GET v2_blocks_ROUND_txids
@@ -8,12 +6,8 @@ describe('GET v2_blocks_ROUND_txids', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test('Basic request and response validation', async () => {
-      const client = new AlgodClient(config)
-
-      const result = await client.blockTxIds(TEST_ROUND)
-
-      expect(result).toMatchSnapshot()
+    test('Basic request and response validation', () => {
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })

@@ -7,7 +7,7 @@ describe('POST v2_teal_compile', () => {
     // Polytest Group: Common Tests
 
     test('Basic request and response validation', () => {
-      // TODO: Implement test
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })

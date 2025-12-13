@@ -7,7 +7,7 @@ describe('GET v2_applications_APPLICATION-ID_box', () => {
     // Polytest Group: Common Tests
 
     test('Basic request and response validation', () => {
-      // TODO: Implement test
+      throw new Error('TEST NOT IMPLEMENTED')
     })
   })
 })
