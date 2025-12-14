@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-13T16:46:23.213Z
+ * Generated: 2025-12-14T20:31:02.548Z
  */
 
 import { z } from 'zod'
@@ -46,8 +46,8 @@ export const LedgerStateDeltaForTransactionGroup = z.object({
 })
 
 export const ApplicationStateSchema = z.object({
-  'num-uint': z.number().int().gte(0).lte(64),
-  'num-byte-slice': z.number().int().gte(0).lte(64)
+  numUint: z.number().int().gte(0).lte(64),
+  numByteSlice: z.number().int().gte(0).lte(64)
 })
 
 export const TealValue = z.object({
@@ -66,23 +66,23 @@ export const TealKeyValueStore = z.array(TealKeyValue)
 export const ApplicationLocalState = z.object({
   id: z.bigint(),
   schema: ApplicationStateSchema,
-  'key-value': TealKeyValueStore.optional()
+  keyValue: TealKeyValueStore.optional()
 })
 
 export const AssetHolding = z.object({
   amount: z.bigint(),
-  'asset-id': z.bigint(),
-  'is-frozen': z.boolean()
+  assetId: z.bigint(),
+  isFrozen: z.boolean()
 })
 
 export const ApplicationParams = z.object({
   creator: z.string(),
-  'approval-program': z.string(),
-  'clear-state-program': z.string(),
-  'extra-program-pages': z.number().int().gte(0).lte(3).optional(),
-  'local-state-schema': ApplicationStateSchema.optional(),
-  'global-state-schema': ApplicationStateSchema.optional(),
-  'global-state': TealKeyValueStore.optional(),
+  approvalProgram: z.string(),
+  clearStateProgram: z.string(),
+  extraProgramPages: z.number().int().gte(0).lte(3).optional(),
+  localStateSchema: ApplicationStateSchema.optional(),
+  globalStateSchema: ApplicationStateSchema.optional(),
+  globalState: TealKeyValueStore.optional(),
   version: z.number().int().optional()
 })
 
@@ -95,18 +95,18 @@ export const AssetParams = z.object({
   clawback: z.string().optional(),
   creator: z.string(),
   decimals: z.number().int().gte(0).lte(19),
-  'default-frozen': z.boolean().optional(),
+  defaultFrozen: z.boolean().optional(),
   freeze: z.string().optional(),
   manager: z.string().optional(),
-  'metadata-hash': z.string().optional(),
+  metadataHash: z.string().optional(),
   name: z.string().optional(),
-  'name-b64': z.string().optional(),
+  nameB64: z.string().optional(),
   reserve: z.string().optional(),
   total: z.bigint(),
-  'unit-name': z.string().optional(),
-  'unit-name-b64': z.string().optional(),
+  unitName: z.string().optional(),
+  unitNameB64: z.string().optional(),
   url: z.string().optional(),
-  'url-b64': z.string().optional()
+  urlB64: z.string().optional()
 })
 
 export const Asset = z.object({
@@ -115,47 +115,47 @@ export const Asset = z.object({
 })
 
 export const AccountParticipation = z.object({
-  'selection-participation-key': z.string(),
-  'vote-first-valid': z.bigint(),
-  'vote-key-dilution': z.bigint(),
-  'vote-last-valid': z.bigint(),
-  'vote-participation-key': z.string(),
-  'state-proof-key': z.string().optional()
+  selectionParticipationKey: z.string(),
+  voteFirstValid: z.bigint(),
+  voteKeyDilution: z.bigint(),
+  voteLastValid: z.bigint(),
+  voteParticipationKey: z.string(),
+  stateProofKey: z.string().optional()
 })
 
 export const Account = z.object({
   address: z.string(),
   amount: z.bigint(),
-  'min-balance': z.bigint(),
-  'amount-without-pending-rewards': z.bigint(),
-  'apps-local-state': z.array(ApplicationLocalState).optional(),
-  'total-apps-opted-in': z.number().int(),
-  'apps-total-schema': ApplicationStateSchema.optional(),
-  'apps-total-extra-pages': z.number().int().optional(),
+  minBalance: z.bigint(),
+  amountWithoutPendingRewards: z.bigint(),
+  appsLocalState: z.array(ApplicationLocalState).optional(),
+  totalAppsOptedIn: z.number().int(),
+  appsTotalSchema: ApplicationStateSchema.optional(),
+  appsTotalExtraPages: z.number().int().optional(),
   assets: z.array(AssetHolding).optional(),
-  'total-assets-opted-in': z.number().int(),
-  'created-apps': z.array(Application).optional(),
-  'total-created-apps': z.number().int(),
-  'created-assets': z.array(Asset).optional(),
-  'total-created-assets': z.number().int(),
-  'total-boxes': z.number().int().optional(),
-  'total-box-bytes': z.number().int().optional(),
+  totalAssetsOptedIn: z.number().int(),
+  createdApps: z.array(Application).optional(),
+  totalCreatedApps: z.number().int(),
+  createdAssets: z.array(Asset).optional(),
+  totalCreatedAssets: z.number().int(),
+  totalBoxes: z.number().int().optional(),
+  totalBoxBytes: z.number().int().optional(),
   participation: AccountParticipation.optional(),
-  'incentive-eligible': z.boolean().optional(),
-  'pending-rewards': z.bigint(),
-  'reward-base': z.bigint().optional(),
+  incentiveEligible: z.boolean().optional(),
+  pendingRewards: z.bigint(),
+  rewardBase: z.bigint().optional(),
   rewards: z.bigint(),
   round: z.bigint(),
   status: z.string(),
-  'sig-type': z.enum(['sig', 'msig', 'lsig']).optional(),
-  'auth-addr': z.string().optional(),
-  'last-proposed': z.bigint().optional(),
-  'last-heartbeat': z.bigint().optional()
+  sigType: z.enum(['sig', 'msig', 'lsig']).optional(),
+  authAddr: z.string().optional(),
+  lastProposed: z.bigint().optional(),
+  lastHeartbeat: z.bigint().optional()
 })
 
 export const AccountAssetHolding = z.object({
-  'asset-holding': AssetHolding,
-  'asset-params': AssetParams.optional()
+  assetHolding: AssetHolding,
+  assetParams: AssetParams.optional()
 })
 
 export const AssetHoldingReference = z.object({
@@ -171,11 +171,11 @@ export const ApplicationLocalReference = z.object({
 export const ParticipationKey = z.object({
   id: z.string(),
   address: z.string(),
-  'effective-first-valid': z.bigint().optional(),
-  'effective-last-valid': z.bigint().optional(),
-  'last-vote': z.bigint().optional(),
-  'last-block-proposal': z.bigint().optional(),
-  'last-state-proof': z.bigint().optional(),
+  effectiveFirstValid: z.bigint().optional(),
+  effectiveLastValid: z.bigint().optional(),
+  lastVote: z.bigint().optional(),
+  lastBlockProposal: z.bigint().optional(),
+  lastStateProof: z.bigint().optional(),
   key: AccountParticipation
 })
 
@@ -218,16 +218,16 @@ export const DryrunState = z.object({
 
 export const DryrunTxnResult = z.object({
   disassembly: z.array(z.string()),
-  'logic-sig-disassembly': z.array(z.string()).optional(),
-  'logic-sig-trace': z.array(DryrunState).optional(),
-  'logic-sig-messages': z.array(z.string()).optional(),
-  'app-call-trace': z.array(DryrunState).optional(),
-  'app-call-messages': z.array(z.string()).optional(),
-  'global-delta': StateDelta.optional(),
-  'local-deltas': z.array(AccountStateDelta).optional(),
+  logicSigDisassembly: z.array(z.string()).optional(),
+  logicSigTrace: z.array(DryrunState).optional(),
+  logicSigMessages: z.array(z.string()).optional(),
+  appCallTrace: z.array(DryrunState).optional(),
+  appCallMessages: z.array(z.string()).optional(),
+  globalDelta: StateDelta.optional(),
+  localDeltas: z.array(AccountStateDelta).optional(),
   logs: z.array(z.string()).optional(),
-  'budget-added': z.number().int().optional(),
-  'budget-consumed': z.number().int().optional()
+  budgetAdded: z.number().int().optional(),
+  budgetConsumed: z.number().int().optional()
 })
 
 export const ErrorResponse = z.object({
@@ -236,19 +236,19 @@ export const ErrorResponse = z.object({
 })
 
 export const DryrunSource = z.object({
-  'field-name': z.string(),
+  fieldName: z.string(),
   source: z.string(),
-  'txn-index': z.number().int(),
-  'app-index': z.bigint()
+  txnIndex: z.number().int(),
+  appIndex: z.bigint()
 })
 
 export const DryrunRequest = z.object({
   txns: z.array(z.string()),
   accounts: z.array(Account),
   apps: z.array(Application),
-  'protocol-version': z.string(),
+  protocolVersion: z.string(),
   round: z.bigint(),
-  'latest-timestamp': z.number().int().gte(0),
+  latestTimestamp: z.number().int().gte(0),
   sources: z.array(DryrunSource)
 })
 
@@ -258,20 +258,20 @@ export const SimulateRequestTransactionGroup = z.object({
 
 export const SimulateTraceConfig = z.object({
   enable: z.boolean().optional(),
-  'stack-change': z.boolean().optional(),
-  'scratch-change': z.boolean().optional(),
-  'state-change': z.boolean().optional()
+  stackChange: z.boolean().optional(),
+  scratchChange: z.boolean().optional(),
+  stateChange: z.boolean().optional()
 })
 
 export const SimulateRequest = z.object({
-  'txn-groups': z.array(SimulateRequestTransactionGroup),
+  txnGroups: z.array(SimulateRequestTransactionGroup),
   round: z.bigint().optional(),
-  'allow-empty-signatures': z.boolean().optional(),
-  'allow-more-logging': z.boolean().optional(),
-  'allow-unnamed-resources': z.boolean().optional(),
-  'extra-opcode-budget': z.number().int().optional(),
-  'exec-trace-config': SimulateTraceConfig.optional(),
-  'fix-signers': z.boolean().optional()
+  allowEmptySignatures: z.boolean().optional(),
+  allowMoreLogging: z.boolean().optional(),
+  allowUnnamedResources: z.boolean().optional(),
+  extraOpcodeBudget: z.number().int().optional(),
+  execTraceConfig: SimulateTraceConfig.optional(),
+  fixSigners: z.boolean().optional()
 })
 
 export const Box = z.object({
@@ -291,74 +291,74 @@ export const BoxReference = z.object({
 
 export const BuildVersion = z.object({
   branch: z.string(),
-  build_number: z.number().int(),
+  buildNumber: z.number().int(),
   channel: z.string(),
-  commit_hash: z.string(),
+  commitHash: z.string(),
   major: z.number().int(),
   minor: z.number().int()
 })
 
 export const Version = z.object({
   build: BuildVersion,
-  genesis_hash_b64: z.string(),
-  genesis_id: z.string(),
+  genesisHashB64: z.string(),
+  genesisId: z.string(),
   versions: z.array(z.string())
 })
 
 export const DebugSettingsProf = z.object({
-  'block-rate': z.bigint().optional(),
-  'mutex-rate': z.bigint().optional()
+  blockRate: z.bigint().optional(),
+  mutexRate: z.bigint().optional()
 })
 
 export const PendingTransactionResponse: z.ZodType<any> = z.lazy(() => z.object({
-  'asset-index': z.bigint().optional(),
-  'application-index': z.bigint().optional(),
-  'close-rewards': z.bigint().optional(),
-  'closing-amount': z.bigint().optional(),
-  'asset-closing-amount': z.bigint().optional(),
-  'confirmed-round': z.bigint().optional(),
-  'pool-error': z.string(),
-  'receiver-rewards': z.bigint().optional(),
-  'sender-rewards': z.bigint().optional(),
-  'local-state-delta': z.array(AccountStateDelta).optional(),
-  'global-state-delta': StateDelta.optional(),
+  assetIndex: z.bigint().optional(),
+  applicationIndex: z.bigint().optional(),
+  closeRewards: z.bigint().optional(),
+  closingAmount: z.bigint().optional(),
+  assetClosingAmount: z.bigint().optional(),
+  confirmedRound: z.bigint().optional(),
+  poolError: z.string(),
+  receiverRewards: z.bigint().optional(),
+  senderRewards: z.bigint().optional(),
+  localStateDelta: z.array(AccountStateDelta).optional(),
+  globalStateDelta: StateDelta.optional(),
   logs: z.array(z.string()).optional(),
-  'inner-txns': z.array(PendingTransactionResponse).optional(),
+  innerTxns: z.array(PendingTransactionResponse).optional(),
   txn: z.record(z.string(), z.any())
 }))
 
 export const ScratchChange = z.object({
   slot: z.number().int(),
-  'new-value': AvmValue
+  newValue: AvmValue
 })
 
 export const ApplicationStateOperation = z.object({
   operation: z.string(),
-  'app-state-type': z.string(),
+  appStateType: z.string(),
   key: z.string(),
-  'new-value': AvmValue.optional(),
+  newValue: AvmValue.optional(),
   account: z.string().optional()
 })
 
 export const SimulationOpcodeTraceUnit = z.object({
   pc: z.number().int(),
-  'scratch-changes': z.array(ScratchChange).optional(),
-  'state-changes': z.array(ApplicationStateOperation).optional(),
-  'spawned-inners': z.array(z.number().int()).optional(),
-  'stack-pop-count': z.number().int().optional(),
-  'stack-additions': z.array(AvmValue).optional()
+  scratchChanges: z.array(ScratchChange).optional(),
+  stateChanges: z.array(ApplicationStateOperation).optional(),
+  spawnedInners: z.array(z.number().int()).optional(),
+  stackPopCount: z.number().int().optional(),
+  stackAdditions: z.array(AvmValue).optional()
 })
 
 export const SimulationTransactionExecTrace: z.ZodType<any> = z.lazy(() => z.object({
-  'approval-program-trace': z.array(SimulationOpcodeTraceUnit).optional(),
-  'approval-program-hash': z.string().optional(),
-  'clear-state-program-trace': z.array(SimulationOpcodeTraceUnit).optional(),
-  'clear-state-program-hash': z.string().optional(),
-  'clear-state-rollback': z.boolean().optional(),
-  'clear-state-rollback-error': z.string().optional(),
-  'logic-sig-trace': z.array(SimulationOpcodeTraceUnit).optional(),
-  'logic-sig-hash': z.string().optional(),
-  'inner-trace': z.array(SimulationTransactionExecTrace).optional()
+  approvalProgramTrace: z.array(SimulationOpcodeTraceUnit).optional(),
+  approvalProgramHash: z.string().optional(),
+  clearStateProgramTrace: z.array(SimulationOpcodeTraceUnit).optional(),
+  clearStateProgramHash: z.string().optional(),
+  clearStateRollback: z.boolean().optional(),
+  clearStateRollbackError: z.string().optional(),
+  logicSigTrace: z.array(SimulationOpcodeTraceUnit).optional(),
+  logicSigHash: z.string().optional(),
+  innerTrace: z.array(SimulationTransactionExecTrace).optional()
 }))
 
 export const SimulateUnnamedResourcesAccessed = z.object({
@@ -366,27 +366,27 @@ export const SimulateUnnamedResourcesAccessed = z.object({
   assets: z.array(z.bigint()).optional(),
   apps: z.array(z.bigint()).optional(),
   boxes: z.array(BoxReference).optional(),
-  'extra-box-refs': z.number().int().optional(),
-  'asset-holdings': z.array(AssetHoldingReference).optional(),
-  'app-locals': z.array(ApplicationLocalReference).optional()
+  extraBoxRefs: z.number().int().optional(),
+  assetHoldings: z.array(AssetHoldingReference).optional(),
+  appLocals: z.array(ApplicationLocalReference).optional()
 })
 
 export const SimulateTransactionResult = z.object({
-  'txn-result': PendingTransactionResponse,
-  'app-budget-consumed': z.number().int().optional(),
-  'logic-sig-budget-consumed': z.number().int().optional(),
-  'exec-trace': SimulationTransactionExecTrace.optional(),
-  'unnamed-resources-accessed': SimulateUnnamedResourcesAccessed.optional(),
-  'fixed-signer': z.string().optional()
+  txnResult: PendingTransactionResponse,
+  appBudgetConsumed: z.number().int().optional(),
+  logicSigBudgetConsumed: z.number().int().optional(),
+  execTrace: SimulationTransactionExecTrace.optional(),
+  unnamedResourcesAccessed: SimulateUnnamedResourcesAccessed.optional(),
+  fixedSigner: z.string().optional()
 })
 
 export const SimulateTransactionGroupResult = z.object({
-  'txn-results': z.array(SimulateTransactionResult),
-  'failure-message': z.string().optional(),
-  'failed-at': z.array(z.number().int()).optional(),
-  'app-budget-added': z.number().int().optional(),
-  'app-budget-consumed': z.number().int().optional(),
-  'unnamed-resources-accessed': SimulateUnnamedResourcesAccessed.optional()
+  txnResults: z.array(SimulateTransactionResult),
+  failureMessage: z.string().optional(),
+  failedAt: z.array(z.number().int()).optional(),
+  appBudgetAdded: z.number().int().optional(),
+  appBudgetConsumed: z.number().int().optional(),
+  unnamedResourcesAccessed: SimulateUnnamedResourcesAccessed.optional()
 })
 
 export const StateProofMessage = z.object({
@@ -409,12 +409,12 @@ export const LightBlockHeaderProof = z.object({
 })
 
 export const SimulationEvalOverrides = z.object({
-  'allow-empty-signatures': z.boolean().optional(),
-  'allow-unnamed-resources': z.boolean().optional(),
-  'max-log-calls': z.number().int().optional(),
-  'max-log-size': z.number().int().optional(),
-  'extra-opcode-budget': z.number().int().optional(),
-  'fix-signers': z.boolean().optional()
+  allowEmptySignatures: z.boolean().optional(),
+  allowUnnamedResources: z.boolean().optional(),
+  maxLogCalls: z.number().int().optional(),
+  maxLogSize: z.number().int().optional(),
+  extraOpcodeBudget: z.number().int().optional(),
+  fixSigners: z.boolean().optional()
 })
 
 export const ApplicationKVStorage = z.object({
@@ -424,18 +424,18 @@ export const ApplicationKVStorage = z.object({
 
 export const ApplicationInitialStates = z.object({
   id: z.bigint(),
-  'app-locals': z.array(ApplicationKVStorage).optional(),
-  'app-globals': ApplicationKVStorage.optional(),
-  'app-boxes': ApplicationKVStorage.optional()
+  appLocals: z.array(ApplicationKVStorage).optional(),
+  appGlobals: ApplicationKVStorage.optional(),
+  appBoxes: ApplicationKVStorage.optional()
 })
 
 export const SimulateInitialStates = z.object({
-  'app-initial-states': z.array(ApplicationInitialStates).optional()
+  appInitialStates: z.array(ApplicationInitialStates).optional()
 })
 
 export const AppCallLogs = z.object({
   logs: z.array(z.string()),
-  'application-index': z.bigint(),
+  applicationIndex: z.bigint(),
   txId: z.string()
 })
 
@@ -461,20 +461,20 @@ export const TransactionGroupLedgerStateDeltasForRoundResponse = z.object({
 
 export const AccountAssetResponse = z.object({
   round: z.bigint(),
-  'asset-holding': AssetHolding.optional(),
-  'created-asset': AssetParams.optional()
+  assetHolding: AssetHolding.optional(),
+  createdAsset: AssetParams.optional()
 })
 
 export const AccountAssetsInformationResponse = z.object({
   round: z.bigint(),
-  'next-token': z.string().optional(),
-  'asset-holdings': z.array(AccountAssetHolding).optional()
+  nextToken: z.string().optional(),
+  assetHoldings: z.array(AccountAssetHolding).optional()
 })
 
 export const AccountApplicationResponse = z.object({
   round: z.bigint(),
-  'app-local-state': ApplicationLocalState.optional(),
-  'created-app': ApplicationParams.optional()
+  appLocalState: ApplicationLocalState.optional(),
+  createdApp: ApplicationParams.optional()
 })
 
 export const BlockResponse = z.object({
@@ -491,45 +491,45 @@ export const BlockHashResponse = z.object({
 })
 
 export const CatchpointStartResponse = z.object({
-  'catchup-message': z.string()
+  catchupMessage: z.string()
 })
 
 export const CatchpointAbortResponse = z.object({
-  'catchup-message': z.string()
+  catchupMessage: z.string()
 })
 
 export const NodeStatusResponse = z.object({
-  'catchup-time': z.bigint(),
-  'last-round': z.bigint(),
-  'last-version': z.string(),
-  'next-version': z.string(),
-  'next-version-round': z.bigint(),
-  'next-version-supported': z.boolean(),
-  'stopped-at-unsupported-round': z.boolean(),
-  'time-since-last-round': z.bigint(),
-  'last-catchpoint': z.string().optional(),
+  catchupTime: z.bigint(),
+  lastRound: z.bigint(),
+  lastVersion: z.string(),
+  nextVersion: z.string(),
+  nextVersionRound: z.bigint(),
+  nextVersionSupported: z.boolean(),
+  stoppedAtUnsupportedRound: z.boolean(),
+  timeSinceLastRound: z.bigint(),
+  lastCatchpoint: z.string().optional(),
   catchpoint: z.string().optional(),
-  'catchpoint-total-accounts': z.number().int().optional(),
-  'catchpoint-processed-accounts': z.number().int().optional(),
-  'catchpoint-verified-accounts': z.number().int().optional(),
-  'catchpoint-total-kvs': z.number().int().optional(),
-  'catchpoint-processed-kvs': z.number().int().optional(),
-  'catchpoint-verified-kvs': z.number().int().optional(),
-  'catchpoint-total-blocks': z.number().int().optional(),
-  'catchpoint-acquired-blocks': z.number().int().optional(),
-  'upgrade-delay': z.bigint().optional(),
-  'upgrade-node-vote': z.boolean().optional(),
-  'upgrade-votes-required': z.number().int().optional(),
-  'upgrade-votes': z.number().int().optional(),
-  'upgrade-yes-votes': z.number().int().optional(),
-  'upgrade-no-votes': z.number().int().optional(),
-  'upgrade-next-protocol-vote-before': z.bigint().optional(),
-  'upgrade-vote-rounds': z.number().int().optional()
+  catchpointTotalAccounts: z.number().int().optional(),
+  catchpointProcessedAccounts: z.number().int().optional(),
+  catchpointVerifiedAccounts: z.number().int().optional(),
+  catchpointTotalKvs: z.number().int().optional(),
+  catchpointProcessedKvs: z.number().int().optional(),
+  catchpointVerifiedKvs: z.number().int().optional(),
+  catchpointTotalBlocks: z.number().int().optional(),
+  catchpointAcquiredBlocks: z.number().int().optional(),
+  upgradeDelay: z.bigint().optional(),
+  upgradeNodeVote: z.boolean().optional(),
+  upgradeVotesRequired: z.number().int().optional(),
+  upgradeVotes: z.number().int().optional(),
+  upgradeYesVotes: z.number().int().optional(),
+  upgradeNoVotes: z.number().int().optional(),
+  upgradeNextProtocolVoteBefore: z.bigint().optional(),
+  upgradeVoteRounds: z.number().int().optional()
 })
 
 export const PendingTransactionsResponse = z.object({
-  'top-transactions': z.array(z.record(z.string(), z.any())),
-  'total-transactions': z.number().int()
+  topTransactions: z.array(z.record(z.string(), z.any())),
+  totalTransactions: z.number().int()
 })
 
 export const ParticipationKeysResponse = z.array(ParticipationKey)
@@ -544,11 +544,11 @@ export const PostTransactionsResponse = z.object({
 
 export const SimulateResponse = z.object({
   version: z.number().int(),
-  'last-round': z.bigint(),
-  'txn-groups': z.array(SimulateTransactionGroupResult),
-  'eval-overrides': SimulationEvalOverrides.optional(),
-  'exec-trace-config': SimulateTraceConfig.optional(),
-  'initial-states': SimulateInitialStates.optional()
+  lastRound: z.bigint(),
+  txnGroups: z.array(SimulateTransactionGroupResult),
+  evalOverrides: SimulationEvalOverrides.optional(),
+  execTraceConfig: SimulateTraceConfig.optional(),
+  initialStates: SimulateInitialStates.optional()
 })
 
 export const BlockLogsResponse = z.object({
@@ -556,18 +556,18 @@ export const BlockLogsResponse = z.object({
 })
 
 export const SupplyResponse = z.object({
-  current_round: z.bigint(),
-  'online-money': z.bigint(),
-  'total-money': z.bigint()
+  currentRound: z.bigint(),
+  onlineMoney: z.bigint(),
+  totalMoney: z.bigint()
 })
 
 export const TransactionParametersResponse = z.object({
-  'consensus-version': z.string(),
+  consensusVersion: z.string(),
   fee: z.bigint(),
-  'genesis-hash': z.string(),
-  'genesis-id': z.string(),
-  'last-round': z.bigint(),
-  'min-fee': z.bigint()
+  genesisHash: z.string(),
+  genesisId: z.string(),
+  lastRound: z.bigint(),
+  minFee: z.bigint()
 })
 
 export const BoxesResponse = z.object({
@@ -594,5 +594,5 @@ export const DisassembleResponse = z.object({
 export const DryrunResponse = z.object({
   txns: z.array(DryrunTxnResult),
   error: z.string(),
-  'protocol-version': z.string()
+  protocolVersion: z.string()
 })

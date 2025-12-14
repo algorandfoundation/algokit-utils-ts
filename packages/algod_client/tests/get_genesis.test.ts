@@ -1,4 +1,7 @@
-import { describe, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
+import { AlgodClient } from '../src'
+import { config } from './config'
+import { Genesis } from './schemas'
 
 describe('GET genesis', () => {
   // Polytest Suite: GET genesis
@@ -6,8 +9,13 @@ describe('GET genesis', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test('Basic request and response validation', () => {
-      throw new Error('TEST NOT IMPLEMENTED')
+    test('Basic request and response validation', async () => {
+      const client = new AlgodClient(config)
+
+      const result = await client.getGenesis()
+
+      Genesis.parse(result)
+      expect(result).toMatchSnapshot()
     })
   })
 })
