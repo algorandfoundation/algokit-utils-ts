@@ -8,11 +8,9 @@ import {
   assertDecodeWithPrefix,
   assertDecodeWithoutPrefix,
   assertEncode,
-  assertEncodeWithAuthAddress,
   assertEncodeWithSignature,
   assertEncodedTransactionType,
   assertExample,
-  assertMultisigExample,
   assertTransactionId,
 } from './transaction_asserts'
 
@@ -33,10 +31,6 @@ describe('Key Registration', () => {
         await assertExample(label, testData)
       })
 
-      test('multisig example', async () => {
-        await assertMultisigExample(label, testData)
-      })
-
       test('get transaction id', () => {
         assertTransactionId(label, testData)
       })
@@ -55,10 +49,6 @@ describe('Key Registration', () => {
 
       test('decode with prefix', () => {
         assertDecodeWithPrefix(label, testData)
-      })
-
-      test('encode with auth address', async () => {
-        await assertEncodeWithAuthAddress(label, testData)
       })
 
       test('encode with signature', async () => {

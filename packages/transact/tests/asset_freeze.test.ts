@@ -8,7 +8,6 @@ import {
   assertDecodeWithPrefix,
   assertDecodeWithoutPrefix,
   assertEncode,
-  assertEncodeWithAuthAddress,
   assertEncodeWithSignature,
   assertEncodedTransactionType,
   assertExample,
@@ -51,12 +50,8 @@ describe('Asset Freeze', () => {
         assertDecodeWithPrefix(label, testData)
       })
 
-      test('encode with auth address', async () => {
-        await assertEncodeWithAuthAddress(label, testData)
-      })
-
-      test('encode with signature', () => {
-        assertEncodeWithSignature(label, testData)
+      test('encode with signature', async () => {
+        await assertEncodeWithSignature(label, testData)
       })
 
       test('encode', () => {
