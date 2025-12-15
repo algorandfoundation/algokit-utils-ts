@@ -361,6 +361,8 @@ export type CommonAppCallParams = CommonTransactionParams & {
   boxReferences?: (BoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
   accessReferences?: ResourceReference[]
+  /** If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check. */
+  rejectVersion?: number
 }
 
 /** Parameters to define an app create transaction */
@@ -976,6 +978,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -1024,6 +1027,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1064,6 +1068,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1106,6 +1111,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1167,6 +1173,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1220,6 +1227,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1271,6 +1279,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1322,6 +1331,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1668,6 +1678,7 @@ export class TransactionComposer {
           return arg
         })
         .reverse(),
+      rejectVersion: params.rejectVersion,
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
       lease: undefined,
@@ -1797,6 +1808,7 @@ export class TransactionComposer {
       access: params.accessReferences?.map(getResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
+      rejectVersion: params.rejectVersion,
     }
 
     if (appId === 0n) {
@@ -1989,7 +2001,8 @@ export class TransactionComposer {
       this.atc['methodCalls'] = methodCalls
     }
 
-    return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
+    const transactions = this.atc.buildGroup()
+    return { atc: this.atc, transactions, methodCalls: this.atc['methodCalls'] }
   }
 
   /**
