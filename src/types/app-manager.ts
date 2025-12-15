@@ -99,7 +99,7 @@ export interface BoxValuesRequestParams {
 /**
  * Defines a holding by referring to an Address and Asset it belongs to.
  */
-export interface HoldingReference {
+export type HoldingReference = {
   /** Asset ID for asset in access list. */
   assetId: bigint
   /** Address in access list, or the sender of the transaction. */
@@ -109,7 +109,7 @@ export interface HoldingReference {
 /**
  * Defines a local state by referring to an Address and App it belongs to.
  */
-export interface LocalsReference {
+export type LocalsReference = {
   /** Application ID for app in access list, or zero if referring to the called application. */
   appId: bigint
   /** Address in access list, or the sender of the transaction. */
@@ -119,7 +119,7 @@ export interface LocalsReference {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface ResourceReference {
+export type ResourceReference = {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: string | Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */

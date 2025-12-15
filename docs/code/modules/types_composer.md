@@ -282,7 +282,7 @@ ___
 
 ### CommonAppCallParams
 
-Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: [`ResourceReference`](../interfaces/types_app_manager.ResourceReference.md)[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `algosdk.OnApplicationComplete` ; `rejectVersion?`: `number`  }
+Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: [`ResourceReference`](types_app_manager.md#resourcereference)[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `algosdk.OnApplicationComplete` ; `rejectVersion?`: `number`  }
 
 Common parameters for defining an application call transaction.
 
