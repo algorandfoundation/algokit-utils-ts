@@ -36,7 +36,7 @@ import TransactionWithSigner = algosdk.TransactionWithSigner
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
-export const MAX_APP_CALL_ACCOUNT_REFERENCES = 4
+export const MAX_APP_CALL_ACCOUNT_REFERENCES = 8
 
 /**
  * @deprecated Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `TransactionComposer.arc2Note`.
@@ -679,11 +679,12 @@ export async function prepareGroupForSending(
         if (appCallHasAccessReferences(t.txn)) return false
 
         const accounts = t.txn.applicationCall?.accounts?.length ?? 0
-        if (type === 'account') return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES
-
         const assets = t.txn.applicationCall?.foreignAssets?.length ?? 0
         const apps = t.txn.applicationCall?.foreignApps?.length ?? 0
         const boxes = t.txn.applicationCall?.boxes?.length ?? 0
+
+        if (type === 'account')
+          return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES && accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
 
         // If we're adding local state or asset holding, we need space for the acocunt and the other reference
         if (type === 'assetHolding' || type === 'appLocal') {

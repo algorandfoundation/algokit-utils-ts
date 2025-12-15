@@ -26,7 +26,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   beforeEach(async () => {
     await localnet.newScope()
     factory = await localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount })
-  }, 10_000)
+  })
 
   let appSpec: AppSpec
   let factory: AppFactory
@@ -192,7 +192,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.return).toBe('arg_io')
   })
 
-  test('Deploy app - update detects extra pages as breaking change', async () => {
+  test('Deploy app - update detects extra page deficit as a breaking change', async () => {
     let appFactory = localnet.algorand.client.getAppFactory({
       appSpec: asJson(smallAppArc56Json),
       defaultSender: localnet.context.testAccount,
@@ -230,6 +230,37 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     expect(appAppendResult.operationPerformed).toBe('create')
     expect(appCreateResult.appId).not.toEqual(appAppendResult.appId)
+  })
+
+  test('Deploy app - update detects extra page surplus as a non breaking change', async () => {
+    let appFactory = localnet.algorand.client.getAppFactory({
+      appSpec: asJson(smallAppArc56Json),
+      defaultSender: localnet.context.testAccount,
+    })
+
+    const { result: appCreateResult } = await appFactory.deploy({
+      updatable: true,
+      createParams: {
+        extraProgramPages: 1,
+      },
+    })
+
+    expect(appCreateResult.operationPerformed).toBe('create')
+
+    // Update the app to a larger program which needs more pages than the previous program
+    appFactory = localnet.algorand.client.getAppFactory({
+      appSpec: asJson(largeAppArc56Json),
+      defaultSender: localnet.context.testAccount,
+    })
+
+    const { result: appUpdateResult } = await appFactory.deploy({
+      updatable: true,
+      onSchemaBreak: OnSchemaBreak.Fail,
+      onUpdate: OnUpdate.UpdateApp,
+    })
+
+    expect(appUpdateResult.operationPerformed).toBe('update')
+    expect(appCreateResult.appId).toEqual(appUpdateResult.appId)
   })
 
   test('Deploy app - replace', async () => {
@@ -762,7 +793,7 @@ describe('ARC56: app-factory-and-app-client', () => {
       appSpec: arc56Json,
       defaultSender: localnet.context.testAccount.addr,
     })
-  }, 10_000)
+  })
 
   test('ARC56 error messages from inner app error', async () => {
     const innerFactory = localnet.algorand.client.getAppFactory({

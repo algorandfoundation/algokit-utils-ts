@@ -21,6 +21,7 @@ Information about an app.
 - [globalState](types_app_manager.AppInformation.md#globalstate)
 - [localByteSlices](types_app_manager.AppInformation.md#localbyteslices)
 - [localInts](types_app_manager.AppInformation.md#localints)
+- [version](types_app_manager.AppInformation.md#version)
 
 ## Properties
 
@@ -154,3 +155,15 @@ The number of allocated ints in per-user local state.
 #### Defined in
 
 [src/types/app-manager.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L39)
+
+___
+
+### version
+
+• `Optional` **version**: `number`
+
+The number of updates to the application programs
+
+#### Defined in
+
+[src/types/app-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L49)
