@@ -103,7 +103,7 @@ export type HoldingReference = {
   /** Asset ID for asset in access list. */
   assetId: bigint
   /** Address in access list, or the sender of the transaction. */
-  address: string | Address
+  address: Address
 }
 
 /**
@@ -113,7 +113,7 @@ export type LocalsReference = {
   /** Application ID for app in access list, or zero if referring to the called application. */
   appId: bigint
   /** Address in access list, or the sender of the transaction. */
-  address: string | Address
+  address: Address
 }
 
 /**
@@ -121,7 +121,7 @@ export type LocalsReference = {
  */
 export type ResourceReference = {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
-  address?: string | Address
+  address?: Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
   appId?: bigint
   /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
