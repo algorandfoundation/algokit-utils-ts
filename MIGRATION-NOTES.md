@@ -39,3 +39,4 @@ A collection of random notes pop up during the migration process.
 - trace field at err.traces[].trace is now a typed value, rather than a map.
 - searchCriteria param for indexer-lookup.ts searchTransactions() method is an object, rather than a function which allows chained configuration
 - Doc: Mock server + Rust + polytest
+- searchTransactions introduces breaking change
