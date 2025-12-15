@@ -217,7 +217,7 @@ export class AppManager {
       localByteSlices: app.params.localStateSchema?.numByteSlices ?? 0,
       globalInts: app.params.globalStateSchema?.numUints ?? 0,
       globalByteSlices: app.params.globalStateSchema?.numByteSlices ?? 0,
-      extraProgramPages: Number(app.params.extraProgramPages ?? 0),
+      extraProgramPages: app.params.extraProgramPages ?? 0,
       globalState: AppManager.decodeAppState(convertedGlobalState),
     }
   }
