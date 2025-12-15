@@ -473,7 +473,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
     txn.msig = applyMultisigSubsignature(txn.msig!, pubkey, signature)
   }
 
-  appplySignature(msigSignature: MultisigSignature, pubkey: Uint8Array, signature: Uint8Array): MultisigSignature {
+  applySignature(msigSignature: MultisigSignature, pubkey: Uint8Array, signature: Uint8Array): MultisigSignature {
     return applyMultisigSubsignature(msigSignature, pubkey, signature)
   }
 }

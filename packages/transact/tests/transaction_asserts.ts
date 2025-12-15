@@ -87,8 +87,8 @@ export const assertMultisigExample = async (label: string, testData: Transaction
 
   const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs: testData.multisigPublicKeys.map((pk) => new Address(pk)) }, [])
   let multisigSignature = msigAccount.createMultisigSignature()
-  multisigSignature = msigAccount.appplySignature(multisigSignature, testData.multisigPublicKeys[0], singleSig)
-  multisigSignature = msigAccount.appplySignature(multisigSignature, testData.multisigPublicKeys[1], singleSig)
+  multisigSignature = msigAccount.applySignature(multisigSignature, testData.multisigPublicKeys[0], singleSig)
+  multisigSignature = msigAccount.applySignature(multisigSignature, testData.multisigPublicKeys[1], singleSig)
 
   const signedTxn: SignedTransaction = {
     txn: testData.transaction,

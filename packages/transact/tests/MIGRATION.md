@@ -94,7 +94,7 @@ const updatedMsig = applyMultisigSubsignature(multisigSignature, participant, si
 ```typescript
 import { MultisigAccount } from '@algorandfoundation/algokit-transact'
 const msigAccount = new MultisigAccount({ version, threshold, addrs }, [])
-const updatedMsig = msigAccount.appplySignature(multisigSignature, participant, signature)
+const updatedMsig = msigAccount.applySignature(multisigSignature, participant, signature)
 ```
 
 ### `mergeMultisignatures`
@@ -108,7 +108,7 @@ const merged = mergeMultisignatures(multisigSignatureA, multisigSignatureB)
 
 #### Now
 
-Apply signatures individually using `MultisigAccount.appplySignature()`.
+Apply signatures individually using `MultisigAccount.applySignature()`.
 
 ### `createMultisigTransaction`
 

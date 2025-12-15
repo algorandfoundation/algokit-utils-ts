@@ -60,7 +60,7 @@ describe('multisig', () => {
       const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
       const multisig = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42) // Mock signature
-      const signedMultisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature)
+      const signedMultisig = msigAccount.applySignature(multisig, addrs[0].publicKey, signature)
 
       const extractedParticipants = signedMultisig.subsignatures.map((subsig) => subsig.publicKey)
 
@@ -111,7 +111,7 @@ describe('multisig', () => {
     })
   })
 
-  describe('MultisigAccount.appplySignature', () => {
+  describe('MultisigAccount.applySignature', () => {
     test('should apply signature to participant', () => {
       const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
@@ -122,7 +122,7 @@ describe('multisig', () => {
       const multisig = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42)
 
-      const signedMultisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature)
+      const signedMultisig = msigAccount.applySignature(multisig, addrs[0].publicKey, signature)
 
       expect(signedMultisig.version).toBe(multisig.version)
       expect(signedMultisig.threshold).toBe(multisig.threshold)
@@ -142,16 +142,16 @@ describe('multisig', () => {
       const signature2 = new Uint8Array(64).fill(84)
 
       // Apply first signature
-      const signedMultisig1 = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature1)
+      const signedMultisig1 = msigAccount.applySignature(multisig, addrs[0].publicKey, signature1)
       expect(signedMultisig1.subsignatures[0].signature).toEqual(signature1)
 
       // Replace with second signature
-      const signedMultisig2 = msigAccount.appplySignature(signedMultisig1, addrs[0].publicKey, signature2)
+      const signedMultisig2 = msigAccount.applySignature(signedMultisig1, addrs[0].publicKey, signature2)
       expect(signedMultisig2.subsignatures[0].signature).toEqual(signature2)
     })
   })
 
-  describe('merge multisignatures via appplySignature', () => {
+  describe('merge multisignatures via applySignature', () => {
     test('should merge compatible multisignatures by applying signatures individually', () => {
       const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
@@ -165,8 +165,8 @@ describe('multisig', () => {
 
       // Apply both signatures to the same multisig
       let multisig = msigAccount.createMultisigSignature()
-      multisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature1)
-      multisig = msigAccount.appplySignature(multisig, addrs[1].publicKey, signature2)
+      multisig = msigAccount.applySignature(multisig, addrs[0].publicKey, signature1)
+      multisig = msigAccount.applySignature(multisig, addrs[1].publicKey, signature2)
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
@@ -185,7 +185,7 @@ describe('multisig', () => {
       const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
       const emptyMultisignature = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42)
-      const signedMultiSig = msigAccount.appplySignature(emptyMultisignature, addrs[0].publicKey, signature)
+      const signedMultiSig = msigAccount.applySignature(emptyMultisignature, addrs[0].publicKey, signature)
       const encoded = encodeMsgpack(multiSignatureCodec.encode(signedMultiSig, 'msgpack'))
 
       const decodedData = decodeMsgpack(encoded)
@@ -222,8 +222,8 @@ describe('multisig', () => {
 
       // Apply signatures
       let multisig = msigAccount.createMultisigSignature()
-      multisig = msigAccount.appplySignature(multisig, addrs[0].publicKey, signature1)
-      multisig = msigAccount.appplySignature(multisig, addrs[1].publicKey, signature2)
+      multisig = msigAccount.applySignature(multisig, addrs[0].publicKey, signature1)
+      multisig = msigAccount.applySignature(multisig, addrs[1].publicKey, signature2)
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
