@@ -383,7 +383,7 @@ When interacting with apps (creating, updating, deleting, calling), there are so
 - `assetReferences?: bigint[]` - The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 - `boxReferences?: (BoxReference | BoxIdentifier)[]` - Any [boxes](#box-references) to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays)
 - `accessReference?: AccessReference[]` - Unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
-- `rejectVersion?: number` - The lowest application version for which this transaction should immediately fail. 0 or undefined indicates that no version check should be performed. See [Reject Version](#reject-version) for more details.
+- `rejectVersion?: number` - If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check. See [Reject Version](#reject-version) for more details.
 
 When making an ABI call, the `args` parameter is replaced with a different type and there is also a `method` parameter per the [`AppMethodCall`](../code/modules/types_composer.md#appmethodcall) type:
 

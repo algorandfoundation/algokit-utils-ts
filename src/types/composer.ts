@@ -361,7 +361,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   boxReferences?: (BoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
   accessReferences?: ResourceReference[]
-  /** The lowest application version for which this transaction should immediately fail. 0 or undefined indicates that no version check should be performed. */
+  /** If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check. */
   rejectVersion?: number
 }
 
