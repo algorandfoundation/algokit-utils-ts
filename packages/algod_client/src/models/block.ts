@@ -1,19 +1,19 @@
-import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import {
-  addressArrayCodec,
-  addressCodec,
   Address,
   ArrayCodec,
+  MapCodec,
+  ObjectModelCodec,
+  addressArrayCodec,
+  addressCodec,
   bigIntCodec,
   booleanCodec,
   bytesArrayCodec,
   bytesCodec,
-  MapCodec,
-  ObjectModelCodec,
   numberCodec,
   stringCodec,
   type ObjectModelMetadata,
 } from '@algorandfoundation/algokit-common'
+import { SignedTransactionMeta, type SignedTransaction } from '@algorandfoundation/algokit-transact'
 
 /** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
 export type BlockEvalDelta = {
@@ -44,9 +44,9 @@ export type BlockAppEvalDelta = {
   /** [ld] Local state deltas keyed by address index. */
   localDeltas?: Map<number, Map<Uint8Array, BlockEvalDelta>>
   /** [itx] Inner transactions produced by this application execution. */
-  innerTxns?: SignedTxnInBlock[]
+  innerTxns?: SignedTxnWithAD[]
   /** [sa] Shared accounts referenced by local deltas. */
-  sharedAccounts?: string[]
+  sharedAccounts?: Address[]
   /** [lg] Application log outputs. */
   logs?: Uint8Array[]
 }
