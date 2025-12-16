@@ -39,6 +39,20 @@ export class AlgorandClientTransactionSender {
   private _appManager: AppManager
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAlgorandClientTransactionSender = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AlgorandClientTransactionSender)._isAlgorandClientTransactionSender === true)
+  }
+
+  /**
    * Creates a new `AlgorandClientSender`
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance

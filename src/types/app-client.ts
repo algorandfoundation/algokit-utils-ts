@@ -503,6 +503,20 @@ export class AppClient {
   private _lastCompiled: { clear?: Uint8Array; approval?: Uint8Array }
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAppClient = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AppClient)._isAppClient === true)
+  }
+
+  /**
    * Create a new app client.
    * @param params The parameters to create the app client
    * @returns The `AppClient` instance
@@ -1812,6 +1826,19 @@ export class ApplicationClient {
 
   private _approvalSourceMap: SourceMap | undefined
   private _clearSourceMap: SourceMap | undefined
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isApplicationClient = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as ApplicationClient)._isApplicationClient === true)
+  }
 
   /**
    * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
