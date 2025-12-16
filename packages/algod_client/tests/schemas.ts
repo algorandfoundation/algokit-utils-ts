@@ -597,3 +597,25 @@ export const DryrunResponse = z.object({
   error: z.string(),
   protocolVersion: z.string()
 })
+
+// =============================================================================
+// Manually added schemas (not in OpenAPI spec)
+// =============================================================================
+
+/**
+ * SuggestedParams is a client-side derived type, not an API response type.
+ * The API returns TransactionParametersResponse, which the client transforms by:
+ * - Omitting `lastRound`
+ * - Adding `flatFee`, `firstValid`, `lastValid` (computed from lastRound)
+ * See: packages/algod_client/src/models/suggested-params.ts
+ */
+export const SuggestedParams = z.object({
+  consensusVersion: z.string(),
+  fee: z.bigint(),
+  genesisHash: z.instanceof(Uint8Array),
+  genesisId: z.string(),
+  minFee: z.bigint(),
+  flatFee: z.boolean(),
+  firstValid: z.bigint(),
+  lastValid: z.bigint()
+})
