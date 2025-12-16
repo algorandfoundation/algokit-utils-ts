@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-16T00:23:19.255Z
+ * Generated: 2025-12-16T01:35:45.095Z
  */
 
 import { z } from 'zod'
