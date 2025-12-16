@@ -71,7 +71,7 @@ export const BlockAppEvalDeltaMeta: ObjectModelMetadata<BlockAppEvalDelta> = {
       name: 'innerTxns',
       wireKey: 'itx',
       optional: true,
-      codec: new ArrayCodec(new ObjectModelCodec(() => SignedTxnInBlockMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(() => SignedTxnWithADMeta)),
     },
     {
       name: 'sharedAccounts',
