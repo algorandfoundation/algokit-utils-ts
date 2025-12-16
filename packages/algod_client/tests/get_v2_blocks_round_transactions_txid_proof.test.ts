@@ -1,4 +1,7 @@
-import { describe, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
+import { AlgodClient } from '../src'
+import { config, TEST_ROUND, TEST_TXID } from './config'
+import { TransactionProof } from './schemas'
 
 describe('GET v2_blocks_ROUND_transactions_TXID_proof', () => {
   // Polytest Suite: GET v2_blocks_ROUND_transactions_TXID_proof
@@ -6,8 +9,13 @@ describe('GET v2_blocks_ROUND_transactions_TXID_proof', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test('Basic request and response validation', () => {
-      throw new Error('TEST NOT IMPLEMENTED')
+    test('Basic request and response validation', async () => {
+      const client = new AlgodClient(config)
+
+      const result = await client.getTransactionProof(TEST_ROUND, TEST_TXID)
+
+      TransactionProof.parse(result)
+      expect(result).toMatchSnapshot()
     })
   })
 })
