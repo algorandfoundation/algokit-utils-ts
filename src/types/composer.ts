@@ -511,11 +511,6 @@ export type TransactionComposerParams = {
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
   defaultValidityWindow?: bigint
-  /** An existing `AppManager` to use to manage app compilation and cache compilation results.
-   *
-   * If not specified then an ephemeral one will be created.
-   */
-  appManager?: AppManager
   /**
    * An array of error transformers to use when an error is caught in simulate or execute
    * callbacks can later be registered with `registerErrorTransformer`
@@ -578,8 +573,6 @@ export class TransactionComposer {
   /** Whether the validity window was explicitly set on construction */
   private defaultValidityWindowIsExplicit = false
 
-  private appManager: AppManager
-
   private errorTransformers: ErrorTransformer[]
 
   private async transformError(originalError: unknown): Promise<unknown> {
@@ -604,6 +597,11 @@ export class TransactionComposer {
     return transformedError
   }
 
+  private async compileTeal(teal: string): Promise<Uint8Array> {
+    const compileResponse = await this.algod.compile(teal).do()
+    return new Uint8Array(Buffer.from(compileResponse.result, 'base64'))
+  }
+
   /**
    * Create a `TransactionComposer`.
    * @param params The configuration for this composer
@@ -616,7 +614,6 @@ export class TransactionComposer {
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
-    this.appManager = params.appManager ?? new AppManager(params.algod)
     this.errorTransformers = params.errorTransformers ?? []
   }
 
@@ -1627,13 +1624,13 @@ export class TransactionComposer {
     const approvalProgram =
       'approvalProgram' in params
         ? typeof params.approvalProgram === 'string'
-          ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+          ? await this.compileTeal(params.approvalProgram)
           : params.approvalProgram
         : undefined
     const clearStateProgram =
       'clearStateProgram' in params
         ? typeof params.clearStateProgram === 'string'
-          ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+          ? await this.compileTeal(params.clearStateProgram)
           : params.clearStateProgram
         : undefined
 
@@ -1786,13 +1783,13 @@ export class TransactionComposer {
     const approvalProgram =
       'approvalProgram' in params
         ? typeof params.approvalProgram === 'string'
-          ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+          ? await this.compileTeal(params.approvalProgram)
           : params.approvalProgram
         : undefined
     const clearStateProgram =
       'clearStateProgram' in params
         ? typeof params.clearStateProgram === 'string'
-          ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+          ? await this.compileTeal(params.clearStateProgram)
           : params.clearStateProgram
         : undefined
 
