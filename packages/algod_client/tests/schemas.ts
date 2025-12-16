@@ -2,10 +2,11 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-14T20:31:02.548Z
+ * Generated: 2025-12-16T00:23:19.255Z
  */
 
 import { z } from 'zod'
+import { Address } from '@algorandfoundation/algokit-common'
 
 // Forward declarations for recursive schemas
 export type PendingTransactionResponseType = z.infer<typeof PendingTransactionResponse>
@@ -46,18 +47,18 @@ export const LedgerStateDeltaForTransactionGroup = z.object({
 })
 
 export const ApplicationStateSchema = z.object({
-  numUint: z.number().int().gte(0).lte(64),
-  numByteSlice: z.number().int().gte(0).lte(64)
+  numUints: z.number().int().gte(0).lte(64),
+  numByteSlices: z.number().int().gte(0).lte(64)
 })
 
 export const TealValue = z.object({
   type: z.number().int(),
-  bytes: z.string(),
+  bytes: z.instanceof(Uint8Array),
   uint: z.bigint()
 })
 
 export const TealKeyValue = z.object({
-  key: z.string(),
+  key: z.instanceof(Uint8Array),
   value: TealValue
 })
 
@@ -76,9 +77,9 @@ export const AssetHolding = z.object({
 })
 
 export const ApplicationParams = z.object({
-  creator: z.string(),
-  approvalProgram: z.string(),
-  clearStateProgram: z.string(),
+  creator: z.instanceof(Address),
+  approvalProgram: z.instanceof(Uint8Array),
+  clearStateProgram: z.instanceof(Uint8Array),
   extraProgramPages: z.number().int().gte(0).lte(3).optional(),
   localStateSchema: ApplicationStateSchema.optional(),
   globalStateSchema: ApplicationStateSchema.optional(),
@@ -98,33 +99,33 @@ export const AssetParams = z.object({
   defaultFrozen: z.boolean().optional(),
   freeze: z.string().optional(),
   manager: z.string().optional(),
-  metadataHash: z.string().optional(),
+  metadataHash: z.instanceof(Uint8Array).optional(),
   name: z.string().optional(),
-  nameB64: z.string().optional(),
+  nameB64: z.instanceof(Uint8Array).optional(),
   reserve: z.string().optional(),
   total: z.bigint(),
   unitName: z.string().optional(),
-  unitNameB64: z.string().optional(),
+  unitNameB64: z.instanceof(Uint8Array).optional(),
   url: z.string().optional(),
-  urlB64: z.string().optional()
+  urlB64: z.instanceof(Uint8Array).optional()
 })
 
 export const Asset = z.object({
-  index: z.bigint(),
+  id: z.bigint(),
   params: AssetParams
 })
 
 export const AccountParticipation = z.object({
-  selectionParticipationKey: z.string(),
+  selectionParticipationKey: z.instanceof(Uint8Array),
   voteFirstValid: z.bigint(),
   voteKeyDilution: z.bigint(),
   voteLastValid: z.bigint(),
-  voteParticipationKey: z.string(),
-  stateProofKey: z.string().optional()
+  voteParticipationKey: z.instanceof(Uint8Array),
+  stateProofKey: z.instanceof(Uint8Array).optional()
 })
 
 export const Account = z.object({
-  address: z.string(),
+  address: z.instanceof(Address),
   amount: z.bigint(),
   minBalance: z.bigint(),
   amountWithoutPendingRewards: z.bigint(),
@@ -148,7 +149,7 @@ export const Account = z.object({
   round: z.bigint(),
   status: z.string(),
   sigType: z.enum(['sig', 'msig', 'lsig']).optional(),
-  authAddr: z.string().optional(),
+  authAddr: z.instanceof(Address).optional(),
   lastProposed: z.bigint().optional(),
   lastHeartbeat: z.bigint().optional()
 })
@@ -159,18 +160,18 @@ export const AccountAssetHolding = z.object({
 })
 
 export const AssetHoldingReference = z.object({
-  account: z.string(),
+  account: z.instanceof(Address),
   asset: z.bigint()
 })
 
 export const ApplicationLocalReference = z.object({
-  account: z.string(),
+  account: z.instanceof(Address),
   app: z.bigint()
 })
 
 export const ParticipationKey = z.object({
   id: z.string(),
-  address: z.string(),
+  address: z.instanceof(Address),
   effectiveFirstValid: z.bigint().optional(),
   effectiveLastValid: z.bigint().optional(),
   lastVote: z.bigint().optional(),
@@ -181,30 +182,30 @@ export const ParticipationKey = z.object({
 
 export const AvmValue = z.object({
   type: z.number().int(),
-  bytes: z.string().optional(),
+  bytes: z.instanceof(Uint8Array).optional(),
   uint: z.bigint().optional()
 })
 
 export const AvmKeyValue = z.object({
-  key: z.string(),
+  key: z.instanceof(Uint8Array),
   value: AvmValue
 })
 
 export const EvalDelta = z.object({
   action: z.number().int(),
-  bytes: z.string().optional(),
+  bytes: z.instanceof(Uint8Array).optional(),
   uint: z.bigint().optional()
 })
 
 export const EvalDeltaKeyValue = z.object({
-  key: z.string(),
+  key: z.instanceof(Uint8Array),
   value: EvalDelta
 })
 
 export const StateDelta = z.array(EvalDeltaKeyValue)
 
 export const AccountStateDelta = z.object({
-  address: z.string(),
+  address: z.instanceof(Address),
   delta: StateDelta
 })
 
@@ -225,7 +226,7 @@ export const DryrunTxnResult = z.object({
   appCallMessages: z.array(z.string()).optional(),
   globalDelta: StateDelta.optional(),
   localDeltas: z.array(AccountStateDelta).optional(),
-  logs: z.array(z.string()).optional(),
+  logs: z.array(z.instanceof(Uint8Array)).optional(),
   budgetAdded: z.number().int().optional(),
   budgetConsumed: z.number().int().optional()
 })
@@ -239,7 +240,7 @@ export const DryrunSource = z.object({
   fieldName: z.string(),
   source: z.string(),
   txnIndex: z.number().int(),
-  appIndex: z.bigint()
+  appId: z.bigint()
 })
 
 export const DryrunRequest = z.object({
@@ -276,17 +277,17 @@ export const SimulateRequest = z.object({
 
 export const Box = z.object({
   round: z.bigint(),
-  name: z.string(),
-  value: z.string()
+  name: z.instanceof(Uint8Array),
+  value: z.instanceof(Uint8Array)
 })
 
 export const BoxDescriptor = z.object({
-  name: z.string()
+  name: z.instanceof(Uint8Array)
 })
 
 export const BoxReference = z.object({
   app: z.bigint(),
-  name: z.string()
+  name: z.instanceof(Uint8Array)
 })
 
 export const BuildVersion = z.object({
@@ -300,7 +301,7 @@ export const BuildVersion = z.object({
 
 export const Version = z.object({
   build: BuildVersion,
-  genesisHashB64: z.string(),
+  genesisHashB64: z.instanceof(Uint8Array),
   genesisId: z.string(),
   versions: z.array(z.string())
 })
@@ -311,8 +312,8 @@ export const DebugSettingsProf = z.object({
 })
 
 export const PendingTransactionResponse: z.ZodType<any> = z.lazy(() => z.object({
-  assetIndex: z.bigint().optional(),
-  applicationIndex: z.bigint().optional(),
+  assetId: z.bigint().optional(),
+  appId: z.bigint().optional(),
   closeRewards: z.bigint().optional(),
   closingAmount: z.bigint().optional(),
   assetClosingAmount: z.bigint().optional(),
@@ -322,7 +323,7 @@ export const PendingTransactionResponse: z.ZodType<any> = z.lazy(() => z.object(
   senderRewards: z.bigint().optional(),
   localStateDelta: z.array(AccountStateDelta).optional(),
   globalStateDelta: StateDelta.optional(),
-  logs: z.array(z.string()).optional(),
+  logs: z.array(z.instanceof(Uint8Array)).optional(),
   innerTxns: z.array(PendingTransactionResponse).optional(),
   txn: z.record(z.string(), z.any())
 }))
@@ -335,9 +336,9 @@ export const ScratchChange = z.object({
 export const ApplicationStateOperation = z.object({
   operation: z.string(),
   appStateType: z.string(),
-  key: z.string(),
+  key: z.instanceof(Uint8Array),
   newValue: AvmValue.optional(),
-  account: z.string().optional()
+  account: z.instanceof(Address).optional()
 })
 
 export const SimulationOpcodeTraceUnit = z.object({
@@ -351,18 +352,18 @@ export const SimulationOpcodeTraceUnit = z.object({
 
 export const SimulationTransactionExecTrace: z.ZodType<any> = z.lazy(() => z.object({
   approvalProgramTrace: z.array(SimulationOpcodeTraceUnit).optional(),
-  approvalProgramHash: z.string().optional(),
+  approvalProgramHash: z.instanceof(Uint8Array).optional(),
   clearStateProgramTrace: z.array(SimulationOpcodeTraceUnit).optional(),
-  clearStateProgramHash: z.string().optional(),
+  clearStateProgramHash: z.instanceof(Uint8Array).optional(),
   clearStateRollback: z.boolean().optional(),
   clearStateRollbackError: z.string().optional(),
   logicSigTrace: z.array(SimulationOpcodeTraceUnit).optional(),
-  logicSigHash: z.string().optional(),
+  logicSigHash: z.instanceof(Uint8Array).optional(),
   innerTrace: z.array(SimulationTransactionExecTrace).optional()
 }))
 
 export const SimulateUnnamedResourcesAccessed = z.object({
-  accounts: z.array(z.string()).optional(),
+  accounts: z.array(z.instanceof(Address)).optional(),
   assets: z.array(z.bigint()).optional(),
   apps: z.array(z.bigint()).optional(),
   boxes: z.array(BoxReference).optional(),
@@ -377,7 +378,7 @@ export const SimulateTransactionResult = z.object({
   logicSigBudgetConsumed: z.number().int().optional(),
   execTrace: SimulationTransactionExecTrace.optional(),
   unnamedResourcesAccessed: SimulateUnnamedResourcesAccessed.optional(),
-  fixedSigner: z.string().optional()
+  fixedSigner: z.instanceof(Address).optional()
 })
 
 export const SimulateTransactionGroupResult = z.object({
@@ -390,8 +391,8 @@ export const SimulateTransactionGroupResult = z.object({
 })
 
 export const StateProofMessage = z.object({
-  BlockHeadersCommitment: z.string(),
-  VotersCommitment: z.string(),
+  BlockHeadersCommitment: z.instanceof(Uint8Array),
+  VotersCommitment: z.instanceof(Uint8Array),
   LnProvenWeight: z.bigint(),
   FirstAttestedRound: z.bigint(),
   LastAttestedRound: z.bigint()
@@ -399,13 +400,13 @@ export const StateProofMessage = z.object({
 
 export const StateProof = z.object({
   Message: StateProofMessage,
-  StateProof: z.string()
+  StateProof: z.instanceof(Uint8Array)
 })
 
 export const LightBlockHeaderProof = z.object({
   index: z.number().int(),
   treedepth: z.number().int(),
-  proof: z.string()
+  proof: z.instanceof(Uint8Array)
 })
 
 export const SimulationEvalOverrides = z.object({
@@ -419,7 +420,7 @@ export const SimulationEvalOverrides = z.object({
 
 export const ApplicationKVStorage = z.object({
   kvs: z.array(AvmKeyValue),
-  account: z.string().optional()
+  account: z.instanceof(Address).optional()
 })
 
 export const ApplicationInitialStates = z.object({
@@ -434,14 +435,14 @@ export const SimulateInitialStates = z.object({
 })
 
 export const AppCallLogs = z.object({
-  logs: z.array(z.string()),
-  applicationIndex: z.bigint(),
+  logs: z.array(z.instanceof(Uint8Array)),
+  appId: z.bigint(),
   txId: z.string()
 })
 
 export const TransactionProof = z.object({
-  proof: z.string(),
-  stibhash: z.string(),
+  proof: z.instanceof(Uint8Array),
+  stibhash: z.instanceof(Uint8Array),
   treedepth: z.number().int(),
   idx: z.number().int(),
   hashtype: z.enum(['sha512_256', 'sha256'])
@@ -483,7 +484,7 @@ export const BlockResponse = z.object({
 })
 
 export const BlockTxidsResponse = z.object({
-  blockTxids: z.array(z.string())
+  blockTxIds: z.array(z.string())
 })
 
 export const BlockHashResponse = z.object({
@@ -564,7 +565,7 @@ export const SupplyResponse = z.object({
 export const TransactionParametersResponse = z.object({
   consensusVersion: z.string(),
   fee: z.bigint(),
-  genesisHash: z.string(),
+  genesisHash: z.instanceof(Uint8Array),
   genesisId: z.string(),
   lastRound: z.bigint(),
   minFee: z.bigint()
