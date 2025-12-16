@@ -199,7 +199,7 @@ export type BoxReference = {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface ResourceReference {
+export type ResourceReference = {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
