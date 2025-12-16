@@ -218,6 +218,9 @@ X_ALGOKIT_BIGINT: Final[str] = "x-algokit-bigint"
 X_ALGOKIT_SIGNED_TXN: Final[str] = "x-algokit-signed-txn"
 X_ALGOKIT_BYTES_BASE64: Final[str] = "x-algokit-bytes-base64"
 X_ALGORAND_FORMAT: Final[str] = "x-algorand-format"
+X_ALGOKIT_BOX_REFERENCE: Final[str] = "x-algokit-box-reference"
+X_ALGOKIT_HOLDING_REFERENCE: Final[str] = "x-algokit-holding-reference"
+X_ALGOKIT_LOCALS_REFERENCE: Final[str] = "x-algokit-locals-reference"
 
 # Template configuration
 TEMPLATE_TRIM_BLOCKS: Final[bool] = True

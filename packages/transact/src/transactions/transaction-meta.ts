@@ -19,7 +19,7 @@ import {
   numberCodec,
   stringCodec,
 } from '@algorandfoundation/algokit-common'
-import { AccessReference, AppCallTransactionFields, BoxReference, StateSchema } from './app-call'
+import { AppCallTransactionFields, BoxReference, ResourceReference, StateSchema } from './app-call'
 import { AssetConfigTransactionFields } from './asset-config'
 import { AssetFreezeTransactionFields } from './asset-freeze'
 import { AssetTransferTransactionFields } from './asset-transfer'
@@ -49,7 +49,7 @@ type WireBoxReference = {
   n?: WireString
 }
 
-type WireAccessReference = {
+type WireResourceReference = {
   /** Account address */
   d?: WireString
 
@@ -238,17 +238,17 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
     return undefined
   }
 
-  private encodeAccessReferences(
+  private encodeResourceReferences(
     appId: bigint,
-    accessReferences: AccessReference[] | undefined,
+    resourceReferences: ResourceReference[] | undefined,
     format: EncodingFormat,
-  ): WireAccessReference[] | undefined {
-    if (!accessReferences || accessReferences.length === 0) return undefined
+  ): WireResourceReference[] | undefined {
+    if (!resourceReferences || resourceReferences.length === 0) return undefined
 
-    const accessList: WireAccessReference[] = []
+    const accessList: WireResourceReference[] = []
 
     // Helper to find or add a simple reference and return its 1-based index
-    const ensure = (target: Pick<AccessReference, 'address' | 'assetId' | 'appId'>): number => {
+    const ensure = (target: Pick<ResourceReference, 'address' | 'assetId' | 'appId'>): number => {
       // Search for existing entry
       for (let idx = 0; idx < accessList.length; idx++) {
         const entry = accessList[idx]
@@ -281,16 +281,16 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
     }
 
     // Process each access reference
-    for (const accessRef of accessReferences) {
+    for (const resourceRef of resourceReferences) {
       // Simple references (address, assetId, or appId)
-      if (accessRef.address || accessRef.assetId !== undefined || accessRef.appId !== undefined) {
-        ensure(accessRef)
+      if (resourceRef.address || resourceRef.assetId !== undefined || resourceRef.appId !== undefined) {
+        ensure(resourceRef)
         continue
       }
 
       // Holding reference
-      if (accessRef.holding) {
-        const holding = accessRef.holding
+      if (resourceRef.holding) {
+        const holding = resourceRef.holding
         let addressIndex = 0
         if (holding.address && !holding.address.equals(Address.zeroAddress())) {
           addressIndex = ensure({ address: holding.address })
@@ -306,8 +306,8 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       }
 
       // Locals reference
-      if (accessRef.locals) {
-        const locals = accessRef.locals
+      if (resourceRef.locals) {
+        const locals = resourceRef.locals
         let addressIndex = 0
         if (locals.address && !locals.address.equals(Address.zeroAddress())) {
           addressIndex = ensure({ address: locals.address })
@@ -329,8 +329,8 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       }
 
       // Box reference
-      if (accessRef.box) {
-        const box = accessRef.box
+      if (resourceRef.box) {
+        const box = resourceRef.box
         // Only add appId to access list if it's different from the calling app's ID
         // Use appIndex = 0 when box is for the current app
         let appIndex = 0
@@ -350,15 +350,18 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
     return accessList.length > 0 ? accessList : undefined
   }
 
-  private decodeAccessReferences(_wireAccessReferences: WireAccessReference[] | undefined, format: EncodingFormat): AccessReference[] {
-    if (!_wireAccessReferences || _wireAccessReferences.length === 0) return []
+  private decodeResourceReferences(
+    _wireResourceReferences: WireResourceReference[] | undefined,
+    format: EncodingFormat,
+  ): ResourceReference[] {
+    if (!_wireResourceReferences || _wireResourceReferences.length === 0) return []
 
-    const result: AccessReference[] = []
+    const result: ResourceReference[] = []
 
     // Process each entry in the access list
 
-    const wireAccessReferences = _wireAccessReferences.map((ref) => normalizeWireObject(ref))
-    for (const ref of wireAccessReferences) {
+    const wireResourceReferences = _wireResourceReferences.map((ref) => normalizeWireObject(ref))
+    for (const ref of wireResourceReferences) {
       const d = ref.d as WireString | undefined
       const s = ref.s as WireBigInt | undefined
       const p = ref.p as WireBigInt | undefined
@@ -397,8 +400,8 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
         }
 
         const holdingAddress =
-          addrIdx === 0 ? Address.zeroAddress() : addressCodec.decode(wireAccessReferences[addrIdx - 1].d! as WireString, format)
-        const holdingAssetId = wireAccessReferences[assetIdx - 1].s! as WireBigInt
+          addrIdx === 0 ? Address.zeroAddress() : addressCodec.decode(wireResourceReferences[addrIdx - 1].d! as WireString, format)
+        const holdingAssetId = wireResourceReferences[assetIdx - 1].s! as WireBigInt
 
         result.push({
           holding: {
@@ -415,8 +418,8 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
         const appIdx = (l.p ?? 0) as number
 
         const localsAddress =
-          addrIdx === 0 ? Address.zeroAddress() : addressCodec.decode(wireAccessReferences[addrIdx - 1].d! as WireString, format)
-        const localsAppId = appIdx === 0 ? 0n : (wireAccessReferences[appIdx - 1].p! as WireBigInt)
+          addrIdx === 0 ? Address.zeroAddress() : addressCodec.decode(wireResourceReferences[addrIdx - 1].d! as WireString, format)
+        const localsAppId = appIdx === 0 ? 0n : (wireResourceReferences[appIdx - 1].p! as WireBigInt)
 
         result.push({
           locals: {
@@ -436,7 +439,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
           throw new Error('Access list box reference is missing name')
         }
 
-        const boxAppId = boxAppIdx === 0 ? 0n : (wireAccessReferences[boxAppIdx - 1].p! as WireBigInt)
+        const boxAppId = boxAppIdx === 0 ? 0n : (wireResourceReferences[boxAppIdx - 1].p! as WireBigInt)
 
         result.push({
           box: {
@@ -528,7 +531,7 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
       result.apbx = wireBoxReferences
     }
 
-    const wireAccessReferences = this.encodeAccessReferences(value.appId, value.accessReferences, format)
+    const wireAccessReferences = this.encodeResourceReferences(value.appId, value.accessReferences, format)
     if (wireAccessReferences) {
       result.al = wireAccessReferences
     }
@@ -547,13 +550,13 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
 
     const appReferences = value.apfa as WireBigInt[] | undefined
     const wireBoxReferences = value.apbx as WireBoxReference[] | undefined
-    const wireAccessReferences = value.al as WireAccessReference[] | undefined
+    const wireAccessReferences = value.al as WireResourceReference[] | undefined
     const boxReferences = this.decodeBoxReferences(
       appReferences?.map((ar) => bigIntCodec.decode(ar, format)),
       wireBoxReferences,
       format,
     )
-    const accessReferences = this.decodeAccessReferences(wireAccessReferences, format)
+    const accessReferences = this.decodeResourceReferences(wireAccessReferences, format)
 
     return {
       ...this.appCallFieldsCodec.decode(value, format),

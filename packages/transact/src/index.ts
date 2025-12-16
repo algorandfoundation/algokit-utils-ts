@@ -26,6 +26,7 @@ export {
 } from './transactions/signed-transaction'
 
 export { SignedTransactionMeta } from './transactions/signed-transaction-meta'
+export { BoxReferenceMeta, HoldingReferenceMeta, LocalsReferenceMeta } from './transactions/reference-types-meta'
 export { TransactionParamsMeta, transactionParamsCodec } from './transactions/transaction-meta'
 export { transactionCodec } from './transactions/transaction'
 
