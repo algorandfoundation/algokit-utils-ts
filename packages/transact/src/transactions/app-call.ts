@@ -1,4 +1,5 @@
 import {
+  Address,
   MAX_ACCOUNT_REFERENCES,
   MAX_APP_ARGS,
   MAX_APP_REFERENCES,
@@ -10,7 +11,6 @@ import {
   MAX_LOCAL_STATE_KEYS,
   MAX_OVERALL_REFERENCES,
   PROGRAM_PAGE_SIZE,
-  Address,
 } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
@@ -111,7 +111,7 @@ export type AppCallTransactionFields = {
   /**
    * Resources accessed by the application
    */
-  accessReferences?: AccessReference[]
+  accessReferences?: ResourceReference[]
 
   /**
    * The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed.
@@ -199,7 +199,7 @@ export type BoxReference = {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface AccessReference {
+export type ResourceReference = {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
@@ -217,7 +217,7 @@ export interface AccessReference {
 /**
  * A grouping of the asset index and address of the account
  */
-export interface HoldingReference {
+export type HoldingReference = {
   /** The asset index of the holding */
   assetId: bigint
 
@@ -227,7 +227,7 @@ export interface HoldingReference {
 
 /** A grouping of the application index and address of the account
  */
-export interface LocalsReference {
+export type LocalsReference = {
   /** The application index of the local state */
   appId: bigint
 
