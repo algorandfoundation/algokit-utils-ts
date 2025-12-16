@@ -23,7 +23,7 @@ Declared storage schema
 
 #### Defined in
 
-[src/types/app-spec.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L350)
+[src/types/app-spec.ts:364](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L364)
 
 ___
 
@@ -35,4 +35,4 @@ Reserved storage schema
 
 #### Defined in
 
-[src/types/app-spec.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L352)
+[src/types/app-spec.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L366)

@@ -26,7 +26,7 @@ Close out call config
 
 #### Defined in
 
-[src/types/app-spec.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L239)
+[src/types/app-spec.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L253)
 
 ___
 
@@ -38,7 +38,7 @@ Delete call config
 
 #### Defined in
 
-[src/types/app-spec.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L243)
+[src/types/app-spec.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L257)
 
 ___
 
@@ -50,7 +50,7 @@ NoOp call config
 
 #### Defined in
 
-[src/types/app-spec.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L235)
+[src/types/app-spec.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L249)
 
 ___
 
@@ -62,7 +62,7 @@ Opt-in call config
 
 #### Defined in
 
-[src/types/app-spec.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L237)
+[src/types/app-spec.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L251)
 
 ___
 
@@ -74,4 +74,4 @@ Update call config
 
 #### Defined in
 
-[src/types/app-spec.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L241)
+[src/types/app-spec.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L255)
