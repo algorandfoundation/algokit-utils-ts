@@ -40,3 +40,5 @@ A collection of random notes pop up during the migration process.
 - searchCriteria param for indexer-lookup.ts searchTransactions() method is an object, rather than a function which allows chained configuration
 - Doc: Mock server + Rust + polytest
 - searchTransactions introduces breaking change
+  - Old: searchCriteria is a fn (s: SearchForTransactions) => SearchForTransactions
+  - New: searchCriteria is an object type with `SearchForTransactionsCriteria`
