@@ -50,6 +50,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
 /** Parameters to define an app create transaction */
 export type AppCreateParams = Expand<
   Omit<CommonAppCallParams, 'appId'> & {
+    appId?: 0
     onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
     /** The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     approvalProgram: string | Uint8Array
