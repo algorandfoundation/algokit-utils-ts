@@ -26,7 +26,9 @@
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
+    "@algorandfoundation/algokit-algod-client": "*",
     "@algorandfoundation/algokit-common": "*",
+    "@algorandfoundation/algokit-transact": "*",
     "zod": "^3.23.8"
   }
 }

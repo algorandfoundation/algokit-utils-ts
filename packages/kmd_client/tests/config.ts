@@ -31,6 +31,16 @@ export const localnetConfig: ClientConfig = {
   token: process.env.KMD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
 }
 
+// Localnet Algod configuration
+const algodServer = process.env.ALGOD_SERVER || 'http://localhost'
+const algodPort = process.env.ALGOD_PORT || '4001'
+const algodBaseUrl = `${algodServer}:${algodPort}`
+
+export const localnetAlgodConfig = {
+  baseUrl: algodBaseUrl,
+  token: process.env.ALGOD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+}
+
 // Test constants
 export const TEST_WALLET_PASSWORD = 'test-password-123'
 export const TEST_WALLET_DRIVER = 'sqlite'
