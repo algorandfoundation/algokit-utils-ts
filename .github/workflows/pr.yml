@@ -8,11 +8,13 @@ permissions:
   contents: read
 
 jobs:
-  setup-polytest:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,15 +29,6 @@ jobs:
 
       - name: Validate polytest algod_client tests
         run: npm run polytest:validate-algod
-
-  build-and-test:
-    needs: setup-polytest
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Generate transact polytest files
         working-directory: packages/transact/
