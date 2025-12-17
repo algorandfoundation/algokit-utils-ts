@@ -1728,18 +1728,18 @@ export class TransactionComposer {
       sortedResources.assets?.sort(compare)
       sortedResources.apps?.sort(compare)
       sortedResources.boxes?.sort((a, b) => {
-        const aStr = `${a.app}-${a.name}`
-        const bStr = `${b.app}-${b.name}`
+        const aStr = `${a.appId}-${a.name}`
+        const bStr = `${b.appId}-${b.name}`
         return compare(aStr, bStr)
       })
       sortedResources.appLocals?.sort((a, b) => {
-        const aStr = `${a.app}-${a.account}`
-        const bStr = `${b.app}-${b.account}`
+        const aStr = `${a.appId}-${a.address}`
+        const bStr = `${b.appId}-${b.address}`
         return compare(aStr, bStr)
       })
       sortedResources.assetHoldings?.sort((a, b) => {
-        const aStr = `${a.asset}-${a.account}`
-        const bStr = `${b.asset}-${b.account}`
+        const aStr = `${a.assetId}-${a.address}`
+        const bStr = `${b.assetId}-${b.address}`
         return compare(aStr, bStr)
       })
     }

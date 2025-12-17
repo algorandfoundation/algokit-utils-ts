@@ -26,6 +26,7 @@
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
-    "@algorandfoundation/algokit-testing": "*"
+    "@algorandfoundation/algokit-testing": "*",
+    "zod": "^3.23.8"
   }
 }

@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_accounts > Common Tests > Basic request and response validation 1`] = `
+{
+  "accounts": [
+    {
+      "address": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ",
+      "amount": 416118344628n,
+      "amountWithoutPendingRewards": 416118344628n,
+      "createdAtRound": 3331015n,
+      "deleted": false,
+      "minBalance": 100000n,
+      "pendingRewards": 0n,
+      "rewardBase": 27521n,
+      "rewards": 74126551n,
+      "round": 57774717n,
+      "status": "Offline",
+      "totalAppsOptedIn": 0,
+      "totalAssetsOptedIn": 0,
+      "totalBoxBytes": 0,
+      "totalBoxes": 0,
+      "totalCreatedApps": 0,
+      "totalCreatedAssets": 0,
+    },
+  ],
+  "currentRound": 57774717n,
+  "nextToken": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ",
+}
+`;

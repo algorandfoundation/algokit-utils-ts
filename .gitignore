@@ -69,3 +69,4 @@ ENV/
 
 .polytest*/
 polytest_resources/
+.algokit*/

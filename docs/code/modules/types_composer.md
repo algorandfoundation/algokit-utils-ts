@@ -69,7 +69,7 @@ Parameters to define an application call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L91)
+[src/transactions/app-call.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L88)
 
 ___
 
@@ -93,7 +93,7 @@ Parameters to define an app create transaction
 
 #### Defined in
 
-[src/transactions/app-call.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L54)
+[src/transactions/app-call.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L51)
 
 ___
 
@@ -117,7 +117,7 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L101)
+[src/transactions/app-call.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L98)
 
 ___
 
@@ -147,7 +147,7 @@ Common parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L96)
+[src/transactions/app-call.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L93)
 
 ___
 
@@ -183,7 +183,7 @@ Parameters to define an app update transaction
 
 #### Defined in
 
-[src/transactions/app-call.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L80)
+[src/transactions/app-call.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L77)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 ### AssetFreezeParams
 
-Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: [`ReadableAddress`](index.md#readableaddress) ; `assetId`: `bigint` ; `frozen`: `boolean`  }
+Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `freezeTarget`: [`ReadableAddress`](index.md#readableaddress) ; `frozen`: `boolean`  }
 
 Parameters to define an asset freeze transaction.
 
@@ -281,13 +281,13 @@ ___
 
 ### CommonAppCallParams
 
-Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
+Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `ResourceReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
 
 Common parameters for defining an application call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L28)
+[src/transactions/app-call.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L25)
 
 ___
 
