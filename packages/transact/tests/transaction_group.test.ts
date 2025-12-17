@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { describe, expect, test } from 'vitest'
 import { decodeSignedTransaction, encodeSignedTransactions, encodeTransactionRaw, groupTransactions, Transaction } from '../src'
-import { testData } from './common'
+import { base64ToUint8Array, testData } from './common'
 
 const dataDir = path.join(__dirname, 'polytest_resources/data-factory/data')
 
@@ -11,15 +11,6 @@ type TxGroupTestData = {
   stxnBlobs: string[]
   txnBlobs: string[]
   txns: string[]
-}
-
-const base64ToUint8Array = (base64: string): Uint8Array => {
-  const binaryString = atob(base64)
-  const bytes = new Uint8Array(binaryString.length)
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i)
-  }
-  return bytes
 }
 
 const txGroupData: TxGroupTestData = JSON.parse(fs.readFileSync(path.join(dataDir, 'txGroup.json'), 'utf-8'))

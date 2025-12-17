@@ -25,7 +25,7 @@ const readTestDataFile = (filename: string): RawTestData => {
 }
 
 // Helper to decode base64 to Uint8Array
-const base64ToUint8Array = (base64: string): Uint8Array => {
+export const base64ToUint8Array = (base64: string): Uint8Array => {
   const binaryString = atob(base64)
   const bytes = new Uint8Array(binaryString.length)
   for (let i = 0; i < binaryString.length; i++) {
