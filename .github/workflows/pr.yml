@@ -37,6 +37,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate transact polytest files
+        working-directory: packages/transact/
+        run: npm run polytest:generate
+
       - name: Run CI
         uses: ./.github/actions/ci
         with:
