@@ -1,6 +1,6 @@
-import { decodeAddress, encodeAddress } from '@algorandfoundation/sdk'
+import { decodeAddress, encodeAddress } from '@algorandfoundation/algokit-common'
 import type { KmdClient } from '../src/client'
-import { TEST_WALLET_PASSWORD, TEST_WALLET_DRIVER, MULTISIG_VERSION, MULTISIG_THRESHOLD, MULTISIG_KEY_COUNT } from './config'
+import { MULTISIG_KEY_COUNT, MULTISIG_THRESHOLD, MULTISIG_VERSION, TEST_WALLET_DRIVER, TEST_WALLET_PASSWORD } from './config'
 
 /**
  * Generates a unique wallet name for testing

@@ -26,6 +26,7 @@
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
+    "@algorandfoundation/algokit-common": "*",
     "zod": "^3.23.8"
   }
 }
