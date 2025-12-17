@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_accounts_ACCOUNT-ID_apps-local-state > Common Tests > Basic request and response validation 1`] = `
+{
+  "appsLocalStates": [],
+  "currentRound": 57774717n,
+}
+`;

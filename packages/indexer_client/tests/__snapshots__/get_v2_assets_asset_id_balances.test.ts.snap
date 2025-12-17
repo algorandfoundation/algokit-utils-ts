@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_assets_ASSET-ID_balances > Common Tests > Basic request and response validation 1`] = `
+{
+  "balances": [
+    {
+      "address": "25M5BT2DMMED3V6CWDEYKSNEFGPXX4QBIINCOICLXXRU3UGTSGRMF3MTOE",
+      "amount": 0n,
+      "deleted": false,
+      "isFrozen": false,
+      "optedInAtRound": 42227833n,
+    },
+    {
+      "address": "5VLJQQVCC2FARS5OKXWDPPYKJLJNEP7SKFHXD76DRN4WCV7SGI6W2IB5ME",
+      "amount": 1n,
+      "deleted": false,
+      "isFrozen": false,
+      "optedInAtRound": 42227864n,
+    },
+  ],
+  "currentRound": 57772761n,
+  "nextToken": "5VLJQQVCC2FARS5OKXWDPPYKJLJNEP7SKFHXD76DRN4WCV7SGI6W2IB5ME",
+}
+`;
