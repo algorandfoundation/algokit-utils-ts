@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "include": ["src/**/*.ts", "tests/**/*.ts", "packages/*/src/**/*.ts", "packages/*/tests/**/*.ts"],
-  "exclude": ["**/polytest_resources/**", "**/node_modules/**", "**/dist/**"]
+  "exclude": ["**/polytest_resources/**", "**/node_modules/**", "**/dist/**", "**/*.algo.ts"]
 }
