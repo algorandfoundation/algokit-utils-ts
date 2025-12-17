@@ -4,8 +4,9 @@ import type { EncodingFormat } from '../types'
 /**
  * Map codec - handles Maps with any key type (including Uint8Array, bigint, number)
  * Depending on the encoding format, the map is encoded differently:
- * - json: Only supports string keys and is represented as an object when encoding.
- *   An exception is thrown upon encountering a non-string key.
+ * - json: Supports string and bigint keys. The map is represented as an object when encoding.
+ *   Bigint keys are converted to/from strings (e.g., 1n becomes "1").
+ *   An exception is thrown upon encountering an unsupported key type.
  * - msgpack: Preserves key types and is represented as a Map when encoding.
  */
 export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>, Map<KEncoded, VEncoded> | Record<string, VEncoded>> {
@@ -28,7 +29,7 @@ export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>,
     if (format === 'msgpack') {
       return true
     }
-    if (this.keyType !== 'string') {
+    if (this.keyType !== 'string' && this.keyType !== 'bigint') {
       throw new Error(`Map key of type '${this.keyType}' is not supported in ${format} format`)
     }
   }
@@ -68,7 +69,11 @@ export class MapCodec<K, V, KEncoded = K, VEncoded = V> extends Codec<Map<K, V>,
     }
 
     for (const [encodedKey, encodedValue] of entries) {
-      const key = this.keyCodec.decode(encodedKey as KEncoded, format)
+      let keyToDecode = encodedKey as KEncoded
+      if (format === 'json' && this.keyType === 'bigint' && typeof encodedKey === 'string') {
+        keyToDecode = BigInt(encodedKey) as KEncoded
+      }
+      const key = this.keyCodec.decode(keyToDecode, format)
       const val = this.valueCodec.decode(encodedValue, format)
       result.set(key, val)
     }
