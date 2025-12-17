@@ -25,5 +25,7 @@
   },
   "dependencies": {},
   "peerDependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "zod": "^3.23.8"
+  }
 }
