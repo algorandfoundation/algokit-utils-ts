@@ -69,7 +69,7 @@ Parameters to define an application call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L88)
+[src/transactions/app-call.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L89)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 ### AppCreateParams
 
-Ƭ **AppCreateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"``\> & \{ `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraProgramPages?`: `number` ; `onComplete?`: `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  }  }\>
+Ƭ **AppCreateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"``\> & \{ `appId?`: ``0`` ; `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraProgramPages?`: `number` ; `onComplete?`: `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  }  }\>
 
 Parameters to define an app create transaction
 
@@ -117,7 +117,7 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L98)
+[src/transactions/app-call.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L99)
 
 ___
 
@@ -147,7 +147,7 @@ Common parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L93)
+[src/transactions/app-call.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L94)
 
 ___
 
@@ -183,7 +183,7 @@ Parameters to define an app update transaction
 
 #### Defined in
 
-[src/transactions/app-call.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L77)
+[src/transactions/app-call.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L78)
 
 ___
 
