@@ -307,11 +307,15 @@ export class ABIAddressType extends ABIType {
       return value.publicKey
     }
 
+    if (value instanceof Uint8Array && value.length === 32) {
+      return value
+    }
+
     throw new Error(`Cannot encode value as address: ${value}`)
   }
 
-  decode(bytes: Uint8Array): ABIValue {
-    return new Address(bytes)
+  decode(bytes: Uint8Array): string {
+    return new Address(bytes).toString()
   }
 }
 
