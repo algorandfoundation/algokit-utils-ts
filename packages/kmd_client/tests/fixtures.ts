@@ -126,15 +126,13 @@ export async function createTestMultisig(
   const addresses = await generateMultipleKeys(client, walletHandleToken, keyCount)
 
   const publicKeys = addresses.map((addr) => addressToPublicKey(addr))
-  // Convert to number[] - the API expects number arrays for public keys
-  const publicKeysAsNumbers = publicKeys.map((pk) => Array.from(pk).map((byte) => Number(byte)))
 
   // Import multisig
   const result = await client.importMultisig({
     walletHandleToken,
     multisigVersion: MULTISIG_VERSION,
     threshold: threshold,
-    pks: publicKeysAsNumbers,
+    publicKeys: publicKeys,
   })
 
   return {
