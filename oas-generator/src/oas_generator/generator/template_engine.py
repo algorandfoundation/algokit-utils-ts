@@ -222,6 +222,7 @@ class SchemaProcessor:
             is_box_reference = bool(items.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
             is_holding_reference = bool(items.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
             is_locals_reference = bool(items.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
+            byte_length = items.get(constants.X_ALGOKIT_BYTE_LENGTH)
             return ModelDescriptor(
                 model_name=model_name,
                 fields=[],
@@ -237,6 +238,7 @@ class SchemaProcessor:
                 array_item_is_box_reference=is_box_reference,
                 array_item_is_holding_reference=is_holding_reference,
                 array_item_is_locals_reference=is_locals_reference,
+                array_item_byte_length=byte_length,
             )
 
         # Object schema descriptor
@@ -273,6 +275,7 @@ class SchemaProcessor:
             boolean_flag = False
             address_flag = False
             inline_object_schema = None
+            byte_length_flag: int | None = None
 
             if is_array and isinstance(items, dict):
                 if "$ref" in items:
@@ -308,6 +311,7 @@ class SchemaProcessor:
                     box_reference = bool(items.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
                     holding_reference = bool(items.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
                     locals_reference = bool(items.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
+                    byte_length_flag = items.get(constants.X_ALGOKIT_BYTE_LENGTH)
             else:
                 if "$ref" in resolved_schema and resolved_schema is prop_schema:
                     # Only set ref_model if we didn't inline the schema
@@ -361,6 +365,7 @@ class SchemaProcessor:
                     box_reference = bool(resolved_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
                     holding_reference = bool(resolved_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
                     locals_reference = bool(resolved_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
+                    byte_length_flag = resolved_schema.get(constants.X_ALGOKIT_BYTE_LENGTH)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
@@ -404,6 +409,7 @@ class SchemaProcessor:
                     inline_object_schema=inline_object_schema,
                     inline_meta_name=inline_meta_name,
                     is_empty_object=is_empty_object,
+                    byte_length=byte_length_flag,
                 )
             )
 

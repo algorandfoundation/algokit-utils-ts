@@ -3,10 +3,11 @@ import {
   stringCodec,
   numberCodec,
   bigIntCodec,
-  bytesCodec,
   addressCodec,
   ArrayCodec,
   ObjectModelCodec,
+  fixedBytes32Codec,
+  fixedBytes64Codec,
 } from '@algorandfoundation/algokit-common'
 import type { BlockRewards } from './block-rewards'
 import { BlockRewardsMeta } from './block-rewards'
@@ -152,7 +153,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
       name: 'genesisHash',
       wireKey: 'genesis-hash',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'genesisId',
@@ -164,13 +165,13 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
       name: 'previousBlockHash',
       wireKey: 'previous-block-hash',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'previousBlockHash512',
       wireKey: 'previous-block-hash-512',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes64Codec,
     },
     {
       name: 'rewards',
@@ -188,7 +189,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
       name: 'seed',
       wireKey: 'seed',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'stateProofTracking',
@@ -212,19 +213,19 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
       name: 'transactionsRoot',
       wireKey: 'transactions-root',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'transactionsRootSha256',
       wireKey: 'transactions-root-sha256',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'transactionsRootSha512',
       wireKey: 'transactions-root-sha512',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes64Codec,
     },
     {
       name: 'txnCounter',

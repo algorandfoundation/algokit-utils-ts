@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, booleanCodec, fixedBytes32Codec, fixedBytes64Codec } from '@algorandfoundation/algokit-common'
 
 /**
  * Fields for a keyreg transaction.
@@ -58,7 +58,7 @@ export const TransactionKeyregMeta: ObjectModelMetadata<TransactionKeyreg> = {
       name: 'selectionParticipationKey',
       wireKey: 'selection-participation-key',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'voteFirstValid',
@@ -82,13 +82,13 @@ export const TransactionKeyregMeta: ObjectModelMetadata<TransactionKeyreg> = {
       name: 'voteParticipationKey',
       wireKey: 'vote-participation-key',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'stateProofKey',
       wireKey: 'state-proof-key',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes64Codec,
     },
   ],
 }

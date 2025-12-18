@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, fixedBytes32Codec } from '@algorandfoundation/algokit-common'
 
 /**
  * TransactionParams contains the parameters that help a client construct
@@ -62,7 +62,7 @@ export const TransactionParametersResponseMeta: ObjectModelMetadata<TransactionP
       name: 'genesisHash',
       wireKey: 'genesis-hash',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'genesisId',

@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, bigIntCodec, bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
+import { stringCodec, bigIntCodec, bytesCodec, ObjectModelCodec, fixedBytes32Codec } from '@algorandfoundation/algokit-common'
 import type { HbProofFields } from './hb-proof-fields'
 import { HbProofFieldsMeta } from './hb-proof-fields'
 
@@ -58,7 +58,7 @@ export const TransactionHeartbeatMeta: ObjectModelMetadata<TransactionHeartbeat>
       name: 'hbVoteId',
       wireKey: 'hb-vote-id',
       optional: false,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'hbKeyDilution',

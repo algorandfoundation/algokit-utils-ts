@@ -11,6 +11,7 @@
 {% set schemaBytes = schema.get('format') == 'byte' or schema.get('x-algokit-bytes-base64') is true %}
 {% set schemaBigint = schema.get('x-algokit-bigint') is true %}
 {% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
+{% set schemaByteLength = schema.get('x-algokit-byte-length') %}
 import type { Address, ObjectModelMetadata, ArrayModelMetadata, PrimitiveModelMetadata } from '@algorandfoundation/algokit-common';
 import {
   stringCodec,
@@ -31,6 +32,10 @@ import {
   PrimitiveModelCodec,
   RecordCodec,
   unknownCodec,
+  FixedBytesCodec,
+  fixedBytes32Codec,
+  fixedBytes64Codec,
+  fixedBytes1793Codec,
 } from '@algorandfoundation/algokit-common';
 {# Import canonical types and Metas from transact when vendor extension types are used #}
 {% if uses_signed_txn or uses_box_reference or uses_holding_reference or uses_locals_reference %}
@@ -93,12 +98,23 @@ import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
 {% macro inline_object_meta(inline_schema, required_fields, meta_name) -%}
 { name: '{{ meta_name }}', kind: 'object', fields: [
 {%- for prop_name, prop_schema in inline_schema.get('properties', {}).items() %}
+{%- set prop_byte_length = prop_schema.get('x-algokit-byte-length') %}
     {
       name: '{{ prop_name | ts_camel_case }}',
       wireKey: '{{ prop_name }}',
       optional: {{ 'false' if prop_name in required_fields else 'true' }},
       codec: {%- if prop_schema.get('x-algorand-format') == 'Address' -%}
         addressCodec
+      {%- elif (prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64')) and prop_byte_length is not none -%}
+        {%- if prop_byte_length == 32 -%}
+        fixedBytes32Codec
+        {%- elif prop_byte_length == 64 -%}
+        fixedBytes64Codec
+        {%- elif prop_byte_length == 1793 -%}
+        fixedBytes1793Codec
+        {%- else -%}
+        new FixedBytesCodec({{ prop_byte_length }})
+        {%- endif -%}
       {%- elif prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64') -%}
         bytesCodec
       {%- elif prop_schema.get('x-algokit-bigint') -%}
@@ -150,10 +166,20 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {%   endfor %}
   ],
 {% elif isArray %}
-  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference) }},
+  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference, descriptor.array_item_byte_length) }},
 {% else %}
 {%   if schemaSignedTxn %}
   codec: new ObjectModelCodec(SignedTransactionMeta),
+{%   elif schemaBytes and schemaByteLength is not none %}
+{%     if schemaByteLength == 32 %}
+  codec: fixedBytes32Codec,
+{%     elif schemaByteLength == 64 %}
+  codec: fixedBytes64Codec,
+{%     elif schemaByteLength == 1793 %}
+  codec: fixedBytes1793Codec,
+{%     else %}
+  codec: new FixedBytesCodec({{ schemaByteLength }}),
+{%     endif %}
 {%   elif schemaBytes %}
   codec: bytesCodec,
 {%   elif schemaBigint %}
