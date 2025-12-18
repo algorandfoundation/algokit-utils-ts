@@ -1143,6 +1143,10 @@ class CodeGenerator:
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { Block } from './block';\n"
                 "export type { BlockHeader } from './block';\n"
+                "export type { TxnCommitments } from './block';\n"
+                "export type { RewardState } from './block';\n"
+                "export type { UpgradeState } from './block';\n"
+                "export type { UpgradeVote } from './block';\n"
                 "export type { SignedTxnInBlock } from './block';\n"
                 "export type { SignedTxnWithAD } from './block';\n"
                 "export type { ApplyData } from './block';\n"
@@ -1156,7 +1160,12 @@ class CodeGenerator:
             # Add Meta exports for nested types in block.ts to model-meta.ts
             meta_path = models_dir / constants.MODELS_META_FILE
             meta_extras = (
+                "export { BlockMeta } from './block';\n"
                 "export { BlockHeaderMeta } from './block';\n"
+                "export { TxnCommitmentsMeta } from './block';\n"
+                "export { RewardStateMeta } from './block';\n"
+                "export { UpgradeStateMeta } from './block';\n"
+                "export { UpgradeVoteMeta } from './block';\n"
                 "export { SignedTxnInBlockMeta } from './block';\n"
                 "export { SignedTxnWithADMeta } from './block';\n"
                 "export { ApplyDataMeta } from './block';\n"

@@ -210,6 +210,101 @@ export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates>
   ],
 }
 
+/** Transaction commitment hashes for the block. */
+export type TxnCommitments = {
+  /** [txn] Root of transaction merkle tree using SHA512_256. */
+  nativeSha512_256Commitment: Uint8Array
+  /** [txn256] Root of transaction vector commitment using SHA256. */
+  sha256Commitment?: Uint8Array
+  /** [txn512] Root of transaction vector commitment using SHA512. */
+  sha512Commitment?: Uint8Array
+}
+
+export const TxnCommitmentsMeta: ObjectModelMetadata<TxnCommitments> = {
+  name: 'TxnCommitments',
+  kind: 'object',
+  fields: [
+    { name: 'nativeSha512_256Commitment', wireKey: 'txn', optional: false, codec: fixedBytes32Codec },
+    { name: 'sha256Commitment', wireKey: 'txn256', optional: true, codec: fixedBytes32Codec },
+    { name: 'sha512Commitment', wireKey: 'txn512', optional: true, codec: fixedBytes64Codec },
+  ],
+}
+
+/** Reward distribution state for the block. */
+export type RewardState = {
+  /** [fees] FeeSink address. */
+  feeSink?: Address
+  /** [rwd] RewardsPool address. */
+  rewardsPool?: Address
+  /** [earn] Rewards level. */
+  rewardsLevel?: bigint
+  /** [rate] Rewards rate. */
+  rewardsRate?: bigint
+  /** [frac] Rewards residue. */
+  rewardsResidue?: bigint
+  /** [rwcalr] Rewards recalculation round. */
+  rewardsRecalculationRound?: bigint
+}
+
+export const RewardStateMeta: ObjectModelMetadata<RewardState> = {
+  name: 'RewardState',
+  kind: 'object',
+  fields: [
+    { name: 'feeSink', wireKey: 'fees', optional: true, codec: addressCodec },
+    { name: 'rewardsPool', wireKey: 'rwd', optional: true, codec: addressCodec },
+    { name: 'rewardsLevel', wireKey: 'earn', optional: true, codec: bigIntCodec },
+    { name: 'rewardsRate', wireKey: 'rate', optional: true, codec: bigIntCodec },
+    { name: 'rewardsResidue', wireKey: 'frac', optional: true, codec: bigIntCodec },
+    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, codec: bigIntCodec },
+  ],
+}
+
+/** Protocol upgrade state for the block. */
+export type UpgradeState = {
+  /** [proto] Current consensus protocol. */
+  currentProtocol?: string
+  /** [nextproto] Next proposed protocol. */
+  nextProtocol?: string
+  /** [nextyes] Next protocol approvals. */
+  nextProtocolApprovals?: bigint
+  /** [nextbefore] Next protocol vote deadline. */
+  nextProtocolVoteBefore?: bigint
+  /** [nextswitch] Next protocol switch round. */
+  nextProtocolSwitchOn?: bigint
+}
+
+export const UpgradeStateMeta: ObjectModelMetadata<UpgradeState> = {
+  name: 'UpgradeState',
+  kind: 'object',
+  fields: [
+    { name: 'currentProtocol', wireKey: 'proto', optional: true, codec: stringCodec },
+    { name: 'nextProtocol', wireKey: 'nextproto', optional: true, codec: stringCodec },
+    { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, codec: bigIntCodec },
+    { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, codec: bigIntCodec },
+    { name: 'nextProtocolSwitchOn', wireKey: 'nextswitch', optional: true, codec: bigIntCodec },
+  ],
+}
+
+/** Protocol upgrade vote parameters for the block. */
+export type UpgradeVote = {
+  /** [upgradeprop] Upgrade proposal. */
+  upgradePropose?: string
+  /** [upgradedelay] Upgrade delay in rounds. */
+  upgradeDelay?: bigint
+  /** [upgradeyes] Upgrade approval flag. */
+  upgradeApprove?: boolean
+}
+
+export const UpgradeVoteMeta: ObjectModelMetadata<UpgradeVote> = {
+  name: 'UpgradeVote',
+  kind: 'object',
+  fields: [
+    { name: 'upgradePropose', wireKey: 'upgradeprop', optional: true, codec: stringCodec },
+    { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, codec: bigIntCodec },
+    { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, codec: booleanCodec },
+  ],
+}
+
 export type BlockHeader = {
   /** [rnd] Round number. */
   round?: bigint
@@ -219,12 +314,8 @@ export type BlockHeader = {
   previousBlockHash512?: Uint8Array
   /** [seed] Sortition seed. */
   seed?: Uint8Array
-  /** [txn] Root of transaction merkle tree using SHA512_256. */
-  transactionsRoot?: Uint8Array
-  /** [txn256] Root of transaction vector commitment using SHA256. */
-  transactionsRootSha256?: Uint8Array
-  /** [txn512] Root of transaction vector commitment using SHA512. */
-  transactionsRootSha512?: Uint8Array
+  /** Authenticates the set of transactions appearing in the block. */
+  txnCommitments: TxnCommitments
   /** [ts] Block timestamp in seconds since epoch. */
   timestamp?: bigint
   /** [gen] Genesis ID. */
@@ -239,34 +330,12 @@ export type BlockHeader = {
   bonus?: bigint
   /** [pp] Proposer payout. */
   proposerPayout?: bigint
-  /** [fees] FeeSink address. */
-  feeSink?: Address
-  /** [rwd] RewardsPool address. */
-  rewardsPool?: Address
-  /** [earn] Rewards level. */
-  rewardsLevel?: bigint
-  /** [rate] Rewards rate. */
-  rewardsRate?: bigint
-  /** [frac] Rewards residue. */
-  rewardsResidue?: bigint
-  /** [rwcalr] Rewards recalculation round. */
-  rewardsRecalculationRound?: bigint
-  /** [proto] Current consensus protocol. */
-  currentProtocol?: string
-  /** [nextproto] Next proposed protocol. */
-  nextProtocol?: string
-  /** [nextyes] Next protocol approvals. */
-  nextProtocolApprovals?: bigint
-  /** [nextbefore] Next protocol vote deadline. */
-  nextProtocolVoteBefore?: bigint
-  /** [nextswitch] Next protocol switch round. */
-  nextProtocolSwitchOn?: bigint
-  /** [upgradeprop] Upgrade proposal. */
-  upgradePropose?: string
-  /** [upgradedelay] Upgrade delay in rounds. */
-  upgradeDelay?: bigint
-  /** [upgradeyes] Upgrade approval flag. */
-  upgradeApprove?: boolean
+  /** Reward distribution state. */
+  rewardState: RewardState
+  /** Protocol upgrade state. */
+  upgradeState: UpgradeState
+  /** Protocol upgrade vote parameters. */
+  upgradeVote: UpgradeVote
   /** [tc] Transaction counter. */
   txnCounter?: bigint
   /** [spt] State proof tracking data keyed by state proof type. */
@@ -283,9 +352,12 @@ export const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
     { name: 'previousBlockHash', wireKey: 'prev', optional: true, codec: fixedBytes32Codec },
     { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, codec: fixedBytes64Codec },
     { name: 'seed', wireKey: 'seed', optional: true, codec: bytesCodec },
-    { name: 'transactionsRoot', wireKey: 'txn', optional: false, codec: fixedBytes32Codec },
-    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, codec: fixedBytes32Codec },
-    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, codec: fixedBytes64Codec },
+    {
+      name: 'txnCommitments',
+      flattened: true,
+      optional: false,
+      codec: new ObjectModelCodec(TxnCommitmentsMeta),
+    },
     { name: 'timestamp', wireKey: 'ts', optional: true, codec: bigIntCodec },
     { name: 'genesisId', wireKey: 'gen', optional: true, codec: stringCodec },
     { name: 'genesisHash', wireKey: 'gh', optional: true, codec: fixedBytes32Codec },
@@ -293,20 +365,24 @@ export const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
     { name: 'feesCollected', wireKey: 'fc', optional: true, codec: bigIntCodec },
     { name: 'bonus', wireKey: 'bi', optional: true, codec: bigIntCodec },
     { name: 'proposerPayout', wireKey: 'pp', optional: true, codec: bigIntCodec },
-    { name: 'feeSink', wireKey: 'fees', optional: true, codec: addressCodec },
-    { name: 'rewardsPool', wireKey: 'rwd', optional: true, codec: addressCodec },
-    { name: 'rewardsLevel', wireKey: 'earn', optional: true, codec: bigIntCodec },
-    { name: 'rewardsRate', wireKey: 'rate', optional: true, codec: bigIntCodec },
-    { name: 'rewardsResidue', wireKey: 'frac', optional: true, codec: bigIntCodec },
-    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, codec: bigIntCodec },
-    { name: 'currentProtocol', wireKey: 'proto', optional: true, codec: stringCodec },
-    { name: 'nextProtocol', wireKey: 'nextproto', optional: true, codec: stringCodec },
-    { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, codec: bigIntCodec },
-    { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, codec: bigIntCodec },
-    { name: 'nextProtocolSwitchOn', wireKey: 'nextswitch', optional: true, codec: bigIntCodec },
-    { name: 'upgradePropose', wireKey: 'upgradeprop', optional: true, codec: stringCodec },
-    { name: 'upgradeDelay', wireKey: 'upgradedelay', optional: true, codec: bigIntCodec },
-    { name: 'upgradeApprove', wireKey: 'upgradeyes', optional: true, codec: booleanCodec },
+    {
+      name: 'rewardState',
+      flattened: true,
+      optional: false,
+      codec: new ObjectModelCodec(RewardStateMeta),
+    },
+    {
+      name: 'upgradeState',
+      flattened: true,
+      optional: false,
+      codec: new ObjectModelCodec(UpgradeStateMeta),
+    },
+    {
+      name: 'upgradeVote',
+      flattened: true,
+      optional: false,
+      codec: new ObjectModelCodec(UpgradeVoteMeta),
+    },
     { name: 'txnCounter', wireKey: 'tc', optional: true, codec: bigIntCodec },
     {
       name: 'stateProofTracking',
