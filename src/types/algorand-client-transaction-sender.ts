@@ -584,6 +584,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -632,6 +633,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -678,6 +680,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -724,6 +727,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -792,6 +796,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -852,6 +857,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -910,6 +916,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -968,6 +975,7 @@ export class AlgorandClientTransactionSender {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in

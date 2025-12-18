@@ -383,6 +383,7 @@ When interacting with apps (creating, updating, deleting, calling), there are so
 - `assetReferences?: bigint[]` - The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 - `boxReferences?: (BoxReference | BoxIdentifier)[]` - Any [boxes](#box-references) to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays)
 - `accessReference?: AccessReference[]` - Unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
+- `rejectVersion?: number` - If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check. See [Reject Version](#reject-version) for more details.
 
 When making an ABI call, the `args` parameter is replaced with a different type and there is also a `method` parameter per the [`AppMethodCall`](../code/modules/types_composer.md#appmethodcall) type:
 
@@ -437,6 +438,12 @@ In using this unified field, you are able to use a total of 16 individual refere
 When using the seperate reference arrays, you are constraints to a collective total of 8.
 
 The separate reference arrays (`accountReferences`, `appReferences`, etc.) remain fully supported, however when using `accessReferences`, you cannot also use `accountReferences`, `appReferences`, `assetReferences` or `boxReferences`.
+
+## Reject Version
+
+The `rejectVersion` parameter provides a safety mechanism that allows consumers to protect themselves against unexpected app updates. When specified, the network will automatically reject any app call transaction if the target app's version is greater than or equal to the `rejectVersion` value.
+
+For example, setting `rejectVersion: 3` will cause the transaction to fail if the app has been updated to version 3 or higher.
 
 ## Compilation
 

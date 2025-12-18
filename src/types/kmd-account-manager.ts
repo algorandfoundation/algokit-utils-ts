@@ -1,12 +1,12 @@
 import { Account } from '@algorandfoundation/algokit-algod-client'
 import { Address, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
+import { AddressWithTransactionSigner, generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
+import nacl from 'tweetnacl'
 import { Config } from '../config'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { TransactionComposer } from './composer'
-import { AddressWithTransactionSigner, generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
-import nacl from 'tweetnacl'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
@@ -67,41 +67,48 @@ export class KmdAccountManager {
     predicate?: (account: Account) => boolean,
     sender?: string | Address,
   ): Promise<AddressWithTransactionSigner | undefined> {
-    const kmd = await this.kmd()
+    return this.findWalletAccount(walletName, predicate, sender)
+  }
 
+  private async findWalletAccount(
+    walletName: string,
+    predicateOrAddress?: ((account: Account) => boolean) | string,
+    sender?: string | Address,
+  ): Promise<AddressWithTransactionSigner | undefined> {
+    const kmd = await this.kmd()
     const walletsResponse = await kmd.listWallets()
     const wallet = walletsResponse.wallets.filter((w) => w.name === walletName)
     if (wallet.length === 0) {
       return undefined
     }
-
     const walletId = wallet[0].id
-
     const walletHandle = (await kmd.initWalletHandle({ walletId, walletPassword: '' })).walletHandleToken
-    const addresses = (await kmd.listKeysInWallet({ walletHandleToken: walletHandle })).addresses
 
-    let i = 0
-    if (predicate) {
-      for (i = 0; i < addresses.length; i++) {
-        const address = addresses[i]
-        const account = await this._clientManager.algod.accountInformation(address)
-        if (predicate(account)) {
-          break
+    let matchedAddress: Address | undefined = undefined
+    if (predicateOrAddress && typeof predicateOrAddress === 'string') {
+      matchedAddress = Address.fromString(predicateOrAddress)
+    } else {
+      const addresses = (await kmd.listKeysInWallet({ walletHandleToken: walletHandle })).addresses
+      if (addresses.length > 0) {
+        if (predicateOrAddress && typeof predicateOrAddress === 'function') {
+          for (let i = 0; i < addresses.length; i++) {
+            const account = await this._clientManager.algod.accountInformation(addresses[i])
+            if (predicateOrAddress(account)) {
+              matchedAddress = addresses[i]
+              break
+            }
+          }
+        } else {
+          matchedAddress = addresses[0]
         }
       }
     }
 
-    if (i >= addresses.length) {
+    if (!matchedAddress) {
       return undefined
     }
 
-    const accountKey = (
-      await kmd.exportKey({
-        walletHandleToken: walletHandle,
-        address: addresses[i],
-      })
-    ).privateKey
-
+    const accountKey = (await kmd.exportKey({ walletHandleToken: walletHandle, address: matchedAddress })).privateKey
     const keys = nacl.sign.keyPair.fromSecretKey(accountKey)
     const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
       return nacl.sign.detached(bytesToSign, keys.secretKey)
@@ -167,11 +174,7 @@ export class KmdAccountManager {
       getSigner: () => dispenser.signer,
       getSuggestedParams: () => this._clientManager.algod.suggestedParams(),
     })
-      .addPayment({
-        amount: fundWith ?? AlgoAmount.Algo(1000),
-        receiver: account.addr,
-        sender: dispenser.addr,
-      })
+      .addPayment({ amount: fundWith ?? AlgoAmount.Algo(1000), receiver: account.addr, sender: dispenser.addr })
       .send()
 
     return account
@@ -189,12 +192,15 @@ export class KmdAccountManager {
     if (!(await this._clientManager.isLocalNet())) {
       throw new Error("Can't get LocalNet dispenser account from non LocalNet network")
     }
-
-    const dispenser = await this.getWalletAccount('unencrypted-default-wallet', (a) => a.status !== 'Offline' && a.amount > 1_000_000_000)
-    if (!dispenser) {
-      throw new Error("Error retrieving LocalNet dispenser account; couldn't find the default account in KMD")
+    const genesisResponse = await this._clientManager.algod.getGenesis()
+    const dispenserAddresses = genesisResponse.alloc.filter((a) => a.comment === 'Wallet1').map((a) => a.addr)
+    if (dispenserAddresses.length > 0) {
+      const dispenser = await this.findWalletAccount('unencrypted-default-wallet', dispenserAddresses[0])
+      if (dispenser) {
+        return dispenser
+      }
     }
 
-    return dispenser
+    throw new Error("Error retrieving LocalNet dispenser account; couldn't find the default account in KMD")
   }
 }

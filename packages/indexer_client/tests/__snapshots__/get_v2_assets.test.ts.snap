@@ -1,0 +1,41 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_assets > Common Tests > Basic request and response validation 1`] = `
+{
+  "assets": [
+    {
+      "createdAtRound": 3219067n,
+      "deleted": false,
+      "id": 185n,
+      "params": {
+        "clawback": "WLH5LELVSEVQL45LBRQYCLJAX6KQPGWUY5WHJXVRV2NPYZUBQAFPH22Q7A",
+        "creator": "WLH5LELVSEVQL45LBRQYCLJAX6KQPGWUY5WHJXVRV2NPYZUBQAFPH22Q7A",
+        "decimals": 0,
+        "defaultFrozen": false,
+        "freeze": "WLH5LELVSEVQL45LBRQYCLJAX6KQPGWUY5WHJXVRV2NPYZUBQAFPH22Q7A",
+        "manager": "WLH5LELVSEVQL45LBRQYCLJAX6KQPGWUY5WHJXVRV2NPYZUBQAFPH22Q7A",
+        "name": "myasset",
+        "nameB64": Uint8Array [
+          109,
+          121,
+          97,
+          115,
+          115,
+          101,
+          116,
+        ],
+        "reserve": "WLH5LELVSEVQL45LBRQYCLJAX6KQPGWUY5WHJXVRV2NPYZUBQAFPH22Q7A",
+        "total": 100n,
+        "unitName": "MYA",
+        "unitNameB64": Uint8Array [
+          77,
+          89,
+          65,
+        ],
+      },
+    },
+  ],
+  "currentRound": 57774717n,
+  "nextToken": "185",
+}
+`;

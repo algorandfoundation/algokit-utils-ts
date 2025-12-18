@@ -97,8 +97,8 @@
     "polytest:init": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#main' dump-default-targets",
     "polytest:validate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#main' validate -t vitest",
     "polytest:generate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#main' generate -t vitest",
-    "polytest:start-mock-servers": ".polytest_algokit-polytest/resources/mock-server/scripts/start_all_servers.sh",
-    "polytest:stop-mock-servers": ".polytest_algokit-polytest/resources/mock-server/scripts/stop_all_servers.sh"
+    "polytest:start-mock-servers": "cd .polytest_algokit-polytest/resources/mock-server/scripts/ && ./start_all_servers.sh && cd ../../../..",
+    "polytest:stop-mock-servers": "cd .polytest_algokit-polytest/resources/mock-server/scripts/ && ./stop_all_servers.sh && cd ../../../.."
   },
   "overrides": {
     "esbuild": "0.25.0"
@@ -127,8 +127,8 @@
     "better-npm-audit": "^3.11.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",
-    "dotenv-cli": "^7.4.2",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-unused-imports": "^4.3.0",

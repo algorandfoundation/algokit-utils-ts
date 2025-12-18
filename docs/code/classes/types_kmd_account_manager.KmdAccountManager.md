@@ -20,6 +20,7 @@ that makes it easier to get and manage accounts using KMD.
 
 ### Methods
 
+- [findWalletAccount](types_kmd_account_manager.KmdAccountManager.md#findwalletaccount)
 - [getLocalNetDispenserAccount](types_kmd_account_manager.KmdAccountManager.md#getlocalnetdispenseraccount)
 - [getOrCreateWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getorcreatewalletaccount)
 - [getWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getwalletaccount)
@@ -69,6 +70,28 @@ ___
 
 ## Methods
 
+### findWalletAccount
+
+▸ **findWalletAccount**(`walletName`, `predicateOrAddress?`, `sender?`): `Promise`\<`undefined` \| `AddressWithTransactionSigner`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `walletName` | `string` |
+| `predicateOrAddress?` | `string` \| (`account`: `Account`) => `boolean` |
+| `sender?` | `string` \| [`Address`](index.Address.md) |
+
+#### Returns
+
+`Promise`\<`undefined` \| `AddressWithTransactionSigner`\>
+
+#### Defined in
+
+[src/types/kmd-account-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L73)
+
+___
+
 ### getLocalNetDispenserAccount
 
 ▸ **getLocalNetDispenserAccount**(): `Promise`\<`AddressWithTransactionSigner`\>
@@ -89,7 +112,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L188)
+[src/types/kmd-account-manager.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L191)
 
 ___
 
@@ -130,7 +153,7 @@ const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('accoun
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L140)
+[src/types/kmd-account-manager.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L147)
 
 ___
 

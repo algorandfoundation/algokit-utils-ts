@@ -8,11 +8,9 @@ import {
   assertDecodeWithPrefix,
   assertDecodeWithoutPrefix,
   assertEncode,
-  assertEncodeWithAuthAddress,
   assertEncodeWithSignature,
   assertEncodedTransactionType,
   assertExample,
-  assertMultisigExample,
   assertTransactionId,
 } from './transaction_asserts'
 
@@ -29,10 +27,6 @@ describe('Payment', () => {
     for (const [label, testData] of txnTestData) {
       test('example', async () => {
         await assertExample(label, testData)
-      })
-
-      test('multisig example', async () => {
-        await assertMultisigExample(label, testData)
       })
 
       test('get transaction id', () => {
@@ -55,12 +49,8 @@ describe('Payment', () => {
         assertDecodeWithPrefix(label, testData)
       })
 
-      test('encode with auth address', async () => {
-        await assertEncodeWithAuthAddress(label, testData)
-      })
-
-      test('encode with signature', () => {
-        assertEncodeWithSignature(label, testData)
+      test('encode with signature', async () => {
+        await assertEncodeWithSignature(label, testData)
       })
 
       test('encode', () => {

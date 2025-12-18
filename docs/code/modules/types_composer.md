@@ -69,7 +69,7 @@ Parameters to define an application call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L91)
+[src/transactions/app-call.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L89)
 
 ___
 
@@ -87,13 +87,13 @@ ___
 
 ### AppCreateParams
 
-Ƭ **AppCreateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"``\> & \{ `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraProgramPages?`: `number` ; `onComplete?`: `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  }  }\>
+Ƭ **AppCreateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"``\> & \{ `appId?`: ``0`` ; `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraProgramPages?`: `number` ; `onComplete?`: `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  }  }\>
 
 Parameters to define an app create transaction
 
 #### Defined in
 
-[src/transactions/app-call.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L54)
+[src/transactions/app-call.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L51)
 
 ___
 
@@ -117,7 +117,7 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L101)
+[src/transactions/app-call.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L97)
 
 ___
 
@@ -147,7 +147,7 @@ Common parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L96)
+[src/transactions/app-call.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L92)
 
 ___
 
@@ -183,7 +183,7 @@ Parameters to define an app update transaction
 
 #### Defined in
 
-[src/transactions/app-call.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L80)
+[src/transactions/app-call.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L78)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 ### AssetFreezeParams
 
-Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `account`: [`ReadableAddress`](index.md#readableaddress) ; `assetId`: `bigint` ; `frozen`: `boolean`  }
+Ƭ **AssetFreezeParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `freezeTarget`: [`ReadableAddress`](index.md#readableaddress) ; `frozen`: `boolean`  }
 
 Parameters to define an asset freeze transaction.
 
@@ -281,13 +281,13 @@ ___
 
 ### CommonAppCallParams
 
-Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `AccessReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
+Ƭ **CommonAppCallParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `accessReferences?`: `ResourceReference`[] ; `accountReferences?`: [`ReadableAddress`](index.md#readableaddress)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxReference`](../interfaces/types_app_manager.BoxReference.md) \| [`BoxIdentifier`](types_app_manager.md#boxidentifier))[] ; `onComplete?`: `OnApplicationComplete` ; `rejectVersion?`: `number`  }
 
 Common parameters for defining an application call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L28)
+[src/transactions/app-call.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L25)
 
 ___
 

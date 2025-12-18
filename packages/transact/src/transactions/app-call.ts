@@ -1,4 +1,5 @@
 import {
+  Address,
   MAX_ACCOUNT_REFERENCES,
   MAX_APP_ARGS,
   MAX_APP_REFERENCES,
@@ -10,7 +11,6 @@ import {
   MAX_LOCAL_STATE_KEYS,
   MAX_OVERALL_REFERENCES,
   PROGRAM_PAGE_SIZE,
-  Address,
 } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
@@ -111,11 +111,11 @@ export type AppCallTransactionFields = {
   /**
    * Resources accessed by the application
    */
-  accessReferences?: AccessReference[]
+  accessReferences?: ResourceReference[]
 
   /**
-   * The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed.
-   */
+   * If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check.
+   * */
   rejectVersion?: number
 }
 
@@ -199,7 +199,7 @@ export type BoxReference = {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface AccessReference {
+export type ResourceReference = {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: Address
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
@@ -217,7 +217,7 @@ export interface AccessReference {
 /**
  * A grouping of the asset index and address of the account
  */
-export interface HoldingReference {
+export type HoldingReference = {
   /** The asset index of the holding */
   assetId: bigint
 
@@ -227,7 +227,7 @@ export interface HoldingReference {
 
 /** A grouping of the application index and address of the account
  */
-export interface LocalsReference {
+export type LocalsReference = {
   /** The application index of the local state */
   appId: bigint
 
@@ -269,29 +269,18 @@ function validateAppCreation(appCall: AppCallTransactionFields): TransactionVali
   const errors = new Array<TransactionValidationError>()
 
   if (!appCall.approvalProgram || appCall.approvalProgram.length === 0) {
-    errors.push({
-      type: TransactionValidationErrorType.RequiredField,
-      data: FIELD_APPROVAL_PROGRAM,
-    })
+    errors.push({ type: TransactionValidationErrorType.RequiredField, data: FIELD_APPROVAL_PROGRAM })
   }
 
   if (!appCall.clearStateProgram || appCall.clearStateProgram.length === 0) {
-    errors.push({
-      type: TransactionValidationErrorType.RequiredField,
-      data: FIELD_CLEAR_STATE_PROGRAM,
-    })
+    errors.push({ type: TransactionValidationErrorType.RequiredField, data: FIELD_CLEAR_STATE_PROGRAM })
   }
 
   const extraPages = appCall.extraProgramPages ?? 0
   if (extraPages > MAX_EXTRA_PROGRAM_PAGES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: FIELD_EXTRA_PROGRAM_PAGES,
-        actual: extraPages,
-        max: MAX_EXTRA_PROGRAM_PAGES,
-        unit: 'pages',
-      },
+      data: { field: FIELD_EXTRA_PROGRAM_PAGES, actual: extraPages, max: MAX_EXTRA_PROGRAM_PAGES, unit: 'pages' },
     })
   }
 
@@ -300,24 +289,14 @@ function validateAppCreation(appCall: AppCallTransactionFields): TransactionVali
   if (appCall.approvalProgram && appCall.approvalProgram.length > maxProgramSize) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: FIELD_APPROVAL_PROGRAM,
-        actual: appCall.approvalProgram.length,
-        max: maxProgramSize,
-        unit: 'bytes',
-      },
+      data: { field: FIELD_APPROVAL_PROGRAM, actual: appCall.approvalProgram.length, max: maxProgramSize, unit: 'bytes' },
     })
   }
 
   if (appCall.clearStateProgram && appCall.clearStateProgram.length > maxProgramSize) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: FIELD_CLEAR_STATE_PROGRAM,
-        actual: appCall.clearStateProgram.length,
-        max: maxProgramSize,
-        unit: 'bytes',
-      },
+      data: { field: FIELD_CLEAR_STATE_PROGRAM, actual: appCall.clearStateProgram.length, max: maxProgramSize, unit: 'bytes' },
     })
   }
 
@@ -325,12 +304,7 @@ function validateAppCreation(appCall: AppCallTransactionFields): TransactionVali
   if (totalProgramSize > maxProgramSize) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: 'Combined approval and clear state programs',
-        actual: totalProgramSize,
-        max: maxProgramSize,
-        unit: 'bytes',
-      },
+      data: { field: 'Combined approval and clear state programs', actual: totalProgramSize, max: maxProgramSize, unit: 'bytes' },
     })
   }
 
@@ -375,37 +349,22 @@ function validateAppOperation(appCall: AppCallTransactionFields): TransactionVal
 
   if (appCall.onComplete === OnApplicationComplete.UpdateApplication) {
     if (!appCall.approvalProgram || appCall.approvalProgram.length === 0) {
-      errors.push({
-        type: TransactionValidationErrorType.RequiredField,
-        data: FIELD_APPROVAL_PROGRAM,
-      })
+      errors.push({ type: TransactionValidationErrorType.RequiredField, data: FIELD_APPROVAL_PROGRAM })
     }
     if (!appCall.clearStateProgram || appCall.clearStateProgram.length === 0) {
-      errors.push({
-        type: TransactionValidationErrorType.RequiredField,
-        data: FIELD_CLEAR_STATE_PROGRAM,
-      })
+      errors.push({ type: TransactionValidationErrorType.RequiredField, data: FIELD_CLEAR_STATE_PROGRAM })
     }
   }
 
   // These fields are immutable and cannot be set for existing apps
   if (appCall.globalStateSchema !== undefined) {
-    errors.push({
-      type: TransactionValidationErrorType.ImmutableField,
-      data: FIELD_GLOBAL_STATE_SCHEMA,
-    })
+    errors.push({ type: TransactionValidationErrorType.ImmutableField, data: FIELD_GLOBAL_STATE_SCHEMA })
   }
   if (appCall.localStateSchema !== undefined) {
-    errors.push({
-      type: TransactionValidationErrorType.ImmutableField,
-      data: FIELD_LOCAL_STATE_SCHEMA,
-    })
+    errors.push({ type: TransactionValidationErrorType.ImmutableField, data: FIELD_LOCAL_STATE_SCHEMA })
   }
   if (appCall.extraProgramPages !== undefined) {
-    errors.push({
-      type: TransactionValidationErrorType.ImmutableField,
-      data: FIELD_EXTRA_PROGRAM_PAGES,
-    })
+    errors.push({ type: TransactionValidationErrorType.ImmutableField, data: FIELD_EXTRA_PROGRAM_PAGES })
   }
 
   return errors
@@ -421,12 +380,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     if (appCall.args.length > MAX_APP_ARGS) {
       errors.push({
         type: TransactionValidationErrorType.FieldTooLong,
-        data: {
-          field: FIELD_ARGS,
-          actual: appCall.args.length,
-          max: MAX_APP_ARGS,
-          unit: 'arguments',
-        },
+        data: { field: FIELD_ARGS, actual: appCall.args.length, max: MAX_APP_ARGS, unit: 'arguments' },
       })
     }
 
@@ -434,12 +388,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     if (totalArgsSize > MAX_ARGS_SIZE) {
       errors.push({
         type: TransactionValidationErrorType.FieldTooLong,
-        data: {
-          field: 'Args total size',
-          actual: totalArgsSize,
-          max: MAX_ARGS_SIZE,
-          unit: 'bytes',
-        },
+        data: { field: 'Args total size', actual: totalArgsSize, max: MAX_ARGS_SIZE, unit: 'bytes' },
       })
     }
   }
@@ -447,36 +396,21 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
   if (appCall.accountReferences && appCall.accountReferences.length > MAX_ACCOUNT_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: 'Account references',
-        actual: appCall.accountReferences.length,
-        max: MAX_ACCOUNT_REFERENCES,
-        unit: 'refs',
-      },
+      data: { field: 'Account references', actual: appCall.accountReferences.length, max: MAX_ACCOUNT_REFERENCES, unit: 'refs' },
     })
   }
 
   if (appCall.appReferences && appCall.appReferences.length > MAX_APP_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: 'App references',
-        actual: appCall.appReferences.length,
-        max: MAX_APP_REFERENCES,
-        unit: 'refs',
-      },
+      data: { field: 'App references', actual: appCall.appReferences.length, max: MAX_APP_REFERENCES, unit: 'refs' },
     })
   }
 
   if (appCall.assetReferences && appCall.assetReferences.length > MAX_ASSET_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: 'Asset references',
-        actual: appCall.assetReferences.length,
-        max: MAX_ASSET_REFERENCES,
-        unit: 'refs',
-      },
+      data: { field: 'Asset references', actual: appCall.assetReferences.length, max: MAX_ASSET_REFERENCES, unit: 'refs' },
     })
   }
 
@@ -485,12 +419,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     if (appCall.boxReferences.length > MAX_BOX_REFERENCES) {
       errors.push({
         type: TransactionValidationErrorType.FieldTooLong,
-        data: {
-          field: 'Box references',
-          actual: appCall.boxReferences.length,
-          max: MAX_BOX_REFERENCES,
-          unit: 'refs',
-        },
+        data: { field: 'Box references', actual: appCall.boxReferences.length, max: MAX_BOX_REFERENCES, unit: 'refs' },
       })
     }
 
@@ -516,12 +445,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
   if (totalReferences > MAX_OVERALL_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
-      data: {
-        field: 'Total references',
-        actual: totalReferences,
-        max: MAX_OVERALL_REFERENCES,
-        unit: 'refs',
-      },
+      data: { field: 'Total references', actual: totalReferences, max: MAX_OVERALL_REFERENCES, unit: 'refs' },
     })
   }
 

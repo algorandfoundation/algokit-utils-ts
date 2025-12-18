@@ -22,7 +22,7 @@ describe('app-client', () => {
       appSpec,
       defaultSender: localnet.context.testAccount,
     })
-  }, 10_000)
+  })
 
   let appSpec: AppSpec
   let defaultFactory: AppFactory

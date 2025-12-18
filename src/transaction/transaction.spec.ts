@@ -8,18 +8,21 @@ import innerFeeContract from '../../tests/example-contracts/inner-fee/applicatio
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
+import testingApp from '../../tests/example-contracts/testing-app/application.json'
 import { algo, microAlgo } from '../amount'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from '../types/amount'
+import { OnUpdate } from '../types/app'
 import { AppClient } from '../types/app-client'
+import { AppSpec } from '../types/app-spec'
 import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
+  beforeEach(localnet.newScope)
 
   const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
     return {
@@ -1346,7 +1349,7 @@ describe('access references', () => {
     getTestAccounts = async (count: number) => {
       return await Promise.all(Array.from({ length: count }, () => fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })))
     }
-  }, 20_000) // Account generation and funding can be slow
+  })
 
   test('address reference enables access', async () => {
     await appClient.send.call({
@@ -1384,7 +1387,7 @@ describe('access references', () => {
       populateAppCallResources: false,
       accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
     })
-  })
+  }, 10_000) // Account generation can be a little slow
 
   test('throws when more than 16 access addresses are supplied', async () => {
     await expect(
@@ -1395,7 +1398,7 @@ describe('access references', () => {
         accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
-  })
+  }, 10_000) // Account generation can be a little slow
 
   test('app reference enables access', async () => {
     await appClient.send.call({
@@ -1447,6 +1450,113 @@ describe('access references', () => {
       args: [alice],
       populateAppCallResources: false,
       accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
+    })
+  })
+})
+
+describe('version', () => {
+  const fixture = algorandFixture()
+  beforeEach(fixture.newScope)
+
+  let appClient: AppClient
+
+  beforeEach(fixture.newScope)
+
+  beforeAll(async () => {
+    Config.configure({ populateAppCallResources: true })
+    await fixture.newScope()
+    const { algorand, testAccount } = fixture.context
+
+    const appSpec = JSON.parse(JSON.stringify(testingApp)) as AppSpec
+    appSpec.hints['call_abi(string)string'].read_only = false
+
+    const appFactory = algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: testAccount,
+    })
+
+    const deploymentResult = await appFactory.deploy({
+      createParams: {},
+      updateParams: {},
+      updatable: true,
+      deletable: false,
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      onUpdate: OnUpdate.UpdateApp,
+    })
+    appClient = deploymentResult.appClient
+
+    await appClient.fundAppAccount({ amount: (2334300).microAlgo() })
+
+    // Increment the app version twice
+    await appFactory.deploy({
+      createParams: {},
+      updateParams: {},
+      updatable: true,
+      deletable: false,
+      deployTimeParams: {
+        VALUE: 2,
+      },
+      onUpdate: OnUpdate.UpdateApp,
+    })
+
+    await appFactory.deploy({
+      createParams: {},
+      updateParams: {},
+      updatable: true,
+      deletable: false,
+      deployTimeParams: {
+        VALUE: 3,
+      },
+      onUpdate: OnUpdate.UpdateApp,
+    })
+  })
+
+  test('transaction is accepted when no rejectVersion is supplied', async () => {
+    expect(
+      await appClient.send.call({
+        method: 'call_abi',
+        args: ['hello'],
+        populateAppCallResources: false,
+      }),
+    )
+  })
+
+  test('transaction is rejected when app version is greater than or equal to rejectVersion', async () => {
+    const appInfo = await appClient.algorand.app.getById(appClient.appId)
+    expect(appInfo.version).toBe(2)
+
+    await expect(
+      async () =>
+        await appClient.send.call({
+          method: 'call_abi',
+          args: ['hello'],
+          rejectVersion: 2,
+          populateAppCallResources: false,
+        }),
+    ).rejects.toThrow(/app version \(2\) >= reject version \(2\)/)
+
+    await expect(
+      async () =>
+        await appClient.send.call({
+          method: 'call_abi',
+          args: ['hello'],
+          rejectVersion: 1,
+          populateAppCallResources: false,
+        }),
+    ).rejects.toThrow(/app version \(2\) >= reject version \(1\)/)
+  })
+
+  test('transaction is accepted when app version is less than rejectVersion', async () => {
+    const appInfo = await appClient.algorand.app.getById(appClient.appId)
+    expect(appInfo.version).toBe(2)
+
+    await appClient.send.call({
+      method: 'call_abi',
+      args: ['hello'],
+      rejectVersion: 3,
+      populateAppCallResources: false,
     })
   })
 })

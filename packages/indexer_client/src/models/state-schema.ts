@@ -8,12 +8,12 @@ export type StateSchema = {
   /**
    * Maximum number of TEAL uints that may be stored in the key/value store.
    */
-  numUint: number
+  numUints: number
 
   /**
    * Maximum number of TEAL byte slices that may be stored in the key/value store.
    */
-  numByteSlice: number
+  numByteSlices: number
 }
 
 export const StateSchemaMeta: ObjectModelMetadata<StateSchema> = {
@@ -21,13 +21,13 @@ export const StateSchemaMeta: ObjectModelMetadata<StateSchema> = {
   kind: 'object',
   fields: [
     {
-      name: 'numUint',
+      name: 'numUints',
       wireKey: 'num-uint',
       optional: false,
       codec: numberCodec,
     },
     {
-      name: 'numByteSlice',
+      name: 'numByteSlices',
       wireKey: 'num-byte-slice',
       optional: false,
       codec: numberCodec,

@@ -90,11 +90,25 @@ class SchemaProcessor:
         models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
         files: FileMap = {}
 
-        # Filter out schemas that are just arrays of uint8 (these should be inlined)
+        # Filter out schemas that should not have generated files:
+        # - Arrays of uint8 (these should be inlined as Uint8Array)
+        # - Resource reference schemas (BoxReference, HoldingReference, LocalsReference) - these come from transact
+        def should_generate_model(schema: Schema) -> bool:
+            if is_array_of_uint8_schema(schema, schemas):
+                return False
+            # Skip resource reference schemas - they come from transact
+            if schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                return False
+            if schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                return False
+            if schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                return False
+            return True
+
         filtered_schemas = {
             name: schema
             for name, schema in schemas.items()
-            if not is_array_of_uint8_schema(schema, schemas)
+            if should_generate_model(schema)
         }
 
         # First pass: Register all model kinds for the codec processor
@@ -205,6 +219,9 @@ class SchemaProcessor:
             is_number = item_type in ("number", "integer") and not is_bigint
             is_boolean = item_type == "boolean"
             is_signed_txn = bool(items.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+            is_box_reference = bool(items.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
+            is_holding_reference = bool(items.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
+            is_locals_reference = bool(items.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
             return ModelDescriptor(
                 model_name=model_name,
                 fields=[],
@@ -217,6 +234,9 @@ class SchemaProcessor:
                 array_item_is_boolean=is_boolean,
                 array_item_is_address=is_address,
                 array_item_is_signed_txn=is_signed_txn,
+                array_item_is_box_reference=is_box_reference,
+                array_item_is_holding_reference=is_holding_reference,
+                array_item_is_locals_reference=is_locals_reference,
             )
 
         # Object schema descriptor
@@ -244,6 +264,9 @@ class SchemaProcessor:
             items = resolved_schema.get(constants.SchemaKey.ITEMS, {}) if is_array else None
             ref_model = None
             signed_txn = False
+            box_reference = False
+            holding_reference = False
+            locals_reference = False
             bytes_flag = False
             bigint_flag = False
             number_flag = False
@@ -259,6 +282,17 @@ class SchemaProcessor:
                         # This is an array of Uint8Array (bytes), not a model reference
                         bytes_flag = True
                         ref_model = None
+                    elif ref_name in all_schemas:
+                        # Check if referenced schema has vendor extensions for resource reference types
+                        ref_schema = all_schemas[ref_name]
+                        if ref_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                            box_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                            holding_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                            locals_reference = True
+                        else:
+                            ref_model = ts_pascal_case(ref_name)
                     else:
                         ref_model = ts_pascal_case(ref_name)
                 else:
@@ -271,13 +305,35 @@ class SchemaProcessor:
                     number_flag = item_type in ("number", "integer") and not bigint_flag
                     boolean_flag = item_type == "boolean"
                     signed_txn = bool(items.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+                    box_reference = bool(items.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
+                    holding_reference = bool(items.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
+                    locals_reference = bool(items.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
             else:
                 if "$ref" in resolved_schema and resolved_schema is prop_schema:
                     # Only set ref_model if we didn't inline the schema
-                    ref_model = ts_pascal_case(resolved_schema["$ref"].split("/")[-1])
+                    ref_name = resolved_schema["$ref"].split("/")[-1]
+                    # Check if referenced schema has vendor extensions for resource reference types
+                    if ref_name in all_schemas:
+                        ref_schema = all_schemas[ref_name]
+                        if ref_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True:
+                            box_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True:
+                            holding_reference = True
+                        elif ref_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True:
+                            locals_reference = True
+                        else:
+                            ref_model = ts_pascal_case(ref_name)
+                    else:
+                        ref_model = ts_pascal_case(ref_name)
                 # Check for special codec flags first
                 elif bool(resolved_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True):
                     signed_txn = True
+                elif bool(resolved_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True):
+                    box_reference = True
+                elif bool(resolved_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True):
+                    holding_reference = True
+                elif bool(resolved_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True):
+                    locals_reference = True
                 # For inline nested objects, store the schema for inline metadata generation
                 elif (resolved_schema.get(constants.SchemaKey.TYPE) == "object" and
                       "properties" in resolved_schema and
@@ -302,6 +358,9 @@ class SchemaProcessor:
                     number_flag = prop_type in ("number", "integer") and not bigint_flag
                     boolean_flag = prop_type == "boolean"
                     signed_txn = bool(resolved_schema.get(constants.X_ALGOKIT_SIGNED_TXN) is True)
+                    box_reference = bool(resolved_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
+                    holding_reference = bool(resolved_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
+                    locals_reference = bool(resolved_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
@@ -337,6 +396,9 @@ class SchemaProcessor:
                     is_boolean=boolean_flag,
                     is_address=address_flag,
                     is_signed_txn=signed_txn,
+                    is_box_reference=box_reference,
+                    is_holding_reference=holding_reference,
+                    is_locals_reference=locals_reference,
                     is_optional=is_optional,
                     is_nullable=is_nullable,
                     inline_object_schema=inline_object_schema,

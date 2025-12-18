@@ -346,6 +346,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application create transaction
@@ -383,6 +384,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application update transaction
@@ -418,6 +420,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application delete transaction
@@ -453,6 +456,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application call transaction
@@ -509,6 +513,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application ABI method create transaction
@@ -558,6 +563,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application ABI method update transaction
@@ -605,6 +611,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application ABI method delete transaction
@@ -652,6 +659,7 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    * @returns The application ABI method call transaction

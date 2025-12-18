@@ -93,7 +93,7 @@ function createMultisigTransaction(txn: Transaction, { version, threshold, addrs
   const msigAddr = addressFromMultisigPreImg({
     version,
     threshold,
-    pks,
+    publicKeys: pks,
   })
   let authAddress: Address | undefined
   if (!msigAddr.equals(txn.sender)) {
@@ -114,8 +114,8 @@ interface MultisigOptions {
   myPk: Uint8Array
 }
 
-interface MultisigMetadataWithPks extends Omit<MultisigMetadata, 'addrs'> {
-  pks: Uint8Array[]
+interface MultisigMetadataWithPublicKeys extends Omit<MultisigMetadata, 'addrs'> {
+  publicKeys: Uint8Array[]
 }
 
 /**
@@ -131,13 +131,13 @@ interface MultisigMetadataWithPks extends Omit<MultisigMetadata, 'addrs'> {
 function createMultisigTransactionWithSignature(
   txn: Transaction,
   { rawSig, myPk }: MultisigOptions,
-  { version, threshold, pks }: MultisigMetadataWithPks,
+  { version, threshold, publicKeys }: MultisigMetadataWithPublicKeys,
 ): SignedTransaction {
   // Create an empty encoded multisig transaction
   const signedTxn = createMultisigTransaction(txn, {
     version,
     threshold,
-    addrs: pks.map((pk) => new Address(pk)),
+    addrs: publicKeys.map((pk) => new Address(pk)),
   })
 
   let keyExist = false
@@ -184,7 +184,7 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
   const refPreImage = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    pks: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
+    publicKeys: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
@@ -208,10 +208,10 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
     if (unisig.msig.subsignatures.length !== refSigTx.msig.subsignatures.length) {
       throw new Error(MULTISIG_MERGE_WRONG_PREIMAGE_ERROR_MSG)
     }
-    const preimg: MultisigMetadataWithPks = {
+    const preimg: MultisigMetadataWithPublicKeys = {
       version: unisig.msig.version,
       threshold: unisig.msig.threshold,
-      pks: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
+      publicKeys: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
     if (refMsigAddr.toString() !== msgigAddr.toString()) {
@@ -256,7 +256,7 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
  */
 function partialSignWithMultisigSignature(
   transaction: Transaction,
-  metadata: MultisigMetadataWithPks,
+  metadata: MultisigMetadataWithPublicKeys,
   signerAddr: string | Address,
   signature: Uint8Array,
 ) {
@@ -291,9 +291,9 @@ function appendSignRawMultisigSignature(
   signerAddr: string | Address,
   signature: Uint8Array,
 ): SignedTransaction {
-  const pks = toPublicKeys(addrs)
+  const publicKeys = toPublicKeys(addrs)
   // obtain underlying txn, sign it, and merge it
-  const partialSigned = partialSignWithMultisigSignature(multisigTxn.txn, { version, threshold, pks }, signerAddr, signature)
+  const partialSigned = partialSignWithMultisigSignature(multisigTxn.txn, { version, threshold, publicKeys }, signerAddr, signature)
   return mergeMultisigTransactions([multisigTxn, partialSigned])
 }
 
@@ -309,30 +309,30 @@ function appendSignRawMultisigSignature(
 function addressFromMultisigPreImg({
   version,
   threshold,
-  pks,
+  publicKeys,
 }: Omit<MultisigMetadata, 'addrs'> & {
-  pks: Uint8Array[]
+  publicKeys: Uint8Array[]
 }): Address {
   if (version > 255 || version < 0) {
     // ^ a tad redundant, but in case in the future version != 1, still check for uint8
     throw new Error(`${INVALID_MSIG_VERSION_ERROR_MSG}: ${version}`)
   }
-  if (threshold === 0 || pks.length === 0 || threshold > pks.length || threshold > 255) {
+  if (threshold === 0 || publicKeys.length === 0 || threshold > publicKeys.length || threshold > 255) {
     throw new Error(INVALID_MSIG_THRESHOLD_ERROR_MSG)
   }
   const pkLen = ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH
   if (pkLen !== PUBLIC_KEY_BYTE_LENGTH) {
     throw new Error(UNEXPECTED_PK_LEN_ERROR_MSG)
   }
-  const merged = new Uint8Array(MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + pkLen * pks.length)
+  const merged = new Uint8Array(MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + pkLen * publicKeys.length)
   merged.set(MULTISIG_PREIMG2ADDR_PREFIX, 0)
   merged.set([version], MULTISIG_PREIMG2ADDR_PREFIX.length)
   merged.set([threshold], MULTISIG_PREIMG2ADDR_PREFIX.length + 1)
-  for (let i = 0; i < pks.length; i++) {
-    if (pks[i].length !== pkLen) {
+  for (let i = 0; i < publicKeys.length; i++) {
+    if (publicKeys[i].length !== pkLen) {
       throw new Error(INVALID_MSIG_PK_ERROR_MSG)
     }
-    merged.set(pks[i], MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + i * pkLen)
+    merged.set(publicKeys[i], MULTISIG_PREIMG2ADDR_PREFIX.length + 2 + i * pkLen)
   }
   return new Address(Uint8Array.from(hash(merged)))
 }
@@ -348,7 +348,7 @@ function addressFromMultisigPreImgAddrs({ version, threshold, addrs }: MultisigM
   return addressFromMultisigPreImg({
     version,
     threshold,
-    pks: toPublicKeys(addrs),
+    publicKeys: toPublicKeys(addrs),
   })
 }
 

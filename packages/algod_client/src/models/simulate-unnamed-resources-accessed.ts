@@ -1,11 +1,7 @@
 import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
 import { numberCodec, ArrayCodec, bigIntArrayCodec, addressArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
-import type { ApplicationLocalReference } from './application-local-reference'
-import { ApplicationLocalReferenceMeta } from './application-local-reference'
-import type { AssetHoldingReference } from './asset-holding-reference'
-import { AssetHoldingReferenceMeta } from './asset-holding-reference'
-import type { BoxReference } from './box-reference'
-import { BoxReferenceMeta } from './box-reference'
+import type { BoxReference, HoldingReference, LocalsReference } from '@algorandfoundation/algokit-transact'
+import { BoxReferenceMeta, HoldingReferenceMeta, LocalsReferenceMeta } from '@algorandfoundation/algokit-transact'
 
 /**
  * These are resources that were accessed by this group that would normally have caused failure, but were allowed in simulation. Depending on where this object is in the response, the unnamed resources it contains may or may not qualify for group resource sharing. If this is a field in SimulateTransactionGroupResult, the resources do qualify, but if this is a field in SimulateTransactionResult, they do not qualify. In order to make this group valid for actual submission, resources that qualify for group sharing can be made available by any transaction of the group; otherwise, resources must be placed in the same transaction which accessed them.
@@ -39,12 +35,12 @@ export type SimulateUnnamedResourcesAccessed = {
   /**
    * The unnamed asset holdings that were referenced. The order of this array is arbitrary.
    */
-  assetHoldings?: AssetHoldingReference[]
+  assetHoldings?: HoldingReference[]
 
   /**
    * The unnamed application local states that were referenced. The order of this array is arbitrary.
    */
-  appLocals?: ApplicationLocalReference[]
+  appLocals?: LocalsReference[]
 }
 
 export const SimulateUnnamedResourcesAccessedMeta: ObjectModelMetadata<SimulateUnnamedResourcesAccessed> = {
@@ -85,13 +81,13 @@ export const SimulateUnnamedResourcesAccessedMeta: ObjectModelMetadata<SimulateU
       name: 'assetHoldings',
       wireKey: 'asset-holdings',
       optional: true,
-      codec: new ArrayCodec(new ObjectModelCodec(AssetHoldingReferenceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(HoldingReferenceMeta)),
     },
     {
       name: 'appLocals',
       wireKey: 'app-locals',
       optional: true,
-      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLocalReferenceMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(LocalsReferenceMeta)),
     },
   ],
 }

@@ -42,10 +42,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
     if (c.update_application && ['ALL', type].includes(c.update_application)) actions.push('UpdateApplication')
     return actions
   }
-  const getDefaultArgValue = (
-    type: string,
-    defaultArg: DefaultArgument | undefined,
-  ): Arc56Contract['methods'][0]['args'][0]['defaultValue'] => {
+  const getDefaultArgValue = (defaultArg: DefaultArgument | undefined): Arc56Contract['methods'][0]['args'][0]['defaultValue'] => {
     if (!defaultArg) return undefined
 
     if (defaultArg.source === 'abi-method') {
@@ -55,12 +52,29 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
       }
     }
 
+    const mappedSource = defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local'
+
+    // type is only set for literal source
+    let defaultValueType: string | undefined = undefined
+    if (mappedSource === 'literal') {
+      if (typeof defaultArg.data === 'number') {
+        defaultValueType = 'uint64'
+      } else if (typeof defaultArg.data === 'string') {
+        defaultValueType = 'AVMString'
+      }
+    }
+
+    const argData =
+      typeof defaultArg.data === 'number'
+        ? ABITypeClass.from('uint64').encode(defaultArg.data)
+        : typeof defaultArg.data === 'string'
+          ? new TextEncoder().encode(defaultArg.data)
+          : defaultArg.data
+
     return {
-      source: defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local',
-      data: Buffer.from(
-        typeof defaultArg.data === 'number' ? ABITypeClass.from('uint64').encode(defaultArg.data) : defaultArg.data,
-      ).toString('base64'),
-      type: type === 'string' ? 'AVMString' : type,
+      source: mappedSource,
+      data: Buffer.from(argData).toString('base64'),
+      type: defaultValueType,
     }
   }
 
@@ -79,7 +93,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
             type: a.type,
             desc: a.desc,
             struct: a.name ? hint(m)?.structs?.[a.name]?.name : undefined,
-            defaultValue: getDefaultArgValue(a.type, !a.name ? undefined : hint(m)?.default_arguments?.[a.name]),
+            defaultValue: getDefaultArgValue(!a.name ? undefined : hint(m)?.default_arguments?.[a.name]),
           })),
           returns: {
             type: m.returns.type,

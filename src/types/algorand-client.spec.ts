@@ -41,7 +41,7 @@ describe('AlgorandClient', () => {
     const deployResult = await appFactory.deploy({ createParams: { method: 'createApplication', args: [] } })
     appClient = deployResult.appClient
     appId = BigInt(deployResult.result.appId)
-  }, 10_000)
+  })
 
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance

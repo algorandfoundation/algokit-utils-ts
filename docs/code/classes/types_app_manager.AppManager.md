@@ -58,7 +58,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-manager.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L107)
+[src/types/app-manager.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L109)
 
 ## Properties
 
@@ -68,7 +68,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-manager.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L100)
+[src/types/app-manager.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L102)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/types/app-manager.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L101)
+[src/types/app-manager.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L103)
 
 ## Methods
 
@@ -113,7 +113,7 @@ const compiled = await appManager.compileTeal(tealProgram)
 
 #### Defined in
 
-[src/types/app-manager.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L126)
+[src/types/app-manager.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L128)
 
 ___
 
@@ -153,7 +153,7 @@ const compiled = await appManager.compileTealTemplate(tealTemplate, { TMPL_APP_I
 
 #### Defined in
 
-[src/types/app-manager.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L162)
+[src/types/app-manager.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L164)
 
 ___
 
@@ -183,7 +183,7 @@ const boxNames = await appManager.getBoxNames(12353n);
 
 #### Defined in
 
-[src/types/app-manager.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L279)
+[src/types/app-manager.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L276)
 
 ___
 
@@ -214,7 +214,7 @@ const boxValue = await appManager.getBoxValue(12353n, 'boxName');
 
 #### Defined in
 
-[src/types/app-manager.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L300)
+[src/types/app-manager.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L293)
 
 ___
 
@@ -244,7 +244,7 @@ const boxValue = await appManager.getBoxValueFromABIType({ appId: 12353n, boxNam
 
 #### Defined in
 
-[src/types/app-manager.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L330)
+[src/types/app-manager.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L323)
 
 ___
 
@@ -275,7 +275,7 @@ const boxValues = await appManager.getBoxValues(12353n, ['boxName1', 'boxName2']
 
 #### Defined in
 
-[src/types/app-manager.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L317)
+[src/types/app-manager.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L310)
 
 ___
 
@@ -305,7 +305,7 @@ const boxValues = await appManager.getBoxValuesFromABIType({ appId: 12353n, boxN
 
 #### Defined in
 
-[src/types/app-manager.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L345)
+[src/types/app-manager.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L338)
 
 ___
 
@@ -335,7 +335,7 @@ const appInfo = await appManager.getById(12353n);
 
 #### Defined in
 
-[src/types/app-manager.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L203)
+[src/types/app-manager.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L205)
 
 ___
 
@@ -366,7 +366,7 @@ const compiled = appManager.getCompilationResult(tealProgram)
 
 #### Defined in
 
-[src/types/app-manager.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L188)
+[src/types/app-manager.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L190)
 
 ___
 
@@ -458,7 +458,7 @@ const stateValues = AppManager.decodeAppState(state);
 
 #### Defined in
 
-[src/types/app-manager.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L377)
+[src/types/app-manager.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L370)
 
 ___
 
@@ -489,7 +489,7 @@ const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignatur
 
 #### Defined in
 
-[src/types/app-manager.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L430)
+[src/types/app-manager.ts:419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L419)
 
 ___
 
@@ -519,7 +519,7 @@ const boxRef = AppManager.getBoxReference('boxName');
 
 #### Defined in
 
-[src/types/app-manager.ts:359](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L359)
+[src/types/app-manager.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L352)
 
 ___
 
@@ -539,7 +539,7 @@ ___
 
 #### Defined in
 
-[src/types/app-manager.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L466)
+[src/types/app-manager.ts:445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L445)
 
 ___
 
@@ -578,7 +578,7 @@ const tealCode = AppManager.replaceTealTemplateDeployTimeControlParams(tealTempl
 
 #### Defined in
 
-[src/types/app-manager.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L495)
+[src/types/app-manager.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L474)
 
 ___
 
@@ -611,7 +611,7 @@ const tealCode = AppManager.replaceTealTemplateParams(tealTemplate, { TMPL_APP_I
 
 #### Defined in
 
-[src/types/app-manager.ts:530](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L530)
+[src/types/app-manager.ts:509](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L509)
 
 ___
 
@@ -641,4 +641,4 @@ const stripped = AppManager.stripTealComments(tealProgram);
 
 #### Defined in
 
-[src/types/app-manager.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L569)
+[src/types/app-manager.ts:548](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L548)

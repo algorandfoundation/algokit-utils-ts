@@ -825,6 +825,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *  // Signer only needed if you want to provide one,
    *  //  generally you'd register it with AlgorandClient
    *  //  against the sender and not need to pass it in
@@ -874,6 +875,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -915,6 +917,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -958,6 +961,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1020,6 +1024,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1081,6 +1086,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1140,6 +1146,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1199,6 +1206,7 @@ export class TransactionComposer {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
+   *  rejectVersion: 1,
    *})
    * ```
    */
@@ -1407,24 +1415,34 @@ export class TransactionComposer {
             transaction = buildAssetOptOut(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'appCall':
-            if (!('appId' in ctxn.data)) {
-              transaction = await buildAppCreate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            if (ctxn.data.appId === undefined || ctxn.data.appId === 0) {
+              transaction = await buildAppCreate(ctxn.data as AppCreateParams, this.appManager, suggestedParams, defaultValidityWindow)
             } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
-              transaction = await buildAppUpdate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+              transaction = await buildAppUpdate(ctxn.data as AppUpdateParams, this.appManager, suggestedParams, defaultValidityWindow)
             } else {
-              transaction = buildAppCall(ctxn.data, suggestedParams, defaultValidityWindow)
+              transaction = buildAppCall(ctxn.data as AppCallParams, suggestedParams, defaultValidityWindow)
             }
             break
           case 'keyReg':
             transaction = buildKeyReg(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'methodCall':
-            if (!('appId' in ctxn.data)) {
-              transaction = await buildAppCreateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            if (ctxn.data.appId === undefined || ctxn.data.appId === 0) {
+              transaction = await buildAppCreateMethodCall(
+                ctxn.data as ProcessedAppCreateMethodCall,
+                this.appManager,
+                suggestedParams,
+                defaultValidityWindow,
+              )
             } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
-              transaction = await buildAppUpdateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+              transaction = await buildAppUpdateMethodCall(
+                ctxn.data as ProcessedAppUpdateMethodCall,
+                this.appManager,
+                suggestedParams,
+                defaultValidityWindow,
+              )
             } else {
-              transaction = await buildAppCallMethodCall(ctxn.data, suggestedParams, defaultValidityWindow)
+              transaction = await buildAppCallMethodCall(ctxn.data as ProcessedAppCallMethodCall, suggestedParams, defaultValidityWindow)
             }
             break
           default:
@@ -1728,18 +1746,18 @@ export class TransactionComposer {
       sortedResources.assets?.sort(compare)
       sortedResources.apps?.sort(compare)
       sortedResources.boxes?.sort((a, b) => {
-        const aStr = `${a.app}-${a.name}`
-        const bStr = `${b.app}-${b.name}`
+        const aStr = `${a.appId}-${a.name}`
+        const bStr = `${b.appId}-${b.name}`
         return compare(aStr, bStr)
       })
       sortedResources.appLocals?.sort((a, b) => {
-        const aStr = `${a.app}-${a.account}`
-        const bStr = `${b.app}-${b.account}`
+        const aStr = `${a.appId}-${a.address}`
+        const bStr = `${b.appId}-${b.address}`
         return compare(aStr, bStr)
       })
       sortedResources.assetHoldings?.sort((a, b) => {
-        const aStr = `${a.asset}-${a.account}`
-        const bStr = `${b.asset}-${b.account}`
+        const aStr = `${a.assetId}-${a.address}`
+        const bStr = `${b.assetId}-${b.address}`
         return compare(aStr, bStr)
       })
     }

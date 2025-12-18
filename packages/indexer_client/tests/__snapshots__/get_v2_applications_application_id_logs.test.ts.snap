@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_applications_APPLICATION-ID_logs > Common Tests > Basic request and response validation 1`] = `
+{
+  "applicationId": 718348254n,
+  "currentRound": 57772761n,
+  "logData": [
+    {
+      "logs": [
+        Uint8Array [
+          21,
+          31,
+          124,
+          117,
+          0,
+          10,
+          0,
+          0,
+          0,
+          0,
+          7,
+          91,
+          205,
+          21,
+          0,
+          4,
+          74,
+          111,
+          104,
+          110,
+        ],
+      ],
+      "txId": "BIVEPHMPLY5BL76MWU55TP65EWPI4UQZD2O2FOFLIL4SQO6Z7WXA",
+    },
+    {
+      "logs": [
+        Uint8Array [
+          21,
+          31,
+          124,
+          117,
+          0,
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          123,
+          0,
+          5,
+          116,
+          101,
+          115,
+          116,
+          32,
+        ],
+      ],
+      "txId": "OUQEBRIXBLCFGEYLIY45XKBNYVIYRJRCTE53HF6R55IUYBIIPOQA",
+    },
+  ],
+  "nextToken": "Q9GiAgAAAAAAAAAA",
+}
+`;
