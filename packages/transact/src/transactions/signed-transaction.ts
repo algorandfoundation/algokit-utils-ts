@@ -47,7 +47,7 @@ export type MultisigSubsignature = {
   /**
    * Optional Ed25519 signature for the transaction.
    */
-  signature?: Uint8Array
+  sig?: Uint8Array
 }
 
 /**
@@ -71,7 +71,7 @@ export type MultisigSignature = {
   /**
    * Array of subsignatures
    */
-  subsignatures: Array<MultisigSubsignature>
+  subsigs: Array<MultisigSubsignature>
 }
 
 /**

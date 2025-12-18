@@ -37,7 +37,7 @@ export function newMultisigSignature(version: number, threshold: number, partici
   return {
     version,
     threshold,
-    subsignatures: participants.map((publicKey) => ({ publicKey })),
+    subsigs: participants.map((publicKey) => ({ publicKey })),
   }
 }
 
@@ -45,7 +45,7 @@ export function newMultisigSignature(version: number, threshold: number, partici
  * Returns the list of participant public keys from a multisignature signature.
  */
 export function participantsFromMultisigSignature(multisigSignature: MultisigSignature): Uint8Array[] {
-  return multisigSignature.subsignatures.map((subsig) => subsig.publicKey)
+  return multisigSignature.subsigs.map((subsig) => subsig.publicKey)
 }
 
 const toPublicKeys = (addrs: Array<string | Address>): Uint8Array[] => addrs.map((addr) => getAddress(addr).publicKey)
@@ -57,7 +57,7 @@ export function addressFromMultisigSignature(multisigSignature: MultisigSignatur
   return addressFromMultisigPreImg({
     version: multisigSignature.version,
     threshold: multisigSignature.threshold,
-    publicKeys: multisigSignature.subsignatures.map((subsig) => subsig.publicKey),
+    publicKeys: multisigSignature.subsigs.map((subsig) => subsig.publicKey),
   })
 }
 
@@ -73,10 +73,10 @@ export function applyMultisigSubsignature(
   signature: Uint8Array,
 ): MultisigSignature {
   let found = false
-  const newSubsignatures = multisigSignature.subsignatures.map((subsig) => {
+  const newSubsignatures = multisigSignature.subsigs.map((subsig) => {
     if (arrayEqual(subsig.publicKey, participant)) {
       found = true
-      return { ...subsig, signature }
+      return { ...subsig, sig: signature } satisfies MultisigSubsignature
     }
     return subsig
   })
@@ -87,7 +87,7 @@ export function applyMultisigSubsignature(
 
   return {
     ...multisigSignature,
-    subsignatures: newSubsignatures,
+    subsigs: newSubsignatures,
   }
 }
 
@@ -112,18 +112,18 @@ export function mergeMultisignatures(multisigSignatureA: MultisigSignature, mult
     throw new Error('Cannot merge multisig signatures with different participants')
   }
 
-  const mergedSubsignatures: MultisigSubsignature[] = multisigSignatureA.subsignatures.map((s1, index) => {
-    const s2 = multisigSignatureB.subsignatures[index]
+  const mergedSubsignatures: MultisigSubsignature[] = multisigSignatureA.subsigs.map((s1, index) => {
+    const s2 = multisigSignatureB.subsigs[index]
     return {
       publicKey: s1.publicKey,
-      signature: s2.signature || s1.signature, // Prefer s2, fall back to s1
-    }
+      sig: s2.sig || s1.sig, // Prefer s2, fall back to s1
+    } satisfies MultisigSubsignature
   })
 
   return {
     version: multisigSignatureA.version,
     threshold: multisigSignatureA.threshold,
-    subsignatures: mergedSubsignatures,
+    subsigs: mergedSubsignatures,
   }
 }
 
@@ -156,15 +156,18 @@ const MULTISIG_KEY_NOT_EXIST_ERROR_MSG = 'Key does not exist'
 export function createMultisigTransaction(txn: Transaction, { version, threshold, addrs }: MultisigMetadata) {
   // construct the appendable multisigned transaction format
   const pks = toPublicKeys(addrs)
-  const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
-    publicKey: pk,
-    signature: undefined,
-  }))
+  const subsignatures = pks.map(
+    (pk) =>
+      ({
+        publicKey: pk,
+        sig: undefined,
+      }) satisfies MultisigSubsignature,
+  )
 
   const msig: MultisigSignature = {
     version,
     threshold,
-    subsignatures,
+    subsigs: subsignatures,
   }
 
   // if the address of this multisig is different from the transaction sender,
@@ -224,10 +227,10 @@ function createMultisigTransactionWithSignature(
   let keyExist = false
 
   // append the multisig signature to the corresponding public key in the multisig blob
-  const updatedSubsigs = signedTxn.msig!.subsignatures.map((subsig) => {
+  const updatedSubsigs = signedTxn.msig!.subsigs.map((subsig) => {
     if (arrayEqual(subsig.publicKey, myPk)) {
       keyExist = true
-      return { ...subsig, signature: rawSig }
+      return { ...subsig, sig: rawSig }
     }
     return subsig
   })
@@ -240,7 +243,7 @@ function createMultisigTransactionWithSignature(
     ...signedTxn,
     msig: {
       ...signedTxn.msig!,
-      subsignatures: updatedSubsigs,
+      subsigs: updatedSubsigs,
     },
   }
 
@@ -265,11 +268,11 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   const refPreImage = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    publicKeys: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
+    publicKeys: refSigTx.msig.subsigs.map((subsig) => subsig.publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
-  const newSubsigs: MultisigSubsignature[] = refSigTx.msig.subsignatures.map((sig) => ({ ...sig }))
+  const newSubsigs: MultisigSubsignature[] = refSigTx.msig.subsigs.map((sig) => ({ ...sig }))
   for (let i = 1; i < multisigTxnBlobs.length; i++) {
     const unisig = decodeSignedTransaction(multisigTxnBlobs[i])
     if (!unisig.msig) {
@@ -286,13 +289,13 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
     }
 
     // check multisig has same preimage as reference
-    if (unisig.msig.subsignatures.length !== refSigTx.msig.subsignatures.length) {
+    if (unisig.msig.subsigs.length !== refSigTx.msig.subsigs.length) {
       throw new Error(MULTISIG_MERGE_WRONG_PREIMAGE_ERROR_MSG)
     }
     const preimg: MultisigMetadataWithPublicKeys = {
       version: unisig.msig.version,
       threshold: unisig.msig.threshold,
-      publicKeys: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
+      publicKeys: unisig.msig.subsigs.map((subsig) => subsig.publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
     if (refMsigAddr.toString() !== msgigAddr.toString()) {
@@ -300,21 +303,21 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
     }
 
     // now, we can merge
-    unisig.msig.subsignatures.forEach((uniSubsig, index) => {
-      if (!uniSubsig.signature) return
+    unisig.msig.subsigs.forEach((uniSubsig, index) => {
+      if (!uniSubsig.sig) return
       const current = newSubsigs[index]
-      if (current.signature && !arrayEqual(uniSubsig.signature, current.signature)) {
+      if (current.sig && !arrayEqual(uniSubsig.sig, current.sig)) {
         // mismatch
         throw new Error(MULTISIG_MERGE_SIG_MISMATCH_ERROR_MSG)
       }
-      current.signature = uniSubsig.signature
+      current.sig = uniSubsig.sig
     })
   }
 
   const msig: MultisigSignature = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    subsignatures: newSubsigs,
+    subsigs: newSubsigs,
   }
 
   const signedTxn: SignedTransaction = {
