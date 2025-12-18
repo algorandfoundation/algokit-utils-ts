@@ -11,10 +11,6 @@ describe('POST v1_multisig_export', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    // SKIPPED: Type mismatch between client model and Zod schema
-    // Client returns publicKeys as Uint8Array[] (typed arrays)
-    // Zod schema expects publicKeys as number[][] (z.array(z.array(z.number().int())))
-    // Zod's z.array() doesn't recognize Uint8Array as a valid array type
     test('Basic request and response validation', async () => {
       const client = new KmdClient(localnetConfig)
       const { walletHandleToken } = await getWalletHandle(client)
