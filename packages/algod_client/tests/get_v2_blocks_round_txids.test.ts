@@ -11,7 +11,7 @@ describe('GET v2_blocks_ROUND_txids', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getBlockTxIds(TEST_ROUND)
+      const result = await client.blockTxIds(TEST_ROUND)
 
       expect(result).toMatchSnapshot()
     })

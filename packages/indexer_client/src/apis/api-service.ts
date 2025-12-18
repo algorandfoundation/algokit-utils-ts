@@ -47,6 +47,23 @@ export class IndexerApi {
     return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain'
   }
 
+  async healthCheck(): Promise<HealthCheck> {
+    const headers: Record<string, string> = {}
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
+
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
+      method: 'GET',
+      url: '/health',
+      path: {},
+      query: {},
+      headers,
+      body: undefined,
+    })
+
+    return decodeJson(payload, HealthCheckMeta)
+  }
+
   /**
    * Lookup an account's asset holdings, optionally for a specific ID.
    */
@@ -450,23 +467,6 @@ export class IndexerApi {
     })
 
     return decodeJson(payload, TransactionResponseMeta)
-  }
-
-  async makeHealthCheck(): Promise<HealthCheck> {
-    const headers: Record<string, string> = {}
-    const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = this.mimeTypeFor(responseFormat)
-
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
-      method: 'GET',
-      url: '/health',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-    })
-
-    return decodeJson(payload, HealthCheckMeta)
   }
 
   /**

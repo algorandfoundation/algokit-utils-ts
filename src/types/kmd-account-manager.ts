@@ -192,7 +192,7 @@ export class KmdAccountManager {
     if (!(await this._clientManager.isLocalNet())) {
       throw new Error("Can't get LocalNet dispenser account from non LocalNet network")
     }
-    const genesisResponse = await this._clientManager.algod.getGenesis()
+    const genesisResponse = await this._clientManager.algod.genesis()
     const dispenserAddresses = genesisResponse.alloc.filter((a) => a.comment === 'Wallet1').map((a) => a.addr)
     if (dispenserAddresses.length > 0) {
       const dispenser = await this.findWalletAccount('unencrypted-default-wallet', dispenserAddresses[0])

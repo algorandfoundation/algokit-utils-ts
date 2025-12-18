@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-16T23:15:21.122Z
+ * Generated: 2025-12-18T06:40:24.225Z
  */
 
 import { z } from 'zod'
@@ -25,7 +25,7 @@ export const TealValue = z.object({
 })
 
 export const TealKeyValue = z.object({
-  key: z.string(),
+  key: z.instanceof(Uint8Array),
   value: TealValue
 })
 
@@ -347,12 +347,12 @@ export const TransactionSignature = z.object({
 
 export const EvalDelta = z.object({
   action: z.number().int(),
-  bytes: z.string().optional(),
+  bytes: z.instanceof(Uint8Array).optional(),
   uint: z.bigint().optional()
 })
 
 export const EvalDeltaKeyValue = z.object({
-  key: z.string(),
+  key: z.instanceof(Uint8Array),
   value: EvalDelta
 })
 

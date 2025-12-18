@@ -44,9 +44,9 @@ export type BlockAppEvalDelta = {
   /** [ld] Local state deltas keyed by address index. */
   localDeltas?: Map<number, Map<Uint8Array, BlockEvalDelta>>
   /** [itx] Inner transactions produced by this application execution. */
-  innerTxns?: SignedTxnInBlock[]
+  innerTxns?: SignedTxnWithAD[]
   /** [sa] Shared accounts referenced by local deltas. */
-  sharedAccounts?: string[]
+  sharedAccounts?: Address[]
   /** [lg] Application log outputs. */
   logs?: Uint8Array[]
 }
@@ -71,7 +71,7 @@ export const BlockAppEvalDeltaMeta: ObjectModelMetadata<BlockAppEvalDelta> = {
       name: 'innerTxns',
       wireKey: 'itx',
       optional: true,
-      codec: new ArrayCodec(new ObjectModelCodec(() => SignedTxnInBlockMeta)),
+      codec: new ArrayCodec(new ObjectModelCodec(() => SignedTxnWithADMeta)),
     },
     {
       name: 'sharedAccounts',

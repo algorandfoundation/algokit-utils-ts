@@ -18,7 +18,7 @@ const composerFromConstructorWithOptionalParams = new TransactionComposer({
   algod,
   /* Return the algosdk.TransactionSigner for this address*/
   getSigner: (address: string) => signer,
-  getSuggestedParams: () => algod.getTransactionParams().do(),
+  getSuggestedParams: () => algod.transactionParams().do(),
   defaultValidityWindow: 1000,
   appManager: new AppManager(algod),
 })

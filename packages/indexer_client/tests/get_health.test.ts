@@ -12,7 +12,7 @@ describe('GET health', () => {
     test('Basic request and response validation', async () => {
       const client = new IndexerClient(config)
 
-      const result = await client.makeHealthCheck()
+      const result = await client.healthCheck()
 
       HealthCheck.parse(result)
       expect(result).toMatchSnapshot()

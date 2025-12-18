@@ -418,7 +418,15 @@ exports[`GET v2_applications > Common Tests > Basic request and response validat
         },
         "globalState": [
           {
-            "key": "Vm90ZUVuZA==",
+            "key": Uint8Array [
+              86,
+              111,
+              116,
+              101,
+              69,
+              110,
+              100,
+            ],
             "value": {
               "bytes": Uint8Array [],
               "type": 2,
@@ -426,7 +434,14 @@ exports[`GET v2_applications > Common Tests > Basic request and response validat
             },
           },
           {
-            "key": "UmVnRW5k",
+            "key": Uint8Array [
+              82,
+              101,
+              103,
+              69,
+              110,
+              100,
+            ],
             "value": {
               "bytes": Uint8Array [],
               "type": 2,
@@ -434,7 +449,15 @@ exports[`GET v2_applications > Common Tests > Basic request and response validat
             },
           },
           {
-            "key": "Q3JlYXRvcg==",
+            "key": Uint8Array [
+              67,
+              114,
+              101,
+              97,
+              116,
+              111,
+              114,
+            ],
             "value": {
               "bytes": Uint8Array [
                 169,
@@ -475,7 +498,16 @@ exports[`GET v2_applications > Common Tests > Basic request and response validat
             },
           },
           {
-            "key": "UmVnQmVnaW4=",
+            "key": Uint8Array [
+              82,
+              101,
+              103,
+              66,
+              101,
+              103,
+              105,
+              110,
+            ],
             "value": {
               "bytes": Uint8Array [],
               "type": 2,
@@ -483,7 +515,17 @@ exports[`GET v2_applications > Common Tests > Basic request and response validat
             },
           },
           {
-            "key": "Vm90ZUJlZ2lu",
+            "key": Uint8Array [
+              86,
+              111,
+              116,
+              101,
+              66,
+              101,
+              103,
+              105,
+              110,
+            ],
             "value": {
               "bytes": Uint8Array [],
               "type": 2,

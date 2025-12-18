@@ -203,7 +203,7 @@ export class AppManager {
    * @returns The app information
    */
   public async getById(appId: bigint): Promise<AppInformation> {
-    const app = await this._algod.getApplicationById(appId)
+    const app = await this._algod.applicationById(appId)
     const convertedGlobalState = (app.params.globalState ?? []).map((kv) => ({ key: kv.key, value: kv.value }))
 
     return {
@@ -274,7 +274,7 @@ export class AppManager {
    * ```
    */
   public async getBoxNames(appId: bigint): Promise<BoxName[]> {
-    const boxResult = await this._algod.getApplicationBoxes(appId)
+    const boxResult = await this._algod.applicationBoxes(appId)
     return boxResult.boxes.map((b: { name: Uint8Array }) => {
       return { nameRaw: b.name, nameBase64: Buffer.from(b.name).toString('base64'), name: Buffer.from(b.name).toString('utf-8') }
     })
@@ -293,7 +293,7 @@ export class AppManager {
   public async getBoxValue(appId: bigint, boxName: BoxIdentifier | BoxName): Promise<Uint8Array> {
     const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
     const name = AppManager.getBoxReference(boxId).name
-    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), name)
+    const boxResult = await this._algod.applicationBoxByName(Number(appId), name)
     return boxResult.value
   }
 

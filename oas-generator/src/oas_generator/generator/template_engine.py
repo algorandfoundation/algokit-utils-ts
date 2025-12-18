@@ -594,9 +594,9 @@ class OperationProcessor:
             get_application_box_by_name = '''/**
    * Given an application ID and box name, it returns the round, box name, and value.
    */
-  async getApplicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
+  async applicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
     const name = `b64:${Buffer.from(boxName).toString('base64')}`;
-    return this._getApplicationBoxByName(applicationId, { name });
+    return this._applicationBoxByName(applicationId, { name });
   }
 '''
             suggested_params_method = '''/**
@@ -619,7 +619,7 @@ class OperationProcessor:
             get_transaction_params_method = '''/**
    * Returns the common needed parameters for a new transaction.
    */
-  async getTransactionParams(): Promise<SuggestedParams> {
+  async transactionParams(): Promise<SuggestedParams> {
     return await this.suggestedParams();
   }'''
             simulate_raw_transactions_method = '''/**
@@ -704,7 +704,7 @@ class OperationProcessor:
         private_method_config = {
             "AlgodApi": {
                 "RawTransaction",  # Wrapped by custom method
-                "GetApplicationBoxByName", # Wrapped by custom method
+                "ApplicationBoxByName", # Wrapped by custom method
                 "TransactionParams" # Wrapped by custom method
             },
             "IndexerApi": {
