@@ -1,19 +1,21 @@
-import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 import {
-  addressArrayCodec,
-  addressCodec,
   Address,
   ArrayCodec,
+  MapCodec,
+  ObjectModelCodec,
+  type ObjectModelMetadata,
+  addressArrayCodec,
+  addressCodec,
   bigIntCodec,
   booleanCodec,
   bytesArrayCodec,
   bytesCodec,
-  MapCodec,
-  ObjectModelCodec,
+  fixedBytes32Codec,
+  fixedBytes64Codec,
   numberCodec,
   stringCodec,
-  type ObjectModelMetadata,
 } from '@algorandfoundation/algokit-common'
+import { type SignedTransaction, SignedTransactionMeta } from '@algorandfoundation/algokit-transact'
 
 /** BlockEvalDelta represents a TEAL value delta (block/msgpack wire keys). */
 export type BlockEvalDelta = {
@@ -278,15 +280,15 @@ export const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
   kind: 'object',
   fields: [
     { name: 'round', wireKey: 'rnd', optional: true, codec: bigIntCodec },
-    { name: 'previousBlockHash', wireKey: 'prev', optional: true, codec: bytesCodec },
-    { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, codec: bytesCodec },
+    { name: 'previousBlockHash', wireKey: 'prev', optional: true, codec: fixedBytes32Codec },
+    { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, codec: fixedBytes64Codec },
     { name: 'seed', wireKey: 'seed', optional: true, codec: bytesCodec },
-    { name: 'transactionsRoot', wireKey: 'txn', optional: false, codec: bytesCodec },
-    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, codec: bytesCodec },
-    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, codec: bytesCodec },
+    { name: 'transactionsRoot', wireKey: 'txn', optional: false, codec: fixedBytes32Codec },
+    { name: 'transactionsRootSha256', wireKey: 'txn256', optional: true, codec: fixedBytes32Codec },
+    { name: 'transactionsRootSha512', wireKey: 'txn512', optional: true, codec: fixedBytes64Codec },
     { name: 'timestamp', wireKey: 'ts', optional: true, codec: bigIntCodec },
     { name: 'genesisId', wireKey: 'gen', optional: true, codec: stringCodec },
-    { name: 'genesisHash', wireKey: 'gh', optional: true, codec: bytesCodec },
+    { name: 'genesisHash', wireKey: 'gh', optional: true, codec: fixedBytes32Codec },
     { name: 'proposer', wireKey: 'prp', optional: true, codec: addressCodec },
     { name: 'feesCollected', wireKey: 'fc', optional: true, codec: bigIntCodec },
     { name: 'bonus', wireKey: 'bi', optional: true, codec: bigIntCodec },
