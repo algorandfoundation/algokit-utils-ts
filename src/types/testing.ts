@@ -96,7 +96,7 @@ export interface AlgorandFixture {
    * ```typescript
    * describe('MY MODULE', () => {
    *   const fixture = algorandFixture()
-   *   beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+   *   beforeEach(fixture.newScope)
    *
    *   test('MY TEST', async () => {
    *     const { algorand, testAccount } = fixture.context
@@ -110,7 +110,7 @@ export interface AlgorandFixture {
    * ```typescript
    * describe('MY MODULE', () => {
    *   const fixture = algorandFixture()
-   *   beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+   *   beforeAll(fixture.newScope)
    *
    *   test('test1', async () => {
    *     const { algorand, testAccount } = fixture.context

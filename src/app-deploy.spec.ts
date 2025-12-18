@@ -11,7 +11,7 @@ import { LogicError } from './types/logic-error'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
+  beforeEach(localnet.newScope)
 
   const logging = algoKitLogCaptureFixture()
   beforeEach(logging.beforeEach)
@@ -587,6 +587,33 @@ describe('deploy-app', () => {
         apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
+  })
+
+  test('App version is incremented when an update is deployed', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: true })
+    const deployment1 = await getTestingAppDeployParams({
+      sender: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await algorand.appDeployer.deploy(deployment1)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const appInfo = await algorand.app.getById(result1.appId)
+    expect(appInfo.version).toBe(undefined)
+
+    // Perform the app update
+    const deployment2 = await getTestingAppDeployParams({
+      sender: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      codeInjectionValue: 2,
+      onUpdate: 'update',
+    })
+    const result2 = await algorand.appDeployer.deploy(deployment2)
+
+    const appInfo2 = await algorand.app.getById(result2.appId)
+    expect(appInfo2.version).toBe(1)
   })
 
   const filterVerboseAndDebugLogs = (log: string) => !log.startsWith('VERBOSE:') && !log.startsWith('DEBUG:')

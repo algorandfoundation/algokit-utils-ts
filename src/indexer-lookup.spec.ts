@@ -7,7 +7,7 @@ import { AlgoAmount } from './types/amount'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.newScope, 10_000)
+  beforeEach(localnet.newScope)
 
   const sendTestTransaction = async (amount?: AlgoAmount, from?: Address) => {
     return await localnet.context.algorand.send.payment({
@@ -26,7 +26,7 @@ describe('indexer-lookup', () => {
 
     expect(txn.transaction.id).toBe(transaction.txId())
     expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
-  }, 20_000)
+  })
 
   test('Account is found by id', async () => {
     const { algorand, testAccount } = localnet.context
@@ -35,7 +35,7 @@ describe('indexer-lookup', () => {
     const account = await algorand.client.indexer.lookupAccountById(testAccount.addr)
 
     expect(account.account.address).toBe(testAccount.addr.toString())
-  }, 20_000)
+  })
 
   test('Transactions are searched with pagination', async () => {
     const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
@@ -60,7 +60,7 @@ describe('indexer-lookup', () => {
 
     expect(transactions.currentRound).toBeGreaterThan(0n)
     expect(transactions.transactions.map((t) => t.id).sort()).toEqual([transaction1.txId(), transaction2.txId()].sort())
-  }, 20_000)
+  })
 
   test('Application create transactions are found by creator with pagination', async () => {
     const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
@@ -85,5 +85,5 @@ describe('indexer-lookup', () => {
     const apps = await indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, testAccount, true, 1)
 
     expect(apps.map((a) => BigInt(a.id)).sort()).toEqual([app1.appId, app2.appId].sort())
-  }, 20_000)
+  })
 })

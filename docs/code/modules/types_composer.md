@@ -117,7 +117,7 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L99)
+[src/transactions/app-call.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L97)
 
 ___
 
@@ -147,7 +147,7 @@ Common parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/app-call.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L94)
+[src/transactions/app-call.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L92)
 
 ___
 

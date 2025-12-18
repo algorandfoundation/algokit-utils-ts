@@ -1,6 +1,7 @@
 {
   "1109842": {
     "active": true,
-    "notes": "glob CLI vulnerability - not exploitable in this context as we don't use glob CLI"
+    "notes": "Bundled dependency in NPM, which cannot be overriden and has no update available yet.",
+    "expiry": "2026-01-28"
   }
 }

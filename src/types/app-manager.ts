@@ -46,6 +46,8 @@ export interface AppInformation {
   globalByteSlices: number
   /** Any extra pages that are needed for the smart contract. */
   extraProgramPages?: number
+  /** The number of updates to the application programs */
+  version?: number
 }
 
 /**
@@ -202,10 +204,7 @@ export class AppManager {
    */
   public async getById(appId: bigint): Promise<AppInformation> {
     const app = await this._algod.getApplicationById(appId)
-    const convertedGlobalState = (app.params.globalState ?? []).map((kv) => ({
-      key: kv.key,
-      value: kv.value,
-    }))
+    const convertedGlobalState = (app.params.globalState ?? []).map((kv) => ({ key: kv.key, value: kv.value }))
 
     return {
       appId: BigInt(app.id),
@@ -219,6 +218,7 @@ export class AppManager {
       globalByteSlices: app.params.globalStateSchema?.numByteSlices ?? 0,
       extraProgramPages: app.params.extraProgramPages ?? 0,
       globalState: AppManager.decodeAppState(convertedGlobalState),
+      version: app.params.version,
     }
   }
 
@@ -259,10 +259,7 @@ export class AppManager {
       return {}
     }
 
-    const convertedState = appInfo.appLocalState.keyValue.map((kv) => ({
-      key: kv.key,
-      value: kv.value,
-    }))
+    const convertedState = appInfo.appLocalState.keyValue.map((kv) => ({ key: kv.key, value: kv.value }))
 
     return AppManager.decodeAppState(convertedState)
   }
@@ -279,11 +276,7 @@ export class AppManager {
   public async getBoxNames(appId: bigint): Promise<BoxName[]> {
     const boxResult = await this._algod.getApplicationBoxes(appId)
     return boxResult.boxes.map((b: { name: Uint8Array }) => {
-      return {
-        nameRaw: b.name,
-        nameBase64: Buffer.from(b.name).toString('base64'),
-        name: Buffer.from(b.name).toString('utf-8'),
-      }
+      return { nameRaw: b.name, nameBase64: Buffer.from(b.name).toString('base64'), name: Buffer.from(b.name).toString('utf-8') }
     })
   }
 
@@ -402,11 +395,7 @@ export class AppManager {
           break
         case 2: {
           const value = tealValue.uint ?? 0
-          stateValues[key] = {
-            keyRaw,
-            keyBase64,
-            value: BigInt(value),
-          }
+          stateValues[key] = { keyRaw, keyBase64, value: BigInt(value) }
           break
         }
         default:
@@ -447,19 +436,9 @@ export class AppManager {
       }
 
       const rawReturnValue = new Uint8Array(lastLog.slice(4))
-      return {
-        method: method,
-        rawReturnValue,
-        decodeError: undefined,
-        returnValue: method.returns.type.decode(rawReturnValue),
-      }
+      return { method: method, rawReturnValue, decodeError: undefined, returnValue: method.returns.type.decode(rawReturnValue) }
     } catch (err) {
-      return {
-        method: method,
-        rawReturnValue: undefined,
-        decodeError: err as Error,
-        returnValue: undefined,
-      }
+      return { method: method, rawReturnValue: undefined, decodeError: err as Error, returnValue: undefined }
     }
   }
 

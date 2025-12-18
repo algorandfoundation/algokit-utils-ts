@@ -43,7 +43,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   boxReferences?: (UtilsBoxReference | BoxIdentifier)[]
   /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
   accessReferences?: ResourceReference[]
-  /** The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. */
+  /** If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check. */
   rejectVersion?: number
 }
 
@@ -86,9 +86,7 @@ export type AppUpdateParams = Expand<
 >
 
 /** Parameters to define an application call transaction. */
-export type AppCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
-}
+export type AppCallParams = CommonAppCallParams & { onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication> }
 
 /** Common parameters to define an ABI method call transaction. */
 export type AppMethodCallParams = CommonAppCallParams & {
@@ -96,9 +94,7 @@ export type AppMethodCallParams = CommonAppCallParams & {
 }
 
 /** Parameters to define an application delete call transaction. */
-export type AppDeleteParams = CommonAppCallParams & {
-  onComplete?: OnApplicationComplete.DeleteApplication
-}
+export type AppDeleteParams = CommonAppCallParams & { onComplete?: OnApplicationComplete.DeleteApplication }
 
 export const buildAppCreate = async (
   params: AppCreateParams,
@@ -117,17 +113,11 @@ export const buildAppCreate = async (
       : params.clearStateProgram
   const globalStateSchema =
     params.schema?.globalByteSlices !== undefined || params.schema?.globalInts !== undefined
-      ? {
-          numByteSlices: params.schema?.globalByteSlices ?? 0,
-          numUints: params.schema?.globalInts ?? 0,
-        }
+      ? { numByteSlices: params.schema?.globalByteSlices ?? 0, numUints: params.schema?.globalInts ?? 0 }
       : undefined
   const localStateSchema =
     params.schema?.localByteSlices !== undefined || params.schema?.localInts !== undefined
-      ? {
-          numByteSlices: params.schema?.localByteSlices ?? 0,
-          numUints: params.schema?.localInts ?? 0,
-        }
+      ? { numByteSlices: params.schema?.localByteSlices ?? 0, numUints: params.schema?.localInts ?? 0 }
       : undefined
   const extraProgramPages =
     params.extraProgramPages !== undefined ? params.extraProgramPages : calculateExtraProgramPages(approvalProgram!, clearStateProgram!)
@@ -345,13 +335,7 @@ export function populateGroupResources(
 
   // Process boxes
   remainingBoxes.forEach((boxRef) => {
-    populateGroupResource(transactions, {
-      type: GroupResourceType.Box,
-      data: {
-        appId: boxRef.appId,
-        name: boxRef.name,
-      },
-    })
+    populateGroupResource(transactions, { type: GroupResourceType.Box, data: { appId: boxRef.appId, name: boxRef.name } })
     // Remove apps as resource if we're adding it here
     remainingApps = remainingApps.filter((app) => app !== boxRef.appId)
   })

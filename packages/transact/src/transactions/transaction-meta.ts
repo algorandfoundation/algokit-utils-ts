@@ -668,6 +668,7 @@ const AppCallTransactionFieldsMeta: ObjectModelMetadata<AppCallTransactionFields
     { name: 'accountReferences', wireKey: 'apat', optional: true, codec: addressArrayCodec },
     { name: 'appReferences', wireKey: 'apfa', optional: true, codec: bigIntArrayCodec },
     { name: 'assetReferences', wireKey: 'apas', optional: true, codec: bigIntArrayCodec },
+    { name: 'rejectVersion', wireKey: 'aprv', optional: true, codec: numberCodec },
     // boxReferences and accessReferences are handled by the parent codec, as they require more complex mappings
   ],
 }
