@@ -1,9 +1,12 @@
 import {
   Address,
   ArrayCodec,
+  Codec,
   MapCodec,
   ObjectModelCodec,
+  type EncodingFormat,
   type ObjectModelMetadata,
+  type WireObject,
   addressArrayCodec,
   addressCodec,
   bigIntCodec,
@@ -27,7 +30,7 @@ export type BlockEvalDelta = {
   uint?: bigint
 }
 
-export const BlockEvalDeltaMeta: ObjectModelMetadata<BlockEvalDelta> = {
+const BlockEvalDeltaMeta: ObjectModelMetadata<BlockEvalDelta> = {
   name: 'BlockEvalDelta',
   kind: 'object',
   fields: [
@@ -53,7 +56,7 @@ export type BlockAppEvalDelta = {
   logs?: Uint8Array[]
 }
 
-export const BlockAppEvalDeltaMeta: ObjectModelMetadata<BlockAppEvalDelta> = {
+const BlockAppEvalDeltaMeta: ObjectModelMetadata<BlockAppEvalDelta> = {
   name: 'BlockAppEvalDelta',
   kind: 'object',
   fields: [
@@ -95,7 +98,7 @@ export type BlockStateProofTrackingData = {
   stateProofNextRound?: bigint
 }
 
-export const BlockStateProofTrackingDataMeta: ObjectModelMetadata<BlockStateProofTrackingData> = {
+const BlockStateProofTrackingDataMeta: ObjectModelMetadata<BlockStateProofTrackingData> = {
   name: 'BlockStateProofTrackingData',
   kind: 'object',
   fields: [
@@ -116,7 +119,7 @@ export type ApplyData = {
   applicationId?: bigint
 }
 
-export const ApplyDataMeta: ObjectModelMetadata<ApplyData> = {
+const ApplyDataMeta: ObjectModelMetadata<ApplyData> = {
   name: 'SignedTxnInBlock',
   kind: 'object',
   fields: [
@@ -141,7 +144,7 @@ export type SignedTxnWithAD = {
   applyData?: ApplyData
 }
 
-export const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
+const SignedTxnWithADMeta: ObjectModelMetadata<SignedTxnWithAD> = {
   name: 'SignedTxnWithAD',
   kind: 'object',
   fields: [
@@ -169,7 +172,7 @@ export type SignedTxnInBlock = {
   hasGenesisHash?: boolean
 }
 
-export const SignedTxnInBlockMeta: ObjectModelMetadata<SignedTxnInBlock> = {
+const SignedTxnInBlockMeta: ObjectModelMetadata<SignedTxnInBlock> = {
   name: 'SignedTxnInBlock',
   kind: 'object',
   fields: [
@@ -191,7 +194,7 @@ export type ParticipationUpdates = {
   absentParticipationAccounts?: string[]
 }
 
-export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
+const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
   name: 'ParticipationUpdates',
   kind: 'object',
   fields: [
@@ -220,7 +223,7 @@ export type TxnCommitments = {
   sha512Commitment?: Uint8Array
 }
 
-export const TxnCommitmentsMeta: ObjectModelMetadata<TxnCommitments> = {
+const TxnCommitmentsMeta: ObjectModelMetadata<TxnCommitments> = {
   name: 'TxnCommitments',
   kind: 'object',
   fields: [
@@ -246,7 +249,7 @@ export type RewardState = {
   rewardsRecalculationRound?: bigint
 }
 
-export const RewardStateMeta: ObjectModelMetadata<RewardState> = {
+const RewardStateMeta: ObjectModelMetadata<RewardState> = {
   name: 'RewardState',
   kind: 'object',
   fields: [
@@ -273,7 +276,7 @@ export type UpgradeState = {
   nextProtocolSwitchOn?: bigint
 }
 
-export const UpgradeStateMeta: ObjectModelMetadata<UpgradeState> = {
+const UpgradeStateMeta: ObjectModelMetadata<UpgradeState> = {
   name: 'UpgradeState',
   kind: 'object',
   fields: [
@@ -295,7 +298,7 @@ export type UpgradeVote = {
   upgradeApprove?: boolean
 }
 
-export const UpgradeVoteMeta: ObjectModelMetadata<UpgradeVote> = {
+const UpgradeVoteMeta: ObjectModelMetadata<UpgradeVote> = {
   name: 'UpgradeVote',
   kind: 'object',
   fields: [
@@ -344,7 +347,7 @@ export type BlockHeader = {
   participationUpdates?: ParticipationUpdates
 }
 
-export const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
+const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
   name: 'BlockHeader',
   kind: 'object',
   fields: [
@@ -410,7 +413,7 @@ export type Block = {
   payset?: SignedTxnInBlock[]
 }
 
-export const BlockMeta: ObjectModelMetadata<Block> = {
+const BlockMeta: ObjectModelMetadata<Block> = {
   name: 'Block',
   kind: 'object',
   fields: [
@@ -423,3 +426,56 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
     },
   ],
 }
+
+const baseBlockCodec = new ObjectModelCodec(BlockMeta)
+
+/**
+ * Custom codec for Block that populates genesis information on transactions after decoding.
+ *
+ * When blocks are returned from algod, transactions may not include the genesisId
+ * and genesisHash fields even though they are required for correct transaction ID calculation.
+ * The block contains `hasGenesisId` and `hasGenesisHash` flags that indicate whether these
+ * fields should be populated from the block header.
+ *
+ * This codec automatically populates these fields after decoding to ensure transaction IDs
+ * can be calculated correctly.
+ */
+class BlockCodec extends Codec<Block, Record<string, unknown>, WireObject> {
+  public defaultValue(): Block {
+    return baseBlockCodec.defaultValue()
+  }
+
+  protected toEncoded(value: Block, format: EncodingFormat): Record<string, unknown> {
+    return baseBlockCodec.encode(value, format)
+  }
+
+  protected fromEncoded(value: WireObject, format: EncodingFormat): Block {
+    const block = baseBlockCodec.decode(value, format)
+
+    // Populate genesis id and hash on transactions if required to ensure tx id's are correct
+    const genesisId = block.header.genesisId
+    const genesisHash = block.header.genesisHash
+
+    for (const txnInBlock of block.payset ?? []) {
+      const txn = txnInBlock.signedTxn.signedTxn.txn
+
+      if (txnInBlock.hasGenesisId && txn.genesisId === undefined) {
+        txn.genesisId = genesisId
+      }
+
+      // The following assumes that Consensus.RequireGenesisHash is true
+      // so assigns genesis hash unless explicitly set to false
+      if (txnInBlock.hasGenesisHash !== false && txn.genesisHash === undefined) {
+        txn.genesisHash = genesisHash
+      }
+    }
+
+    return block
+  }
+
+  public isDefaultValue(value: Block): boolean {
+    return baseBlockCodec.isDefaultValue(value)
+  }
+}
+
+export const blockCodec = new BlockCodec()

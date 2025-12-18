@@ -1160,19 +1160,7 @@ class CodeGenerator:
             # Add Meta exports for nested types in block.ts to model-meta.ts
             meta_path = models_dir / constants.MODELS_META_FILE
             meta_extras = (
-                "export { BlockMeta } from './block';\n"
-                "export { BlockHeaderMeta } from './block';\n"
-                "export { TxnCommitmentsMeta } from './block';\n"
-                "export { RewardStateMeta } from './block';\n"
-                "export { UpgradeStateMeta } from './block';\n"
-                "export { UpgradeVoteMeta } from './block';\n"
-                "export { SignedTxnInBlockMeta } from './block';\n"
-                "export { SignedTxnWithADMeta } from './block';\n"
-                "export { ApplyDataMeta } from './block';\n"
-                "export { BlockAppEvalDeltaMeta } from './block';\n"
-                "export { BlockEvalDeltaMeta } from './block';\n"
-                "export { BlockStateProofTrackingDataMeta } from './block';\n"
-                "export { ParticipationUpdatesMeta } from './block';\n"
+                "export { blockCodec } from './block';\n"
             )
             files[meta_path] = files[meta_path] + meta_extras
         elif service_class == "KmdApi":
