@@ -13,7 +13,7 @@ describe('POST v1_master-key_export', () => {
     // SKIPPED: Type mismatch between client model and Zod schema
     // Client returns masterDerivationKey as Uint8Array
     // Zod schema expects object with masterDerivationKey as number[] (z.array(z.number().int()))
-    test.skip('Basic request and response validation', async () => {
+    test('Basic request and response validation', async () => {
       const client = new KmdClient(localnetConfig)
       const { walletHandleToken } = await getWalletHandle(client)
 

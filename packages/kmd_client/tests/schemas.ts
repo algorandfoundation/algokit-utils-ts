@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-17T00:50:00.270Z
+ * Generated: 2025-12-18T17:23:47.961Z
  */
 
 import { z } from 'zod'
@@ -39,13 +39,13 @@ export const GenerateKeyResponse = z.object({
   address: z.instanceof(Address)
 })
 
-export const MasterDerivationKey = z.array(z.number().int())
+export const MasterDerivationKey = z.instanceof(Uint8Array)
 
 export const ExportMasterKeyResponse = z.object({
   masterDerivationKey: MasterDerivationKey
 })
 
-export const ed25519PublicKey = z.array(z.number().int())
+export const ed25519PublicKey = z.instanceof(Uint8Array)
 
 export const PublicKey = ed25519PublicKey
 
@@ -123,7 +123,7 @@ export const DeleteMultisigRequest = z.object({
   walletPassword: z.string().optional()
 })
 
-export const Digest = z.array(z.number().int())
+export const Digest = z.instanceof(Uint8Array)
 
 export const ExportKeyRequest = z.object({
   address: z.instanceof(Address),
@@ -172,7 +172,7 @@ export const ListMultisigRequest = z.object({
 
 export const ListWalletsRequest = z.record(z.string(), z.any())
 
-export const ed25519Signature = z.array(z.number().int())
+export const ed25519Signature = z.instanceof(Uint8Array)
 
 export const Signature = ed25519Signature
 
@@ -187,7 +187,7 @@ export const MultisigSig = z.object({
   version: z.number().int()
 })
 
-export const ed25519PrivateKey = z.array(z.number().int())
+export const ed25519PrivateKey = z.instanceof(Uint8Array)
 
 export const PrivateKey = ed25519PrivateKey
 
