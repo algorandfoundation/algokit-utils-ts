@@ -229,39 +229,63 @@ function populateMethodArgsIntoReferenceArrays(
   sender: Address,
   appId: bigint,
   method: ABIMethod,
-  methodArgs: AppMethodCallArg[],
+  methodArgs: (ABIValue | undefined)[],
   accountReferences?: Address[],
   appReferences?: bigint[],
   assetReferences?: bigint[],
-): { accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
+): { accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[]; updatedArgs: (ABIValue | undefined)[] } {
   const accounts = [...(accountReferences ?? [])]
   const assets = [...(assetReferences ?? [])]
   const apps = [...(appReferences ?? [])]
 
-  methodArgs.forEach((arg, i) => {
+  const updatedArgs = methodArgs.map((arg, i) => {
     const argType = method.args[i].type
-    if (argTypeIsReference(argType)) {
-      switch (argType) {
-        case 'account':
-          if (typeof arg === 'string' && arg !== sender.toString() && !accounts.some((a) => a.toString() === arg)) {
-            accounts.push(getAddress(arg))
-          }
-          break
-        case 'asset':
-          if (typeof arg === 'bigint' && !assets.includes(arg)) {
-            assets.push(arg)
-          }
-          break
-        case 'application':
-          if (typeof arg === 'bigint' && arg !== appId && !apps.includes(arg)) {
-            apps.push(arg)
-          }
-          break
+    if (!argTypeIsReference(argType)) {
+      return arg
+    }
+    switch (argType) {
+      case 'account': {
+        let addr: Address
+        if (typeof arg === 'string') {
+          addr = getAddress(arg)
+        } else if (arg instanceof Uint8Array) {
+          addr = new Address(arg)
+        } else {
+          throw new Error('Invalid value for account')
+        }
+        if (sender.equals(addr)) {
+          return 0
+        }
+        const existing = accounts.findIndex((a) => a.equals(addr)) + 1
+        if (existing) return existing
+        accounts.push(addr)
+        return accounts.length
+      }
+      case 'asset': {
+        if (typeof arg !== 'bigint') {
+          throw new Error('Invalid value for asset')
+        }
+        const existing = assets.findIndex((a) => a === arg)
+        if (existing === -1) {
+          assets.push(arg)
+          return assets.length - 1
+        }
+        return existing
+      }
+      case 'application': {
+        if (typeof arg !== 'bigint') {
+          throw new Error('Invalid value for application')
+        }
+        if (arg === appId) return 0
+        const existing = apps.findIndex((a) => a === arg) + 1
+        if (existing) return existing
+        apps.push(arg)
+        return apps.length
       }
     }
   })
 
-  return { accountReferences: accounts, appReferences: apps, assetReferences: assets }
+  return { accountReferences: accounts, appReferences: apps, assetReferences: assets, updatedArgs }
 }
 
 /**
@@ -339,19 +363,9 @@ function encodeMethodArguments(
     } else if (argTypeIsReference(methodArg.type)) {
       // Reference types are encoded as uint8 indexes
       const referenceType = methodArg.type
-      if (typeof argValue === 'string' || typeof argValue === 'bigint') {
-        const foreignIndex = calculateMethodArgReferenceArrayIndex(
-          argValue,
-          referenceType,
-          sender,
-          appId,
-          accountReferences,
-          appReferences,
-          assetReferences,
-        )
-
+      if (typeof argValue === 'number') {
         abiTypes.push(new ABIUintType(8))
-        abiValues.push(foreignIndex)
+        abiValues.push(argValue)
       } else {
         throw new Error(`Invalid reference value for ${referenceType}: ${argValue}`)
       }
@@ -435,7 +449,7 @@ function buildMethodCallCommon(
   },
   commonData: TransactionCommonData,
 ): { args: Uint8Array[]; accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
-  const { accountReferences, appReferences, assetReferences } = populateMethodArgsIntoReferenceArrays(
+  const { accountReferences, appReferences, assetReferences, updatedArgs } = populateMethodArgsIntoReferenceArrays(
     commonData.sender,
     params.appId,
     params.method,
@@ -447,7 +461,7 @@ function buildMethodCallCommon(
 
   const encodedArgs = encodeMethodArguments(
     params.method,
-    params.args,
+    updatedArgs,
     commonData.sender,
     params.appId,
     accountReferences,
