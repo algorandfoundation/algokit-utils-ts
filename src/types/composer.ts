@@ -1407,24 +1407,34 @@ export class TransactionComposer {
             transaction = buildAssetOptOut(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'appCall':
-            if (!('appId' in ctxn.data)) {
-              transaction = await buildAppCreate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            if (ctxn.data.appId === undefined || ctxn.data.appId === 0) {
+              transaction = await buildAppCreate(ctxn.data as AppCreateParams, this.appManager, suggestedParams, defaultValidityWindow)
             } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
-              transaction = await buildAppUpdate(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+              transaction = await buildAppUpdate(ctxn.data as AppUpdateParams, this.appManager, suggestedParams, defaultValidityWindow)
             } else {
-              transaction = buildAppCall(ctxn.data, suggestedParams, defaultValidityWindow)
+              transaction = buildAppCall(ctxn.data as AppCallParams, suggestedParams, defaultValidityWindow)
             }
             break
           case 'keyReg':
             transaction = buildKeyReg(ctxn.data, suggestedParams, defaultValidityWindow)
             break
           case 'methodCall':
-            if (!('appId' in ctxn.data)) {
-              transaction = await buildAppCreateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+            if (ctxn.data.appId === undefined || ctxn.data.appId === 0) {
+              transaction = await buildAppCreateMethodCall(
+                ctxn.data as ProcessedAppCreateMethodCall,
+                this.appManager,
+                suggestedParams,
+                defaultValidityWindow,
+              )
             } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
-              transaction = await buildAppUpdateMethodCall(ctxn.data, this.appManager, suggestedParams, defaultValidityWindow)
+              transaction = await buildAppUpdateMethodCall(
+                ctxn.data as ProcessedAppUpdateMethodCall,
+                this.appManager,
+                suggestedParams,
+                defaultValidityWindow,
+              )
             } else {
-              transaction = await buildAppCallMethodCall(ctxn.data, suggestedParams, defaultValidityWindow)
+              transaction = await buildAppCallMethodCall(ctxn.data as ProcessedAppCallMethodCall, suggestedParams, defaultValidityWindow)
             }
             break
           default:
