@@ -1,5 +1,5 @@
-import { Address } from '@algorandfoundation/algokit-common'
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Address } from '@algorandfoundation/algokit-common'
 import { describe, test } from 'vitest'
 import { KmdClient } from '../src/client'
 import { localnetAlgodConfig, localnetConfig, TEST_WALLET_PASSWORD } from './config'
@@ -24,12 +24,13 @@ describe('POST v1_multisig_signprogram', () => {
         // Compile a simple TEAL program (always approves)
         const tealSource = '#pragma version 8\nint 1'
         const compileResult = await algodClient.tealCompile(tealSource)
+        const programBytes = new Uint8Array(Buffer.from(compileResult.result, 'base64'))
 
         // Sign the program with the first key
         const result = await client.signMultisigProgram({
           walletHandleToken,
           address: Address.fromString(multisigAddress),
-          program: compileResult.result,
+          program: programBytes,
           publicKey: publicKeys[0],
           walletPassword: TEST_WALLET_PASSWORD,
         })
