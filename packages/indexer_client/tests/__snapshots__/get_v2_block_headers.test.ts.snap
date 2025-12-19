@@ -39,6 +39,10 @@ exports[`GET v2_block-headers > Common Tests > Basic request and response valida
         34,
       ],
       "genesisId": "testnet-v1.0",
+      "participationUpdates": {
+        "absentParticipationAccounts": [],
+        "expiredParticipationAccounts": [],
+      },
       "previousBlockHash": Uint8Array [
         0,
         0,
@@ -118,6 +122,7 @@ exports[`GET v2_block-headers > Common Tests > Basic request and response valida
       ],
       "stateProofTracking": [],
       "timestamp": 1560210455,
+      "transactions": [],
       "transactionsRoot": Uint8Array [
         39,
         120,
