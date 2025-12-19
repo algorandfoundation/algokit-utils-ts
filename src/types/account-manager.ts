@@ -445,6 +445,11 @@ export class AccountManager {
     const acct = addrWithSigners.addr as Address & AddressWithSigners
 
     for (const prop in addrWithSigners) {
+      // Create a new Address instance for avoid circular references
+      if (prop === 'addr') {
+        acct.addr = new Address(addrWithSigners.addr.publicKey)
+        continue
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(acct as any)[prop] = (addrWithSigners as any)[prop]
     }
