@@ -129,6 +129,7 @@ class FieldDescriptor:
     inline_object_schema: dict | None = None
     inline_meta_name: str | None = None
     is_empty_object: bool = False
+    byte_length: int | None = None
 
 
 @dataclass
@@ -161,3 +162,4 @@ class ModelDescriptor:
     array_item_is_box_reference: bool = False
     array_item_is_holding_reference: bool = False
     array_item_is_locals_reference: bool = False
+    array_item_byte_length: int | None = None

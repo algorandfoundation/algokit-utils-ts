@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
+import { bytesCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { TealValue } from './teal-value'
 import { TealValueMeta } from './teal-value'
 
@@ -7,7 +7,7 @@ import { TealValueMeta } from './teal-value'
  * Represents a key-value pair in an application store.
  */
 export type TealKeyValue = {
-  key: string
+  key: Uint8Array
   value: TealValue
 }
 
@@ -19,7 +19,7 @@ export const TealKeyValueMeta: ObjectModelMetadata<TealKeyValue> = {
       name: 'key',
       wireKey: 'key',
       optional: false,
-      codec: stringCodec,
+      codec: bytesCodec,
     },
     {
       name: 'value',

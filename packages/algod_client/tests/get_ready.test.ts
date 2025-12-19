@@ -11,7 +11,7 @@ describe('GET ready', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getReady()
+      const result = await client.ready()
 
       expect(result).toMatchSnapshot()
     })

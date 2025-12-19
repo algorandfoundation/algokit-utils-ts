@@ -22,11 +22,11 @@ describe('multisig', () => {
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
-      expect(multisig.subsignatures).toHaveLength(2)
-      expect(multisig.subsignatures[0].publicKey).toEqual(participants[0])
-      expect(multisig.subsignatures[1].publicKey).toEqual(participants[1])
-      expect(multisig.subsignatures[0].signature).toBeUndefined()
-      expect(multisig.subsignatures[1].signature).toBeUndefined()
+      expect(multisig.subsigs).toHaveLength(2)
+      expect(multisig.subsigs[0].publicKey).toEqual(participants[0])
+      expect(multisig.subsigs[1].publicKey).toEqual(participants[1])
+      expect(multisig.subsigs[0].sig).toBeUndefined()
+      expect(multisig.subsigs[1].sig).toBeUndefined()
     })
 
     test('should handle single participant', () => {
@@ -36,8 +36,8 @@ describe('multisig', () => {
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(1)
-      expect(multisig.subsignatures).toHaveLength(1)
-      expect(multisig.subsignatures[0].publicKey).toEqual(participants[0])
+      expect(multisig.subsigs).toHaveLength(1)
+      expect(multisig.subsigs[0].publicKey).toEqual(participants[0])
     })
   })
 
@@ -132,8 +132,8 @@ describe('multisig', () => {
 
       expect(signedMultisig.version).toBe(multisig.version)
       expect(signedMultisig.threshold).toBe(multisig.threshold)
-      expect(signedMultisig.subsignatures[0].signature).toEqual(signature)
-      expect(signedMultisig.subsignatures[1].signature).toBeUndefined()
+      expect(signedMultisig.subsigs[0].sig).toEqual(signature)
+      expect(signedMultisig.subsigs[1].sig).toBeUndefined()
     })
 
     test('should replace existing signature', () => {
@@ -148,11 +148,11 @@ describe('multisig', () => {
 
       // Apply first signature
       const signedMultisig1 = applyMultisigSubsignature(multisig, participants[0], signature1)
-      expect(signedMultisig1.subsignatures[0].signature).toEqual(signature1)
+      expect(signedMultisig1.subsigs[0].sig).toEqual(signature1)
 
       // Replace with second signature
       const signedMultisig2 = applyMultisigSubsignature(signedMultisig1, participants[0], signature2)
-      expect(signedMultisig2.subsignatures[0].signature).toEqual(signature2)
+      expect(signedMultisig2.subsigs[0].sig).toEqual(signature2)
     })
   })
 
@@ -176,8 +176,8 @@ describe('multisig', () => {
 
       expect(merged.version).toBe(1)
       expect(merged.threshold).toBe(2)
-      expect(merged.subsignatures[0].signature).toEqual(signature1)
-      expect(merged.subsignatures[1].signature).toEqual(signature2)
+      expect(merged.subsigs[0].sig).toEqual(signature1)
+      expect(merged.subsigs[1].sig).toEqual(signature2)
     })
 
     test('should throw error for incompatible versions', () => {
@@ -209,11 +209,11 @@ describe('multisig', () => {
 
       expect(decoded.version).toBe(emptyMultisignature.version)
       expect(decoded.threshold).toBe(emptyMultisignature.threshold)
-      expect(decoded.subsignatures).toHaveLength(emptyMultisignature.subsignatures.length)
-      expect(decoded.subsignatures[0].publicKey).toEqual(participants[0])
-      expect(decoded.subsignatures[1].publicKey).toEqual(participants[1])
-      expect(decoded.subsignatures[0].signature).toEqual(signature)
-      expect(decoded.subsignatures[1].signature).toBeUndefined()
+      expect(decoded.subsigs).toHaveLength(emptyMultisignature.subsigs.length)
+      expect(decoded.subsigs[0].publicKey).toEqual(participants[0])
+      expect(decoded.subsigs[1].publicKey).toEqual(participants[1])
+      expect(decoded.subsigs[0].sig).toEqual(signature)
+      expect(decoded.subsigs[1].sig).toBeUndefined()
     })
   })
 
@@ -245,11 +245,11 @@ describe('multisig', () => {
 
       expect(signedMultisig.version).toBe(1)
       expect(signedMultisig.threshold).toBe(2)
-      expect(signedMultisig.subsignatures).toHaveLength(2)
-      expect(signedMultisig.subsignatures[0].publicKey).toEqual(participants[0])
-      expect(signedMultisig.subsignatures[1].publicKey).toEqual(participants[1])
-      expect(signedMultisig.subsignatures[0].signature).toEqual(signature1)
-      expect(signedMultisig.subsignatures[1].signature).toEqual(signature2)
+      expect(signedMultisig.subsigs).toHaveLength(2)
+      expect(signedMultisig.subsigs[0].publicKey).toEqual(participants[0])
+      expect(signedMultisig.subsigs[1].publicKey).toEqual(participants[1])
+      expect(signedMultisig.subsigs[0].sig).toEqual(signature1)
+      expect(signedMultisig.subsigs[1].sig).toEqual(signature2)
     })
   })
 })

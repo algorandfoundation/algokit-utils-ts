@@ -221,6 +221,7 @@ X_ALGORAND_FORMAT: Final[str] = "x-algorand-format"
 X_ALGOKIT_BOX_REFERENCE: Final[str] = "x-algokit-box-reference"
 X_ALGOKIT_HOLDING_REFERENCE: Final[str] = "x-algokit-holding-reference"
 X_ALGOKIT_LOCALS_REFERENCE: Final[str] = "x-algokit-locals-reference"
+X_ALGOKIT_BYTE_LENGTH: Final[str] = "x-algokit-byte-length"
 
 # Template configuration
 TEMPLATE_TRIM_BLOCKS: Final[bool] = True

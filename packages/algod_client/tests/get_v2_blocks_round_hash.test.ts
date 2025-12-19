@@ -11,7 +11,7 @@ describe('GET v2_blocks_ROUND_hash', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getBlockHash(TEST_ROUND)
+      const result = await client.blockHash(TEST_ROUND)
 
       expect(result).toMatchSnapshot()
     })
