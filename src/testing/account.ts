@@ -1,7 +1,7 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
+import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AlgorandClient, Config } from '../'
 import { GetTestAccountParams } from '../types/testing'
 
@@ -45,7 +45,7 @@ export async function getTestAccount(
           kmd,
         })
 
-  const account = accountGetter ? await accountGetter(algorand) : algorand.account.random()
+  const account = accountGetter ? await accountGetter(algorand) : algorand.account.random().account
 
   Config.getLogger(suppressLog).info(`New test account created with address '${account.addr}'.`)
 
@@ -65,10 +65,5 @@ export async function getTestAccount(
 
   algorand.setSignerFromAccount(account)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const address = Address.fromString(account.addr.toString()) as any
-  address.addr = account.addr
-  address.signer = algorand.account.getSigner(address)
-
-  return address
+  return Object.assign(Address.fromString(account.addr.toString()), account)
 }
