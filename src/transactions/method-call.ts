@@ -1,6 +1,5 @@
 import {
   ABIMethod,
-  ABIReferenceType,
   ABITupleType,
   ABIType,
   ABIUintType,
@@ -17,7 +16,7 @@ import { AppManager } from '../types/app-manager'
 import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
 import { AppCreateParams, AppDeleteParams, AppMethodCallParams, AppUpdateParams } from './app-call'
-import { TransactionCommonData, buildTransactionCommonData } from './common'
+import { buildTransactionCommonData } from './common'
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
@@ -223,9 +222,10 @@ const isAbiValue = (x: unknown): x is ABIValue => {
 }
 
 /**
- * Populate reference arrays from processed ABI method call arguments
+ * Prepares method arguments for ABI encoding by building reference arrays and
+ * replacing reference-type arguments (account, asset, application) with their indices.
  */
-function populateMethodArgsIntoReferenceArrays(
+function prepareArgsForEncoding(
   sender: Address,
   appId: bigint,
   method: ABIMethod,
@@ -289,61 +289,10 @@ function populateMethodArgsIntoReferenceArrays(
 }
 
 /**
- * Calculate array index for ABI reference values
- */
-function calculateMethodArgReferenceArrayIndex(
-  refValue: string | bigint,
-  referenceType: ABIReferenceType,
-  sender: Address,
-  appId: bigint,
-  accountReferences: Address[],
-  appReferences: bigint[],
-  assetReferences: bigint[],
-): number {
-  switch (referenceType) {
-    case 'account':
-      if (typeof refValue === 'string') {
-        // If address is the same as sender, use index 0
-        if (refValue === sender.toString()) return 0
-        const index = accountReferences.findIndex((a) => a.toString() === refValue)
-        if (index === -1) throw new Error(`Account ${refValue} not found in reference array`)
-        return index + 1
-      }
-      throw new Error('Account reference must be a string')
-    case 'asset':
-      if (typeof refValue === 'bigint') {
-        const index = assetReferences.indexOf(refValue)
-        if (index === -1) throw new Error(`Asset ${refValue} not found in reference array`)
-        return index
-      }
-      throw new Error('Asset reference must be a bigint')
-    case 'application':
-      if (typeof refValue === 'bigint') {
-        // If app ID is the same as the current app, use index 0
-        if (refValue === appId) return 0
-        const index = appReferences.indexOf(refValue)
-        if (index === -1) throw new Error(`Application ${refValue} not found in reference array`)
-        return index + 1
-      }
-      throw new Error('Application reference must be a bigint')
-    default:
-      throw new Error(`Unknown reference type: ${referenceType}`)
-  }
-}
-
-/**
  * Encode ABI method arguments with tuple packing support
  * Ports the logic from the Rust encode_method_arguments function
  */
-function encodeMethodArguments(
-  method: ABIMethod,
-  args: (ABIValue | undefined)[],
-  sender: Address,
-  appId: bigint,
-  accountReferences: Address[],
-  appReferences: bigint[],
-  assetReferences: bigint[],
-): Uint8Array[] {
+function encodeMethodArguments(method: ABIMethod, args: (ABIValue | undefined)[]): Uint8Array[] {
   const encodedArgs = new Array<Uint8Array>()
 
   // Insert method selector at the front
@@ -436,21 +385,19 @@ function encodeArgsWithTuplePacking(abiTypes: ABIType[], abiValues: ABIValue[]):
 }
 
 /**
- * Common method call building logic
+ * Builds encoded ABI method arguments and resolves reference arrays
  */
-function buildMethodCallCommon(
-  params: {
-    appId: bigint
-    method: ABIMethod
-    args: (ABIValue | undefined)[]
-    accountReferences?: Address[]
-    appReferences?: bigint[]
-    assetReferences?: bigint[]
-  },
-  commonData: TransactionCommonData,
-): { args: Uint8Array[]; accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
-  const { accountReferences, appReferences, assetReferences, updatedArgs } = populateMethodArgsIntoReferenceArrays(
-    commonData.sender,
+function buildMethodCallArgsAndReferences(params: {
+  sender: Address
+  appId: bigint
+  method: ABIMethod
+  args: (ABIValue | undefined)[]
+  accountReferences?: Address[]
+  appReferences?: bigint[]
+  assetReferences?: bigint[]
+}): { args: Uint8Array[]; accountReferences: Address[]; appReferences: bigint[]; assetReferences: bigint[] } {
+  const { accountReferences, appReferences, assetReferences, updatedArgs } = prepareArgsForEncoding(
+    params.sender,
     params.appId,
     params.method,
     params.args ?? [],
@@ -459,15 +406,7 @@ function buildMethodCallCommon(
     params.assetReferences,
   )
 
-  const encodedArgs = encodeMethodArguments(
-    params.method,
-    updatedArgs,
-    commonData.sender,
-    params.appId,
-    accountReferences,
-    appReferences,
-    assetReferences,
-  )
+  const encodedArgs = encodeMethodArguments(params.method, updatedArgs)
 
   return {
     args: encodedArgs,
@@ -509,17 +448,15 @@ export const buildAppCreateMethodCall = async (
   const extraProgramPages =
     params.extraProgramPages !== undefined ? params.extraProgramPages : calculateExtraProgramPages(approvalProgram!, clearStateProgram!)
   const accountReferences = params.accountReferences?.map((a) => getAddress(a))
-  const common = buildMethodCallCommon(
-    {
-      appId: 0n,
-      method: params.method,
-      args: params.args ?? [],
-      accountReferences: accountReferences,
-      appReferences: params.appReferences,
-      assetReferences: params.assetReferences,
-    },
-    commonData,
-  )
+  const argsAndReferences = buildMethodCallArgsAndReferences({
+    sender: commonData.sender,
+    appId: 0n,
+    method: params.method,
+    args: params.args ?? [],
+    accountReferences: accountReferences,
+    appReferences: params.appReferences,
+    assetReferences: params.assetReferences,
+  })
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
@@ -535,13 +472,13 @@ export const buildAppCreateMethodCall = async (
       globalStateSchema: globalStateSchema,
       localStateSchema: localStateSchema,
       extraProgramPages: extraProgramPages,
-      args: common.args,
+      args: argsAndReferences.args,
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: common.accountReferences,
-            appReferences: common.appReferences,
-            assetReferences: common.assetReferences,
+            accountReferences: argsAndReferences.accountReferences,
+            appReferences: argsAndReferences.appReferences,
+            assetReferences: argsAndReferences.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
       rejectVersion: params.rejectVersion,
@@ -565,17 +502,15 @@ export const buildAppUpdateMethodCall = async (
       ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
       : params.clearStateProgram
   const accountReferences = params.accountReferences?.map((a) => getAddress(a))
-  const common = buildMethodCallCommon(
-    {
-      appId: params.appId,
-      method: params.method,
-      args: params.args ?? [],
-      accountReferences: accountReferences,
-      appReferences: params.appReferences,
-      assetReferences: params.assetReferences,
-    },
-    commonData,
-  )
+  const argsAndReferences = buildMethodCallArgsAndReferences({
+    sender: commonData.sender,
+    appId: params.appId,
+    method: params.method,
+    args: params.args ?? [],
+    accountReferences: accountReferences,
+    appReferences: params.appReferences,
+    assetReferences: params.assetReferences,
+  })
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
@@ -588,13 +523,13 @@ export const buildAppUpdateMethodCall = async (
       onComplete: OnApplicationComplete.UpdateApplication,
       approvalProgram: approvalProgram,
       clearStateProgram: clearStateProgram,
-      args: common.args,
+      args: argsAndReferences.args,
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: common.accountReferences,
-            appReferences: common.appReferences,
-            assetReferences: common.assetReferences,
+            accountReferences: argsAndReferences.accountReferences,
+            appReferences: argsAndReferences.appReferences,
+            assetReferences: argsAndReferences.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
       rejectVersion: params.rejectVersion,
@@ -609,17 +544,15 @@ export const buildAppCallMethodCall = async (
 ): Promise<Transaction> => {
   const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
   const accountReferences = params.accountReferences?.map((a) => getAddress(a))
-  const common = buildMethodCallCommon(
-    {
-      appId: params.appId,
-      method: params.method,
-      args: params.args ?? [],
-      accountReferences: accountReferences,
-      appReferences: params.appReferences,
-      assetReferences: params.assetReferences,
-    },
-    commonData,
-  )
+  const argsAndReferences = buildMethodCallArgsAndReferences({
+    sender: commonData.sender,
+    appId: params.appId,
+    method: params.method,
+    args: params.args ?? [],
+    accountReferences: accountReferences,
+    appReferences: params.appReferences,
+    assetReferences: params.assetReferences,
+  })
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
@@ -630,13 +563,13 @@ export const buildAppCallMethodCall = async (
     appCall: {
       appId: params.appId,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
-      args: common.args,
+      args: argsAndReferences.args,
       ...(hasAccessReferences
         ? { accessReferences: params.accessReferences }
         : {
-            accountReferences: common.accountReferences,
-            appReferences: common.appReferences,
-            assetReferences: common.assetReferences,
+            accountReferences: argsAndReferences.accountReferences,
+            appReferences: argsAndReferences.appReferences,
+            assetReferences: argsAndReferences.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
       rejectVersion: params.rejectVersion,
