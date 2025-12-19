@@ -32,10 +32,10 @@ function applyMultisigSubsignature(
   signature: Uint8Array,
 ): MultisigSignature {
   let found = false
-  const newSubsignatures = multisigSignature.subsignatures.map((subsig) => {
+  const newSubsignatures = multisigSignature.subsigs.map((subsig) => {
     if (arrayEqual(subsig.publicKey, participant)) {
       found = true
-      return { ...subsig, signature }
+      return { ...subsig, sig: signature } satisfies MultisigSubsignature
     }
     return subsig
   })
@@ -46,7 +46,7 @@ function applyMultisigSubsignature(
 
   return {
     ...multisigSignature,
-    subsignatures: newSubsignatures,
+    subsigs: newSubsignatures,
   }
 }
 
@@ -77,15 +77,18 @@ const MULTISIG_KEY_NOT_EXIST_ERROR_MSG = 'Key does not exist'
 function createMultisigTransaction(txn: Transaction, { version, threshold, addrs }: MultisigMetadata) {
   // construct the appendable multisigned transaction format
   const pks = toPublicKeys(addrs)
-  const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
-    publicKey: pk,
-    signature: undefined,
-  }))
+  const subsignatures = pks.map(
+    (pk) =>
+      ({
+        publicKey: pk,
+        sig: undefined,
+      }) satisfies MultisigSubsignature,
+  )
 
   const msig: MultisigSignature = {
     version,
     threshold,
-    subsignatures,
+    subsigs: subsignatures,
   }
 
   // if the address of this multisig is different from the transaction sender,
@@ -143,10 +146,10 @@ function createMultisigTransactionWithSignature(
   let keyExist = false
 
   // append the multisig signature to the corresponding public key in the multisig blob
-  const updatedSubsigs = signedTxn.msig!.subsignatures.map((subsig) => {
+  const updatedSubsigs = signedTxn.msig!.subsigs.map((subsig) => {
     if (arrayEqual(subsig.publicKey, myPk)) {
       keyExist = true
-      return { ...subsig, signature: rawSig }
+      return { ...subsig, sig: rawSig }
     }
     return subsig
   })
@@ -159,7 +162,7 @@ function createMultisigTransactionWithSignature(
     ...signedTxn,
     msig: {
       ...signedTxn.msig!,
-      subsignatures: updatedSubsigs,
+      subsigs: updatedSubsigs,
     },
   }
 
@@ -184,11 +187,11 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
   const refPreImage = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    publicKeys: refSigTx.msig.subsignatures.map((subsig) => subsig.publicKey),
+    publicKeys: refSigTx.msig.subsigs.map((subsig) => subsig.publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
-  const newSubsigs: MultisigSubsignature[] = refSigTx.msig.subsignatures.map((sig) => ({ ...sig }))
+  const newSubsigs: MultisigSubsignature[] = refSigTx.msig.subsigs.map((sig) => ({ ...sig }))
   for (let i = 1; i < multisigTxnBlobs.length; i++) {
     const unisig = multisigTxnBlobs[i]
     if (!unisig.msig) {
@@ -205,13 +208,13 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
     }
 
     // check multisig has same preimage as reference
-    if (unisig.msig.subsignatures.length !== refSigTx.msig.subsignatures.length) {
+    if (unisig.msig.subsigs.length !== refSigTx.msig.subsigs.length) {
       throw new Error(MULTISIG_MERGE_WRONG_PREIMAGE_ERROR_MSG)
     }
     const preimg: MultisigMetadataWithPublicKeys = {
       version: unisig.msig.version,
       threshold: unisig.msig.threshold,
-      publicKeys: unisig.msig.subsignatures.map((subsig) => subsig.publicKey),
+      publicKeys: unisig.msig.subsigs.map((subsig) => subsig.publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
     if (refMsigAddr.toString() !== msgigAddr.toString()) {
@@ -219,21 +222,21 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
     }
 
     // now, we can merge
-    unisig.msig.subsignatures.forEach((uniSubsig, index) => {
-      if (!uniSubsig.signature) return
+    unisig.msig.subsigs.forEach((uniSubsig, index) => {
+      if (!uniSubsig.sig) return
       const current = newSubsigs[index]
-      if (current.signature && !arrayEqual(uniSubsig.signature, current.signature)) {
+      if (current.sig && !arrayEqual(uniSubsig.sig, current.sig)) {
         // mismatch
         throw new Error(MULTISIG_MERGE_SIG_MISMATCH_ERROR_MSG)
       }
-      current.signature = uniSubsig.signature
+      current.sig = uniSubsig.sig
     })
   }
 
   const msig: MultisigSignature = {
     version: refSigTx.msig.version,
     threshold: refSigTx.msig.threshold,
-    subsignatures: newSubsigs,
+    subsigs: newSubsigs,
   }
 
   const signedTxn: SignedTransaction = {
@@ -409,7 +412,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
     const params: MultisigMetadata = {
       version: signature.version,
       threshold: signature.threshold,
-      addrs: signature.subsignatures.map((subsig) => new Address(subsig.publicKey)),
+      addrs: signature.subsigs.map((subsig) => new Address(subsig.publicKey)),
     }
 
     return new MultisigAccount(params, [])
@@ -460,7 +463,7 @@ export class MultisigAccount implements AddressWithTransactionSigner {
     return {
       version: this._params.version,
       threshold: this._params.threshold,
-      subsignatures,
+      subsigs: subsignatures,
     }
   }
 
@@ -474,6 +477,24 @@ export class MultisigAccount implements AddressWithTransactionSigner {
   }
 
   applySignature(msigSignature: MultisigSignature, pubkey: Uint8Array, signature: Uint8Array): MultisigSignature {
+    if (msigSignature.version !== this._params.version || msigSignature.threshold !== this._params.threshold) {
+      const thisParams = {
+        version: this._params.version,
+        threshold: this._params.threshold,
+        participants: this._params.addrs.map((addr) => addr.toString()),
+      }
+
+      const givenParams = {
+        version: msigSignature.version,
+        threshold: msigSignature.threshold,
+        participants: msigSignature.subsigs.map((subsig) => new Address(subsig.publicKey).toString()),
+      }
+
+      throw new Error(
+        `Multisig signature parameters do not match expected multisig parameters. Multisig params: ${JSON.stringify(thisParams)}, signature: ${JSON.stringify(givenParams)}`,
+      )
+    }
+
     return applyMultisigSubsignature(msigSignature, pubkey, signature)
   }
 }

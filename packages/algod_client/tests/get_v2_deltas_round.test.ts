@@ -13,7 +13,7 @@ describe('GET v2_deltas_ROUND', () => {
         baseUrl: `https://mainnet-api.4160.nodely.dev`,
       })
 
-      const result = await client.getLedgerStateDelta(55240407n)
+      const result = await client.ledgerStateDelta(55240407n)
       expect(result).toMatchSnapshot()
     })
   })

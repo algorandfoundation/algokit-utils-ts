@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import { stringCodec, numberCodec, bigIntCodec, booleanCodec, bytesCodec, fixedBytes32Codec } from '@algorandfoundation/algokit-common'
 
 /**
  * AssetParams specifies the parameters for an asset.
@@ -130,7 +130,7 @@ export const AssetParamsMeta: ObjectModelMetadata<AssetParams> = {
       name: 'metadataHash',
       wireKey: 'metadata-hash',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'name',

@@ -87,7 +87,7 @@ export class LogicSigAccount {
   async delegateMultisig(msig: MultisigAccount) {
     if (this.lmsig == undefined) {
       this.lmsig = {
-        subsignatures: [],
+        subsigs: [],
         version: msig.params.version,
         threshold: msig.params.threshold,
       }
@@ -96,7 +96,7 @@ export class LogicSigAccount {
       const { lsigSigner, addr } = addrWithSigner
       const signature = await lsigSigner(this, msig)
 
-      this.lmsig.subsignatures.push({ publicKey: addr.publicKey, signature })
+      this.lmsig.subsigs.push({ publicKey: addr.publicKey, sig: signature })
     }
   }
 

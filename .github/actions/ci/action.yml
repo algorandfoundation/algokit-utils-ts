@@ -27,6 +27,18 @@ runs:
       shell: bash
       run: npm ci
 
+    - name: Setup Polytest
+      uses: algorandfoundation/algokit-polytest/.github/actions/setup-polytest@main
+
+    - name: Validate polytest algod_client tests
+      shell: bash
+      run: npm run polytest:validate-algod
+
+    - name: Generate transact polytest files
+      shell: bash
+      working-directory: packages/transact/
+      run: npm run polytest:generate
+
     - name: Commit lint
       shell: bash
       run: npx commitlint --from ${{ inputs.commit-lint-from }} --to ${{ inputs.commit-lint-to }} --verbose

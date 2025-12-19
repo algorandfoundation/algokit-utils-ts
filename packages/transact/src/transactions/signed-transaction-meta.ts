@@ -17,7 +17,7 @@ const MultisigSubsignatureMeta: ObjectModelMetadata<MultisigSubsignature> = {
   kind: 'object',
   fields: [
     { name: 'publicKey', wireKey: 'pk', optional: false, codec: fixedBytes32Codec },
-    { name: 'signature', wireKey: 's', optional: true, codec: fixedBytes64Codec },
+    { name: 'sig', wireKey: 's', optional: true, codec: fixedBytes64Codec },
   ],
 }
 
@@ -28,7 +28,7 @@ const MultisigSignatureMeta: ObjectModelMetadata<MultisigSignature> = {
     { name: 'version', wireKey: 'v', optional: false, codec: numberCodec },
     { name: 'threshold', wireKey: 'thr', optional: false, codec: numberCodec },
     {
-      name: 'subsignatures',
+      name: 'subsigs',
       wireKey: 'subsig',
       optional: false,
       codec: new ArrayCodec(new ObjectModelCodec(MultisigSubsignatureMeta)),

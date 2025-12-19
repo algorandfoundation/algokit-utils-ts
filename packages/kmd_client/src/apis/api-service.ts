@@ -264,48 +264,6 @@ export class KmdApi {
     return decodeJson(payload, GenerateKeyResponseMeta)
   }
 
-  async getVersion(): Promise<VersionsResponse> {
-    const headers: Record<string, string> = {}
-    const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = this.mimeTypeFor(responseFormat)
-
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
-      method: 'GET',
-      url: '/versions',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-    })
-
-    return decodeJson(payload, VersionsResponseMeta)
-  }
-
-  /**
-   * Returns information about the wallet associated with the passed wallet handle token. Additionally returns expiration information about the token itself.
-   */
-  async getWalletInfo(body: WalletInfoRequest): Promise<WalletInfoResponse> {
-    const headers: Record<string, string> = {}
-    const responseFormat: EncodingFormat = 'json'
-    headers['Accept'] = this.mimeTypeFor(responseFormat)
-
-    const bodyMeta = WalletInfoRequestMeta
-    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
-    if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
-
-    const payload = await this.httpRequest.request<Record<string, unknown>>({
-      method: 'POST',
-      url: '/v1/wallet/info',
-      path: {},
-      query: {},
-      headers,
-      body: serializedBody,
-    })
-
-    return decodeJson(payload, WalletInfoResponseMeta)
-  }
-
   /**
    * Import an externally generated key into the wallet. Note that if you wish to back up the imported key, you must do so by backing up the entire wallet database, because imported keys were not derived from the wallet's master derivation key.
    */
@@ -622,6 +580,48 @@ export class KmdApi {
     })
 
     return decodeJson(payload, SignTransactionResponseMeta)
+  }
+
+  async version(): Promise<VersionsResponse> {
+    const headers: Record<string, string> = {}
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
+
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
+      method: 'GET',
+      url: '/versions',
+      path: {},
+      query: {},
+      headers,
+      body: undefined,
+    })
+
+    return decodeJson(payload, VersionsResponseMeta)
+  }
+
+  /**
+   * Returns information about the wallet associated with the passed wallet handle token. Additionally returns expiration information about the token itself.
+   */
+  async walletInfo(body: WalletInfoRequest): Promise<WalletInfoResponse> {
+    const headers: Record<string, string> = {}
+    const responseFormat: EncodingFormat = 'json'
+    headers['Accept'] = this.mimeTypeFor(responseFormat)
+
+    const bodyMeta = WalletInfoRequestMeta
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat)
+    if (mediaType) headers['Content-Type'] = mediaType
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined
+
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
+      method: 'POST',
+      url: '/v1/wallet/info',
+      path: {},
+      query: {},
+      headers,
+      body: serializedBody,
+    })
+
+    return decodeJson(payload, WalletInfoResponseMeta)
   }
 
   /**

@@ -11,7 +11,7 @@ describe('GET v2_transactions_params', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getTransactionParams()
+      const result = await client.transactionParams()
 
       expect(result).toMatchSnapshot()
     })

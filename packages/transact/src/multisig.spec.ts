@@ -17,11 +17,11 @@ describe('multisig', () => {
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
-      expect(multisig.subsignatures).toHaveLength(2)
-      expect(multisig.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
-      expect(multisig.subsignatures[1].publicKey).toEqual(addrs[1].publicKey)
-      expect(multisig.subsignatures[0].signature).toBeUndefined()
-      expect(multisig.subsignatures[1].signature).toBeUndefined()
+      expect(multisig.subsigs).toHaveLength(2)
+      expect(multisig.subsigs[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(multisig.subsigs[1].publicKey).toEqual(addrs[1].publicKey)
+      expect(multisig.subsigs[0].sig).toBeUndefined()
+      expect(multisig.subsigs[1].sig).toBeUndefined()
     })
 
     test('should handle single participant', () => {
@@ -32,8 +32,8 @@ describe('multisig', () => {
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(1)
-      expect(multisig.subsignatures).toHaveLength(1)
-      expect(multisig.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(multisig.subsigs).toHaveLength(1)
+      expect(multisig.subsigs[0].publicKey).toEqual(addrs[0].publicKey)
     })
   })
 
@@ -46,7 +46,7 @@ describe('multisig', () => {
 
       const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
       const multisig = msigAccount.createMultisigSignature()
-      const extractedParticipants = multisig.subsignatures.map((subsig) => subsig.publicKey)
+      const extractedParticipants = multisig.subsigs.map((subsig) => subsig.publicKey)
 
       expect(extractedParticipants).toEqual(addrs.map((a) => a.publicKey))
     })
@@ -62,7 +62,7 @@ describe('multisig', () => {
       const signature = new Uint8Array(64).fill(42) // Mock signature
       const signedMultisig = msigAccount.applySignature(multisig, addrs[0].publicKey, signature)
 
-      const extractedParticipants = signedMultisig.subsignatures.map((subsig) => subsig.publicKey)
+      const extractedParticipants = signedMultisig.subsigs.map((subsig) => subsig.publicKey)
 
       expect(extractedParticipants).toEqual(addrs.map((a) => a.publicKey))
     })
@@ -126,8 +126,8 @@ describe('multisig', () => {
 
       expect(signedMultisig.version).toBe(multisig.version)
       expect(signedMultisig.threshold).toBe(multisig.threshold)
-      expect(signedMultisig.subsignatures[0].signature).toEqual(signature)
-      expect(signedMultisig.subsignatures[1].signature).toBeUndefined()
+      expect(signedMultisig.subsigs[0].sig).toEqual(signature)
+      expect(signedMultisig.subsigs[1].sig).toBeUndefined()
     })
 
     test('should replace existing signature', () => {
@@ -143,11 +143,11 @@ describe('multisig', () => {
 
       // Apply first signature
       const signedMultisig1 = msigAccount.applySignature(multisig, addrs[0].publicKey, signature1)
-      expect(signedMultisig1.subsignatures[0].signature).toEqual(signature1)
+      expect(signedMultisig1.subsigs[0].sig).toEqual(signature1)
 
       // Replace with second signature
       const signedMultisig2 = msigAccount.applySignature(signedMultisig1, addrs[0].publicKey, signature2)
-      expect(signedMultisig2.subsignatures[0].signature).toEqual(signature2)
+      expect(signedMultisig2.subsigs[0].sig).toEqual(signature2)
     })
   })
 
@@ -170,8 +170,24 @@ describe('multisig', () => {
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
-      expect(multisig.subsignatures[0].signature).toEqual(signature1)
-      expect(multisig.subsignatures[1].signature).toEqual(signature2)
+      expect(multisig.subsigs[0].sig).toEqual(signature1)
+      expect(multisig.subsigs[1].sig).toEqual(signature2)
+    })
+
+    test('should throw error for incompatible versions', () => {
+      const addrs = [
+        'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
+        'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
+      ].map((s) => Address.fromString(s))
+
+      const msigAccount1 = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+      const msigAccount2 = new MultisigAccount({ version: 2, threshold: 2, addrs }, [])
+
+      const msig2 = msigAccount2.createMultisigSignature()
+
+      expect(() => msigAccount1.applySignature(msig2, addrs[0].publicKey, new Uint8Array(64))).toThrow(
+        `Multisig signature parameters do not match expected multisig parameters. Multisig params: {"version":1,"threshold":2,"participants":["RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q","ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA"]}, signature: {"version":2,"threshold":2,"participants":["RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q","ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA"]}`,
+      )
     })
   })
 
@@ -193,11 +209,11 @@ describe('multisig', () => {
 
       expect(decoded.version).toBe(emptyMultisignature.version)
       expect(decoded.threshold).toBe(emptyMultisignature.threshold)
-      expect(decoded.subsignatures).toHaveLength(emptyMultisignature.subsignatures.length)
-      expect(decoded.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
-      expect(decoded.subsignatures[1].publicKey).toEqual(addrs[1].publicKey)
-      expect(decoded.subsignatures[0].signature).toEqual(signature)
-      expect(decoded.subsignatures[1].signature).toBeUndefined()
+      expect(decoded.subsigs).toHaveLength(emptyMultisignature.subsigs.length)
+      expect(decoded.subsigs[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(decoded.subsigs[1].publicKey).toEqual(addrs[1].publicKey)
+      expect(decoded.subsigs[0].sig).toEqual(signature)
+      expect(decoded.subsigs[1].sig).toBeUndefined()
     })
   })
 
@@ -227,11 +243,11 @@ describe('multisig', () => {
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
-      expect(multisig.subsignatures).toHaveLength(2)
-      expect(multisig.subsignatures[0].publicKey).toEqual(addrs[0].publicKey)
-      expect(multisig.subsignatures[1].publicKey).toEqual(addrs[1].publicKey)
-      expect(multisig.subsignatures[0].signature).toEqual(signature1)
-      expect(multisig.subsignatures[1].signature).toEqual(signature2)
+      expect(multisig.subsigs).toHaveLength(2)
+      expect(multisig.subsigs[0].publicKey).toEqual(addrs[0].publicKey)
+      expect(multisig.subsigs[1].publicKey).toEqual(addrs[1].publicKey)
+      expect(multisig.subsigs[0].sig).toEqual(signature1)
+      expect(multisig.subsigs[1].sig).toEqual(signature2)
     })
   })
 })

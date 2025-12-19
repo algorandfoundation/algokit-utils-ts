@@ -222,6 +222,7 @@ class SchemaProcessor:
             is_box_reference = bool(items.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
             is_holding_reference = bool(items.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
             is_locals_reference = bool(items.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
+            byte_length = items.get(constants.X_ALGOKIT_BYTE_LENGTH)
             return ModelDescriptor(
                 model_name=model_name,
                 fields=[],
@@ -237,6 +238,7 @@ class SchemaProcessor:
                 array_item_is_box_reference=is_box_reference,
                 array_item_is_holding_reference=is_holding_reference,
                 array_item_is_locals_reference=is_locals_reference,
+                array_item_byte_length=byte_length,
             )
 
         # Object schema descriptor
@@ -273,6 +275,7 @@ class SchemaProcessor:
             boolean_flag = False
             address_flag = False
             inline_object_schema = None
+            byte_length_flag: int | None = None
 
             if is_array and isinstance(items, dict):
                 if "$ref" in items:
@@ -308,6 +311,7 @@ class SchemaProcessor:
                     box_reference = bool(items.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
                     holding_reference = bool(items.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
                     locals_reference = bool(items.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
+                    byte_length_flag = items.get(constants.X_ALGOKIT_BYTE_LENGTH)
             else:
                 if "$ref" in resolved_schema and resolved_schema is prop_schema:
                     # Only set ref_model if we didn't inline the schema
@@ -361,6 +365,7 @@ class SchemaProcessor:
                     box_reference = bool(resolved_schema.get(constants.X_ALGOKIT_BOX_REFERENCE) is True)
                     holding_reference = bool(resolved_schema.get(constants.X_ALGOKIT_HOLDING_REFERENCE) is True)
                     locals_reference = bool(resolved_schema.get(constants.X_ALGOKIT_LOCALS_REFERENCE) is True)
+                    byte_length_flag = resolved_schema.get(constants.X_ALGOKIT_BYTE_LENGTH)
 
             is_optional = prop_name not in required_fields
             # Nullable per OpenAPI
@@ -404,6 +409,7 @@ class SchemaProcessor:
                     inline_object_schema=inline_object_schema,
                     inline_meta_name=inline_meta_name,
                     is_empty_object=is_empty_object,
+                    byte_length=byte_length_flag,
                 )
             )
 
@@ -594,9 +600,9 @@ class OperationProcessor:
             get_application_box_by_name = '''/**
    * Given an application ID and box name, it returns the round, box name, and value.
    */
-  async getApplicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
+  async applicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
     const name = `b64:${Buffer.from(boxName).toString('base64')}`;
-    return this._getApplicationBoxByName(applicationId, { name });
+    return this._applicationBoxByName(applicationId, { name });
   }
 '''
             suggested_params_method = '''/**
@@ -619,7 +625,7 @@ class OperationProcessor:
             get_transaction_params_method = '''/**
    * Returns the common needed parameters for a new transaction.
    */
-  async getTransactionParams(): Promise<SuggestedParams> {
+  async transactionParams(): Promise<SuggestedParams> {
     return await this.suggestedParams();
   }'''
             simulate_raw_transactions_method = '''/**
@@ -704,7 +710,7 @@ class OperationProcessor:
         private_method_config = {
             "AlgodApi": {
                 "RawTransaction",  # Wrapped by custom method
-                "GetApplicationBoxByName", # Wrapped by custom method
+                "ApplicationBoxByName", # Wrapped by custom method
                 "TransactionParams" # Wrapped by custom method
             },
             "IndexerApi": {
@@ -1137,6 +1143,10 @@ class CodeGenerator:
                 "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { Block } from './block';\n"
                 "export type { BlockHeader } from './block';\n"
+                "export type { TxnCommitments } from './block';\n"
+                "export type { RewardState } from './block';\n"
+                "export type { UpgradeState } from './block';\n"
+                "export type { UpgradeVote } from './block';\n"
                 "export type { SignedTxnInBlock } from './block';\n"
                 "export type { SignedTxnWithAD } from './block';\n"
                 "export type { ApplyData } from './block';\n"
@@ -1150,14 +1160,7 @@ class CodeGenerator:
             # Add Meta exports for nested types in block.ts to model-meta.ts
             meta_path = models_dir / constants.MODELS_META_FILE
             meta_extras = (
-                "export { BlockHeaderMeta } from './block';\n"
-                "export { SignedTxnInBlockMeta } from './block';\n"
-                "export { SignedTxnWithADMeta } from './block';\n"
-                "export { ApplyDataMeta } from './block';\n"
-                "export { BlockAppEvalDeltaMeta } from './block';\n"
-                "export { BlockEvalDeltaMeta } from './block';\n"
-                "export { BlockStateProofTrackingDataMeta } from './block';\n"
-                "export { ParticipationUpdatesMeta } from './block';\n"
+                "export { blockCodec } from './block';\n"
             )
             files[meta_path] = files[meta_path] + meta_extras
         elif service_class == "KmdApi":

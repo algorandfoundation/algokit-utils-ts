@@ -11,7 +11,7 @@ describe('GET v2_ledger_sync', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getSyncRound()
+      const result = await client.syncRound()
 
       expect(result).toMatchSnapshot()
     })

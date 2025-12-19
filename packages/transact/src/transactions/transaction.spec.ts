@@ -67,6 +67,8 @@ describe('Transaction Validation', () => {
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
         lastValid: 2000n,
+        genesisHash: new Uint8Array(32).fill(1),
+        genesisId: 'testnet-v1.0',
         assetTransfer: {
           assetId: 0n,
           amount: 1000n,
@@ -76,6 +78,40 @@ describe('Transaction Validation', () => {
 
       expect(() => sut(transaction)).toThrow('Asset transfer validation failed: Asset ID must not be 0')
     })
+  })
+})
+
+describe('txId', () => {
+  test('throws when computing txId without genesisHash', () => {
+    const transaction = new Transaction({
+      type: TransactionType.Payment,
+      sender: VALID_ADDRESS_1,
+      firstValid: 1000n,
+      lastValid: 2000n,
+      payment: {
+        amount: 1000n,
+        receiver: VALID_ADDRESS_1,
+      },
+    })
+
+    expect(() => transaction.txId()).toThrow('Cannot compute transaction id without genesis hash')
+  })
+
+  test('should compute txId when genesisHash is present', () => {
+    const transaction = new Transaction({
+      type: TransactionType.Payment,
+      sender: VALID_ADDRESS_1,
+      firstValid: 1000n,
+      lastValid: 2000n,
+      genesisHash: new Uint8Array(32).fill(1),
+      payment: {
+        amount: 1000n,
+        receiver: VALID_ADDRESS_1,
+      },
+    })
+
+    expect(() => transaction.txId()).not.toThrow()
+    expect(transaction.txId()).toMatch(/^[A-Z2-7]{52}$/)
   })
 })
 

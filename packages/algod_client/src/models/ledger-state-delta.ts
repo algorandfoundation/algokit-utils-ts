@@ -1,5 +1,5 @@
 import type { Block } from './block'
-import { BlockMeta } from './block'
+import { blockCodec } from './block'
 import {
   numberCodec,
   bigIntCodec,
@@ -666,7 +666,7 @@ export const LedgerStateDeltaMeta: ObjectModelMetadata<LedgerStateDelta> = {
   kind: 'object',
   fields: [
     { name: 'accounts', wireKey: 'Accts', optional: false, codec: new ObjectModelCodec(LedgerAccountDeltasMeta) },
-    { name: 'block', wireKey: 'Hdr', optional: false, codec: new ObjectModelCodec(BlockMeta) },
+    { name: 'block', wireKey: 'Hdr', optional: false, codec: blockCodec },
     { name: 'stateProofNext', wireKey: 'StateProofNext', optional: false, codec: bigIntCodec },
     { name: 'prevTimestamp', wireKey: 'PrevTimestamp', optional: false, codec: bigIntCodec },
     { name: 'totals', wireKey: 'Totals', optional: false, codec: new ObjectModelCodec(LedgerAccountTotalsMeta) },

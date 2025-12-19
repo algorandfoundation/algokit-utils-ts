@@ -147,7 +147,7 @@ export const waitForConfirmation = async function (
   }
 
   // Get current round
-  const status = await algod.getStatus()
+  const status = await algod.status()
   if (status === undefined) {
     throw new Error('Unable to get node status')
   }
