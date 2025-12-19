@@ -29,13 +29,13 @@ Configuration for creating an Algorand testing fixture.
 
 ### accountGetter
 
-• `Optional` **accountGetter**: (`algod`: `AlgodClient`, `kmd?`: `KmdClient`) => `Promise`\<\{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
+• `Optional` **accountGetter**: (`algod`: `AlgodClient`, `kmd?`: `KmdClient`) => `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
 
 Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts.
 
 #### Type declaration
 
-▸ (`algod`, `kmd?`): `Promise`\<\{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
+▸ (`algod`, `kmd?`): `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
 
 ##### Parameters
 
@@ -46,11 +46,11 @@ Optional override for how to get an account; this allows you to retrieve account
 
 ##### Returns
 
-`Promise`\<\{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
+`Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
 
 #### Defined in
 
-[src/types/testing.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L60)
+[src/types/testing.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L80)
 
 ___
 
@@ -62,7 +62,7 @@ An optional algod client, if not specified then it will create one against `algo
 
 #### Defined in
 
-[src/types/testing.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L52)
+[src/types/testing.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L72)
 
 ___
 
@@ -90,7 +90,7 @@ An optional indexer client, if not specified then it will create one against `in
 
 #### Defined in
 
-[src/types/testing.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L54)
+[src/types/testing.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L74)
 
 ___
 
@@ -118,7 +118,7 @@ An optional kmd client, if not specified then it will create one against `kmdCon
 
 #### Defined in
 
-[src/types/testing.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L56)
+[src/types/testing.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L76)
 
 ___
 
@@ -146,4 +146,4 @@ The amount of funds to allocate to the default testing account, if not specified
 
 #### Defined in
 
-[src/types/testing.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L58)
+[src/types/testing.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L78)
