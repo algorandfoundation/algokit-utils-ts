@@ -1,38 +1,9 @@
-import { Address, concatArrays, decodeMsgpack, hash, isValidAddress } from '@algorandfoundation/algokit-common'
+import { Address, concatArrays, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
 import { MultisigAccount } from './multisig'
 import { TransactionSigner } from './signer'
 import { LogicSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
-import { logicSignatureCodec } from './transactions/signed-transaction-meta'
 import { Transaction } from './transactions/transaction'
-
-// base64regex is the regex to test for base64 strings
-const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
-
-/** sanityCheckProgram performs heuristic program validation:
- * check if passed in bytes are Algorand address or is B64 encoded, rather than Teal bytes
- *
- * @param program - Program bytes to check
- */
-export function sanityCheckProgram(program: Uint8Array) {
-  if (!program || program.length === 0) throw new Error('empty program')
-
-  const lineBreakOrd = '\n'.charCodeAt(0)
-  const blankSpaceOrd = ' '.charCodeAt(0)
-  const tildeOrd = '~'.charCodeAt(0)
-
-  const isPrintable = (x: number) => blankSpaceOrd <= x && x <= tildeOrd
-  const isAsciiPrintable = program.every((x: number) => x === lineBreakOrd || isPrintable(x))
-
-  if (isAsciiPrintable) {
-    const programStr = new TextDecoder().decode(program)
-
-    if (isValidAddress(programStr)) throw new Error('requesting program bytes, get Algorand address')
-
-    if (base64regex.test(programStr)) throw new Error('program should not be b64 encoded')
-
-    throw new Error('program bytes are all ASCII printable characters, not looking like Teal byte code')
-  }
-}
+import { logicSignatureCodec } from './transactions/signed-transaction-meta'
 
 const PROGRAM_TAG = new TextEncoder().encode('Program')
 const MSIG_PROGRAM_TAG = new TextEncoder().encode('MsigProgram')
@@ -51,6 +22,20 @@ export class LogicSigAccount {
   msig?: MultisigSignature
   lmsig?: MultisigSignature
 
+  static fromSignature(signature: LogicSignature): LogicSigAccount {
+    const lsigAccount = new LogicSigAccount(signature.logic, signature.args || [])
+    lsigAccount.sig = signature.sig
+    lsigAccount.msig = signature.msig
+    lsigAccount.lmsig = signature.lmsig
+    return lsigAccount
+  }
+
+  static fromBytes(encodedLsig: Uint8Array): LogicSigAccount {
+    const decoded = decodeMsgpack(encodedLsig)
+    const lsigSignature = logicSignatureCodec.decode(decoded, 'msgpack')
+    return LogicSigAccount.fromSignature(lsigSignature)
+  }
+
   constructor(program: Uint8Array, programArgs?: Array<Uint8Array> | null) {
     if (programArgs && (!Array.isArray(programArgs) || !programArgs.every((arg) => arg.constructor === Uint8Array))) {
       throw new TypeError('Invalid arguments')
@@ -58,8 +43,6 @@ export class LogicSigAccount {
 
     let args: Uint8Array[] = []
     if (programArgs != null) args = programArgs.map((arg) => new Uint8Array(arg))
-
-    sanityCheckProgram(program)
 
     this.logic = program
     this.args = args
@@ -132,15 +115,4 @@ export class LogicSigAccount {
   programDataToSign(data: Uint8Array): Uint8Array {
     return concatArrays(SIGN_PROGRAM_DATA_PREFIX, this.address().publicKey, data)
   }
-}
-
-/**
- * Decodes MsgPack bytes into a logic signature.
- *
- * @param encodedLogicSignature - The MsgPack encoded logic signature
- * @returns The decoded LogicSignature or an error if decoding fails.
- */
-export function decodeLogicSignature(encodedLogicSignature: Uint8Array): LogicSignature {
-  const decodedData = decodeMsgpack(encodedLogicSignature)
-  return logicSignatureCodec.decode(decodedData, 'msgpack')
 }

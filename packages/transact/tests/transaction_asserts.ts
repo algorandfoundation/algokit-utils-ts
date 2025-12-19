@@ -1,6 +1,7 @@
 import * as ed from '@noble/ed25519'
 import { expect } from 'vitest'
 import {
+  MultisigAccount,
   SignedTransaction,
   assignFee,
   decodeTransaction,
@@ -11,6 +12,7 @@ import {
   getEncodedTransactionType,
 } from '../src'
 import { TransactionTestData } from './common'
+import { Address } from '@algorandfoundation/algokit-common'
 
 // Helper to decode base64 to Uint8Array
 const base64ToUint8Array = (base64: string): Uint8Array => {
@@ -108,4 +110,29 @@ export const assertAssignFee = (label: string, testData: TransactionTestData) =>
   const txnWithFee3 = assignFee(testData.transaction, { feePerByte, minFee: 1000n })
   const txnSize = estimateTransactionSize(testData.transaction)
   expect(txnWithFee3.fee, label).toEqual(txnSize * feePerByte)
+}
+
+export const assertMultisigExample = async (label: string, testData: TransactionTestData) => {
+  const singleSig = await ed.signAsync(encodeTransaction(testData.transaction), base64ToUint8Array(testData.signer.msigSigners![0].SK))
+
+  const pubkeys = testData.signer.msigSigners!.map((signer) => base64ToUint8Array(signer.SignatureVerifier))
+  const msigAccount = new MultisigAccount(
+    {
+      version: 1,
+      threshold: 2,
+      addrs: pubkeys.map((pk) => new Address(pk)),
+    },
+    [],
+  )
+  let multisigSignature = msigAccount.createMultisigSignature()
+  multisigSignature = msigAccount.applySignature(multisigSignature, pubkeys[0], singleSig)
+  multisigSignature = msigAccount.applySignature(multisigSignature, pubkeys[1], singleSig)
+
+  const signedTxn: SignedTransaction = {
+    txn: testData.transaction,
+    msig: multisigSignature,
+  }
+  const encodedSignedTxn = encodeSignedTransaction(signedTxn)
+
+  expect(encodedSignedTxn, label).toEqual(testData.signedBytes)
 }
