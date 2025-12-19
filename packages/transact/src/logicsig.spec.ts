@@ -1,4 +1,4 @@
-import { encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { Address, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { LogicSigAccount } from './logicsig'
 import { LogicSignature } from './transactions/signed-transaction'
@@ -15,7 +15,7 @@ describe('logicsig', () => {
       } satisfies LogicSignature
       const encoded = encodeMsgpack(logicSignatureCodec.encode(logicSignature, 'msgpack'))
 
-      const decoded = LogicSigAccount.fromBytes(encoded)
+      const decoded = LogicSigAccount.fromBytes(encoded, Address.zeroAddress())
 
       expect(decoded.logic).toEqual(logicSignature.logic)
       expect(decoded.sig).toEqual(signature)

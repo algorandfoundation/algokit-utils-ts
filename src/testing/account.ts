@@ -1,6 +1,13 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
+import {
+  AddressWithSigners,
+  AddressWithTransactionSigner,
+  DelegatedLsigSigner,
+  MxBytesSigner,
+  ProgramDataSigner,
+  TransactionSigner,
+} from '@algorandfoundation/algokit-transact'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { AlgorandClient, Config } from '../'
 import { GetTestAccountParams } from '../types/testing'
@@ -36,7 +43,7 @@ export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
   algodOrAlgorandClient: AlgodClient | AlgorandClient,
   kmd?: KmdClient,
-): Promise<Address & AddressWithTransactionSigner> {
+): Promise<Address & AddressWithSigners> {
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient
@@ -65,10 +72,13 @@ export async function getTestAccount(
 
   algorand.setSignerFromAccount(account)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const address = Address.fromString(account.addr.toString()) as any
-  address.addr = account.addr
-  address.signer = algorand.account.getSigner(address)
+  const address = Address.fromString(account.addr.toString()) as Address & AddressWithSigners
+  for (const key of Object.keys(account as AddressWithSigners)) {
+    if (!(key in address)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(address as any)[key] = (account as any)[key]
+    }
+  }
 
   return address
 }
