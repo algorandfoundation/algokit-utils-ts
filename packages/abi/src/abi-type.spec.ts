@@ -394,6 +394,9 @@ describe('ABIType encode decode', () => {
 
     const decodedStruct = structType.decode(encodedTuple)
     expect(decodedStruct).toEqual(structValue)
+
+    const encodedStructFromTupleValue = structType.encode(tupleValue)
+    expect(encodedStructFromTupleValue).toEqual(encodedStruct)
   })
 
   test('correctly decodes a struct containing a uint16', () => {

@@ -253,11 +253,14 @@ function prepareArgsForEncoding(
         } else {
           throw new Error('Invalid value for account')
         }
+
         if (sender.equals(addr)) {
           return 0
         }
+
         const existing = accounts.findIndex((a) => a.equals(addr)) + 1
         if (existing) return existing
+
         accounts.push(addr)
         return accounts.length
       }
@@ -265,20 +268,25 @@ function prepareArgsForEncoding(
         if (typeof arg !== 'bigint') {
           throw new Error('Invalid value for asset')
         }
+
         const existing = assets.findIndex((a) => a === arg)
         if (existing === -1) {
           assets.push(arg)
           return assets.length - 1
         }
+
         return existing
       }
       case 'application': {
         if (typeof arg !== 'bigint') {
           throw new Error('Invalid value for application')
         }
+
         if (arg === appId) return 0
+
         const existing = apps.findIndex((a) => a === arg) + 1
         if (existing) return existing
+
         apps.push(arg)
         return apps.length
       }
