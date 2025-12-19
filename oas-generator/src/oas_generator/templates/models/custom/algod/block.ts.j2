@@ -1,7 +1,6 @@
 import {
   Address,
   ArrayCodec,
-  Codec,
   MapCodec,
   ObjectModelCodec,
   type EncodingFormat,
@@ -427,8 +426,6 @@ const BlockMeta: ObjectModelMetadata<Block> = {
   ],
 }
 
-const baseBlockCodec = new ObjectModelCodec(BlockMeta)
-
 /**
  * Custom codec for Block that populates genesis information on transactions after decoding.
  *
@@ -440,17 +437,13 @@ const baseBlockCodec = new ObjectModelCodec(BlockMeta)
  * This codec automatically populates these fields after decoding to ensure transaction IDs
  * can be calculated correctly.
  */
-class BlockCodec extends Codec<Block, Record<string, unknown>, WireObject> {
-  public defaultValue(): Block {
-    return baseBlockCodec.defaultValue()
-  }
-
-  protected toEncoded(value: Block, format: EncodingFormat): Record<string, unknown> {
-    return baseBlockCodec.encode(value, format)
+class BlockCodec extends ObjectModelCodec<Block> {
+  constructor() {
+    super(BlockMeta)
   }
 
   protected fromEncoded(value: WireObject, format: EncodingFormat): Block {
-    const block = baseBlockCodec.decode(value, format)
+    const block = super.fromEncoded(value, format)
 
     // Populate genesis id and hash on transactions if required to ensure tx id's are correct
     const genesisId = block.header.genesisId
@@ -471,10 +464,6 @@ class BlockCodec extends Codec<Block, Record<string, unknown>, WireObject> {
     }
 
     return block
-  }
-
-  public isDefaultValue(value: Block): boolean {
-    return baseBlockCodec.isDefaultValue(value)
   }
 }
 
