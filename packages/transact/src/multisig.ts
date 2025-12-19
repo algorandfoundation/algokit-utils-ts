@@ -461,7 +461,6 @@ export class MultisigAccount implements AddressWithTransactionSigner, AddressWit
         const { lsigSigner, addr } = addrWithSigner
         const result = await lsigSigner(lsig, this)
         if (!('sig' in result) || !result.sig) {
-          console.debug(result)
           throw new Error(
             `Signer for address ${addr.toString()} did not produce a valid signature when signing logic sig for multisig account ${this._addr.toString()}`,
           )
