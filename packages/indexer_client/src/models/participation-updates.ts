@@ -8,12 +8,12 @@ export type ParticipationUpdates = {
   /**
    * \[partupdrmv\] a list of online accounts that needs to be converted to offline since their participation key expired.
    */
-  expiredParticipationAccounts?: string[]
+  expiredParticipationAccounts: string[]
 
   /**
    * \[partupabs\] a list of online accounts that need to be suspended.
    */
-  absentParticipationAccounts?: string[]
+  absentParticipationAccounts: string[]
 }
 
 export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
@@ -23,13 +23,13 @@ export const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates>
     {
       name: 'expiredParticipationAccounts',
       wireKey: 'expired-participation-accounts',
-      optional: true,
+      optional: false,
       codec: stringArrayCodec,
     },
     {
       name: 'absentParticipationAccounts',
       wireKey: 'absent-participation-accounts',
-      optional: true,
+      optional: false,
       codec: stringArrayCodec,
     },
   ],
