@@ -8,6 +8,7 @@ import type { SimulateTransactionGroupResult } from './simulate-transaction-grou
 import { SimulateTransactionGroupResultMeta } from './simulate-transaction-group-result'
 import type { SimulationEvalOverrides } from './simulation-eval-overrides'
 import { SimulationEvalOverridesMeta } from './simulation-eval-overrides'
+import { encodeJson } from '../core/model-runtime'
 
 export type SimulateResponse = {
   /**
@@ -70,4 +71,8 @@ export const SimulateResponseMeta: ObjectModelMetadata<SimulateResponse> = {
       codec: new ObjectModelCodec(SimulateInitialStatesMeta),
     },
   ],
+}
+
+export function encodeSimulateResponseToJson(simulateResponse: SimulateResponse): string {
+  return encodeJson(simulateResponse, SimulateResponseMeta, 2)
 }

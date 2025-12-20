@@ -48,6 +48,22 @@ class OperationInput:
     spec: Schema
 
 
+@dataclass
+class CustomModelMethod:
+    """Represents a custom method to be added to a model file."""
+
+    name: str  # The function name
+    code: str  # The function code
+
+
+@dataclass
+class CustomModelExtensions:
+    """Custom imports and methods for a model file."""
+
+    imports: list[str]
+    methods: list[CustomModelMethod]
+
+
 class TemplateRenderer:
     """Handles template rendering operations."""
 
@@ -81,8 +97,9 @@ class TemplateRenderer:
 class SchemaProcessor:
     """Processes OpenAPI schemas and generates TypeScript models."""
 
-    def __init__(self, renderer: TemplateRenderer) -> None:
+    def __init__(self, renderer: TemplateRenderer, service_class_name: str = "") -> None:
         self.renderer = renderer
+        self.service_class_name = service_class_name
         self._wire_to_canonical: dict[str, str] = {}
         self._camel_to_wire: dict[str, str] = {}
 
@@ -124,7 +141,8 @@ class SchemaProcessor:
             else:
                 register_model_kind(model_name, "primitive")
 
-        # Second pass: Generate individual model files
+        # Second pass: Generate individual model files and collect custom method exports
+        custom_method_exports: list[dict[str, Any]] = []
         for name, schema in filtered_schemas.items():
             descriptor = self._build_model_descriptor(name, schema, schemas)
             context = self._create_model_context(name, schema, schemas, descriptor)
@@ -132,9 +150,16 @@ class SchemaProcessor:
             file_name = f"{ts_kebab_case(name)}{constants.MODEL_FILE_EXTENSION}"
             files[models_dir / file_name] = content
 
+            # Collect custom method exports for the index
+            for method in context.get("custom_methods", []):
+                custom_method_exports.append({
+                    "file_name": ts_kebab_case(name),
+                    "method_name": method.name,
+                })
+
         files[models_dir / constants.INDEX_FILE] = self.renderer.render(
             constants.MODELS_INDEX_TEMPLATE,
-            {"schemas": filtered_schemas},
+            {"schemas": filtered_schemas, "custom_method_exports": custom_method_exports},
         )
 
         files[models_dir / constants.MODELS_META_FILE] = self.renderer.render(
@@ -150,6 +175,10 @@ class SchemaProcessor:
         is_object = self._is_object_schema(schema)
         properties = self._extract_properties(schema) if is_object else []
 
+        # Get custom extensions for this model
+        model_name = ts_pascal_case(name)
+        custom_extensions = self._get_custom_model_extensions(model_name)
+
         return {
             "schema_name": name,
             "schema": schema,
@@ -159,6 +188,8 @@ class SchemaProcessor:
             "has_additional_properties": schema.get(constants.SchemaKey.ADDITIONAL_PROPERTIES) is not None,
             "additional_properties_type": schema.get(constants.SchemaKey.ADDITIONAL_PROPERTIES),
             "descriptor": descriptor,
+            "custom_imports": custom_extensions.imports if custom_extensions else [],
+            "custom_methods": custom_extensions.methods if custom_extensions else [],
         }
 
     @staticmethod
@@ -198,6 +229,30 @@ class SchemaProcessor:
     @property
     def rename_mappings(self) -> tuple[dict[str, str], dict[str, str]]:
         return self._wire_to_canonical, self._camel_to_wire
+
+    def _get_custom_model_extensions(self, model_name: str) -> CustomModelExtensions | None:
+        """Get custom imports and methods for specific models."""
+        # Configuration for custom model methods by service class and model name
+        custom_model_config: dict[str, dict[str, CustomModelExtensions]] = {
+            "AlgodApi": {
+                "SimulateResponse": CustomModelExtensions(
+                    imports=[
+                        "import { encodeJson } from '../core/model-runtime';",
+                    ],
+                    methods=[
+                        CustomModelMethod(
+                            name="encodeSimulateResponseToJson",
+                            code='''export function encodeSimulateResponseToJson(simulateResponse: SimulateResponse): string {
+  return encodeJson(simulateResponse, SimulateResponseMeta, 2);
+}''',
+                        ),
+                    ],
+                ),
+            },
+        }
+
+        service_config = custom_model_config.get(self.service_class_name, {})
+        return service_config.get(model_name)
 
     def _build_model_descriptor(self, name: str, schema: Schema, all_schemas: Schemas) -> ModelDescriptor:
         """Build a per-model descriptor from OAS schema and vendor extensions."""
@@ -1112,6 +1167,9 @@ class CodeGenerator:
         # Filter schemas to only include those used by non-skipped operations
         used_schemas = {name: schema for name, schema in all_schemas.items()
                        if ts_pascal_case(name) in all_used_types}
+
+        # Set service class name for custom model extensions
+        self.schema_processor.service_class_name = service_class
 
         # Generate components (only used schemas)
         files.update(self.schema_processor.generate_models(output_dir, used_schemas))

@@ -6,9 +6,9 @@ import {
   type ObjectModelMetadata,
 } from '@algorandfoundation/algokit-common'
 
-export function encodeJson<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>): string {
-  const wire = new ObjectModelCodec(meta).encode(value, 'json')
-  return stringifyJson(wire)
+export function encodeJson<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>, space?: string | number): string {
+  const wire = new ObjectModelCodec(meta).encode(value, 'json');
+  return stringifyJson(wire, undefined, space);
 }
 export function encodeMsgpack<T extends Record<string, unknown>>(value: T, meta: ObjectModelMetadata<T>): Uint8Array {
   const wire = new ObjectModelCodec(meta).encode(value, 'msgpack')

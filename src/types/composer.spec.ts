@@ -286,4 +286,23 @@ describe('TransactionComposer', () => {
       }),
     ).toThrow('Cannot specify both `accessReferences` and reference arrays (`appReferences`, `assetReferences`, `boxReferences`).')
   })
+
+  describe('simulate', () => {
+    test('should not group a single transaction', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+      const simulateResult = await algorand
+        .newGroup()
+        .addPayment({
+          amount: AlgoAmount.MicroAlgo(1000),
+          sender,
+          receiver: sender,
+        })
+        .simulate({ resultOnFailure: true })
+
+      expect(simulateResult).toBeDefined()
+      expect(simulateResult.groupId).toBe('')
+      expect(simulateResult.simulateResponse.txnGroups[0].txnResults[0].txnResult.txn.txn.group).toBeUndefined()
+    })
+  })
 })

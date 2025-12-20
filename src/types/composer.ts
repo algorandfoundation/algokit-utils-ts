@@ -2008,7 +2008,7 @@ export class TransactionComposer {
     if (!this.transactionsWithSigners) {
       const builtTransactions = await this.buildTransactions()
       const transactions =
-        builtTransactions.transactions.length > 0 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
+        builtTransactions.transactions.length > 1 ? groupTransactions(builtTransactions.transactions) : builtTransactions.transactions
 
       transactionsWithSigner = transactions.map((txn, index) => ({
         txn: txn,
@@ -2054,14 +2054,14 @@ export class TransactionComposer {
       const error = new Error(errorMessage)
 
       if (Config.debug) {
-        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
       throw await this.transformError(error)
     }
 
     if (Config.debug && Config.traceAll) {
-      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
     }
 
     const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))

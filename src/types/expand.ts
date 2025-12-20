@@ -7,3 +7,5 @@ export type Expand<T> = T extends (...args: infer A) => infer R
   : T extends infer O
     ? { [K in keyof O]: O[K] }
     : never
+
+// TODO: NC - This is also in common
