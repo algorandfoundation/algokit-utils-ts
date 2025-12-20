@@ -29,8 +29,7 @@ export class LogicSig implements Addressable {
 
   constructor(program: Uint8Array, programArgs?: Array<Uint8Array>) {
     this.logic = program
-    this.args = programArgs?.map((arg) => new Uint8Array(arg)) ?? []
-    this._addr = this.address()
+    this.args = programArgs ?? []
     const toBeSigned = concatArrays(PROGRAM_TAG, this.logic)
     const h = hash(toBeSigned)
     this._addr = new Address(h)
@@ -150,7 +149,7 @@ export class LogicSigAccount extends LogicSig {
 
     if (!result.addr.equals(this._addr)) {
       throw new Error(
-        `Delagator address from signer does not match expected delegator address. Expected: ${this._addr.toString()}, got: ${result.addr.toString()}`,
+        `Delegator address from signer does not match expected delegator address. Expected: ${this._addr.toString()}, got: ${result.addr.toString()}`,
       )
     }
 
