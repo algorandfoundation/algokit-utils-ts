@@ -18,13 +18,13 @@ Parameters for the `getTestAccount` function.
 
 ### accountGetter
 
-• `Optional` **accountGetter**: (`algorand`: [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)) => `Promise`\<\{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
+• `Optional` **accountGetter**: (`algorand`: [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)) => `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
 
 Optional override for how to get a test account; this allows you to retrieve accounts from a known or cached list of accounts.
 
 #### Type declaration
 
-▸ (`algorand`): `Promise`\<\{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
+▸ (`algorand`): `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
 
 ##### Parameters
 
@@ -34,11 +34,11 @@ Optional override for how to get a test account; this allows you to retrieve acc
 
 ##### Returns
 
-`Promise`\<\{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
+`Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
 
 #### Defined in
 
-[src/types/testing.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L46)
+[src/types/testing.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L55)
 
 ___
 
@@ -50,7 +50,7 @@ Initial funds to ensure the account has
 
 #### Defined in
 
-[src/types/testing.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L42)
+[src/types/testing.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L51)
 
 ___
 
@@ -62,4 +62,4 @@ Whether to suppress the log (which includes a mnemonic) or not (default: do not 
 
 #### Defined in
 
-[src/types/testing.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L44)
+[src/types/testing.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L53)

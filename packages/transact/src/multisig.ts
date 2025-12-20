@@ -17,6 +17,7 @@ import {
   SignedTransaction,
 } from './transactions/signed-transaction'
 import { Transaction } from './transactions/transaction'
+import { DelegatedLsigSigner } from './logicsig'
 
 const toPublicKeys = (addrs: Array<string | Address>): Uint8Array[] => addrs.map((addr) => getAddress(addr).publicKey)
 
@@ -382,11 +383,12 @@ export interface MultisigMetadata {
 }
 
 /** Account wrapper that supports partial or full multisig signing. */
-export class MultisigAccount implements AddressWithTransactionSigner {
+export class MultisigAccount implements AddressWithTransactionSigner, AddressWithDelegatedLsigSigner {
   _params: MultisigMetadata
   _subSigners: (AddressWithTransactionSigner & AddressWithDelegatedLsigSigner)[]
   _addr: Address
   _signer: TransactionSigner
+  _lsigSigner: DelegatedLsigSigner
 
   /** The parameters for the multisig account */
   get params(): Readonly<MultisigMetadata> {
@@ -406,6 +408,10 @@ export class MultisigAccount implements AddressWithTransactionSigner {
   /** The transaction signer for the multisig account */
   get signer(): TransactionSigner {
     return this._signer
+  }
+
+  get lsigSigner(): DelegatedLsigSigner {
+    return this._lsigSigner
   }
 
   static fromSignature(signature: MultisigSignature): MultisigAccount {
@@ -446,6 +452,24 @@ export class MultisigAccount implements AddressWithTransactionSigner {
       }
 
       return signedMsigTxns.map(encodeSignedTransaction)
+    }
+
+    this._lsigSigner = async (lsig, _) => {
+      let lmsig = lsig.lmsig ?? this.createMultisigSignature()
+
+      for (const addrWithSigner of this.subSigners) {
+        const { lsigSigner, addr } = addrWithSigner
+        const result = await lsigSigner(lsig, this)
+        if (!('sig' in result) || !result.sig) {
+          throw new Error(
+            `Signer for address ${addr.toString()} did not produce a valid signature when signing logic sig for multisig account ${this._addr.toString()}`,
+          )
+        }
+
+        lmsig = this.applySignature(lmsig, addr.publicKey, result.sig)
+      }
+
+      return { addr: this.addr, lmsig }
     }
   }
 
