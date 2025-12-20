@@ -18,16 +18,12 @@
 
 Ƭ **EventDataMap**: `Object`
 
-#### Index signature
-
-▪ [key: `string`]: `unknown`
-
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `AppCompiled` | [`TealSourcesDebugEventData`](../interfaces/types_debugging.TealSourcesDebugEventData.md) |
-| `TxnGroupSimulated` | [`AVMTracesEventData`](../interfaces/types_debugging.AVMTracesEventData.md) |
+| `AppCompiled` | [`TealSourcesDebugEventData`](types_debugging.md#tealsourcesdebugeventdata) |
+| `TxnGroupSimulated` | [`AVMTracesEventData`](types_debugging.md#avmtraceseventdata) |
 
 #### Defined in
 

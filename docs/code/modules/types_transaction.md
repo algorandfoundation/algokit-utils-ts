@@ -42,7 +42,7 @@ ___
 
 ### SendSingleTransactionResult
 
-Ƭ **SendSingleTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendTransactionComposerResults`](../interfaces/types_transaction.SendTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md)\>
+Ƭ **SendSingleTransactionResult**: `Expand`\<[`SendTransactionComposerResults`](../interfaces/types_transaction.SendTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md)\>
 
 Result from sending a single transaction.
 

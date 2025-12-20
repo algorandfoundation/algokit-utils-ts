@@ -70,7 +70,7 @@ ___
 
 ### AVMTracesEventData
 
-Re-exports [AVMTracesEventData](../interfaces/types_debugging.AVMTracesEventData.md)
+Re-exports [AVMTracesEventData](types_debugging.md#avmtraceseventdata)
 
 ___
 
@@ -118,13 +118,13 @@ ___
 
 ### TealSourceDebugEventData
 
-Re-exports [TealSourceDebugEventData](../interfaces/types_debugging.TealSourceDebugEventData.md)
+Re-exports [TealSourceDebugEventData](types_debugging.md#tealsourcedebugeventdata)
 
 ___
 
 ### TealSourcesDebugEventData
 
-Re-exports [TealSourcesDebugEventData](../interfaces/types_debugging.TealSourcesDebugEventData.md)
+Re-exports [TealSourcesDebugEventData](types_debugging.md#tealsourcesdebugeventdata)
 
 ## Type Aliases
 
