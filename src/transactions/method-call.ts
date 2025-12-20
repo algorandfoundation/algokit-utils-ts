@@ -9,12 +9,11 @@ import {
   argTypeIsTransaction,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Address, getAddress } from '@algorandfoundation/algokit-common'
+import { Address, Expand, getAddress } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, Transaction, TransactionSigner, TransactionType } from '@algorandfoundation/algokit-transact'
 import { TransactionWithSigner } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { AppManager } from '../types/app-manager'
-import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
 import { AppCreateParams, AppDeleteParams, AppMethodCallParams, AppUpdateParams } from './app-call'
 import { TransactionCommonData, buildTransactionCommonData } from './common'

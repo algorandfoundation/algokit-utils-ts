@@ -7,7 +7,7 @@ import {
   SimulateUnnamedResourcesAccessed,
   SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
-import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import { EMPTY_SIGNATURE, Expand } from '@algorandfoundation/algokit-common'
 import {
   OnApplicationComplete,
   SignedTransaction,
@@ -80,7 +80,6 @@ import { buildPayment, type PaymentParams } from '../transactions/payment'
 import { asJson } from '../util'
 import { AlgoAmount } from './amount'
 import { AppManager } from './app-manager'
-import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction'
