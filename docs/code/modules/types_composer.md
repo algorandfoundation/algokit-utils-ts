@@ -57,7 +57,7 @@ Parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L31)
+[src/transactions/method-call.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L30)
 
 ___
 
@@ -81,7 +81,7 @@ Parameters to define an ABI method call create transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L25)
+[src/transactions/method-call.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L24)
 
 ___
 
@@ -105,7 +105,7 @@ Parameters to define an ABI method call delete transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L29)
+[src/transactions/method-call.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L28)
 
 ___
 
@@ -135,7 +135,7 @@ Parameters to define an ABI method call.
 
 #### Defined in
 
-[src/transactions/method-call.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L62)
+[src/transactions/method-call.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L61)
 
 ___
 
@@ -159,7 +159,7 @@ Types that can be used to define a transaction argument for an ABI call transact
 
 #### Defined in
 
-[src/transactions/method-call.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L52)
+[src/transactions/method-call.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L51)
 
 ___
 
@@ -171,7 +171,7 @@ Parameters to define an ABI method call update transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L27)
+[src/transactions/method-call.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L26)
 
 ___
 
@@ -390,7 +390,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L45)
+[src/transactions/method-call.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L44)
 
 ___
 
@@ -400,7 +400,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L33)
+[src/transactions/method-call.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L32)
 
 ___
 
@@ -410,7 +410,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L39)
+[src/transactions/method-call.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L38)
 
 ___
 
