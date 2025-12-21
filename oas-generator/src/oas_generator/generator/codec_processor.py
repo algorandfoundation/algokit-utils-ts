@@ -67,6 +67,7 @@ class CodecProcessor:
                 is_number=field.is_number,
                 is_boolean=field.is_boolean,
                 is_address=field.is_address,
+                byte_length=field.byte_length,
             )
             if array_codec:
                 return array_codec
@@ -86,6 +87,7 @@ class CodecProcessor:
                 model_name=model_name,
                 inline_meta_name=None,
                 ts_type=field.ts_type,
+                byte_length=field.byte_length,
             )
             return f"new ArrayCodec({item_codec})"
 
@@ -103,6 +105,7 @@ class CodecProcessor:
             model_name=model_name,
             inline_meta_name=field.inline_meta_name,
             ts_type=field.ts_type,
+            byte_length=field.byte_length,
         )
 
     @staticmethod
@@ -120,6 +123,7 @@ class CodecProcessor:
         model_name: str,
         inline_meta_name: str | None,
         ts_type: str = "",
+        byte_length: int | None = None,
     ) -> str:
         """Generate base codec expression (without array wrapping).
 
@@ -137,6 +141,7 @@ class CodecProcessor:
             model_name: Name of the parent model (for self-referential types)
             inline_meta_name: Name of inline object metadata if applicable
             ts_type: TypeScript type string for fallback inference
+            byte_length: Fixed byte length if specified via x-algokit-byte-length
 
         Returns:
             Codec expression string
@@ -177,6 +182,10 @@ class CodecProcessor:
         if inline_meta_name:
             return f"new ObjectModelCodec({inline_meta_name})"
 
+        # Fixed-length bytes - use predefined singletons or create new codec
+        if is_bytes and byte_length is not None:
+            return CodecProcessor._get_fixed_bytes_codec(byte_length)
+
         if is_bytes:
             return "bytesCodec"
         if is_bigint:
@@ -194,6 +203,27 @@ class CodecProcessor:
 
         # Final fallback
         return "stringCodec"
+
+    @staticmethod
+    def _get_fixed_bytes_codec(length: int) -> str:
+        """Get the codec expression for fixed-length bytes.
+
+        Args:
+            length: The fixed byte length
+
+        Returns:
+            Codec expression string (singleton name or new constructor)
+        """
+        # Use predefined singletons for common lengths
+        if length == 32:
+            return "fixedBytes32Codec"
+        if length == 64:
+            return "fixedBytes64Codec"
+        if length == 1793:
+            return "fixedBytes1793Codec"
+
+        # For other lengths, create a new FixedBytesCodec instance
+        return f"new FixedBytesCodec({length})"
 
     @staticmethod
     def infer_primitive_codec(ts_type: str) -> str:
@@ -236,6 +266,7 @@ class CodecProcessor:
         array_item_is_box_reference: bool = False,
         array_item_is_holding_reference: bool = False,
         array_item_is_locals_reference: bool = False,
+        array_item_byte_length: int | None = None,
     ) -> str:
         """Generate codec expression for array items (used for top-level array schemas).
 
@@ -250,6 +281,7 @@ class CodecProcessor:
             array_item_is_box_reference: Whether items are BoxReferences
             array_item_is_holding_reference: Whether items are HoldingReferences
             array_item_is_locals_reference: Whether items are LocalsReferences
+            array_item_byte_length: Fixed byte length for array items
 
         Returns:
             Codec expression string (singleton array codec name or new ArrayCodec(...))
@@ -266,6 +298,7 @@ class CodecProcessor:
             is_number=array_item_is_number,
             is_boolean=array_item_is_boolean,
             is_address=array_item_is_address,
+            byte_length=array_item_byte_length,
         )
         if array_codec:
             return array_codec
@@ -284,6 +317,7 @@ class CodecProcessor:
             is_address=array_item_is_address,
             model_name="",  # Top-level arrays don't have a parent model
             inline_meta_name=None,
+            byte_length=array_item_byte_length,
         )
         return f"new ArrayCodec({item_codec})"
 
@@ -299,6 +333,7 @@ class CodecProcessor:
         is_number: bool,
         is_boolean: bool,
         is_address: bool,
+        byte_length: int | None = None,
     ) -> str | None:
         """Get singleton array codec name for primitive types.
 
@@ -313,12 +348,17 @@ class CodecProcessor:
             is_number: Whether items are numbers
             is_boolean: Whether items are booleans
             is_address: Whether items are addresses
+            byte_length: Fixed byte length for items (no singleton available)
 
         Returns:
             Singleton array codec name or None if not a primitive array
         """
-        # Model references, signed transactions, and vendor extension types don't have singleton array codecs
+        # Model references, signed transactions, vendor extension types, and fixed-length bytes don't have singleton array codecs
         if ref_model or is_signed_txn or is_box_reference or is_holding_reference or is_locals_reference:
+            return None
+
+        # Fixed-length bytes don't have predefined array singletons
+        if is_bytes and byte_length is not None:
             return None
 
         # Return singleton array codec names

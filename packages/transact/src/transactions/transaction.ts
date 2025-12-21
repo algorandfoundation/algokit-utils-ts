@@ -303,6 +303,10 @@ export class Transaction implements TransactionParams {
   }
 
   private rawTxId(): Uint8Array {
+    if (this.genesisHash === undefined) {
+      throw new Error('Cannot compute transaction id without genesis hash')
+    }
+
     const encodedBytes = encodeTransaction(this)
     return hash(encodedBytes)
   }

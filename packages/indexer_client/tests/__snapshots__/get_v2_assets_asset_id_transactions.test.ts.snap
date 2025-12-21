@@ -266,7 +266,11 @@ exports[`GET v2_assets_ASSET-ID_transactions > Common Tests > Basic request and 
       "genesisId": "testnet-v1.0",
       "globalStateDelta": [
         {
-          "key": "YXNh",
+          "key": Uint8Array [
+            97,
+            115,
+            97,
+          ],
           "value": {
             "action": 2,
             "uint": 705457144n,

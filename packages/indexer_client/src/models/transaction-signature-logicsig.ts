@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { bytesCodec, bytesArrayCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
+import { bytesCodec, bytesArrayCodec, ObjectModelCodec, fixedBytes64Codec } from '@algorandfoundation/algokit-common'
 import type { TransactionSignatureMultisig } from './transaction-signature-multisig'
 import { TransactionSignatureMultisigMeta } from './transaction-signature-multisig'
 
@@ -60,7 +60,7 @@ export const TransactionSignatureLogicsigMeta: ObjectModelMetadata<TransactionSi
       name: 'signature',
       wireKey: 'signature',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes64Codec,
     },
   ],
 }

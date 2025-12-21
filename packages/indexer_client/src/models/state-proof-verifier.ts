@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import { bigIntCodec, fixedBytes64Codec } from '@algorandfoundation/algokit-common'
 
 export type StateProofVerifier = {
   /**
@@ -21,7 +21,7 @@ export const StateProofVerifierMeta: ObjectModelMetadata<StateProofVerifier> = {
       name: 'commitment',
       wireKey: 'commitment',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes64Codec,
     },
     {
       name: 'keyLifetime',

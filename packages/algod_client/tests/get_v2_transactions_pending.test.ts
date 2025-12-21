@@ -18,7 +18,7 @@ describe('GET v2_transactions_pending', () => {
     test.skip('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getPendingTransactions()
+      const result = await client.pendingTransactions()
 
       expect(result).toMatchSnapshot()
     })

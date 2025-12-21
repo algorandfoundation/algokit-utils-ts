@@ -121,12 +121,12 @@ describe('ClientManager', () => {
 
     test('Get working LocalNet algod client', async () => {
       const algod = ClientManager.getAlgodClient(ClientManager.getDefaultLocalNetConfig('algod'))
-      await algod.getStatus()
+      await algod.status()
     })
 
     test('Get working LocalNet indexer client', async () => {
       const indexer = ClientManager.getIndexerClient(ClientManager.getDefaultLocalNetConfig('indexer'))
-      await indexer.makeHealthCheck()
+      await indexer.healthCheck()
     })
 
     test('Get working LocalNet kmd client', async () => {
@@ -136,12 +136,12 @@ describe('ClientManager', () => {
 
     test('Get working MainNet algod client', async () => {
       const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('mainnet', 'algod'))
-      await algod.getStatus()
+      await algod.status()
     })
 
     test('Get working MainNet indexer client', async () => {
       const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('mainnet', 'indexer'))
-      await indexer.makeHealthCheck()
+      await indexer.healthCheck()
     })
 
     test('Determine LocalNet algod client is LocalNet', async () => {

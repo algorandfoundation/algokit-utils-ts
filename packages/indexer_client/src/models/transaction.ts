@@ -9,6 +9,7 @@ import {
   bytesArrayCodec,
   ObjectModelCodec,
   ArrayModelCodec,
+  fixedBytes32Codec,
 } from '@algorandfoundation/algokit-common'
 import type { AccountStateDelta } from './account-state-delta'
 import { AccountStateDeltaMeta } from './account-state-delta'
@@ -280,7 +281,7 @@ export const TransactionMeta: ObjectModelMetadata<Transaction> = {
       name: 'genesisHash',
       wireKey: 'genesis-hash',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'genesisId',
@@ -292,7 +293,7 @@ export const TransactionMeta: ObjectModelMetadata<Transaction> = {
       name: 'group',
       wireKey: 'group',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'id',
@@ -322,7 +323,7 @@ export const TransactionMeta: ObjectModelMetadata<Transaction> = {
       name: 'lease',
       wireKey: 'lease',
       optional: true,
-      codec: bytesCodec,
+      codec: fixedBytes32Codec,
     },
     {
       name: 'note',

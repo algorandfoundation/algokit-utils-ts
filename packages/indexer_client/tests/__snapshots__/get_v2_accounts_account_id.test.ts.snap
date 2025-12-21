@@ -590,7 +590,20 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "cHJldmlvdXNfYmlk",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -598,7 +611,23 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "cHJldmlvdXNfYmlkZGVy",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+                100,
+                101,
+                114,
+              ],
               "value": {
                 "bytes": Uint8Array [
                   0,
@@ -639,7 +668,11 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNh",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -647,7 +680,18 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNhX2Ftb3VudA==",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+                95,
+                97,
+                109,
+                111,
+                117,
+                110,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -655,7 +699,19 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXVjdGlvbl9lbmQ=",
+              "key": Uint8Array [
+                97,
+                117,
+                99,
+                116,
+                105,
+                111,
+                110,
+                95,
+                101,
+                110,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -1316,7 +1372,11 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "YXNh",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -1324,7 +1384,15 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNhX2FtdA==",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+                95,
+                97,
+                109,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -1332,7 +1400,19 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXVjdGlvbl9lbmQ=",
+              "key": Uint8Array [
+                97,
+                117,
+                99,
+                116,
+                105,
+                111,
+                110,
+                95,
+                101,
+                110,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -1340,7 +1420,19 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "aGlnaGVzdF9iaWQ=",
+              "key": Uint8Array [
+                104,
+                105,
+                103,
+                104,
+                101,
+                115,
+                116,
+                95,
+                98,
+                105,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -1348,7 +1440,22 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "aGlnaGVzdF9iaWRkZXI=",
+              "key": Uint8Array [
+                104,
+                105,
+                103,
+                104,
+                101,
+                115,
+                116,
+                95,
+                98,
+                105,
+                100,
+                100,
+                101,
+                114,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 1,
@@ -3359,7 +3466,11 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "YXNh",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -3367,7 +3478,18 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNhX2Ftb3VudA==",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+                95,
+                97,
+                109,
+                111,
+                117,
+                110,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -3375,7 +3497,19 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXVjdGlvbl9lbmQ=",
+              "key": Uint8Array [
+                97,
+                117,
+                99,
+                116,
+                105,
+                111,
+                110,
+                95,
+                101,
+                110,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -3383,7 +3517,20 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "cHJldmlvdXNfYmlk",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -3391,7 +3538,23 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "cHJldmlvdXNfYmlkZGVy",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+                100,
+                101,
+                114,
+              ],
               "value": {
                 "bytes": Uint8Array [
                   0,
@@ -4012,7 +4175,20 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "cHJldmlvdXNfYmlk",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4020,7 +4196,23 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "cHJldmlvdXNfYmlkZGVy",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+                100,
+                101,
+                114,
+              ],
               "value": {
                 "bytes": Uint8Array [
                   0,
@@ -4061,7 +4253,11 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNh",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4069,7 +4265,18 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNhX2Ftb3VudA==",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+                95,
+                97,
+                109,
+                111,
+                117,
+                110,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4077,7 +4284,19 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXVjdGlvbl9lbmQ=",
+              "key": Uint8Array [
+                97,
+                117,
+                99,
+                116,
+                105,
+                111,
+                110,
+                95,
+                101,
+                110,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4665,7 +4884,11 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "YXNh",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4673,7 +4896,18 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXNhX2Ftb3VudA==",
+              "key": Uint8Array [
+                97,
+                115,
+                97,
+                95,
+                97,
+                109,
+                111,
+                117,
+                110,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4681,7 +4915,19 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "YXVjdGlvbl9lbmQ=",
+              "key": Uint8Array [
+                97,
+                117,
+                99,
+                116,
+                105,
+                111,
+                110,
+                95,
+                101,
+                110,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4689,7 +4935,20 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "cHJldmlvdXNfYmlk",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -4697,7 +4956,23 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
               },
             },
             {
-              "key": "cHJldmlvdXNfYmlkZGVy",
+              "key": Uint8Array [
+                112,
+                114,
+                101,
+                118,
+                105,
+                111,
+                117,
+                115,
+                95,
+                98,
+                105,
+                100,
+                100,
+                101,
+                114,
+              ],
               "value": {
                 "bytes": Uint8Array [
                   0,
@@ -5171,7 +5446,18 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "Z2xvYmFsX2ludA==",
+              "key": Uint8Array [
+                103,
+                108,
+                111,
+                98,
+                97,
+                108,
+                95,
+                105,
+                110,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
@@ -7022,7 +7308,28 @@ exports[`GET v2_accounts_ACCOUNT-ID > Common Tests > Basic request and response 
           },
           "globalState": [
             {
-              "key": "Z2xvYmFsX3N0YXRlX2JpZ19pbnQ=",
+              "key": Uint8Array [
+                103,
+                108,
+                111,
+                98,
+                97,
+                108,
+                95,
+                115,
+                116,
+                97,
+                116,
+                101,
+                95,
+                98,
+                105,
+                103,
+                95,
+                105,
+                110,
+                116,
+              ],
               "value": {
                 "bytes": Uint8Array [],
                 "type": 2,
