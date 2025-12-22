@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-18T06:40:24.225Z
+ * Generated: 2025-12-19T11:38:22.460Z
  */
 
 import { z } from 'zod'
@@ -416,8 +416,8 @@ export const BlockUpgradeVote = z.object({
 })
 
 export const ParticipationUpdates = z.object({
-  expiredParticipationAccounts: z.array(z.string()).optional(),
-  absentParticipationAccounts: z.array(z.string()).optional()
+  expiredParticipationAccounts: z.array(z.string()),
+  absentParticipationAccounts: z.array(z.string())
 })
 
 export const Block = z.object({
@@ -429,19 +429,19 @@ export const Block = z.object({
   genesisId: z.string(),
   previousBlockHash: z.instanceof(Uint8Array),
   previousBlockHash512: z.instanceof(Uint8Array).optional(),
-  rewards: BlockRewards.optional(),
+  rewards: BlockRewards,
   round: z.bigint(),
   seed: z.instanceof(Uint8Array),
   stateProofTracking: z.array(StateProofTracking).optional(),
   timestamp: z.number().int(),
-  transactions: z.array(Transaction).optional(),
+  transactions: z.array(Transaction),
   transactionsRoot: z.instanceof(Uint8Array),
-  transactionsRootSha256: z.instanceof(Uint8Array),
+  transactionsRootSha256: z.instanceof(Uint8Array).optional(),
   transactionsRootSha512: z.instanceof(Uint8Array).optional(),
   txnCounter: z.number().int().optional(),
-  upgradeState: BlockUpgradeState.optional(),
+  upgradeState: BlockUpgradeState,
   upgradeVote: BlockUpgradeVote.optional(),
-  participationUpdates: ParticipationUpdates.optional()
+  participationUpdates: ParticipationUpdates
 })
 
 export const Box = z.object({

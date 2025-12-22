@@ -3048,6 +3048,10 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
         223,
       ],
       "genesisId": "mainnet-v1.0",
+      "participationUpdates": {
+        "absentParticipationAccounts": [],
+        "expiredParticipationAccounts": [],
+      },
       "previousBlockHash": Uint8Array [
         41,
         2,
@@ -3261,6 +3265,7 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
           ],
           Symbol(algokit_common:Address): true,
         },
+        "rewardsRate": 0n,
         "rewardsRecalculationRound": 55500000n,
         "rewardsResidue": 6886250026n,
       },
@@ -3445,8 +3450,8 @@ exports[`GET v2_deltas_ROUND > Common Tests > Basic request and response validat
       "upgradeState": {
         "currentProtocol": "https://github.com/algorandfoundation/specs/tree/953304de35264fc3ef91bcd05c123242015eeaed",
       },
-      "upgradeVote": {},
     },
+    "payset": [],
   },
   "creatables": Map {
     3307475755 => {

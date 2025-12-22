@@ -37,6 +37,10 @@ exports[`GET v2_blocks_ROUND-NUMBER > Common Tests > Basic request and response 
     34,
   ],
   "genesisId": "testnet-v1.0",
+  "participationUpdates": {
+    "absentParticipationAccounts": [],
+    "expiredParticipationAccounts": [],
+  },
   "previousBlockHash": Uint8Array [
     132,
     225,

@@ -188,9 +188,9 @@ const SignedTxnInBlockMeta: ObjectModelMetadata<SignedTxnInBlock> = {
 
 export type ParticipationUpdates = {
   /** [partupdrmv] Expired participation accounts. */
-  expiredParticipationAccounts?: string[]
+  expiredParticipationAccounts: string[]
   /** [partupdabs] Absent participation accounts. */
-  absentParticipationAccounts?: string[]
+  absentParticipationAccounts: string[]
 }
 
 const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
@@ -200,13 +200,13 @@ const ParticipationUpdatesMeta: ObjectModelMetadata<ParticipationUpdates> = {
     {
       name: 'expiredParticipationAccounts',
       wireKey: 'partupdrmv',
-      optional: true,
+      optional: false,
       codec: addressArrayCodec,
     },
     {
       name: 'absentParticipationAccounts',
       wireKey: 'partupdabs',
-      optional: true,
+      optional: false,
       codec: addressArrayCodec,
     },
   ],
@@ -235,36 +235,36 @@ const TxnCommitmentsMeta: ObjectModelMetadata<TxnCommitments> = {
 /** Reward distribution state for the block. */
 export type RewardState = {
   /** [fees] FeeSink address. */
-  feeSink?: Address
+  feeSink: Address
   /** [rwd] RewardsPool address. */
-  rewardsPool?: Address
+  rewardsPool: Address
   /** [earn] Rewards level. */
-  rewardsLevel?: bigint
+  rewardsLevel: bigint
   /** [rate] Rewards rate. */
-  rewardsRate?: bigint
+  rewardsRate: bigint
   /** [frac] Rewards residue. */
-  rewardsResidue?: bigint
+  rewardsResidue: bigint
   /** [rwcalr] Rewards recalculation round. */
-  rewardsRecalculationRound?: bigint
+  rewardsRecalculationRound: bigint
 }
 
 const RewardStateMeta: ObjectModelMetadata<RewardState> = {
   name: 'RewardState',
   kind: 'object',
   fields: [
-    { name: 'feeSink', wireKey: 'fees', optional: true, codec: addressCodec },
-    { name: 'rewardsPool', wireKey: 'rwd', optional: true, codec: addressCodec },
-    { name: 'rewardsLevel', wireKey: 'earn', optional: true, codec: bigIntCodec },
-    { name: 'rewardsRate', wireKey: 'rate', optional: true, codec: bigIntCodec },
-    { name: 'rewardsResidue', wireKey: 'frac', optional: true, codec: bigIntCodec },
-    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: true, codec: bigIntCodec },
+    { name: 'feeSink', wireKey: 'fees', optional: false, codec: addressCodec },
+    { name: 'rewardsPool', wireKey: 'rwd', optional: false, codec: addressCodec },
+    { name: 'rewardsLevel', wireKey: 'earn', optional: false, codec: bigIntCodec },
+    { name: 'rewardsRate', wireKey: 'rate', optional: false, codec: bigIntCodec },
+    { name: 'rewardsResidue', wireKey: 'frac', optional: false, codec: bigIntCodec },
+    { name: 'rewardsRecalculationRound', wireKey: 'rwcalr', optional: false, codec: bigIntCodec },
   ],
 }
 
 /** Protocol upgrade state for the block. */
 export type UpgradeState = {
   /** [proto] Current consensus protocol. */
-  currentProtocol?: string
+  currentProtocol: string
   /** [nextproto] Next proposed protocol. */
   nextProtocol?: string
   /** [nextyes] Next protocol approvals. */
@@ -279,7 +279,7 @@ const UpgradeStateMeta: ObjectModelMetadata<UpgradeState> = {
   name: 'UpgradeState',
   kind: 'object',
   fields: [
-    { name: 'currentProtocol', wireKey: 'proto', optional: true, codec: stringCodec },
+    { name: 'currentProtocol', wireKey: 'proto', optional: false, codec: stringCodec },
     { name: 'nextProtocol', wireKey: 'nextproto', optional: true, codec: stringCodec },
     { name: 'nextProtocolApprovals', wireKey: 'nextyes', optional: true, codec: bigIntCodec },
     { name: 'nextProtocolVoteBefore', wireKey: 'nextbefore', optional: true, codec: bigIntCodec },
@@ -309,21 +309,21 @@ const UpgradeVoteMeta: ObjectModelMetadata<UpgradeVote> = {
 
 export type BlockHeader = {
   /** [rnd] Round number. */
-  round?: bigint
+  round: bigint
   /** [prev] Previous block hash. */
-  previousBlockHash?: Uint8Array
+  previousBlockHash: Uint8Array
   /** [prev512] Previous block hash using SHA-512. */
   previousBlockHash512?: Uint8Array
   /** [seed] Sortition seed. */
-  seed?: Uint8Array
+  seed: Uint8Array
   /** Authenticates the set of transactions appearing in the block. */
   txnCommitments: TxnCommitments
   /** [ts] Block timestamp in seconds since epoch. */
-  timestamp?: bigint
+  timestamp: bigint
   /** [gen] Genesis ID. */
-  genesisId?: string
+  genesisId: string
   /** [gh] Genesis hash. */
-  genesisHash?: Uint8Array
+  genesisHash: Uint8Array
   /** [prp] Proposer address. */
   proposer?: Address
   /** [fc] Fees collected in this block. */
@@ -343,26 +343,26 @@ export type BlockHeader = {
   /** [spt] State proof tracking data keyed by state proof type. */
   stateProofTracking?: Map<number, BlockStateProofTrackingData>
   /** Represents participation account data that needs to be checked/acted on by the network */
-  participationUpdates?: ParticipationUpdates
+  participationUpdates: ParticipationUpdates
 }
 
 const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
   name: 'BlockHeader',
   kind: 'object',
   fields: [
-    { name: 'round', wireKey: 'rnd', optional: true, codec: bigIntCodec },
-    { name: 'previousBlockHash', wireKey: 'prev', optional: true, codec: fixedBytes32Codec },
+    { name: 'round', wireKey: 'rnd', optional: false, codec: bigIntCodec },
+    { name: 'previousBlockHash', wireKey: 'prev', optional: false, codec: fixedBytes32Codec },
     { name: 'previousBlockHash512', wireKey: 'prev512', optional: true, codec: fixedBytes64Codec },
-    { name: 'seed', wireKey: 'seed', optional: true, codec: bytesCodec },
+    { name: 'seed', wireKey: 'seed', optional: false, codec: bytesCodec },
     {
       name: 'txnCommitments',
       flattened: true,
       optional: false,
       codec: new ObjectModelCodec(TxnCommitmentsMeta),
     },
-    { name: 'timestamp', wireKey: 'ts', optional: true, codec: bigIntCodec },
-    { name: 'genesisId', wireKey: 'gen', optional: true, codec: stringCodec },
-    { name: 'genesisHash', wireKey: 'gh', optional: true, codec: fixedBytes32Codec },
+    { name: 'timestamp', wireKey: 'ts', optional: false, codec: bigIntCodec },
+    { name: 'genesisId', wireKey: 'gen', optional: false, codec: stringCodec },
+    { name: 'genesisHash', wireKey: 'gh', optional: false, codec: fixedBytes32Codec },
     { name: 'proposer', wireKey: 'prp', optional: true, codec: addressCodec },
     { name: 'feesCollected', wireKey: 'fc', optional: true, codec: bigIntCodec },
     { name: 'bonus', wireKey: 'bi', optional: true, codec: bigIntCodec },
@@ -382,7 +382,7 @@ const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
     {
       name: 'upgradeVote',
       flattened: true,
-      optional: false,
+      optional: true,
       codec: new ObjectModelCodec(UpgradeVoteMeta),
     },
     { name: 'txnCounter', wireKey: 'tc', optional: true, codec: bigIntCodec },
@@ -395,7 +395,7 @@ const BlockHeaderMeta: ObjectModelMetadata<BlockHeader> = {
     {
       name: 'participationUpdates',
       flattened: true,
-      optional: true,
+      optional: false,
       codec: new ObjectModelCodec(ParticipationUpdatesMeta),
     },
   ],
@@ -409,7 +409,7 @@ export type Block = {
   header: BlockHeader
 
   /** [txns] Block transactions (Payset). */
-  payset?: SignedTxnInBlock[]
+  payset: SignedTxnInBlock[]
 }
 
 const BlockMeta: ObjectModelMetadata<Block> = {
@@ -420,7 +420,7 @@ const BlockMeta: ObjectModelMetadata<Block> = {
     {
       name: 'payset',
       wireKey: 'txns',
-      optional: true,
+      optional: false,
       codec: new ArrayCodec(new ObjectModelCodec(SignedTxnInBlockMeta)),
     },
   ],
