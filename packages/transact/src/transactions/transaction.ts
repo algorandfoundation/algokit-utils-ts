@@ -448,7 +448,6 @@ export function validateTransaction(transaction: Transaction): void {
  * This is useful for encoding the transaction for signing with tools that automatically add "TX" prefix to the transaction bytes.
  */
 export function encodeTransactionRaw(transaction: Transaction): Uint8Array {
-  validateTransaction(transaction)
   const encodingData = transactionCodec.encode(transaction, 'msgpack')
   return encodeMsgpack(encodingData)
 }

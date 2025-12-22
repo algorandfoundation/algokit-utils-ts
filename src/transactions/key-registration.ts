@@ -15,7 +15,7 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
   /** This is the dilution for the 2-level participation key. It determines the interval (number of rounds) for generating new ephemeral keys */
   voteKeyDilution: bigint
   /** The 64 byte state proof public key commitment */
-  stateProofKey?: Uint8Array
+  stateProofKey: Uint8Array
 }
 
 /** Parameters to define an offline key registration transaction. */

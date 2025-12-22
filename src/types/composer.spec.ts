@@ -1,5 +1,6 @@
 import { ABIMethod } from '@algorandfoundation/algokit-abi'
 import { Address } from '@algorandfoundation/algokit-common'
+import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
@@ -336,6 +337,43 @@ describe('TransactionComposer', () => {
       expect(simulateResult).toBeDefined()
       expect(simulateResult.groupId).toBe('')
       expect(simulateResult.simulateResponse.txnGroups[0].txnResults[0].txnResult.txn.txn.group).toBeUndefined()
+    })
+  })
+
+  describe('transaction validation', () => {
+    test('should validate transact transactions when adding', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      const txn = new Transaction({
+        type: TransactionType.AssetTransfer,
+        sender,
+        firstValid: 1000n,
+        lastValid: 2000n,
+        assetTransfer: {
+          receiver: sender,
+          assetId: 0n,
+          amount: 1000n,
+        },
+      })
+
+      const composer = algorand.newGroup()
+      expect(() => composer.addTransaction(txn)).toThrow('Asset transfer validation failed: Asset ID must not be 0')
+    })
+
+    test('should validate composer transactions when building', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      const composer = algorand.newGroup()
+      composer.addAssetTransfer({
+        sender,
+        receiver: sender,
+        assetId: 0n,
+        amount: 1000n,
+      })
+
+      await expect(composer.build()).rejects.toThrow('Asset transfer validation failed: Asset ID must not be 0')
     })
   })
 })

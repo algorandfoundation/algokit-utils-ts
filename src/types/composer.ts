@@ -22,6 +22,8 @@ import {
   encodeTransactionRaw,
   groupTransactions,
   makeEmptyTransactionSigner,
+  validateSignedTransaction,
+  validateTransaction,
 } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
@@ -463,6 +465,7 @@ export class TransactionComposer {
     if (transaction.group) {
       throw new Error('Cannot add a transaction to the composer because it is already in a group')
     }
+    validateTransaction(transaction)
     this.push({
       data: {
         txn: transaction,
@@ -1374,13 +1377,16 @@ export class TransactionComposer {
     let transactionIndex = 0
     for (const ctxn of this.txns) {
       if (ctxn.type === 'txn') {
+        validateTransaction(ctxn.data.txn)
         transactions.push(ctxn.data.txn)
         if (ctxn.data.signer) {
           signers.set(transactionIndex, ctxn.data.signer)
         }
         transactionIndex++
       } else if (ctxn.type === 'asyncTxn') {
-        transactions.push(await ctxn.data.txn)
+        const transaction = await ctxn.data.txn
+        validateTransaction(transaction)
+        transactions.push(transaction)
         if (ctxn.data.signer) {
           signers.set(transactionIndex, ctxn.data.signer)
         }
@@ -1458,6 +1464,7 @@ export class TransactionComposer {
           })
         }
 
+        validateTransaction(transaction)
         transactions.push(transaction)
 
         if (ctxn.data.signer) {
@@ -2127,7 +2134,9 @@ export class TransactionComposer {
     signerEntries.forEach(([, indexes], signerIndex) => {
       const stxs = signedGroups[signerIndex]
       indexes.forEach((txIndex, stxIndex) => {
-        signedTransactions[txIndex] = decodeSignedTransaction(stxs[stxIndex])
+        const stxn = decodeSignedTransaction(stxs[stxIndex])
+        validateSignedTransaction(stxn)
+        signedTransactions[txIndex] = stxn
       })
     })
 
