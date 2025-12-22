@@ -113,7 +113,6 @@ export type LogicSignature = {
  * @returns The MsgPack encoded bytes or an error if encoding fails.
  */
 export function encodeSignedTransaction(signedTransaction: SignedTransaction): Uint8Array {
-  validateSignedTransaction(signedTransaction)
   const encodingData = signedTransactionCodec.encode(signedTransaction, 'msgpack')
   return encodeMsgpack(encodingData)
 }
@@ -154,7 +153,7 @@ export function decodeSignedTransactions(encodedSignedTransactions: Uint8Array[]
 /**
  * Validate a signed transaction structure
  */
-function validateSignedTransaction(signedTransaction: SignedTransaction): void {
+export function validateSignedTransaction(signedTransaction: SignedTransaction): void {
   validateTransaction(signedTransaction.txn)
 
   // Validate that only one signature type is set

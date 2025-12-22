@@ -344,7 +344,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L156)
+[src/types/composer.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L157)
 
 ___
 
@@ -423,7 +423,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L127)
+[src/types/composer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L128)
 
 ___
 
@@ -435,7 +435,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L133)
+[src/types/composer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L134)
 
 ___
 
@@ -447,7 +447,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L115)
+[src/types/composer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L116)
 
 ___
 
@@ -464,7 +464,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L170)
+[src/types/composer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L171)
 
 ___
 
@@ -488,4 +488,4 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L190)
+[src/types/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L191)

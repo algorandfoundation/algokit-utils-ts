@@ -22,6 +22,7 @@ import {
   encodeTransactionRaw,
   groupTransactions,
   makeEmptyTransactionSigner,
+  validateSignedTransaction,
   validateTransaction,
 } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
@@ -2133,7 +2134,9 @@ export class TransactionComposer {
     signerEntries.forEach(([, indexes], signerIndex) => {
       const stxs = signedGroups[signerIndex]
       indexes.forEach((txIndex, stxIndex) => {
-        signedTransactions[txIndex] = decodeSignedTransaction(stxs[stxIndex])
+        const stxn = decodeSignedTransaction(stxs[stxIndex])
+        validateSignedTransaction(stxn)
+        signedTransactions[txIndex] = stxn
       })
     })
 

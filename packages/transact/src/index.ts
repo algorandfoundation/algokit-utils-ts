@@ -19,6 +19,7 @@ export {
   decodeSignedTransactions,
   encodeSignedTransaction,
   encodeSignedTransactions,
+  validateSignedTransaction,
   type LogicSignature,
   type MultisigSignature,
   type MultisigSubsignature,
