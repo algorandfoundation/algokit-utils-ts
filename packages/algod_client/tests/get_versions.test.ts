@@ -15,7 +15,7 @@ describe('GET versions', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getVersion()
+      const result = await client.version()
 
       // Validate response with Zod schema - throws if invalid
       Version.parse(result)

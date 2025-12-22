@@ -12,7 +12,7 @@ describe('GET v2_accounts_ADDRESS_transactions_pending', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getPendingTransactionsByAddress(TEST_ADDRESS)
+      const result = await client.pendingTransactionsByAddress(TEST_ADDRESS)
 
       PendingTransactionsResponse.parse(result)
       expect(result).toMatchSnapshot()

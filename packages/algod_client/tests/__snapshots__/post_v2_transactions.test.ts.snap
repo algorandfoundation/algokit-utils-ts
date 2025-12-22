@@ -1,7 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`POST v2_transactions > Common Tests > Basic request and response validation 1`] = `
-{
-  "txId": Any<String>,
-}
-`;

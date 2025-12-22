@@ -12,7 +12,7 @@ describe('GET v2_deltas_ROUND', () => {
     test.skip('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getLedgerStateDelta(TEST_ROUND)
+      const result = await client.ledgerStateDelta(TEST_ROUND)
 
       expect(result).toMatchSnapshot()
     })

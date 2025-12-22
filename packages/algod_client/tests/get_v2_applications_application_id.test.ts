@@ -12,7 +12,7 @@ describe('GET v2_applications_APPLICATION-ID', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getApplicationById(TEST_APP_ID)
+      const result = await client.applicationById(TEST_APP_ID)
 
       Application.parse(result)
       expect(result).toMatchSnapshot()

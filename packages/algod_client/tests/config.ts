@@ -7,7 +7,9 @@ import {
   TEST_ASSET_ID,
   TEST_BOX_NAME,
   TEST_ROUND,
+  TEST_ROUND_PROOF,
   TEST_TXID,
+  TEST_TXID_PROOF,
 } from '@algorandfoundation/algokit-testing'
 import type { ClientConfig } from '../src/core/client-config'
 
@@ -29,8 +31,17 @@ export const localnetConfig: ClientConfig = {
   token: process.env.ALGOD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
 }
 
-
 export const TEST_ACCOUNT_MNEMONIC =
   'auction inquiry lava second expand liberty glass involve ginger illness length room item discover ahead table doctor term tackle cement bonus profit right above catch'
 
-export { TEST_ADDRESS, TEST_APP_ID, TEST_APP_ID_WITH_BOXES, TEST_ASSET_ID, TEST_BOX_NAME, TEST_ROUND, TEST_TXID }
+export {
+  TEST_ADDRESS,
+  TEST_APP_ID,
+  TEST_APP_ID_WITH_BOXES,
+  TEST_ASSET_ID,
+  TEST_BOX_NAME,
+  TEST_ROUND,
+  TEST_ROUND_PROOF,
+  TEST_TXID,
+  TEST_TXID_PROOF,
+}

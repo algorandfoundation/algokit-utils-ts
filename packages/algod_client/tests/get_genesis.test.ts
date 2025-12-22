@@ -12,7 +12,7 @@ describe('GET genesis', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getGenesis()
+      const result = await client.genesis()
 
       Genesis.parse(result)
       expect(result).toMatchSnapshot()

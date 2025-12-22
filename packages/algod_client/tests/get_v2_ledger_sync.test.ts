@@ -14,7 +14,7 @@ describe('GET v2_ledger_sync', () => {
     test.skip('Basic request and response validation', async () => {
       const client = new AlgodClient(localnetConfig)
 
-      const result = await client.getSyncRound()
+      const result = await client.syncRound()
 
       GetSyncRoundResponse.parse(result)
       expect(result).toMatchSnapshot()

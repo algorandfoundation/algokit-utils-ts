@@ -15,7 +15,7 @@ describe('GET v2_applications_APPLICATION-ID_box', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getApplicationBoxByName(TEST_APP_ID_WITH_BOXES, boxNameBytes)
+      const result = await client.applicationBoxByName(TEST_APP_ID_WITH_BOXES, boxNameBytes)
 
       Box.parse(result)
       expect(result).toMatchSnapshot()
