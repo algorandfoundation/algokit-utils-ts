@@ -1,9 +1,9 @@
 import {
   Address,
   ArrayCodec,
+  type EncodingFormat,
   MapCodec,
   ObjectModelCodec,
-  type EncodingFormat,
   type ObjectModelMetadata,
   type WireObject,
   addressArrayCodec,
@@ -337,7 +337,7 @@ export type BlockHeader = {
   /** Protocol upgrade state. */
   upgradeState: UpgradeState
   /** Protocol upgrade vote parameters. */
-  upgradeVote: UpgradeVote
+  upgradeVote?: UpgradeVote
   /** [tc] Transaction counter. */
   txnCounter?: bigint
   /** [spt] State proof tracking data keyed by state proof type. */
