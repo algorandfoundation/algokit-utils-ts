@@ -12,7 +12,7 @@ describe('GET v2_status', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getStatus()
+      const result = await client.status()
 
       NodeStatusResponse.parse(result)
       expect(result).toMatchSnapshot()

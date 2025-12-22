@@ -12,7 +12,7 @@ describe('GET v2_blocks_ROUND_lightheader_proof', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getLightBlockHeaderProof(TEST_ROUND)
+      const result = await client.lightBlockHeaderProof(TEST_ROUND)
 
       LightBlockHeaderProof.parse(result)
       expect(result).toMatchSnapshot()

@@ -12,7 +12,7 @@ describe('GET v2_devmode_blocks_offset', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(localnetConfig)
 
-      const result = await client.getBlockTimeStampOffset()
+      const result = await client.blockTimeStampOffset()
 
       GetBlockTimeStampOffsetResponse.parse(result)
       expect(result).toMatchSnapshot()

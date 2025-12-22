@@ -12,7 +12,7 @@ describe('GET ready', () => {
       const client = new AlgodClient(config)
 
       // getReady returns void when node is caught up
-      const result = await client.getReady()
+      const result = await client.ready()
 
       expect(result).toBeUndefined()
     })

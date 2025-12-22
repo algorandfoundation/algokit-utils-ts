@@ -12,7 +12,7 @@ describe('GET v2_blocks_ROUND', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getBlock(TEST_ROUND)
+      const result = await client.block(TEST_ROUND)
 
       BlockResponse.parse(result)
       expect(result).toMatchSnapshot()

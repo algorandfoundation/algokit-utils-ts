@@ -12,7 +12,7 @@ describe('GET v2_assets_ASSET-ID', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getAssetById(TEST_ASSET_ID)
+      const result = await client.assetById(TEST_ASSET_ID)
 
       Asset.parse(result)
       expect(result).toMatchSnapshot()

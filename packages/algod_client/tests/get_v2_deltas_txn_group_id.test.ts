@@ -14,7 +14,7 @@ describe('GET v2_deltas_txn_group_ID', () => {
 
       const TEST_GROUP_ID = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
 
-      const result = await client.getLedgerStateDeltaForTransactionGroup(TEST_GROUP_ID)
+      const result = await client.ledgerStateDeltaForTransactionGroup(TEST_GROUP_ID)
 
       expect(result).toMatchSnapshot()
     })

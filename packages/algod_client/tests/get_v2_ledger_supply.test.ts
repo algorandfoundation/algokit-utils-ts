@@ -12,7 +12,7 @@ describe('GET v2_ledger_supply', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
-      const result = await client.getSupply()
+      const result = await client.supply()
 
       SupplyResponse.parse(result)
       expect(result).toMatchSnapshot()
