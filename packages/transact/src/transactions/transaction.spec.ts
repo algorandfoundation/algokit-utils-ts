@@ -1,16 +1,6 @@
-import { Address, EMPTY_SIGNATURE, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { Address, encodeMsgpack } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
-import { encodeSignedTransaction } from './signed-transaction'
-import {
-  TXN_SYMBOL,
-  Transaction,
-  TransactionParams,
-  decodeTransaction,
-  encodeTransaction,
-  encodeTransactionRaw,
-  estimateTransactionSize,
-  validateTransaction,
-} from './transaction'
+import { TXN_SYMBOL, Transaction, TransactionParams, decodeTransaction, validateTransaction } from './transaction'
 import { TransactionType } from './transaction-type'
 
 const VALID_ADDRESS_1 = Address.fromString('424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI')
@@ -37,13 +27,16 @@ describe('Transaction Validation', () => {
       expect(() => validateTransaction(transaction)).toThrow('Multiple transaction type specific fields set')
     })
 
-    test('should validate valid payment transaction', () => {
+    test('should validate a valid transaction', () => {
       const transaction = new Transaction({
-        type: TransactionType.Payment,
+        type: TransactionType.AssetTransfer,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
         lastValid: 2000n,
-        payment: {
+        genesisHash: new Uint8Array(32).fill(1),
+        genesisId: 'testnet-v1.0',
+        assetTransfer: {
+          assetId: 1234n,
           amount: 1000n,
           receiver: VALID_ADDRESS_1,
         },
@@ -52,17 +45,8 @@ describe('Transaction Validation', () => {
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
-    test.each([
-      ['encodeTransaction', (params: TransactionParams) => encodeTransaction(new Transaction(params))],
-      ['encodeTransactionRaw', (params: TransactionParams) => encodeTransactionRaw(new Transaction(params))],
-      ['estimateTransactionSize', (params: TransactionParams) => estimateTransactionSize(new Transaction(params))],
-      ['txId', (params: TransactionParams) => new Transaction(params).txId()],
-      [
-        'encodeSignedTransaction',
-        (params: TransactionParams) => encodeSignedTransaction({ txn: new Transaction(params), sig: EMPTY_SIGNATURE }),
-      ],
-    ])('should validate when calling %s', (_, sut) => {
-      const transaction: TransactionParams = {
+    test('should validate an invalid transaction', () => {
+      const transaction = new Transaction({
         type: TransactionType.AssetTransfer,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
@@ -74,9 +58,9 @@ describe('Transaction Validation', () => {
           amount: 1000n,
           receiver: VALID_ADDRESS_1,
         },
-      }
+      })
 
-      expect(() => sut(transaction)).toThrow('Asset transfer validation failed: Asset ID must not be 0')
+      expect(() => validateTransaction(transaction)).toThrow('Asset transfer validation failed: Asset ID must not be 0')
     })
   })
 })

@@ -25,20 +25,28 @@ export {
   type SignedTransaction,
 } from './transactions/signed-transaction'
 
-export { SignedTransactionMeta } from './transactions/signed-transaction-meta'
 export { BoxReferenceMeta, HoldingReferenceMeta, LocalsReferenceMeta } from './transactions/reference-types-meta'
-export { TransactionParamsMeta, transactionParamsCodec } from './transactions/transaction-meta'
-export { transactionCodec } from './transactions/transaction'
+export { SignedTransactionMeta } from './transactions/signed-transaction-meta'
+export { transactionCodec, validateTransaction } from './transactions/transaction'
+export { transactionParamsCodec, TransactionParamsMeta } from './transactions/transaction-meta'
 
 export * from './signer'
-export * from './transactions/app-call'
-export * from './transactions/asset-config'
-export * from './transactions/asset-freeze'
-export * from './transactions/asset-transfer'
-export * from './transactions/heartbeat'
-export * from './transactions/key-registration'
-export * from './transactions/payment'
-export * from './transactions/state-proof'
+export {
+  OnApplicationComplete,
+  type AppCallTransactionFields,
+  type BoxReference,
+  type HoldingReference,
+  type LocalsReference,
+  type ResourceReference,
+  type StateSchema,
+} from './transactions/app-call'
+export type { AssetConfigTransactionFields } from './transactions/asset-config'
+export type { AssetFreezeTransactionFields } from './transactions/asset-freeze'
+export type { AssetTransferTransactionFields } from './transactions/asset-transfer'
+export type { HeartbeatProof, HeartbeatTransactionFields } from './transactions/heartbeat'
+export type { KeyRegistrationTransactionFields } from './transactions/key-registration'
+export type { PaymentTransactionFields } from './transactions/payment'
+export type * from './transactions/state-proof'
 
-export * from './multisig'
 export * from './logicsig'
+export * from './multisig'
