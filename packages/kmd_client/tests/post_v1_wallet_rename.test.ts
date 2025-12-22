@@ -25,7 +25,7 @@ describe('POST v1_wallet_rename', () => {
         RenameWalletResponse.parse(result)
 
         // Verify the wallet was renamed
-        const walletInfo = await client.getWalletInfo({ walletHandleToken })
+        const walletInfo = await client.walletInfo({ walletHandleToken })
         expect(walletInfo.walletHandle.wallet.name).toBe(newWalletName)
       } finally {
         await releaseWalletHandle(client, walletHandleToken)

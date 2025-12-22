@@ -12,7 +12,7 @@ describe('GET versions', () => {
     test('Basic request and response validation', async () => {
       const client = new KmdClient(localnetConfig)
 
-      const result = await client.getVersion()
+      const result = await client.version()
 
       VersionsResponse.parse(result)
     })

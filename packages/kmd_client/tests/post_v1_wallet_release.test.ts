@@ -21,7 +21,7 @@ describe('POST v1_wallet_release', () => {
       ).resolves.toBeUndefined()
 
       // Verify the handle is now invalid by trying to use it
-      await expect(client.getWalletInfo({ walletHandleToken })).rejects.toThrow()
+      await expect(client.walletInfo({ walletHandleToken })).rejects.toThrow()
     })
   })
 })

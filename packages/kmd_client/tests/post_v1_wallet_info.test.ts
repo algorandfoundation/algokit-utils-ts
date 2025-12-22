@@ -15,7 +15,7 @@ describe('POST v1_wallet_info', () => {
       const { walletHandleToken } = await getWalletHandle(client)
 
       try {
-        const result = await client.getWalletInfo({
+        const result = await client.walletInfo({
           walletHandleToken,
         })
 
