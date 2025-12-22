@@ -514,6 +514,11 @@ function arrayToZod(schema: SchemaObject, bigintFields: Set<string>, recursiveSc
     return 'z.array(z.any())'
   }
 
+  // Detect uint8 array (byte array) - should be Uint8Array
+  if (schema.items.type === 'integer' && schema.items.format === 'uint8') {
+    return 'z.instanceof(Uint8Array)'
+  }
+
   const itemsZod = schemaToZod(schema.items, bigintFields, recursiveSchemas, strict)
   return `z.array(${itemsZod})`
 }

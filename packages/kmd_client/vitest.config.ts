@@ -5,7 +5,8 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     exclude: ['node_modules'],
-    globalSetup: ['./tests/globalSetup.ts'],
+    // Disabled: localnet tests don't need mock server setup
+    // globalSetup: ['./tests/globalSetup.ts'],
     testTimeout: 30_000,
     hookTimeout: 60_000,
     coverage: {
