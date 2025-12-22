@@ -832,11 +832,15 @@ export class ABIStructType extends ABIType {
   }
 
   encode(value: ABIValue): Uint8Array {
-    if (typeof value !== 'object' || Array.isArray(value) || value instanceof Uint8Array || value instanceof Address) {
+    if (value instanceof Uint8Array || value instanceof Address || typeof value !== 'object') {
       throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
 
     const tupleType = this.toABITupleType()
+    if (Array.isArray(value)) {
+      return tupleType.encode(value)
+    }
+
     const tupleValue = this.getTupleValueFromStructValue(value)
     return tupleType.encode(tupleValue)
   }

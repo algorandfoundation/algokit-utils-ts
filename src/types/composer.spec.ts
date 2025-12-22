@@ -197,6 +197,39 @@ describe('TransactionComposer', () => {
     expect(txn.appCall?.accountReferences?.[0]).toEqual(Address.fromString(foreignAcct))
   })
 
+  test('should properly handle Uint8Array account reference arg in addAppCallMethodCall', async () => {
+    const { algorand, context } = fixture
+    const sender = context.testAccount
+
+    const method = ABIMethod.fromSignature('add(account)uint8')
+    const account = Address.fromString('E4VCHISDQPLIZWMALIGNPK2B2TERPDMR64MZJXE3UL75MUDXZMADX5OWXM')
+
+    const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+    // Create method call using TransactionComposer.
+    // The foreign apps array argument should be packed before the method argument.
+    composer.addAppCallMethodCall({
+      appId: 7n,
+      method,
+      sender,
+      args: [account.publicKey],
+      accountReferences: [],
+      appReferences: [],
+      assetReferences: [],
+    })
+
+    // The built group should have one txn.
+    const built = await composer.build()
+    const txn = built.transactions[0].txn
+
+    expect(txn.appCall?.appReferences?.length).toBe(0)
+
+    expect(txn.appCall?.assetReferences?.length).toBe(0)
+
+    expect(txn.appCall?.accountReferences?.length).toBe(1)
+    expect(txn.appCall?.accountReferences?.[0]).toEqual(account)
+  })
+
   test('should properly populate foreign array objects in addAppCallMethodCall', async () => {
     const { algorand, context } = fixture
     const sender = context.testAccount
