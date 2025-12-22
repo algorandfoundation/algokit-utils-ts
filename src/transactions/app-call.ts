@@ -1,6 +1,7 @@
 import { SimulateUnnamedResourcesAccessed, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
   Address,
+  Expand,
   MAX_ACCOUNT_REFERENCES,
   MAX_OVERALL_REFERENCES,
   ReadableAddress,
@@ -17,7 +18,6 @@ import {
   TransactionType,
 } from '@algorandfoundation/algokit-transact'
 import { AppManager, BoxIdentifier, BoxReference as UtilsBoxReference } from '../types/app-manager'
-import { Expand } from '../types/expand'
 import { calculateExtraProgramPages } from '../util'
 import { CommonTransactionParams, buildTransactionCommonData } from './common'
 

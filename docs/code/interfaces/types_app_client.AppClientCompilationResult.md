@@ -33,7 +33,7 @@ The compiled bytecode of the approval program, ready to deploy to algod
 
 #### Defined in
 
-[src/types/app-client.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L260)
+[src/types/app-client.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L259)
 
 ___
 
@@ -45,7 +45,7 @@ The compiled bytecode of the clear state program, ready to deploy to algod
 
 #### Defined in
 
-[src/types/app-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L262)
+[src/types/app-client.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L261)
 
 ___
 
@@ -61,7 +61,7 @@ Partial.compiledApproval
 
 #### Defined in
 
-[src/types/app.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L218)
+[src/types/app.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L217)
 
 ___
 
@@ -77,4 +77,4 @@ Partial.compiledClear
 
 #### Defined in
 
-[src/types/app.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L220)
+[src/types/app.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L219)

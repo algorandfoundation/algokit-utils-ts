@@ -1,5 +1,5 @@
 import { ABIReturn } from '@algorandfoundation/algokit-abi'
-import { Address, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { Address, Expand, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
@@ -25,7 +25,6 @@ import {
   AppUpdateParams,
   TransactionComposer,
 } from './composer'
-import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'
 
 /** Params to specify an update transaction for an app deployment */

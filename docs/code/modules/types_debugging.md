@@ -4,11 +4,11 @@
 
 ## Table of contents
 
-### Interfaces
+### Type Aliases
 
-- [AVMTracesEventData](../interfaces/types_debugging.AVMTracesEventData.md)
-- [TealSourceDebugEventData](../interfaces/types_debugging.TealSourceDebugEventData.md)
-- [TealSourcesDebugEventData](../interfaces/types_debugging.TealSourcesDebugEventData.md)
+- [AVMTracesEventData](types_debugging.md#avmtraceseventdata)
+- [TealSourceDebugEventData](types_debugging.md#tealsourcedebugeventdata)
+- [TealSourcesDebugEventData](types_debugging.md#tealsourcesdebugeventdata)
 
 ### Variables
 
@@ -17,6 +17,62 @@
 - [SOURCES\_DIR](types_debugging.md#sources_dir)
 - [TEAL\_FILE\_EXT](types_debugging.md#teal_file_ext)
 - [TEAL\_SOURCEMAP\_EXT](types_debugging.md#teal_sourcemap_ext)
+
+## Type Aliases
+
+### AVMTracesEventData
+
+Ƭ **AVMTracesEventData**: `Object`
+
+Represents the data for AVM traces debug events emitted whenever a transaction is simulated in debug mode
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `simulateResponse` | `SimulateResponse` | The simulation response from Algod |
+
+#### Defined in
+
+[src/types/debugging.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L47)
+
+___
+
+### TealSourceDebugEventData
+
+Ƭ **TealSourceDebugEventData**: `Object`
+
+Represents the data for a single TEAL source
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appName` | `string` | The name of the application |
+| `compiledTeal` | `Expand`\<`Omit`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md), ``"sourceMap"``\> & \{ `sourceMap`: `SourceMap`  }\> | The compiled TEAL code |
+| `fileName` | `string` | The name of the file |
+
+#### Defined in
+
+[src/types/debugging.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L27)
+
+___
+
+### TealSourcesDebugEventData
+
+Ƭ **TealSourcesDebugEventData**: `Object`
+
+Represents the data for multiple TEAL sources debug events emitted whenever an app is compiled as part of a deploy in debug mode
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sources` | [`TealSourceDebugEventData`](types_debugging.md#tealsourcedebugeventdata)[] | An array of TEAL source debug event data |
+
+#### Defined in
+
+[src/types/debugging.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L39)
 
 ## Variables
 
@@ -28,7 +84,7 @@ The directory name for AlgoKit project related files
 
 #### Defined in
 
-[src/types/debugging.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L9)
+[src/types/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L10)
 
 ___
 
@@ -40,7 +96,7 @@ The default maximum search depth for file operations
 
 #### Defined in
 
-[src/types/debugging.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L21)
+[src/types/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L22)
 
 ___
 
@@ -52,7 +108,7 @@ The directory name for debug source files
 
 #### Defined in
 
-[src/types/debugging.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L12)
+[src/types/debugging.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L13)
 
 ___
 
@@ -64,7 +120,7 @@ The file extension for TEAL files
 
 #### Defined in
 
-[src/types/debugging.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L15)
+[src/types/debugging.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L16)
 
 ___
 
@@ -76,4 +132,4 @@ The file extension for TEAL source map files
 
 #### Defined in
 
-[src/types/debugging.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L18)
+[src/types/debugging.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L19)

@@ -94,6 +94,9 @@ import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
 {%     endif %}
 {%   endif %}
 {% endfor %}
+{% for custom_import in custom_imports %}
+{{ custom_import }}
+{% endfor %}
 
 {% macro inline_object_meta(inline_schema, required_fields, meta_name) -%}
 { name: '{{ meta_name }}', kind: 'object', fields: [
@@ -189,3 +192,7 @@ export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelN
 {%   endif %}
 {% endif %}
 };
+{% for method in custom_methods %}
+
+{{ method.code }}
+{% endfor %}
