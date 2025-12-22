@@ -344,7 +344,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L155)
+[src/types/composer.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L156)
 
 ___
 
@@ -362,7 +362,7 @@ ___
 
 ### OnlineKeyRegistrationParams
 
-Ƭ **OnlineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  }
+Ƭ **OnlineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  }
 
 Parameters to define an online key registration transaction.
 
@@ -423,7 +423,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L126)
+[src/types/composer.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L127)
 
 ___
 
@@ -435,7 +435,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L132)
+[src/types/composer.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L133)
 
 ___
 
@@ -447,7 +447,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L114)
+[src/types/composer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L115)
 
 ___
 
@@ -464,7 +464,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L169)
+[src/types/composer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L170)
 
 ___
 
@@ -488,4 +488,4 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L189)
+[src/types/composer.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L190)
