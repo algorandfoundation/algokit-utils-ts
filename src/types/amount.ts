@@ -1,5 +1,3 @@
-import * as algosdk from '@algorandfoundation/sdk'
-
 /** Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbers */
 export class AlgoAmount {
   private amountInMicroAlgo: bigint
@@ -16,12 +14,12 @@ export class AlgoAmount {
 
   /** Return the amount as a number in Algo */
   get algos() {
-    return algosdk.microalgosToAlgos(Number(this.amountInMicroAlgo))
+    return microalgosToAlgos(Number(this.amountInMicroAlgo))
   }
 
   /** Return the amount as a number in Algo */
   get algo() {
-    return algosdk.microalgosToAlgos(Number(this.amountInMicroAlgo))
+    return microalgosToAlgos(Number(this.amountInMicroAlgo))
   }
 
   /**
@@ -43,8 +41,8 @@ export class AlgoAmount {
         : 'microAlgo' in amount
           ? BigInt(amount.microAlgo)
           : 'algos' in amount
-            ? BigInt(algosdk.algosToMicroalgos(Number(amount.algos)))
-            : BigInt(algosdk.algosToMicroalgos(Number(amount.algo)))
+            ? BigInt(algosToMicroalgos(Number(amount.algos)))
+            : BigInt(algosToMicroalgos(Number(amount.algo)))
   }
 
   toString(): string {
@@ -78,4 +76,29 @@ export class AlgoAmount {
   static MicroAlgo(amount: number | bigint) {
     return new AlgoAmount({ microAlgos: amount })
   }
+}
+
+const MICROALGOS_TO_ALGOS_RATIO = 1e6
+const INVALID_MICROALGOS_ERROR_MSG = 'Microalgos should be positive and less than 2^53 - 1.'
+
+/**
+ * microalgosToAlgos converts microalgos to algos
+ * @param microalgos - number
+ * @returns number
+ */
+function microalgosToAlgos(microalgos: number) {
+  if (microalgos < 0 || !Number.isSafeInteger(microalgos)) {
+    throw new Error(INVALID_MICROALGOS_ERROR_MSG)
+  }
+  return microalgos / MICROALGOS_TO_ALGOS_RATIO
+}
+
+/**
+ * algosToMicroalgos converts algos to microalgos
+ * @param algos - number
+ * @returns number
+ */
+function algosToMicroalgos(algos: number) {
+  const microalgos = algos * MICROALGOS_TO_ALGOS_RATIO
+  return Math.round(microalgos)
 }
