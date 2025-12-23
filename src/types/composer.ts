@@ -1803,16 +1803,18 @@ export class TransactionComposer {
    * ```
    */
   async send(params?: SendParams): Promise<SendTransactionComposerResults> {
+    const effectiveConfig = {
+      coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees ?? this.composerConfig.coverAppCallInnerTransactionFees,
+      populateAppCallResources: params?.populateAppCallResources ?? this.composerConfig.populateAppCallResources,
+    }
+
     if (
-      this.composerConfig.coverAppCallInnerTransactionFees !== (params?.coverAppCallInnerTransactionFees ?? false) ||
-      this.composerConfig.populateAppCallResources !== (params?.populateAppCallResources ?? true)
+      this.composerConfig.coverAppCallInnerTransactionFees !== effectiveConfig.coverAppCallInnerTransactionFees ||
+      this.composerConfig.populateAppCallResources !== effectiveConfig.populateAppCallResources
     ) {
       // If the params are different to the composer config, reset the builtGroup
       // to ensure that the SendParams overwrites the composer config
-      this.composerConfig = {
-        coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees ?? false,
-        populateAppCallResources: params?.populateAppCallResources ?? true,
-      }
+      this.composerConfig = effectiveConfig
 
       this.reset()
     }
