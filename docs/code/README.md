@@ -38,6 +38,7 @@
 - [types/debugging](modules/types_debugging.md)
 - [types/dispenser-client](modules/types_dispenser_client.md)
 - [types/dispenser-client.spec](modules/types_dispenser_client_spec.md)
+- [types/expand](modules/types_expand.md)
 - [types/indexer](modules/types_indexer.md)
 - [types/instance-of](modules/types_instance_of.md)
 - [types/kmd-account-manager](modules/types_kmd_account_manager.md)

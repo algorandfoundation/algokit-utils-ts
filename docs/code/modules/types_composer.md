@@ -51,7 +51,7 @@
 
 ### AppCallMethodCall
 
-Ƭ **AppCallMethodCall**: `Expand`\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\>\>
+Ƭ **AppCallMethodCall**: [`Expand`](types_expand.md#expand)\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\>\>
 
 Parameters to define an ABI method call transaction.
 
@@ -75,7 +75,7 @@ ___
 
 ### AppCreateMethodCall
 
-Ƭ **AppCreateMethodCall**: `Expand`\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\>\>
+Ƭ **AppCreateMethodCall**: [`Expand`](types_expand.md#expand)\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\>\>
 
 Parameters to define an ABI method call create transaction.
 
@@ -87,7 +87,7 @@ ___
 
 ### AppCreateParams
 
-Ƭ **AppCreateParams**: `Expand`\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"``\> & \{ `appId?`: ``0`` ; `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraProgramPages?`: `number` ; `onComplete?`: `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  }  }\>
+Ƭ **AppCreateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"``\> & \{ `appId?`: ``0`` ; `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraProgramPages?`: `number` ; `onComplete?`: `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  }  }\>
 
 Parameters to define an app create transaction
 
@@ -99,7 +99,7 @@ ___
 
 ### AppDeleteMethodCall
 
-Ƭ **AppDeleteMethodCall**: `Expand`\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppDeleteParams`](types_composer.md#appdeleteparams)\>\>
+Ƭ **AppDeleteMethodCall**: [`Expand`](types_expand.md#expand)\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppDeleteParams`](types_composer.md#appdeleteparams)\>\>
 
 Parameters to define an ABI method call delete transaction.
 
@@ -123,7 +123,7 @@ ___
 
 ### AppMethodCall
 
-Ƭ **AppMethodCall**\<`T`\>: `Expand`\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`ABIValue` \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\> \| `undefined`)[] ; `method`: `ABIMethod`  }
+Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`ABIValue` \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\> \| `undefined`)[] ; `method`: `ABIMethod`  }
 
 Parameters to define an ABI method call.
 
@@ -165,7 +165,7 @@ ___
 
 ### AppUpdateMethodCall
 
-Ƭ **AppUpdateMethodCall**: `Expand`\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\>\>
+Ƭ **AppUpdateMethodCall**: [`Expand`](types_expand.md#expand)\<[`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\>\>
 
 Parameters to define an ABI method call update transaction.
 
@@ -177,7 +177,7 @@ ___
 
 ### AppUpdateParams
 
-Ƭ **AppUpdateParams**: `Expand`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams) & \{ `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `onComplete?`: `OnApplicationComplete.UpdateApplication`  }\>
+Ƭ **AppUpdateParams**: [`Expand`](types_expand.md#expand)\<[`CommonAppCallParams`](types_composer.md#commonappcallparams) & \{ `approvalProgram`: `string` \| `Uint8Array` ; `clearStateProgram`: `string` \| `Uint8Array` ; `onComplete?`: `OnApplicationComplete.UpdateApplication`  }\>
 
 Parameters to define an app update transaction
 
@@ -386,7 +386,7 @@ ___
 
 ### ProcessedAppCallMethodCall
 
-Ƭ **ProcessedAppCallMethodCall**: `Expand`\<`Omit`\<[`AppCallMethodCall`](types_composer.md#appcallmethodcall), ``"args"``\> & \{ `args?`: (`ABIValue` \| `undefined`)[]  }\>
+Ƭ **ProcessedAppCallMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppCallMethodCall`](types_composer.md#appcallmethodcall), ``"args"``\> & \{ `args?`: (`ABIValue` \| `undefined`)[]  }\>
 
 #### Defined in
 
@@ -396,7 +396,7 @@ ___
 
 ### ProcessedAppCreateMethodCall
 
-Ƭ **ProcessedAppCreateMethodCall**: `Expand`\<`Omit`\<[`AppCreateMethodCall`](types_composer.md#appcreatemethodcall), ``"args"``\> & \{ `args?`: (`ABIValue` \| `undefined`)[]  }\>
+Ƭ **ProcessedAppCreateMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppCreateMethodCall`](types_composer.md#appcreatemethodcall), ``"args"``\> & \{ `args?`: (`ABIValue` \| `undefined`)[]  }\>
 
 #### Defined in
 
@@ -406,7 +406,7 @@ ___
 
 ### ProcessedAppUpdateMethodCall
 
-Ƭ **ProcessedAppUpdateMethodCall**: `Expand`\<`Omit`\<[`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall), ``"args"``\> & \{ `args?`: (`ABIValue` \| `undefined`)[]  }\>
+Ƭ **ProcessedAppUpdateMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall), ``"args"``\> & \{ `args?`: (`ABIValue` \| `undefined`)[]  }\>
 
 #### Defined in
 
@@ -416,7 +416,7 @@ ___
 
 ### RawSimulateOptions
 
-Ƭ **RawSimulateOptions**: `Expand`\<`Omit`\<`SimulateRequest`, ``"txnGroups"``\>\> & \{ `resultOnFailure?`: `boolean`  }
+Ƭ **RawSimulateOptions**: [`Expand`](types_expand.md#expand)\<`Omit`\<`SimulateRequest`, ``"txnGroups"``\>\> & \{ `resultOnFailure?`: `boolean`  }
 
 The raw API options to control a simulate request.
 See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
@@ -429,7 +429,7 @@ ___
 
 ### SimulateOptions
 
-Ƭ **SimulateOptions**: `Expand`\<`Partial`\<[`SkipSignaturesSimulateOptions`](types_composer.md#skipsignaturessimulateoptions)\> & [`RawSimulateOptions`](types_composer.md#rawsimulateoptions)\>
+Ƭ **SimulateOptions**: [`Expand`](types_expand.md#expand)\<`Partial`\<[`SkipSignaturesSimulateOptions`](types_composer.md#skipsignaturessimulateoptions)\> & [`RawSimulateOptions`](types_composer.md#rawsimulateoptions)\>
 
 All options to control a simulate request
 
@@ -441,7 +441,7 @@ ___
 
 ### SkipSignaturesSimulateOptions
 
-Ƭ **SkipSignaturesSimulateOptions**: `Expand`\<`Omit`\<[`RawSimulateOptions`](types_composer.md#rawsimulateoptions), ``"fixSigners"`` \| ``"allowEmptySignatures"``\> & \{ `skipSignatures`: `boolean`  }\>
+Ƭ **SkipSignaturesSimulateOptions**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`RawSimulateOptions`](types_composer.md#rawsimulateoptions), ``"fixSigners"`` \| ``"allowEmptySignatures"``\> & \{ `skipSignatures`: `boolean`  }\>
 
 Options to control a simulate request, that does not require transaction signing
 

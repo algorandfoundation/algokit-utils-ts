@@ -26,7 +26,7 @@
 
 ### AppDeployParams
 
-Ƭ **AppDeployParams**: `Expand`\<[`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `createParams`: [`AppCreateParams`](types_composer.md#appcreateparams) \| [`AppCreateMethodCall`](types_composer.md#appcreatemethodcall) ; `deleteParams`: [`DeployAppDeleteParams`](types_app_deployer.md#deployappdeleteparams) \| [`DeployAppDeleteMethodCall`](types_app_deployer.md#deployappdeletemethodcall) ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `existingDeployments?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `ignoreCache?`: `boolean` ; `metadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `onSchemaBreak?`: ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnSchemaBreak`](../enums/types_app.OnSchemaBreak.md) ; `onUpdate?`: ``"update"`` \| ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnUpdate`](../enums/types_app.OnUpdate.md) ; `updateParams`: [`DeployAppUpdateParams`](types_app_deployer.md#deployappupdateparams) \| [`DeployAppUpdateMethodCall`](types_app_deployer.md#deployappupdatemethodcall)  }\>
+Ƭ **AppDeployParams**: [`Expand`](types_expand.md#expand)\<[`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `createParams`: [`AppCreateParams`](types_composer.md#appcreateparams) \| [`AppCreateMethodCall`](types_composer.md#appcreatemethodcall) ; `deleteParams`: [`DeployAppDeleteParams`](types_app_deployer.md#deployappdeleteparams) \| [`DeployAppDeleteMethodCall`](types_app_deployer.md#deployappdeletemethodcall) ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `existingDeployments?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `ignoreCache?`: `boolean` ; `metadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `onSchemaBreak?`: ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnSchemaBreak`](../enums/types_app.OnSchemaBreak.md) ; `onUpdate?`: ``"update"`` \| ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnUpdate`](../enums/types_app.OnUpdate.md) ; `updateParams`: [`DeployAppUpdateParams`](types_app_deployer.md#deployappupdateparams) \| [`DeployAppUpdateMethodCall`](types_app_deployer.md#deployappupdatemethodcall)  }\>
 
 The parameters to idempotently deploy an app
 
@@ -38,7 +38,7 @@ ___
 
 ### AppDeployResult
 
-Ƭ **AppDeployResult**: `Expand`\<\{ `operationPerformed`: ``"create"``  } & `Omit`\<[`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md), ``"appId"`` \| ``"appAddress"``\> & [`SendAppCreateTransactionResult`](types_app.md#sendappcreatetransactionresult)\> \| `Expand`\<\{ `operationPerformed`: ``"update"``  } & [`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md) & [`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult)\> \| `Expand`\<\{ `operationPerformed`: ``"replace"``  } & `Omit`\<[`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md), ``"appId"`` \| ``"appAddress"``\> & [`SendAppCreateTransactionResult`](types_app.md#sendappcreatetransactionresult) & \{ `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: `ABIReturn`  }\> \| `Expand`\<\{ `operationPerformed`: ``"nothing"``  } & [`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md)\>
+Ƭ **AppDeployResult**: [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"create"``  } & `Omit`\<[`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md), ``"appId"`` \| ``"appAddress"``\> & [`SendAppCreateTransactionResult`](types_app.md#sendappcreatetransactionresult)\> \| [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"update"``  } & [`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md) & [`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult)\> \| [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"replace"``  } & `Omit`\<[`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md), ``"appId"`` \| ``"appAddress"``\> & [`SendAppCreateTransactionResult`](types_app.md#sendappcreatetransactionresult) & \{ `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: `ABIReturn`  }\> \| [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"nothing"``  } & [`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md)\>
 
 #### Defined in
 
@@ -48,7 +48,7 @@ ___
 
 ### DeployAppDeleteMethodCall
 
-Ƭ **DeployAppDeleteMethodCall**: `Expand`\<`Omit`\<[`AppDeleteMethodCall`](types_composer.md#appdeletemethodcall), ``"appId"``\>\>
+Ƭ **DeployAppDeleteMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeleteMethodCall`](types_composer.md#appdeletemethodcall), ``"appId"``\>\>
 
 Params to specify a delete method call for an app deployment
 
@@ -60,7 +60,7 @@ ___
 
 ### DeployAppDeleteParams
 
-Ƭ **DeployAppDeleteParams**: `Expand`\<`Omit`\<[`AppDeleteParams`](types_composer.md#appdeleteparams), ``"appId"``\>\>
+Ƭ **DeployAppDeleteParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeleteParams`](types_composer.md#appdeleteparams), ``"appId"``\>\>
 
 Params to specify a transaction for an app deployment
 
@@ -72,7 +72,7 @@ ___
 
 ### DeployAppUpdateMethodCall
 
-Ƭ **DeployAppUpdateMethodCall**: `Expand`\<`Omit`\<[`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall), ``"appId"`` \| ``"approvalProgram"`` \| ``"clearStateProgram"``\>\>
+Ƭ **DeployAppUpdateMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall), ``"appId"`` \| ``"approvalProgram"`` \| ``"clearStateProgram"``\>\>
 
 Params to specify an update method call for an app deployment
 
@@ -84,7 +84,7 @@ ___
 
 ### DeployAppUpdateParams
 
-Ƭ **DeployAppUpdateParams**: `Expand`\<`Omit`\<[`AppUpdateParams`](types_composer.md#appupdateparams), ``"appId"`` \| ``"approvalProgram"`` \| ``"clearStateProgram"``\>\>
+Ƭ **DeployAppUpdateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppUpdateParams`](types_composer.md#appupdateparams), ``"appId"`` \| ``"approvalProgram"`` \| ``"clearStateProgram"``\>\>
 
 Params to specify an update transaction for an app deployment
 

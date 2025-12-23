@@ -123,7 +123,7 @@ ___
 
 ### SendAppCreateTransactionResult
 
-Ƭ **SendAppCreateTransactionResult**: `Expand`\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: [`Address`](../classes/index.Address.md) ; `appId`: `bigint`  }\>
+Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: [`Address`](../classes/index.Address.md) ; `appId`: `bigint`  }\>
 
 Result from sending a single app transaction.
 
@@ -135,7 +135,7 @@ ___
 
 ### SendAppTransactionResult
 
-Ƭ **SendAppTransactionResult**: `Expand`\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: `ABIReturn`  }\>
+Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: `ABIReturn`  }\>
 
 Result from sending a single app transaction.
 
@@ -147,7 +147,7 @@ ___
 
 ### SendAppUpdateTransactionResult
 
-Ƭ **SendAppUpdateTransactionResult**: `Expand`\<[`SendAppTransactionResult`](types_app.md#sendapptransactionresult) & `Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\>\>
+Ƭ **SendAppUpdateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppTransactionResult`](types_app.md#sendapptransactionresult) & `Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\>\>
 
 Result from sending a single app transaction.
 

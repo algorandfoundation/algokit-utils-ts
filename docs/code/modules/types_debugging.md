@@ -49,7 +49,7 @@ Represents the data for a single TEAL source
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appName` | `string` | The name of the application |
-| `compiledTeal` | `Expand`\<`Omit`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md), ``"sourceMap"``\> & \{ `sourceMap`: `SourceMap`  }\> | The compiled TEAL code |
+| `compiledTeal` | [`Expand`](types_expand.md#expand)\<`Omit`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md), ``"sourceMap"``\> & \{ `sourceMap`: `SourceMap`  }\> | The compiled TEAL code |
 | `fileName` | `string` | The name of the file |
 
 #### Defined in
