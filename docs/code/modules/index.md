@@ -18,10 +18,6 @@
 - [TealSourceDebugEventData](index.md#tealsourcedebugeventdata)
 - [TealSourcesDebugEventData](index.md#tealsourcesdebugeventdata)
 
-### Namespaces
-
-- [indexer](index.indexer.md)
-
 ### Classes
 
 - [Address](../classes/index.Address.md)

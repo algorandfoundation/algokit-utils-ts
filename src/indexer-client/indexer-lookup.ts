@@ -7,7 +7,7 @@ import {
   MiniAssetHolding,
   TransactionsResponse,
 } from '@algorandfoundation/algokit-indexer-client'
-import { LookupAssetHoldingsOptions } from './types/indexer'
+import { LookupAssetHoldingsOptions } from '../types/indexer'
 export type SearchForTransactionsCriteria = Omit<NonNullable<Parameters<IndexerClient['searchForTransactions']>[0]>, 'limit' | 'next'>
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
