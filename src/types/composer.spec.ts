@@ -1,7 +1,7 @@
 import { ABIMethod } from '@algorandfoundation/algokit-abi'
 import { Address } from '@algorandfoundation/algokit-common'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
 
@@ -374,6 +374,54 @@ describe('TransactionComposer', () => {
       })
 
       await expect(composer.build()).rejects.toThrow('Asset transfer validation failed: Asset ID must not be 0')
+    })
+  })
+
+  describe('send params config handling', () => {
+    test('should not reset when send() is called without params and composer has non-default config', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      // Create composer with non-default config (populateAppCallResources: false instead of default true)
+      const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+      // Spy on the private reset method
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resetSpy = vi.spyOn(composer as any, 'reset')
+
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+
+      await composer.send()
+
+      expect(resetSpy).not.toHaveBeenCalled()
+    })
+
+    test('should reset when send() params explicitly differ from composer config', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      // Create composer with populateAppCallResources: false
+      const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+      // Spy on the private reset method
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resetSpy = vi.spyOn(composer as any, 'reset')
+
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+
+      // Send with explicitly different config should trigger reset
+      await composer.send({ populateAppCallResources: true })
+
+      // Reset should have been called because we explicitly passed a different value
+      expect(resetSpy).toHaveBeenCalled()
     })
   })
 })
