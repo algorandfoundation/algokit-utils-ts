@@ -1,9 +1,9 @@
 import { Address } from '@algorandfoundation/algokit-common'
 import { beforeEach, describe, expect, test } from 'vitest'
-import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
+import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
+import { algorandFixture, runWhenIndexerCaughtUp } from '../testing'
+import { AlgoAmount } from '../types/amount'
 import * as indexer from './indexer-lookup'
-import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
-import { AlgoAmount } from './types/amount'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
