@@ -37,7 +37,7 @@ Omit.accounts
 
 #### Defined in
 
-[src/types/app.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L49)
+[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
 
 ___
 
@@ -53,7 +53,7 @@ Omit.apps
 
 #### Defined in
 
-[src/types/app.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L51)
+[src/types/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L50)
 
 ___
 
@@ -69,7 +69,7 @@ Omit.assets
 
 #### Defined in
 
-[src/types/app.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L53)
+[src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
 
 ___
 
@@ -85,7 +85,7 @@ Omit.boxes
 
 #### Defined in
 
-[src/types/app.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L47)
+[src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
 
 ___
 
@@ -101,7 +101,7 @@ Omit.lease
 
 #### Defined in
 
-[src/types/app.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L45)
+[src/types/app.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L44)
 
 ___
 
@@ -113,7 +113,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 #### Defined in
 
-[src/types/app-client.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L178)
+[src/types/app-client.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L177)
 
 ___
 
@@ -129,7 +129,7 @@ Omit.methodArgs
 
 #### Defined in
 
-[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)
+[src/types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
 
 ___
 
@@ -147,4 +147,4 @@ Omit.rekeyTo
 
 #### Defined in
 
-[src/types/app.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L58)
+[src/types/app.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L57)
