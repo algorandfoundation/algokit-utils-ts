@@ -1,8 +1,7 @@
 import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Address, Expand } from '@algorandfoundation/algokit-common'
+import { Address, Expand, ProgramSourceMap } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import { TransactionWithSigner } from '../transaction'
 import { BoxIdentifier, BoxReference } from './app-manager'
 import {

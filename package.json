@@ -61,11 +61,6 @@
       "import": "./algo25/index.mjs",
       "require": "./algo25/index.js"
     },
-    "./sdk": {
-      "types": "./sdk/index.d.ts",
-      "import": "./sdk/index.mjs",
-      "require": "./sdk/index.js"
-    },
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
