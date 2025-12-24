@@ -110,7 +110,7 @@ ___
 
 • `get` **microAlgo**(): `bigint`
 
-Return the amount as a number in µAlgo
+Return the amount as a bigint in µAlgo
 
 #### Returns
 
@@ -126,7 +126,7 @@ ___
 
 • `get` **microAlgos**(): `bigint`
 
-Return the amount as a number in µAlgo
+Return the amount as a bigint in µAlgo
 
 #### Returns
 
