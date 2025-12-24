@@ -79,7 +79,6 @@ export class AlgoAmount {
 }
 
 const MICROALGOS_TO_ALGOS_RATIO = 1e6
-const MICROALGOS_TO_ALGOS_RATIO_BIGINT = BigInt(MICROALGOS_TO_ALGOS_RATIO)
 const MICROALGOS_IS_NOT_SAFE_NUMBER_ERROR_MSG = 'Microalgos must be a safe integer. Use bigint for values greater than 2^53 - 1.'
 const MICROALGOS_NEGATIVE_ERROR_MSG = 'Microalgos should be positive.'
 
@@ -93,8 +92,8 @@ function microalgosToAlgos(microalgos: number | bigint): number {
     if (microalgos < 0n) {
       throw new Error(MICROALGOS_NEGATIVE_ERROR_MSG)
     }
-    const whole = microalgos / MICROALGOS_TO_ALGOS_RATIO_BIGINT
-    const remainder = microalgos % MICROALGOS_TO_ALGOS_RATIO_BIGINT
+    const whole = microalgos / BigInt(MICROALGOS_TO_ALGOS_RATIO)
+    const remainder = microalgos % BigInt(MICROALGOS_TO_ALGOS_RATIO)
     return Number(whole) + Number(remainder) / 1e6
   }
 
