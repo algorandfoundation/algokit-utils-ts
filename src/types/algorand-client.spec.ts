@@ -1,6 +1,5 @@
-import { getABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIType, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/example-contracts/client/TestContractClient'
 import { algorandFixture } from '../testing'
@@ -121,8 +120,8 @@ describe('AlgorandClient', () => {
         appId: appId,
         args: [
           appClient.appClient.getABIMethod('doMath')!.getSelector(),
-          algosdk.encodeUint64(1),
-          algosdk.encodeUint64(2),
+          ABIType.from('uint64').encode(1),
+          ABIType.from('uint64').encode(2),
           Uint8Array.from(Buffer.from('AANzdW0=', 'base64')), //sum
         ],
         note: 'addAppCall',
