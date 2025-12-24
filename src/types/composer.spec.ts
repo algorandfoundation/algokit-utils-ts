@@ -1,4 +1,4 @@
-import { ABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, ABITupleType, ABIType } from '@algorandfoundation/algokit-abi'
 import { Address } from '@algorandfoundation/algokit-common'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
@@ -423,5 +423,50 @@ describe('TransactionComposer', () => {
       // Reset should have been called because we explicitly passed a different value
       expect(resetSpy).toHaveBeenCalled()
     })
+  })
+
+  describe('ARC-4 tuple packing', () => {
+    const uint8ArrayType = ABIType.from('uint8[]')
+    const singleArray = uint8ArrayType.encode([1])
+    const twoArrays = new ABITupleType([uint8ArrayType, uint8ArrayType]).encode([[1], [1]])
+    const threeArrays = new ABITupleType([uint8ArrayType, uint8ArrayType, uint8ArrayType]).encode([[1], [1], [1]])
+
+    const testCases: { numAbiArgs: number; expectedTxnArgs: number; expectedLastArg: Uint8Array }[] = [
+      { numAbiArgs: 1, expectedTxnArgs: 2, expectedLastArg: singleArray },
+      { numAbiArgs: 13, expectedTxnArgs: 14, expectedLastArg: singleArray },
+      { numAbiArgs: 14, expectedTxnArgs: 15, expectedLastArg: singleArray },
+      { numAbiArgs: 15, expectedTxnArgs: 16, expectedLastArg: singleArray },
+      { numAbiArgs: 16, expectedTxnArgs: 16, expectedLastArg: twoArrays },
+      { numAbiArgs: 17, expectedTxnArgs: 16, expectedLastArg: threeArrays },
+    ]
+
+    test.each(testCases)(
+      'should handle $numAbiArgs ABI args correctly (expecting $expectedTxnArgs txn args)',
+      async ({ numAbiArgs, expectedTxnArgs, expectedLastArg }) => {
+        const { algorand, context } = fixture
+        const sender = context.testAccount
+
+        // Build method signature with the specified number of uint8[] args
+        const argsSignature = Array(numAbiArgs).fill('uint8[]').join(',')
+        const method = ABIMethod.fromSignature(`args${numAbiArgs}(${argsSignature})void`)
+
+        const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+        composer.addAppCallMethodCall({
+          appId: 1234n,
+          method,
+          sender,
+          args: Array(numAbiArgs).fill([1]), // Each arg is [1] (a uint8 array with value 1)
+        })
+
+        const built = await composer.build()
+        const txn = built.transactions[0].txn
+
+        const args = txn.appCall?.args ?? []
+        expect(args.length).toBe(expectedTxnArgs)
+        expect(args[0]).toEqual(method.getSelector())
+        expect(args[args.length - 1]).toEqual(expectedLastArg)
+      },
+    )
   })
 })
