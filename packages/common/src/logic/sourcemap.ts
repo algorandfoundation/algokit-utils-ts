@@ -1,4 +1,4 @@
-// @ts-ignore - vlq doesn't have proper type exports
+// @ts-expect-error - vlq doesn't have proper type exports
 import * as vlq from 'vlq'
 
 /**
