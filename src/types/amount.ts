@@ -14,12 +14,12 @@ export class AlgoAmount {
 
   /** Return the amount as a number in Algo */
   get algos() {
-    return microalgosToAlgos(Number(this.amountInMicroAlgo))
+    return microalgosToAlgos(this.amountInMicroAlgo)
   }
 
   /** Return the amount as a number in Algo */
   get algo() {
-    return microalgosToAlgos(Number(this.amountInMicroAlgo))
+    return microalgosToAlgos(this.amountInMicroAlgo)
   }
 
   /**
@@ -83,10 +83,16 @@ const INVALID_MICROALGOS_ERROR_MSG = 'Microalgos should be positive and less tha
 
 /**
  * microalgosToAlgos converts microalgos to algos
- * @param microalgos - number
+ * @param microalgos - number or bigint
  * @returns number
  */
-function microalgosToAlgos(microalgos: number) {
+function microalgosToAlgos(microalgos: number | bigint): number {
+  if (typeof microalgos === 'bigint') {
+    if (microalgos < 0n) {
+      throw new Error('Microalgos should be positive.')
+    }
+    return Number(microalgos) / MICROALGOS_TO_ALGOS_RATIO
+  }
   if (microalgos < 0 || !Number.isSafeInteger(microalgos)) {
     throw new Error(INVALID_MICROALGOS_ERROR_MSG)
   }

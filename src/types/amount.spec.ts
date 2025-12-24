@@ -39,3 +39,28 @@ describe('amount', () => {
     expect((100).microAlgo().microAlgo).toBe(100n)
   })
 })
+
+describe('AlgoAmount conversions', () => {
+  test('accepts number and bigint for microAlgo', () => {
+    expect(new AlgoAmount({ microAlgo: 1_000_000 }).microAlgo).toBe(1_000_000n)
+    expect(new AlgoAmount({ microAlgo: 1_000_000n }).microAlgo).toBe(1_000_000n)
+  })
+
+  test('accepts number and bigint for algo', () => {
+    expect(new AlgoAmount({ algo: 5 }).microAlgo).toBe(5_000_000n)
+    expect(new AlgoAmount({ algo: 5n }).microAlgo).toBe(5_000_000n)
+  })
+
+  test('handles max supply of Algos (10 billion) with bigint', () => {
+    const maxSupplyMicroAlgos = 10_000_000_000_000_000n
+    const amount = AlgoAmount.MicroAlgos(maxSupplyMicroAlgos)
+    expect(amount.microAlgo).toBe(maxSupplyMicroAlgos)
+    expect(amount.algo).toBe(10_000_000_000)
+  })
+
+  test('fractional algos conversion', () => {
+    const amount = new AlgoAmount({ algos: 0.000001 })
+    expect(amount.microAlgo).toBe(1n)
+    expect(amount.algo).toBe(0.000001)
+  })
+})
