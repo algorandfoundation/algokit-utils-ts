@@ -17,7 +17,7 @@ import { calculateExtraProgramPages } from '../util'
 import { AppCreateParams, AppDeleteParams, AppMethodCallParams, AppUpdateParams } from './app-call'
 import { buildTransactionCommonData } from './common'
 
-const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
+const ARGS_TUPLE_PACKING_THRESHOLD = 15 // ARC-4 allows 15 ABI args (slots 1-15) before tuple packing is needed
 
 /** Parameters to define an ABI method call create transaction. */
 export type AppCreateMethodCall = Expand<AppMethodCall<AppCreateParams>>
@@ -339,8 +339,8 @@ function encodeMethodArguments(method: ABIMethod, args: (ABIValue | undefined)[]
     throw new Error('Mismatch in length of non-transaction arguments')
   }
 
-  // Apply ARC-4 tuple packing for methods with more than 14 arguments
-  // 14 instead of 15 in the ARC-4 because the first argument (method selector) is added separately
+  // Apply ARC-4 tuple packing for methods with more than 15 ABI arguments
+  // Algorand allows 16 app args total; slot 0 is the method selector, leaving 15 for ABI args
   if (abiTypes.length > ARGS_TUPLE_PACKING_THRESHOLD) {
     encodedArgs.push(...encodeArgsWithTuplePacking(abiTypes, abiValues))
   } else {
@@ -372,14 +372,16 @@ function encodeArgsIndividually(abiTypes: ABIType[], abiValues: ABIValue[]): Uin
 function encodeArgsWithTuplePacking(abiTypes: ABIType[], abiValues: ABIValue[]): Uint8Array[] {
   const encodedArgs: Uint8Array[] = []
 
-  // Encode first 14 arguments individually
-  const first14AbiTypes = abiTypes.slice(0, ARGS_TUPLE_PACKING_THRESHOLD)
-  const first14AbiValues = abiValues.slice(0, ARGS_TUPLE_PACKING_THRESHOLD)
-  encodedArgs.push(...encodeArgsIndividually(first14AbiTypes, first14AbiValues))
+  // When packing is needed (> 15 args), we split at 14 to leave one slot for the packed tuple
+  // This gives us: 1 (selector) + 14 (individual) + 1 (packed tuple) = 16 total app args
+  const splitAt = ARGS_TUPLE_PACKING_THRESHOLD - 1
+  const firstAbiTypes = abiTypes.slice(0, splitAt)
+  const firstAbiValues = abiValues.slice(0, splitAt)
+  encodedArgs.push(...encodeArgsIndividually(firstAbiTypes, firstAbiValues))
 
-  // Pack remaining arguments into tuple at position 15
-  const remainingAbiTypes = abiTypes.slice(ARGS_TUPLE_PACKING_THRESHOLD)
-  const remainingAbiValues = abiValues.slice(ARGS_TUPLE_PACKING_THRESHOLD)
+  // Pack remaining arguments into a tuple
+  const remainingAbiTypes = abiTypes.slice(splitAt)
+  const remainingAbiValues = abiValues.slice(splitAt)
 
   if (remainingAbiTypes.length > 0) {
     const tupleType = new ABITupleType(remainingAbiTypes)
