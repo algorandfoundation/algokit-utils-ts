@@ -1,5 +1,7 @@
 export {
   ABIMethod,
+  ABIReferenceType,
+  ABITransactionType,
   arc56MethodToABIMethod,
   argTypeIsAbiType,
   argTypeIsReference,
@@ -19,7 +21,6 @@ export type {
   ABIReturn,
   DefaultValueSource,
 } from './abi-method'
-export { ABIReferenceType, ABITransactionType } from './abi-method'
 export {
   ABIAddressType,
   ABIArrayDynamicType,
@@ -67,3 +68,4 @@ export type {
   StructField,
   StructName,
 } from './arc56-contract'
+export { getStructValueFromTupleValue, getTupleValueFromStructValue } from './utils'
