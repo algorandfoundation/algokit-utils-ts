@@ -63,4 +63,31 @@ describe('AlgoAmount conversions', () => {
     expect(amount.microAlgo).toBe(1n)
     expect(amount.algo).toBe(0.000001)
   })
+
+  test('throws on negative number microAlgo', () => {
+    expect(() => new AlgoAmount({ microAlgo: -1 }).algo).toThrow('Microalgos should be positive.')
+  })
+
+  test('throws on negative bigint microAlgo', () => {
+    expect(() => new AlgoAmount({ microAlgo: -1n }).algo).toThrow('Microalgos should be positive.')
+  })
+
+  test('unsafe integer microAlgo is converted to bigint in constructor', () => {
+    const unsafeNumber = Number.MAX_SAFE_INTEGER + 1
+    const amount = new AlgoAmount({ microAlgo: unsafeNumber })
+
+    expect(amount.microAlgo).toBe(BigInt(unsafeNumber))
+  })
+
+  test('bigint to algo conversion preserves precision for large values', () => {
+    const largeMicroAlgos = 9_007_199_254_740_993n // MAX_SAFE_INTEGER + 2
+    const amount = new AlgoAmount({ microAlgo: largeMicroAlgos })
+
+    expect(amount.algo).toBe(9007199254.740993)
+  })
+
+  test('small bigint microAlgo converts to fractional algo', () => {
+    const amount = new AlgoAmount({ microAlgo: 1_000n })
+    expect(amount.algo).toBe(0.001)
+  })
 })
