@@ -2,6 +2,10 @@ const MICROALGOS_TO_ALGOS_RATIO = 1e6
 const NOT_SAFE_INTEGER_ERROR_MSG = 'Number must be a safe integer. Use bigint for values greater than 2^53 - 1.'
 const MICROALGOS_NOT_INTEGER_ERROR_MSG = 'microAlgos must be a whole number.'
 const NEGATIVE_VALUE_ERROR_MSG = 'Value must be positive.'
+// Max microAlgos before precision loss in algo conversion: MAX_SAFE_INTEGER * 1e6
+// This is ~9 quadrillion microAlgos (~9 billion algos), well above Algorand's 10 billion max supply
+const MAX_MICROALGOS = BigInt(Number.MAX_SAFE_INTEGER) * BigInt(MICROALGOS_TO_ALGOS_RATIO)
+const EXCEEDS_MAX_MICROALGOS_ERROR_MSG = `microAlgos cannot exceed ${MAX_MICROALGOS} to maintain precision.`
 
 /**
  * microalgosToAlgos converts microalgos to algos
@@ -61,9 +65,11 @@ export class AlgoAmount {
     if ('microAlgos' in amount || 'microAlgo' in amount) {
       const value = 'microAlgos' in amount ? amount.microAlgos : amount.microAlgo
       if (typeof value === 'bigint') {
-        // Bigints can be arbitrarily large, just validate non-negative
         if (value < 0n) {
           throw new Error(NEGATIVE_VALUE_ERROR_MSG)
+        }
+        if (value > MAX_MICROALGOS) {
+          throw new Error(EXCEEDS_MAX_MICROALGOS_ERROR_MSG)
         }
         this.amountInMicroAlgo = value
       } else {
@@ -83,11 +89,14 @@ export class AlgoAmount {
       // Handle algos input - convert to microAlgos (multiply by 1,000,000)
       const value = 'algos' in amount ? amount.algos : amount.algo
       if (typeof value === 'bigint') {
-        // Bigints preserve precision when multiplied, no size limit
         if (value < 0n) {
           throw new Error(NEGATIVE_VALUE_ERROR_MSG)
         }
-        this.amountInMicroAlgo = value * BigInt(MICROALGOS_TO_ALGOS_RATIO)
+        const microAlgos = value * BigInt(MICROALGOS_TO_ALGOS_RATIO)
+        if (microAlgos > MAX_MICROALGOS) {
+          throw new Error(EXCEEDS_MAX_MICROALGOS_ERROR_MSG)
+        }
+        this.amountInMicroAlgo = microAlgos
       } else {
         // Numbers can be fractional (e.g., 1.5 algos), but must be within safe range
         // Use Math.round to handle floating-point precision (e.g., 0.000001 * 1e6 = 0.9999...)

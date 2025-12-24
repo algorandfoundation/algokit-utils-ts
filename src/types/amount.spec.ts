@@ -87,6 +87,33 @@ describe('AlgoAmount conversions', () => {
     expect(amount.algo).toBe(9007199254.740993)
   })
 
+  test('remainder with various fractional values', () => {
+    // Test different remainder values to ensure division precision
+    const base = BigInt(Number.MAX_SAFE_INTEGER) + 1n // Force the large value path
+
+    // remainder = 740992 (from base)
+    expect(new AlgoAmount({ microAlgo: base }).algo).toBe(9007199254.740992)
+
+    // remainder = 740992 + 333332 = 1074324
+    expect(new AlgoAmount({ microAlgo: base + 333332n }).algo).toBe(9007199255.074324)
+
+    // remainder = 740992 + 999998 = 1740990
+    expect(new AlgoAmount({ microAlgo: base + 999998n }).algo).toBe(9007199255.74099)
+  })
+
+  test('whole algos with zero remainder', () => {
+    // When microAlgos is exactly divisible by 1,000,000
+    const wholeAlgos = 10_000_000_000n // 10 billion algos (max supply)
+    const microAlgos = wholeAlgos * 1_000_000n
+    const amount = new AlgoAmount({ microAlgo: microAlgos })
+    expect(amount.algo).toBe(10_000_000_000)
+  })
+
+  test('handle microAlgo as MAX_SAFE_INTEGER', () => {
+    const atMax = new AlgoAmount({ microAlgo: BigInt(Number.MAX_SAFE_INTEGER) })
+    expect(atMax.algo).toBe(Number.MAX_SAFE_INTEGER / 1e6)
+  })
+
   test('small bigint microAlgo converts to fractional algo', () => {
     const amount = new AlgoAmount({ microAlgo: 1_000n })
     expect(amount.algo).toBe(0.001)
@@ -110,21 +137,27 @@ describe('AlgoAmount conversions', () => {
     )
   })
 
-  test('accepts bigint at MAX_SAFE_INTEGER for algo', () => {
-    const safeBigInt = BigInt(Number.MAX_SAFE_INTEGER)
-    const amount = new AlgoAmount({ algo: safeBigInt })
-    expect(amount.microAlgo).toBe(safeBigInt * 1_000_000n)
+  test('throws on bigint algo exceeding max precision limit', () => {
+    // MAX_MICROALGOS = MAX_SAFE_INTEGER * 1e6, so max algos = MAX_SAFE_INTEGER
+    const tooLargeAlgos = BigInt(Number.MAX_SAFE_INTEGER) + 1n
+    expect(() => new AlgoAmount({ algo: tooLargeAlgos })).toThrow('microAlgos cannot exceed')
   })
 
-  test('accepts bigint exceeding MAX_SAFE_INTEGER for algo', () => {
-    const largeBigInt = BigInt(Number.MAX_SAFE_INTEGER) + 1n
-    const amount = new AlgoAmount({ algo: largeBigInt })
-    expect(amount.microAlgo).toBe(largeBigInt * 1_000_000n)
+  test('throws on bigint microAlgo exceeding max precision limit', () => {
+    const maxMicroAlgos = BigInt(Number.MAX_SAFE_INTEGER) * 1_000_000n
+    const tooLarge = maxMicroAlgos + 1n
+    expect(() => new AlgoAmount({ microAlgo: tooLarge })).toThrow('microAlgos cannot exceed')
   })
 
-  test('accepts bigint exceeding MAX_SAFE_INTEGER for microAlgo', () => {
-    const largeBigInt = BigInt(Number.MAX_SAFE_INTEGER) + 1n
-    const amount = new AlgoAmount({ microAlgo: largeBigInt })
-    expect(amount.microAlgo).toBe(largeBigInt)
+  test('accepts bigint at max precision limit for algo', () => {
+    const maxAlgos = BigInt(Number.MAX_SAFE_INTEGER)
+    const amount = new AlgoAmount({ algo: maxAlgos })
+    expect(amount.microAlgo).toBe(maxAlgos * 1_000_000n)
+  })
+
+  test('accepts bigint at max precision limit for microAlgo', () => {
+    const maxMicroAlgos = BigInt(Number.MAX_SAFE_INTEGER) * 1_000_000n
+    const amount = new AlgoAmount({ microAlgo: maxMicroAlgos })
+    expect(amount.microAlgo).toBe(maxMicroAlgos)
   })
 })
