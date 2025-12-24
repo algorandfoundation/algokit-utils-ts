@@ -51,6 +51,11 @@ describe('AlgoAmount conversions', () => {
     expect(new AlgoAmount({ algo: 5n }).microAlgo).toBe(5_000_000n)
   })
 
+  test('accepts max supply of Algos (10 billion)', () => {
+    expect(new AlgoAmount({ algo: 10_000_000_000n }).microAlgo).toBe(10_000_000_000_000_000n)
+    expect(new AlgoAmount({ algo: 10_000_000_000 }).microAlgo).toBe(10_000_000_000_000_000n)
+  })
+
   test('handles max supply of Algos (10 billion) with bigint', () => {
     const maxSupplyMicroAlgos = 10_000_000_000_000_000n
     const amount = AlgoAmount.MicroAlgos(maxSupplyMicroAlgos)
