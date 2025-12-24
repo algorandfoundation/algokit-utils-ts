@@ -2,12 +2,12 @@
 export class AlgoAmount {
   private amountInMicroAlgo: bigint
 
-  /** Return the amount as a number in µAlgo */
+  /** Return the amount as a bigint in µAlgo */
   get microAlgos() {
     return this.amountInMicroAlgo
   }
 
-  /** Return the amount as a number in µAlgo */
+  /** Return the amount as a bigint in µAlgo */
   get microAlgo() {
     return this.amountInMicroAlgo
   }
@@ -41,8 +41,8 @@ export class AlgoAmount {
         : 'microAlgo' in amount
           ? BigInt(amount.microAlgo)
           : 'algos' in amount
-            ? BigInt(algosToMicroalgos(Number(amount.algos)))
-            : BigInt(algosToMicroalgos(Number(amount.algo)))
+            ? algosToMicroalgos(Number(amount.algos))
+            : algosToMicroalgos(Number(amount.algo))
   }
 
   toString(): string {
@@ -79,7 +79,9 @@ export class AlgoAmount {
 }
 
 const MICROALGOS_TO_ALGOS_RATIO = 1e6
-const INVALID_MICROALGOS_ERROR_MSG = 'Microalgos should be positive and less than 2^53 - 1.'
+const MICROALGOS_TO_ALGOS_RATIO_BIGINT = 1_000_000n
+const MICROALGOS_IS_NOT_SAFE_NUMBER_ERROR_MSG = 'Microalgos must be a safe integer. Use bigint for values greater than 2^53 - 1.'
+const MICROALGOS_NEGATIVE_ERROR_MSG = 'Microalgos should be positive.'
 
 /**
  * microalgosToAlgos converts microalgos to algos
@@ -89,12 +91,16 @@ const INVALID_MICROALGOS_ERROR_MSG = 'Microalgos should be positive and less tha
 function microalgosToAlgos(microalgos: number | bigint): number {
   if (typeof microalgos === 'bigint') {
     if (microalgos < 0n) {
-      throw new Error('Microalgos should be positive.')
+      throw new Error(MICROALGOS_NEGATIVE_ERROR_MSG)
     }
-    return Number(microalgos) / MICROALGOS_TO_ALGOS_RATIO
+    return Number(microalgos / MICROALGOS_TO_ALGOS_RATIO_BIGINT)
   }
-  if (microalgos < 0 || !Number.isSafeInteger(microalgos)) {
-    throw new Error(INVALID_MICROALGOS_ERROR_MSG)
+
+  if (microalgos < 0) {
+    throw new Error(MICROALGOS_NEGATIVE_ERROR_MSG)
+  }
+  if (!Number.isSafeInteger(microalgos)) {
+    throw new Error(MICROALGOS_IS_NOT_SAFE_NUMBER_ERROR_MSG)
   }
   return microalgos / MICROALGOS_TO_ALGOS_RATIO
 }
@@ -102,9 +108,8 @@ function microalgosToAlgos(microalgos: number | bigint): number {
 /**
  * algosToMicroalgos converts algos to microalgos
  * @param algos - number
- * @returns number
+ * @returns bigint
  */
 function algosToMicroalgos(algos: number) {
-  const microalgos = algos * MICROALGOS_TO_ALGOS_RATIO
-  return Math.round(microalgos)
+  return BigInt(algos) * MICROALGOS_TO_ALGOS_RATIO_BIGINT
 }
