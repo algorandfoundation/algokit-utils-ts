@@ -1,3 +1,25 @@
+const MICROALGOS_TO_ALGOS_RATIO = 1e6
+const NOT_SAFE_INTEGER_ERROR_MSG = 'Number must be a safe integer. Use bigint for values greater than 2^53 - 1.'
+const MICROALGOS_NOT_INTEGER_ERROR_MSG = 'microAlgos must be a whole number.'
+const NEGATIVE_VALUE_ERROR_MSG = 'Value must be positive.'
+
+/**
+ * microalgosToAlgos converts microalgos to algos
+ * @param microalgos - bigint
+ * @returns number
+ */
+function microalgosToAlgos(microalgos: bigint): number {
+  // If within safe integer range, convert to number for simpler calculation
+  if (microalgos <= BigInt(Number.MAX_SAFE_INTEGER)) {
+    return Number(microalgos) / MICROALGOS_TO_ALGOS_RATIO
+  }
+
+  // For large values, split into whole and remainder to preserve precision
+  const whole = microalgos / BigInt(MICROALGOS_TO_ALGOS_RATIO)
+  const remainder = microalgos % BigInt(MICROALGOS_TO_ALGOS_RATIO)
+  return Number(whole) + Number(remainder) / MICROALGOS_TO_ALGOS_RATIO
+}
+
 /** Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbers */
 export class AlgoAmount {
   private amountInMicroAlgo: bigint
@@ -35,14 +57,49 @@ export class AlgoAmount {
   constructor(
     amount: { algos: number | bigint } | { algo: number | bigint } | { microAlgos: number | bigint } | { microAlgo: number | bigint },
   ) {
-    this.amountInMicroAlgo =
-      'microAlgos' in amount
-        ? BigInt(amount.microAlgos)
-        : 'microAlgo' in amount
-          ? BigInt(amount.microAlgo)
-          : 'algos' in amount
-            ? algosToMicroalgos(Number(amount.algos))
-            : algosToMicroalgos(Number(amount.algo))
+    // Handle microAlgos input - the smallest unit, must be a whole number
+    if ('microAlgos' in amount || 'microAlgo' in amount) {
+      const value = 'microAlgos' in amount ? amount.microAlgos : amount.microAlgo
+      if (typeof value === 'bigint') {
+        // Bigints can be arbitrarily large, just validate non-negative
+        if (value < 0n) {
+          throw new Error(NEGATIVE_VALUE_ERROR_MSG)
+        }
+        this.amountInMicroAlgo = value
+      } else {
+        // Numbers must be whole (microAlgos is indivisible) and within safe integer range
+        if (value < 0) {
+          throw new Error(NEGATIVE_VALUE_ERROR_MSG)
+        }
+        if (!Number.isInteger(value)) {
+          throw new Error(MICROALGOS_NOT_INTEGER_ERROR_MSG)
+        }
+        if (value > Number.MAX_SAFE_INTEGER) {
+          throw new Error(NOT_SAFE_INTEGER_ERROR_MSG)
+        }
+        this.amountInMicroAlgo = BigInt(value)
+      }
+    } else {
+      // Handle algos input - convert to microAlgos (multiply by 1,000,000)
+      const value = 'algos' in amount ? amount.algos : amount.algo
+      if (typeof value === 'bigint') {
+        // Bigints preserve precision when multiplied, no size limit
+        if (value < 0n) {
+          throw new Error(NEGATIVE_VALUE_ERROR_MSG)
+        }
+        this.amountInMicroAlgo = value * BigInt(MICROALGOS_TO_ALGOS_RATIO)
+      } else {
+        // Numbers can be fractional (e.g., 1.5 algos), but must be within safe range
+        // Use Math.round to handle floating-point precision (e.g., 0.000001 * 1e6 = 0.9999...)
+        if (value < 0) {
+          throw new Error(NEGATIVE_VALUE_ERROR_MSG)
+        }
+        if (Math.abs(value) > Number.MAX_SAFE_INTEGER) {
+          throw new Error(NOT_SAFE_INTEGER_ERROR_MSG)
+        }
+        this.amountInMicroAlgo = BigInt(Math.round(value * MICROALGOS_TO_ALGOS_RATIO))
+      }
+    }
   }
 
   toString(): string {
@@ -76,41 +133,4 @@ export class AlgoAmount {
   static MicroAlgo(amount: number | bigint) {
     return new AlgoAmount({ microAlgos: amount })
   }
-}
-
-const MICROALGOS_TO_ALGOS_RATIO = 1e6
-const MICROALGOS_IS_NOT_SAFE_NUMBER_ERROR_MSG = 'Microalgos must be a safe integer. Use bigint for values greater than 2^53 - 1.'
-const MICROALGOS_NEGATIVE_ERROR_MSG = 'Microalgos should be positive.'
-
-/**
- * microalgosToAlgos converts microalgos to algos
- * @param microalgos - number or bigint
- * @returns number
- */
-function microalgosToAlgos(microalgos: number | bigint): number {
-  if (typeof microalgos === 'bigint') {
-    if (microalgos < 0n) {
-      throw new Error(MICROALGOS_NEGATIVE_ERROR_MSG)
-    }
-    const whole = microalgos / BigInt(MICROALGOS_TO_ALGOS_RATIO)
-    const remainder = microalgos % BigInt(MICROALGOS_TO_ALGOS_RATIO)
-    return Number(whole) + Number(remainder) / 1e6
-  }
-
-  if (microalgos < 0) {
-    throw new Error(MICROALGOS_NEGATIVE_ERROR_MSG)
-  }
-  if (!Number.isSafeInteger(microalgos)) {
-    throw new Error(MICROALGOS_IS_NOT_SAFE_NUMBER_ERROR_MSG)
-  }
-  return microalgos / MICROALGOS_TO_ALGOS_RATIO
-}
-
-/**
- * algosToMicroalgos converts algos to microalgos
- * @param algos - number
- * @returns bigint
- */
-function algosToMicroalgos(algos: number) {
-  return BigInt(Math.round(algos * MICROALGOS_TO_ALGOS_RATIO))
 }

@@ -65,18 +65,19 @@ describe('AlgoAmount conversions', () => {
   })
 
   test('throws on negative number microAlgo', () => {
-    expect(() => new AlgoAmount({ microAlgo: -1 }).algo).toThrow('Microalgos should be positive.')
+    expect(() => new AlgoAmount({ microAlgo: -1 })).toThrow('Value must be positive.')
   })
 
   test('throws on negative bigint microAlgo', () => {
-    expect(() => new AlgoAmount({ microAlgo: -1n }).algo).toThrow('Microalgos should be positive.')
+    expect(() => new AlgoAmount({ microAlgo: -1n })).toThrow('Value must be positive.')
   })
 
-  test('unsafe integer microAlgo is converted to bigint in constructor', () => {
-    const unsafeNumber = Number.MAX_SAFE_INTEGER + 1
-    const amount = new AlgoAmount({ microAlgo: unsafeNumber })
+  test('throws on negative number algo', () => {
+    expect(() => new AlgoAmount({ algo: -1 })).toThrow('Value must be positive.')
+  })
 
-    expect(amount.microAlgo).toBe(BigInt(unsafeNumber))
+  test('throws on negative bigint algo', () => {
+    expect(() => new AlgoAmount({ algo: -1n })).toThrow('Value must be positive.')
   })
 
   test('bigint to algo conversion preserves precision for large values', () => {
@@ -89,5 +90,41 @@ describe('AlgoAmount conversions', () => {
   test('small bigint microAlgo converts to fractional algo', () => {
     const amount = new AlgoAmount({ microAlgo: 1_000n })
     expect(amount.algo).toBe(0.001)
+  })
+
+  test('throws on fractional microAlgo', () => {
+    expect(() => new AlgoAmount({ microAlgo: 1.5 })).toThrow('microAlgos must be a whole number.')
+  })
+
+  test('throws on unsafe number for microAlgo', () => {
+    const unsafeNumber = Number.MAX_SAFE_INTEGER + 1
+    expect(() => new AlgoAmount({ microAlgo: unsafeNumber })).toThrow(
+      'Number must be a safe integer. Use bigint for values greater than 2^53 - 1.',
+    )
+  })
+
+  test('throws on unsafe number for algo', () => {
+    const unsafeNumber = Number.MAX_SAFE_INTEGER + 1
+    expect(() => new AlgoAmount({ algo: unsafeNumber })).toThrow(
+      'Number must be a safe integer. Use bigint for values greater than 2^53 - 1.',
+    )
+  })
+
+  test('accepts bigint at MAX_SAFE_INTEGER for algo', () => {
+    const safeBigInt = BigInt(Number.MAX_SAFE_INTEGER)
+    const amount = new AlgoAmount({ algo: safeBigInt })
+    expect(amount.microAlgo).toBe(safeBigInt * 1_000_000n)
+  })
+
+  test('accepts bigint exceeding MAX_SAFE_INTEGER for algo', () => {
+    const largeBigInt = BigInt(Number.MAX_SAFE_INTEGER) + 1n
+    const amount = new AlgoAmount({ algo: largeBigInt })
+    expect(amount.microAlgo).toBe(largeBigInt * 1_000_000n)
+  })
+
+  test('accepts bigint exceeding MAX_SAFE_INTEGER for microAlgo', () => {
+    const largeBigInt = BigInt(Number.MAX_SAFE_INTEGER) + 1n
+    const amount = new AlgoAmount({ microAlgo: largeBigInt })
+    expect(amount.microAlgo).toBe(largeBigInt)
   })
 })
