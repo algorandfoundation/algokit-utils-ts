@@ -126,3 +126,6 @@ export const TEST_ROUND = 24099447
 // Separate constants for transaction proof endpoint (uses different round/txid in HAR file)
 export const TEST_TXID_PROOF = '7KOOPZMUTVFHZ2PKXBGSOR6KZUYJA7P5QY257XNJZLR4NQ7IOW7A'
 export const TEST_ROUND_PROOF = 57624474
+
+// State proof endpoint
+export const TEST_ROUND_STATEPROOF = 55739610

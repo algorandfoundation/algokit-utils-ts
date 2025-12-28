@@ -8,6 +8,7 @@ import {
   TEST_BOX_NAME,
   TEST_ROUND,
   TEST_ROUND_PROOF,
+  TEST_ROUND_STATEPROOF,
   TEST_TXID,
   TEST_TXID_PROOF,
 } from '@algorandfoundation/algokit-testing'
@@ -55,6 +56,8 @@ export {
   TEST_BOX_NAME,
   TEST_ROUND,
   TEST_ROUND_PROOF,
+  TEST_ROUND_STATEPROOF,
   TEST_TXID,
-  TEST_TXID_PROOF,
+  TEST_TXID_PROOF
 }
+

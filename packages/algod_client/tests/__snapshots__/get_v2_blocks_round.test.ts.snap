@@ -39,6 +39,10 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
         34,
       ],
       "genesisId": "testnet-v1.0",
+      "participationUpdates": {
+        "absentParticipationAccounts": [],
+        "expiredParticipationAccounts": [],
+      },
       "previousBlockHash": Uint8Array [
         132,
         225,
@@ -149,6 +153,7 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
           ],
           Symbol(algokit_common:Address): true,
         },
+        "rewardsRate": 0n,
         "rewardsRecalculationRound": 24500000n,
         "rewardsResidue": 2030197303n,
       },
@@ -267,7 +272,6 @@ exports[`GET v2_blocks_ROUND > Common Tests > Basic request and response validat
       "upgradeState": {
         "currentProtocol": "https://github.com/algorandfoundation/specs/tree/433d8e9a7274b6fca703d91213e05c7e6a589e69",
       },
-      "upgradeVote": {},
     },
     "payset": [
       {

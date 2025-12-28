@@ -124,7 +124,8 @@ async function main() {
  */
 function toCamelCase(str: string): string {
   // Handle both kebab-case (dashes) and snake_case (underscores)
-  return str.replace(/[-_]([a-z0-9])/g, (_, letter) => letter.toUpperCase())
+  const camel = str.replace(/[-_]([a-z0-9])/g, (_, letter) => letter.toUpperCase())
+  return camel.charAt(0).toLowerCase() + camel.slice(1)
 }
 
 // =============================================================================

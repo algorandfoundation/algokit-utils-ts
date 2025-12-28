@@ -2,7 +2,7 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-16T01:35:45.095Z
+ * Generated: 2025-12-28T17:49:41.785Z
  */
 
 import { z } from 'zod'
@@ -42,8 +42,8 @@ export const Genesis = z.object({
 export const LedgerStateDelta = z.record(z.string(), z.any())
 
 export const LedgerStateDeltaForTransactionGroup = z.object({
-  Delta: LedgerStateDelta,
-  Ids: z.array(z.string())
+  delta: LedgerStateDelta,
+  ids: z.array(z.string())
 })
 
 export const ApplicationStateSchema = z.object({
@@ -391,16 +391,16 @@ export const SimulateTransactionGroupResult = z.object({
 })
 
 export const StateProofMessage = z.object({
-  BlockHeadersCommitment: z.instanceof(Uint8Array),
-  VotersCommitment: z.instanceof(Uint8Array),
-  LnProvenWeight: z.bigint(),
-  FirstAttestedRound: z.bigint(),
-  LastAttestedRound: z.bigint()
+  blockHeadersCommitment: z.instanceof(Uint8Array),
+  votersCommitment: z.instanceof(Uint8Array),
+  lnProvenWeight: z.bigint(),
+  firstAttestedRound: z.bigint(),
+  lastAttestedRound: z.bigint()
 })
 
 export const StateProof = z.object({
-  Message: StateProofMessage,
-  StateProof: z.instanceof(Uint8Array)
+  message: StateProofMessage,
+  stateProof: z.instanceof(Uint8Array)
 })
 
 export const LightBlockHeaderProof = z.object({
@@ -457,7 +457,7 @@ export const GetSyncRoundResponse = z.object({
 })
 
 export const TransactionGroupLedgerStateDeltasForRoundResponse = z.object({
-  Deltas: z.array(LedgerStateDeltaForTransactionGroup)
+  deltas: z.array(LedgerStateDeltaForTransactionGroup)
 })
 
 export const AccountAssetResponse = z.object({
@@ -596,26 +596,4 @@ export const DryrunResponse = z.object({
   txns: z.array(DryrunTxnResult),
   error: z.string(),
   protocolVersion: z.string()
-})
-
-// =============================================================================
-// Manually added schemas (not in OpenAPI spec)
-// =============================================================================
-
-/**
- * SuggestedParams is a client-side derived type, not an API response type.
- * The API returns TransactionParametersResponse, which the client transforms by:
- * - Omitting `lastRound`
- * - Adding `flatFee`, `firstValid`, `lastValid` (computed from lastRound)
- * See: packages/algod_client/src/models/suggested-params.ts
- */
-export const SuggestedParams = z.object({
-  consensusVersion: z.string(),
-  fee: z.bigint(),
-  genesisHash: z.instanceof(Uint8Array),
-  genesisId: z.string(),
-  minFee: z.bigint(),
-  flatFee: z.boolean(),
-  firstValid: z.bigint(),
-  lastValid: z.bigint()
 })

@@ -2,7 +2,7 @@
 
 exports[`POST v2_teal_disassemble > Common Tests > Basic request and response validation 1`] = `
 {
-  "result": "// unsupported version 47
+  "result": "// unsupported version 112
 ",
 }
 `;
