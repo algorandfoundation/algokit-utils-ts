@@ -337,7 +337,7 @@ export type BlockHeader = {
   /** Protocol upgrade state. */
   upgradeState: UpgradeState
   /** Protocol upgrade vote parameters. */
-  upgradeVote: UpgradeVote
+  upgradeVote?: UpgradeVote
   /** [tc] Transaction counter. */
   txnCounter?: bigint
   /** [spt] State proof tracking data keyed by state proof type. */

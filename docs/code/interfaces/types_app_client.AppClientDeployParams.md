@@ -47,7 +47,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-[src/types/app-client.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L146)
+[src/types/app-client.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L154)
 
 ___
 
@@ -64,7 +64,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-[src/types/app-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L142)
+[src/types/app-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L150)
 
 ___
 
@@ -80,7 +80,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app-client.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L158)
+[src/types/app-client.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L166)
 
 ___
 
@@ -96,7 +96,7 @@ Override the on-completion action for the create call; defaults to NoOp
 
 #### Defined in
 
-[src/types/app-client.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L160)
+[src/types/app-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L168)
 
 ___
 
@@ -112,7 +112,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app-client.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L164)
+[src/types/app-client.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L172)
 
 ___
 
@@ -128,7 +128,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app-client.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L156)
+[src/types/app-client.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L164)
 
 ___
 
@@ -144,7 +144,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app-client.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L148)
+[src/types/app-client.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L156)
 
 ___
 
@@ -160,7 +160,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L150)
+[src/types/app-client.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L158)
 
 ___
 
@@ -172,7 +172,7 @@ Any overrides for the storage schema to request for the created app; by default 
 
 #### Defined in
 
-[src/types/app-client.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L170)
+[src/types/app-client.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L178)
 
 ___
 
@@ -188,7 +188,7 @@ Parameters to control transaction sending
 
 #### Defined in
 
-[src/types/app-client.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L138)
+[src/types/app-client.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L146)
 
 ___
 
@@ -204,7 +204,7 @@ The optional sender to send the transaction from, will use the application clien
 
 #### Defined in
 
-[src/types/app-client.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L136)
+[src/types/app-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L144)
 
 ___
 
@@ -220,7 +220,7 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app-client.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L162)
+[src/types/app-client.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L170)
 
 ___
 
@@ -236,4 +236,4 @@ The version of the contract, uses "1.0" by default
 
 #### Defined in
 
-[src/types/app-client.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L134)
+[src/types/app-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L142)

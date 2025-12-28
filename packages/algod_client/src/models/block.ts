@@ -1,9 +1,9 @@
 import {
   Address,
   ArrayCodec,
-  type EncodingFormat,
   MapCodec,
   ObjectModelCodec,
+  type EncodingFormat,
   type ObjectModelMetadata,
   type WireObject,
   addressArrayCodec,
