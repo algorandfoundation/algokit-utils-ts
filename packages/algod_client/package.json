@@ -27,6 +27,7 @@
   "peerDependencies": {},
   "devDependencies": {
     "@algorandfoundation/algokit-algo25": "*",
+    "@algorandfoundation/algokit-kmd-client": "*",
     "@algorandfoundation/algokit-testing": "*",
     "@noble/ed25519": "^3.0.0",
     "zod": "^3.23.8"

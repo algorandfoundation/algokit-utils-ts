@@ -1,5 +1,3 @@
-import { seedFromMnemonic } from '@algorandfoundation/algokit-algo25'
-import { Address } from '@algorandfoundation/algokit-common'
 import {
   encodeSignedTransaction,
   encodeTransaction,
@@ -7,10 +5,10 @@ import {
   TransactionType,
   type SignedTransaction,
 } from '@algorandfoundation/algokit-transact'
-import * as ed from '@noble/ed25519'
 import { describe, expect, test } from 'vitest'
 import { AlgodClient } from '../src'
-import { localnetConfig, TEST_ACCOUNT_MNEMONIC } from './config'
+import { localnetConfig } from './config'
+import { getLocalNetDefaultAccount } from './fixtures'
 import { PostTransactionsResponse } from './schemas'
 
 describe('POST v2_transactions', () => {
@@ -22,10 +20,8 @@ describe('POST v2_transactions', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(localnetConfig)
 
-      // Get account from mnemonic
-      const seed = seedFromMnemonic(TEST_ACCOUNT_MNEMONIC)
-      const publicKey = await ed.getPublicKeyAsync(seed)
-      const address = new Address(publicKey)
+      // Get funded account from LocalNet default wallet
+      const account = await getLocalNetDefaultAccount()
 
       // Get transaction params
       const params = await client.suggestedParams()
@@ -33,9 +29,9 @@ describe('POST v2_transactions', () => {
       // Create payment transaction (send to self, 0 amount)
       const txn = new Transaction({
         type: TransactionType.Payment,
-        sender: address,
+        sender: account.address,
         payment: {
-          receiver: address,
+          receiver: account.address,
           amount: 0n,
         },
         fee: params.minFee,
@@ -46,7 +42,7 @@ describe('POST v2_transactions', () => {
       })
 
       // Sign transaction
-      const signature = await ed.signAsync(encodeTransaction(txn), seed)
+      const signature = await account.sign(encodeTransaction(txn))
       const signedTxn: SignedTransaction = { txn, sig: signature }
 
       // Send transaction

@@ -31,6 +31,19 @@ export const localnetConfig: ClientConfig = {
   token: process.env.ALGOD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
 }
 
+// Localnet KMD configuration
+const kmdServer = process.env.KMD_SERVER || 'http://localhost'
+const kmdPort = process.env.KMD_PORT || '4002'
+const kmdBaseUrl = `${kmdServer}:${kmdPort}`
+
+export const localnetKmdConfig: ClientConfig = {
+  baseUrl: kmdBaseUrl,
+  token: process.env.KMD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+}
+
+export const DEFAULT_WALLET_NAME = 'unencrypted-default-wallet'
+export const DEFAULT_WALLET_PASSWORD = ''
+
 export const TEST_ACCOUNT_MNEMONIC =
   'auction inquiry lava second expand liberty glass involve ginger illness length room item discover ahead table doctor term tackle cement bonus profit right above catch'
 
