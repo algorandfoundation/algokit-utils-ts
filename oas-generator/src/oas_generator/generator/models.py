@@ -116,6 +116,7 @@ class FieldDescriptor:
     is_array: bool
     ref_model: str | None
     is_bytes: bool
+    is_bytes_b64: bool
     is_bigint: bool
     is_number: bool
     is_boolean: bool
@@ -154,6 +155,7 @@ class ModelDescriptor:
     is_array: bool = False
     array_item_ref: str | None = None
     array_item_is_bytes: bool = False
+    array_item_is_bytes_b64: bool = False
     array_item_is_bigint: bool = False
     array_item_is_number: bool = False
     array_item_is_boolean: bool = False

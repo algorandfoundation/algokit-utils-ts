@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { numberCodec, bigIntCodec, bytesCodec } from '@algorandfoundation/algokit-common'
+import { numberCodec, bigIntCodec, bytesBase64Codec } from '@algorandfoundation/algokit-common'
 
 /**
  * Represents a TEAL value delta.
@@ -35,7 +35,7 @@ export const EvalDeltaMeta: ObjectModelMetadata<EvalDelta> = {
       name: 'bytes',
       wireKey: 'bytes',
       optional: true,
-      codec: bytesCodec,
+      codec: bytesBase64Codec,
     },
     {
       name: 'uint',

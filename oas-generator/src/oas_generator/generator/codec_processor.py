@@ -63,6 +63,7 @@ class CodecProcessor:
                 is_holding_reference=field.is_holding_reference,
                 is_locals_reference=field.is_locals_reference,
                 is_bytes=field.is_bytes,
+                is_bytes_b64=field.is_bytes_b64,
                 is_bigint=field.is_bigint,
                 is_number=field.is_number,
                 is_boolean=field.is_boolean,
@@ -80,6 +81,7 @@ class CodecProcessor:
                 is_holding_reference=field.is_holding_reference,
                 is_locals_reference=field.is_locals_reference,
                 is_bytes=field.is_bytes,
+                is_bytes_b64=field.is_bytes_b64,
                 is_bigint=field.is_bigint,
                 is_number=field.is_number,
                 is_boolean=field.is_boolean,
@@ -98,6 +100,7 @@ class CodecProcessor:
             is_holding_reference=field.is_holding_reference,
             is_locals_reference=field.is_locals_reference,
             is_bytes=field.is_bytes,
+            is_bytes_b64=field.is_bytes_b64,
             is_bigint=field.is_bigint,
             is_number=field.is_number,
             is_boolean=field.is_boolean,
@@ -116,6 +119,7 @@ class CodecProcessor:
         is_holding_reference: bool,
         is_locals_reference: bool,
         is_bytes: bool,
+        is_bytes_b64: bool,
         is_bigint: bool,
         is_number: bool,
         is_boolean: bool,
@@ -134,6 +138,7 @@ class CodecProcessor:
             is_holding_reference: Whether this is a HoldingReference
             is_locals_reference: Whether this is a LocalsReference
             is_bytes: Whether this is a byte array (Uint8Array)
+            is_bytes_b64: Whether this is explicitly a base64-encoded bytes field (x-algokit-bytes-base64)
             is_bigint: Whether this is a bigint
             is_number: Whether this is a number
             is_boolean: Whether this is a boolean
@@ -186,6 +191,9 @@ class CodecProcessor:
         if is_bytes and byte_length is not None:
             return CodecProcessor._get_fixed_bytes_codec(byte_length)
 
+        # Base64-encoded bytes (x-algokit-bytes-base64) use bytesBase64Codec
+        if is_bytes_b64:
+            return "bytesBase64Codec"
         if is_bytes:
             return "bytesCodec"
         if is_bigint:
@@ -259,6 +267,7 @@ class CodecProcessor:
         array_item_ref: str | None,
         array_item_is_signed_txn: bool,
         array_item_is_bytes: bool,
+        array_item_is_bytes_b64: bool,
         array_item_is_bigint: bool,
         array_item_is_number: bool,
         array_item_is_boolean: bool,
@@ -274,6 +283,7 @@ class CodecProcessor:
             array_item_ref: Referenced model name
             array_item_is_signed_txn: Whether items are SignedTransactions
             array_item_is_bytes: Whether items are byte arrays
+            array_item_is_bytes_b64: Whether items are base64-encoded bytes (x-algokit-bytes-base64)
             array_item_is_bigint: Whether items are bigints
             array_item_is_number: Whether items are numbers
             array_item_is_boolean: Whether items are booleans
@@ -294,6 +304,7 @@ class CodecProcessor:
             is_holding_reference=array_item_is_holding_reference,
             is_locals_reference=array_item_is_locals_reference,
             is_bytes=array_item_is_bytes,
+            is_bytes_b64=array_item_is_bytes_b64,
             is_bigint=array_item_is_bigint,
             is_number=array_item_is_number,
             is_boolean=array_item_is_boolean,
@@ -311,6 +322,7 @@ class CodecProcessor:
             is_holding_reference=array_item_is_holding_reference,
             is_locals_reference=array_item_is_locals_reference,
             is_bytes=array_item_is_bytes,
+            is_bytes_b64=array_item_is_bytes_b64,
             is_bigint=array_item_is_bigint,
             is_number=array_item_is_number,
             is_boolean=array_item_is_boolean,
@@ -329,6 +341,7 @@ class CodecProcessor:
         is_holding_reference: bool,
         is_locals_reference: bool,
         is_bytes: bool,
+        is_bytes_b64: bool,
         is_bigint: bool,
         is_number: bool,
         is_boolean: bool,
@@ -344,6 +357,7 @@ class CodecProcessor:
             is_holding_reference: Whether items are HoldingReferences
             is_locals_reference: Whether items are LocalsReferences
             is_bytes: Whether items are byte arrays
+            is_bytes_b64: Whether items are base64-encoded bytes
             is_bigint: Whether items are bigints
             is_number: Whether items are numbers
             is_boolean: Whether items are booleans
@@ -357,8 +371,10 @@ class CodecProcessor:
         if ref_model or is_signed_txn or is_box_reference or is_holding_reference or is_locals_reference:
             return None
 
-        # Fixed-length bytes don't have predefined array singletons
+        # Fixed-length bytes and bytesB64 don't have predefined array singletons
         if is_bytes and byte_length is not None:
+            return None
+        if is_bytes_b64:
             return None
 
         # Return singleton array codec names

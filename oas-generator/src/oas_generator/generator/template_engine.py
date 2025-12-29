@@ -268,7 +268,8 @@ class SchemaProcessor:
             fmt = items.get(constants.SchemaKey.FORMAT)
             item_type = items.get(constants.SchemaKey.TYPE)
             algorand_format = items.get(constants.X_ALGORAND_FORMAT)
-            is_bytes = fmt == "byte" or items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+            is_bytes = fmt == "byte"
+            is_bytes_b64 = items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
             is_bigint = bool(items.get(constants.X_ALGOKIT_BIGINT) is True)
             is_address = algorand_format == "Address"
             is_number = item_type in ("number", "integer") and not is_bigint
@@ -284,7 +285,8 @@ class SchemaProcessor:
                 is_object=False,
                 is_array=True,
                 array_item_ref=ref_model,
-                array_item_is_bytes=is_bytes,
+                array_item_is_bytes=is_bytes or is_bytes_b64,
+                array_item_is_bytes_b64=is_bytes_b64,
                 array_item_is_bigint=is_bigint,
                 array_item_is_number=is_number,
                 array_item_is_boolean=is_boolean,
@@ -325,6 +327,7 @@ class SchemaProcessor:
             holding_reference = False
             locals_reference = False
             bytes_flag = False
+            bytes_b64_flag = False
             bigint_flag = False
             number_flag = False
             boolean_flag = False
@@ -357,7 +360,8 @@ class SchemaProcessor:
                     fmt = items.get(constants.SchemaKey.FORMAT)
                     item_type = items.get(constants.SchemaKey.TYPE)
                     algorand_format = items.get(constants.X_ALGORAND_FORMAT)
-                    bytes_flag = fmt == "byte" or items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+                    bytes_flag = fmt == "byte"
+                    bytes_b64_flag = items.get(constants.X_ALGOKIT_BYTES_BASE64) is True
                     bigint_flag = bool(items.get(constants.X_ALGOKIT_BIGINT) is True)
                     address_flag = algorand_format == "Address"
                     number_flag = item_type in ("number", "integer") and not bigint_flag
@@ -411,7 +415,8 @@ class SchemaProcessor:
                     fmt = resolved_schema.get(constants.SchemaKey.FORMAT)
                     prop_type = resolved_schema.get(constants.SchemaKey.TYPE)
                     algorand_format = resolved_schema.get(constants.X_ALGORAND_FORMAT)
-                    bytes_flag = fmt == "byte" or resolved_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
+                    bytes_flag = fmt == "byte"
+                    bytes_b64_flag = resolved_schema.get(constants.X_ALGOKIT_BYTES_BASE64) is True
                     bigint_flag = bool(resolved_schema.get(constants.X_ALGOKIT_BIGINT) is True)
                     address_flag = algorand_format == "Address"
                     number_flag = prop_type in ("number", "integer") and not bigint_flag
@@ -450,7 +455,8 @@ class SchemaProcessor:
                     ts_type=ts_t,
                     is_array=is_array,
                     ref_model=ref_model,
-                    is_bytes=bytes_flag,
+                    is_bytes=bytes_flag or bytes_b64_flag,
+                    is_bytes_b64=bytes_b64_flag,
                     is_bigint=bigint_flag,
                     is_number=number_flag,
                     is_boolean=boolean_flag,
