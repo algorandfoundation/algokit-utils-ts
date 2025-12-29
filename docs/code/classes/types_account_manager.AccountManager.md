@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[src/types/account-manager.ts:546](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L546)
+[src/types/account-manager.ts:562](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L562)
 
 ___
 
@@ -215,7 +215,7 @@ const account = await accountManager.dispenserFromEnvironment()
 
 #### Defined in
 
-[src/types/account-manager.ts:459](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L459)
+[src/types/account-manager.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L475)
 
 ___
 
@@ -258,7 +258,7 @@ await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.
 
 #### Defined in
 
-[src/types/account-manager.ts:579](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L579)
+[src/types/account-manager.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L595)
 
 ___
 
@@ -307,7 +307,7 @@ await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(
 
 #### Defined in
 
-[src/types/account-manager.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L641)
+[src/types/account-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L657)
 
 ___
 
@@ -351,7 +351,7 @@ await accountManager.ensureFundedFromTestNetDispenserApi("ACCOUNTADDRESS", algor
 
 #### Defined in
 
-[src/types/account-manager.ts:697](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L697)
+[src/types/account-manager.ts:713](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L713)
 
 ___
 
@@ -587,7 +587,7 @@ const account = await accountManager.localNetDispenser()
 
 #### Defined in
 
-[src/types/account-manager.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L478)
+[src/types/account-manager.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L494)
 
 ___
 
@@ -656,13 +656,13 @@ ___
 
 ### random
 
-▸ **random**(): [`Address`](index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }
+▸ **random**(): [`Address`](index.Address.md) & \{ `addr`: `Readonly`\<[`Address`](index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }
 
 Tracks and returns a new, random Algorand account with secret key loaded.
 
 #### Returns
 
-[`Address`](index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }
+[`Address`](index.Address.md) & \{ `addr`: `Readonly`\<[`Address`](index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }
 
 The account
 
@@ -734,7 +734,7 @@ await accountManager.rekeyAccount({
 
 #### Defined in
 
-[src/types/account-manager.ts:521](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L521)
+[src/types/account-manager.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L537)
 
 ___
 

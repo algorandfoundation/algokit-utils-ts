@@ -1,103 +1,56 @@
-import { Address, concatArrays, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
+import { Address, Addressable, concatArrays, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
 import { MultisigAccount } from './multisig'
-import { TransactionSigner } from './signer'
-import { LogicSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
+import { AddressWithDelegatedLsigSigner, TransactionSigner } from './signer'
+import { LogicSigSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
+import { logicSigSignatureCodec } from './transactions/signed-transaction-meta'
 import { Transaction } from './transactions/transaction'
-import { logicSignatureCodec } from './transactions/signed-transaction-meta'
 
 const PROGRAM_TAG = new TextEncoder().encode('Program')
 const MSIG_PROGRAM_TAG = new TextEncoder().encode('MsigProgram')
 const SIGN_PROGRAM_DATA_PREFIX = new TextEncoder().encode('ProgData')
 
-/** Function for signing logic signatures for delegation */
-export type DelegatedLsigSigner = (lsig: LogicSigAccount, msig?: MultisigAccount) => Promise<Uint8Array>
+/** Function for signing logic signatures for delegation
+ *  @param lsig - The logic signature that is being signed for delegation
+ *  @param msig - Optional multisig account that should be set when a public key is signing as a subsigner of a multisig
+ *  @returns The address of the delegator
+ * */
+export type DelegatedLsigSigner = (
+  lsig: LogicSigAccount,
+  msig?: MultisigAccount,
+) => Promise<{ addr: Address } & ({ sig?: Uint8Array } | { lmsig?: MultisigSignature })>
 
 /** Function for signing program data for a logic signature */
-export type ProgramDataSigner = (data: Uint8Array, lsig: LogicSigAccount) => Promise<Uint8Array>
+export type ProgramDataSigner = (data: Uint8Array, lsig: LogicSig) => Promise<Uint8Array>
 
-export class LogicSigAccount {
+export class LogicSig implements Addressable {
   logic: Uint8Array
   args: Uint8Array[]
-  sig?: Uint8Array
-  msig?: MultisigSignature
-  lmsig?: MultisigSignature
+  protected _addr: Address
 
-  static fromSignature(signature: LogicSignature): LogicSigAccount {
-    const lsigAccount = new LogicSigAccount(signature.logic, signature.args || [])
-    lsigAccount.sig = signature.sig
-    lsigAccount.msig = signature.msig
-    lsigAccount.lmsig = signature.lmsig
-    return lsigAccount
-  }
-
-  static fromBytes(encodedLsig: Uint8Array): LogicSigAccount {
-    const decoded = decodeMsgpack(encodedLsig)
-    const lsigSignature = logicSignatureCodec.decode(decoded, 'msgpack')
-    return LogicSigAccount.fromSignature(lsigSignature)
-  }
-
-  constructor(program: Uint8Array, programArgs?: Array<Uint8Array> | null) {
-    if (programArgs && (!Array.isArray(programArgs) || !programArgs.every((arg) => arg.constructor === Uint8Array))) {
-      throw new TypeError('Invalid arguments')
-    }
-
-    let args: Uint8Array[] = []
-    if (programArgs != null) args = programArgs.map((arg) => new Uint8Array(arg))
-
+  constructor(program: Uint8Array, programArgs?: Array<Uint8Array>) {
     this.logic = program
-    this.args = args
+    this.args = programArgs ?? []
+    const toBeSigned = concatArrays(PROGRAM_TAG, this.logic)
+    const h = hash(toBeSigned)
+    this._addr = new Address(h)
   }
 
-  get signer(): TransactionSigner {
-    return async (txns: Transaction[], indexes: number[]) => {
-      const signedTxns: Uint8Array[] = []
-      for (const index of indexes) {
-        const txn = txns[index]
+  static fromSignature(signature: LogicSigSignature): LogicSig {
+    return new LogicSig(signature.logic, signature.args || [])
+  }
 
-        const stxn: SignedTransaction = {
-          txn,
-          lsig: { logic: this.logic, args: this.args, msig: this.msig, lmsig: this.lmsig, sig: this.sig },
-        }
+  static fromBytes(encodedLsig: Uint8Array): LogicSig {
+    const decoded = decodeMsgpack(encodedLsig)
+    const lsigSignature = logicSigSignatureCodec.decode(decoded, 'msgpack')
+    return LogicSig.fromSignature(lsigSignature)
+  }
 
-        signedTxns.push(encodeSignedTransaction(stxn))
-      }
-
-      return signedTxns
-    }
+  address(): Address {
+    return this._addr
   }
 
   get addr(): Address {
-    return this.address()
-  }
-
-  /**
-   * Compute hash of the logic sig program (that is the same as escrow account address) as string address
-   * @returns String representation of the address
-   */
-  address(): Address {
-    const toBeSigned = concatArrays(PROGRAM_TAG, this.logic)
-    const h = hash(toBeSigned)
-    return new Address(h)
-  }
-
-  async delegate(signer: DelegatedLsigSigner) {
-    this.sig = await signer(this)
-  }
-
-  async delegateMultisig(msig: MultisigAccount) {
-    if (this.lmsig == undefined) {
-      this.lmsig = {
-        subsigs: [],
-        version: msig.params.version,
-        threshold: msig.params.threshold,
-      }
-    }
-    for (const addrWithSigner of msig.subSigners) {
-      const { lsigSigner, addr } = addrWithSigner
-      const signature = await lsigSigner(this, msig)
-
-      this.lmsig.subsigs.push({ publicKey: addr.publicKey, sig: signature })
-    }
+    return this._addr
   }
 
   bytesToSignForDelegation(msig?: MultisigAccount): Uint8Array {
@@ -114,5 +67,98 @@ export class LogicSigAccount {
 
   programDataToSign(data: Uint8Array): Uint8Array {
     return concatArrays(SIGN_PROGRAM_DATA_PREFIX, this.address().publicKey, data)
+  }
+
+  account(): LogicSigAccount {
+    return new LogicSigAccount(this.logic, this.args)
+  }
+
+  delegatedAccount(delegator: Address): LogicSigAccount {
+    return new LogicSigAccount(this.logic, this.args, delegator)
+  }
+}
+
+export class LogicSigAccount extends LogicSig {
+  sig?: Uint8Array
+  msig?: MultisigSignature
+  lmsig?: MultisigSignature
+
+  static fromSignature(signature: LogicSigSignature, delegator?: Address): LogicSigAccount {
+    if (signature.lmsig || signature.msig) {
+      const msigAddr = MultisigAccount.fromSignature((signature.lmsig || signature.msig)!).addr
+
+      if (delegator && !msigAddr.equals(delegator)) {
+        throw new Error('Provided delegator address does not match multisig address')
+      }
+
+      const lsig = new LogicSigAccount(signature.logic, signature.args || [], msigAddr)
+      lsig.lmsig = signature.lmsig
+      lsig.msig = signature.msig
+      return lsig
+    }
+
+    const lsigAccount = new LogicSigAccount(signature.logic, signature.args || [], delegator)
+
+    if (signature.sig && delegator === undefined) {
+      throw new Error('Delegated address must be provided when logic sig has a signature')
+    }
+
+    if (signature.sig) {
+      lsigAccount.sig = signature.sig
+      return lsigAccount
+    }
+
+    return lsigAccount
+  }
+
+  static fromBytes(encodedLsig: Uint8Array, delegator?: Address): LogicSigAccount {
+    const decoded = decodeMsgpack(encodedLsig)
+    const lsigSignature = logicSigSignatureCodec.decode(decoded, 'msgpack')
+    return LogicSigAccount.fromSignature(lsigSignature, delegator)
+  }
+
+  constructor(program: Uint8Array, programArgs?: Array<Uint8Array> | null, delegator?: Address) {
+    super(program, programArgs ?? undefined)
+    this._addr = delegator ?? this._addr
+  }
+
+  get signer(): TransactionSigner {
+    return async (txns: Transaction[], indexes: number[]) => {
+      const signedTxns: Uint8Array[] = []
+      for (const index of indexes) {
+        const txn = txns[index]
+
+        const stxn: SignedTransaction = {
+          txn,
+          lsig: { logic: this.logic, args: this.args, msig: this.msig, lmsig: this.lmsig, sig: this.sig },
+        }
+
+        if (!stxn.txn.sender.equals(this.addr)) {
+          stxn.authAddress = this.addr
+        }
+
+        signedTxns.push(encodeSignedTransaction(stxn))
+      }
+
+      return signedTxns
+    }
+  }
+
+  async signForDelegation(delegator: AddressWithDelegatedLsigSigner) {
+    const result = await delegator.lsigSigner(this)
+
+    if (!result.addr.equals(this._addr)) {
+      throw new Error(
+        `Delegator address from signer does not match expected delegator address. Expected: ${this._addr.toString()}, got: ${result.addr.toString()}`,
+      )
+    }
+
+    if ('sig' in result && result.sig) {
+      this.sig = result.sig
+    } else if ('lmsig' in result && result.lmsig) {
+      this.lmsig = result.lmsig
+    } else {
+      throw new Error('Delegated lsig signer must return either a sig or lmsig')
+    }
   }
 }

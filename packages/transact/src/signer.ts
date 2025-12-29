@@ -75,7 +75,8 @@ export function generateAddressWithSigners(args: {
 
   const lsigSigner: DelegatedLsigSigner = async (lsig, msig) => {
     const bytesToSign = lsig.bytesToSignForDelegation(msig)
-    return await rawEd25519Signer(bytesToSign)
+    const sig = await rawEd25519Signer(bytesToSign)
+    return { sig, addr: sendingAddress }
   }
 
   const programDataSigner: ProgramDataSigner = async (data, lsig) => {

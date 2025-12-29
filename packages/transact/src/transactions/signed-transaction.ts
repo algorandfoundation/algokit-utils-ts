@@ -25,7 +25,7 @@ export type SignedTransaction = {
   /**
    * Optional logic signature for the transaction.
    */
-  lsig?: LogicSignature
+  lsig?: LogicSigSignature
 
   /**
    * Optional auth address applicable if the transaction sender is a rekeyed account.
@@ -75,9 +75,9 @@ export type MultisigSignature = {
 }
 
 /**
- * Logic signature structure
+ * LogicSig signature structure
  */
-export type LogicSignature = {
+export type LogicSigSignature = {
   /**
    * Logic signature program
    */

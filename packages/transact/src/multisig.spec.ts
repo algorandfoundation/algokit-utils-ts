@@ -2,7 +2,7 @@ import { Address, decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algok
 import { describe, expect, test } from 'vitest'
 import { MultisigAccount } from './multisig'
 import { MultisigSignature } from './transactions/signed-transaction'
-import { multiSignatureCodec } from './transactions/signed-transaction-meta'
+import { multisigSignatureCodec } from './transactions/signed-transaction-meta'
 
 describe('multisig', () => {
   describe('MultisigAccount.createMultisigSignature', () => {
@@ -202,10 +202,10 @@ describe('multisig', () => {
       const emptyMultisignature = msigAccount.createMultisigSignature()
       const signature = new Uint8Array(64).fill(42)
       const signedMultiSig = msigAccount.applySignature(emptyMultisignature, addrs[0].publicKey, signature)
-      const encoded = encodeMsgpack(multiSignatureCodec.encode(signedMultiSig, 'msgpack'))
+      const encoded = encodeMsgpack(multisigSignatureCodec.encode(signedMultiSig, 'msgpack'))
 
       const decodedData = decodeMsgpack(encoded)
-      const decoded: MultisigSignature = multiSignatureCodec.decode(decodedData, 'msgpack')
+      const decoded: MultisigSignature = multisigSignatureCodec.decode(decodedData, 'msgpack')
 
       expect(decoded.version).toBe(emptyMultisignature.version)
       expect(decoded.threshold).toBe(emptyMultisignature.threshold)

@@ -36,7 +36,7 @@ export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
   algodOrAlgorandClient: AlgodClient | AlgorandClient,
   kmd?: KmdClient,
-): Promise<Address & AddressWithTransactionSigner> {
+): Promise<Address & AddressWithSigners> {
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient
@@ -45,7 +45,7 @@ export async function getTestAccount(
           kmd,
         })
 
-  const account = accountGetter ? await accountGetter(algorand) : algorand.account.random().account
+  const account = accountGetter ? await accountGetter(algorand) : algorand.account.random()
 
   Config.getLogger(suppressLog).info(`New test account created with address '${account.addr}'.`)
 
@@ -65,5 +65,13 @@ export async function getTestAccount(
 
   algorand.setSignerFromAccount(account)
 
-  return Object.assign(Address.fromString(account.addr.toString()), account)
+  const address = Address.fromString(account.addr.toString()) as Address & AddressWithSigners
+  for (const key of Object.keys(account as AddressWithSigners)) {
+    if (!(key in address)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(address as any)[key] = (account as any)[key]
+    }
+  }
+
+  return address
 }

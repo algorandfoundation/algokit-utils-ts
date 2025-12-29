@@ -1,9 +1,14 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import { AddressWithSigners, AddressWithTransactionSigner, LogicSigAccount, Transaction } from '@algorandfoundation/algokit-transact'
-import { MultisigAccount } from '@algorandfoundation/algokit-transact'
 import { IndexerClient, TransactionResponse } from '@algorandfoundation/algokit-indexer-client'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
+import {
+  AddressWithSigners,
+  AddressWithTransactionSigner,
+  LogicSigAccount,
+  MultisigAccount,
+  Transaction,
+} from '@algorandfoundation/algokit-transact'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
@@ -43,7 +48,7 @@ export interface GetTestAccountParams {
   /** Whether to suppress the log (which includes a mnemonic) or not (default: do not suppress the log) */
   suppressLog?: boolean
   /** Optional override for how to get a test account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algorand: AlgorandClient) => Promise<AddressWithSigners>
+  accountGetter?: (algorand: AlgorandClient) => Promise<Address & AddressWithSigners>
 }
 
 /** Configuration for creating an Algorand testing fixture. */
@@ -57,7 +62,7 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algod: AlgodClient, kmd?: KmdClient) => Promise<AddressWithSigners>
+  accountGetter?: (algorand: AlgorandClient) => Promise<Address & AddressWithSigners>
 }
 
 /** An Algorand automated testing fixture */

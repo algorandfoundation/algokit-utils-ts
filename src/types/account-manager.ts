@@ -437,7 +437,23 @@ export class AccountManager {
       return nacl.sign.detached(bytesToSign, keypair.secretKey)
     }
 
-    return this.signerAccount(generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner }))
+    const addrWithSigners = generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner })
+
+    this._accounts[addrWithSigners.addr.toString()] = addrWithSigners
+
+    const acct = addrWithSigners.addr as Address & AddressWithSigners
+
+    for (const prop in addrWithSigners) {
+      // Create a new Address instance for avoid circular references
+      if (prop === 'addr') {
+        acct.addr = new Address(addrWithSigners.addr.publicKey)
+        continue
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(acct as any)[prop] = (addrWithSigners as any)[prop]
+    }
+
+    return acct
   }
 
   /**

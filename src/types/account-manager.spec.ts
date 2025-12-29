@@ -1,5 +1,5 @@
 import { secretKeyToMnemonic } from '@algorandfoundation/algokit-algo25'
-import { generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
+import { generateAddressWithSigners, LogicSigAccount, MultisigAccount } from '@algorandfoundation/algokit-transact'
 import nacl from 'tweetnacl'
 import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
@@ -60,44 +60,48 @@ describe('AccountManager', () => {
     expect(accountInfo.authAddr!.toString()).toBe(rekeyTo.addr.toString())
   }, 10e6)
 
-  // TODO: This will be fixed in a future PR
-  // test('Logicsig account lmsig signing is supported', async () => {
-  //   const { algorand, generateAccount, testAccount } = localnet.context
-  //   const account1 = await generateAccount({ initialFunds: algo(1) })
-  //   const account2 = await generateAccount({ initialFunds: algo(1) })
-  //   const account3 = await generateAccount({ initialFunds: algo(1) })
+  test('Logicsig account lmsig signing is supported', async () => {
+    const { algorand, generateAccount, testAccount } = localnet.context
+    const account1 = await generateAccount({ initialFunds: algo(1) })
+    const account2 = await generateAccount({ initialFunds: algo(1) })
+    const account3 = await generateAccount({ initialFunds: algo(1) })
 
-  //   // Setup the multisig delegated logicsig
-  //   const lsigAccount = new algosdk.LogicSigAccount(
-  //     Uint8Array.from([1, 32, 1, 1, 34]), // int 1
-  //     [Uint8Array.from([1]), Uint8Array.from([2, 3])],
-  //   )
-  //   lsigAccount.signMultisig(
-  //     {
-  //       version: 1,
-  //       threshold: 2,
-  //       addrs: [account1.addr, account2.addr, account3.addr],
-  //     } satisfies algosdk.MultisigMetadata,
-  //     account1.sk,
-  //   ) // Make a 2 of 3 multisig delegated logicsig and sign with the first account
-  //   lsigAccount.appendToMultisig(account2.sk) // sign with the second account
-  //   await localnet.algorand.account.ensureFunded(lsigAccount.address(), testAccount, algo(1)) // Fund the lsig account
+    const msigParams = {
+      version: 1,
+      threshold: 2,
+      addrs: [account1.addr, account2.addr, account3.addr],
+    }
 
-  //   algorand.setSignerFromAccount(lsigAccount)
+    const msigAccount1 = new MultisigAccount(msigParams, [account1])
+    const msigAccount2 = new MultisigAccount(msigParams, [account2])
 
-  //   const result = await algorand.send.payment({
-  //     sender: lsigAccount.address(),
-  //     receiver: testAccount.addr,
-  //     amount: algo(0.1),
-  //   })
+    // Setup the multisig delegated logicsig
+    const lsigAccount = new LogicSigAccount(
+      Uint8Array.from([1, 32, 1, 1, 34]), // int 1
+      [Uint8Array.from([1]), Uint8Array.from([2, 3])],
+      msigAccount1.addr,
+    )
 
-  //   expect(result.confirmation.txn.lsig?.msig).toBeUndefined()
-  //   expect(result.confirmation.txn.lsig?.lmsig).toBeDefined()
-  //   expect(result.confirmation.txn.lsig?.lmsig?.threshold).toBe(2)
-  //   expect(result.confirmation.txn.lsig?.lmsig?.version).toBe(1)
-  //   expect(result.confirmation.txn.lsig?.lmsig?.subsignatures.length).toBe(3)
-  //   expect(result.confirmation.txn.lsig?.lmsig?.subsignatures[0].signature).toBeDefined()
-  //   expect(result.confirmation.txn.lsig?.lmsig?.subsignatures[1].signature).toBeDefined()
-  //   expect(result.confirmation.txn.lsig?.lmsig?.subsignatures[2].signature).toBeUndefined()
-  // })
+    await lsigAccount.signForDelegation(msigAccount1) // sign with the first account
+    await lsigAccount.signForDelegation(msigAccount2) // sign with the second account
+
+    await localnet.algorand.account.ensureFunded(lsigAccount.address(), testAccount, algo(1)) // Fund the lsig account
+
+    algorand.setSignerFromAccount(lsigAccount)
+
+    const result = await algorand.send.payment({
+      sender: lsigAccount.address(),
+      receiver: testAccount.addr,
+      amount: algo(0.1),
+    })
+
+    expect(result.confirmation.txn.lsig?.msig).toBeUndefined()
+    expect(result.confirmation.txn.lsig?.lmsig).toBeDefined()
+    expect(result.confirmation.txn.lsig?.lmsig?.threshold).toBe(2)
+    expect(result.confirmation.txn.lsig?.lmsig?.version).toBe(1)
+    expect(result.confirmation.txn.lsig?.lmsig?.subsigs.length).toBe(3)
+    expect(result.confirmation.txn.lsig?.lmsig?.subsigs[0].sig).toBeDefined()
+    expect(result.confirmation.txn.lsig?.lmsig?.subsigs[1].sig).toBeDefined()
+    expect(result.confirmation.txn.lsig?.lmsig?.subsigs[2].sig).toBeUndefined()
+  })
 })

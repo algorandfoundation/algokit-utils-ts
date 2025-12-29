@@ -9,7 +9,7 @@ import {
   fixedBytes64Codec,
   numberCodec,
 } from '@algorandfoundation/algokit-common'
-import { LogicSignature, MultisigSignature, MultisigSubsignature, SignedTransaction } from './signed-transaction'
+import { LogicSigSignature, MultisigSignature, MultisigSubsignature, SignedTransaction } from './signed-transaction'
 import { transactionCodec } from './transaction'
 
 const MultisigSubsignatureMeta: ObjectModelMetadata<MultisigSubsignature> = {
@@ -36,7 +36,7 @@ const MultisigSignatureMeta: ObjectModelMetadata<MultisigSignature> = {
   ],
 }
 
-const LogicSignatureMeta: ObjectModelMetadata<LogicSignature> = {
+const LogicSigSignatureMeta: ObjectModelMetadata<LogicSigSignature> = {
   name: 'LogicSignature',
   kind: 'object',
   fields: [
@@ -58,8 +58,8 @@ const LogicSignatureMeta: ObjectModelMetadata<LogicSignature> = {
   ],
 }
 
-export const multiSignatureCodec = new ObjectModelCodec<MultisigSignature>(MultisigSignatureMeta)
-export const logicSignatureCodec = new ObjectModelCodec<LogicSignature>(LogicSignatureMeta)
+export const multisigSignatureCodec = new ObjectModelCodec<MultisigSignature>(MultisigSignatureMeta)
+export const logicSigSignatureCodec = new ObjectModelCodec<LogicSigSignature>(LogicSigSignatureMeta)
 
 /**
  * Metadata for SignedTransaction
@@ -79,13 +79,13 @@ export const SignedTransactionMeta: ObjectModelMetadata<SignedTransaction> = {
       name: 'msig',
       wireKey: 'msig',
       optional: true,
-      codec: multiSignatureCodec,
+      codec: multisigSignatureCodec,
     },
     {
       name: 'lsig',
       wireKey: 'lsig',
       optional: true,
-      codec: logicSignatureCodec,
+      codec: logicSigSignatureCodec,
     },
     { name: 'authAddress', wireKey: 'sgnr', optional: true, codec: addressCodec },
   ],
