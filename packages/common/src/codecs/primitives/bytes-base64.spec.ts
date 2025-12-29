@@ -27,7 +27,7 @@ describe('BytesBase64Codec', () => {
       })
     })
 
-    describe('JSON format', () => {
+    describe('non default values', () => {
       test.each<{ bytes: number[]; expectedBase64: string; description: string }>([
         { bytes: [72, 101, 108, 108, 111], expectedBase64: 'SGVsbG8=', description: '"Hello" in ASCII' },
         { bytes: [0, 1, 2, 3, 4], expectedBase64: 'AAECAwQ=', description: 'small byte sequence' },
@@ -41,30 +41,13 @@ describe('BytesBase64Codec', () => {
         },
       ])('should encode $description as base64 string', ({ bytes, expectedBase64 }) => {
         const uint8Array = new Uint8Array(bytes)
-        const encoded = bytesBase64Codec.encode(uint8Array, 'json')
-        expect(encoded).toBe(expectedBase64)
-        expect(typeof encoded).toBe('string')
-      })
-    })
+        const encodedJson = bytesBase64Codec.encode(uint8Array, 'json')
+        const encodedMsgpack = bytesBase64Codec.encode(uint8Array, 'msgpack')
 
-    describe('msgpack format', () => {
-      test.each<{ bytes: number[]; expectedBase64: string; description: string }>([
-        { bytes: [72, 101, 108, 108, 111], expectedBase64: 'SGVsbG8=', description: '"Hello" in ASCII' },
-        { bytes: [0, 1, 2, 3, 4], expectedBase64: 'AAECAwQ=', description: 'small byte sequence' },
-        { bytes: [255, 254, 253, 252], expectedBase64: '//79/A==', description: 'high byte values' },
-        { bytes: [0], expectedBase64: 'AA==', description: 'single zero byte' },
-        { bytes: [255], expectedBase64: '/w==', description: 'single max byte' },
-        {
-          bytes: Array.from({ length: 100 }, (_, i) => i % 256),
-          expectedBase64:
-            'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiYw==',
-          description: '100-byte sequence',
-        },
-      ])('should encode $description as base64 string (not pass-through)', ({ bytes, expectedBase64 }) => {
-        const uint8Array = new Uint8Array(bytes)
-        const encoded = bytesBase64Codec.encode(uint8Array, 'msgpack')
-        expect(typeof encoded).toBe('string')
-        expect(encoded).toBe(expectedBase64)
+        expect(typeof encodedJson).toBe('string')
+        expect(encodedJson).toBe(expectedBase64)
+        expect(typeof encodedMsgpack).toBe('string')
+        expect(encodedMsgpack).toBe(expectedBase64)
       })
     })
   })
@@ -81,7 +64,7 @@ describe('BytesBase64Codec', () => {
       })
     })
 
-    describe('JSON format', () => {
+    describe('non default values', () => {
       test.each<{ bytes: number[]; expectedBase64: string; description: string }>([
         { bytes: [72, 101, 108, 108, 111], expectedBase64: 'SGVsbG8=', description: '"Hello" in ASCII' },
         { bytes: [0, 1, 2, 3, 4], expectedBase64: 'AAECAwQ=', description: 'small byte sequence' },
@@ -95,30 +78,13 @@ describe('BytesBase64Codec', () => {
         },
       ])('should encode $description as base64 string', ({ bytes, expectedBase64 }) => {
         const uint8Array = new Uint8Array(bytes)
-        const encoded = bytesBase64Codec.encodeOptional(uint8Array, 'json')
-        expect(encoded).toBe(expectedBase64)
-        expect(typeof encoded).toBe('string')
-      })
-    })
+        const encodedJson = bytesBase64Codec.encodeOptional(uint8Array, 'json')
+        const encodedMsgpack = bytesBase64Codec.encodeOptional(uint8Array, 'msgpack')
 
-    describe('msgpack format', () => {
-      test.each<{ bytes: number[]; expectedBase64: string; description: string }>([
-        { bytes: [72, 101, 108, 108, 111], expectedBase64: 'SGVsbG8=', description: '"Hello" in ASCII' },
-        { bytes: [0, 1, 2, 3, 4], expectedBase64: 'AAECAwQ=', description: 'small byte sequence' },
-        { bytes: [255, 254, 253, 252], expectedBase64: '//79/A==', description: 'high byte values' },
-        { bytes: [0], expectedBase64: 'AA==', description: 'single zero byte' },
-        { bytes: [255], expectedBase64: '/w==', description: 'single max byte' },
-        {
-          bytes: Array.from({ length: 100 }, (_, i) => i % 256),
-          expectedBase64:
-            'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiYw==',
-          description: '100-byte sequence',
-        },
-      ])('should encode $description as base64 string (not pass-through)', ({ bytes, expectedBase64 }) => {
-        const uint8Array = new Uint8Array(bytes)
-        const encoded = bytesBase64Codec.encodeOptional(uint8Array, 'msgpack')
-        expect(typeof encoded).toBe('string')
-        expect(encoded).toBe(expectedBase64)
+        expect(typeof encodedJson).toBe('string')
+        expect(encodedJson).toBe(expectedBase64)
+        expect(typeof encodedMsgpack).toBe('string')
+        expect(encodedMsgpack).toBe(expectedBase64)
       })
     })
   })
