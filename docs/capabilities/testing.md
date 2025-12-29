@@ -110,7 +110,7 @@ When calling `algorandFixture()` you can optionally pass in some fixture configu
 - `indexer?: Indexer` - An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `kmd?: Kmd` - An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `testAccountFunding?: AlgoAmount` - The [amount](./amount.md) of funds to allocate to the default testing account, if not specified then it will get `10` ALGO
-- `accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>` - Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts.
+- `accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Address & AddressWithSigners>` - Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts.
 
 ### Using the fixture context
 
@@ -121,8 +121,8 @@ The `fixture.context` property is of type [`AlgorandTestAutomationContext`](../c
 - `indexer: Indexer` - Indexer client instance
 - `kmd: Kmd` - KMD client instance
 - `transactionLogger: TransactionLogger` - Transaction logger that will log transaction IDs for all transactions issued by `algod`
-- `testAccount: Account` - Funded test account that is ephemerally created for each test
-- `generateAccount: (params: GetTestAccountParams) => Promise<Account>` - Generate and fund an additional ephemerally created account
+- `testAccount: Address & AddressWithSigners` - Funded test account that is ephemerally created for each test
+- `generateAccount: (params: GetTestAccountParams) => Promise<Address & AddressWithSigners>` - Generate and fund an additional ephemerally created account
 - `waitForIndexer()` - Waits for indexer to catch up with the latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
 - `waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>` - Wait for the indexer to catch up with the given transaction ID
 

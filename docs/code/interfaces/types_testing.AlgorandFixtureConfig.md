@@ -29,28 +29,27 @@ Configuration for creating an Algorand testing fixture.
 
 ### accountGetter
 
-• `Optional` **accountGetter**: (`algod`: `AlgodClient`, `kmd?`: `KmdClient`) => `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
+• `Optional` **accountGetter**: (`algorand`: [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)) => `Promise`\<[`Address`](../classes/index.Address.md) & \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
 
 Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts.
 
 #### Type declaration
 
-▸ (`algod`, `kmd?`): `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
+▸ (`algorand`): `Promise`\<[`Address`](../classes/index.Address.md) & \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `algod` | `AlgodClient` |
-| `kmd?` | `KmdClient` |
+| `algorand` | [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) |
 
 ##### Returns
 
-`Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithTransactionSigner` & \{ `account`: \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }  }\>
+`Promise`\<[`Address`](../classes/index.Address.md) & \{ `addr`: `Readonly`\<[`Address`](../classes/index.Address.md)\> ; `lsigSigner`: `DelegatedLsigSigner` ; `mxBytesSigner`: `MxBytesSigner` ; `programDataSigner`: `ProgramDataSigner` ; `signer`: `TransactionSigner`  }\>
 
 #### Defined in
 
-[src/types/testing.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L80)
+[src/types/testing.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L65)
 
 ___
 
@@ -62,7 +61,7 @@ An optional algod client, if not specified then it will create one against `algo
 
 #### Defined in
 
-[src/types/testing.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L72)
+[src/types/testing.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L57)
 
 ___
 
@@ -90,7 +89,7 @@ An optional indexer client, if not specified then it will create one against `in
 
 #### Defined in
 
-[src/types/testing.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L74)
+[src/types/testing.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L59)
 
 ___
 
@@ -118,7 +117,7 @@ An optional kmd client, if not specified then it will create one against `kmdCon
 
 #### Defined in
 
-[src/types/testing.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L76)
+[src/types/testing.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L61)
 
 ___
 
@@ -146,4 +145,4 @@ The amount of funds to allocate to the default testing account, if not specified
 
 #### Defined in
 
-[src/types/testing.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L78)
+[src/types/testing.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L63)

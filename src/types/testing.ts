@@ -1,18 +1,14 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
+import { IndexerClient, TransactionResponse } from '@algorandfoundation/algokit-indexer-client'
+import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import {
   AddressWithSigners,
   AddressWithTransactionSigner,
-  DelegatedLsigSigner,
   LogicSigAccount,
-  MxBytesSigner,
-  ProgramDataSigner,
+  MultisigAccount,
   Transaction,
-  TransactionSigner,
 } from '@algorandfoundation/algokit-transact'
-import { MultisigAccount } from '@algorandfoundation/algokit-transact'
-import { IndexerClient, TransactionResponse } from '@algorandfoundation/algokit-indexer-client'
-import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
@@ -52,18 +48,7 @@ export interface GetTestAccountParams {
   /** Whether to suppress the log (which includes a mnemonic) or not (default: do not suppress the log) */
   suppressLog?: boolean
   /** Optional override for how to get a test account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algorand: AlgorandClient) => Promise<
-    Address &
-      AddressWithTransactionSigner & {
-        account: {
-          addr: Readonly<Address>
-          signer: TransactionSigner
-          lsigSigner: DelegatedLsigSigner
-          programDataSigner: ProgramDataSigner
-          mxBytesSigner: MxBytesSigner
-        }
-      }
-  >
+  accountGetter?: (algorand: AlgorandClient) => Promise<Address & AddressWithSigners>
 }
 
 /** Configuration for creating an Algorand testing fixture. */
@@ -77,21 +62,7 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (
-    algod: AlgodClient,
-    kmd?: KmdClient,
-  ) => Promise<
-    Address &
-      AddressWithTransactionSigner & {
-        account: {
-          addr: Readonly<Address>
-          signer: TransactionSigner
-          lsigSigner: DelegatedLsigSigner
-          programDataSigner: ProgramDataSigner
-          mxBytesSigner: MxBytesSigner
-        }
-      }
-  >
+  accountGetter?: (algorand: AlgorandClient) => Promise<Address & AddressWithSigners>
 }
 
 /** An Algorand automated testing fixture */

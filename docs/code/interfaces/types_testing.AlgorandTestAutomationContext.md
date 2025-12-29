@@ -30,7 +30,7 @@ Algod client instance that will log transactions in `transactionLogger`
 
 #### Defined in
 
-[src/types/testing.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L29)
+[src/types/testing.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L25)
 
 ___
 
@@ -42,7 +42,7 @@ An AlgorandClient instance loaded with the current context, including testAccoun
 
 #### Defined in
 
-[src/types/testing.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L27)
+[src/types/testing.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L23)
 
 ___
 
@@ -68,7 +68,7 @@ Generate and fund an additional ephemerally created account
 
 #### Defined in
 
-[src/types/testing.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L39)
+[src/types/testing.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L35)
 
 ___
 
@@ -80,7 +80,7 @@ Indexer client instance
 
 #### Defined in
 
-[src/types/testing.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L31)
+[src/types/testing.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L27)
 
 ___
 
@@ -92,7 +92,7 @@ KMD client instance
 
 #### Defined in
 
-[src/types/testing.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L33)
+[src/types/testing.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L29)
 
 ___
 
@@ -104,7 +104,7 @@ Default, funded test account that is ephemerally created
 
 #### Defined in
 
-[src/types/testing.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L37)
+[src/types/testing.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L33)
 
 ___
 
@@ -116,7 +116,7 @@ Transaction logger that will log transaction IDs for all transactions issued by 
 
 #### Defined in
 
-[src/types/testing.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L35)
+[src/types/testing.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L31)
 
 ___
 
@@ -136,7 +136,7 @@ Wait for the indexer to catch up with all transactions logged by `transactionLog
 
 #### Defined in
 
-[src/types/testing.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L41)
+[src/types/testing.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L37)
 
 ___
 
@@ -162,4 +162,4 @@ Wait for the indexer to catch up with the given transaction ID
 
 #### Defined in
 
-[src/types/testing.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L43)
+[src/types/testing.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L39)
