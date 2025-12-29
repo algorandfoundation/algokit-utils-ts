@@ -1,8 +1,7 @@
 import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
-import { Address, ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
+import { Address, ProgramSourceMap, ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
-import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import {
   ABI_RETURN_PREFIX,
   BoxName,

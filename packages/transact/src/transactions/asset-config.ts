@@ -1,9 +1,9 @@
 import {
+  Address,
   MAX_ASSET_DECIMALS,
   MAX_ASSET_NAME_LENGTH,
   MAX_ASSET_UNIT_NAME_LENGTH,
   MAX_ASSET_URL_LENGTH,
-  Address,
 } from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 

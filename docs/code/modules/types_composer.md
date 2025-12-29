@@ -57,7 +57,7 @@ Parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L31)
+[src/transactions/method-call.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L29)
 
 ___
 
@@ -81,7 +81,7 @@ Parameters to define an ABI method call create transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L25)
+[src/transactions/method-call.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L23)
 
 ___
 
@@ -105,7 +105,7 @@ Parameters to define an ABI method call delete transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L29)
+[src/transactions/method-call.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L27)
 
 ___
 
@@ -135,7 +135,7 @@ Parameters to define an ABI method call.
 
 #### Defined in
 
-[src/transactions/method-call.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L62)
+[src/transactions/method-call.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L60)
 
 ___
 
@@ -159,7 +159,7 @@ Types that can be used to define a transaction argument for an ABI call transact
 
 #### Defined in
 
-[src/transactions/method-call.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L52)
+[src/transactions/method-call.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L50)
 
 ___
 
@@ -171,7 +171,7 @@ Parameters to define an ABI method call update transaction.
 
 #### Defined in
 
-[src/transactions/method-call.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L27)
+[src/transactions/method-call.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L25)
 
 ___
 
@@ -344,7 +344,7 @@ and return the input error if it cannot or should not transform it.
 
 #### Defined in
 
-[src/types/composer.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L156)
+[src/types/composer.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L157)
 
 ___
 
@@ -362,7 +362,7 @@ ___
 
 ### OnlineKeyRegistrationParams
 
-Ƭ **OnlineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  }
+Ƭ **OnlineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  }
 
 Parameters to define an online key registration transaction.
 
@@ -390,7 +390,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L45)
+[src/transactions/method-call.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L43)
 
 ___
 
@@ -400,7 +400,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L33)
+[src/transactions/method-call.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L31)
 
 ___
 
@@ -410,7 +410,7 @@ ___
 
 #### Defined in
 
-[src/transactions/method-call.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L39)
+[src/transactions/method-call.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L37)
 
 ___
 
@@ -423,7 +423,7 @@ See algod API docs for more information: https://dev.algorand.co/reference/rest-
 
 #### Defined in
 
-[src/types/composer.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L127)
+[src/types/composer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L128)
 
 ___
 
@@ -435,7 +435,7 @@ All options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L133)
+[src/types/composer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L134)
 
 ___
 
@@ -447,7 +447,7 @@ Options to control a simulate request, that does not require transaction signing
 
 #### Defined in
 
-[src/types/composer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L115)
+[src/types/composer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L116)
 
 ___
 
@@ -464,7 +464,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L170)
+[src/types/composer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L171)
 
 ___
 
@@ -488,4 +488,4 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L190)
+[src/types/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L191)

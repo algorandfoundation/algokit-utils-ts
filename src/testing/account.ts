@@ -1,10 +1,7 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
-import {
-  AddressWithSigners,
-  AddressWithTransactionSigner,
-} from '@algorandfoundation/algokit-transact'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
+import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AlgorandClient, Config } from '../'
 import { GetTestAccountParams } from '../types/testing'
 

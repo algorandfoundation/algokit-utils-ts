@@ -8,5 +8,4 @@ export enum EventType {
 export type EventDataMap = {
   [EventType.TxnGroupSimulated]: AVMTracesEventData
   [EventType.AppCompiled]: TealSourcesDebugEventData
-  [key: string]: unknown
 }

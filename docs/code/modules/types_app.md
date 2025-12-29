@@ -57,7 +57,7 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 #### Defined in
 
-[src/types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
+[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
 
 ___
 
@@ -69,7 +69,7 @@ App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
+[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
 
 ___
 
@@ -83,7 +83,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
+[src/types/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L94)
 
 ___
 
@@ -95,7 +95,7 @@ Result from calling an app
 
 #### Defined in
 
-[src/types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
+[src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L223)
+[src/types/app.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L221)
 
 ___
 
@@ -129,7 +129,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L240)
+[src/types/app.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L238)
 
 ___
 
@@ -141,7 +141,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L229)
+[src/types/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L227)
 
 ___
 
@@ -153,7 +153,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L237)
+[src/types/app.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L235)
 
 ## Variables
 
@@ -165,7 +165,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L33)
+[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
 
 ___
 
@@ -177,7 +177,7 @@ The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/ma
 
 #### Defined in
 
-[src/types/app.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L27)
+[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
 
 ___
 
@@ -189,7 +189,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L30)
+[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
 
 ___
 
@@ -201,7 +201,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L24)
+[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)
 
 ___
 
@@ -213,4 +213,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L21)
+[src/types/app.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L19)

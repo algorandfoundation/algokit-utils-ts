@@ -42,3 +42,6 @@ A collection of random notes pop up during the migration process.
 - searchTransactions introduces breaking change
   - Old: searchCriteria is a fn (s: SearchForTransactions) => SearchForTransactions
   - New: searchCriteria is an object type with `SearchForTransactionsCriteria`
+- indexer-lookup was removed from root export
+- indexer-lookup was removed from `import { indexer } from 'utils'` export
+- indexer-lookup was moved to `/indexer-client`

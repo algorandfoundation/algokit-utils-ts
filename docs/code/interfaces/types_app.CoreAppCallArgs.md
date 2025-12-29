@@ -33,7 +33,7 @@ The address of any accounts to load in
 
 #### Defined in
 
-[src/types/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L50)
+[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
 
 ___
 
@@ -45,7 +45,7 @@ IDs of any apps to load into the foreignApps array
 
 #### Defined in
 
-[src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
+[src/types/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L50)
 
 ___
 
@@ -57,7 +57,7 @@ IDs of any assets to load into the foreignAssets array
 
 #### Defined in
 
-[src/types/app.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L54)
+[src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
 
 ___
 
@@ -69,7 +69,7 @@ Any box references to load
 
 #### Defined in
 
-[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
+[src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
 
 ___
 
@@ -81,7 +81,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
+[src/types/app.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L44)
 
 ___
 
@@ -95,4 +95,4 @@ Optional account / account address that should be authorised to transact on beha
 
 #### Defined in
 
-[src/types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)
+[src/types/app.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L57)

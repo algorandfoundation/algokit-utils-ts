@@ -9,6 +9,7 @@ import {
 import type { ABIStructValue, ABIValue } from './abi-value'
 import { StructField } from './arc56-contract'
 import { bigIntToBytes, bytesToBigInt } from './bigint'
+import { getStructValueFromTupleValue, getTupleValueFromStructValue } from './utils'
 
 const STATIC_ARRAY_REGEX = /^([a-z\d[\](),]+)\[(0|[1-9][\d]*)]$/
 const UFIXED_REGEX = /^ufixed([1-9][\d]*)x([1-9][\d]*)$/
@@ -832,61 +833,23 @@ export class ABIStructType extends ABIType {
   }
 
   encode(value: ABIValue): Uint8Array {
-    if (typeof value !== 'object' || Array.isArray(value) || value instanceof Uint8Array || value instanceof Address) {
+    if (value instanceof Uint8Array || value instanceof Address || typeof value !== 'object') {
       throw new Error(`Cannot encode value as ${this.name}: ${value}`)
     }
 
     const tupleType = this.toABITupleType()
-    const tupleValue = this.getTupleValueFromStructValue(value)
+    if (Array.isArray(value)) {
+      return tupleType.encode(value)
+    }
+
+    const tupleValue = getTupleValueFromStructValue(this, value)
     return tupleType.encode(tupleValue)
   }
 
   decode(bytes: Uint8Array): ABIStructValue {
     const tupleType = this.toABITupleType()
     const tupleValue = tupleType.decode(bytes)
-    return this.getStructValueFromTupleValue(tupleValue)
-  }
-
-  private getTupleValueFromStructValue(structValue: ABIStructValue): ABIValue[] {
-    const getTupleValueFromStructFields = (structFields: ABIStructField[], values: ABIValue[]): ABIValue[] => {
-      return structFields.map(({ type }, index) => {
-        // if type is an array of fields, treat as unnamed struct
-        if (Array.isArray(type)) {
-          const value = values[index] as ABIStructValue
-          return getTupleValueFromStructFields(type, Object.values(value))
-        }
-        // if type is struct, treat as struct
-        if (type instanceof ABIStructType) {
-          const value = values[index] as ABIStructValue
-          return getTupleValueFromStructFields(type.structFields, Object.values(value))
-        }
-        return values[index]
-      })
-    }
-
-    return getTupleValueFromStructFields(this.structFields, Object.values(structValue))
-  }
-
-  private getStructValueFromTupleValue(tupleValue: ABIValue[]): ABIStructValue {
-    const getStructFieldValues = (structFields: ABIStructField[], values: ABIValue[]): ABIStructValue => {
-      return Object.fromEntries(
-        structFields.map(({ name, type }, index) => {
-          // When the type is an array of fields, the value must be tuple
-          if (Array.isArray(type)) {
-            const value = values[index] as ABIValue[]
-            return [name, getStructFieldValues(type, value)]
-          }
-          // When the type is a struct, the value must be tuple
-          if (type instanceof ABIStructType) {
-            const value = values[index] as ABIValue[]
-            return [name, getStructFieldValues(type.structFields, value)]
-          }
-          return [name, values[index]]
-        }),
-      )
-    }
-
-    return getStructFieldValues(this.structFields, tupleValue)
+    return getStructValueFromTupleValue(this, tupleValue)
   }
 }
 

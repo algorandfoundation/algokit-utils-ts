@@ -556,12 +556,18 @@ describe('app-client', () => {
     expect(fundResult.confirmation.confirmedRound).toBeGreaterThan(0n)
   })
 
-  test('Retrieve state', async () => {
-    const { testAccount } = localnet.context
+  test('Retrieve global state', async () => {
     const { client } = await deploy()
 
-    await client.send.call({ method: 'set_global', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+    const setGlobalResult = await client.send.call({ method: 'set_global', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
     const globalState = await client.getGlobalState()
+
+    const confirmationGlobalDeltaKvs = setGlobalResult.confirmation.globalStateDelta?.sort().reduce((acc, x) => {
+      return {
+        ...acc,
+        [Buffer.from(x.key).toString('utf-8')]: x.value.action === 1 ? x.value.bytes : x.value.uint,
+      }
+    }, {})
 
     invariant(globalState.int1)
     invariant(globalState.int2)
@@ -573,10 +579,40 @@ describe('app-client', () => {
     expect(globalState.int2.value).toBe(2n)
     expect(globalState.bytes1.value).toBe('asdf')
     expect(globalState.bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
+    expect(confirmationGlobalDeltaKvs).toMatchInlineSnapshot(`
+      {
+        "bytes1": Uint8Array [
+          97,
+          115,
+          100,
+          102,
+        ],
+        "bytes2": Uint8Array [
+          1,
+          2,
+          3,
+          4,
+        ],
+        "int1": 1n,
+        "int2": 2n,
+      }
+    `)
+  })
+
+  test('Retrieve local state', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy()
 
     await client.send.optIn({ method: 'opt_in' })
-    await client.send.call({ method: 'set_local', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+    const setLocalResult = await client.send.call({ method: 'set_local', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
     const localState = await client.getLocalState(testAccount)
+
+    const confirmationLocalDeltaKvs = setLocalResult.confirmation.localStateDelta![0].delta.sort().reduce((acc, x) => {
+      return {
+        ...acc,
+        [Buffer.from(x.key).toString('utf-8')]: x.value.action === 1 ? x.value.bytes : x.value.uint,
+      }
+    }, {})
 
     invariant(localState.local_int1)
     invariant(localState.local_int2)
@@ -588,6 +624,28 @@ describe('app-client', () => {
     expect(localState.local_int2.value).toBe(2n)
     expect(localState.local_bytes1.value).toBe('asdf')
     expect(localState.local_bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
+    expect(confirmationLocalDeltaKvs).toMatchInlineSnapshot(`
+      {
+        "local_bytes1": Uint8Array [
+          97,
+          115,
+          100,
+          102,
+        ],
+        "local_bytes2": Uint8Array [
+          1,
+          2,
+          3,
+          4,
+        ],
+        "local_int1": 1n,
+        "local_int2": 2n,
+      }
+    `)
+  })
+
+  test('Retrieve box state', async () => {
+    const { client } = await deploy()
 
     const boxName1 = new Uint8Array([0, 0, 0, 1])
     const boxName1Base64 = Buffer.from(boxName1).toString('base64')

@@ -19,10 +19,17 @@ import {
   getLocalABIStorageMaps,
 } from '@algorandfoundation/algokit-abi'
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Address, ReadableAddress, getAddress, getApplicationAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
+import {
+  Address,
+  Expand,
+  ProgramSourceMap,
+  ReadableAddress,
+  getAddress,
+  getApplicationAddress,
+  getOptionalAddress,
+} from '@algorandfoundation/algokit-common'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { AddressWithTransactionSigner, OnApplicationComplete, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { ProgramSourceMap } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, binaryStartsWith } from '../util'
@@ -57,7 +64,6 @@ import {
   CommonAppCallParams,
   PaymentParams,
 } from './composer'
-import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
 import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'

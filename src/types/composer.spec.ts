@@ -1,6 +1,7 @@
-import { ABIMethod } from '@algorandfoundation/algokit-abi'
+import { ABIMethod, ABITupleType, ABIType } from '@algorandfoundation/algokit-abi'
 import { Address } from '@algorandfoundation/algokit-common'
-import { beforeEach, describe, expect, test } from 'vitest'
+import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
 
@@ -197,6 +198,39 @@ describe('TransactionComposer', () => {
     expect(txn.appCall?.accountReferences?.[0]).toEqual(Address.fromString(foreignAcct))
   })
 
+  test('should properly handle Uint8Array account reference arg in addAppCallMethodCall', async () => {
+    const { algorand, context } = fixture
+    const sender = context.testAccount
+
+    const method = ABIMethod.fromSignature('add(account)uint8')
+    const account = Address.fromString('E4VCHISDQPLIZWMALIGNPK2B2TERPDMR64MZJXE3UL75MUDXZMADX5OWXM')
+
+    const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+    // Create method call using TransactionComposer.
+    // The foreign apps array argument should be packed before the method argument.
+    composer.addAppCallMethodCall({
+      appId: 7n,
+      method,
+      sender,
+      args: [account.publicKey],
+      accountReferences: [],
+      appReferences: [],
+      assetReferences: [],
+    })
+
+    // The built group should have one txn.
+    const built = await composer.build()
+    const txn = built.transactions[0].txn
+
+    expect(txn.appCall?.appReferences?.length).toBe(0)
+
+    expect(txn.appCall?.assetReferences?.length).toBe(0)
+
+    expect(txn.appCall?.accountReferences?.length).toBe(1)
+    expect(txn.appCall?.accountReferences?.[0]).toEqual(account)
+  })
+
   test('should properly populate foreign array objects in addAppCallMethodCall', async () => {
     const { algorand, context } = fixture
     const sender = context.testAccount
@@ -285,5 +319,154 @@ describe('TransactionComposer', () => {
         accessReferences: [{ appId: 1n }, { assetId: 124n }, { address: Address.fromString(foreignAcct) }],
       }),
     ).toThrow('Cannot specify both `accessReferences` and reference arrays (`appReferences`, `assetReferences`, `boxReferences`).')
+  })
+
+  describe('simulate', () => {
+    test('should not group a single transaction', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+      const simulateResult = await algorand
+        .newGroup()
+        .addPayment({
+          amount: AlgoAmount.MicroAlgo(1000),
+          sender,
+          receiver: sender,
+        })
+        .simulate({ resultOnFailure: true })
+
+      expect(simulateResult).toBeDefined()
+      expect(simulateResult.groupId).toBe('')
+      expect(simulateResult.simulateResponse.txnGroups[0].txnResults[0].txnResult.txn.txn.group).toBeUndefined()
+    })
+  })
+
+  describe('transaction validation', () => {
+    test('should validate transact transactions when adding', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      const txn = new Transaction({
+        type: TransactionType.AssetTransfer,
+        sender,
+        firstValid: 1000n,
+        lastValid: 2000n,
+        assetTransfer: {
+          receiver: sender,
+          assetId: 0n,
+          amount: 1000n,
+        },
+      })
+
+      const composer = algorand.newGroup()
+      expect(() => composer.addTransaction(txn)).toThrow('Asset transfer validation failed: Asset ID must not be 0')
+    })
+
+    test('should validate composer transactions when building', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      const composer = algorand.newGroup()
+      composer.addAssetTransfer({
+        sender,
+        receiver: sender,
+        assetId: 0n,
+        amount: 1000n,
+      })
+
+      await expect(composer.build()).rejects.toThrow('Asset transfer validation failed: Asset ID must not be 0')
+    })
+  })
+
+  describe('send params config handling', () => {
+    test('should not reset when send() is called without params and composer has non-default config', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      // Create composer with non-default config (populateAppCallResources: false instead of default true)
+      const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+      // Spy on the private reset method
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resetSpy = vi.spyOn(composer as any, 'reset')
+
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+
+      await composer.send()
+
+      expect(resetSpy).not.toHaveBeenCalled()
+    })
+
+    test('should reset when send() params explicitly differ from composer config', async () => {
+      const algorand = fixture.context.algorand
+      const sender = fixture.context.testAccount
+
+      // Create composer with populateAppCallResources: false
+      const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+      // Spy on the private reset method
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resetSpy = vi.spyOn(composer as any, 'reset')
+
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+
+      // Send with explicitly different config should trigger reset
+      await composer.send({ populateAppCallResources: true })
+
+      // Reset should have been called because we explicitly passed a different value
+      expect(resetSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('ARC-4 tuple packing', () => {
+    const uint8ArrayType = ABIType.from('uint8[]')
+    const singleArray = uint8ArrayType.encode([1])
+    const twoArrays = new ABITupleType([uint8ArrayType, uint8ArrayType]).encode([[1], [1]])
+    const threeArrays = new ABITupleType([uint8ArrayType, uint8ArrayType, uint8ArrayType]).encode([[1], [1], [1]])
+
+    const testCases: { numAbiArgs: number; expectedTxnArgs: number; expectedLastArg: Uint8Array }[] = [
+      { numAbiArgs: 1, expectedTxnArgs: 2, expectedLastArg: singleArray },
+      { numAbiArgs: 13, expectedTxnArgs: 14, expectedLastArg: singleArray },
+      { numAbiArgs: 14, expectedTxnArgs: 15, expectedLastArg: singleArray },
+      { numAbiArgs: 15, expectedTxnArgs: 16, expectedLastArg: singleArray },
+      { numAbiArgs: 16, expectedTxnArgs: 16, expectedLastArg: twoArrays },
+      { numAbiArgs: 17, expectedTxnArgs: 16, expectedLastArg: threeArrays },
+    ]
+
+    test.each(testCases)(
+      'should handle $numAbiArgs ABI args correctly (expecting $expectedTxnArgs txn args)',
+      async ({ numAbiArgs, expectedTxnArgs, expectedLastArg }) => {
+        const { algorand, context } = fixture
+        const sender = context.testAccount
+
+        // Build method signature with the specified number of uint8[] args
+        const argsSignature = Array(numAbiArgs).fill('uint8[]').join(',')
+        const method = ABIMethod.fromSignature(`args${numAbiArgs}(${argsSignature})void`)
+
+        const composer = algorand.newGroup({ populateAppCallResources: false, coverAppCallInnerTransactionFees: false })
+
+        composer.addAppCallMethodCall({
+          appId: 1234n,
+          method,
+          sender,
+          args: Array(numAbiArgs).fill([1]), // Each arg is [1] (a uint8 array with value 1)
+        })
+
+        const built = await composer.build()
+        const txn = built.transactions[0].txn
+
+        const args = txn.appCall?.args ?? []
+        expect(args.length).toBe(expectedTxnArgs)
+        expect(args[0]).toEqual(method.getSelector())
+        expect(args[args.length - 1]).toEqual(expectedLastArg)
+      },
+    )
   })
 })

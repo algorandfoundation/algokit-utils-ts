@@ -25,4 +25,4 @@ See https://stackoverflow.com/a/69288824
 
 #### Defined in
 
-[src/types/expand.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/expand.ts#L5)
+[packages/common/src/expand.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/expand.ts#L5)

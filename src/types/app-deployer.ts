@@ -1,9 +1,9 @@
 import { ABIReturn } from '@algorandfoundation/algokit-abi'
-import { Address, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
+import { Address, Expand, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
-import * as indexer from '../indexer-lookup'
+import { lookupAccountCreatedApplicationByAddress, searchTransactions } from '../indexer-client'
 import { calculateExtraProgramPages } from '../util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
@@ -25,7 +25,6 @@ import {
   AppUpdateParams,
   TransactionComposer,
 } from './composer'
-import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'
 
 /** Params to specify an update transaction for an app deployment */
@@ -508,7 +507,7 @@ export class AppDeployer {
     }
 
     // Extract all apps that account created
-    const createdApps = (await indexer.lookupAccountCreatedApplicationByAddress(this._indexer, creatorString))
+    const createdApps = (await lookupAccountCreatedApplicationByAddress(this._indexer, creatorString))
       .map((a) => {
         return { id: a.id, createdAtRound: a.createdAtRound!, deleted: a.deleted }
       })
@@ -518,7 +517,7 @@ export class AppDeployer {
     const apps = await Promise.all(
       createdApps.map(async (createdApp) => {
         // Find any app transactions for that app in the round it was created (should always just be a single creation transaction)
-        const appTransactions = await indexer.searchTransactions(this._indexer!, {
+        const appTransactions = await searchTransactions(this._indexer!, {
           minRound: createdApp.createdAtRound,
           txType: TransactionType.AppCall,
           applicationId: createdApp.id,

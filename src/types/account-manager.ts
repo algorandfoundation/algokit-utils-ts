@@ -108,9 +108,8 @@ export class AccountManager {
 
   /**
    * Records the given account (that can sign) against the address of the provided account for later
-   * retrieval and returns a `AddressWithSigner` along with the original account in an `account` property.
+   * retrieval and returns a `AddressWithTransactionSigner` along with the original account in an `account` property.
    */
-
   private signerAccount<T extends AddressWithTransactionSigner | LogicSigAccount | MultisigAccount>(
     account: T,
   ): Address &

@@ -249,8 +249,8 @@ export function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contra
         : method.returns.struct
           ? ABIStructType.fromStruct(method.returns.struct, appSpec.structs)
           : ABIType.from(method.returns.type),
-    desc: method.returns.desc,
-  }
+    description: method.returns.desc,
+  } satisfies ABIMethodReturn
 
   return new ABIMethod({
     name: method.name,

@@ -178,7 +178,7 @@ Note: By default this will log the mnemonic of the account.
 
 #### Defined in
 
-[src/testing/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L23)
+[src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
 
 ▸ **getTestAccount**(`params`, `algorand`): `Promise`\<[`Address`](../classes/index.Address.md) & `AddressWithSigners`\>
 
@@ -202,7 +202,7 @@ The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L37)
+[src/testing/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L34)
 
 ___
 

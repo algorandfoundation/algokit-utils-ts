@@ -30,7 +30,7 @@ Parameters to create an app client
 
 #### Defined in
 
-[src/types/app-factory.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L38)
+[src/types/app-factory.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L36)
 
 ___
 
@@ -43,7 +43,7 @@ Defaults to the ARC-32/ARC-56 app spec name.
 
 #### Defined in
 
-[src/types/app-factory.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L44)
+[src/types/app-factory.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L42)
 
 ___
 
@@ -58,7 +58,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 #### Defined in
 
-[src/types/app-factory.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L35)
+[src/types/app-factory.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L33)
 
 ___
 
@@ -70,7 +70,7 @@ Optional address to use for the account to use as the default sender for calls.
 
 #### Defined in
 
-[src/types/app-factory.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L47)
+[src/types/app-factory.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L45)
 
 ___
 
@@ -82,7 +82,7 @@ Optional signer to use as the default signer for default sender calls (if not sp
 
 #### Defined in
 
-[src/types/app-factory.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L50)
+[src/types/app-factory.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L48)
 
 ___
 
@@ -98,7 +98,7 @@ for each call.
 
 #### Defined in
 
-[src/types/app-factory.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L71)
+[src/types/app-factory.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L69)
 
 ___
 
@@ -114,7 +114,7 @@ for each call.
 
 #### Defined in
 
-[src/types/app-factory.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L80)
+[src/types/app-factory.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L78)
 
 ___
 
@@ -130,7 +130,7 @@ for each call.
 
 #### Defined in
 
-[src/types/app-factory.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L62)
+[src/types/app-factory.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L60)
 
 ___
 
@@ -142,4 +142,4 @@ The version of app that is / will be deployed; defaults to 1.0
 
 #### Defined in
 
-[src/types/app-factory.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L53)
+[src/types/app-factory.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L51)

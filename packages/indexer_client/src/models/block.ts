@@ -68,7 +68,7 @@ export type Block = {
    * \[prev512\] Previous block hash, using SHA-512.
    */
   previousBlockHash512?: Uint8Array
-  rewards?: BlockRewards
+  rewards: BlockRewards
 
   /**
    * \[rnd\] Current round on which this block was appended to the chain.
@@ -93,7 +93,7 @@ export type Block = {
   /**
    * \[txns\] list of transactions corresponding to a given round.
    */
-  transactions?: Transaction[]
+  transactions: Transaction[]
 
   /**
    * \[txn\] TransactionsRoot authenticates the set of transactions appearing in the block. More specifically, it's the root of a merkle tree whose leaves are the block's Txids, in lexicographic order. For the empty block, it's 0. Note that the TxnRoot does not authenticate the signatures on the transactions, only the transactions themselves. Two blocks with the same transactions but in a different order and with different signatures will have the same TxnRoot.
@@ -103,7 +103,7 @@ export type Block = {
   /**
    * \[txn256\] TransactionsRootSHA256 is an auxiliary TransactionRoot, built using a vector commitment instead of a merkle tree, and SHA256 hash function instead of the default SHA512_256. This commitment can be used on environments where only the SHA256 function exists.
    */
-  transactionsRootSha256: Uint8Array
+  transactionsRootSha256?: Uint8Array
 
   /**
    * \[txn512\] TransactionsRootSHA512 is an auxiliary TransactionRoot, built using a vector commitment instead of a merkle tree, and SHA512 hash function instead of the default SHA512_256.
@@ -116,9 +116,9 @@ export type Block = {
    * Specifically, TxnCounter is the number of the next transaction that will be committed after this block.  It is 0 when no transactions have ever been committed (since TxnCounter started being supported).
    */
   txnCounter?: number
-  upgradeState?: BlockUpgradeState
+  upgradeState: BlockUpgradeState
   upgradeVote?: BlockUpgradeVote
-  participationUpdates?: ParticipationUpdates
+  participationUpdates: ParticipationUpdates
 }
 
 export const BlockMeta: ObjectModelMetadata<Block> = {
@@ -176,7 +176,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
     {
       name: 'rewards',
       wireKey: 'rewards',
-      optional: true,
+      optional: false,
       codec: new ObjectModelCodec(BlockRewardsMeta),
     },
     {
@@ -206,7 +206,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
     {
       name: 'transactions',
       wireKey: 'transactions',
-      optional: true,
+      optional: false,
       codec: new ArrayCodec(new ObjectModelCodec(TransactionMeta)),
     },
     {
@@ -218,7 +218,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
     {
       name: 'transactionsRootSha256',
       wireKey: 'transactions-root-sha256',
-      optional: false,
+      optional: true,
       codec: fixedBytes32Codec,
     },
     {
@@ -236,7 +236,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
     {
       name: 'upgradeState',
       wireKey: 'upgrade-state',
-      optional: true,
+      optional: false,
       codec: new ObjectModelCodec(BlockUpgradeStateMeta),
     },
     {
@@ -248,7 +248,7 @@ export const BlockMeta: ObjectModelMetadata<Block> = {
     {
       name: 'participationUpdates',
       wireKey: 'participation-updates',
-      optional: true,
+      optional: false,
       codec: new ObjectModelCodec(ParticipationUpdatesMeta),
     },
   ],
