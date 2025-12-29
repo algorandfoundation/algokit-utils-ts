@@ -1,6 +1,6 @@
 import { ABIMethod, ABITupleType, ABIType } from '@algorandfoundation/algokit-abi'
 import { Address } from '@algorandfoundation/algokit-common'
-import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import { Transaction, TransactionSigner, TransactionType } from '@algorandfoundation/algokit-transact'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
@@ -468,5 +468,170 @@ describe('TransactionComposer', () => {
         expect(args[args.length - 1]).toEqual(expectedLastArg)
       },
     )
+  })
+
+  describe('gatherSignatures', () => {
+    test('should successfully sign a single transaction', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+
+      const signedTxns = await composer.gatherSignatures()
+
+      expect(signedTxns).toHaveLength(1)
+      expect(signedTxns[0]).toBeDefined()
+      expect(signedTxns[0].sig).toBeDefined()
+    })
+
+    test('should successfully sign multiple transactions with the same signer', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(2000),
+      })
+
+      const signedTxns = await composer.gatherSignatures()
+
+      expect(signedTxns).toHaveLength(2)
+      expect(signedTxns[0].sig).toBeDefined()
+      expect(signedTxns[1].sig).toBeDefined()
+    })
+
+    test('should successfully sign transactions with multiple different signers', async () => {
+      const { algorand, context } = fixture
+      const sender1 = context.testAccount
+      const sender2 = await context.generateAccount({ initialFunds: AlgoAmount.Algos(10) })
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender: sender1,
+        receiver: sender2,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+      composer.addPayment({
+        sender: sender2,
+        receiver: sender1,
+        amount: AlgoAmount.MicroAlgo(1000),
+      })
+
+      const signedTxns = await composer.gatherSignatures()
+
+      expect(signedTxns).toHaveLength(2)
+      expect(signedTxns[0].sig).toBeDefined()
+      expect(signedTxns[1].sig).toBeDefined()
+    })
+
+    test('should throw error when no transactions to sign', async () => {
+      const { algorand } = fixture
+
+      const composer = algorand.newGroup()
+
+      await expect(composer.gatherSignatures()).rejects.toThrow('No transactions available to sign')
+    })
+
+    test('should throw error when signer returns fewer signed transactions than expected', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+
+      // Create a faulty signer that returns fewer signed transactions than requested
+      const faultySigner: TransactionSigner = async (_group, indexes) => {
+        // Only return one signed transaction even if multiple are requested
+        const realSigner = algorand.account.getSigner(sender)
+        const sigs = await realSigner(_group, [indexes[0]])
+        return sigs
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: faultySigner,
+      })
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(2000),
+        signer: faultySigner,
+      })
+
+      await expect(composer.gatherSignatures()).rejects.toThrow('Transactions at indexes [1] were not signed')
+    })
+
+    test('should throw error when signer returns null signed transaction', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+
+      // Create a faulty signer that returns array of nulls
+      const faultySigner: TransactionSigner = async (_group, indexes) => {
+        const result = new Array(indexes.length).fill(null) as unknown as Uint8Array[]
+        return result
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: faultySigner,
+      })
+
+      await expect(composer.gatherSignatures()).rejects.toThrow('Transactions at indexes [0] were not signed')
+    })
+
+    test('should throw error when signer returns empty array', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+
+      // Create a faulty signer that returns empty array
+      const faultySigner: TransactionSigner = async () => {
+        return []
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: faultySigner,
+      })
+
+      await expect(composer.gatherSignatures()).rejects.toThrow('Transactions at indexes [0] were not signed')
+    })
+
+    test('should throw error when signer returns invalid signed transaction data', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+
+      // Create a faulty signer that returns invalid data
+      const faultySigner: TransactionSigner = async (_group, indexes) => {
+        return indexes.map(() => new Uint8Array([1, 2, 3]))
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: faultySigner,
+      })
+
+      await expect(composer.gatherSignatures()).rejects.toThrow('Invalid signed transaction at index 0')
+    })
   })
 })

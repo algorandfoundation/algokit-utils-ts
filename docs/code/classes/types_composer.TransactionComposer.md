@@ -1748,7 +1748,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:2157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2157)
+[src/types/composer.ts:2171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2171)
 
 ___
 
@@ -1902,7 +1902,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:2175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2175)
+[src/types/composer.ts:2189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2189)
 
 ___
 

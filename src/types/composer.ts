@@ -2132,24 +2132,38 @@ export class TransactionComposer {
     const signedGroups = await Promise.all(signerEntries.map(([signer, indexes]) => signer(transactions, indexes)))
 
     // Reconstruct signed transactions in original order
-    const signedTransactions = new Array<SignedTransaction>(transactionsWithSigners.length)
+    const rawSignedTransactions: (Uint8Array | null)[] = new Array(transactionsWithSigners.length).fill(null)
     signerEntries.forEach(([, indexes], signerIndex) => {
       const stxs = signedGroups[signerIndex]
       indexes.forEach((txIndex, stxIndex) => {
-        const stxn = decodeSignedTransaction(stxs[stxIndex])
-        validateSignedTransaction(stxn)
-        signedTransactions[txIndex] = stxn
+        rawSignedTransactions[txIndex] = stxs[stxIndex] ?? null
       })
     })
 
     // Verify all transactions were signed
-    const unsignedIndexes = signedTransactions
-      .map((stxn, index) => (stxn === undefined ? index : null))
+    const unsignedIndexes = rawSignedTransactions
+      .map((stxn, index) => (stxn == null ? index : null))
       .filter((index): index is number => index !== null)
 
     if (unsignedIndexes.length > 0) {
       throw new Error(`Transactions at indexes [${unsignedIndexes.join(', ')}] were not signed`)
     }
+
+    // Decode and validate all signed transactions
+    const signedTransactions = rawSignedTransactions.map((stxn, index) => {
+      if (stxn == null) {
+        // This shouldn't happen due to the check above, but ensures type safety
+        throw new Error(`Transaction at index ${index} was not signed`)
+      }
+
+      try {
+        const signedTransaction = decodeSignedTransaction(stxn)
+        validateSignedTransaction(signedTransaction)
+        return signedTransaction
+      } catch (err) {
+        throw new Error(`Invalid signed transaction at index ${index}. ${err}`)
+      }
+    })
 
     return signedTransactions
   }
