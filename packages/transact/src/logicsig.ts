@@ -1,9 +1,9 @@
 import { Address, Addressable, concatArrays, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
 import { MultisigAccount } from './multisig'
 import { AddressWithDelegatedLsigSigner, TransactionSigner } from './signer'
-import { LogicSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
+import { LogicSigSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
+import { logicSigSignatureCodec } from './transactions/signed-transaction-meta'
 import { Transaction } from './transactions/transaction'
-import { logicSignatureCodec } from './transactions/signed-transaction-meta'
 
 const PROGRAM_TAG = new TextEncoder().encode('Program')
 const MSIG_PROGRAM_TAG = new TextEncoder().encode('MsigProgram')
@@ -35,13 +35,13 @@ export class LogicSig implements Addressable {
     this._addr = new Address(h)
   }
 
-  static fromSignature(signature: LogicSignature): LogicSig {
+  static fromSignature(signature: LogicSigSignature): LogicSig {
     return new LogicSig(signature.logic, signature.args || [])
   }
 
   static fromBytes(encodedLsig: Uint8Array): LogicSig {
     const decoded = decodeMsgpack(encodedLsig)
-    const lsigSignature = logicSignatureCodec.decode(decoded, 'msgpack')
+    const lsigSignature = logicSigSignatureCodec.decode(decoded, 'msgpack')
     return LogicSig.fromSignature(lsigSignature)
   }
 
@@ -83,7 +83,7 @@ export class LogicSigAccount extends LogicSig {
   msig?: MultisigSignature
   lmsig?: MultisigSignature
 
-  static fromSignature(signature: LogicSignature, delegator?: Address): LogicSigAccount {
+  static fromSignature(signature: LogicSigSignature, delegator?: Address): LogicSigAccount {
     if (signature.lmsig || signature.msig) {
       const msigAddr = MultisigAccount.fromSignature((signature.lmsig || signature.msig)!).addr
 
@@ -113,7 +113,7 @@ export class LogicSigAccount extends LogicSig {
 
   static fromBytes(encodedLsig: Uint8Array, delegator?: Address): LogicSigAccount {
     const decoded = decodeMsgpack(encodedLsig)
-    const lsigSignature = logicSignatureCodec.decode(decoded, 'msgpack')
+    const lsigSignature = logicSigSignatureCodec.decode(decoded, 'msgpack')
     return LogicSigAccount.fromSignature(lsigSignature, delegator)
   }
 
