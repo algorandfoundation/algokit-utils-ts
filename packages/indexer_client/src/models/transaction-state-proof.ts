@@ -1,5 +1,5 @@
 import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
-import { bigIntCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
+import { numberCodec, ObjectModelCodec } from '@algorandfoundation/algokit-common'
 import type { IndexerStateProofMessage } from './indexer-state-proof-message'
 import { IndexerStateProofMessageMeta } from './indexer-state-proof-message'
 import type { StateProofFields } from './state-proof-fields'
@@ -15,7 +15,7 @@ export type TransactionStateProof = {
   /**
    * \[sptype\] Type of the state proof. Integer representing an entry defined in protocol/stateproof.go
    */
-  stateProofType?: bigint
+  stateProofType?: number
   stateProof?: StateProofFields
   message?: IndexerStateProofMessage
 }
@@ -28,7 +28,7 @@ export const TransactionStateProofMeta: ObjectModelMetadata<TransactionStateProo
       name: 'stateProofType',
       wireKey: 'state-proof-type',
       optional: true,
-      codec: bigIntCodec,
+      codec: numberCodec,
     },
     {
       name: 'stateProof',

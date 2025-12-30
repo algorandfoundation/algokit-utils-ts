@@ -3,7 +3,7 @@
  */
 export type StateProofTransactionFields = {
   /** State proof type */
-  stateProofType?: number
+  stateProofType: number
 
   /** State proof */
   stateProof?: StateProof
