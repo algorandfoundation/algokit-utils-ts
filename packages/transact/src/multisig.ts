@@ -8,6 +8,7 @@ import {
   PUBLIC_KEY_BYTE_LENGTH,
   SIGNATURE_BYTE_LENGTH,
 } from '@algorandfoundation/algokit-common'
+import { DelegatedLsigSigner } from './logicsig'
 import { AddressWithDelegatedLsigSigner, AddressWithTransactionSigner, TransactionSigner } from './signer'
 import {
   decodeSignedTransaction,
@@ -15,9 +16,9 @@ import {
   MultisigSignature,
   MultisigSubsignature,
   SignedTransaction,
+  validateSignedTransaction,
 } from './transactions/signed-transaction'
 import { Transaction } from './transactions/transaction'
-import { DelegatedLsigSigner } from './logicsig'
 
 const toPublicKeys = (addrs: Array<string | Address>): Uint8Array[] => addrs.map((addr) => getAddress(addr).publicKey)
 
@@ -451,7 +452,10 @@ export class MultisigAccount implements AddressWithTransactionSigner, AddressWit
         signedMsigTxns.push(signedMsigTxn)
       }
 
-      return signedMsigTxns.map(encodeSignedTransaction)
+      return signedMsigTxns.map((stxn) => {
+        validateSignedTransaction(stxn)
+        return encodeSignedTransaction(stxn)
+      })
     }
 
     this._lsigSigner = async (lsig, _) => {

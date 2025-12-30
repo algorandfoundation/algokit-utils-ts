@@ -16,13 +16,11 @@ import {
   TransactionType,
   assignFee,
   calculateFee,
-  decodeSignedTransaction,
+  decodeSignedTransactions,
   decodeTransaction,
-  encodeSignedTransactions,
   encodeTransactionRaw,
   groupTransactions,
   makeEmptyTransactionSigner,
-  validateSignedTransaction,
   validateTransaction,
 } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
@@ -250,7 +248,7 @@ export class TransactionComposer {
 
   private transactionsWithSigners?: TransactionWithSigner[]
 
-  private signedTransactions?: SignedTransaction[]
+  private signedTransactions?: Uint8Array[]
 
   // Cache the raw transactions before resource population for error handling
   private rawBuildTransactions?: Transaction[]
@@ -1858,19 +1856,18 @@ export class TransactionComposer {
         })
       }
 
-      const group = this.signedTransactions[0].txn.group
+      const group = this.transactionsWithSigners[0].txn.group
 
       let waitRounds = params?.maxRoundsToWaitForConfirmation
 
       if (waitRounds === undefined) {
         const suggestedParams = await this.getSuggestedParams()
         const firstRound = suggestedParams.firstValid
-        const lastRound = this.signedTransactions.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
+        const lastRound = this.transactionsWithSigners.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
         waitRounds = Number(lastRound - firstRound) + 1
       }
 
-      const encodedTxns = encodeSignedTransactions(this.signedTransactions)
-      await this.algod.sendRawTransaction(encodedTxns)
+      await this.algod.sendRawTransaction(this.signedTransactions)
 
       if (transactionsToSend.length > 1 && group) {
         Config.getLogger(params?.suppressLog).verbose(
@@ -1927,7 +1924,9 @@ export class TransactionComposer {
           txn,
           signer: makeEmptyTransactionSigner(),
         }))
-        const signedTransactions = await this.signTransactions(transactionsWithEmptySigners)
+        const encodedSignedTransactions = await this.signTransactions(transactionsWithEmptySigners)
+        const signedTransactions = decodeSignedTransactions(encodedSignedTransactions)
+
         const simulateResponse = await this.algod.simulateTransactions({
           txnGroups: [{ txns: signedTransactions }],
           allowEmptySignatures: true,
@@ -2030,7 +2029,8 @@ export class TransactionComposer {
     }
 
     const transactions = transactionsWithSigner.map((e) => e.txn)
-    const signedTransactions = await this.signTransactions(transactionsWithSigner)
+    const encodedSignedTransactions = await this.signTransactions(transactionsWithSigner)
+    const signedTransactions = decodeSignedTransactions(encodedSignedTransactions)
 
     const simulateRequest = {
       txnGroups: [
@@ -2097,7 +2097,7 @@ export class TransactionComposer {
     return encoder.encode(arc2Payload)
   }
 
-  public async gatherSignatures(): Promise<SignedTransaction[]> {
+  public async gatherSignatures(): Promise<Uint8Array[]> {
     if (this.signedTransactions) {
       return this.signedTransactions
     }
@@ -2112,7 +2112,7 @@ export class TransactionComposer {
     return this.signedTransactions
   }
 
-  private async signTransactions(transactionsWithSigners: TransactionWithSigner[]): Promise<SignedTransaction[]> {
+  private async signTransactions(transactionsWithSigners: TransactionWithSigner[]): Promise<Uint8Array[]> {
     if (transactionsWithSigners.length === 0) {
       throw new Error('No transactions available to sign')
     }
@@ -2132,16 +2132,16 @@ export class TransactionComposer {
     const signedGroups = await Promise.all(signerEntries.map(([signer, indexes]) => signer(transactions, indexes)))
 
     // Reconstruct signed transactions in original order
-    const rawSignedTransactions: (Uint8Array | null)[] = new Array(transactionsWithSigners.length).fill(null)
+    const encodedSignedTransactions: (Uint8Array | null)[] = new Array(transactionsWithSigners.length).fill(null)
     signerEntries.forEach(([, indexes], signerIndex) => {
       const stxs = signedGroups[signerIndex]
       indexes.forEach((txIndex, stxIndex) => {
-        rawSignedTransactions[txIndex] = stxs[stxIndex] ?? null
+        encodedSignedTransactions[txIndex] = stxs[stxIndex] ?? null
       })
     })
 
     // Verify all transactions were signed
-    const unsignedIndexes = rawSignedTransactions
+    const unsignedIndexes = encodedSignedTransactions
       .map((stxn, index) => (stxn == null ? index : null))
       .filter((index): index is number => index !== null)
 
@@ -2149,23 +2149,7 @@ export class TransactionComposer {
       throw new Error(`Transactions at indexes [${unsignedIndexes.join(', ')}] were not signed`)
     }
 
-    // Decode and validate all signed transactions
-    const signedTransactions = rawSignedTransactions.map((stxn, index) => {
-      if (stxn == null) {
-        // This shouldn't happen due to the check above, but ensures type safety
-        throw new Error(`Transaction at index ${index} was not signed`)
-      }
-
-      try {
-        const signedTransaction = decodeSignedTransaction(stxn)
-        validateSignedTransaction(signedTransaction)
-        return signedTransaction
-      } catch (err) {
-        throw new Error(`Invalid signed transaction at index ${index}. ${err}`)
-      }
-    })
-
-    return signedTransactions
+    return encodedSignedTransactions as Uint8Array[] // The guard above ensures no nulls
   }
 
   private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
