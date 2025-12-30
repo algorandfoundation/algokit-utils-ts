@@ -311,6 +311,7 @@ export const DebugSettingsProf = z.object({
   mutexRate: z.bigint().optional()
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PendingTransactionResponse: z.ZodType<any> = z.lazy(() => z.object({
   assetId: z.bigint().optional(),
   appId: z.bigint().optional(),
@@ -350,6 +351,7 @@ export const SimulationOpcodeTraceUnit = z.object({
   stackAdditions: z.array(AvmValue).optional()
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SimulationTransactionExecTrace: z.ZodType<any> = z.lazy(() => z.object({
   approvalProgramTrace: z.array(SimulationOpcodeTraceUnit).optional(),
   approvalProgramHash: z.instanceof(Uint8Array).optional(),
