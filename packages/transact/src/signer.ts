@@ -1,7 +1,7 @@
 import { Address, Addressable, concatArrays, Expand, ReadableAddress } from '@algorandfoundation/algokit-common'
-import { encodeTransaction, Transaction } from './transactions/transaction'
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
-import { encodeSignedTransaction, SignedTransaction } from './transactions/signed-transaction'
+import { encodeSignedTransaction, SignedTransaction, validateSignedTransaction } from './transactions/signed-transaction'
+import { encodeTransaction, Transaction } from './transactions/transaction'
 
 /** Function for signing a group of transactions */
 export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
@@ -70,7 +70,10 @@ export function generateAddressWithSigners(args: {
       stxns.push(stxn)
     }
 
-    return stxns.map(encodeSignedTransaction)
+    return stxns.map((stxn) => {
+      validateSignedTransaction(stxn)
+      return encodeSignedTransaction(stxn)
+    })
   }
 
   const lsigSigner: DelegatedLsigSigner = async (lsig, msig) => {
@@ -105,6 +108,7 @@ export function makeEmptyTransactionSigner(): TransactionSigner {
         txn: txnGroup[index],
         sig: new Uint8Array(64).fill(0),
       }
+      validateSignedTransaction(stxn)
       unsigned.push(encodeSignedTransaction(stxn))
     }
 

@@ -1,7 +1,13 @@
 import { Address, Addressable, concatArrays, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
 import { MultisigAccount } from './multisig'
 import { AddressWithDelegatedLsigSigner, TransactionSigner } from './signer'
-import { LogicSigSignature, MultisigSignature, SignedTransaction, encodeSignedTransaction } from './transactions/signed-transaction'
+import {
+  LogicSigSignature,
+  MultisigSignature,
+  SignedTransaction,
+  encodeSignedTransaction,
+  validateSignedTransaction,
+} from './transactions/signed-transaction'
 import { logicSigSignatureCodec } from './transactions/signed-transaction-meta'
 import { Transaction } from './transactions/transaction'
 
@@ -137,6 +143,7 @@ export class LogicSigAccount extends LogicSig {
           stxn.authAddress = this.addr
         }
 
+        validateSignedTransaction(stxn)
         signedTxns.push(encodeSignedTransaction(stxn))
       }
 
