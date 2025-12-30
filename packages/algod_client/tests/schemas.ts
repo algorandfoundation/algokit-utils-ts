@@ -2,11 +2,11 @@
  * Auto-generated Zod schemas from OpenAPI specification.
  * Do not edit manually.
  *
- * Generated: 2025-12-28T17:49:41.785Z
+ * Generated: 2025-12-28T18:23:43.020Z
  */
 
-import { z } from 'zod'
 import { Address } from '@algorandfoundation/algokit-common'
+import { z } from 'zod'
 
 // Forward declarations for recursive schemas
 export type PendingTransactionResponseType = z.infer<typeof PendingTransactionResponse>
@@ -596,4 +596,18 @@ export const DryrunResponse = z.object({
   txns: z.array(DryrunTxnResult),
   error: z.string(),
   protocolVersion: z.string()
+})
+
+// =============================================================================
+// Algod-specific extensions
+// =============================================================================
+
+/**
+ * Contains parameters relevant to the creation of a new transaction in a specific network at a specific time.
+ * This extends TransactionParametersResponse by removing lastRound and adding transaction validity fields.
+ */
+export const SuggestedParams = TransactionParametersResponse.omit({ lastRound: true }).extend({
+  flatFee: z.boolean(),
+  firstValid: z.bigint(),
+  lastValid: z.bigint()
 })

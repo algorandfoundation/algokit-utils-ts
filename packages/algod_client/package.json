@@ -21,7 +21,8 @@
     "check-types": "tsc --noEmit",
     "audit": "better-npm-audit audit",
     "format": "prettier --config ../../.prettierrc.cjs --ignore-path ../../.prettierignore --write .",
-    "pre-commit": "run-s check-types lint:fix audit format test"
+    "pre-commit": "run-s check-types lint:fix audit format test",
+    "generate:schema": "npx tsx ../../scripts/generate-zod-schemas.ts --spec ../../.algokit-oas-generator/specs/algod.oas3.json --output ./tests/schemas.ts"
   },
   "dependencies": {},
   "peerDependencies": {},
