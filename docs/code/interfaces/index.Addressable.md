@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[packages/common/src/address.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L127)
+[packages/common/src/address.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L138)
