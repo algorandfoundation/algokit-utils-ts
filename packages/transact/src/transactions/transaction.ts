@@ -319,7 +319,6 @@ export class Transaction implements TransactionParams {
 
     return base32.encode(rawTxId).slice(0, TRANSACTION_ID_LENGTH)
   }
-
 }
 
 // Define Symbol.hasInstance outside the class to avoid Metro/Hermes parser issues
@@ -332,6 +331,7 @@ Object.defineProperty(Transaction, Symbol.hasInstance, {
       return true
     }
     // Then check for the brand symbol (handles cross-realm/serialized instances)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return Boolean(obj && typeof obj === 'object' && TXN_SYMBOL in obj && (obj as any)[TXN_SYMBOL])
   },
 })

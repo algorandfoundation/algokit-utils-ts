@@ -117,7 +117,6 @@ export class Address {
   static zeroAddress(): Address {
     return new Address(new Uint8Array(ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH))
   }
-
 }
 
 // Define Symbol.hasInstance outside the class to avoid Metro/Hermes parser issues
@@ -130,6 +129,7 @@ Object.defineProperty(Address, Symbol.hasInstance, {
       return true
     }
     // Then check for the brand symbol (handles cross-realm/serialized instances)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return Boolean(obj && typeof obj === 'object' && ADDR_SYMBOL in obj && (obj as any)[ADDR_SYMBOL])
   },
 })
