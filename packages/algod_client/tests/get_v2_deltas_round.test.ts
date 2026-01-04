@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
+import { AlgodClient } from '../src'
+import { config, TEST_ROUND } from './config'
 
 describe('GET v2_deltas_ROUND', () => {
   // Polytest Suite: GET v2_deltas_ROUND
@@ -7,13 +8,12 @@ describe('GET v2_deltas_ROUND', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    // TODO: Fix msgpack response handling in PollyJS mock server
+    // Skipped: Requires experimental/archival node features and msgpack response handling
     test('Basic request and response validation', async () => {
-      const client = new AlgodClient({
-        baseUrl: `https://mainnet-api.4160.nodely.dev`,
-      })
+      const client = new AlgodClient(config)
 
-      const result = await client.ledgerStateDelta(55240407n)
+      const result = await client.ledgerStateDelta(TEST_ROUND)
+
       expect(result).toMatchSnapshot()
     })
   })

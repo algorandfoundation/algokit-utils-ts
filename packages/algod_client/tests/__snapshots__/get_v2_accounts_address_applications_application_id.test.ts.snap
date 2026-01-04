@@ -120,6 +120,6 @@ exports[`GET v2_accounts_ADDRESS_applications_APPLICATION-ID > Common Tests > Ba
       "numUints": 0,
     },
   },
-  "round": 57711496n,
+  "round": 58979813n,
 }
 `;

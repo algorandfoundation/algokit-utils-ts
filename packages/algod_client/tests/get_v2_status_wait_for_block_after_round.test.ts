@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { TEST_ROUND, config } from './config'
+import { AlgodClient } from '../src'
+import { config, TEST_ROUND } from './config'
+import { NodeStatusResponse } from './schemas'
 
 describe('GET v2_status_wait-for-block-after_ROUND', () => {
   // Polytest Suite: GET v2_status_wait-for-block-after_ROUND
@@ -13,6 +14,7 @@ describe('GET v2_status_wait-for-block-after_ROUND', () => {
 
       const result = await client.statusAfterBlock(TEST_ROUND)
 
+      NodeStatusResponse.parse(result)
       expect(result).toMatchSnapshot()
     })
   })

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { TEST_ADDRESS, config } from './config'
+import { AlgodClient } from '../src'
+import { config, TEST_ADDRESS } from './config'
+import { Account } from './schemas'
 
 describe('GET v2_accounts_ADDRESS', () => {
   // Polytest Suite: GET v2_accounts_ADDRESS
@@ -13,6 +14,7 @@ describe('GET v2_accounts_ADDRESS', () => {
 
       const result = await client.accountInformation(TEST_ADDRESS)
 
+      Account.parse(result)
       expect(result).toMatchSnapshot()
     })
   })

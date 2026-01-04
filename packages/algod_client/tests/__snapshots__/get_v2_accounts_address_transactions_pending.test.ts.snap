@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_accounts_ADDRESS_transactions_pending > Common Tests > Basic request and response validation 1`] = `
+{
+  "topTransactions": [],
+  "totalTransactions": 0,
+}
+`;
