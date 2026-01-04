@@ -117,11 +117,22 @@ export class Address {
   static zeroAddress(): Address {
     return new Address(new Uint8Array(ALGORAND_ADDRESS_BYTE_LENGTH - ALGORAND_CHECKSUM_BYTE_LENGTH))
   }
-
-  static [Symbol.hasInstance](obj: unknown) {
-    return Boolean(obj && typeof obj === 'object' && ADDR_SYMBOL in obj && obj[ADDR_SYMBOL as keyof typeof obj])
-  }
 }
+
+// Define Symbol.hasInstance outside the class to avoid Metro/Hermes parser issues
+// with static computed property names like `static [Symbol.hasInstance]()`
+// Also must handle Babel's _classCallCheck which uses instanceof before ADDR_SYMBOL is set
+Object.defineProperty(Address, Symbol.hasInstance, {
+  value: function (obj: unknown): boolean {
+    // First check prototype chain (handles Babel's _classCallCheck and normal instances)
+    if (obj instanceof Object && Object.getPrototypeOf(obj) === Address.prototype) {
+      return true
+    }
+    // Then check for the brand symbol (handles cross-realm/serialized instances)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return Boolean(obj && typeof obj === 'object' && ADDR_SYMBOL in obj && (obj as any)[ADDR_SYMBOL])
+  },
+})
 
 export interface Addressable {
   addr: Readonly<Address>

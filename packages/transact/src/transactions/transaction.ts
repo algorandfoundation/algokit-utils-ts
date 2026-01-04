@@ -319,11 +319,22 @@ export class Transaction implements TransactionParams {
 
     return base32.encode(rawTxId).slice(0, TRANSACTION_ID_LENGTH)
   }
-
-  static [Symbol.hasInstance](obj: unknown) {
-    return Boolean(obj && typeof obj === 'object' && TXN_SYMBOL in obj && obj[TXN_SYMBOL as keyof typeof obj])
-  }
 }
+
+// Define Symbol.hasInstance outside the class to avoid Metro/Hermes parser issues
+// with static computed property names like `static [Symbol.hasInstance]()`
+// Also must handle Babel's _classCallCheck which uses instanceof before TXN_SYMBOL is set
+Object.defineProperty(Transaction, Symbol.hasInstance, {
+  value: function (obj: unknown): boolean {
+    // First check prototype chain (handles Babel's _classCallCheck and normal instances)
+    if (obj instanceof Object && Object.getPrototypeOf(obj) === Transaction.prototype) {
+      return true
+    }
+    // Then check for the brand symbol (handles cross-realm/serialized instances)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return Boolean(obj && typeof obj === 'object' && TXN_SYMBOL in obj && (obj as any)[TXN_SYMBOL])
+  },
+})
 
 /**
  * Codec for Transaction class.

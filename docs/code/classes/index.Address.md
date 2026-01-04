@@ -22,7 +22,6 @@ Represents an Algorand address
 - [checksum](index.Address.md#checksum)
 - [equals](index.Address.md#equals)
 - [toString](index.Address.md#tostring)
-- [[hasInstance]](index.Address.md#[hasinstance])
 - [fromString](index.Address.md#fromstring)
 - [zeroAddress](index.Address.md#zeroaddress)
 
@@ -123,26 +122,6 @@ Encode the address into a string form.
 #### Defined in
 
 [packages/common/src/address.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L83)
-
-___
-
-### [hasInstance]
-
-▸ **[hasInstance]**(`obj`): `boolean`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `obj` | `unknown` |
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[packages/common/src/address.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L121)
 
 ___
 

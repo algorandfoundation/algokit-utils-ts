@@ -130,7 +130,7 @@ Re-exports [TealSourcesDebugEventData](types_debugging.md#tealsourcesdebugeventd
 
 #### Defined in
 
-[packages/common/src/address.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L130)
+[packages/common/src/address.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L141)
 
 ## Variables
 
@@ -230,7 +230,7 @@ the decoded form of the address's public key and checksum
 
 #### Defined in
 
-[packages/common/src/address.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L182)
+[packages/common/src/address.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L193)
 
 ___
 
@@ -254,7 +254,7 @@ the address and checksum encoded as a string.
 
 #### Defined in
 
-[packages/common/src/address.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L191)
+[packages/common/src/address.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L202)
 
 ___
 
@@ -314,7 +314,7 @@ ___
 
 #### Defined in
 
-[packages/common/src/address.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L132)
+[packages/common/src/address.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L143)
 
 ___
 
@@ -338,7 +338,7 @@ The address corresponding to that application's escrow account.
 
 #### Defined in
 
-[packages/common/src/address.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L171)
+[packages/common/src/address.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L182)
 
 ___
 
@@ -358,7 +358,7 @@ ___
 
 #### Defined in
 
-[packages/common/src/address.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L142)
+[packages/common/src/address.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L153)
 
 ___
 
