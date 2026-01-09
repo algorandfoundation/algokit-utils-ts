@@ -84,4 +84,31 @@ describe('signer', () => {
 
     runTests(addressWithSigners, generated.ed25519Pubkey)
   })
+
+  test('full example xHD mx bytes flow', async () => {
+    // Generate a new rootkey
+    const { hdRootKey } = await peikertXHdWalletGenerator() // peikertXHdWalletGenerator from algokit-crypto
+
+    // Generate an account at BIP44 path m/44'/283'/0'/0/0
+    const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0) // peikertXHdAccountGenerator from algokit-crypto
+
+    // Generate Algorand-specific signing functions
+    const addressWithSigners = generateAddressWithSigners(generated) // generateAddressWithSigners from algokit-transact
+
+    const message = new TextEncoder().encode('Hello, Algorand!')
+
+    // Sign the message
+    const mxBytesSig = await addressWithSigners.mxBytesSigner(message)
+
+    // Get the bytes that were actually signed
+    const signedBytes = bytesForSigning.mxBytes(message) // bytesForSigning from algokit-transact
+
+    // Verify the signature
+    const isValid = await ed25519Verifier(mxBytesSig, signedBytes, addressWithSigners.addr.publicKey)
+    expect(isValid).toBe(true)
+
+    // Demonstrate it is not a raw signature
+    const isRawValid = await ed25519Verifier(mxBytesSig, message, addressWithSigners.addr.publicKey)
+    expect(isRawValid).toBe(false)
+  })
 })
