@@ -3,7 +3,7 @@ import sha512 from 'js-sha512'
 import { BIP32DerivationType, fromSeed, KeyContext, XHDWalletAPI, harden } from '@algorandfoundation/xhd-wallet-api'
 
 export type RawEd25519Signer = (bytesToSign: Uint8Array) => Promise<Uint8Array>
-export type RawEd25519Verifier = (message: Uint8Array, signature: Uint8Array, publicKey: Uint8Array) => Promise<boolean>
+export type RawEd25519Verifier = (message: Uint8Array, signature: Uint8Array) => Promise<boolean>
 export type Ed25519Generator = (seed?: Uint8Array) => {
   ed25519Pubkey: Uint8Array
   ed25519SecretKey: Uint8Array
@@ -21,12 +21,8 @@ export const nobleEd25519Generator: Ed25519Generator = (seed?: Uint8Array) => {
     return ed.signAsync(bytesToSign, ed25519SecretKey)
   }
 
-  const rawEd25519Verifier: RawEd25519Verifier = async (
-    message: Uint8Array,
-    signature: Uint8Array,
-    publicKey: Uint8Array,
-  ): Promise<boolean> => {
-    return ed.verifyAsync(signature, message, publicKey)
+  const rawEd25519Verifier: RawEd25519Verifier = async (message: Uint8Array, signature: Uint8Array): Promise<boolean> => {
+    return ed.verifyAsync(signature, message, ed25519Pubkey)
   }
 
   return { ed25519Pubkey, ed25519SecretKey, rawEd25519Signer, rawEd25519Verifier }
