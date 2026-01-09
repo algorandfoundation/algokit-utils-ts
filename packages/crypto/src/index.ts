@@ -2,17 +2,48 @@ import * as ed from '@noble/ed25519'
 import sha512 from 'js-sha512'
 import { BIP32DerivationType, fromSeed, KeyContext, XHDWalletAPI, harden } from '@algorandfoundation/xhd-wallet-api'
 
+export type RawEd25519Verifier = (signature: Uint8Array, message: Uint8Array, pubkey: Uint8Array) => Promise<boolean>
+
+/**
+ * Verifies an ed25519 signature using the @noble/ed25519 implementation.
+ *
+ * @param message - The original message that was signed.
+ * @param signature - The ed25519 signature to verify.
+ * @returns A promise that resolves to true if the signature is valid, false otherwise.
+ */
+export const nobleEd25519Verifier: RawEd25519Verifier = async (
+  signature: Uint8Array,
+  message: Uint8Array,
+  pubkey: Uint8Array,
+): Promise<boolean> => {
+  return ed.verifyAsync(signature, message, pubkey)
+}
+
+/**
+ * Verifies an ed25519 signature using the default ed25519 implementation (currently @noble/ed25519).
+ * The implementation may change in the future. To explicitly use the @noble/ed25519 implementation, use `nobleEd25519Verifier`.
+ *
+ * @param message - The original message that was signed.
+ * @param signature - The ed25519 signature to verify.
+ * @returns A promise that resolves to true if the signature is valid, false otherwise.
+ */
+export const ed25519Verifier: RawEd25519Verifier = nobleEd25519Verifier
+
 export type RawEd25519Signer = (bytesToSign: Uint8Array) => Promise<Uint8Array>
-export type RawEd25519Verifier = (message: Uint8Array, signature: Uint8Array) => Promise<boolean>
 export type Ed25519Generator = (seed?: Uint8Array) => {
   ed25519Pubkey: Uint8Array
   ed25519SecretKey: Uint8Array
   rawEd25519Signer: RawEd25519Signer
-  rawEd25519Verifier: RawEd25519Verifier
 }
 
 ed.hashes.sha512 = (msg: ed.Bytes) => new Uint8Array(sha512.sha512.digest(msg))
 
+/**
+ * Generates an ed25519 keypair and a raw signer function using the @noble/ed25519 implementation.
+ *
+ * @param seed - Optional seed for key generation. If not provided, a random seed will be used.
+ * @returns An object containing the ed25519 public key, secret key, and a raw signer function.
+ */
 export const nobleEd25519Generator: Ed25519Generator = (seed?: Uint8Array) => {
   const ed25519SecretKey = ed.utils.randomSecretKey(seed)
   const ed25519Pubkey = ed.getPublicKey(ed25519SecretKey)
@@ -21,23 +52,26 @@ export const nobleEd25519Generator: Ed25519Generator = (seed?: Uint8Array) => {
     return ed.signAsync(bytesToSign, ed25519SecretKey)
   }
 
-  const rawEd25519Verifier: RawEd25519Verifier = async (message: Uint8Array, signature: Uint8Array): Promise<boolean> => {
-    return ed.verifyAsync(signature, message, ed25519Pubkey)
-  }
-
-  return { ed25519Pubkey, ed25519SecretKey, rawEd25519Signer, rawEd25519Verifier }
+  return { ed25519Pubkey, ed25519SecretKey, rawEd25519Signer }
 }
+
+/**
+ * Generates an ed25519 keypair and a raw signer function using the default ed25519 implementation (currently @noble/ed25519).
+ * The implementation may change in the future. To explicitly use the @noble/ed25519 implementation, use `nobleEd25519Generator`.
+ *
+ * @param seed - Optional seed for key generation. If not provided, a random seed will be used.
+ * @returns An object containing the ed25519 public key, secret key, and a raw signer function.
+ */
+export const ed25519Generator: Ed25519Generator = nobleEd25519Generator
 
 const xhd = new XHDWalletAPI()
 export type BIP44Path = [number, number, number, number, number]
 
 export type RawHdWalletSigner = (bytesToSign: Uint8Array, bip44Path: BIP44Path) => Promise<Uint8Array>
-export type RawHdWalletVerifier = (message: Uint8Array, signature: Uint8Array, bip44Path: BIP44Path) => Promise<boolean>
 
 export type HdWalletGenerator = (seed?: Uint8Array) => Promise<{
   hdRootKey: Uint8Array
   rawHdSigner: RawHdWalletSigner
-  rawHdVerifier: RawHdWalletVerifier
 }>
 
 const verifyPath = (bip44Path: BIP44Path) => {
@@ -74,14 +108,7 @@ export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8A
     return xhd.signAlgoTransaction(rootKey, KeyContext.Address, account, index, bytesToSign, BIP32DerivationType.Peikert)
   }
 
-  const rawHdVerifier: RawHdWalletVerifier = async (message: Uint8Array, signature: Uint8Array, bip44Path: BIP44Path): Promise<boolean> => {
-    verifyPath(bip44Path)
-    const { account, index } = getPathComponents(bip44Path)
-    const publicKey = await xhd.keyGen(rootKey, KeyContext.Address, account, index, BIP32DerivationType.Peikert)
-    return ed.verifyAsync(signature, message, publicKey)
-  }
-
-  return { hdRootKey: rootKey, rawHdSigner, rawHdVerifier }
+  return { hdRootKey: rootKey, rawHdSigner }
 }
 
 export type HdAccountGenerator = (
@@ -92,7 +119,6 @@ export type HdAccountGenerator = (
   ed25519Pubkey: Uint8Array
   bip44Path: BIP44Path
   rawEd25519Signer: RawEd25519Signer
-  rawEd25519Verifier: RawEd25519Verifier
 }>
 
 export const peikertXHdAccountGenerator: HdAccountGenerator = async (rootKey: Uint8Array, account: number, index: number) => {
@@ -104,9 +130,5 @@ export const peikertXHdAccountGenerator: HdAccountGenerator = async (rootKey: Ui
 
   const bip44Path: BIP44Path = [harden(44), harden(283), harden(account), 0, index]
 
-  const rawEd25519Verifier: RawEd25519Verifier = async (message: Uint8Array, signature: Uint8Array): Promise<boolean> => {
-    return ed.verifyAsync(signature, message, ed25519Pubkey)
-  }
-
-  return { ed25519Pubkey, rawEd25519Signer, bip44Path, rawEd25519Verifier }
+  return { ed25519Pubkey, rawEd25519Signer, bip44Path }
 }

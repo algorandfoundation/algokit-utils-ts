@@ -1,8 +1,50 @@
 import { describe, expect, test } from 'vitest'
-import * as nacl from 'tweetnacl'
+import nacl from 'tweetnacl'
 import * as ed from '@noble/ed25519'
-import { generateAddressWithSigners } from './signer'
-import { nobleEd25519Generator, peikertXHdAccountGenerator, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
+import { AddressWithSigners, bytesForSigning, generateAddressWithSigners } from './signer'
+import {
+  ed25519Generator,
+  ed25519Verifier,
+  nobleEd25519Generator,
+  nobleEd25519Verifier,
+  peikertXHdAccountGenerator,
+  peikertXHdWalletGenerator,
+} from '@algorandfoundation/algokit-crypto'
+import { LogicSig, LogicSigAccount } from './logicsig'
+import { Transaction } from './transactions/transaction'
+import { TransactionType } from './transactions/transaction-type'
+import { decodeSignedTransaction } from './transactions/signed-transaction'
+
+const lsig = new LogicSig(new Uint8Array([1, 2, 3, 4, 5]))
+const txn = new Transaction({
+  type: TransactionType.Payment,
+  sender: lsig.address(),
+  firstValid: 1n,
+  lastValid: 1000n,
+})
+
+async function runTests(addressWithSigners: AddressWithSigners, expectedPubkey: Uint8Array) {
+  const { addr, lsigSigner, signer, programDataSigner, mxBytesSigner } = addressWithSigners
+
+  expect(addr.publicKey).toEqual(expectedPubkey)
+  expect(ed25519Verifier).toEqual(nobleEd25519Verifier)
+
+  const stxns = await signer([txn], [0])
+  const sig = decodeSignedTransaction(stxns[0]).sig
+  expect(await ed25519Verifier(sig!, bytesForSigning.transaction(txn), addr.publicKey)).toBe(true)
+
+  const lsigAccount = new LogicSigAccount(lsig.logic, [], addr)
+  const lsigSignResult = (await lsigSigner(lsigAccount)) as { sig: Uint8Array }
+  expect(await ed25519Verifier(lsigSignResult.sig, bytesForSigning.lsigForDelegation(lsig), addr.publicKey)).toBe(true)
+
+  const programData = new Uint8Array([10, 20, 30])
+  const programDataSig = await programDataSigner(programData, lsig)
+  expect(await ed25519Verifier(programDataSig, bytesForSigning.programData(lsig, programData), addr.publicKey)).toBe(true)
+
+  const mxBytes = new Uint8Array([5, 4, 3, 2, 1])
+  const mxBytesSig = await mxBytesSigner(mxBytes)
+  expect(await ed25519Verifier(mxBytesSig, bytesForSigning.mxBytes(mxBytes), addr.publicKey)).toBe(true)
+}
 
 describe('signer', () => {
   test('generateSigners with tweetnacl', async () => {
@@ -10,14 +52,9 @@ describe('signer', () => {
     const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
       return nacl.sign.detached(bytesToSign, keypair.secretKey)
     }
-
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner })
 
-    expect(addressWithSigners.addr.publicKey).toEqual(keypair.publicKey)
-    expect(addressWithSigners.signer).toBeDefined()
-    expect(addressWithSigners.lsigSigner).toBeDefined()
-    expect(addressWithSigners.programDataSigner).toBeDefined()
-    expect(addressWithSigners.mxBytesSigner).toBeDefined()
+    runTests(addressWithSigners, keypair.publicKey)
   })
 
   test('generateSigners with @noble/ed25519', async () => {
@@ -26,38 +63,25 @@ describe('signer', () => {
     const rawSigner = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
       return ed.signAsync(bytesToSign, privateKey)
     }
-
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: publicKey, rawEd25519Signer: rawSigner })
 
-    expect(addressWithSigners.addr.publicKey).toEqual(publicKey)
-    expect(addressWithSigners.signer).toBeDefined()
-    expect(addressWithSigners.lsigSigner).toBeDefined()
-    expect(addressWithSigners.programDataSigner).toBeDefined()
-    expect(addressWithSigners.mxBytesSigner).toBeDefined()
+    runTests(addressWithSigners, publicKey)
   })
 
   test('generateSigners with nobleEd25519Generator', async () => {
-    const generated = nobleEd25519Generator()
+    expect(ed25519Generator).toEqual(nobleEd25519Generator)
 
+    const generated = ed25519Generator()
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    expect(addressWithSigners.addr.publicKey).toEqual(generated.ed25519Pubkey)
-    expect(addressWithSigners.signer).toBeDefined()
-    expect(addressWithSigners.lsigSigner).toBeDefined()
-    expect(addressWithSigners.programDataSigner).toBeDefined()
-    expect(addressWithSigners.mxBytesSigner).toBeDefined()
+    runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('generateSigners with peikertXHdAccountGenerator', async () => {
     const { hdRootKey } = await peikertXHdWalletGenerator()
     const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0)
-
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    expect(addressWithSigners.addr.publicKey).toEqual(generated.ed25519Pubkey)
-    expect(addressWithSigners.signer).toBeDefined()
-    expect(addressWithSigners.lsigSigner).toBeDefined()
-    expect(addressWithSigners.programDataSigner).toBeDefined()
-    expect(addressWithSigners.mxBytesSigner).toBeDefined()
+    runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 })
