@@ -36,10 +36,12 @@ const xhd = new XHDWalletAPI()
 export type BIP44Path = [number, number, number, number, number]
 
 export type RawHdWalletSigner = (bytesToSign: Uint8Array, bip44Path: BIP44Path) => Promise<Uint8Array>
+export type RawHdWalletVerifier = (message: Uint8Array, signature: Uint8Array, bip44Path: BIP44Path) => Promise<boolean>
 
 export type HdWalletGenerator = (seed?: Uint8Array) => Promise<{
   hdRootKey: Uint8Array
   rawHdSigner: RawHdWalletSigner
+  rawHdVerifier: RawHdWalletVerifier
 }>
 
 const verifyPath = (bip44Path: BIP44Path) => {
@@ -76,7 +78,14 @@ export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8A
     return xhd.signAlgoTransaction(rootKey, KeyContext.Address, account, index, bytesToSign, BIP32DerivationType.Peikert)
   }
 
-  return { hdRootKey: rootKey, rawHdSigner }
+  const rawHdVerifier: RawHdWalletVerifier = async (message: Uint8Array, signature: Uint8Array, bip44Path: BIP44Path): Promise<boolean> => {
+    verifyPath(bip44Path)
+    const { account, index } = getPathComponents(bip44Path)
+    const publicKey = await xhd.keyGen(rootKey, KeyContext.Address, account, index, BIP32DerivationType.Peikert)
+    return ed.verifyAsync(signature, message, publicKey)
+  }
+
+  return { hdRootKey: rootKey, rawHdSigner, rawHdVerifier }
 }
 
 export type HdAccountGenerator = (
@@ -87,6 +96,7 @@ export type HdAccountGenerator = (
   ed25519Pubkey: Uint8Array
   bip44Path: BIP44Path
   rawEd25519Signer: RawEd25519Signer
+  rawEd25519Verifier: RawEd25519Verifier
 }>
 
 export const peikertXHdAccountGenerator: HdAccountGenerator = async (rootKey: Uint8Array, account: number, index: number) => {
@@ -98,5 +108,9 @@ export const peikertXHdAccountGenerator: HdAccountGenerator = async (rootKey: Ui
 
   const bip44Path: BIP44Path = [harden(44), harden(283), harden(account), 0, index]
 
-  return { ed25519Pubkey, rawEd25519Signer, bip44Path }
+  const rawEd25519Verifier: RawEd25519Verifier = async (message: Uint8Array, signature: Uint8Array): Promise<boolean> => {
+    return ed.verifyAsync(signature, message, ed25519Pubkey)
+  }
+
+  return { ed25519Pubkey, rawEd25519Signer, bip44Path, rawEd25519Verifier }
 }
