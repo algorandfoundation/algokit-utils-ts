@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import * as nacl from 'tweetnacl'
 import * as ed from '@noble/ed25519'
 import { generateAddressWithSigners } from './signer'
-import { nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
+import { nobleEd25519Generator, peikertXHdAccountGenerator, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
 
 describe('signer', () => {
   test('generateSigners with tweetnacl', async () => {
@@ -37,7 +37,20 @@ describe('signer', () => {
   })
 
   test('generateSigners with nobleEd25519Generator', async () => {
-    const generated = await nobleEd25519Generator()
+    const generated = nobleEd25519Generator()
+
+    const addressWithSigners = generateAddressWithSigners(generated)
+
+    expect(addressWithSigners.addr.publicKey).toEqual(generated.ed25519Pubkey)
+    expect(addressWithSigners.signer).toBeDefined()
+    expect(addressWithSigners.lsigSigner).toBeDefined()
+    expect(addressWithSigners.programDataSigner).toBeDefined()
+    expect(addressWithSigners.mxBytesSigner).toBeDefined()
+  })
+
+  test('generateSigners with peikertXHdAccountGenerator', async () => {
+    const { hdRootKey } = await peikertXHdWalletGenerator()
+    const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0)
 
     const addressWithSigners = generateAddressWithSigners(generated)
 

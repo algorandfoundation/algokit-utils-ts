@@ -23,6 +23,7 @@
     "format": "prettier --config ../../.prettierrc.cjs --ignore-path ../../.prettierignore --write .",
     "pre-commit": "run-s check-types lint:fix audit format test"
   },
-  "dependencies": {},
-  "peerDependencies": {}
+  "dependencies": {
+    "@algorandfoundation/xhd-wallet-api": "file:algorandfoundation-xhd-wallet-api-1.0.3.tgz"
+  }
 }
