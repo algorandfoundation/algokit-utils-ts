@@ -12,6 +12,7 @@ export default defineConfig({
       '@algorandfoundation/algokit-kmd-client': path.resolve(__dirname, 'packages/kmd_client/src'),
       '@algorandfoundation/algokit-testing': path.resolve(__dirname, 'packages/testing/src'),
       '@algorandfoundation/algokit-algo25': path.resolve(__dirname, 'packages/algo25/src'),
+      '@algorandfoundation/algokit-crypto': path.resolve(__dirname, 'packages/crypto/src'),
     },
   },
   test: {

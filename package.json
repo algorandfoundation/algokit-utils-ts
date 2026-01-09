@@ -61,6 +61,11 @@
       "import": "./algo25/index.mjs",
       "require": "./algo25/index.js"
     },
+    "./crypto": {
+      "types": "./crypto/index.d.ts",
+      "import": "./crypto/index.mjs",
+      "require": "./crypto/index.js"
+    },
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
@@ -105,7 +110,6 @@
     "hi-base32": "^0.5.1",
     "js-sha512": "^0.8.0",
     "json-bigint": "^1.0.0",
-    "tweetnacl": "^1.0.3",
     "vlq": "^2.0.4"
   },
   "devDependencies": {

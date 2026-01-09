@@ -2,6 +2,7 @@ import { Address, Addressable, concatArrays, Expand, ReadableAddress } from '@al
 import { DelegatedLsigSigner, ProgramDataSigner } from './logicsig'
 import { encodeSignedTransaction, SignedTransaction, validateSignedTransaction } from './transactions/signed-transaction'
 import { encodeTransaction, Transaction } from './transactions/transaction'
+import { RawEd25519Signer } from '@algorandfoundation/algokit-crypto'
 
 /** Function for signing a group of transactions */
 export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
@@ -46,7 +47,7 @@ const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 export function generateAddressWithSigners(args: {
   ed25519Pubkey: Uint8Array
   sendingAddress?: Address
-  rawEd25519Signer: (bytesToSign: Uint8Array) => Promise<Uint8Array>
+  rawEd25519Signer: RawEd25519Signer
 }): AddressWithSigners {
   const { ed25519Pubkey, rawEd25519Signer } = args
   const authAddr = new Address(ed25519Pubkey)

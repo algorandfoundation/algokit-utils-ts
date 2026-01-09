@@ -1,7 +1,7 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, LogicSigAccount, TransactionSigner, MultisigAccount } from '@algorandfoundation/algokit-transact'
-import { AccountManager } from './account-manager'
+import { AccountManager, AccountManagerConfig } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
@@ -10,6 +10,7 @@ import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './composer'
 import { AlgoConfig } from './network-client'
+import { nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
 
 /**
  * A client that brokers easy access to Algorand functionality.
@@ -36,9 +37,9 @@ export class AlgorandClient {
    */
   private _errorTransformers: Set<ErrorTransformer> = new Set()
 
-  private constructor(config: AlgoConfig | AlgoSdkClients) {
+  private constructor(config: (AlgoConfig | AlgoSdkClients) & Partial<AccountManagerConfig>) {
     this._clientManager = new ClientManager(config, this)
-    this._accountManager = new AccountManager(this._clientManager)
+    this._accountManager = new AccountManager(this._clientManager, { ed25519Generator: config.ed25519Generator ?? nobleEd25519Generator })
     this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, (config) => this.newGroup(config))
     this._transactionSender = new AlgorandClientTransactionSender((config) => this.newGroup(config), this._assetManager, this._appManager)

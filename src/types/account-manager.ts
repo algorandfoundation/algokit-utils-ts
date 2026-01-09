@@ -20,6 +20,7 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
+import { Ed25519Generator, nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -45,12 +46,17 @@ export const getAccountTransactionSigner = memoize(function (
   return account.signer
 })
 
+export interface AccountManagerConfig {
+  ed25519Generator: Ed25519Generator
+}
+
 /** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
 export class AccountManager {
   private _clientManager: ClientManager
   private _kmdAccountManager: KmdAccountManager
   private _accounts: { [address: string]: AddressWithTransactionSigner } = {}
   private _defaultSigner?: TransactionSigner
+  private _ed25519Generator: Ed25519Generator
 
   /**
    * Create a new account manager.
@@ -60,9 +66,10 @@ export class AccountManager {
    * const accountManager = new AccountManager(clientManager)
    * ```
    */
-  constructor(clientManager: ClientManager) {
+  constructor(clientManager: ClientManager, config: AccountManagerConfig) {
     this._clientManager = clientManager
     this._kmdAccountManager = new KmdAccountManager(clientManager)
+    this._ed25519Generator = config.ed25519Generator
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<SuggestedParams>) {
@@ -286,17 +293,14 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
+  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): Promise<AddressWithTransactionSigner> {
     const seed = seedFromMnemonic(mnemonicSecret)
 
-    const keypair = nacl.sign.keyPair.fromSeed(seed)
+    const generated = this._ed25519Generator(seed)
 
     const addrWithSigners = generateAddressWithSigners({
-      ed25519Pubkey: keypair.publicKey,
+      ...generated,
       sendingAddress: getOptionalAddress(sender),
-      rawEd25519Signer: async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
-        return nacl.sign.detached(bytesToSign, keypair.secretKey)
-      },
     })
 
     return this.signerAccount(addrWithSigners)

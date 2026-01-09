@@ -22,7 +22,8 @@
       "@algorandfoundation/algokit-indexer-client": ["packages/indexer_client/src"],
       "@algorandfoundation/algokit-kmd-client": ["packages/kmd_client/src"],
       "@algorandfoundation/algokit-testing": ["packages/testing/src"],
-      "@algorandfoundation/algokit-algo25": ["packages/algo25/src"]
+      "@algorandfoundation/algokit-algo25": ["packages/algo25/src"],
+      "@algorandfoundation/algokit-crypto": ["packages/crypto/src"]
     }
   }
 }
