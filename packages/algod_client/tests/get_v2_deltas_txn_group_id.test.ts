@@ -8,6 +8,10 @@ describe('GET v2_deltas_txn_group_ID', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
+    test("Basic request and response validation", () => {
+      throw new Error("TEST NOT IMPLEMENTED");
+    });
+
     // Skipped: Requires experimental/archival node features with complex LedgerStateDelta schema
     test.skip('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
