@@ -6,7 +6,7 @@ To see some usage examples check out the [automated tests](../../src/types/clien
 
 ## `ClientManager`
 
-The [`ClientManager`](../code/classes/types_client_manager.ClientManager.md) is a class that is used to manage client instances.
+The [`ClientManager`](.../api/classes/types_client_manager.ClientManager.md) is a class that is used to manage client instances.
 
 To get an instance of `ClientManager` you can get it from either [`AlgorandClient`](./algorand-client.md) via `algorand.client` or instantiate it directly:
 
@@ -25,7 +25,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 ## Network configuration
 
-The network configuration is specified using the [`AlgoClientConfig`](../code/interfaces/types_network_client.AlgoClientConfig.md) interface.
+The network configuration is specified using the [`AlgoClientConfig`](.../api/interfaces/types_network_client.AlgoClientConfig.md) interface.
 
 There are a number of ways to produce one of these configuration objects:
 
@@ -41,11 +41,11 @@ There are a number of ways to produce one of these configuration objects:
     token: 'SECRET_TOKEN'
   }
   ```
-- [`ClientManager.getConfigFromEnvironmentOrLocalNet()`](../code/classes/types_client_manager.ClientManager.md#getconfigfromenvironmentorlocalnet) - Loads the Algod client config, the Indexer client config and the Kmd config from well-known environment variables or if not found then default LocalNet; this is useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
-- [`ClientManager.getAlgodConfigFromEnvironment()`](../code/classes/types_client_manager.ClientManager.md#getalgodconfigfromenvironment) - Loads an Algod client config from well-known environment variables
-- [`ClientManager.getIndexerConfigFromEnvironment()`](../code/classes/types_client_manager.ClientManager.md#getindexerconfigfromenvironment) - Loads an Indexer client config from well-known environment variables; useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
-- [`ClientManager.getAlgoNodeConfig(network, config)`](../code/classes/types_client_manager.ClientManager.md#getalgonodeconfig) - Loads an Algod or indexer config against [AlgoNode free tier](https://nodely.io/docs/free/start) to either MainNet or TestNet
-- [`ClientManager.getDefaultLocalNetConfig(configOrPort)`](../code/classes/types_client_manager.ClientManager.md#getdefaultlocalnetconfig) - Loads an Algod, Indexer or Kmd config against [LocalNet](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/localnet.md) using the default configuration
+- [`ClientManager.getConfigFromEnvironmentOrLocalNet()`](.../api/classes/types_client_manager.ClientManager.md#getconfigfromenvironmentorlocalnet) - Loads the Algod client config, the Indexer client config and the Kmd config from well-known environment variables or if not found then default LocalNet; this is useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
+- [`ClientManager.getAlgodConfigFromEnvironment()`](.../api/classes/types_client_manager.ClientManager.md#getalgodconfigfromenvironment) - Loads an Algod client config from well-known environment variables
+- [`ClientManager.getIndexerConfigFromEnvironment()`](.../api/classes/types_client_manager.ClientManager.md#getindexerconfigfromenvironment) - Loads an Indexer client config from well-known environment variables; useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
+- [`ClientManager.getAlgoNodeConfig(network, config)`](.../api/classes/types_client_manager.ClientManager.md#getalgonodeconfig) - Loads an Algod or indexer config against [AlgoNode free tier](https://nodely.io/docs/free/start) to either MainNet or TestNet
+- [`ClientManager.getDefaultLocalNetConfig(configOrPort)`](.../api/classes/types_client_manager.ClientManager.md#getdefaultlocalnetconfig) - Loads an Algod, Indexer or Kmd config against [LocalNet](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/localnet.md) using the default configuration
 
 ## Clients
 
@@ -53,15 +53,15 @@ There are a number of ways to produce one of these configuration objects:
 
 Once you have the configuration for a client, to get a new client you can use the following functions:
 
-- [`ClientManager.getAlgoClient(config)`](../code/classes/types_client_manager.ClientManager.md#getalgoclient) - Returns an Algod client for the given configuration; the client automatically retries on transient HTTP errors
-- [`ClientManager.getIndexerClient(config, overrideIntDecoding)`](../code/classes/types_client_manager.ClientManager.md#getindexerclient) - Returns an Indexer client for given configuration
-- [`ClientManager.getKmdClient(config)`](../code/classes/types_client_manager.ClientManager.md#getkmdclient) - Returns a Kmd client for the given configuration
+- [`ClientManager.getAlgoClient(config)`](.../api/classes/types_client_manager.ClientManager.md#getalgoclient) - Returns an Algod client for the given configuration; the client automatically retries on transient HTTP errors
+- [`ClientManager.getIndexerClient(config, overrideIntDecoding)`](.../api/classes/types_client_manager.ClientManager.md#getindexerclient) - Returns an Indexer client for given configuration
+- [`ClientManager.getKmdClient(config)`](.../api/classes/types_client_manager.ClientManager.md#getkmdclient) - Returns a Kmd client for the given configuration
 
 You can also shortcut needing to write the likes of `ClientManager.getAlgoClient(ClientManager.getAlgodConfigFromEnvironment())` with environment shortcut methods:
 
-- [`ClientManager.getAlgodClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getalgodclientfromenvironment) - Returns an Algod client by loading the config from environment variables
-- [`ClientManager.getIndexerClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getindexerclientfromenvironment) - Returns an indexer client by loading the config from environment variables
-- [`ClientManager.getKmdClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getkmdclientfromenvironment) - Returns a kmd client by loading the config from environment variables
+- [`ClientManager.getAlgodClientFromEnvironment(config)`](.../api/classes/types_client_manager.ClientManager.md#getalgodclientfromenvironment) - Returns an Algod client by loading the config from environment variables
+- [`ClientManager.getIndexerClientFromEnvironment(config)`](.../api/classes/types_client_manager.ClientManager.md#getindexerclientfromenvironment) - Returns an indexer client by loading the config from environment variables
+- [`ClientManager.getKmdClientFromEnvironment(config)`](.../api/classes/types_client_manager.ClientManager.md#getkmdclientfromenvironment) - Returns a kmd client by loading the config from environment variables
 
 ### Accessing SDK clients via ClientManager instance
 
@@ -95,11 +95,11 @@ You can also create a [TestNet dispenser API client instance](./dispenser-client
 
 ## Automatic retry
 
-When receiving an Algod or Indexer client from AlgoKit Utils, it will be a special wrapper client that handles retrying transient failures. This is done via the [`AlgoHttpClientWithRetry`](../code/classes/types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md) class.
+When receiving an Algod or Indexer client from AlgoKit Utils, it will be a special wrapper client that handles retrying transient failures. This is done via the [`AlgoHttpClientWithRetry`](.../api/classes/types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md) class.
 
 ## Network information
 
-To get information about the current network you are connected to, you can use the [`network()`](../code/classes/types_client_manager.ClientManager.md#network) method on `ClientManager` or the `is{Network}()` methods (which in turn call `network()`) as shown below (expressed here as `algorand.client` to denote the syntax via an [`AlgorandClient`](./algorand-client.md)):
+To get information about the current network you are connected to, you can use the [`network()`](.../api/classes/types_client_manager.ClientManager.md#network) method on `ClientManager` or the `is{Network}()` methods (which in turn call `network()`) as shown below (expressed here as `algorand.client` to denote the syntax via an [`AlgorandClient`](./algorand-client.md)):
 
 ```typescript
 const algorand = AlgorandClient.defaultLocalNet()

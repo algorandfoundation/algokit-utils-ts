@@ -46,7 +46,7 @@ To use this library simply include the following at the top of your file:
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
 
-As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import within the `{}` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
+As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import within the `{}` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](../api/modules/index.md).
 
 > [!WARNING]
 > Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as algokit`):
@@ -59,7 +59,7 @@ As well as `AlgorandClient` and `Config`, you can use intellisense to auto-compl
 >
 > If you are migrating from the old functions to the new ones then you can follow the [migration guide](v7-migration.md).
 
-The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
+The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./algorand-client.md), e.g.:
 
 ```typescript
 // Point to the network configured through environment variables or
@@ -98,7 +98,7 @@ Or, you can generally get away with just importing the `algorandFixture` since i
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 ```
 
-To see how to use it consult the [testing capability page](capabilities/testing.md) or to see what's available look at the [reference documentation](./code/modules/testing.md).
+To see how to use it consult the [testing capability page](./testing.md) or to see what's available look at the [reference documentation](../api/modules/testing.md).
 
 ## Types
 
@@ -108,7 +108,7 @@ If you want to extend or pass around any of the types the various functions take
 import {<type>} from '@algorandfoundation/types/<module>'
 ```
 
-Where `<type>` would be replaced with the type and `<module>` would be replaced with the module. You can use intellisense to discover the modules and types in your favourite IDE, or you can explore the [types modules in the reference documentation](./code/README.md#modules).
+Where `<type>` would be replaced with the type and `<module>` would be replaced with the module. You can use intellisense to discover the modules and types in your favourite IDE, or you can explore the [types modules in the reference documentation](../api/README.md#modules).
 
 # Config and logging
 
@@ -118,7 +118,7 @@ To configure the AlgoKit Utils library you can make use of the `Config` object, 
 
 AlgoKit has an in-built logging abstraction that allows the library to issue log messages without coupling the library to a particular logging library. This means you can access the AlgoKit Utils logs within your existing logging library if you have one.
 
-To do this you need to create a logging translator that exposes the following interface ([`Logger`](./code/modules/types_logging.md#logger)):
+To do this you need to create a logging translator that exposes the following interface ([`Logger`](../api/modules/types_logging.md#logger)):
 
 ```typescript
 export type Logger = {
@@ -132,7 +132,7 @@ export type Logger = {
 
 Note: this interface type is directly compatible with [Winston](https://github.com/winstonjs/winston) so you should be able to pass AlgoKit a Winston logger.
 
-By default, the [`consoleLogger`](./code/modules/types_logging.md#consolelogger) is set as the logger, which will send log messages to the various `console.*` methods for all logs apart from verbose logs. There is also a [`nullLogger`](./code/modules/types_logging.md#nulllogger) if you want to disable logging, or various leveled console loggers: [`verboseConsoleLogger`](./code/modules/types_logging.md#verboseconsolelogger) (also outputs verbose logs), [`infoConsoleLogger`](./code/modules/types_logging.md#infoconsolelogger) (only outputs info, warning and error logs), [`warningConsoleLogger`](./code/modules/types_logging.md#warningconsolelogger) (only outputs warning and error logs).
+By default, the [`consoleLogger`](../api/modules/types_logging.md#consolelogger) is set as the logger, which will send log messages to the various `console.*` methods for all logs apart from verbose logs. There is also a [`nullLogger`](../api/modules/types_logging.md#nulllogger) if you want to disable logging, or various leveled console loggers: [`verboseConsoleLogger`](../api/modules/types_logging.md#verboseconsolelogger) (also outputs verbose logs), [`infoConsoleLogger`](../api/modules/types_logging.md#infoconsolelogger) (only outputs info, warning and error logs), [`warningConsoleLogger`](../api/modules/types_logging.md#warningconsolelogger) (only outputs warning and error logs).
 
 If you want to override the logger you can use the following:
 
@@ -140,7 +140,7 @@ If you want to override the logger you can use the following:
 Config.configure({ logger: myLogger })
 ```
 
-To retrieve the current debug state you can use [`Config.logger`](./code/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`Config.getLogger(useNullLogger)`](./code/classes/types_config.UpdatableConfig.md#getlogger) function.
+To retrieve the current debug state you can use [`Config.logger`](../api/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`Config.getLogger(useNullLogger)`](../api/classes/types_config.UpdatableConfig.md#getlogger) function.
 
 ## Debug mode
 
@@ -150,11 +150,11 @@ To turn on debug mode you can use the following:
 Config.configure({ debug: true })
 ```
 
-To retrieve the current debug state you can use [`Config.debug`](./code/interfaces/types_config.Config.md).
+To retrieve the current debug state you can use [`Config.debug`](../api/interfaces/types_config.Config.md).
 
-This will turn on things like automatic tracing, more verbose logging and [advanced debugging](./capabilities/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
+This will turn on things like automatic tracing, more verbose logging and [advanced debugging](./debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
 
-If you want to temporarily turn it on you can use the [`withDebug`](./code/classes/types_config.UpdatableConfig.md#withdebug) function:
+If you want to temporarily turn it on you can use the [`withDebug`](../api/classes/types_config.UpdatableConfig.md#withdebug) function:
 
 ```typescript
 Config.withDebug(() => {
@@ -166,22 +166,22 @@ Config.withDebug(() => {
 
 The library helps you interact with and develop against the Algorand blockchain with a series of end-to-end capabilities as described below:
 
-- [**AlgorandClient**](./capabilities/algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
+- [**AlgorandClient**](./algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
 - **Core capabilities**
-  - [**Client management**](./capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration, and creation of other API clients (e.g. TestNet Dispenser API and app clients)
-  - [**Account management**](./capabilities/account.md) - Creation, use, and management of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
-  - [**Algo amount handling**](./capabilities/amount.md) - Reliable, explicit, and terse specification of microAlgo and Algo amounts and safe conversion between them
-  - [**Transaction management**](./capabilities/transaction.md) - Ability to construct, simulate and send transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, validity, signing, and sending behaviour
+  - [**Client management**](./client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration, and creation of other API clients (e.g. TestNet Dispenser API and app clients)
+  - [**Account management**](./account.md) - Creation, use, and management of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
+  - [**Algo amount handling**](./amount.md) - Reliable, explicit, and terse specification of microAlgo and Algo amounts and safe conversion between them
+  - [**Transaction management**](./transaction.md) - Ability to construct, simulate and send transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, validity, signing, and sending behaviour
 - **Higher-order use cases**
-  - [**Asset management**](./capabilities/asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
-  - [**Typed application clients**](./capabilities/typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-56 or ARC-32 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
-    - [**ARC-56 / ARC-32 App client and App factory**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-56 and ARC-32 application spec defined smart contracts
-    - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
-    - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
-  - [**Algo transfers (payments)**](./capabilities/transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding
-  - [**Automated testing**](./capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
-  - [**Indexer lookups / searching**](./capabilities/indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
+  - [**Asset management**](./asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
+  - [**Typed application clients**](./typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-56 or ARC-32 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
+    - [**ARC-56 / ARC-32 App client and App factory**](./app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-56 and ARC-32 application spec defined smart contracts
+    - [**App management**](./app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
+    - [**App deployment**](./app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
+  - [**Algo transfers (payments)**](./transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding
+  - [**Automated testing**](./testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
+  - [**Indexer lookups / searching**](./indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
 
 # Reference documentation
 
-We have [auto-generated reference documentation for the code](./code/README.md).
+We have [auto-generated reference documentation for the code](../api/README.md).
