@@ -1,0 +1,26 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/index.ts",
+    "src/types/*.ts",
+    "src/testing/index.ts",
+    "src/abi/index.ts",
+    "src/transact/index.ts",
+    "src/transaction/index.ts",
+    "src/algod-client/index.ts",
+    "src/indexer-client/index.ts",
+    "src/kmd-client/index.ts",
+    "src/algo25/index.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "examples/**/*.*"],
+  "out": "docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "tsconfig": "tsconfig.build.json",
+  "readme": "docs/guides/README.md",
+  "gitRevision": "main",
+  "cleanOutputDir": true,
+  "excludeReferences": true,
+  "includeHierarchySummary": true,
+  "highlightLanguages": ["typescript", "python", "json", "bash", "javascript", "yaml"]
+}
