@@ -61,9 +61,9 @@ As well as `AlgorandClient` and `Config`, you can use intellisense to auto-compl
 >
 > This version will still work until at least v9, but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
 >
-> If you are migrating from the old functions to the new ones then you can follow the [migration guide](documents/v7-migration.md).
+> If you are migrating from the old functions to the new ones then you can follow the [migration guide](documents/migration/v7-migration.md).
 
-The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](documents/algorand-client.md), e.g.:
+The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](documents/concepts/algorand-client.md), e.g.:
 
 ```typescript
 // Point to the network configured through environment variables or
@@ -102,7 +102,7 @@ Or, you can generally get away with just importing the `algorandFixture` since i
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 ```
 
-To see how to use it consult the [testing capability page](documents/testing.md) or to see what's available look at the [reference documentation](../api/modules/testing.md).
+To see how to use it consult the [testing capability page](documents/concepts/testing.md) or to see what's available look at the [reference documentation](../api/modules/testing.md).
 
 ## Types
 
@@ -156,7 +156,7 @@ Config.configure({ debug: true })
 
 To retrieve the current debug state you can use [`Config.debug`](../api/interfaces/types_config.Config.md).
 
-This will turn on things like automatic tracing, more verbose logging and [advanced debugging](documents/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
+This will turn on things like automatic tracing, more verbose logging and [advanced debugging](documents/concepts/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
 
 If you want to temporarily turn it on you can use the [`withDebug`](../api/classes/types_config.UpdatableConfig.md#withdebug) function:
 
@@ -170,21 +170,21 @@ Config.withDebug(() => {
 
 The library helps you interact with and develop against the Algorand blockchain with a series of end-to-end capabilities as described below:
 
-- [**AlgorandClient**](documents/algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
+- [**AlgorandClient**](documents/concepts/algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
 - **Core capabilities**
-  - [**Client management**](documents/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration, and creation of other API clients (e.g. TestNet Dispenser API and app clients)
-  - [**Account management**](documents/account.md) - Creation, use, and management of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
-  - [**Algo amount handling**](documents/amount.md) - Reliable, explicit, and terse specification of microAlgo and Algo amounts and safe conversion between them
-  - [**Transaction management**](documents/transaction.md) - Ability to construct, simulate and send transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, validity, signing, and sending behaviour
+  - [**Client management**](documents/concepts/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration, and creation of other API clients (e.g. TestNet Dispenser API and app clients)
+  - [**Account management**](documents/concepts/account.md) - Creation, use, and management of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
+  - [**Algo amount handling**](documents/concepts/amount.md) - Reliable, explicit, and terse specification of microAlgo and Algo amounts and safe conversion between them
+  - [**Transaction management**](documents/concepts/transaction.md) - Ability to construct, simulate and send transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, validity, signing, and sending behaviour
 - **Higher-order use cases**
-  - [**Asset management**](documents/asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
-  - [**Typed application clients**](documents/typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-56 or ARC-32 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
-    - [**ARC-56 / ARC-32 App client and App factory**](documents/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-56 and ARC-32 application spec defined smart contracts
-    - [**App management**](documents/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
-    - [**App deployment**](documents/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
-  - [**Algo transfers (payments)**](documents/transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding
-  - [**Automated testing**](documents/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
-  - [**Indexer lookups / searching**](documents/indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
+  - [**Asset management**](documents/concepts/asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
+  - [**Typed application clients**](documents/concepts/typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-56 or ARC-32 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
+    - [**ARC-56 / ARC-32 App client and App factory**](documents/concepts/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-56 and ARC-32 application spec defined smart contracts
+    - [**App management**](documents/concepts/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
+    - [**App deployment**](documents/concepts/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
+  - [**Algo transfers (payments)**](documents/concepts/transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding
+  - [**Automated testing**](documents/concepts/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
+  - [**Indexer lookups / searching**](documents/concepts/indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
 
 # Reference documentation
 

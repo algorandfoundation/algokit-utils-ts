@@ -18,7 +18,7 @@
   "plugin": ["typedoc-plugin-markdown"],
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
-  "projectDocuments": ["docs/guides/*.md"],
+  "projectDocuments": ["docs/guides/concepts/*.md", "docs/guides/migration/*.md"],
   "gitRevision": "main",
   "cleanOutputDir": true,
   "excludeReferences": true,
