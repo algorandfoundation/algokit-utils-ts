@@ -17,6 +17,7 @@
   "out": "docs/_html",
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
+  "projectDocuments": ["docs/guides/*.md"],
   "gitRevision": "main",
   "cleanOutputDir": true,
   "excludeReferences": true,

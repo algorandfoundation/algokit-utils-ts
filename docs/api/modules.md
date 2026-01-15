@@ -4,6 +4,29 @@
 
 # @algorandfoundation/algokit-utils
 
+## Documents
+
+- [README](documents/README.md)
+- [account](documents/account.md)
+- [algorand-client](documents/algorand-client.md)
+- [amount](documents/amount.md)
+- [app-client](documents/app-client.md)
+- [app-deploy](documents/app-deploy.md)
+- [app](documents/app.md)
+- [asset](documents/asset.md)
+- [client](documents/client.md)
+- [debugging](documents/debugging.md)
+- [dispenser-client](documents/dispenser-client.md)
+- [event-emitter](documents/event-emitter.md)
+- [indexer](documents/indexer.md)
+- [testing](documents/testing.md)
+- [transaction-composer](documents/transaction-composer.md)
+- [transaction](documents/transaction.md)
+- [transfer](documents/transfer.md)
+- [typed-app-clients](documents/typed-app-clients.md)
+- [v7-migration](documents/v7-migration.md)
+- [v8-migration](documents/v8-migration.md)
+
 ## Modules
 
 - [abi](abi/README.md)
