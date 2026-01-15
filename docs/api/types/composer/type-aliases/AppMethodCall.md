@@ -16,7 +16,7 @@ Parameters to define an ABI method call.
 
 ### args?
 
-> `optional` **args**: ([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`TransactionWithSigner`](../../../index/interfaces/TransactionWithSigner.md) \| [`Transaction`](../../../transact/classes/Transaction.md) \| `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\> \| `AppMethodCall`\<[`AppCreateParams`](AppCreateParams.md)\> \| `AppMethodCall`\<[`AppUpdateParams`](AppUpdateParams.md)\> \| `AppMethodCall`\<[`AppMethodCallParams`](AppMethodCallParams.md)\> \| `undefined`)[]
+> `optional` **args**: ([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\> \| `AppMethodCall`\<[`AppCreateParams`](AppCreateParams.md)\> \| `AppMethodCall`\<[`AppUpdateParams`](AppUpdateParams.md)\> \| `AppMethodCall`\<[`AppMethodCallParams`](AppMethodCallParams.md)\> \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -28,7 +28,7 @@ Arguments to the ABI method, either:
 
 ### method
 
-> **method**: [`ABIMethod`](../../../abi/classes/ABIMethod.md)
+> **method**: [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 The ABI method to call
 

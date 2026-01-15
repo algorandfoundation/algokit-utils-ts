@@ -22,7 +22,7 @@ The result of preparing and/or sending multiple transactions using an `Transacti
 
 ### confirmations
 
-> **confirmations**: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]
+> **confirmations**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]
 
 Defined in: [src/types/transaction.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L77)
 
@@ -43,7 +43,7 @@ base64 encoded representation of the group ID of the group
 
 ### returns?
 
-> `optional` **returns**: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]
+> `optional` **returns**: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]
 
 Defined in: [src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)
 
@@ -53,7 +53,7 @@ If ABI method(s) were called the processed return values
 
 ### transactions
 
-> **transactions**: [`Transaction`](../../../transact/classes/Transaction.md)[]
+> **transactions**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]
 
 Defined in: [src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 

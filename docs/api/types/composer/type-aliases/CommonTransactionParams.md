@@ -82,7 +82,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ### rekeyTo?
 
-> `optional` **rekeyTo**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **rekeyTo**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Defined in: [src/transactions/common.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/common.ts#L20)
 
@@ -94,7 +94,7 @@ Change the signing key of the sender to the given address.
 
 ### sender
 
-> **sender**: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+> **sender**: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 Defined in: [src/transactions/common.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/common.ts#L10)
 
@@ -104,7 +104,7 @@ The address sending the transaction, optionally with an attached signer.
 
 ### signer?
 
-> `optional` **signer**: [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md) \| [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md)
+> `optional` **signer**: [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md) \| [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/transactions/common.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/common.ts#L15)
 

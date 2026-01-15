@@ -35,7 +35,7 @@ Defaults to the ARC-32/ARC-56 app spec name.
 
 ### appSpec
 
-> **appSpec**: `string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+> **appSpec**: `string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 Defined in: [src/types/app-factory.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L33)
 
@@ -48,7 +48,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 ### defaultSender?
 
-> `optional` **defaultSender**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **defaultSender**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Defined in: [src/types/app-factory.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L45)
 
@@ -58,7 +58,7 @@ Optional address to use for the account to use as the default sender for calls.
 
 ### defaultSigner?
 
-> `optional` **defaultSigner**: [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+> `optional` **defaultSigner**: [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Defined in: [src/types/app-factory.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L48)
 

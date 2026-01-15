@@ -42,7 +42,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Get Signature
 
-> **get** **testLogger**(): [`TestLogger`](../../../testing/classes/TestLogger.md)
+> **get** **testLogger**(): [`TestLogger`](../../../Packages/Testing/classes/TestLogger.md)
 
 Defined in: [src/types/testing.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L153)
 
@@ -50,4 +50,4 @@ The test logger instance for the current test
 
 ##### Returns
 
-[`TestLogger`](../../../testing/classes/TestLogger.md)
+[`TestLogger`](../../../Packages/Testing/classes/TestLogger.md)

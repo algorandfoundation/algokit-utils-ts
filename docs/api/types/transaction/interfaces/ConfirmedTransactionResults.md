@@ -22,7 +22,7 @@ The result of sending and confirming one or more transactions, but where there i
 
 ### confirmation
 
-> **confirmation**: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)
+> **confirmation**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)
 
 Defined in: [src/types/transaction.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L89)
 
@@ -36,7 +36,7 @@ The response from sending and waiting for the primary transaction
 
 ### confirmations
 
-> **confirmations**: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]
+> **confirmations**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]
 
 Defined in: [src/types/transaction.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L91)
 
@@ -50,7 +50,7 @@ The response from sending and waiting for the transactions
 
 ### transaction
 
-> **transaction**: [`Transaction`](../../../transact/classes/Transaction.md)
+> **transaction**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)
 
 Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
@@ -64,7 +64,7 @@ The transaction
 
 ### transactions
 
-> **transactions**: [`Transaction`](../../../transact/classes/Transaction.md)[]
+> **transactions**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]
 
 Defined in: [src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 

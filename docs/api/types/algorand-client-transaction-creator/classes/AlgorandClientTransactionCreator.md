@@ -42,7 +42,7 @@ const transactionCreator = new AlgorandClientTransactionCreator(() => new Transa
 
 ### appCall()
 
-> **appCall**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **appCall**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L464)
 
@@ -60,7 +60,7 @@ The parameters for the app call transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The application call transaction
 
@@ -98,7 +98,7 @@ await algorand.createTransaction.appCall({
 
 ### appCallMethodCall()
 
-> **appCallMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+> **appCallMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:667](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L667)
 
@@ -114,13 +114,13 @@ The parameters for the app call transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -138,7 +138,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-([`Transaction`](../../../transact/classes/Transaction.md) \| [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../index/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
+([`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -201,7 +201,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### method
 
-[`ABIMethod`](../../../abi/classes/ABIMethod.md)
+[`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 The ABI method to call
 
@@ -213,7 +213,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -225,7 +225,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -233,13 +233,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender
 
-[`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+[`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 The address sending the transaction, optionally with an attached signer.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -259,7 +259,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 The application ABI method call transaction
 
@@ -309,7 +309,7 @@ await algorand.createTransaction.appCallMethodCall({
 
 ### appCreate()
 
-> **appCreate**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **appCreate**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L354)
 
@@ -325,13 +325,13 @@ The parameters for the app creation transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -430,7 +430,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -442,7 +442,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -480,13 +480,13 @@ The number of integers saved in local state.
 
 ###### sender
 
-[`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+[`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 The address sending the transaction, optionally with an attached signer.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -506,7 +506,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The application create transaction
 
@@ -553,7 +553,7 @@ await algorand.createTransaction.appCreate({
 
 ### appCreateMethodCall()
 
-> **appCreateMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+> **appCreateMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:521](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L521)
 
@@ -569,13 +569,13 @@ The parameters for the app creation transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -597,7 +597,7 @@ The program to execute for all OnCompletes other than ClearState as raw teal tha
 
 ###### args?
 
-([`Transaction`](../../../transact/classes/Transaction.md) \| [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../index/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
+([`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -674,7 +674,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### method
 
-[`ABIMethod`](../../../abi/classes/ABIMethod.md)
+[`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 The ABI method to call
 
@@ -686,7 +686,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -698,7 +698,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -736,13 +736,13 @@ The number of integers saved in local state.
 
 ###### sender
 
-[`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+[`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 The address sending the transaction, optionally with an attached signer.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -762,7 +762,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 The application ABI method create transaction
 
@@ -821,7 +821,7 @@ await algorand.createTransaction.appCreateMethodCall({
 
 ### appDelete()
 
-> **appDelete**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **appDelete**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L428)
 
@@ -839,7 +839,7 @@ The parameters for the app deletion transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The application delete transaction
 
@@ -877,7 +877,7 @@ await algorand.createTransaction.appDelete({
 
 ### appDeleteMethodCall()
 
-> **appDeleteMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+> **appDeleteMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L619)
 
@@ -893,13 +893,13 @@ The parameters for the app deletion transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -917,7 +917,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-([`Transaction`](../../../transact/classes/Transaction.md) \| [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../index/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
+([`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -980,7 +980,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### method
 
-[`ABIMethod`](../../../abi/classes/ABIMethod.md)
+[`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 The ABI method to call
 
@@ -992,7 +992,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -1004,7 +1004,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1012,13 +1012,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender
 
-[`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+[`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 The address sending the transaction, optionally with an attached signer.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1038,7 +1038,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 The application ABI method delete transaction
 
@@ -1088,7 +1088,7 @@ await algorand.createTransaction.appDeleteMethodCall({
 
 ### appUpdate()
 
-> **appUpdate**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **appUpdate**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L392)
 
@@ -1104,13 +1104,13 @@ The parameters for the app update transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -1203,7 +1203,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication)
+[`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -1215,7 +1215,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1223,13 +1223,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender
 
-[`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+[`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 The address sending the transaction, optionally with an attached signer.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1249,7 +1249,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The application update transaction
 
@@ -1289,7 +1289,7 @@ await algorand.createTransaction.appUpdate({
 
 ### appUpdateMethodCall()
 
-> **appUpdateMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+> **appUpdateMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L571)
 
@@ -1305,13 +1305,13 @@ The parameters for the app update transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -1335,7 +1335,7 @@ The program to execute for all OnCompletes other than ClearState as raw teal (st
 
 ###### args?
 
-([`Transaction`](../../../transact/classes/Transaction.md) \| [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../index/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
+([`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\> \| [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId?`: `0`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appId`: `bigint`; `appReferences?`: `bigint`[]; `approvalProgram`: `string` \| `Uint8Array`; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: BoxIdentifier \| BoxReference[]; `clearStateProgram`: `string` \| `Uint8Array`; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication); `rejectVersion?`: `number`; `rekeyTo?`: ReadableAddress \| undefined; `sender`: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}\> \| [`AppMethodCall`](../../composer/type-aliases/AppMethodCall.md)\<[`AppMethodCallParams`](../../composer/type-aliases/AppMethodCallParams.md)\> \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -1404,7 +1404,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### method
 
-[`ABIMethod`](../../../abi/classes/ABIMethod.md)
+[`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 The ABI method to call
 
@@ -1416,7 +1416,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication)
+[`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -1428,7 +1428,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1436,13 +1436,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender
 
-[`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+[`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 The address sending the transaction, optionally with an attached signer.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1462,7 +1462,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 The application ABI method update transaction
 
@@ -1514,7 +1514,7 @@ await algorand.createTransaction.appUpdateMethodCall({
 
 ### assetConfig()
 
-> **assetConfig**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetConfig**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L149)
 
@@ -1534,7 +1534,7 @@ The parameters for the asset config transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The asset config transaction
 
@@ -1569,7 +1569,7 @@ await algorand.createTransaction.assetConfig({
 
 ### assetCreate()
 
-> **assetCreate**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetCreate**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L113)
 
@@ -1588,7 +1588,7 @@ The parameters for the asset creation transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The asset create transaction
 
@@ -1629,7 +1629,7 @@ await algorand.createTransaction.assetCreate({
 
 ### assetDestroy()
 
-> **assetDestroy**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetDestroy**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L211)
 
@@ -1649,7 +1649,7 @@ The parameters for the asset destroy transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The asset destroy transaction
 
@@ -1680,7 +1680,7 @@ await algorand.createTransaction.assetDestroy({
 
 ### assetFreeze()
 
-> **assetFreeze**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetFreeze**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L179)
 
@@ -1696,7 +1696,7 @@ The parameters for the asset freeze transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The asset freeze transaction
 
@@ -1729,7 +1729,7 @@ await algorand.createTransaction.assetFreeze({
 
 ### assetOptIn()
 
-> **assetOptIn**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetOptIn**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L272)
 
@@ -1745,7 +1745,7 @@ The parameters for the asset opt-in transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The asset opt-in transaction
 
@@ -1776,7 +1776,7 @@ await algorand.createTransaction.assetOptIn({
 
 ### assetOptOut()
 
-> **assetOptOut**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetOptOut**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L309)
 
@@ -1795,7 +1795,7 @@ The parameters for the asset opt-out transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The asset opt-out transaction
 
@@ -1832,7 +1832,7 @@ await algorand.createTransaction.assetOptOut({
 
 ### assetTransfer()
 
-> **assetTransfer**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **assetTransfer**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L244)
 
@@ -1848,7 +1848,7 @@ The parameters for the asset transfer transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The result of the asset transfer transaction
 
@@ -1884,7 +1884,7 @@ await algorand.createTransaction.assetTransfer({
 
 ### offlineKeyRegistration()
 
-> **offlineKeyRegistration**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **offlineKeyRegistration**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:739](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L739)
 
@@ -1900,7 +1900,7 @@ The parameters for the key registration transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The offline key registration transaction
 
@@ -1934,7 +1934,7 @@ await algorand.createTransaction.offlineKeyRegistration({
 
 ### onlineKeyRegistration()
 
-> **onlineKeyRegistration**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **onlineKeyRegistration**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:709](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L709)
 
@@ -1950,7 +1950,7 @@ The parameters for the key registration transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The online key registration transaction
 
@@ -1996,7 +1996,7 @@ await algorand.createTransaction.onlineKeyRegistration({
 
 ### payment()
 
-> **payment**: (`params`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **payment**: (`params`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Defined in: [src/types/algorand-client-transaction-creator.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L72)
 
@@ -2012,7 +2012,7 @@ The parameters for the payment transaction
 
 #### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The payment transaction
 

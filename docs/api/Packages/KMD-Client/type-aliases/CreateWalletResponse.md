@@ -1,0 +1,21 @@
+[**@algorandfoundation/algokit-utils**](../../../README.md)
+
+***
+
+[@algorandfoundation/algokit-utils](../../../modules.md) / [Packages/KMD Client](../README.md) / CreateWalletResponse
+
+# Type Alias: CreateWalletResponse
+
+> **CreateWalletResponse** = `object`
+
+Defined in: [packages/kmd\_client/src/models/create-wallet-response.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/create-wallet-response.ts#L9)
+
+CreateWalletResponse is the response to `POST /v1/wallet`
+
+## Properties
+
+### wallet
+
+> **wallet**: [`Wallet`](Wallet.md)
+
+Defined in: [packages/kmd\_client/src/models/create-wallet-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/create-wallet-response.ts#L10)

@@ -16,6 +16,6 @@ onComplete parameter for a create app call
 
 ### onComplete?
 
-> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../transact/enumerations/OnApplicationComplete.md), [`ClearState`](../../../transact/enumerations/OnApplicationComplete.md#clearstate)\>
+> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md), [`ClearState`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#clearstate)\>
 
 Defined in: [src/types/app-factory.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L83)

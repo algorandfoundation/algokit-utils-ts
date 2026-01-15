@@ -1,6 +1,9 @@
+/**
+ * @module Algokit Utils API
+ */
 export {
-  ALGORAND_ZERO_ADDRESS_STRING,
   Address,
+  ALGORAND_ZERO_ADDRESS_STRING,
   decodeAddress,
   encodeAddress,
   getAddress,

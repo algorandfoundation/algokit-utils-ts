@@ -8,38 +8,38 @@
 
 ### ABIType
 
-- [ABIType](abi/classes/ABIType.md)
-  - [ABIAddressType](abi/classes/ABIAddressType.md)
-  - [ABIArrayDynamicType](abi/classes/ABIArrayDynamicType.md)
-  - [ABIArrayStaticType](abi/classes/ABIArrayStaticType.md)
-  - [ABIBoolType](abi/classes/ABIBoolType.md)
-  - [ABIByteType](abi/classes/ABIByteType.md)
-  - [ABIStringType](abi/classes/ABIStringType.md)
-  - [ABIStructType](abi/classes/ABIStructType.md)
-  - [ABITupleType](abi/classes/ABITupleType.md)
-  - [ABIUfixedType](abi/classes/ABIUfixedType.md)
-  - [ABIUintType](abi/classes/ABIUintType.md)
+- [ABIType](Packages/ABI/classes/ABIType.md)
+  - [ABIAddressType](Packages/ABI/classes/ABIAddressType.md)
+  - [ABIArrayDynamicType](Packages/ABI/classes/ABIArrayDynamicType.md)
+  - [ABIArrayStaticType](Packages/ABI/classes/ABIArrayStaticType.md)
+  - [ABIBoolType](Packages/ABI/classes/ABIBoolType.md)
+  - [ABIByteType](Packages/ABI/classes/ABIByteType.md)
+  - [ABIStringType](Packages/ABI/classes/ABIStringType.md)
+  - [ABIStructType](Packages/ABI/classes/ABIStructType.md)
+  - [ABITupleType](Packages/ABI/classes/ABITupleType.md)
+  - [ABIUfixedType](Packages/ABI/classes/ABIUfixedType.md)
+  - [ABIUintType](Packages/ABI/classes/ABIUintType.md)
 
 ***
 
 ### Addressable
 
-- [Addressable](index/interfaces/Addressable.md)
-  - [LogicSig](transact/classes/LogicSig.md)
-    - [LogicSigAccount](transact/classes/LogicSigAccount.md)
-  - [AddressWithTransactionSigner](transact/interfaces/AddressWithTransactionSigner.md)
-    - [MultisigAccount](transact/classes/MultisigAccount.md)
-  - [AddressWithDelegatedLsigSigner](transact/interfaces/AddressWithDelegatedLsigSigner.md)
+- [Addressable](Algokit-Utils-API/interfaces/Addressable.md)
+  - [LogicSig](Packages/Transact/classes/LogicSig.md)
+    - [LogicSigAccount](Packages/Transact/classes/LogicSigAccount.md)
+  - [AddressWithTransactionSigner](Packages/Transact/interfaces/AddressWithTransactionSigner.md)
+    - [MultisigAccount](Packages/Transact/classes/MultisigAccount.md)
+  - [AddressWithDelegatedLsigSigner](Packages/Transact/interfaces/AddressWithDelegatedLsigSigner.md)
 
-  - [AddressWithProgramDataSigner](transact/interfaces/AddressWithProgramDataSigner.md)
-  - [AddressWithMxBytesSigner](transact/interfaces/AddressWithMxBytesSigner.md)
+  - [AddressWithProgramDataSigner](Packages/Transact/interfaces/AddressWithProgramDataSigner.md)
+  - [AddressWithMxBytesSigner](Packages/Transact/interfaces/AddressWithMxBytesSigner.md)
 
 ***
 
 ### AlgodApi
 
-- [AlgodApi](algod-client/classes/AlgodApi.md)
-  - [AlgodClient](algod-client/classes/AlgodClient.md)
+- [AlgodApi](Packages/Algod-Client/classes/AlgodApi.md)
+  - [AlgodClient](Packages/Algod-Client/classes/AlgodClient.md)
 
 ***
 
@@ -72,22 +72,22 @@
 
 ### BaseHttpRequest
 
-- [BaseHttpRequest](algod-client/classes/BaseHttpRequest.md)
-  - [FetchHttpRequest](algod-client/classes/FetchHttpRequest.md)
+- [BaseHttpRequest](Packages/Algod-Client/classes/BaseHttpRequest.md)
+  - [FetchHttpRequest](Packages/Algod-Client/classes/FetchHttpRequest.md)
 
 ***
 
 ### BaseHttpRequest
 
-- [BaseHttpRequest](indexer-client/classes/BaseHttpRequest.md)
-  - [FetchHttpRequest](indexer-client/classes/FetchHttpRequest.md)
+- [BaseHttpRequest](Packages/Indexer-Client/classes/BaseHttpRequest.md)
+  - [FetchHttpRequest](Packages/Indexer-Client/classes/FetchHttpRequest.md)
 
 ***
 
 ### BaseHttpRequest
 
-- [BaseHttpRequest](kmd-client/classes/BaseHttpRequest.md)
-  - [FetchHttpRequest](kmd-client/classes/FetchHttpRequest.md)
+- [BaseHttpRequest](Packages/KMD-Client/classes/BaseHttpRequest.md)
+  - [FetchHttpRequest](Packages/KMD-Client/classes/FetchHttpRequest.md)
 
 ***
 
@@ -100,15 +100,15 @@
 
 ### IndexerApi
 
-- [IndexerApi](indexer-client/classes/IndexerApi.md)
-  - [IndexerClient](indexer-client/classes/IndexerClient.md)
+- [IndexerApi](Packages/Indexer-Client/classes/IndexerApi.md)
+  - [IndexerClient](Packages/Indexer-Client/classes/IndexerClient.md)
 
 ***
 
 ### KmdApi
 
-- [KmdApi](kmd-client/classes/KmdApi.md)
-  - [KmdClient](kmd-client/classes/KmdClient.md)
+- [KmdApi](Packages/KMD-Client/classes/KmdApi.md)
+  - [KmdClient](Packages/KMD-Client/classes/KmdClient.md)
 
 ***
 

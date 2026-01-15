@@ -23,7 +23,7 @@ The result of preparing and/or sending multiple transactions
 
 ### confirmations?
 
-> `optional` **confirmations**: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]
+> `optional` **confirmations**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]
 
 Defined in: [src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
 
@@ -34,7 +34,7 @@ the index of the confirmation will match the index of the underlying transaction
 
 ### transactions
 
-> **transactions**: [`Transaction`](../../../transact/classes/Transaction.md)[]
+> **transactions**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]
 
 Defined in: [src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 

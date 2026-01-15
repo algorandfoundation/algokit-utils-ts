@@ -27,7 +27,7 @@ used in calls to `deploy`, `create` and `update` unless overridden in those call
 
 ### params?
 
-> `optional` **params**: [`SuggestedParams`](../../../algod-client/type-aliases/SuggestedParams.md)
+> `optional` **params**: [`SuggestedParams`](../../../Packages/Algod-Client/type-aliases/SuggestedParams.md)
 
 Defined in: [src/types/app-client.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L111)
 

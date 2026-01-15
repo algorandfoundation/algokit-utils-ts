@@ -14,7 +14,7 @@ Parameters for the `getTestAccount` function.
 
 ### accountGetter()?
 
-> `optional` **accountGetter**: (`algorand`) => `Promise`\<[`Address`](../../../index/classes/Address.md) & `object`\>
+> `optional` **accountGetter**: (`algorand`) => `Promise`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`\>
 
 Defined in: [src/types/testing.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L51)
 
@@ -28,7 +28,7 @@ Optional override for how to get a test account; this allows you to retrieve acc
 
 #### Returns
 
-`Promise`\<[`Address`](../../../index/classes/Address.md) & `object`\>
+`Promise`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`\>
 
 ***
 

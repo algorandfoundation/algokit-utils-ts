@@ -6,7 +6,7 @@
 
 # Function: arc32ToArc56()
 
-> **arc32ToArc56**(`appSpec`): [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+> **arc32ToArc56**(`appSpec`): [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 Defined in: [src/types/app-spec.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L20)
 
@@ -22,7 +22,7 @@ The ARC-32 Application Specification
 
 ## Returns
 
-[`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+[`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 The ARC-56 Contract
 

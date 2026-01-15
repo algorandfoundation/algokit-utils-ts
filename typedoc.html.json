@@ -2,16 +2,13 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": [
     "src/index.ts",
-    "src/types/*.ts",
-    "src/testing/index.ts",
     "src/abi/index.ts",
+    "src/algo25/index.ts",
     "src/transact/index.ts",
-    "src/common/index.ts",
-    "src/transactions/index.ts",
     "src/algod-client/index.ts",
     "src/indexer-client/index.ts",
     "src/kmd-client/index.ts",
-    "src/algo25/index.ts"
+    "src/testing/index.ts"
   ],
   "entryPointStrategy": "expand",
   "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "examples/**/*.*"],

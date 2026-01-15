@@ -66,7 +66,7 @@ A reference to the underlying `AlgorandClient` this app client is using.
 
 #### Get Signature
 
-> **get** **appAddress**(): [`Address`](../../../index/classes/Address.md)
+> **get** **appAddress**(): [`Address`](../../../Algokit-Utils-API/classes/Address.md)
 
 Defined in: [src/types/app-client.ts:622](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L622)
 
@@ -74,7 +74,7 @@ The app address of the app instance this client is linked to.
 
 ##### Returns
 
-[`Address`](../../../index/classes/Address.md)
+[`Address`](../../../Algokit-Utils-API/classes/Address.md)
 
 ***
 
@@ -114,7 +114,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
 #### Get Signature
 
-> **get** **appSpec**(): [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+> **get** **appSpec**(): [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 Defined in: [src/types/app-client.ts:632](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L632)
 
@@ -122,7 +122,7 @@ The ARC-56 app spec being used
 
 ##### Returns
 
-[`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+[`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 ***
 
@@ -213,7 +213,7 @@ Returns all single-key state values in a record keyed by the key name and the va
 
 ###### box.getMap()
 
-> **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md), [`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>\>
+> **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md), [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>\>
 
 ###### Parameters
 
@@ -225,11 +225,11 @@ The name of the map to read from
 
 ###### Returns
 
-`Promise`\<`Map`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md), [`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>\>
+`Promise`\<`Map`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md), [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>\>
 
 ###### box.getMapValue()
 
-> **getMapValue**: (`mapName`, `key`) => `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>
+> **getMapValue**: (`mapName`, `key`) => `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
 
 ###### Parameters
 
@@ -249,11 +249,11 @@ The key within the map (without any map prefix) as either a Buffer with the byte
 
 ###### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
 
 ###### box.getValue()
 
-> **getValue**: (`name`) => `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>
+> **getValue**: (`name`) => `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
 
 Returns a single state value for the current app with the value a decoded ABI value.
 
@@ -267,7 +267,7 @@ The name of the state value to retrieve the value for
 
 ###### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
 
 ###### global
 
@@ -287,7 +287,7 @@ Returns all single-key state values in a record keyed by the key name and the va
 
 ###### global.getMap()
 
-> **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md), [`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>\>
+> **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md), [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>\>
 
 Returns all map values for the given map.
 
@@ -301,13 +301,13 @@ The name of the map to read from
 
 ###### Returns
 
-`Promise`\<`Map`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md), [`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>\>
+`Promise`\<`Map`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md), [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>\>
 
 A map of all key-value pairs in the map as a `Record<string, ABIValue>`
 
 ###### global.getMapValue()
 
-> **getMapValue**: (`mapName`, `key`, `appState?`) => `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+> **getMapValue**: (`mapName`, `key`, `appState?`) => `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 Returns a single value from the given map for the current app with the value a decoded ABI value.
 
@@ -335,11 +335,11 @@ Optional cached value of the current state
 
 ###### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 ###### global.getValue()
 
-> **getValue**: (`name`, `appState?`) => `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+> **getValue**: (`name`, `appState?`) => `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 Returns a single state value for the current app with the value a decoded ABI value.
 
@@ -359,7 +359,7 @@ Optional cached value of the current state
 
 ###### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 ###### local()
 
@@ -371,7 +371,7 @@ Methods to access local state for the current app
 
 ###### address
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account to get the local state for
 
@@ -389,7 +389,7 @@ Returns all single-key state values in a record keyed by the key name and the va
 
 ###### getMap()
 
-> **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md), [`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>\>
+> **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md), [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>\>
 
 Returns all map values for the given map.
 
@@ -403,13 +403,13 @@ The name of the map to read from
 
 ###### Returns
 
-`Promise`\<`Map`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md), [`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>\>
+`Promise`\<`Map`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md), [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>\>
 
 A map of all key-value pairs in the map as a `Record<string, ABIValue>`
 
 ###### getMapValue()
 
-> **getMapValue**: (`mapName`, `key`, `appState?`) => `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+> **getMapValue**: (`mapName`, `key`, `appState?`) => `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 Returns a single value from the given map for the current app with the value a decoded ABI value.
 
@@ -437,11 +437,11 @@ Optional cached value of the current state
 
 ###### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 ###### getValue()
 
-> **getValue**: (`name`, `appState?`) => `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+> **getValue**: (`name`, `appState?`) => `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 Returns a single state value for the current app with the value a decoded ABI value.
 
@@ -461,7 +461,7 @@ Optional cached value of the current state
 
 ###### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`\>
 
 ## Methods
 
@@ -506,13 +506,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -609,7 +609,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 ### fundAppAccount()
 
-> **fundAppAccount**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **fundAppAccount**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/app-client.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L700)
 
@@ -631,7 +631,7 @@ Amount to send
 
 ###### closeRemainderTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 If given, close the sender account and send the remaining balance to this address
 
@@ -699,7 +699,7 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -707,13 +707,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The optional sender to send the transaction from, will use the application client's default sender by default if specified
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -739,7 +739,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the funding
 
@@ -753,7 +753,7 @@ await appClient.fundAppAccount({ amount: algo(1) })
 
 ### getABIMethod()
 
-> **getABIMethod**(`methodNameOrSignature`): [`ABIMethod`](../../../abi/classes/ABIMethod.md)
+> **getABIMethod**(`methodNameOrSignature`): [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 Defined in: [src/types/app-client.ts:869](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L869)
 
@@ -770,7 +770,7 @@ e.g. `my_method` or `my_method(unit64,string)bytes`
 
 #### Returns
 
-[`ABIMethod`](../../../abi/classes/ABIMethod.md)
+[`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
 
 A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 
@@ -830,7 +830,7 @@ const boxValue = await appClient.getBoxValue('boxName')
 
 ### getBoxValueFromABIType()
 
-> **getBoxValueFromABIType**(`name`, `type`): `Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>
+> **getBoxValueFromABIType**(`name`, `type`): `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
 
 Defined in: [src/types/app-client.ts:764](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L764)
 
@@ -846,11 +846,11 @@ The identifier of the box to return
 
 ##### type
 
-[`ABIType`](../../../abi/classes/ABIType.md)
+[`ABIType`](../../../Packages/ABI/classes/ABIType.md)
 
 #### Returns
 
-`Promise`\<[`ABIValue`](../../../abi/type-aliases/ABIValue.md)\>
+`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
 
 The current box value as a byte array
 
@@ -906,7 +906,7 @@ Note: This will issue multiple HTTP requests (one per box) and it's not an atomi
 
 ##### type
 
-[`ABIType`](../../../abi/classes/ABIType.md)
+[`ABIType`](../../../Packages/ABI/classes/ABIType.md)
 
 The ABI type to decode the values with
 
@@ -964,7 +964,7 @@ Returns raw local state for the given account address.
 
 ##### address
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account to get the local state for
 
@@ -1019,11 +1019,11 @@ If the return type is an ARC-56 struct then the struct will be returned.
 
 ##### TReturn
 
-`TReturn` *extends* [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`
+`TReturn` *extends* [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`
 
 ##### TResult
 
-`TResult` *extends* `object` = \{ `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}
+`TResult` *extends* `object` = \{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}
 
 #### Parameters
 
@@ -1059,7 +1059,7 @@ Will store any generated source maps for later use in debugging.
 
 ##### appSpec
 
-[`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+[`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 The app spec for the app
 
@@ -1102,7 +1102,7 @@ The error to parse
 
 ##### appSpec
 
-[`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+[`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 The app spec for the app
 
@@ -1112,7 +1112,7 @@ Additional information to inform the error
 
 ###### approvalSourceInfo?
 
-[`ProgramSourceInfo`](../../../abi/type-aliases/ProgramSourceInfo.md)
+[`ProgramSourceInfo`](../../../Packages/ABI/type-aliases/ProgramSourceInfo.md)
 
 ARC56 approval source info
 
@@ -1124,7 +1124,7 @@ Approval program source map
 
 ###### clearSourceInfo?
 
-[`ProgramSourceInfo`](../../../abi/type-aliases/ProgramSourceInfo.md)
+[`ProgramSourceInfo`](../../../Packages/ABI/type-aliases/ProgramSourceInfo.md)
 
 ARC56 clear source info
 
@@ -1197,7 +1197,7 @@ Optional source map for the approval program
 
 ###### appSpec
 
-`string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 The ARC-56 or ARC-32 application spec as either:
  * Parsed JSON ARC-56 `Contract`
@@ -1212,19 +1212,19 @@ Optional source map for the clear state program
 
 ###### creatorAddress
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the creator account for the app
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -1290,7 +1290,7 @@ Optional source map for the approval program
 
 ###### appSpec
 
-`string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 The ARC-56 or ARC-32 application spec as either:
  * Parsed JSON ARC-56 `Contract`
@@ -1305,13 +1305,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -1333,7 +1333,7 @@ const appClient = await AppClient.fromNetwork({
 
 ### normaliseAppSpec()
 
-> `static` **normaliseAppSpec**(`spec`): [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+> `static` **normaliseAppSpec**(`spec`): [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 Defined in: [src/types/app-client.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L610)
 
@@ -1346,11 +1346,11 @@ normalises it into a parsed ARC-56 contract object.
 
 The spec to normalise
 
-`string` | [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) | [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` | [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) | [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 #### Returns
 
-[`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+[`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 The normalised ARC-56 contract object
 

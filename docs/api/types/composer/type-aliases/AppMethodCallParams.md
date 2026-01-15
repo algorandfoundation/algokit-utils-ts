@@ -16,4 +16,4 @@ Common parameters to define an ABI method call transaction.
 
 ### onComplete?
 
-> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../transact/enumerations/OnApplicationComplete.md), [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`ClearState`](../../../transact/enumerations/OnApplicationComplete.md#clearstate)\>
+> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md), [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`ClearState`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#clearstate)\>

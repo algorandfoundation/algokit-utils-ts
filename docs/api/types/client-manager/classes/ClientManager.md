@@ -60,7 +60,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 #### Get Signature
 
-> **get** **algod**(): [`AlgodClient`](../../../algod-client/classes/AlgodClient.md)
+> **get** **algod**(): [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
 
 Defined in: [src/types/client-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L92)
 
@@ -68,7 +68,7 @@ Returns an Algod API client.
 
 ##### Returns
 
-[`AlgodClient`](../../../algod-client/classes/AlgodClient.md)
+[`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
 
 The Algod client
 
@@ -78,7 +78,7 @@ The Algod client
 
 #### Get Signature
 
-> **get** **indexer**(): [`IndexerClient`](../../../indexer-client/classes/IndexerClient.md)
+> **get** **indexer**(): [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
 
 Defined in: [src/types/client-manager.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L101)
 
@@ -90,7 +90,7 @@ Error if no Indexer client is configured
 
 ##### Returns
 
-[`IndexerClient`](../../../indexer-client/classes/IndexerClient.md)
+[`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
 
 The Indexer client
 
@@ -100,7 +100,7 @@ The Indexer client
 
 #### Get Signature
 
-> **get** **indexerIfPresent**(): [`IndexerClient`](../../../indexer-client/classes/IndexerClient.md) \| `undefined`
+> **get** **indexerIfPresent**(): [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md) \| `undefined`
 
 Defined in: [src/types/client-manager.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L110)
 
@@ -108,7 +108,7 @@ Returns an Indexer API client or `undefined` if it's not been provided.
 
 ##### Returns
 
-[`IndexerClient`](../../../indexer-client/classes/IndexerClient.md) \| `undefined`
+[`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md) \| `undefined`
 
 The Indexer client or `undefined`
 
@@ -118,7 +118,7 @@ The Indexer client or `undefined`
 
 #### Get Signature
 
-> **get** **kmd**(): [`KmdClient`](../../../kmd-client/classes/KmdClient.md)
+> **get** **kmd**(): [`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
 
 Defined in: [src/types/client-manager.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L119)
 
@@ -130,7 +130,7 @@ Error if no KMD client is configured
 
 ##### Returns
 
-[`KmdClient`](../../../kmd-client/classes/KmdClient.md)
+[`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
 
 The KMD client
 
@@ -174,7 +174,7 @@ Optional source map for the approval program
 
 ###### appSpec
 
-`string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 The ARC-56 or ARC-32 application spec as either:
  * Parsed JSON ARC-56 `Contract`
@@ -189,19 +189,19 @@ Optional source map for the clear state program
 
 ###### creatorAddress
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the creator account for the app
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -264,7 +264,7 @@ Optional source map for the approval program
 
 ###### appSpec
 
-`string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 The ARC-56 or ARC-32 application spec as either:
  * Parsed JSON ARC-56 `Contract`
@@ -279,13 +279,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -339,7 +339,7 @@ Optional source map for the approval program
 
 ###### appSpec
 
-`string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 The ARC-56 or ARC-32 application spec as either:
  * Parsed JSON ARC-56 `Contract`
@@ -354,13 +354,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -404,7 +404,7 @@ Defaults to the ARC-32/ARC-56 app spec name.
 
 ###### appSpec
 
-`string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+`string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 The ARC-56 or ARC-32 application spec as either:
  * Parsed JSON ARC-56 `Contract`
@@ -413,13 +413,13 @@ The ARC-56 or ARC-32 application spec as either:
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -614,19 +614,19 @@ Optional source map for the clear state program
 
 ###### creatorAddress
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the creator account for the app
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -714,13 +714,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -791,13 +791,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -852,13 +852,13 @@ Defaults to the ARC-32/ARC-56 app spec name.
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -1035,7 +1035,7 @@ const isLocalNet = ClientManager.genesisIdIsLocalNet('testnet-v1.0')
 
 ### getAlgodClient()
 
-> `static` **getAlgodClient**(`config`): [`AlgodClient`](../../../algod-client/classes/AlgodClient.md)
+> `static` **getAlgodClient**(`config`): [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
 
 Defined in: [src/types/client-manager.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L589)
 
@@ -1051,7 +1051,7 @@ The config of the client
 
 #### Returns
 
-[`AlgodClient`](../../../algod-client/classes/AlgodClient.md)
+[`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
 
 The Algod client
 
@@ -1076,7 +1076,7 @@ The Algod client
 
 ### getAlgodClientFromEnvironment()
 
-> `static` **getAlgodClientFromEnvironment**(): [`AlgodClient`](../../../algod-client/classes/AlgodClient.md)
+> `static` **getAlgodClientFromEnvironment**(): [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
 
 Defined in: [src/types/client-manager.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L610)
 
@@ -1084,7 +1084,7 @@ Returns an algod SDK client that automatically retries on idempotent calls loade
 
 #### Returns
 
-[`AlgodClient`](../../../algod-client/classes/AlgodClient.md)
+[`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
 
 The Algod client
 
@@ -1225,7 +1225,7 @@ const config = ClientManager.getDefaultLocalNetConfig('algod')
 
 ### getIndexerClient()
 
-> `static` **getIndexerClient**(`config`): [`IndexerClient`](../../../indexer-client/classes/IndexerClient.md)
+> `static` **getIndexerClient**(`config`): [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
 
 Defined in: [src/types/client-manager.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L635)
 
@@ -1241,7 +1241,7 @@ The config of the client
 
 #### Returns
 
-[`IndexerClient`](../../../indexer-client/classes/IndexerClient.md)
+[`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
 
 The Indexer client
 
@@ -1266,7 +1266,7 @@ The Indexer client
 
 ### getIndexerClientFromEnvironment()
 
-> `static` **getIndexerClientFromEnvironment**(): [`IndexerClient`](../../../indexer-client/classes/IndexerClient.md)
+> `static` **getIndexerClientFromEnvironment**(): [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
 
 Defined in: [src/types/client-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L657)
 
@@ -1274,7 +1274,7 @@ Returns an indexer SDK client that automatically retries on idempotent calls loa
 
 #### Returns
 
-[`IndexerClient`](../../../indexer-client/classes/IndexerClient.md)
+[`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
 
 The Indexer client
 
@@ -1318,7 +1318,7 @@ const config = ClientManager.getIndexerConfigFromEnvironment()
 
 ### getKmdClient()
 
-> `static` **getKmdClient**(`config`): [`KmdClient`](../../../kmd-client/classes/KmdClient.md)
+> `static` **getKmdClient**(`config`): [`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
 
 Defined in: [src/types/client-manager.ts:673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L673)
 
@@ -1336,7 +1336,7 @@ The config for the client
 
 #### Returns
 
-[`KmdClient`](../../../kmd-client/classes/KmdClient.md)
+[`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
 
 The KMD client
 
@@ -1350,7 +1350,7 @@ The KMD client
 
 ### getKmdClientFromEnvironment()
 
-> `static` **getKmdClientFromEnvironment**(): [`KmdClient`](../../../kmd-client/classes/KmdClient.md)
+> `static` **getKmdClientFromEnvironment**(): [`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
 
 Defined in: [src/types/client-manager.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L693)
 
@@ -1358,7 +1358,7 @@ Returns a KMD SDK client that automatically retries on idempotent calls loaded f
 
 #### Returns
 
-[`KmdClient`](../../../kmd-client/classes/KmdClient.md)
+[`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
 
 The KMD client
 

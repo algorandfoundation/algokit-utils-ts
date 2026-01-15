@@ -26,7 +26,7 @@ ID of the asset to reconfigure
 
 ### clawback?
 
-> `optional` **clawback**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **clawback**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the optional account that can clawback holdings of this asset from any account.
 
@@ -38,7 +38,7 @@ If not set (`undefined` or `""`) the field will become permanently empty.
 
 ### freeze?
 
-> `optional` **freeze**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **freeze**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
 
@@ -48,7 +48,7 @@ If not set (`undefined` or `""`) the field will become permanently empty.
 
 ### manager?
 
-> `optional` **manager**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **manager**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the optional account that can manage the configuration of the asset and destroy it.
 
@@ -58,7 +58,7 @@ If not set (`undefined` or `""`) the asset will become permanently immutable.
 
 ### reserve?
 
-> `optional` **reserve**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **reserve**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
 

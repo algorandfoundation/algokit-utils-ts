@@ -55,7 +55,7 @@ Optional source map for the approval program
 
 ### appSpec
 
-> **appSpec**: `string` \| [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
+> **appSpec**: `string` \| [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md)
 
 Defined in: [src/types/app-client.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L281)
 
@@ -78,7 +78,7 @@ Optional source map for the clear state program
 
 ### defaultSender?
 
-> `optional` **defaultSender**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> `optional` **defaultSender**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Defined in: [src/types/app-client.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L292)
 
@@ -88,7 +88,7 @@ Optional address to use for the account to use as the default sender for calls.
 
 ### defaultSigner?
 
-> `optional` **defaultSigner**: [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+> `optional` **defaultSigner**: [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Defined in: [src/types/app-client.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L294)
 

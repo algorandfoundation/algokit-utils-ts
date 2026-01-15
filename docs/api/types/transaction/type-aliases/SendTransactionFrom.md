@@ -6,7 +6,7 @@
 
 # Type Alias: SendTransactionFrom
 
-> **SendTransactionFrom** = [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md)
+> **SendTransactionFrom** = [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/transaction.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L98)
 

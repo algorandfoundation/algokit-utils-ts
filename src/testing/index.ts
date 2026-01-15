@@ -1,3 +1,6 @@
+/**
+ * @module Packages API/Testing
+ */
 export * from './account'
 export * from './fixtures'
 export * from './indexer'

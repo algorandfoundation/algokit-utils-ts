@@ -274,7 +274,7 @@ Sets the default signer to use if no other signer is specified.
 
 The signer to use, either a `TransactionSigner` or a `AddressWithSigner`
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) | [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) | [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 #### Returns
 
@@ -335,11 +335,11 @@ Tracks the given signer against the given sender for later signing.
 
 The sender address to use this signer for
 
-`string` | [`Address`](../../../index/classes/Address.md)
+`string` | [`Address`](../../../Algokit-Utils-API/classes/Address.md)
 
 ##### signer
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The signer to sign transactions with for the given sender
 
@@ -373,7 +373,7 @@ Tracks the given account (object that encapsulates an address and a signer) for 
 The account to register, which can be a `AddressWithSigner` or
  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
 
-[`MultisigAccount`](../../../transact/classes/MultisigAccount.md) | [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) | [`LogicSigAccount`](../../../transact/classes/LogicSigAccount.md)
+[`MultisigAccount`](../../../Packages/Transact/classes/MultisigAccount.md) | [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) | [`LogicSigAccount`](../../../Packages/Transact/classes/LogicSigAccount.md)
 
 #### Returns
 

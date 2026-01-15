@@ -22,7 +22,7 @@ ID of the asset that will be opted-out of.
 
 ### creator
 
-> **creator**: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+> **creator**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the asset creator account to close the asset
   position to (any remaining asset units will be sent to this account).

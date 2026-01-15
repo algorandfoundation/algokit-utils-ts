@@ -64,7 +64,7 @@ What action to perform if a TEAL update is detected
 
 ### sender?
 
-> `optional` **sender**: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md)
+> `optional` **sender**: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/app-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L144)
 

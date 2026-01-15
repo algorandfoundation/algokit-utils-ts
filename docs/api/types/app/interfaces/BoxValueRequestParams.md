@@ -37,7 +37,7 @@ The name of the box to return either as a string, binary array or `BoxName`
 
 ### ~~type~~
 
-> **type**: [`ABIType`](../../../abi/classes/ABIType.md)
+> **type**: [`ABIType`](../../../Packages/ABI/classes/ABIType.md)
 
 Defined in: [src/types/app.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L285)
 

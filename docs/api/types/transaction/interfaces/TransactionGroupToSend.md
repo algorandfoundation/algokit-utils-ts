@@ -25,7 +25,7 @@ Any parameters to control the semantics of the send to the network
 
 ### signer?
 
-> `optional` **signer**: [`SendingAddress`](../../../transact/type-aliases/SendingAddress.md)
+> `optional` **signer**: [`SendingAddress`](../../../Packages/Transact/type-aliases/SendingAddress.md)
 
 Defined in: [src/types/transaction.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L120)
 
@@ -35,7 +35,7 @@ Optional signer to pass in, required if at least one transaction provided is jus
 
 ### transactions
 
-> **transactions**: ([`Transaction`](../../../transact/classes/Transaction.md) \| [`TransactionToSign`](TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](SendTransactionResult.md)\>)[]
+> **transactions**: ([`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| [`TransactionToSign`](TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](SendTransactionResult.md)\>)[]
 
 Defined in: [src/types/transaction.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L118)
 

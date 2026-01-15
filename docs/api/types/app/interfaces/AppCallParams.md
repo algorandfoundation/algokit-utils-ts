@@ -42,7 +42,7 @@ The arguments passed in to the app call
 
 ### callType
 
-> **callType**: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`ClearState`](../../../transact/enumerations/OnApplicationComplete.md#clearstate) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+> **callType**: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`ClearState`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#clearstate) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 Defined in: [src/types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)
 
@@ -66,7 +66,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 ### from
 
-> **from**: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md)
+> **from**: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
 

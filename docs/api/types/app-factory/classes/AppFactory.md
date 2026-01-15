@@ -62,7 +62,7 @@ Create bare (raw) transactions for the current app
 
 ##### bare.create()
 
-> **create**: (`params?`) => `Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+> **create**: (`params?`) => `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 Create a create app call transaction using a bare (raw) create call.
 
@@ -76,13 +76,13 @@ The parameters to create the create call transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -177,7 +177,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 ###### rejectVersion?
 
@@ -187,7 +187,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -225,13 +225,13 @@ The number of integers saved in local state.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -257,13 +257,13 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 ###### Returns
 
-`Promise`\<[`Transaction`](../../../transact/classes/Transaction.md)\>
+`Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\>
 
 The create call transaction
 
 #### create()
 
-> **create**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+> **create**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 Create a create app call transaction using an ABI create call.
 
@@ -277,13 +277,13 @@ The parameters to create the create call transaction
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -295,7 +295,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
+([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -403,7 +403,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -415,7 +415,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -453,13 +453,13 @@ The number of integers saved in local state.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -485,7 +485,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 ##### Returns
 
-`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; \}\>
+`Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; \}\>
 
 The create call transaction
 
@@ -507,7 +507,7 @@ Send bare (raw) transactions for the current app
 
 ##### bare.create()
 
-> **create**: (`params?`) => `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
+> **create**: (`params?`) => `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
 
 Creates an instance of the app using a bare (raw) create call and returns the result
 of the creation transaction and an app client to interact with that app instance.
@@ -524,13 +524,13 @@ The parameters to create the app
 
 ###### Returns
 
-`Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
+`Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
 
 The app client and the result of the creation transaction
 
 #### create()
 
-> **create**: (`params`) => `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
+> **create**: (`params`) => `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
 
 Creates an instance of the app and returns the result of the creation
 transaction and an app client to interact with that app instance.
@@ -547,7 +547,7 @@ The parameters to create the app
 
 ##### Returns
 
-`Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
+`Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}; \}\>
 
 The app client and the result of the creation transaction
 
@@ -589,7 +589,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
 #### Get Signature
 
-> **get** **appSpec**(): [`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+> **get** **appSpec**(): [`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 Defined in: [src/types/app-factory.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L196)
 
@@ -597,7 +597,7 @@ The ARC-56 app spec being used
 
 ##### Returns
 
-[`Arc56Contract`](../../../abi/type-aliases/Arc56Contract.md)
+[`Arc56Contract`](../../../Packages/ABI/type-aliases/Arc56Contract.md)
 
 ***
 
@@ -644,13 +644,13 @@ Return params for a create bare call, including deploy-time TEAL template replac
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -745,7 +745,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 ###### rejectVersion?
 
@@ -755,7 +755,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -793,13 +793,13 @@ The number of integers saved in local state.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -839,13 +839,13 @@ Return params for a deployment delete bare call
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -926,7 +926,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -934,13 +934,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -972,13 +972,13 @@ Return params for a deployment update bare call
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -1059,7 +1059,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1067,13 +1067,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1105,13 +1105,13 @@ Return params for a create ABI call, including deploy-time TEAL template replace
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -1123,7 +1123,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
+([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -1231,7 +1231,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication)
+[`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -1243,7 +1243,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1281,13 +1281,13 @@ The number of integers saved in local state.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1327,13 +1327,13 @@ Return params for a deployment delete ABI call
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -1345,7 +1345,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
+([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -1433,7 +1433,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`OnApplicationComplete`](../../../transact/enumerations/OnApplicationComplete.md)
+[`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -1445,7 +1445,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1453,13 +1453,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1491,13 +1491,13 @@ Return params for a deployment update ABI call
 
 ###### accessReferences?
 
-[`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]
+[`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ###### accountReferences?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -1509,7 +1509,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
+([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]
 
 Arguments to the ABI method, either:
 * An ABI value
@@ -1597,7 +1597,7 @@ Note to attach to the transaction. Max of 1000 bytes.
 
 ###### onComplete?
 
-[`OnApplicationComplete`](../../../transact/enumerations/OnApplicationComplete.md)
+[`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 
@@ -1609,7 +1609,7 @@ If set, the transaction will be rejected when the app's version is greater than 
 
 ###### rekeyTo?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Change the signing key of the sender to the given address.
 
@@ -1617,13 +1617,13 @@ Change the signing key of the sender to the given address.
 
 ###### sender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the account sending the transaction, if undefined then the app client's defaultSender is used.
 
 ###### signer?
 
-[`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 The function used to sign transaction(s); if not specified then
  an attempt will be made to find a registered signer for the
@@ -1683,7 +1683,7 @@ const result = await factory.compile()
 
 ### deploy()
 
-> **deploy**(`params`): `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"create"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"update"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteResult`: [`ConfirmedTransactionResult`](../../transaction/interfaces/ConfirmedTransactionResult.md); `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"replace"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `name`: `string`; `operationPerformed`: `"nothing"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \}; \}\>
+> **deploy**(`params`): `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"create"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"update"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteResult`: [`ConfirmedTransactionResult`](../../transaction/interfaces/ConfirmedTransactionResult.md); `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"replace"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `name`: `string`; `operationPerformed`: `"nothing"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \}; \}\>
 
 Defined in: [src/types/app-factory.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L354)
 
@@ -1715,7 +1715,7 @@ Whether to use simulate to automatically calculate required app call inner trans
 
 ###### createParams?
 
-\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
+\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
 
 Create transaction parameters to use if a create needs to be issued as part of deployment
 
@@ -1728,7 +1728,7 @@ Whether or not the contract should have deploy-time permanence control set.
 
 ###### deleteParams?
 
-\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`OnApplicationComplete`](../../../transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
+\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
 
 Delete transaction parameters to use if a create needs to be issued as part of deployment
 
@@ -1798,13 +1798,13 @@ Whether or not the contract should have deploy-time immutability control set.
 
 ###### updateParams?
 
-\{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../../transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`OnApplicationComplete`](../../../transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
+\{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`AppMethodCallTransactionArgument`](../../composer/type-aliases/AppMethodCallTransactionArgument.md) \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](../../amount/classes/AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
 
 Update transaction parameters to use if a create needs to be issued as part of deployment
 
 #### Returns
 
-`Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"create"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"update"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteResult`: [`ConfirmedTransactionResult`](../../transaction/interfaces/ConfirmedTransactionResult.md); `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"replace"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../index/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `name`: `string`; `operationPerformed`: `"nothing"`; `return`: [`ABIValue`](../../../abi/type-aliases/ABIValue.md) \| `undefined`; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \}; \}\>
+`Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"create"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"update"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteResult`: [`ConfirmedTransactionResult`](../../transaction/interfaces/ConfirmedTransactionResult.md); `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"replace"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `name`: `string`; `operationPerformed`: `"nothing"`; `return`: [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| `undefined`; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \}; \}\>
 
 The app client and the result of the deployment
 
@@ -1929,19 +1929,19 @@ Optional source map for the clear state program
 
 ###### creatorAddress
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 The address of the creator account for the app
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
@@ -2009,13 +2009,13 @@ Optional source map for the clear state program
 
 ###### defaultSender?
 
-[`ReadableAddress`](../../../index/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
 
 Optional address to use for the account to use as the default sender for calls.
 
 ###### defaultSigner?
 
-[`TransactionSigner`](../../../transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
 
 Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`).
 
