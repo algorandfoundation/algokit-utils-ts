@@ -107,7 +107,7 @@ Sends a funding request to the dispenser API to fund the specified address with 
 
 The address to fund.
 
-`string` | [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+`string` | [`Address`](../../../algokit-utils/classes/Address.md)
 
 ##### amount
 

@@ -28,7 +28,7 @@ A hash map of app name to app metadata
 
 ### creator
 
-> **creator**: `Readonly`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md)\>
+> **creator**: `Readonly`\<[`Address`](../../../algokit-utils/classes/Address.md)\>
 
 Defined in: [src/types/app-deployer.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L93)
 

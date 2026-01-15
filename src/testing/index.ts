@@ -1,5 +1,5 @@
 /**
- * @module Packages API/Testing
+ * @module Subpaths/testing
  */
 export * from './account'
 export * from './fixtures'

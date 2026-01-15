@@ -4,39 +4,17 @@
 
 # @algorandfoundation/algokit-utils
 
-## Documents
-
-- [concepts/account](documents/concepts/account.md)
-- [concepts/algorand-client](documents/concepts/algorand-client.md)
-- [concepts/amount](documents/concepts/amount.md)
-- [concepts/app-client](documents/concepts/app-client.md)
-- [concepts/app-deploy](documents/concepts/app-deploy.md)
-- [concepts/app](documents/concepts/app.md)
-- [concepts/asset](documents/concepts/asset.md)
-- [concepts/client](documents/concepts/client.md)
-- [concepts/debugging](documents/concepts/debugging.md)
-- [concepts/dispenser-client](documents/concepts/dispenser-client.md)
-- [concepts/event-emitter](documents/concepts/event-emitter.md)
-- [concepts/indexer](documents/concepts/indexer.md)
-- [concepts/testing](documents/concepts/testing.md)
-- [concepts/transaction-composer](documents/concepts/transaction-composer.md)
-- [concepts/transaction](documents/concepts/transaction.md)
-- [concepts/transfer](documents/concepts/transfer.md)
-- [concepts/typed-app-clients](documents/concepts/typed-app-clients.md)
-- [migration/v7-migration](documents/migration/v7-migration.md)
-- [migration/v8-migration](documents/migration/v8-migration.md)
-
 ## Modules
 
-- [Algokit Utils API](Algokit-Utils-API/README.md)
-- [Packages/ABI](Packages/ABI/README.md)
-- [Packages/Algo25](Packages/Algo25/README.md)
-- [Packages/Algod Client](Packages/Algod-Client/README.md)
-- [Packages/Indexer Client](Packages/Indexer-Client/README.md)
-- [Packages/KMD Client](Packages/KMD-Client/README.md)
-- [Packages/Testing](Packages/Testing/README.md)
-- [Packages/Transact](Packages/Transact/README.md)
+- [algokit-utils](algokit-utils/README.md)
 - [Packages/Transaction](Packages/Transaction/README.md)
+- [Subpaths/abi](Subpaths/abi/README.md)
+- [Subpaths/algo25](Subpaths/algo25/README.md)
+- [Subpaths/algod-client](Subpaths/algod-client/README.md)
+- [Subpaths/indexer-client](Subpaths/indexer-client/README.md)
+- [Subpaths/kmd-client](Subpaths/kmd-client/README.md)
+- [Subpaths/testing](Subpaths/testing/README.md)
+- [Subpaths/transact](Subpaths/transact/README.md)
 - [types/account](types/account/README.md)
 - [types/account-manager](types/account-manager/README.md)
 - [types/algorand-client](types/algorand-client/README.md)

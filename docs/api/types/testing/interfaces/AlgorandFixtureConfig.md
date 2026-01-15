@@ -22,7 +22,7 @@ Configuration for creating an Algorand testing fixture.
 
 ### accountGetter()?
 
-> `optional` **accountGetter**: (`algorand`) => `Promise`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`\>
+> `optional` **accountGetter**: (`algorand`) => `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
 Defined in: [src/types/testing.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L65)
 
@@ -36,13 +36,13 @@ Optional override for how to get an account; this allows you to retrieve account
 
 #### Returns
 
-`Promise`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`\>
+`Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
 ***
 
 ### algod?
 
-> `optional` **algod**: [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
+> `optional` **algod**: [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
 Defined in: [src/types/testing.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L57)
 
@@ -66,7 +66,7 @@ Algod client configuration
 
 ### indexer?
 
-> `optional` **indexer**: [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
+> `optional` **indexer**: [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
 Defined in: [src/types/testing.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L59)
 
@@ -90,7 +90,7 @@ Indexer client configuration
 
 ### kmd?
 
-> `optional` **kmd**: [`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
+> `optional` **kmd**: [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
 Defined in: [src/types/testing.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L61)
 

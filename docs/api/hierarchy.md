@@ -8,38 +8,38 @@
 
 ### ABIType
 
-- [ABIType](Packages/ABI/classes/ABIType.md)
-  - [ABIAddressType](Packages/ABI/classes/ABIAddressType.md)
-  - [ABIArrayDynamicType](Packages/ABI/classes/ABIArrayDynamicType.md)
-  - [ABIArrayStaticType](Packages/ABI/classes/ABIArrayStaticType.md)
-  - [ABIBoolType](Packages/ABI/classes/ABIBoolType.md)
-  - [ABIByteType](Packages/ABI/classes/ABIByteType.md)
-  - [ABIStringType](Packages/ABI/classes/ABIStringType.md)
-  - [ABIStructType](Packages/ABI/classes/ABIStructType.md)
-  - [ABITupleType](Packages/ABI/classes/ABITupleType.md)
-  - [ABIUfixedType](Packages/ABI/classes/ABIUfixedType.md)
-  - [ABIUintType](Packages/ABI/classes/ABIUintType.md)
+- [ABIType](Subpaths/abi/classes/ABIType.md)
+  - [ABIAddressType](Subpaths/abi/classes/ABIAddressType.md)
+  - [ABIArrayDynamicType](Subpaths/abi/classes/ABIArrayDynamicType.md)
+  - [ABIArrayStaticType](Subpaths/abi/classes/ABIArrayStaticType.md)
+  - [ABIBoolType](Subpaths/abi/classes/ABIBoolType.md)
+  - [ABIByteType](Subpaths/abi/classes/ABIByteType.md)
+  - [ABIStringType](Subpaths/abi/classes/ABIStringType.md)
+  - [ABIStructType](Subpaths/abi/classes/ABIStructType.md)
+  - [ABITupleType](Subpaths/abi/classes/ABITupleType.md)
+  - [ABIUfixedType](Subpaths/abi/classes/ABIUfixedType.md)
+  - [ABIUintType](Subpaths/abi/classes/ABIUintType.md)
 
 ***
 
 ### Addressable
 
-- [Addressable](Algokit-Utils-API/interfaces/Addressable.md)
-  - [LogicSig](Packages/Transact/classes/LogicSig.md)
-    - [LogicSigAccount](Packages/Transact/classes/LogicSigAccount.md)
-  - [AddressWithTransactionSigner](Packages/Transact/interfaces/AddressWithTransactionSigner.md)
-    - [MultisigAccount](Packages/Transact/classes/MultisigAccount.md)
-  - [AddressWithDelegatedLsigSigner](Packages/Transact/interfaces/AddressWithDelegatedLsigSigner.md)
+- [Addressable](algokit-utils/interfaces/Addressable.md)
+  - [LogicSig](Subpaths/transact/classes/LogicSig.md)
+    - [LogicSigAccount](Subpaths/transact/classes/LogicSigAccount.md)
+  - [AddressWithTransactionSigner](Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
+    - [MultisigAccount](Subpaths/transact/classes/MultisigAccount.md)
+  - [AddressWithDelegatedLsigSigner](Subpaths/transact/interfaces/AddressWithDelegatedLsigSigner.md)
 
-  - [AddressWithProgramDataSigner](Packages/Transact/interfaces/AddressWithProgramDataSigner.md)
-  - [AddressWithMxBytesSigner](Packages/Transact/interfaces/AddressWithMxBytesSigner.md)
+  - [AddressWithProgramDataSigner](Subpaths/transact/interfaces/AddressWithProgramDataSigner.md)
+  - [AddressWithMxBytesSigner](Subpaths/transact/interfaces/AddressWithMxBytesSigner.md)
 
 ***
 
 ### AlgodApi
 
-- [AlgodApi](Packages/Algod-Client/classes/AlgodApi.md)
-  - [AlgodClient](Packages/Algod-Client/classes/AlgodClient.md)
+- [AlgodApi](Subpaths/algod-client/classes/AlgodApi.md)
+  - [AlgodClient](Subpaths/algod-client/classes/AlgodClient.md)
 
 ***
 
@@ -72,22 +72,22 @@
 
 ### BaseHttpRequest
 
-- [BaseHttpRequest](Packages/Algod-Client/classes/BaseHttpRequest.md)
-  - [FetchHttpRequest](Packages/Algod-Client/classes/FetchHttpRequest.md)
+- [BaseHttpRequest](Subpaths/algod-client/classes/BaseHttpRequest.md)
+  - [FetchHttpRequest](Subpaths/algod-client/classes/FetchHttpRequest.md)
 
 ***
 
 ### BaseHttpRequest
 
-- [BaseHttpRequest](Packages/Indexer-Client/classes/BaseHttpRequest.md)
-  - [FetchHttpRequest](Packages/Indexer-Client/classes/FetchHttpRequest.md)
+- [BaseHttpRequest](Subpaths/indexer-client/classes/BaseHttpRequest.md)
+  - [FetchHttpRequest](Subpaths/indexer-client/classes/FetchHttpRequest.md)
 
 ***
 
 ### BaseHttpRequest
 
-- [BaseHttpRequest](Packages/KMD-Client/classes/BaseHttpRequest.md)
-  - [FetchHttpRequest](Packages/KMD-Client/classes/FetchHttpRequest.md)
+- [BaseHttpRequest](Subpaths/kmd-client/classes/BaseHttpRequest.md)
+  - [FetchHttpRequest](Subpaths/kmd-client/classes/FetchHttpRequest.md)
 
 ***
 
@@ -100,15 +100,15 @@
 
 ### IndexerApi
 
-- [IndexerApi](Packages/Indexer-Client/classes/IndexerApi.md)
-  - [IndexerClient](Packages/Indexer-Client/classes/IndexerClient.md)
+- [IndexerApi](Subpaths/indexer-client/classes/IndexerApi.md)
+  - [IndexerClient](Subpaths/indexer-client/classes/IndexerClient.md)
 
 ***
 
 ### KmdApi
 
-- [KmdApi](Packages/KMD-Client/classes/KmdApi.md)
-  - [KmdClient](Packages/KMD-Client/classes/KmdClient.md)
+- [KmdApi](Subpaths/kmd-client/classes/KmdApi.md)
+  - [KmdClient](Subpaths/kmd-client/classes/KmdClient.md)
 
 ***
 

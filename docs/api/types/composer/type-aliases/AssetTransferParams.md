@@ -28,7 +28,7 @@ ID of the asset to transfer.
 
 ### clawbackTarget?
 
-> `optional` **clawbackTarget**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **clawbackTarget**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 Optional address of an account to clawback the asset from.
 
@@ -38,7 +38,7 @@ Requires the sender to be the clawback account.
 
 ### closeAssetTo?
 
-> `optional` **closeAssetTo**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **closeAssetTo**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 Optional address of an account to close the asset position to.
 
@@ -46,6 +46,6 @@ Optional address of an account to close the asset position to.
 
 ### receiver
 
-> **receiver**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> **receiver**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the account that will receive the asset unit(s).

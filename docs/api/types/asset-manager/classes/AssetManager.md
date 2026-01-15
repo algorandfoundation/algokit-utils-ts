@@ -24,7 +24,7 @@ Create a new asset manager.
 
 ##### algod
 
-[`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
+[`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
 An algod client
 
@@ -62,7 +62,7 @@ Transactions will be sent in batches of 16 as transaction groups.
 
 The account to opt-in
 
-`string` | [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+`string` | [`Address`](../../../algokit-utils/classes/Address.md)
 
 ##### assetIds
 
@@ -109,7 +109,7 @@ Transactions will be sent in batches of 16 as transaction groups.
 
 The account to opt-in
 
-`string` | [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+`string` | [`Address`](../../../algokit-utils/classes/Address.md)
 
 ##### assetIds
 
@@ -154,7 +154,7 @@ Returns the given sender account's asset holding for a given asset.
 
 The address of the sender/account to look up
 
-`string` | [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+`string` | [`Address`](../../../algokit-utils/classes/Address.md)
 
 ##### assetId
 

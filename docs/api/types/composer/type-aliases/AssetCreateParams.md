@@ -28,7 +28,7 @@ This field can only be specified upon asset creation.
 
 ### clawback?
 
-> `optional` **clawback**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **clawback**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the optional account that can clawback holdings of this asset from any account.
 
@@ -69,7 +69,7 @@ This field can only be specified upon asset creation.
 
 ### freeze?
 
-> `optional` **freeze**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **freeze**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
 
@@ -79,7 +79,7 @@ If not set (`undefined` or `""`) at asset creation or subsequently set to empty 
 
 ### manager?
 
-> `optional` **manager**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **manager**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the optional account that can manage the configuration of the asset and destroy it.
 
@@ -99,7 +99,7 @@ This field can only be specified upon asset creation.
 
 ### reserve?
 
-> `optional` **reserve**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **reserve**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
 

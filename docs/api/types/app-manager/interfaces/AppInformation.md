@@ -14,7 +14,7 @@ Information about an app.
 
 ### appAddress
 
-> **appAddress**: [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+> **appAddress**: [`Address`](../../../algokit-utils/classes/Address.md)
 
 Defined in: [src/types/app-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L20)
 
@@ -54,7 +54,7 @@ Clear state program.
 
 ### creator
 
-> **creator**: [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+> **creator**: [`Address`](../../../algokit-utils/classes/Address.md)
 
 Defined in: [src/types/app-manager.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L33)
 

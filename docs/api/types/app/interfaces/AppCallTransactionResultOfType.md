@@ -28,7 +28,7 @@ The result of preparing and/or sending multiple transactions
 
 ### confirmation?
 
-> `optional` **confirmation**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)
+> `optional` **confirmation**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
 Defined in: [src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
@@ -42,7 +42,7 @@ The response if the transaction was sent and waited for
 
 ### confirmations?
 
-> `optional` **confirmations**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]
+> `optional` **confirmations**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]
 
 Defined in: [src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
 
@@ -67,7 +67,7 @@ If an ABI method was called the processed return value
 
 ### transaction
 
-> **transaction**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)
+> **transaction**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)
 
 Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
@@ -81,7 +81,7 @@ The transaction
 
 ### transactions
 
-> **transactions**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]
+> **transactions**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]
 
 Defined in: [src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 

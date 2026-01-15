@@ -6,7 +6,7 @@
 
 # ~~Type Alias: TransactionSignerAccount~~
 
-> **TransactionSignerAccount** = [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
+> **TransactionSignerAccount** = [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/account.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L19)
 

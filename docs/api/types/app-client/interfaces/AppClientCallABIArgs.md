@@ -20,7 +20,7 @@ Defined in: [src/types/app-client.ts:183](https://github.com/algorandfoundation/
 
 ### accounts?
 
-> `optional` **accounts**: (`string` \| [`Address`](../../../Algokit-Utils-API/classes/Address.md))[]
+> `optional` **accounts**: (`string` \| [`Address`](../../../algokit-utils/classes/Address.md))[]
 
 Defined in: [src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
 
@@ -62,7 +62,7 @@ IDs of any assets to load into the foreignAssets array
 
 ### boxes?
 
-> `optional` **boxes**: ([`BoxReference`](../../../Packages/Transact/type-aliases/BoxReference.md) \| [`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]
+> `optional` **boxes**: ([`BoxReference`](../../../Subpaths/transact/type-aliases/BoxReference.md) \| [`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]
 
 Defined in: [src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
 
@@ -114,7 +114,7 @@ The ABI method args to pass in
 
 ### rekeyTo?
 
-> `optional` **rekeyTo**: `string` \| [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
+> `optional` **rekeyTo**: `string` \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/app.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L57)
 

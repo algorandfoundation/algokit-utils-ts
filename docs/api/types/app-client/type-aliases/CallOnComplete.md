@@ -16,7 +16,7 @@ onComplete parameter for a non-update app call
 
 ### onComplete?
 
-> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md), [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication)\>
+> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md), [`UpdateApplication`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication)\>
 
 Defined in: [src/types/app-client.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L307)
 

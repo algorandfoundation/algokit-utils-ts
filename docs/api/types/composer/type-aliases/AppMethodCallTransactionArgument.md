@@ -6,7 +6,7 @@
 
 # Type Alias: AppMethodCallTransactionArgument
 
-> **AppMethodCallTransactionArgument** = [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| `Promise`\<[`Transaction`](../../../Packages/Transact/classes/Transaction.md)\> \| [`AppMethodCall`](AppMethodCall.md)\<[`AppCreateParams`](AppCreateParams.md)\> \| [`AppMethodCall`](AppMethodCall.md)\<[`AppUpdateParams`](AppUpdateParams.md)\> \| [`AppMethodCall`](AppMethodCall.md)\<[`AppMethodCallParams`](AppMethodCallParams.md)\>
+> **AppMethodCallTransactionArgument** = [`TransactionWithSigner`](../../../algokit-utils/interfaces/TransactionWithSigner.md) \| [`Transaction`](../../../Subpaths/transact/classes/Transaction.md) \| `Promise`\<[`Transaction`](../../../Subpaths/transact/classes/Transaction.md)\> \| [`AppMethodCall`](AppMethodCall.md)\<[`AppCreateParams`](AppCreateParams.md)\> \| [`AppMethodCall`](AppMethodCall.md)\<[`AppUpdateParams`](AppUpdateParams.md)\> \| [`AppMethodCall`](AppMethodCall.md)\<[`AppMethodCallParams`](AppMethodCallParams.md)\>
 
 Defined in: [src/transactions/method-call.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L50)
 

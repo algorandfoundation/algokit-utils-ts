@@ -14,7 +14,7 @@ Clients from algosdk that interact with the official Algorand APIs
 
 ### algod
 
-> **algod**: [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
+> **algod**: [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
 Defined in: [src/types/client-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L15)
 
@@ -24,7 +24,7 @@ Algod client, see https://dev.algorand.co/reference/rest-apis/algod/
 
 ### indexer?
 
-> `optional` **indexer**: [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
+> `optional` **indexer**: [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
 Defined in: [src/types/client-manager.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L17)
 
@@ -34,7 +34,7 @@ Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer
 
 ### kmd?
 
-> `optional` **kmd**: [`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
+> `optional` **kmd**: [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
 Defined in: [src/types/client-manager.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L19)
 

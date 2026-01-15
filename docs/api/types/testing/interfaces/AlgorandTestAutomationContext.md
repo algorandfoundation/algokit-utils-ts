@@ -14,7 +14,7 @@ Test automation context.
 
 ### algod
 
-> **algod**: [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
+> **algod**: [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
 Defined in: [src/types/testing.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L25)
 
@@ -34,7 +34,7 @@ An AlgorandClient instance loaded with the current context, including testAccoun
 
 ### generateAccount()
 
-> **generateAccount**: (`params`) => `Promise`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`\>
+> **generateAccount**: (`params`) => `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
 Defined in: [src/types/testing.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L35)
 
@@ -48,13 +48,13 @@ Generate and fund an additional ephemerally created account
 
 #### Returns
 
-`Promise`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`\>
+`Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
 ***
 
 ### indexer
 
-> **indexer**: [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md)
+> **indexer**: [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
 Defined in: [src/types/testing.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L27)
 
@@ -64,7 +64,7 @@ Indexer client instance
 
 ### kmd
 
-> **kmd**: [`KmdClient`](../../../Packages/KMD-Client/classes/KmdClient.md)
+> **kmd**: [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
 Defined in: [src/types/testing.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L29)
 
@@ -74,7 +74,7 @@ KMD client instance
 
 ### testAccount
 
-> **testAccount**: [`Address`](../../../Algokit-Utils-API/classes/Address.md) & `object`
+> **testAccount**: [`Address`](../../../algokit-utils/classes/Address.md) & `object`
 
 Defined in: [src/types/testing.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L33)
 
@@ -84,29 +84,29 @@ Default, funded test account that is ephemerally created
 
 ##### addr
 
-> **addr**: `Readonly`\<[`Address`](../../../Algokit-Utils-API/classes/Address.md)\>
+> **addr**: `Readonly`\<[`Address`](../../../algokit-utils/classes/Address.md)\>
 
 ##### lsigSigner
 
-> **lsigSigner**: [`DelegatedLsigSigner`](../../../Packages/Transact/type-aliases/DelegatedLsigSigner.md)
+> **lsigSigner**: [`DelegatedLsigSigner`](../../../Subpaths/transact/type-aliases/DelegatedLsigSigner.md)
 
 ##### mxBytesSigner
 
-> **mxBytesSigner**: [`MxBytesSigner`](../../../Packages/Transact/type-aliases/MxBytesSigner.md)
+> **mxBytesSigner**: [`MxBytesSigner`](../../../Subpaths/transact/type-aliases/MxBytesSigner.md)
 
 ##### programDataSigner
 
-> **programDataSigner**: [`ProgramDataSigner`](../../../Packages/Transact/type-aliases/ProgramDataSigner.md)
+> **programDataSigner**: [`ProgramDataSigner`](../../../Subpaths/transact/type-aliases/ProgramDataSigner.md)
 
 ##### signer
 
-> **signer**: [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
+> **signer**: [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
 ***
 
 ### transactionLogger
 
-> **transactionLogger**: [`TransactionLogger`](../../../Packages/Testing/classes/TransactionLogger.md)
+> **transactionLogger**: [`TransactionLogger`](../../../Subpaths/testing/classes/TransactionLogger.md)
 
 Defined in: [src/types/testing.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L31)
 
@@ -130,7 +130,7 @@ Wait for the indexer to catch up with all transactions logged by `transactionLog
 
 ### waitForIndexerTransaction()
 
-> **waitForIndexerTransaction**: (`transactionId`) => `Promise`\<[`TransactionResponse`](../../../Packages/Indexer-Client/type-aliases/TransactionResponse.md)\>
+> **waitForIndexerTransaction**: (`transactionId`) => `Promise`\<[`TransactionResponse`](../../../Subpaths/indexer-client/type-aliases/TransactionResponse.md)\>
 
 Defined in: [src/types/testing.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L39)
 
@@ -144,4 +144,4 @@ Wait for the indexer to catch up with the given transaction ID
 
 #### Returns
 
-`Promise`\<[`TransactionResponse`](../../../Packages/Indexer-Client/type-aliases/TransactionResponse.md)\>
+`Promise`\<[`TransactionResponse`](../../../Subpaths/indexer-client/type-aliases/TransactionResponse.md)\>

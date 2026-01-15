@@ -16,7 +16,7 @@ Represents the data for AVM traces debug events emitted whenever a transaction i
 
 ### simulateResponse
 
-> **simulateResponse**: [`SimulateResponse`](../../../Packages/Algod-Client/type-aliases/SimulateResponse.md)
+> **simulateResponse**: [`SimulateResponse`](../../../Subpaths/algod-client/type-aliases/SimulateResponse.md)
 
 Defined in: [src/types/debugging.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L49)
 

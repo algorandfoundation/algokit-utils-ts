@@ -16,7 +16,7 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 ### creatorAddress
 
-> **creatorAddress**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> **creatorAddress**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 Defined in: [src/types/app-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L77)
 
@@ -26,7 +26,7 @@ The address of the app creator account to resolve the app by
 
 ### findExistingUsing
 
-> **findExistingUsing**: [`IndexerClient`](../../../Packages/Indexer-Client/classes/IndexerClient.md) \| [`AppLookup`](../../app/interfaces/AppLookup.md)
+> **findExistingUsing**: [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md) \| [`AppLookup`](../../app/interfaces/AppLookup.md)
 
 Defined in: [src/types/app-client.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L84)
 

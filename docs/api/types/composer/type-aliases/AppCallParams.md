@@ -16,4 +16,4 @@ Parameters to define an application call transaction.
 
 ### onComplete?
 
-> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md), [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication)\>
+> `optional` **onComplete**: `Exclude`\<[`OnApplicationComplete`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md), [`UpdateApplication`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication)\>

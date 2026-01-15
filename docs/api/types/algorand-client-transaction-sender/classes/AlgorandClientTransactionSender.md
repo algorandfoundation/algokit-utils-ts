@@ -54,7 +54,7 @@ const transactionSender = new AlgorandClientTransactionSender(() => new Transact
 
 ### appCall()
 
-> **appCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:741](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L741)
 
@@ -72,7 +72,7 @@ The parameters for the app call transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the app call transaction and the transaction that was sent
 
@@ -116,7 +116,7 @@ await algorand.send.appCall({
 
 ### appCallMethodCall()
 
-> **appCallMethodCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appCallMethodCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:989](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L989)
 
@@ -134,7 +134,7 @@ The parameters for the app call transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the application ABI method call transaction and the transaction that was sent
 
@@ -190,7 +190,7 @@ await algorand.send.appCallMethodCall({
 
 ### appCreate()
 
-> **appCreate**: (`params`) => `Promise`\<\{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appCreate**: (`params`) => `Promise`\<\{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:598](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L598)
 
@@ -208,7 +208,7 @@ The parameters for the app creation transaction
 
 #### Returns
 
-`Promise`\<\{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the app create transaction and the transaction that was sent
 
@@ -262,7 +262,7 @@ await algorand.send.appCreate({
 
 ### appCreateMethodCall()
 
-> **appCreateMethodCall**: (`params`) => `Promise`\<\{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appCreateMethodCall**: (`params`) => `Promise`\<\{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:810](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L810)
 
@@ -280,7 +280,7 @@ The parameters for the app creation transaction
 
 #### Returns
 
-`Promise`\<\{ `appAddress`: [`Address`](../../../Algokit-Utils-API/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the application ABI method create transaction and the transaction that was sent
 
@@ -346,7 +346,7 @@ await algorand.send.appCreateMethodCall({
 
 ### appDelete()
 
-> **appDelete**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appDelete**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:694](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L694)
 
@@ -364,7 +364,7 @@ The parameters for the app deletion transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the app delete transaction and the transaction that was sent
 
@@ -408,7 +408,7 @@ await algorand.send.appDelete({
 
 ### appDeleteMethodCall()
 
-> **appDeleteMethodCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appDeleteMethodCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:930](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L930)
 
@@ -426,7 +426,7 @@ The parameters for the app deletion transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the application ABI method delete transaction and the transaction that was sent
 
@@ -482,7 +482,7 @@ await algorand.send.appDeleteMethodCall({
 
 ### appUpdate()
 
-> **appUpdate**: (`params`) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appUpdate**: (`params`) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L647)
 
@@ -500,7 +500,7 @@ The parameters for the app update transaction
 
 #### Returns
 
-`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the app update transaction and the transaction that was sent
 
@@ -546,7 +546,7 @@ await algorand.send.appUpdate({
 
 ### appUpdateMethodCall()
 
-> **appUpdateMethodCall**: (`params`) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **appUpdateMethodCall**: (`params`) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:871](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L871)
 
@@ -564,7 +564,7 @@ The parameters for the app update transaction
 
 #### Returns
 
-`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the application ABI method update transaction and the transaction that was sent
 
@@ -622,7 +622,7 @@ await algorand.send.appUpdateMethodCall({
 
 ### assetConfig()
 
-> **assetConfig**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetConfig**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L306)
 
@@ -642,7 +642,7 @@ The parameters for the asset config transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset config transaction and the transaction that was sent
 
@@ -683,7 +683,7 @@ await algorand.send.assetConfig({
 
 ### assetDestroy()
 
-> **assetDestroy**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetDestroy**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L386)
 
@@ -703,7 +703,7 @@ The parameters for the asset destroy transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset destroy transaction and the transaction that was sent
 
@@ -740,7 +740,7 @@ await algorand.send.assetDestroy({
 
 ### assetFreeze()
 
-> **assetFreeze**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetFreeze**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L345)
 
@@ -756,7 +756,7 @@ The parameters for the asset freeze transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset freeze transaction and the transaction that was sent
 
@@ -795,7 +795,7 @@ await algorand.send.assetFreeze({
 
 ### assetOptIn()
 
-> **assetOptIn**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetOptIn**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L466)
 
@@ -811,7 +811,7 @@ The parameters for the asset opt-in transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset opt-in transaction and the transaction that was sent
 
@@ -848,7 +848,7 @@ await algorand.send.assetOptIn({
 
 ### assetTransfer()
 
-> **assetTransfer**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetTransfer**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L428)
 
@@ -864,7 +864,7 @@ The parameters for the asset transfer transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset transfer transaction and the transaction that was sent
 
@@ -906,7 +906,7 @@ await algorand.send.assetTransfer({
 
 ### offlineKeyRegistration()
 
-> **offlineKeyRegistration**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **offlineKeyRegistration**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:1068](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L1068)
 
@@ -922,7 +922,7 @@ The parameters for the key registration transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the offline key registration transaction and the transaction that was sent
 
@@ -956,7 +956,7 @@ const result = await algorand.send.offlineKeyRegistration({
 
 ### onlineKeyRegistration()
 
-> **onlineKeyRegistration**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **onlineKeyRegistration**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:1035](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L1035)
 
@@ -972,7 +972,7 @@ The parameters for the key registration transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the online key registration transaction and the transaction that was sent
 
@@ -1018,7 +1018,7 @@ const result = await algorand.send.onlineKeyRegistration({
 
 ### payment()
 
-> **payment**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **payment**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L206)
 
@@ -1034,7 +1034,7 @@ The parameters for the payment transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the payment transaction and the transaction that was sent
 
@@ -1079,7 +1079,7 @@ const result = await algorand.send.payment({
 
 ### assetCreate()
 
-> **assetCreate**(`params`): `Promise`\<\{ `assetId`: `bigint`; `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetCreate**(`params`): `Promise`\<\{ `assetId`: `bigint`; `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L257)
 
@@ -1098,7 +1098,7 @@ The parameters for the asset creation transaction
 
 #### Returns
 
-`Promise`\<\{ `assetId`: `bigint`; `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `assetId`: `bigint`; `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset create transaction and the transaction that was sent
 
@@ -1145,7 +1145,7 @@ await algorand.send.assetCreate({
 
 ### assetOptOut()
 
-> **assetOptOut**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+> **assetOptOut**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 Defined in: [src/types/algorand-client-transaction-sender.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L513)
 
@@ -1165,7 +1165,7 @@ The parameters for the asset opt-out transaction
 
 #### Returns
 
-`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
+`Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
 The result of the asset opt-out transaction and the transaction that was sent
 

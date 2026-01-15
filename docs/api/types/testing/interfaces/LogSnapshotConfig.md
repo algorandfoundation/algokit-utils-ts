@@ -16,7 +16,7 @@ This helps ensure that the provided configuration items won't appear
 
 ### accounts?
 
-> `optional` **accounts**: (`string` \| [`Address`](../../../Algokit-Utils-API/classes/Address.md) \| [`MultisigAccount`](../../../Packages/Transact/classes/MultisigAccount.md) \| [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) \| [`LogicSigAccount`](../../../Packages/Transact/classes/LogicSigAccount.md))[]
+> `optional` **accounts**: (`string` \| [`Address`](../../../algokit-utils/classes/Address.md) \| [`MultisigAccount`](../../../Subpaths/transact/classes/MultisigAccount.md) \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`LogicSigAccount`](../../../Subpaths/transact/classes/LogicSigAccount.md))[]
 
 Defined in: [src/types/testing.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L144)
 
@@ -56,7 +56,7 @@ Optional filter predicate to filter out logs
 
 ### transactions?
 
-> `optional` **transactions**: (`string` \| [`Transaction`](../../../Packages/Transact/classes/Transaction.md))[]
+> `optional` **transactions**: (`string` \| [`Transaction`](../../../Subpaths/transact/classes/Transaction.md))[]
 
 Defined in: [src/types/testing.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L142)
 

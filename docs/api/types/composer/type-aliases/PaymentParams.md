@@ -22,7 +22,7 @@ Amount to send
 
 ### closeRemainderTo?
 
-> `optional` **closeRemainderTo**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> `optional` **closeRemainderTo**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 If given, close the sender account and send the remaining balance to this address
 
@@ -30,6 +30,6 @@ If given, close the sender account and send the remaining balance to this addres
 
 ### receiver
 
-> **receiver**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> **receiver**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the account that will receive the Algo

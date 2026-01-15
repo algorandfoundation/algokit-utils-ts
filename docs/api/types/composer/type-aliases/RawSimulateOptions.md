@@ -6,7 +6,7 @@
 
 # Type Alias: RawSimulateOptions
 
-> **RawSimulateOptions** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`SimulateRequest`](../../../Packages/Algod-Client/type-aliases/SimulateRequest.md), `"txnGroups"`\>\> & `object`
+> **RawSimulateOptions** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`SimulateRequest`](../../../Subpaths/algod-client/type-aliases/SimulateRequest.md), `"txnGroups"`\>\> & `object`
 
 Defined in: [src/types/composer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L126)
 

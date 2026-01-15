@@ -22,7 +22,7 @@ The ID of the asset to freeze/unfreeze
 
 ### freezeTarget
 
-> **freezeTarget**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+> **freezeTarget**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The address of the account to freeze or unfreeze
 

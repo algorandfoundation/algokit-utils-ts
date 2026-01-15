@@ -22,7 +22,7 @@ The metadata that can be collected about a deployed app
 
 ### appAddress
 
-> **appAddress**: [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+> **appAddress**: [`Address`](../../../algokit-utils/classes/Address.md)
 
 Defined in: [src/types/app-deployer.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L79)
 

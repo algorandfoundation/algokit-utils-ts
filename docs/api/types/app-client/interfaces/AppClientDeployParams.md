@@ -66,7 +66,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 ### createOnCompleteAction?
 
-> `optional` **createOnCompleteAction**: [`NoOp`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
+> `optional` **createOnCompleteAction**: [`NoOp`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#deleteapplication)
 
 Defined in: [src/types/app-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L168)
 
@@ -146,7 +146,7 @@ Any overrides for the storage schema to request for the created app; by default 
 
 ### sender?
 
-> `optional` **sender**: [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
+> `optional` **sender**: [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/app-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L144)
 

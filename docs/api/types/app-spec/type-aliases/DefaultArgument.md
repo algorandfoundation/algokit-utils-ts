@@ -6,7 +6,7 @@
 
 # Type Alias: DefaultArgument
 
-> **DefaultArgument** = \{ `data`: [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md); `source`: `"abi-method"`; \} \| \{ `data`: `string`; `source`: `"global-state"`; \} \| \{ `data`: `string`; `source`: `"local-state"`; \} \| \{ `data`: `string` \| `number`; `source`: `"constant"`; \}
+> **DefaultArgument** = \{ `data`: [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md); `source`: `"abi-method"`; \} \| \{ `data`: `string`; `source`: `"global-state"`; \} \| \{ `data`: `string`; `source`: `"local-state"`; \} \| \{ `data`: `string` \| `number`; `source`: `"constant"`; \}
 
 Defined in: [src/types/app-spec.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L289)
 
@@ -14,11 +14,11 @@ Defines a strategy for obtaining a default value for a given ABI arg.
 
 ## Type Declaration
 
-\{ `data`: [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md); `source`: `"abi-method"`; \}
+\{ `data`: [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md); `source`: `"abi-method"`; \}
 
 ### data
 
-> **data**: [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
+> **data**: [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)
 
 ### source
 

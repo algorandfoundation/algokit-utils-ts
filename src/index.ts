@@ -1,5 +1,5 @@
 /**
- * @module Algokit Utils API
+ * @module algokit-utils
  */
 export {
   Address,

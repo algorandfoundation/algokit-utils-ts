@@ -24,7 +24,7 @@ The result of sending a transaction
 
 ### confirmation?
 
-> `optional` **confirmation**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)
+> `optional` **confirmation**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
 Defined in: [src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
 
@@ -34,7 +34,7 @@ The response if the transaction was sent and waited for
 
 ### transaction
 
-> **transaction**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)
+> **transaction**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)
 
 Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 

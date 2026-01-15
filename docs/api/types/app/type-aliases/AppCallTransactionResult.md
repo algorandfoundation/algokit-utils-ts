@@ -6,7 +6,7 @@
 
 # Type Alias: AppCallTransactionResult
 
-> **AppCallTransactionResult** = [`AppCallTransactionResultOfType`](../interfaces/AppCallTransactionResultOfType.md)\<[`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md)\>
+> **AppCallTransactionResult** = [`AppCallTransactionResultOfType`](../interfaces/AppCallTransactionResultOfType.md)\<[`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)\>
 
 Defined in: [src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
 

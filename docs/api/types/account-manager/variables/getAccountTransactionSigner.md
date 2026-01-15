@@ -6,7 +6,7 @@
 
 # Variable: getAccountTransactionSigner()
 
-> `const` **getAccountTransactionSigner**: (`val`) => [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
+> `const` **getAccountTransactionSigner**: (`val`) => [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
 Defined in: [src/types/account-manager.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L42)
 
@@ -17,11 +17,11 @@ This function has memoization, so will return the same transaction signer for a 
 
 ### val
 
-[`MultisigAccount`](../../../Packages/Transact/classes/MultisigAccount.md) | [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md) | [`LogicSigAccount`](../../../Packages/Transact/classes/LogicSigAccount.md)
+[`MultisigAccount`](../../../Subpaths/transact/classes/MultisigAccount.md) | [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) | [`LogicSigAccount`](../../../Subpaths/transact/classes/LogicSigAccount.md)
 
 ## Returns
 
-[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
 A transaction signer
 

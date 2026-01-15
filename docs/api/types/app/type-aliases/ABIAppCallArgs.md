@@ -16,7 +16,7 @@ App call args for an ABI call
 
 ### method
 
-> **method**: [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)
+> **method**: [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)
 
 The ABI method to call
 

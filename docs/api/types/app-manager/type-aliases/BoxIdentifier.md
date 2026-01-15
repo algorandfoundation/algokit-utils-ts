@@ -6,7 +6,7 @@
 
 # Type Alias: BoxIdentifier
 
-> **BoxIdentifier** = `string` \| `Uint8Array` \| [`AddressWithTransactionSigner`](../../../Packages/Transact/interfaces/AddressWithTransactionSigner.md)
+> **BoxIdentifier** = `string` \| `Uint8Array` \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
 Defined in: [src/types/app-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L59)
 

@@ -22,7 +22,7 @@ The result of sending and confirming a transaction
 
 ### confirmation
 
-> **confirmation**: [`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md)
+> **confirmation**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
 Defined in: [src/types/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L83)
 
@@ -36,7 +36,7 @@ The response from sending and waiting for the transaction
 
 ### transaction
 
-> **transaction**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)
+> **transaction**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)
 
 Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 

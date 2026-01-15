@@ -14,7 +14,7 @@ Set of transactions built by `TransactionComposer`.
 
 ### methodCalls
 
-> **methodCalls**: `Map`\<`number`, [`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md)\>
+> **methodCalls**: `Map`\<`number`, [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)\>
 
 Defined in: [src/types/composer.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L218)
 
@@ -24,7 +24,7 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 
 ### signers
 
-> **signers**: `Map`\<`number`, [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)\>
+> **signers**: `Map`\<`number`, [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)\>
 
 Defined in: [src/types/composer.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L220)
 
@@ -34,7 +34,7 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 
 ### transactions
 
-> **transactions**: [`Transaction`](../../../Packages/Transact/classes/Transaction.md)[]
+> **transactions**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]
 
 Defined in: [src/types/composer.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L216)
 

@@ -16,13 +16,13 @@ Common parameters for defining an application call transaction.
 
 ### accessReferences?
 
-> `optional` **accessReferences**: [`ResourceReference`](../../../Packages/Transact/type-aliases/ResourceReference.md)[]
+> `optional` **accessReferences**: [`ResourceReference`](../../../Subpaths/transact/type-aliases/ResourceReference.md)[]
 
 Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 ### accountReferences?
 
-> `optional` **accountReferences**: [`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)[]
+> `optional` **accountReferences**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)[]
 
 Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 
@@ -61,7 +61,7 @@ Either the name identifier (which will be set against app ID of `0` i.e.
 
 ### onComplete?
 
-> `optional` **onComplete**: [`OnApplicationComplete`](../../../Packages/Transact/enumerations/OnApplicationComplete.md)
+> `optional` **onComplete**: [`OnApplicationComplete`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md)
 
 The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op.
 

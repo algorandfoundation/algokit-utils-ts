@@ -16,4 +16,4 @@ Parameters to define an application delete call transaction.
 
 ### onComplete?
 
-> `optional` **onComplete**: [`DeleteApplication`](../../../Packages/Transact/enumerations/OnApplicationComplete.md#deleteapplication)
+> `optional` **onComplete**: [`DeleteApplication`](../../../Subpaths/transact/enumerations/OnApplicationComplete.md#deleteapplication)

@@ -16,7 +16,7 @@ Account information at a given round.
 
 ### address
 
-> **address**: [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+> **address**: [`Address`](../../../algokit-utils/classes/Address.md)
 
 Defined in: [src/types/account.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L26)
 
@@ -36,7 +36,7 @@ The amount of Algo in the account, without the pending rewards.
 
 ### appsLocalState?
 
-> `optional` **appsLocalState**: [`ApplicationLocalState`](../../../Packages/Algod-Client/type-aliases/ApplicationLocalState.md)[]
+> `optional` **appsLocalState**: [`ApplicationLocalState`](../../../Subpaths/algod-client/type-aliases/ApplicationLocalState.md)[]
 
 Defined in: [src/types/account.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L91)
 
@@ -56,7 +56,7 @@ The sum of all extra application program pages for this account.
 
 ### appsTotalSchema?
 
-> `optional` **appsTotalSchema**: [`ApplicationStateSchema`](../../../Packages/Algod-Client/type-aliases/ApplicationStateSchema.md)
+> `optional` **appsTotalSchema**: [`ApplicationStateSchema`](../../../Subpaths/algod-client/type-aliases/ApplicationStateSchema.md)
 
 Defined in: [src/types/account.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L102)
 
@@ -68,7 +68,7 @@ Note: the raw account uses `StateSchema` for this type.
 
 ### assets?
 
-> `optional` **assets**: [`AssetHolding`](../../../Packages/Algod-Client/type-aliases/AssetHolding.md)[]
+> `optional` **assets**: [`AssetHolding`](../../../Subpaths/algod-client/type-aliases/AssetHolding.md)[]
 
 Defined in: [src/types/account.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L107)
 
@@ -78,7 +78,7 @@ Assets held by this account.
 
 ### authAddr?
 
-> `optional` **authAddr**: [`Address`](../../../Algokit-Utils-API/classes/Address.md)
+> `optional` **authAddr**: [`Address`](../../../algokit-utils/classes/Address.md)
 
 Defined in: [src/types/account.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L114)
 
@@ -100,7 +100,7 @@ The balance of Algo currently held by the account.
 
 ### createdApps?
 
-> `optional` **createdApps**: [`Application`](../../../Packages/Algod-Client/type-aliases/Application.md)[]
+> `optional` **createdApps**: [`Application`](../../../Subpaths/algod-client/type-aliases/Application.md)[]
 
 Defined in: [src/types/account.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L119)
 
@@ -110,7 +110,7 @@ Parameters of applications created by this account including app global data.
 
 ### createdAssets?
 
-> `optional` **createdAssets**: [`Asset`](../../../Packages/Algod-Client/type-aliases/Asset.md)[]
+> `optional` **createdAssets**: [`Asset`](../../../Subpaths/algod-client/type-aliases/Asset.md)[]
 
 Defined in: [src/types/account.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L125)
 
@@ -154,7 +154,7 @@ The requirement grows based on asset and application usage.
 
 ### participation?
 
-> `optional` **participation**: [`AccountParticipation`](../../../Packages/Algod-Client/type-aliases/AccountParticipation.md)
+> `optional` **participation**: [`AccountParticipation`](../../../Subpaths/algod-client/type-aliases/AccountParticipation.md)
 
 Defined in: [src/types/account.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L131)
 

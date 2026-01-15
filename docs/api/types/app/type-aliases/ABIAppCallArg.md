@@ -6,7 +6,7 @@
 
 # Type Alias: ABIAppCallArg
 
-> **ABIAppCallArg** = [`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md) \| [`TransactionWithSigner`](../../../Algokit-Utils-API/interfaces/TransactionWithSigner.md) \| [`TransactionToSign`](../../transaction/interfaces/TransactionToSign.md) \| [`Transaction`](../../../Packages/Transact/classes/Transaction.md) \| `Promise`\<[`SendTransactionResult`](../../transaction/interfaces/SendTransactionResult.md)\> \| [`SendTransactionResult`](../../transaction/interfaces/SendTransactionResult.md) \| `undefined`
+> **ABIAppCallArg** = [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| [`TransactionWithSigner`](../../../algokit-utils/interfaces/TransactionWithSigner.md) \| [`TransactionToSign`](../../transaction/interfaces/TransactionToSign.md) \| [`Transaction`](../../../Subpaths/transact/classes/Transaction.md) \| `Promise`\<[`SendTransactionResult`](../../transaction/interfaces/SendTransactionResult.md)\> \| [`SendTransactionResult`](../../transaction/interfaces/SendTransactionResult.md) \| `undefined`
 
 Defined in: [src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
 

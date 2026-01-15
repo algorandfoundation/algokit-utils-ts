@@ -16,7 +16,7 @@ Parameters to create an `TransactionComposer`.
 
 ### algod
 
-> **algod**: [`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
+> **algod**: [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
 Defined in: [src/types/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L191)
 
@@ -68,7 +68,7 @@ callbacks can later be registered with `registerErrorTransformer`
 
 ### getSigner()
 
-> **getSigner**: (`address`) => [`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
+> **getSigner**: (`address`) => [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
 Defined in: [src/types/composer.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L193)
 
@@ -78,17 +78,17 @@ The function used to get the TransactionSigner for a given address
 
 ##### address
 
-[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 #### Returns
 
-[`TransactionSigner`](../../../Packages/Transact/type-aliases/TransactionSigner.md)
+[`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
 ***
 
 ### getSuggestedParams()?
 
-> `optional` **getSuggestedParams**: () => `Promise`\<[`SuggestedParams`](../../../Packages/Algod-Client/type-aliases/SuggestedParams.md)\>
+> `optional` **getSuggestedParams**: () => `Promise`\<[`SuggestedParams`](../../../Subpaths/algod-client/type-aliases/SuggestedParams.md)\>
 
 Defined in: [src/types/composer.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L195)
 
@@ -96,4 +96,4 @@ The method used to get SuggestedParams for transactions in the group
 
 #### Returns
 
-`Promise`\<[`SuggestedParams`](../../../Packages/Algod-Client/type-aliases/SuggestedParams.md)\>
+`Promise`\<[`SuggestedParams`](../../../Subpaths/algod-client/type-aliases/SuggestedParams.md)\>

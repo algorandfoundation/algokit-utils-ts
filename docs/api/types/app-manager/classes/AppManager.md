@@ -24,7 +24,7 @@ Creates an `AppManager`
 
 ##### algod
 
-[`AlgodClient`](../../../Packages/Algod-Client/classes/AlgodClient.md)
+[`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
 An algod instance
 
@@ -191,7 +191,7 @@ const boxValue = await appManager.getBoxValue(12353n, 'boxName');
 
 ### getBoxValueFromABIType()
 
-> **getBoxValueFromABIType**(`request`): `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
+> **getBoxValueFromABIType**(`request`): `Promise`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)\>
 
 Defined in: [src/types/app-manager.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L322)
 
@@ -207,7 +207,7 @@ The parameters for the box value request
 
 #### Returns
 
-`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)\>
+`Promise`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)\>
 
 The current box value as an ABI value
 
@@ -257,7 +257,7 @@ const boxValues = await appManager.getBoxValues(12353n, ['boxName1', 'boxName2']
 
 ### getBoxValuesFromABIType()
 
-> **getBoxValuesFromABIType**(`request`): `Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)[]\>
+> **getBoxValuesFromABIType**(`request`): `Promise`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)[]\>
 
 Defined in: [src/types/app-manager.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L337)
 
@@ -273,7 +273,7 @@ The parameters for the box value request
 
 #### Returns
 
-`Promise`\<[`ABIValue`](../../../Packages/ABI/type-aliases/ABIValue.md)[]\>
+`Promise`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)[]\>
 
 The current box values as an ABI value in the same order as the passed in box names
 
@@ -394,7 +394,7 @@ The ID of the app to return local state for
 
 ##### address
 
-[`ReadableAddress`](../../../Algokit-Utils-API/type-aliases/ReadableAddress.md)
+[`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
 The string address of the account to get local state for the given app
 
@@ -445,7 +445,7 @@ const stateValues = AppManager.decodeAppState(state);
 
 ### getABIReturn()
 
-> `static` **getABIReturn**(`confirmation`, `method`): [`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md) \| `undefined`
+> `static` **getABIReturn**(`confirmation`, `method`): [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md) \| `undefined`
 
 Defined in: [src/types/app-manager.ts:418](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L418)
 
@@ -457,17 +457,17 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 The transaction confirmation from algod
 
-[`PendingTransactionResponse`](../../../Packages/Algod-Client/type-aliases/PendingTransactionResponse.md) | `undefined`
+[`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md) | `undefined`
 
 ##### method
 
 The ABI method
 
-[`ABIMethod`](../../../Packages/ABI/classes/ABIMethod.md) | `undefined`
+[`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md) | `undefined`
 
 #### Returns
 
-[`ABIReturn`](../../../Packages/ABI/type-aliases/ABIReturn.md) \| `undefined`
+[`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md) \| `undefined`
 
 The return value for the method call
 
@@ -481,7 +481,7 @@ const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignatur
 
 ### getBoxReference()
 
-> `static` **getBoxReference**(`boxId`): [`BoxReference`](../../../Packages/Transact/type-aliases/BoxReference.md)
+> `static` **getBoxReference**(`boxId`): [`BoxReference`](../../../Subpaths/transact/type-aliases/BoxReference.md)
 
 Defined in: [src/types/app-manager.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L351)
 
@@ -497,7 +497,7 @@ The box to return a reference for
 
 #### Returns
 
-[`BoxReference`](../../../Packages/Transact/type-aliases/BoxReference.md)
+[`BoxReference`](../../../Subpaths/transact/type-aliases/BoxReference.md)
 
 The box reference ready to pass into a `algosdk.Transaction`
 
