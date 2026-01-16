@@ -3,6 +3,12 @@ import sha512 from 'js-sha512'
 import { BIP32DerivationType, fromSeed, KeyContext, XHDWalletAPI, harden } from '@algorandfoundation/xhd-wallet-api'
 
 export type RawEd25519Verifier = (signature: Uint8Array, message: Uint8Array, pubkey: Uint8Array) => Promise<boolean>
+export type RawEd25519Signer = (bytesToSign: Uint8Array) => Promise<Uint8Array>
+export type Ed25519Generator = (seed?: Uint8Array) => {
+  ed25519Pubkey: Uint8Array
+  ed25519SecretKey: Uint8Array
+  rawEd25519Signer: RawEd25519Signer
+}
 
 /**
  * Verifies an ed25519 signature using the @noble/ed25519 implementation.
@@ -28,13 +34,6 @@ export const nobleEd25519Verifier: RawEd25519Verifier = async (
  * @returns A promise that resolves to true if the signature is valid, false otherwise.
  */
 export const ed25519Verifier: RawEd25519Verifier = nobleEd25519Verifier
-
-export type RawEd25519Signer = (bytesToSign: Uint8Array) => Promise<Uint8Array>
-export type Ed25519Generator = (seed?: Uint8Array) => {
-  ed25519Pubkey: Uint8Array
-  ed25519SecretKey: Uint8Array
-  rawEd25519Signer: RawEd25519Signer
-}
 
 ed.hashes.sha512 = (msg: ed.Bytes) => new Uint8Array(sha512.sha512.digest(msg))
 
@@ -74,6 +73,16 @@ export type HdWalletGenerator = (seed?: Uint8Array) => Promise<{
   rawHdSigner: RawHdWalletSigner
 }>
 
+export type HdAccountGenerator = (
+  rootKey: Uint8Array,
+  account: number,
+  index: number,
+) => Promise<{
+  ed25519Pubkey: Uint8Array
+  bip44Path: BIP44Path
+  rawEd25519Signer: RawEd25519Signer
+}>
+
 const verifyPath = (bip44Path: BIP44Path) => {
   if (bip44Path.length !== 5) {
     throw new Error('BIP44 path must have exactly 5 elements')
@@ -110,16 +119,6 @@ export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8A
 
   return { hdRootKey: rootKey, rawHdSigner }
 }
-
-export type HdAccountGenerator = (
-  rootKey: Uint8Array,
-  account: number,
-  index: number,
-) => Promise<{
-  ed25519Pubkey: Uint8Array
-  bip44Path: BIP44Path
-  rawEd25519Signer: RawEd25519Signer
-}>
 
 export const peikertXHdAccountGenerator: HdAccountGenerator = async (rootKey: Uint8Array, account: number, index: number) => {
   const ed25519Pubkey = await xhd.keyGen(rootKey, KeyContext.Address, account, index, BIP32DerivationType.Peikert)
