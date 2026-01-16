@@ -389,7 +389,14 @@ export interface MultisigMetadata {
   addrs: Array<Address>
 }
 
-/** Account wrapper that supports partial or full multisig signing. */
+/**
+ * Account wrapper that supports partial or full multisig signing.
+ *
+ * @remarks
+ * A multisig account requires M-of-N signatures to authorize transactions, where M is the threshold
+ * and N is the total number of participating addresses. The same address can appear multiple times
+ * in the participant list to implement weighted voting (each occurrence counts as one signature toward the threshold).
+ */
 export class MultisigAccount implements AddressWithTransactionSigner, AddressWithDelegatedLsigSigner {
   _params: MultisigMetadata
   _subSigners: (AddressWithTransactionSigner & AddressWithDelegatedLsigSigner)[]

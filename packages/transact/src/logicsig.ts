@@ -84,6 +84,15 @@ export class LogicSig implements Addressable {
   }
 }
 
+/**
+ * A logic signature account that can sign transactions using a TEAL program.
+ *
+ * @remarks
+ * Logic signatures can operate in two modes: contract mode (where the program itself is the authority)
+ * or delegated mode (where an account delegates signing authority to the program). In delegated mode,
+ * the delegator's signature authorizes the logic sig to sign on their behalf. Always verify the TEAL
+ * program logic before delegating, as the delegator is responsible for any transactions the program authorizes.
+ */
 export class LogicSigAccount extends LogicSig {
   sig?: Uint8Array
   msig?: MultisigSignature

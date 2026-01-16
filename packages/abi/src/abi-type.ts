@@ -99,6 +99,11 @@ export abstract class ABIType {
    * @param str The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
    * @returns The corresponding ABI type
    * @throws {Error} If the type string is malformed or unsupported
+   *
+   * @remarks
+   * Supported type formats include: `uint<N>` (8-512 bits), `ufixed<N>x<M>`, `bool`, `byte`,
+   * `address`, `string`, `<type>[<N>]` (static arrays), `<type>[]` (dynamic arrays),
+   * and `(<type1>,<type2>,...)` (tuples). This parser is recursive for nested types.
    */
   static from(str: string): ABIType {
     if (str.endsWith('[]')) {
