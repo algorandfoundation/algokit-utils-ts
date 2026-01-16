@@ -293,7 +293,7 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): Promise<AddressWithTransactionSigner> {
+  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
     const seed = seedFromMnemonic(mnemonicSecret)
 
     const generated = this._ed25519Generator(seed)
