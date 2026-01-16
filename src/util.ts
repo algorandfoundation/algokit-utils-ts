@@ -3,8 +3,9 @@ import { APP_PAGE_MAX_SIZE } from './types/app'
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.
  *
- * Throws an UnsafeConversionError if the conversion would result in an unsafe integer for the Number type
- * @param value
+ * @param value The value to convert
+ * @returns The value as a number
+ * @throws {UnsafeConversionError} If the conversion would result in an unsafe integer for the Number type
  */
 export const toNumber = (value: number | bigint) => {
   if (typeof value === 'number') return value

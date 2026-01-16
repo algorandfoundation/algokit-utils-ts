@@ -175,6 +175,10 @@ function createMultisigTransactionWithSignature(
  * takes a list of multisig transaction blobs, and merges them.
  * @param multisigTxnBlobs - a list of blobs representing encoded multisig txns
  * @returns typed array msg-pack encoded multisig txn
+ * @throws {Error} If fewer than two transactions are provided
+ * @throws {Error} If transaction IDs differ between transactions
+ * @throws {Error} If auth addresses differ between transactions
+ * @throws {Error} If multisig preimages or signatures are mismatched
  */
 function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): SignedTransaction {
   if (multisigTxnBlobs.length < 2) {
@@ -258,6 +262,7 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
  * @param signerAddr - address of the signer
  * @param signature - raw multisig signature
  * @returns an encoded, partially signed multisig transaction.
+ * @throws {Error} If signature length is incorrect
  */
 function partialSignWithMultisigSignature(
   transaction: Transaction,
@@ -310,6 +315,7 @@ function appendSignRawMultisigSignature(
  * @param version - multisig version
  * @param threshold - multisig threshold
  * @param pks - array of typed array public keys
+ * @throws {Error} If multisig parameters are invalid (version, threshold, or public keys)
  */
 function addressFromMultisigPreImg({
   version,
