@@ -20,7 +20,7 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import { Ed25519Generator, nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
+import { Ed25519Generator } from '@algorandfoundation/algokit-crypto'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
