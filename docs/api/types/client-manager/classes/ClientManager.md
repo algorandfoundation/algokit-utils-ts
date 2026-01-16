@@ -513,14 +513,12 @@ An instance of the TestNetDispenserApiClient class.
 
 #### Example
 
-```ts
 const client = clientManager.getTestNetDispenser(
     {
       authToken: 'your_auth_token',
       requestTimeout: 15,
     }
 )
-```
 
 ***
 
@@ -550,13 +548,11 @@ An instance of the TestNetDispenserApiClient class.
 
 #### Example
 
-```ts
 const client = clientManager.getTestNetDispenserFromEnvironment(
     {
       requestTimeout: 15,
     }
 )
-```
 
 ***
 

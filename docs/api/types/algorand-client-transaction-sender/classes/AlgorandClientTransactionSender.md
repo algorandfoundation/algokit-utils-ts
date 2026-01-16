@@ -1222,7 +1222,5 @@ A new instance of `TransactionComposer`.
 
 #### Example
 
-```ts
 const composer = AlgorandClient.mainNet().send.newGroup();
 const result = await composer.addTransaction(payment).send()
-```

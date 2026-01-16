@@ -24,9 +24,7 @@ Get or create accounts that can sign transactions.
 
 ##### Example
 
-```ts
 const accountManager = AlgorandClient.mainNet().account;
-```
 
 ##### Returns
 
@@ -48,9 +46,7 @@ Methods for interacting with apps.
 
 ##### Example
 
-```ts
 const appManager = AlgorandClient.mainNet().app;
-```
 
 ##### Returns
 
@@ -72,9 +68,7 @@ Methods for deploying apps and managing app deployment metadata.
 
 ##### Example
 
-```ts
 const deployer = AlgorandClient.mainNet().appDeployer;
-```
 
 ##### Returns
 
@@ -96,9 +90,7 @@ Methods for interacting with assets.
 
 ##### Example
 
-```ts
 const assetManager = AlgorandClient.mainNet().asset;
-```
 
 ##### Returns
 
@@ -120,9 +112,7 @@ Get clients, including algosdk clients and app clients.
 
 ##### Example
 
-```ts
 const clientManager = AlgorandClient.mainNet().client;
-```
 
 ##### Returns
 
@@ -144,13 +134,11 @@ Methods for creating a transaction.
 
 ##### Example
 
-```ts
 const payment = await AlgorandClient.mainNet().createTransaction.payment({
  sender: "SENDERADDRESS",
  receiver: "RECEIVERADDRESS",
  amount: algo(1)
 })
-```
 
 ##### Returns
 
@@ -172,13 +160,11 @@ Methods for sending a transaction.
 
 ##### Example
 
-```ts
 const result = await AlgorandClient.mainNet().send.payment({
  sender: "SENDERADDRESS",
  receiver: "RECEIVERADDRESS",
  amount: algo(1)
 })
-```
 
 ##### Returns
 
@@ -204,9 +190,7 @@ The suggested transaction parameters.
 
 #### Example
 
-```ts
 const params = await AlgorandClient.mainNet().getSuggestedParams();
-```
 
 ***
 
@@ -233,9 +217,16 @@ A new instance of `TransactionComposer`.
 #### Example
 
 ```ts
-const composer = AlgorandClient.mainNet().newGroup();
-const result = await composer.addTransaction(payment).send()
+const result = await algorand
+  .newGroup()
+  .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
+  .addTransactionComposer(doMathComposer)
+  .send()
 ```
+
+#### See
+
+[Full working test](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts#L71)
 
 ***
 
@@ -539,9 +530,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.defaultLocalNet();
-```
 
 ***
 
@@ -569,9 +558,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
-```
 
 ***
 
@@ -599,9 +586,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig });
-```
 
 ***
 
@@ -634,9 +619,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const client = AlgorandClient.fromEnvironment();
-```
 
 ***
 
@@ -656,9 +639,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.mainNet();
-```
 
 ***
 
@@ -678,6 +659,4 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.testNet();
-```

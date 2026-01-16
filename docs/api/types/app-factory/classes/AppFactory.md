@@ -385,15 +385,9 @@ The method name or method signature to call if an ABI call is being emitted
 
 **Examples**
 
-```ts
-Method name
 `my_method`
-```
 
-```ts
-Method signature
 `my_method(unit64,string)bytes`
-```
 
 ###### note?
 
@@ -1213,15 +1207,9 @@ The method name or method signature to call if an ABI call is being emitted
 
 **Examples**
 
-```ts
-Method name
 `my_method`
-```
 
-```ts
-Method signature
 `my_method(unit64,string)bytes`
-```
 
 ###### note?
 
@@ -1415,15 +1403,9 @@ The method name or method signature to call if an ABI call is being emitted
 
 **Examples**
 
-```ts
-Method name
 `my_method`
-```
 
-```ts
-Method signature
 `my_method(unit64,string)bytes`
-```
 
 ###### note?
 
@@ -1579,15 +1561,9 @@ The method name or method signature to call if an ABI call is being emitted
 
 **Examples**
 
-```ts
-Method name
 `my_method`
-```
 
-```ts
-Method signature
 `my_method(unit64,string)bytes`
-```
 
 ###### note?
 

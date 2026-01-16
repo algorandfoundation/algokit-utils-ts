@@ -227,8 +227,8 @@ export class AlgorandClient {
   /** Start a new `TransactionComposer` transaction group
    * @returns A new instance of `TransactionComposer`.
    * @example
-   * const composer = AlgorandClient.mainNet().newGroup();
-   * const result = await composer.addTransaction(payment).send()
+   * {@includeCode ./algorand-client.spec.ts#example-newGroup}
+   * @see [Full working test](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts#L71)
    */
   public newGroup(composerConfig?: TransactionComposerConfig) {
     return new TransactionComposer({
