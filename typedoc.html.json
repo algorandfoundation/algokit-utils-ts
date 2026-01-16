@@ -1,5 +1,8 @@
 {
   "$schema": "https://typedoc.org/schema.json",
+  "jsdocCompatibility": {
+    "exampleTag": false
+  },
   "entryPoints": [
     "src/index.ts",
     "src/abi/index.ts",
