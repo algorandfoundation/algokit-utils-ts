@@ -105,10 +105,10 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
+    "@noble/hashes": "^2.0.1",
     "algorand-msgpack": "^1.1.0",
     "buffer": "^6.0.3",
     "hi-base32": "^0.5.1",
-    "js-sha512": "^0.8.0",
     "json-bigint": "^1.0.0",
     "vlq": "^2.0.4"
   },

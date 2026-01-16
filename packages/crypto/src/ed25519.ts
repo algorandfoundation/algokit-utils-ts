@@ -1,5 +1,5 @@
 import * as ed from '@noble/ed25519'
-import sha512 from 'js-sha512'
+import { sha512 } from '@noble/hashes/sha2.js'
 
 export type RawEd25519Verifier = (signature: Uint8Array, message: Uint8Array, pubkey: Uint8Array) => Promise<boolean>
 export type RawEd25519Signer = (bytesToSign: Uint8Array) => Promise<Uint8Array>
@@ -34,7 +34,7 @@ export const nobleEd25519Verifier: RawEd25519Verifier = async (
  */
 export const ed25519Verifier: RawEd25519Verifier = nobleEd25519Verifier
 
-ed.hashes.sha512 = (msg: ed.Bytes) => new Uint8Array(sha512.sha512.digest(msg))
+ed.hashes.sha512 = (msg: ed.Bytes) => sha512(msg)
 
 /**
  * Generates an ed25519 keypair and a raw signer function using the @noble/ed25519 implementation.

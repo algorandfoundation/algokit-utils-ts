@@ -1,4 +1,4 @@
-import sha512 from 'js-sha512'
+import { sha512_256 } from '@noble/hashes/sha2.js'
 import { ABIAddressType, ABIStructType, ABIType, ABIUintType, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
@@ -115,7 +115,7 @@ export class ABIMethod {
    * @returns The 4-byte method selector
    */
   getSelector(): Uint8Array {
-    const hash = sha512.sha512_256.array(this.getSignature())
+    const hash = sha512_256(new TextEncoder().encode(this.getSignature()))
     return new Uint8Array(hash.slice(0, 4))
   }
 
