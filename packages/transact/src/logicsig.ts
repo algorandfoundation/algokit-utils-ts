@@ -84,11 +84,27 @@ export class LogicSig implements Addressable {
   }
 }
 
+/**
+ * A logic signature account that can sign transactions using a TEAL program.
+ *
+ * @remarks
+ * Logic signatures can operate in two modes: contract mode (where the program itself is the authority)
+ * or delegated mode (where an account delegates signing authority to the program). In delegated mode,
+ * the delegator's signature authorizes the logic sig to sign on their behalf. Always verify the TEAL
+ * program logic before delegating, as the delegator is responsible for any transactions the program authorizes.
+ */
 export class LogicSigAccount extends LogicSig {
   sig?: Uint8Array
   msig?: MultisigSignature
   lmsig?: MultisigSignature
 
+  /**
+   * Creates a LogicSigAccount from a LogicSigSignature.
+   * @param signature - The logic signature
+   * @param delegator - Optional delegator address
+   * @returns A LogicSigAccount instance
+   * @throws {Error} If delegator address doesn't match multisig address or if signature exists without delegator
+   */
   static fromSignature(signature: LogicSigSignature, delegator?: Address): LogicSigAccount {
     if (signature.lmsig || signature.msig) {
       const msigAddr = MultisigAccount.fromSignature((signature.lmsig || signature.msig)!).addr
@@ -151,6 +167,11 @@ export class LogicSigAccount extends LogicSig {
     }
   }
 
+  /**
+   * Signs the logic signature for delegation.
+   * @param delegator - The delegator with signing capability
+   * @throws {Error} If delegator address doesn't match expected address or signer returns invalid result
+   */
   async signForDelegation(delegator: AddressWithDelegatedLsigSigner) {
     const result = await delegator.lsigSigner(this)
 

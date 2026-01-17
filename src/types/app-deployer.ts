@@ -142,6 +142,12 @@ export class AppDeployer {
    * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
    *
    * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
+   *
+   * @remarks
+   * This method is idempotent: calling it multiple times with the same parameters will only create the app once,
+   * and subsequent calls will either do nothing (if unchanged) or update/replace as configured. App lookup is
+   * performed by creator address and app name, stored in the transaction note field during creation.
+   *
    * @param deployment The arguments to control the app deployment
    * @returns The result of the deployment
    * @example

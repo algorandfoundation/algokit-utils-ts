@@ -124,6 +124,7 @@ export class ABIMethod {
    * @param signature The method signature
    * e.g. `my_method(unit64,string)bytes`
    * @returns The `ABIMethod`
+   * @throws {Error} If the method signature is invalid
    */
   static fromSignature(signature: string): ABIMethod {
     const argsStart = signature.indexOf('(')
@@ -180,6 +181,7 @@ export class ABIMethod {
  * e.g. `my_method` or `my_method(unit64,string)bytes`
  * @param appSpec The app spec for the app
  * @returns The `ABIMethod`
+ * @throws {Error} If the method is not found in the app spec or if method name resolves to multiple methods
  */
 export function getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contract): ABIMethod {
   if (!methodNameOrSignature.includes('(')) {

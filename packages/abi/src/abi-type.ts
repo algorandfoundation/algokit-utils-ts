@@ -82,6 +82,7 @@ export abstract class ABIType {
    * Encodes a value according to this ABI type.
    * @param value The value to encode
    * @returns The encoded bytes
+   * @throws {Error} If the value cannot be encoded as this type
    */
   abstract encode(value: ABIValue): Uint8Array
 
@@ -89,6 +90,7 @@ export abstract class ABIType {
    * Decodes bytes according to this ABI type.
    * @param bytes The bytes to decode
    * @returns The decoded value
+   * @throws {Error} If the bytes cannot be decoded as this type
    */
   abstract decode(bytes: Uint8Array): ABIValue
 
@@ -96,6 +98,12 @@ export abstract class ABIType {
    * Creates an ABI type from an ARC-4 type string.
    * @param str The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
    * @returns The corresponding ABI type
+   * @throws {Error} If the type string is malformed or unsupported
+   *
+   * @remarks
+   * Supported type formats include: `uint<N>` (8-512 bits), `ufixed<N>x<M>`, `bool`, `byte`,
+   * `address`, `string`, `<type>[<N>]` (static arrays), `<type>[]` (dynamic arrays),
+   * and `(<type1>,<type2>,...)` (tuples). This parser is recursive for nested types.
    */
   static from(str: string): ABIType {
     if (str.endsWith('[]')) {
@@ -172,6 +180,7 @@ export class ABIUintType extends ABIType {
   /**
    * Creates a new unsigned integer type.
    * @param bitSize The bit size (must be a multiple of 8, between 8 and 512)
+   * @throws {Error} If bitSize is not a multiple of 8 or not between 8 and 512
    */
   constructor(public readonly bitSize: number) {
     super()
@@ -227,6 +236,7 @@ export class ABIUfixedType extends ABIType {
    * Creates a new fixed-point type.
    * @param bitSize The bit size (must be a multiple of 8, between 8 and 512)
    * @param precision The decimal precision (must be between 1 and 160)
+   * @throws {Error} If bitSize or precision is out of valid range
    */
   constructor(
     public readonly bitSize: number,
@@ -463,6 +473,7 @@ export class ABITupleType extends ABIType {
   /**
    * Creates a new tuple type.
    * @param childTypes The types of the tuple elements
+   * @throws {Error} If the tuple has too many child types (exceeds 2^16-1)
    */
   constructor(public readonly childTypes: ABIType[]) {
     super()
@@ -600,6 +611,7 @@ export class ABIArrayStaticType extends ABIType {
    * Creates a new static array type.
    * @param childType The type of the array elements
    * @param length The fixed length of the array
+   * @throws {Error} If length is negative or exceeds 2^16-1
    */
   constructor(
     public readonly childType: ABIType,
@@ -800,6 +812,7 @@ export class ABIStructType extends ABIType {
    * @param structName The name of the struct
    * @param structs A record of struct definitions
    * @returns The struct type
+   * @throws {Error} If the struct name is not found in the struct definitions
    */
   static fromStruct(structName: string, structs: Record<string, StructField[]>): ABIStructType {
     const getStructFieldType = (structFieldType: string | StructField[]): ABIType | ABIStructField[] => {
@@ -986,6 +999,12 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
   return result
 }
 
+/**
+ * Parses the content of a tuple type string into individual type strings.
+ * @param content The content inside the tuple parentheses
+ * @returns An array of type strings
+ * @throws {Error} If the content has invalid comma placement or mismatched parentheses
+ */
 export function parseTupleContent(content: string): string[] {
   if (content === '') {
     return []
