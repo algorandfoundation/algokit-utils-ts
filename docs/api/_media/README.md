@@ -144,7 +144,7 @@ If you want to override the logger you can use the following:
 Config.configure({ logger: myLogger })
 ```
 
-To retrieve the current debug state you can use [`Config.logger`](../api/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`Config.getLogger(useNullLogger)`](../api/classes/types_config.UpdatableConfig.md#getlogger) function.
+To retrieve the current debug state you can use `Config.logger`. To get a logger that is optionally set to the null logger based on a boolean flag you can use `Config.getLogger(useNullLogger)`.
 
 ## Debug mode
 
@@ -154,11 +154,11 @@ To turn on debug mode you can use the following:
 Config.configure({ debug: true })
 ```
 
-To retrieve the current debug state you can use [`Config.debug`](../api/interfaces/types_config.Config.md).
+To retrieve the current debug state you can use `Config.debug`.
 
 This will turn on things like automatic tracing, more verbose logging and [advanced debugging](documents/concepts/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
 
-If you want to temporarily turn it on you can use the [`withDebug`](../api/classes/types_config.UpdatableConfig.md#withdebug) function:
+If you want to temporarily turn it on you can use the `withDebug` function:
 
 ```typescript
 Config.withDebug(() => {

@@ -14,8 +14,8 @@ to interact with those (or other) app instances.
 
 ## See
 
- - [AppClient](../../app-client/classes/AppClient.md) for interacting with deployed apps
- - AppDeployer for lower-level deployment control
+[AppClient](../../app-client/classes/AppClient.md) for interacting with deployed apps
+See AppDeployer for lower-level deployment control
 
 ## Constructors
 

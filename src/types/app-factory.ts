@@ -147,7 +147,7 @@ export type AppFactoryDeployParams = Expand<
  * and deploy one or more app instances and to create one or more app clients
  * to interact with those (or other) app instances.
  * @see {@link AppClient} for interacting with deployed apps
- * @see {@link AppDeployer} for lower-level deployment control
+ * See AppDeployer for lower-level deployment control
  */
 export class AppFactory {
   private _appSpec: Arc56Contract

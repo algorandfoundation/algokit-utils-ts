@@ -10,10 +10,7 @@ Defined in: [src/types/app-client.ts:434](https://github.com/p2arthur/algokit-ut
 
 ARC-56/ARC-32 application client that allows you to manage calls and
 state for a specific deployed instance of an app (with a known app ID).
-
-## See
-
-AppFactory for creating and deploying apps
+See AppFactory for creating and deploying apps
 
 ## Constructors
 
@@ -538,7 +535,7 @@ const appClient2 = appClient.clone({ defaultSender: 'NEW_SENDER_ADDRESS' })
 
 > **compile**(`compilation?`): `Promise`\<[`AppClientCompilationResult`](../interfaces/AppClientCompilationResult.md)\>
 
-Defined in: [src/types/app-client.ts:905](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L905)
+Defined in: [src/types/app-client.ts:904](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L904)
 
 Compiles the approval and clear state programs (if TEAL templates provided),
 performing any provided deploy-time parameter replacement and stores
@@ -1012,7 +1009,7 @@ The source maps to import
 
 > **processMethodCallReturn**\<`TReturn`, `TResult`\>(`result`): `Promise`\<`Omit`\<`TResult`, `"return"`\> & [`AppReturn`](../../app/type-aliases/AppReturn.md)\<`TReturn`\>\>
 
-Defined in: [src/types/app-client.ts:886](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L886)
+Defined in: [src/types/app-client.ts:885](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L885)
 
 Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
 on the ARC-56 method, replacing the `return` property with the decoded type.
@@ -1049,7 +1046,7 @@ The smart contract response with an updated return value
 
 > `static` **compile**(`appSpec`, `appManager`, `compilation?`): `Promise`\<[`AppClientCompilationResult`](../interfaces/AppClientCompilationResult.md)\>
 
-Defined in: [src/types/app-client.ts:1013](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L1013)
+Defined in: [src/types/app-client.ts:1012](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L1012)
 
 Compiles the approval and clear state programs (if TEAL templates provided),
 performing any provided deploy-time parameter replacement and returns
@@ -1091,7 +1088,7 @@ The compiled code and any compilation results (including source maps)
 
 > `static` **exposeLogicError**(`e`, `appSpec`, `details`): `Error`
 
-Defined in: [src/types/app-client.ts:929](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L929)
+Defined in: [src/types/app-client.ts:928](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L928)
 
 Takes an error that may include a logic error from a call to the current app and re-exposes the
 error to include source code information via the source map and ARC-56 spec.

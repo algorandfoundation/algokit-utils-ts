@@ -8,20 +8,21 @@
     "src/algod-client/index.ts",
     "src/indexer-client/index.ts",
     "src/kmd-client/index.ts",
-    "src/testing/index.ts"
+    "src/testing/index.ts",
+    "src/types/*.ts"
   ],
   "navigationLinks": {
-    "Examples": "./examples/index.html",
+    "Examples": "/examples/",
     "GitHub": "https://github.com/your-username/your-repo"
   },
   "entryPointStrategy": "expand",
-  "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "examples/**/*.*"],
-  "out": "docs/_html",
+  "exclude": ["src/**/*.spec.ts", "tests/**/*.*"],
+  "out": "docs",
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
-  "projectDocuments": ["docs/guides/Concepts/*.md", "docs/guides/Migration/*.md"],
+  "projectDocuments": ["docs/guides/concepts/*.md", "docs/guides/migration/*.md"],
   "gitRevision": "main",
-  "cleanOutputDir": true,
+  "cleanOutputDir": false,
   "excludeReferences": true,
   "includeHierarchySummary": true,
   "highlightLanguages": ["typescript", "python", "json", "bash", "javascript", "yaml"]

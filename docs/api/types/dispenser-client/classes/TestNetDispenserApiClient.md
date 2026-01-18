@@ -16,18 +16,6 @@ either directly as a parameter or through an `ALGOKIT_DISPENSER_ACCESS_TOKEN` en
 
 The request timeout can be provided as a parameter. If not provided, a default value is used.
 
-## Method
-
-fund - Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
-
-## Method
-
-refund - Sends a refund request to the dispenser API for the specified refundTxnId.
-
-## Method
-
-limit - Sends a request to the dispenser API to get the funding limit for the Algo asset.
-
 ## Example
 
 ```typescript
@@ -90,6 +78,10 @@ Defined in: [src/types/dispenser-client.ts:96](https://github.com/p2arthur/algok
 `number`
 
 The timeout for API requests, in seconds.
+
+fund - Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
+refund - Sends a refund request to the dispenser API for the specified refundTxnId.
+limit - Sends a request to the dispenser API to get the funding limit for the Algo asset.
 
 ## Methods
 

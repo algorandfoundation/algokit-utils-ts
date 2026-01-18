@@ -8,7 +8,7 @@
 
 > **sendTransactionComposer**(`atcSend`): `Promise`\<[`SendTransactionComposerResults`](../../types/transaction/interfaces/SendTransactionComposerResults.md)\>
 
-Defined in: [src/transaction/transaction.ts:121](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transaction/transaction.ts#L121)
+Defined in: [src/transaction/transaction.ts:119](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transaction/transaction.ts#L119)
 
 ## Parameters
 

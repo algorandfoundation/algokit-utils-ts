@@ -426,10 +426,10 @@ function getConstantBlockOffset(program: Uint8Array) {
   return Math.max(bytecblockOffset ?? 0, intcblockOffset ?? 0)
 }
 
-/**
- * ARC-56/ARC-32 application client that allows you to manage calls and
- * state for a specific deployed instance of an app (with a known app ID).
- * @see {@link AppFactory} for creating and deploying apps
+ /**
+  * ARC-56/ARC-32 application client that allows you to manage calls and
+  * state for a specific deployed instance of an app (with a known app ID).
+ * See AppFactory for creating and deploying apps
  */
 export class AppClient {
   private _appId: bigint
@@ -880,7 +880,6 @@ export class AppClient {
    * If the return type is an ARC-56 struct then the struct will be returned.
    *
    * @param result The SendAppTransactionResult to be mapped
-   * @param method The method that was called
    * @returns The smart contract response with an updated return value
    */
   public async processMethodCallReturn<
@@ -1606,10 +1605,6 @@ export class AppClient {
       /**
        *
        * @param mapName The name of the map to read from
-       * @param key The key within the map as either a Buffer with the bytes or a value
-       *  that will be converted to bytes by encoding it using the specified ABI key type
-       *  in the ARC-56 spec
-       * @param appState
        */
       getMap: async (mapName: string) => {
         const metadata = getBoxABIStorageMap(that._appSpec, mapName)
@@ -1700,7 +1695,6 @@ export class AppClient {
       /**
        * Returns all map values for the given map.
        * @param mapName The name of the map to read from
-       * @param appState Optional cached value of the current state
        * @returns A map of all key-value pairs in the map as a `Record<string, ABIValue>`
        */
       getMap: async (mapName: string) => {

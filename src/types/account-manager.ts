@@ -32,7 +32,6 @@ export interface EnsureFundedResult {
 /**
  * Returns a `TransactionSigner` for the given account that can sign a transaction.
  * This function has memoization, so will return the same transaction signer for a given account.
- * @param account An account that can sign a transaction
  * @returns A transaction signer
  * @example
  * ```typescript

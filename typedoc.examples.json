@@ -1,0 +1,17 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "AlgoKit Utils - Examples",
+  "entryPoints": ["examples/*.ts"],
+  "entryPointStrategy": "expand",
+  "out": "docs/examples",
+  "tsconfig": "tsconfig.examples.json",
+  "readme": "examples/index.md",
+  "navigationLinks": {
+    "API Docs": "/"
+  },
+  "cleanOutputDir": true,
+  "excludeReferences": true,
+  "includeHierarchySummary": false,
+  "gitRevision": "main",
+  "highlightLanguages": ["typescript", "bash"]
+}

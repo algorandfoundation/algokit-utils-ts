@@ -13,7 +13,7 @@
     "src/algo25/index.ts"
   ],
   "entryPointStrategy": "expand",
-  "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "examples/**/*.*"],
+  "exclude": ["src/**/*.spec.ts", "tests/**/*.*"],
   "out": "docs/api",
   "plugin": ["typedoc-plugin-markdown"],
   "tsconfig": "tsconfig.build.json",
