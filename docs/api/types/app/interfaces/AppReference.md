@@ -6,7 +6,7 @@
 
 # Interface: AppReference
 
-Defined in: [src/types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
+Defined in: [src/types/app.ts:34](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L34)
 
 Information about an Algorand app
 
@@ -24,7 +24,7 @@ Information about an Algorand app
 
 > **appAddress**: `string`
 
-Defined in: [src/types/app.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L38)
+Defined in: [src/types/app.ts:38](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L38)
 
 The Algorand address of the account associated with the app
 
@@ -34,6 +34,6 @@ The Algorand address of the account associated with the app
 
 > **appId**: `number` \| `bigint`
 
-Defined in: [src/types/app.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L36)
+Defined in: [src/types/app.ts:36](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L36)
 
 The id of the app

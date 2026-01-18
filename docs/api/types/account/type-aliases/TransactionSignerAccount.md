@@ -8,7 +8,7 @@
 
 > **TransactionSignerAccount** = [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/account.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L19)
+Defined in: [src/types/account.ts:19](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account.ts#L19)
 
 ## Deprecated
 

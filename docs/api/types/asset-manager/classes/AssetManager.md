@@ -6,7 +6,7 @@
 
 # Class: AssetManager
 
-Defined in: [src/types/asset-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L139)
+Defined in: [src/types/asset-manager.ts:139](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L139)
 
 Allows management of asset information.
 
@@ -16,7 +16,7 @@ Allows management of asset information.
 
 > **new AssetManager**(`algod`, `newGroup`): `AssetManager`
 
-Defined in: [src/types/asset-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L152)
+Defined in: [src/types/asset-manager.ts:152](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L152)
 
 Create a new asset manager.
 
@@ -50,7 +50,7 @@ const assetManager = new AssetManager(algod, () => new TransactionComposer({algo
 
 > **bulkOptIn**(`account`, `assetIds`, `options?`): `Promise`\<[`BulkAssetOptInOutResult`](../interfaces/BulkAssetOptInOutResult.md)[]\>
 
-Defined in: [src/types/asset-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L234)
+Defined in: [src/types/asset-manager.ts:234](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L234)
 
 Opt an account in to a list of Algorand Standard Assets.
 
@@ -97,7 +97,7 @@ assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).micr
 
 > **bulkOptOut**(`account`, `assetIds`, `options?`): `Promise`\<[`BulkAssetOptInOutResult`](../interfaces/BulkAssetOptInOutResult.md)[]\>
 
-Defined in: [src/types/asset-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L284)
+Defined in: [src/types/asset-manager.ts:284](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L284)
 
 Opt an account out of a list of Algorand Standard Assets.
 
@@ -144,7 +144,7 @@ assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance:
 
 > **getAccountInformation**(`sender`, `assetId`): `Promise`\<[`AccountAssetInformation`](../../account/type-aliases/AccountAssetInformation.md)\>
 
-Defined in: [src/types/asset-manager.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L206)
+Defined in: [src/types/asset-manager.ts:206](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L206)
 
 Returns the given sender account's asset holding for a given asset.
 
@@ -184,7 +184,7 @@ const accountInfo = await assetManager.getAccountInformation(address, assetId);
 
 > **getById**(`assetId`): `Promise`\<[`AssetInformation`](../interfaces/AssetInformation.md)\>
 
-Defined in: [src/types/asset-manager.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L168)
+Defined in: [src/types/asset-manager.ts:168](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L168)
 
 Returns the current asset information for the asset with the given ID.
 

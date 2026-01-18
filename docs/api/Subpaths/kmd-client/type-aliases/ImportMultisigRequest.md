@@ -8,7 +8,7 @@
 
 > **ImportMultisigRequest** = `object`
 
-Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L7)
+Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L7)
 
 The request for `POST /v1/multisig/import`
 
@@ -18,7 +18,7 @@ The request for `POST /v1/multisig/import`
 
 > **multisigVersion**: `number`
 
-Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L8)
+Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L8)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:8](https
 
 > **publicKeys**: `Uint8Array`[]
 
-Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L9)
+Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L9)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:9](https
 
 > **threshold**: `number`
 
-Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L10)
+Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L10)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:10](http
 
 > **walletHandleToken**: `string`
 
-Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L11)
+Defined in: [packages/kmd\_client/src/models/import-multisig-request.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/import-multisig-request.ts#L11)

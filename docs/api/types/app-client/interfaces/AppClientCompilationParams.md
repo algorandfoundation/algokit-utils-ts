@@ -6,7 +6,7 @@
 
 # Interface: AppClientCompilationParams
 
-Defined in: [src/types/app-client.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L207)
+Defined in: [src/types/app-client.ts:207](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L207)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types/app-client.ts:207](https://github.com/algorandfoundation/
 
 > `optional` **deletable**: `boolean`
 
-Defined in: [src/types/app-client.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L213)
+Defined in: [src/types/app-client.ts:213](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L213)
 
 Whether or not the contract should have deploy-time permanence control set, undefined = ignore
 
@@ -24,7 +24,7 @@ Whether or not the contract should have deploy-time permanence control set, unde
 
 > `optional` **deployTimeParams**: [`TealTemplateParams`](../../app/interfaces/TealTemplateParams.md)
 
-Defined in: [src/types/app-client.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L209)
+Defined in: [src/types/app-client.ts:209](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L209)
 
 Any deploy-time parameters to replace in the TEAL code
 
@@ -34,6 +34,6 @@ Any deploy-time parameters to replace in the TEAL code
 
 > `optional` **updatable**: `boolean`
 
-Defined in: [src/types/app-client.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L211)
+Defined in: [src/types/app-client.ts:211](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L211)
 
 Whether or not the contract should have deploy-time immutability control set, undefined = ignore

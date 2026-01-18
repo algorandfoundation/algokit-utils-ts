@@ -8,7 +8,7 @@
 
 > **PaymentTransactionFields** = `object`
 
-Defined in: [packages/transact/src/transactions/payment.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/payment.ts#L8)
+Defined in: [packages/transact/src/transactions/payment.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/payment.ts#L8)
 
 Represents a payment transaction that transfers ALGO between accounts.
 
@@ -20,7 +20,7 @@ Payment transactions are used to transfer ALGO between accounts.
 
 > **amount**: `bigint`
 
-Defined in: [packages/transact/src/transactions/payment.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/payment.ts#L19)
+Defined in: [packages/transact/src/transactions/payment.ts:19](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/payment.ts#L19)
 
 The amount of microALGO to send.
 
@@ -32,7 +32,7 @@ Specified in microALGO (1 ALGO = 1,000,000 microALGO).
 
 > `optional` **closeRemainderTo**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/payment.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/payment.ts#L28)
+Defined in: [packages/transact/src/transactions/payment.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/payment.ts#L28)
 
 Optional address to send all remaining funds to after the transfer.
 
@@ -46,6 +46,6 @@ This effectively removes the sender account from the ledger.
 
 > **receiver**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/payment.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/payment.ts#L12)
+Defined in: [packages/transact/src/transactions/payment.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/payment.ts#L12)
 
 The address of the account receiving the ALGO payment.

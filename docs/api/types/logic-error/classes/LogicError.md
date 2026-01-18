@@ -6,7 +6,7 @@
 
 # Class: LogicError
 
-Defined in: [src/types/logic-error.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L22)
+Defined in: [src/types/logic-error.ts:22](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L22)
 
 Wraps key functionality around processing logic errors
 
@@ -24,7 +24,7 @@ Wraps key functionality around processing logic errors
 
 > **new LogicError**(`errorDetails`, `program`, `getLineForPc`): `LogicError`
 
-Defined in: [src/types/logic-error.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L56)
+Defined in: [src/types/logic-error.ts:56](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L56)
 
 Create a new logic error object.
 
@@ -74,7 +74,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:24
 
 > **led**: [`LogicErrorDetails`](../interfaces/LogicErrorDetails.md)
 
-Defined in: [src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
+Defined in: [src/types/logic-error.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L44)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [src/types/logic-error.ts:44](https://github.com/algorandfoundation/
 
 > **lines**: `number` = `5`
 
-Defined in: [src/types/logic-error.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L46)
+Defined in: [src/types/logic-error.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L46)
 
 ***
 
@@ -114,7 +114,7 @@ Defined in: node\_modules/typescript/lib/lib.es5.d.ts:1076
 
 > **program**: `string`[]
 
-Defined in: [src/types/logic-error.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L45)
+Defined in: [src/types/logic-error.ts:45](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L45)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: [src/types/logic-error.ts:45](https://github.com/algorandfoundation/
 
 > `optional` **stack**: `string`
 
-Defined in: [src/types/logic-error.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L48)
+Defined in: [src/types/logic-error.ts:48](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L48)
 
 #### Overrides
 
@@ -134,7 +134,7 @@ Defined in: [src/types/logic-error.ts:48](https://github.com/algorandfoundation/
 
 > **teal\_line**: `number` = `0`
 
-Defined in: [src/types/logic-error.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L47)
+Defined in: [src/types/logic-error.ts:47](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L47)
 
 ***
 
@@ -234,7 +234,7 @@ a();
 
 > `static` **parseLogicError**(`error`): [`LogicErrorDetails`](../interfaces/LogicErrorDetails.md) \| `undefined`
 
-Defined in: [src/types/logic-error.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)
+Defined in: [src/types/logic-error.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logic-error.ts#L28)
 
 Takes an error message and parses out the details of any logic errors in there.
 

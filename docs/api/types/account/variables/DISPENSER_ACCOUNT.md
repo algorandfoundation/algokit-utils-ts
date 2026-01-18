@@ -8,6 +8,6 @@
 
 > `const` **DISPENSER\_ACCOUNT**: `"DISPENSER"` = `'DISPENSER'`
 
-Defined in: [src/types/account.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L16)
+Defined in: [src/types/account.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account.ts#L16)
 
 The account name identifier used for fund dispensing in test environments

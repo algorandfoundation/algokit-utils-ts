@@ -6,7 +6,7 @@
 
 # Interface: BuiltTransactions
 
-Defined in: [src/types/composer.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L214)
+Defined in: [src/types/composer.ts:214](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L214)
 
 Set of transactions built by `TransactionComposer`.
 
@@ -16,7 +16,7 @@ Set of transactions built by `TransactionComposer`.
 
 > **methodCalls**: `Map`\<`number`, [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)\>
 
-Defined in: [src/types/composer.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L218)
+Defined in: [src/types/composer.ts:218](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L218)
 
 Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index.
 
@@ -26,7 +26,7 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 
 > **signers**: `Map`\<`number`, [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)\>
 
-Defined in: [src/types/composer.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L220)
+Defined in: [src/types/composer.ts:220](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L220)
 
 Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index.
 
@@ -36,6 +36,6 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 
 > **transactions**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]
 
-Defined in: [src/types/composer.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L216)
+Defined in: [src/types/composer.ts:216](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L216)
 
 The built transactions

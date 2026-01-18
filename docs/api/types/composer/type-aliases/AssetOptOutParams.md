@@ -8,7 +8,7 @@
 
 > **AssetOptOutParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/asset-transfer.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/asset-transfer.ts#L35)
+Defined in: [src/transactions/asset-transfer.ts:35](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/asset-transfer.ts#L35)
 
 Parameters to define an asset opt-out transaction.
 

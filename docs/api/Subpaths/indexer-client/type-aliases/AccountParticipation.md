@@ -8,7 +8,7 @@
 
 > **AccountParticipation** = `object`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L7)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L7)
 
 AccountParticipation describes the parameters used by this account in consensus protocol.
 
@@ -18,7 +18,7 @@ AccountParticipation describes the parameters used by this account in consensus 
 
 > **selectionParticipationKey**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L11)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L11)
 
 Selection public key (if any) currently registered for this round.
 
@@ -28,7 +28,7 @@ Selection public key (if any) currently registered for this round.
 
 > `optional` **stateProofKey**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L36)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:36](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L36)
 
 Root of the state proof key (if any)
 
@@ -38,7 +38,7 @@ Root of the state proof key (if any)
 
 > **voteFirstValid**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L16)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L16)
 
 First round for which this participation is valid.
 
@@ -48,7 +48,7 @@ First round for which this participation is valid.
 
 > **voteKeyDilution**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L21)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:21](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L21)
 
 Number of subkeys in each batch of participation keys.
 
@@ -58,7 +58,7 @@ Number of subkeys in each batch of participation keys.
 
 > **voteLastValid**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L26)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:26](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L26)
 
 Last round for which this participation is valid.
 
@@ -68,6 +68,6 @@ Last round for which this participation is valid.
 
 > **voteParticipationKey**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/account-participation.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-participation.ts#L31)
+Defined in: [packages/indexer\_client/src/models/account-participation.ts:31](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-participation.ts#L31)
 
 root participation public key (if any) currently registered for this round.

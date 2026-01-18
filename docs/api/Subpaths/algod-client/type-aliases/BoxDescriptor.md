@@ -8,7 +8,7 @@
 
 > **BoxDescriptor** = `object`
 
-Defined in: [packages/algod\_client/src/models/box-descriptor.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/box-descriptor.ts#L7)
+Defined in: [packages/algod\_client/src/models/box-descriptor.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/box-descriptor.ts#L7)
 
 Box descriptor describes a Box.
 
@@ -18,6 +18,6 @@ Box descriptor describes a Box.
 
 > **name**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/box-descriptor.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/box-descriptor.ts#L11)
+Defined in: [packages/algod\_client/src/models/box-descriptor.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/box-descriptor.ts#L11)
 
 Base64 encoded box name

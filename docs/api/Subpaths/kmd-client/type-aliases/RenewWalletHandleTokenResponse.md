@@ -8,7 +8,7 @@
 
 > **RenewWalletHandleTokenResponse** = `object`
 
-Defined in: [packages/kmd\_client/src/models/renew-wallet-handle-token-response.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/renew-wallet-handle-token-response.ts#L9)
+Defined in: [packages/kmd\_client/src/models/renew-wallet-handle-token-response.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/renew-wallet-handle-token-response.ts#L9)
 
 RenewWalletHandleTokenResponse is the response to `POST /v1/wallet/renew`
 
@@ -18,4 +18,4 @@ RenewWalletHandleTokenResponse is the response to `POST /v1/wallet/renew`
 
 > **walletHandle**: [`WalletHandle`](WalletHandle.md)
 
-Defined in: [packages/kmd\_client/src/models/renew-wallet-handle-token-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/renew-wallet-handle-token-response.ts#L10)
+Defined in: [packages/kmd\_client/src/models/renew-wallet-handle-token-response.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/renew-wallet-handle-token-response.ts#L10)

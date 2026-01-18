@@ -8,7 +8,7 @@
 
 > **encodeSignedTransaction**(`signedTransaction`): `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L115)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:115](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L115)
 
 Encode signed transactions to MsgPack for sending on the network.
 

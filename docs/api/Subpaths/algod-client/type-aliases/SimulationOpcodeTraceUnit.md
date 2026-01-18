@@ -8,7 +8,7 @@
 
 > **SimulationOpcodeTraceUnit** = `object`
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L13)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L13)
 
 The set of trace information and effect from evaluating a single opcode.
 
@@ -18,7 +18,7 @@ The set of trace information and effect from evaluating a single opcode.
 
 > **pc**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L17)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:17](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L17)
 
 The program counter of the current opcode being evaluated.
 
@@ -28,7 +28,7 @@ The program counter of the current opcode being evaluated.
 
 > `optional` **scratchChanges**: [`ScratchChange`](ScratchChange.md)[]
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L22)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:22](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L22)
 
 The writes into scratch slots.
 
@@ -38,7 +38,7 @@ The writes into scratch slots.
 
 > `optional` **spawnedInners**: `number`[]
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L32)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:32](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L32)
 
 The indexes of the traces for inner transactions spawned by this opcode, if any.
 
@@ -48,7 +48,7 @@ The indexes of the traces for inner transactions spawned by this opcode, if any.
 
 > `optional` **stackAdditions**: [`AvmValue`](AvmValue.md)[]
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L42)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:42](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L42)
 
 The values added by this opcode to the stack.
 
@@ -58,7 +58,7 @@ The values added by this opcode to the stack.
 
 > `optional` **stackPopCount**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L37)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:37](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L37)
 
 The number of deleted stack values by this opcode.
 
@@ -68,6 +68,6 @@ The number of deleted stack values by this opcode.
 
 > `optional` **stateChanges**: [`ApplicationStateOperation`](ApplicationStateOperation.md)[]
 
-Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L27)
+Defined in: [packages/algod\_client/src/models/simulation-opcode-trace-unit.ts:27](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-opcode-trace-unit.ts#L27)
 
 The operations against the current application's states.

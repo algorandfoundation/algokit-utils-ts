@@ -8,7 +8,7 @@
 
 > **SimulationEvalOverrides** = `object`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L7)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L7)
 
 The set of parameters and limits override during simulation. If this set of parameters is present, then evaluation parameters may differ from standard evaluation in certain ways.
 
@@ -18,7 +18,7 @@ The set of parameters and limits override during simulation. If this set of para
 
 > `optional` **allowEmptySignatures**: `boolean`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L11)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L11)
 
 If true, transactions without signatures are allowed and simulated as if they were properly signed.
 
@@ -28,7 +28,7 @@ If true, transactions without signatures are allowed and simulated as if they we
 
 > `optional` **allowUnnamedResources**: `boolean`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L16)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L16)
 
 If true, allows access to unnamed resources during simulation.
 
@@ -38,7 +38,7 @@ If true, allows access to unnamed resources during simulation.
 
 > `optional` **extraOpcodeBudget**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L31)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:31](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L31)
 
 The extra opcode budget added to each transaction group during simulation
 
@@ -48,7 +48,7 @@ The extra opcode budget added to each transaction group during simulation
 
 > `optional` **fixSigners**: `boolean`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L36)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:36](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L36)
 
 If true, signers for transactions that are missing signatures will be fixed during evaluation.
 
@@ -58,7 +58,7 @@ If true, signers for transactions that are missing signatures will be fixed duri
 
 > `optional` **maxLogCalls**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L21)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:21](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L21)
 
 The maximum log calls one can make during simulation
 
@@ -68,6 +68,6 @@ The maximum log calls one can make during simulation
 
 > `optional` **maxLogSize**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L26)
+Defined in: [packages/algod\_client/src/models/simulation-eval-overrides.ts:26](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/simulation-eval-overrides.ts#L26)
 
 The maximum byte number to log during simulation

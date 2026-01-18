@@ -6,7 +6,7 @@
 
 # Interface: AppLookup
 
-Defined in: [src/types/app.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L175)
+Defined in: [src/types/app.ts:175](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L175)
 
 A lookup of name -> Algorand app for a creator
 
@@ -16,7 +16,7 @@ A lookup of name -> Algorand app for a creator
 
 > **apps**: `Readonly`\<\{\[`name`: `string`\]: [`AppMetadata`](AppMetadata.md); \}\>
 
-Defined in: [src/types/app.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L177)
+Defined in: [src/types/app.ts:177](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L177)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [src/types/app.ts:177](https://github.com/algorandfoundation/algokit
 
 > **creator**: `string`
 
-Defined in: [src/types/app.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L176)
+Defined in: [src/types/app.ts:176](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L176)

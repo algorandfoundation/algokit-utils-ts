@@ -6,7 +6,7 @@
 
 # Class: Address
 
-Defined in: [packages/common/src/address.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L46)
+Defined in: [packages/common/src/address.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L46)
 
 Represents an Algorand address
 
@@ -16,7 +16,7 @@ Represents an Algorand address
 
 > **new Address**(`publicKey`): `Address`
 
-Defined in: [packages/common/src/address.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L59)
+Defined in: [packages/common/src/address.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L59)
 
 Create a new Address object from its binary form.
 
@@ -38,7 +38,7 @@ The binary form of the address. Must be 32 bytes.
 
 > **\[ADDR\_SYMBOL\]**: `boolean`
 
-Defined in: [packages/common/src/address.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L53)
+Defined in: [packages/common/src/address.ts:53](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L53)
 
 **`Internal`**
 
@@ -48,7 +48,7 @@ Defined in: [packages/common/src/address.ts:53](https://github.com/algorandfound
 
 > `readonly` **publicKey**: `Uint8Array`
 
-Defined in: [packages/common/src/address.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L50)
+Defined in: [packages/common/src/address.ts:50](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L50)
 
 The binary form of the address. For standard accounts, this is the public key.
 
@@ -58,7 +58,7 @@ The binary form of the address. For standard accounts, this is the public key.
 
 > **checksum**(): `Uint8Array`
 
-Defined in: [packages/common/src/address.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L76)
+Defined in: [packages/common/src/address.ts:76](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L76)
 
 Compute the 4 byte checksum of the address.
 
@@ -72,7 +72,7 @@ Compute the 4 byte checksum of the address.
 
 > **equals**(`other`): `boolean`
 
-Defined in: [packages/common/src/address.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L69)
+Defined in: [packages/common/src/address.ts:69](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L69)
 
 Check if the address is equal to another address.
 
@@ -92,7 +92,7 @@ Check if the address is equal to another address.
 
 > **toString**(): `string`
 
-Defined in: [packages/common/src/address.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L83)
+Defined in: [packages/common/src/address.ts:83](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L83)
 
 Encode the address into a string form.
 
@@ -106,7 +106,7 @@ Encode the address into a string form.
 
 > `static` **fromString**(`address`): `Address`
 
-Defined in: [packages/common/src/address.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L93)
+Defined in: [packages/common/src/address.ts:93](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L93)
 
 Decode an address from a string.
 
@@ -130,7 +130,7 @@ An Address object corresponding to the input string.
 
 > `static` **zeroAddress**(): `Address`
 
-Defined in: [packages/common/src/address.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L117)
+Defined in: [packages/common/src/address.ts:117](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L117)
 
 Get the zero address.
 

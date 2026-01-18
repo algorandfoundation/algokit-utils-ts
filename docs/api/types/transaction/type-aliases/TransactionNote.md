@@ -8,4 +8,4 @@
 
 > **TransactionNote** = `Uint8Array` \| [`TransactionNoteData`](TransactionNoteData.md) \| [`Arc2TransactionNote`](Arc2TransactionNote.md)
 
-Defined in: [src/types/transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L8)
+Defined in: [src/types/transaction.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L8)

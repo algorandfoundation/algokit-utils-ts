@@ -8,7 +8,7 @@
 
 > **encodeTransaction**(`transaction`): `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/transaction.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/transaction.ts#L391)
+Defined in: [packages/transact/src/transactions/transaction.ts:391](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/transaction.ts#L391)
 
 Encode the transaction with the domain separation (e.g. "TX") prefix
 

@@ -8,7 +8,7 @@
 
 > **TealSourcesDebugEventData** = `object`
 
-Defined in: [src/types/debugging.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L39)
+Defined in: [src/types/debugging.ts:39](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/debugging.ts#L39)
 
 Represents the data for multiple TEAL sources debug events emitted whenever an app is compiled as part of a deploy in debug mode
 
@@ -18,6 +18,6 @@ Represents the data for multiple TEAL sources debug events emitted whenever an a
 
 > **sources**: [`TealSourceDebugEventData`](TealSourceDebugEventData.md)[]
 
-Defined in: [src/types/debugging.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L41)
+Defined in: [src/types/debugging.ts:41](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/debugging.ts#L41)
 
 An array of TEAL source debug event data

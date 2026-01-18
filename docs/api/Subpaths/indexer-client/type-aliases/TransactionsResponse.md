@@ -8,7 +8,7 @@
 
 > **TransactionsResponse** = `object`
 
-Defined in: [packages/indexer\_client/src/models/transactions-response.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transactions-response.ts#L6)
+Defined in: [packages/indexer\_client/src/models/transactions-response.ts:6](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transactions-response.ts#L6)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/indexer\_client/src/models/transactions-response.ts:6](htt
 
 > **currentRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transactions-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transactions-response.ts#L10)
+Defined in: [packages/indexer\_client/src/models/transactions-response.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transactions-response.ts#L10)
 
 Round at which the results were computed.
 
@@ -26,7 +26,7 @@ Round at which the results were computed.
 
 > `optional` **nextToken**: `string`
 
-Defined in: [packages/indexer\_client/src/models/transactions-response.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transactions-response.ts#L15)
+Defined in: [packages/indexer\_client/src/models/transactions-response.ts:15](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transactions-response.ts#L15)
 
 Used for pagination, when making another request provide this token with the next parameter.
 
@@ -36,4 +36,4 @@ Used for pagination, when making another request provide this token with the nex
 
 > **transactions**: [`Transaction`](Transaction.md)[]
 
-Defined in: [packages/indexer\_client/src/models/transactions-response.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transactions-response.ts#L16)
+Defined in: [packages/indexer\_client/src/models/transactions-response.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transactions-response.ts#L16)

@@ -6,7 +6,7 @@
 
 # Interface: AppClientCompilationResult
 
-Defined in: [src/types/app-client.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L264)
+Defined in: [src/types/app-client.ts:264](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L264)
 
 The result of asking an `AppClient` to compile a program.
 
@@ -26,7 +26,7 @@ Always contains the compiled bytecode, and may contain the result of compiling T
 
 > **approvalProgram**: `Uint8Array`
 
-Defined in: [src/types/app-client.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L266)
+Defined in: [src/types/app-client.ts:266](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L266)
 
 The compiled bytecode of the approval program, ready to deploy to algod
 
@@ -36,7 +36,7 @@ The compiled bytecode of the approval program, ready to deploy to algod
 
 > **clearStateProgram**: `Uint8Array`
 
-Defined in: [src/types/app-client.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L268)
+Defined in: [src/types/app-client.ts:268](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L268)
 
 The compiled bytecode of the clear state program, ready to deploy to algod
 
@@ -46,7 +46,7 @@ The compiled bytecode of the clear state program, ready to deploy to algod
 
 > `optional` **compiledApproval**: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md)
 
-Defined in: [src/types/app.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L216)
+Defined in: [src/types/app.ts:216](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L216)
 
 The result of compiling the approval program
 
@@ -60,7 +60,7 @@ The result of compiling the approval program
 
 > `optional` **compiledClear**: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md)
 
-Defined in: [src/types/app.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L218)
+Defined in: [src/types/app.ts:218](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L218)
 
 The result of compiling the clear state program
 

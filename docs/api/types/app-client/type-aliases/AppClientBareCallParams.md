@@ -8,6 +8,6 @@
 
 > **AppClientBareCallParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`CommonAppCallParams`](../../composer/type-aliases/CommonAppCallParams.md), `"appId"` \| `"sender"` \| `"onComplete"`\> & `object`\>
 
-Defined in: [src/types/app-client.ts:311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L311)
+Defined in: [src/types/app-client.ts:311](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L311)
 
 AppClient common parameters for a bare app call

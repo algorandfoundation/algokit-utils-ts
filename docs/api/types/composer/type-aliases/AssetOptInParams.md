@@ -8,7 +8,7 @@
 
 > **AssetOptInParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/asset-transfer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/asset-transfer.ts#L29)
+Defined in: [src/transactions/asset-transfer.ts:29](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/asset-transfer.ts#L29)
 
 Parameters to define an asset opt-in transaction.
 

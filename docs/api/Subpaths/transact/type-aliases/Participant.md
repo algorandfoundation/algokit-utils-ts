@@ -8,7 +8,7 @@
 
 > **Participant** = `object`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L40)
+Defined in: [packages/transact/src/transactions/state-proof.ts:40](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/state-proof.ts#L40)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:40](https://githu
 
 > **verifier**: [`MerkleSignatureVerifier`](MerkleSignatureVerifier.md)
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L41)
+Defined in: [packages/transact/src/transactions/state-proof.ts:41](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/state-proof.ts#L41)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:41](https://githu
 
 > **weight**: `bigint`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L42)
+Defined in: [packages/transact/src/transactions/state-proof.ts:42](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/state-proof.ts#L42)

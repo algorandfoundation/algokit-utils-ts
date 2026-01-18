@@ -6,7 +6,7 @@
 
 # Class: ApiError\<T\>
 
-Defined in: [packages/indexer\_client/src/core/api-error.ts:1](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/api-error.ts#L1)
+Defined in: [packages/indexer\_client/src/core/api-error.ts:1](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/core/api-error.ts#L1)
 
 ## Hierarchy
 
@@ -28,7 +28,7 @@ Defined in: [packages/indexer\_client/src/core/api-error.ts:1](https://github.co
 
 > **new ApiError**\<`T`\>(`url`, `status`, `body?`): `ApiError`\<`T`\>
 
-Defined in: [packages/indexer\_client/src/core/api-error.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/api-error.ts#L6)
+Defined in: [packages/indexer\_client/src/core/api-error.ts:6](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/core/api-error.ts#L6)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ Defined in: [packages/indexer\_client/src/core/api-error.ts:6](https://github.co
 
 > `readonly` **body**: `T` \| `undefined`
 
-Defined in: [packages/indexer\_client/src/core/api-error.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/api-error.ts#L4)
+Defined in: [packages/indexer\_client/src/core/api-error.ts:4](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/core/api-error.ts#L4)
 
 ***
 
@@ -114,7 +114,7 @@ Defined in: node\_modules/typescript/lib/lib.es5.d.ts:1078
 
 > `readonly` **status**: `number`
 
-Defined in: [packages/indexer\_client/src/core/api-error.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/api-error.ts#L3)
+Defined in: [packages/indexer\_client/src/core/api-error.ts:3](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/core/api-error.ts#L3)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: [packages/indexer\_client/src/core/api-error.ts:3](https://github.co
 
 > `readonly` **url**: `string`
 
-Defined in: [packages/indexer\_client/src/core/api-error.ts:2](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/api-error.ts#L2)
+Defined in: [packages/indexer\_client/src/core/api-error.ts:2](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/core/api-error.ts#L2)
 
 ***
 

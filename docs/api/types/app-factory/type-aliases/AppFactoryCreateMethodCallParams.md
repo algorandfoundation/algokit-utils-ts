@@ -8,6 +8,6 @@
 
 > **AppFactoryCreateMethodCallParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<[`AppClientMethodCallParams`](../../app-client/type-aliases/AppClientMethodCallParams.md) & [`AppClientCompilationParams`](../../app-client/interfaces/AppClientCompilationParams.md) & [`CreateOnComplete`](CreateOnComplete.md) & [`CreateSchema`](CreateSchema.md)\>
 
-Defined in: [src/types/app-factory.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L109)
+Defined in: [src/types/app-factory.ts:109](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-factory.ts#L109)
 
 Params to specify a create method call for an app

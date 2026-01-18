@@ -8,6 +8,6 @@
 
 > **AppSpecAppDetails** = [`AppSpecAppDetailsBase`](AppSpecAppDetailsBase.md) & [`AppDetails`](AppDetails.md)
 
-Defined in: [src/types/app-client.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L137)
+Defined in: [src/types/app-client.ts:137](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L137)
 
 The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app

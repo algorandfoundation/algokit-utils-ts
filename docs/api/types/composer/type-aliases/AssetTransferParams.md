@@ -8,7 +8,7 @@
 
 > **AssetTransferParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/asset-transfer.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/asset-transfer.ts#L7)
+Defined in: [src/transactions/asset-transfer.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/asset-transfer.ts#L7)
 
 Parameters to define an asset transfer transaction.
 

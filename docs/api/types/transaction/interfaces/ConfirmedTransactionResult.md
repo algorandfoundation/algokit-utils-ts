@@ -6,7 +6,7 @@
 
 # Interface: ConfirmedTransactionResult
 
-Defined in: [src/types/transaction.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L81)
+Defined in: [src/types/transaction.ts:81](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L81)
 
 The result of sending and confirming a transaction
 
@@ -24,7 +24,7 @@ The result of sending and confirming a transaction
 
 > **confirmation**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
-Defined in: [src/types/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L83)
+Defined in: [src/types/transaction.ts:83](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L83)
 
 The response from sending and waiting for the transaction
 
@@ -38,7 +38,7 @@ The response from sending and waiting for the transaction
 
 > **transaction**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)
 
-Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
+Defined in: [src/types/transaction.ts:51](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L51)
 
 The transaction
 

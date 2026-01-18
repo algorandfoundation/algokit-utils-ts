@@ -6,7 +6,7 @@
 
 # Interface: AssetInformation
 
-Defined in: [src/types/asset-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L18)
+Defined in: [src/types/asset-manager.ts:18](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L18)
 
 Information about an asset.
 
@@ -16,7 +16,7 @@ Information about an asset.
 
 > **assetId**: `bigint`
 
-Defined in: [src/types/asset-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L20)
+Defined in: [src/types/asset-manager.ts:20](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L20)
 
 The ID of the asset.
 
@@ -26,7 +26,7 @@ The ID of the asset.
 
 > `optional` **assetName**: `string`
 
-Defined in: [src/types/asset-manager.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L111)
+Defined in: [src/types/asset-manager.ts:111](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L111)
 
 The optional name of the asset.
 
@@ -38,7 +38,7 @@ Max size is 32 bytes.
 
 > `optional` **assetNameAsBytes**: `Uint8Array`
 
-Defined in: [src/types/asset-manager.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L117)
+Defined in: [src/types/asset-manager.ts:117](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L117)
 
 The optional name of the asset.
 
@@ -50,7 +50,7 @@ Max size is 32 bytes.
 
 > `optional` **clawback**: `string`
 
-Defined in: [src/types/asset-manager.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L93)
+Defined in: [src/types/asset-manager.ts:93](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L93)
 
 The address of the optional account that can clawback holdings of this asset from any account.
 
@@ -66,7 +66,7 @@ If not set the field is permanently empty.
 
 > **creator**: `string`
 
-Defined in: [src/types/asset-manager.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L28)
+Defined in: [src/types/asset-manager.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L28)
 
 The address of the account that created the asset.
 
@@ -80,7 +80,7 @@ closing out an asset position and opting-out of the asset.
 
 > **decimals**: `number`
 
-Defined in: [src/types/asset-manager.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L44)
+Defined in: [src/types/asset-manager.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L44)
 
 The amount of decimal places the asset was created with.
 
@@ -96,7 +96,7 @@ The amount of decimal places the asset was created with.
 
 > `optional` **defaultFrozen**: `boolean`
 
-Defined in: [src/types/asset-manager.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L52)
+Defined in: [src/types/asset-manager.ts:52](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L52)
 
 Whether the asset was frozen by default for all accounts.
 
@@ -110,7 +110,7 @@ transaction from the `freeze` account.
 
 > `optional` **freeze**: `string`
 
-Defined in: [src/types/asset-manager.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L82)
+Defined in: [src/types/asset-manager.ts:82](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L82)
 
 The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
 
@@ -124,7 +124,7 @@ If not set the field is permanently empty.
 
 > `optional` **manager**: `string`
 
-Defined in: [src/types/asset-manager.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L58)
+Defined in: [src/types/asset-manager.ts:58](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L58)
 
 The address of the optional account that can manage the configuration of the asset and destroy it.
 
@@ -136,7 +136,7 @@ If not set the asset is permanently immutable.
 
 > `optional` **metadataHash**: `Uint8Array`
 
-Defined in: [src/types/asset-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L135)
+Defined in: [src/types/asset-manager.ts:135](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L135)
 
 32-byte hash of some metadata that is relevant to the asset and/or asset holders.
 
@@ -148,7 +148,7 @@ The format of this metadata is up to the application.
 
 > `optional` **reserve**: `string`
 
-Defined in: [src/types/asset-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L73)
+Defined in: [src/types/asset-manager.ts:73](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L73)
 
 The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
 
@@ -168,7 +168,7 @@ If not set the field is permanently empty.
 
 > **total**: `bigint`
 
-Defined in: [src/types/asset-manager.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L34)
+Defined in: [src/types/asset-manager.ts:34](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L34)
 
 The total amount of the smallest divisible (decimal) units that were created of the asset.
 
@@ -180,7 +180,7 @@ For example, if `decimals` is, say, 2, then for every 100 `total` there is 1 who
 
 > `optional` **unitName**: `string`
 
-Defined in: [src/types/asset-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L99)
+Defined in: [src/types/asset-manager.ts:99](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L99)
 
 The optional name of the unit of this asset (e.g. ticker name).
 
@@ -192,7 +192,7 @@ Max size is 8 bytes.
 
 > `optional` **unitNameAsBytes**: `Uint8Array`
 
-Defined in: [src/types/asset-manager.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L105)
+Defined in: [src/types/asset-manager.ts:105](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L105)
 
 The optional name of the unit of this asset (e.g. ticker name).
 
@@ -204,7 +204,7 @@ Max size is 8 bytes.
 
 > `optional` **url**: `string`
 
-Defined in: [src/types/asset-manager.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L123)
+Defined in: [src/types/asset-manager.ts:123](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L123)
 
 Optional URL where more information about the asset can be retrieved (e.g. metadata).
 
@@ -216,7 +216,7 @@ Max size is 96 bytes.
 
 > `optional` **urlAsBytes**: `Uint8Array`
 
-Defined in: [src/types/asset-manager.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L129)
+Defined in: [src/types/asset-manager.ts:129](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/asset-manager.ts#L129)
 
 Optional URL where more information about the asset can be retrieved (e.g. metadata).
 

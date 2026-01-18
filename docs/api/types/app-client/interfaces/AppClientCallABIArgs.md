@@ -6,7 +6,7 @@
 
 # Interface: AppClientCallABIArgs
 
-Defined in: [src/types/app-client.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L183)
+Defined in: [src/types/app-client.ts:183](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L183)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [src/types/app-client.ts:183](https://github.com/algorandfoundation/
 
 > `optional` **accounts**: (`string` \| [`Address`](../../../algokit-utils/classes/Address.md))[]
 
-Defined in: [src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
+Defined in: [src/types/app.ts:48](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L48)
 
 The address of any accounts to load in
 
@@ -36,7 +36,7 @@ The address of any accounts to load in
 
 > `optional` **apps**: `number`[]
 
-Defined in: [src/types/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L50)
+Defined in: [src/types/app.ts:50](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L50)
 
 IDs of any apps to load into the foreignApps array
 
@@ -50,7 +50,7 @@ IDs of any apps to load into the foreignApps array
 
 > `optional` **assets**: `number`[]
 
-Defined in: [src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
+Defined in: [src/types/app.ts:52](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L52)
 
 IDs of any assets to load into the foreignAssets array
 
@@ -64,7 +64,7 @@ IDs of any assets to load into the foreignAssets array
 
 > `optional` **boxes**: ([`BoxReference`](../../../Subpaths/transact/type-aliases/BoxReference.md) \| [`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]
 
-Defined in: [src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
+Defined in: [src/types/app.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L46)
 
 Any box references to load
 
@@ -78,7 +78,7 @@ Any box references to load
 
 > `optional` **lease**: `string` \| `Uint8Array`
 
-Defined in: [src/types/app.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L44)
+Defined in: [src/types/app.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L44)
 
 The optional lease for the transaction
 
@@ -92,7 +92,7 @@ The optional lease for the transaction
 
 > **method**: `string`
 
-Defined in: [src/types/app-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L185)
+Defined in: [src/types/app-client.ts:185](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L185)
 
 If calling an ABI method then either the name of the method, or the ABI signature
 
@@ -102,7 +102,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 > **methodArgs**: [`ABIAppCallArg`](../../app/type-aliases/ABIAppCallArg.md)[]
 
-Defined in: [src/types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
+Defined in: [src/types/app.ts:87](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L87)
 
 The ABI method args to pass in
 
@@ -116,7 +116,7 @@ The ABI method args to pass in
 
 > `optional` **rekeyTo**: `string` \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/app.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L57)
+Defined in: [src/types/app.ts:57](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L57)
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 

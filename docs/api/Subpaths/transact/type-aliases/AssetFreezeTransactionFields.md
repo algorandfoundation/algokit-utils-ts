@@ -8,7 +8,7 @@
 
 > **AssetFreezeTransactionFields** = `object`
 
-Defined in: [packages/transact/src/transactions/asset-freeze.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-freeze.ts#L10)
+Defined in: [packages/transact/src/transactions/asset-freeze.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/asset-freeze.ts#L10)
 
 Represents an asset freeze transaction that freezes or unfreezes asset holdings.
 
@@ -21,7 +21,7 @@ whether a specific account can transfer a particular asset.
 
 > **assetId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/asset-freeze.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-freeze.ts#L14)
+Defined in: [packages/transact/src/transactions/asset-freeze.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/asset-freeze.ts#L14)
 
 The ID of the asset being frozen/unfrozen.
 
@@ -31,7 +31,7 @@ The ID of the asset being frozen/unfrozen.
 
 > **freezeTarget**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/asset-freeze.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-freeze.ts#L19)
+Defined in: [packages/transact/src/transactions/asset-freeze.ts:19](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/asset-freeze.ts#L19)
 
 The target account whose asset holdings will be affected.
 
@@ -41,7 +41,7 @@ The target account whose asset holdings will be affected.
 
 > **frozen**: `boolean`
 
-Defined in: [packages/transact/src/transactions/asset-freeze.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-freeze.ts#L27)
+Defined in: [packages/transact/src/transactions/asset-freeze.ts:27](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/asset-freeze.ts#L27)
 
 The new freeze status.
 

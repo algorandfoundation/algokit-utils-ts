@@ -8,7 +8,7 @@
 
 > **getGlobalABIStorageKeys**(`contract`): `Record`\<`string`, [`ABIStorageKey`](../type-aliases/ABIStorageKey.md)\>
 
-Defined in: [packages/abi/src/arc56-contract.ts:423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L423)
+Defined in: [packages/abi/src/arc56-contract.ts:423](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L423)
 
 Get all global storage keys with parsed ABI types
 

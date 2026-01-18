@@ -1,3 +1,9 @@
+[**@algorandfoundation/algokit-utils**](../../README.md)
+
+***
+
+[@algorandfoundation/algokit-utils](../../modules.md) / concepts/debugging
+
 # Debugger
 
 The AlgoKit TypeScript Utilities package provides a set of debugging tools that can be used to simulate and trace transactions on the Algorand blockchain. These tools and methods are optimized for developers who are building applications on Algorand and need to test and debug their smart contracts via [AlgoKit AVM Debugger extension](https://github.com/algorandfoundation/algokit-avm-vscode-debugger).

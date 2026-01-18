@@ -6,7 +6,7 @@
 
 # Class: ABITupleType
 
-Defined in: [packages/abi/src/abi-type.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L462)
+Defined in: [packages/abi/src/abi-type.ts:472](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L472)
 
 A tuple ABI type containing other ABI types.
 
@@ -24,7 +24,7 @@ A tuple ABI type containing other ABI types.
 
 > **new ABITupleType**(`childTypes`): `ABITupleType`
 
-Defined in: [packages/abi/src/abi-type.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L467)
+Defined in: [packages/abi/src/abi-type.ts:478](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L478)
 
 Creates a new tuple type.
 
@@ -40,6 +40,10 @@ The types of the tuple elements
 
 `ABITupleType`
 
+#### Throws
+
+If the tuple has too many child types (exceeds 2^16-1)
+
 #### Overrides
 
 [`ABIType`](ABIType.md).[`constructor`](ABIType.md#constructor)
@@ -50,7 +54,7 @@ The types of the tuple elements
 
 > `readonly` **childTypes**: [`ABIType`](ABIType.md)[]
 
-Defined in: [packages/abi/src/abi-type.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L467)
+Defined in: [packages/abi/src/abi-type.ts:478](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L478)
 
 The types of the tuple elements
 
@@ -62,7 +66,7 @@ The types of the tuple elements
 
 > **get** **displayName**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L49)
+Defined in: [packages/abi/src/abi-type.ts:49](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L49)
 
 Returns a user-friendly display name for this type.
 
@@ -84,7 +88,7 @@ The display name for this type
 
 > **get** **name**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L474)
+Defined in: [packages/abi/src/abi-type.ts:485](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L485)
 
 Returns the ARC-4 type name string representation.
 
@@ -104,7 +108,7 @@ The ARC-4 type string
 
 > **byteLen**(): `number`
 
-Defined in: [packages/abi/src/abi-type.ts:492](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L492)
+Defined in: [packages/abi/src/abi-type.ts:503](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L503)
 
 Gets the byte length of the encoded type for static types.
 
@@ -128,7 +132,7 @@ Error if the type is dynamic
 
 > **decode**(`bytes`): [`ABIValue`](../type-aliases/ABIValue.md)[]
 
-Defined in: [packages/abi/src/abi-type.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L580)
+Defined in: [packages/abi/src/abi-type.ts:591](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L591)
 
 Decodes bytes according to this ABI type.
 
@@ -146,6 +150,10 @@ The bytes to decode
 
 The decoded value
 
+#### Throws
+
+If the bytes cannot be decoded as this type
+
 #### Overrides
 
 [`ABIType`](ABIType.md).[`decode`](ABIType.md#decode)
@@ -156,7 +164,7 @@ The decoded value
 
 > **encode**(`value`): `Uint8Array`
 
-Defined in: [packages/abi/src/abi-type.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L510)
+Defined in: [packages/abi/src/abi-type.ts:521](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L521)
 
 Encodes a value according to this ABI type.
 
@@ -174,6 +182,10 @@ The value to encode
 
 The encoded bytes
 
+#### Throws
+
+If the value cannot be encoded as this type
+
 #### Overrides
 
 [`ABIType`](ABIType.md).[`encode`](ABIType.md#encode)
@@ -184,7 +196,7 @@ The encoded bytes
 
 > **equals**(`other`): `boolean`
 
-Defined in: [packages/abi/src/abi-type.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L482)
+Defined in: [packages/abi/src/abi-type.ts:493](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L493)
 
 Checks if this ABI type is equal to another.
 
@@ -212,7 +224,7 @@ True if the types are equal, false otherwise
 
 > **isDynamic**(): `boolean`
 
-Defined in: [packages/abi/src/abi-type.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L488)
+Defined in: [packages/abi/src/abi-type.ts:499](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L499)
 
 Checks if this ABI type is dynamic (variable-length).
 
@@ -232,7 +244,7 @@ True if the type is dynamic, false otherwise
 
 > **toString**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L57)
+Defined in: [packages/abi/src/abi-type.ts:57](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L57)
 
 Returns the ARC-4 type name string representation.
 
@@ -252,7 +264,7 @@ The ARC-4 type string
 
 > `static` **from**(`str`): [`ABIType`](ABIType.md)
 
-Defined in: [packages/abi/src/abi-type.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L100)
+Defined in: [packages/abi/src/abi-type.ts:108](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/abi-type.ts#L108)
 
 Creates an ABI type from an ARC-4 type string.
 
@@ -269,6 +281,16 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 [`ABIType`](ABIType.md)
 
 The corresponding ABI type
+
+#### Throws
+
+If the type string is malformed or unsupported
+
+#### Remarks
+
+Supported type formats include: `uint<N>` (8-512 bits), `ufixed<N>x<M>`, `bool`, `byte`,
+`address`, `string`, `<type>[<N>]` (static arrays), `<type>[]` (dynamic arrays),
+and `(<type1>,<type2>,...)` (tuples). This parser is recursive for nested types.
 
 #### Inherited from
 

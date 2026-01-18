@@ -8,6 +8,6 @@
 
 > **StateDelta** = [`EvalDeltaKeyValue`](EvalDeltaKeyValue.md)[]
 
-Defined in: [packages/indexer\_client/src/models/state-delta.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-delta.ts#L9)
+Defined in: [packages/indexer\_client/src/models/state-delta.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/state-delta.ts#L9)
 
 Application state delta.

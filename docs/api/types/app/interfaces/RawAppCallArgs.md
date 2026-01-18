@@ -6,7 +6,7 @@
 
 # Interface: RawAppCallArgs
 
-Defined in: [src/types/app.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L63)
+Defined in: [src/types/app.ts:63](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L63)
 
 App call args with non-ABI (raw) values (minus some processing like encoding strings as binary)
 
@@ -24,7 +24,7 @@ App call args with non-ABI (raw) values (minus some processing like encoding str
 
 > `optional` **accounts**: (`string` \| [`Address`](../../../algokit-utils/classes/Address.md))[]
 
-Defined in: [src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
+Defined in: [src/types/app.ts:48](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L48)
 
 The address of any accounts to load in
 
@@ -38,7 +38,7 @@ The address of any accounts to load in
 
 > `optional` **appArgs**: (`string` \| `Uint8Array`)[]
 
-Defined in: [src/types/app.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L65)
+Defined in: [src/types/app.ts:65](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L65)
 
 Any application arguments to pass through
 
@@ -48,7 +48,7 @@ Any application arguments to pass through
 
 > `optional` **apps**: `number`[]
 
-Defined in: [src/types/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L50)
+Defined in: [src/types/app.ts:50](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L50)
 
 IDs of any apps to load into the foreignApps array
 
@@ -62,7 +62,7 @@ IDs of any apps to load into the foreignApps array
 
 > `optional` **assets**: `number`[]
 
-Defined in: [src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
+Defined in: [src/types/app.ts:52](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L52)
 
 IDs of any assets to load into the foreignAssets array
 
@@ -76,7 +76,7 @@ IDs of any assets to load into the foreignAssets array
 
 > `optional` **boxes**: ([`BoxReference`](../../../Subpaths/transact/type-aliases/BoxReference.md) \| [`BoxIdentifier`](../../app-manager/type-aliases/BoxIdentifier.md) \| [`BoxReference`](../../app-manager/interfaces/BoxReference.md))[]
 
-Defined in: [src/types/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L46)
+Defined in: [src/types/app.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L46)
 
 Any box references to load
 
@@ -90,7 +90,7 @@ Any box references to load
 
 > `optional` **lease**: `string` \| `Uint8Array`
 
-Defined in: [src/types/app.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L44)
+Defined in: [src/types/app.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L44)
 
 The optional lease for the transaction
 
@@ -104,7 +104,7 @@ The optional lease for the transaction
 
 > `optional` **method**: `undefined`
 
-Defined in: [src/types/app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L67)
+Defined in: [src/types/app.ts:67](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L67)
 
 Property to aid intellisense
 
@@ -114,7 +114,7 @@ Property to aid intellisense
 
 > `optional` **rekeyTo**: `string` \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/app.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L57)
+Defined in: [src/types/app.ts:57](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L57)
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 

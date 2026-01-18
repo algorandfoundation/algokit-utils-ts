@@ -8,7 +8,7 @@
 
 > `const` **algoKitLogCaptureFixture**: () => [`AlgoKitLogCaptureFixture`](../../../types/testing/interfaces/AlgoKitLogCaptureFixture.md)
 
-Defined in: [src/testing/fixtures/algokit-log-capture-fixture.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algokit-log-capture-fixture.ts#L22)
+Defined in: [src/testing/fixtures/algokit-log-capture-fixture.ts:22](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/fixtures/algokit-log-capture-fixture.ts#L22)
 
 Creates a test fixture for capturing AlgoKit logs.
 

@@ -8,6 +8,6 @@
 
 > **AppDetails** = [`AppDetailsBase`](AppDetailsBase.md) & [`ResolveAppById`](../interfaces/ResolveAppById.md) \| [`ResolveAppByCreatorAndName`](ResolveAppByCreatorAndName.md)
 
-Defined in: [src/types/app-client.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L119)
+Defined in: [src/types/app-client.ts:119](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L119)
 
 The details of an AlgoKit Utils deployed app

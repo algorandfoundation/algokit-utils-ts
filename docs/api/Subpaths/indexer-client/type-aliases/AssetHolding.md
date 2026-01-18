@@ -8,7 +8,7 @@
 
 > **AssetHolding** = `object`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L10)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L10)
 
 Describes an asset held by an account.
 
@@ -21,7 +21,7 @@ data/basics/userBalance.go : AssetHolding
 
 > **amount**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L14)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L14)
 
 number of units held.
 
@@ -31,7 +31,7 @@ number of units held.
 
 > **assetId**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L19)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:19](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L19)
 
 Asset ID of the holding.
 
@@ -41,7 +41,7 @@ Asset ID of the holding.
 
 > `optional` **deleted**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L29)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:29](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L29)
 
 Whether or not the asset holding is currently deleted from its account.
 
@@ -51,7 +51,7 @@ Whether or not the asset holding is currently deleted from its account.
 
 > **isFrozen**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L24)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:24](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L24)
 
 whether or not the holding is frozen.
 
@@ -61,7 +61,7 @@ whether or not the holding is frozen.
 
 > `optional` **optedInAtRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L34)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:34](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L34)
 
 Round during which the account opted into this asset holding.
 
@@ -71,6 +71,6 @@ Round during which the account opted into this asset holding.
 
 > `optional` **optedOutAtRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/asset-holding.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/asset-holding.ts#L39)
+Defined in: [packages/indexer\_client/src/models/asset-holding.ts:39](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/asset-holding.ts#L39)
 
 Round during which the account opted out of this asset holding.

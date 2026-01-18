@@ -8,7 +8,7 @@
 
 > **ABIStorageMap** = `object`
 
-Defined in: [packages/abi/src/arc56-contract.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L20)
+Defined in: [packages/abi/src/arc56-contract.ts:20](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L20)
 
 Describes a storage map with parsed ABI types
 
@@ -18,7 +18,7 @@ Describes a storage map with parsed ABI types
 
 > `optional` **desc**: `string`
 
-Defined in: [packages/abi/src/arc56-contract.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L26)
+Defined in: [packages/abi/src/arc56-contract.ts:26](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L26)
 
 Description of what the key-value pairs in this mapping hold
 
@@ -28,7 +28,7 @@ Description of what the key-value pairs in this mapping hold
 
 > **keyType**: [`ABIType`](../classes/ABIType.md) \| [`AVMType`](AVMType.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L22)
+Defined in: [packages/abi/src/arc56-contract.ts:22](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L22)
 
 The parsed type of the keys in the map (ABI type or AVM type)
 
@@ -38,7 +38,7 @@ The parsed type of the keys in the map (ABI type or AVM type)
 
 > `optional` **prefix**: `string`
 
-Defined in: [packages/abi/src/arc56-contract.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L28)
+Defined in: [packages/abi/src/arc56-contract.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L28)
 
 The base64-encoded prefix of the map keys
 
@@ -48,6 +48,6 @@ The base64-encoded prefix of the map keys
 
 > **valueType**: [`ABIType`](../classes/ABIType.md) \| [`AVMType`](AVMType.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L24)
+Defined in: [packages/abi/src/arc56-contract.ts:24](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L24)
 
 The parsed type of the values in the map (ABI type or AVM type)

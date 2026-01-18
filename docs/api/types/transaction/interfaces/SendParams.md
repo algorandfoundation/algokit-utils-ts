@@ -6,7 +6,7 @@
 
 # Interface: SendParams
 
-Defined in: [src/types/transaction.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L124)
+Defined in: [src/types/transaction.ts:124](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L124)
 
 Parameters to configure transaction sending.
 
@@ -24,7 +24,7 @@ Parameters to configure transaction sending.
 
 > `optional` **coverAppCallInnerTransactionFees**: `boolean`
 
-Defined in: [src/types/transaction.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L132)
+Defined in: [src/types/transaction.ts:132](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L132)
 
 Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
 
@@ -34,7 +34,7 @@ Whether to use simulate to automatically calculate required app call inner trans
 
 > `optional` **maxRoundsToWaitForConfirmation**: `number`
 
-Defined in: [src/types/transaction.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L126)
+Defined in: [src/types/transaction.ts:126](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L126)
 
 The number of rounds to wait for confirmation. By default until the latest lastValid has past.
 
@@ -44,7 +44,7 @@ The number of rounds to wait for confirmation. By default until the latest lastV
 
 > `optional` **populateAppCallResources**: `boolean`
 
-Defined in: [src/types/transaction.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L130)
+Defined in: [src/types/transaction.ts:130](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L130)
 
 Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
 
@@ -54,6 +54,6 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 > `optional` **suppressLog**: `boolean`
 
-Defined in: [src/types/transaction.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L128)
+Defined in: [src/types/transaction.ts:128](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L128)
 
 Whether to suppress log messages from transaction send, default: do not suppress.

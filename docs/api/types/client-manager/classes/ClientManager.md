@@ -6,7 +6,7 @@
 
 # Class: ClientManager
 
-Defined in: [src/types/client-manager.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L47)
+Defined in: [src/types/client-manager.ts:47](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L47)
 
 Exposes access to various API clients.
 
@@ -16,7 +16,7 @@ Exposes access to various API clients.
 
 > **new ClientManager**(`clientsOrConfig`, `algorandClient?`): `ClientManager`
 
-Defined in: [src/types/client-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L73)
+Defined in: [src/types/client-manager.ts:73](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L73)
 
 algosdk clients or config for interacting with the official Algorand APIs.
 
@@ -62,7 +62,7 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 
 > **get** **algod**(): [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
-Defined in: [src/types/client-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L92)
+Defined in: [src/types/client-manager.ts:92](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L92)
 
 Returns an Algod API client.
 
@@ -80,7 +80,7 @@ The Algod client
 
 > **get** **indexer**(): [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
-Defined in: [src/types/client-manager.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L101)
+Defined in: [src/types/client-manager.ts:101](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L101)
 
 Returns an Indexer API client or throws an error if it's not been provided.
 
@@ -102,7 +102,7 @@ The Indexer client
 
 > **get** **indexerIfPresent**(): [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md) \| `undefined`
 
-Defined in: [src/types/client-manager.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L110)
+Defined in: [src/types/client-manager.ts:110](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L110)
 
 Returns an Indexer API client or `undefined` if it's not been provided.
 
@@ -120,7 +120,7 @@ The Indexer client or `undefined`
 
 > **get** **kmd**(): [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
-Defined in: [src/types/client-manager.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L119)
+Defined in: [src/types/client-manager.ts:119](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L119)
 
 Returns a KMD API client or throws an error if it's not been provided.
 
@@ -140,7 +140,7 @@ The KMD client
 
 > **getAppClientByCreatorAndName**(`params`): `Promise`\<[`AppClient`](../../app-client/classes/AppClient.md)\>
 
-Defined in: [src/types/client-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L283)
+Defined in: [src/types/client-manager.ts:283](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L283)
 
 Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
 This method resolves the app ID by looking up the creator address and name
@@ -233,7 +233,7 @@ const appClient = clientManager.getAppClientByCreatorAndName({
 
 > **getAppClientById**(`params`): [`AppClient`](../../app-client/classes/AppClient.md)
 
-Defined in: [src/types/client-manager.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L306)
+Defined in: [src/types/client-manager.ts:306](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L306)
 
 Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
 
@@ -310,7 +310,7 @@ const appClient = clientManager.getAppClientById({
 
 > **getAppClientByNetwork**(`params`): `Promise`\<[`AppClient`](../../app-client/classes/AppClient.md)\>
 
-Defined in: [src/types/client-manager.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L329)
+Defined in: [src/types/client-manager.ts:329](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L329)
 
 Returns a new `AppClient` client for managing calls and state for an ARC-56 app.
 This method resolves the app ID for the current network based on
@@ -385,7 +385,7 @@ const appClient = clientManager.getAppClientByNetwork({
 
 > **getAppFactory**(`params`): [`AppFactory`](../../app-factory/classes/AppFactory.md)
 
-Defined in: [src/types/client-manager.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L260)
+Defined in: [src/types/client-manager.ts:260](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L260)
 
 Returns a new `AppFactory` client
 
@@ -491,7 +491,7 @@ const factory = clientManager.getAppFactory({
 
 > **getTestNetDispenser**(`params`): [`TestNetDispenserApiClient`](../../dispenser-client/classes/TestNetDispenserApiClient.md)
 
-Defined in: [src/types/client-manager.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L214)
+Defined in: [src/types/client-manager.ts:214](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L214)
 
 Returns a TestNet Dispenser API client.
 
@@ -528,7 +528,7 @@ const client = clientManager.getTestNetDispenser(
 
 > **getTestNetDispenserFromEnvironment**(`params?`): [`TestNetDispenserApiClient`](../../dispenser-client/classes/TestNetDispenserApiClient.md)
 
-Defined in: [src/types/client-manager.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L233)
+Defined in: [src/types/client-manager.ts:233](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L233)
 
 Returns a TestNet Dispenser API client, loading the auth token from `process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN`.
 
@@ -564,7 +564,7 @@ const client = clientManager.getTestNetDispenserFromEnvironment(
 
 > **getTypedAppClientByCreatorAndName**\<`TClient`\>(`typedClient`, `params`): `Promise`\<`InstanceType`\<`TClient`\>\>
 
-Defined in: [src/types/client-manager.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L357)
+Defined in: [src/types/client-manager.ts:357](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L357)
 
 Returns a new typed client, resolving the app by creator address and name.
 
@@ -665,7 +665,7 @@ const appClient = clientManager.getTypedAppClientByCreatorAndName(MyContractClie
 
 > **getTypedAppClientById**\<`TClient`\>(`typedClient`, `params`): `InstanceType`\<`TClient`\>
 
-Defined in: [src/types/client-manager.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L381)
+Defined in: [src/types/client-manager.ts:381](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L381)
 
 Returns a new typed client, resolving the app by app ID.
 
@@ -745,7 +745,7 @@ const appClient = clientManager.getTypedAppClientById(MyContractClient, {
 
 > **getTypedAppClientByNetwork**\<`TClient`\>(`typedClient`, `params?`): `Promise`\<`InstanceType`\<`TClient`\>\>
 
-Defined in: [src/types/client-manager.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L407)
+Defined in: [src/types/client-manager.ts:407](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L407)
 
 Returns a new typed client, resolves the app ID for the current network based on
 pre-determined network-specific app IDs specified in the ARC-56 app spec.
@@ -821,7 +821,7 @@ const appClient = clientManager.getTypedAppClientByNetwork(MyContractClient, {
 
 > **getTypedAppFactory**\<`TClient`\>(`typedFactory`, `params?`): `TClient`
 
-Defined in: [src/types/client-manager.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L430)
+Defined in: [src/types/client-manager.ts:430](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L430)
 
 Returns a new typed app factory.
 
@@ -918,7 +918,7 @@ const appFactory = clientManager.getTypedAppFactory(MyContractClient, {
 
 > **isLocalNet**(): `Promise`\<`boolean`\>
 
-Defined in: [src/types/client-manager.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L170)
+Defined in: [src/types/client-manager.ts:170](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L170)
 
 Returns true if the current network is LocalNet.
 
@@ -940,7 +940,7 @@ const isLocalNet = await clientManager.isLocalNet()
 
 > **isMainNet**(): `Promise`\<`boolean`\>
 
-Defined in: [src/types/client-manager.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L194)
+Defined in: [src/types/client-manager.ts:194](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L194)
 
 Returns true if the current network is MainNet.
 
@@ -962,7 +962,7 @@ const isMainNet = await clientManager.isMainNet()
 
 > **isTestNet**(): `Promise`\<`boolean`\>
 
-Defined in: [src/types/client-manager.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L182)
+Defined in: [src/types/client-manager.ts:182](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L182)
 
 Returns true if the current network is TestNet.
 
@@ -984,7 +984,7 @@ const isTestNet = await clientManager.isTestNet()
 
 > **network**(): `Promise`\<[`NetworkDetails`](../../network-client/interfaces/NetworkDetails.md)\>
 
-Defined in: [src/types/client-manager.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L134)
+Defined in: [src/types/client-manager.ts:134](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L134)
 
 Get details about the current network.
 
@@ -1007,7 +1007,7 @@ const genesisId = network.genesisId
 
 > `static` **genesisIdIsLocalNet**(`genesisId`): `boolean`
 
-Defined in: [src/types/client-manager.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L158)
+Defined in: [src/types/client-manager.ts:158](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L158)
 
 Returns true if the given network genesisId is associated with a LocalNet network.
 
@@ -1037,7 +1037,7 @@ const isLocalNet = ClientManager.genesisIdIsLocalNet('testnet-v1.0')
 
 > `static` **getAlgodClient**(`config`): [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
-Defined in: [src/types/client-manager.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L589)
+Defined in: [src/types/client-manager.ts:589](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L589)
 
 Returns an algod SDK client that automatically retries on idempotent calls.
 
@@ -1078,7 +1078,7 @@ The Algod client
 
 > `static` **getAlgodClientFromEnvironment**(): [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
-Defined in: [src/types/client-manager.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L610)
+Defined in: [src/types/client-manager.ts:610](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L610)
 
 Returns an algod SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
 
@@ -1102,7 +1102,7 @@ The Algod client
 
 > `static` **getAlgodConfigFromEnvironment**(): [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/client-manager.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L491)
+Defined in: [src/types/client-manager.ts:491](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L491)
 
 Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment)
 
@@ -1130,7 +1130,7 @@ const config = ClientManager.getAlgodConfigFromEnvironment()
 
 > `static` **getAlgoNodeConfig**(`network`, `config`): [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/client-manager.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L544)
+Defined in: [src/types/client-manager.ts:544](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L544)
 
 Returns the Algorand configuration to point to the free tier of the AlgoNode service.
 
@@ -1166,7 +1166,7 @@ const config = ClientManager.getAlgoNodeConfig('testnet', 'algod')
 
 > `static` **getConfigFromEnvironmentOrLocalNet**(): [`AlgoConfig`](../../network-client/interfaces/AlgoConfig.md)
 
-Defined in: [src/types/client-manager.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L455)
+Defined in: [src/types/client-manager.ts:455](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L455)
 
 Retrieve client configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment)
 
@@ -1197,7 +1197,7 @@ const config = ClientManager.getConfigFromEnvironmentOrLocalNet()
 
 > `static` **getDefaultLocalNetConfig**(`configOrPort`): [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/client-manager.ts:560](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L560)
+Defined in: [src/types/client-manager.ts:560](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L560)
 
 Returns the Algorand configuration to point to the default LocalNet.
 
@@ -1227,7 +1227,7 @@ const config = ClientManager.getDefaultLocalNetConfig('algod')
 
 > `static` **getIndexerClient**(`config`): [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
-Defined in: [src/types/client-manager.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L635)
+Defined in: [src/types/client-manager.ts:635](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L635)
 
 Returns an indexer SDK client that automatically retries on idempotent calls
 
@@ -1268,7 +1268,7 @@ The Indexer client
 
 > `static` **getIndexerClientFromEnvironment**(): [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
-Defined in: [src/types/client-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L657)
+Defined in: [src/types/client-manager.ts:657](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L657)
 
 Returns an indexer SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
 
@@ -1292,7 +1292,7 @@ The Indexer client
 
 > `static` **getIndexerConfigFromEnvironment**(): [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/client-manager.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L518)
+Defined in: [src/types/client-manager.ts:518](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L518)
 
 Retrieve the indexer configuration from environment variables (expects to be called from a Node.js environment).
 
@@ -1320,7 +1320,7 @@ const config = ClientManager.getIndexerConfigFromEnvironment()
 
 > `static` **getKmdClient**(`config`): [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
-Defined in: [src/types/client-manager.ts:673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L673)
+Defined in: [src/types/client-manager.ts:673](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L673)
 
 Returns a KMD SDK client.
 
@@ -1352,7 +1352,7 @@ The KMD client
 
 > `static` **getKmdClientFromEnvironment**(): [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
-Defined in: [src/types/client-manager.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L693)
+Defined in: [src/types/client-manager.ts:693](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L693)
 
 Returns a KMD SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
 

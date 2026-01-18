@@ -8,7 +8,7 @@
 
 > **AppCallParams** = [`CommonAppCallParams`](CommonAppCallParams.md) & `object`
 
-Defined in: [src/transactions/app-call.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L89)
+Defined in: [src/transactions/app-call.ts:89](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/app-call.ts#L89)
 
 Parameters to define an application call transaction.
 

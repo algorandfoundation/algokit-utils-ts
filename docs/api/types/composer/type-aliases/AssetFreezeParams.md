@@ -8,7 +8,7 @@
 
 > **AssetFreezeParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/asset-config.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/asset-config.ts#L171)
+Defined in: [src/transactions/asset-config.ts:171](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/asset-config.ts#L171)
 
 Parameters to define an asset freeze transaction.
 

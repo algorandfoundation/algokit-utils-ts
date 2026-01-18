@@ -8,6 +8,6 @@
 
 > **DeployAppDeleteParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`AppDeleteParams`](../../composer/type-aliases/AppDeleteParams.md), `"appId"`\>\>
 
-Defined in: [src/types/app-deployer.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L35)
+Defined in: [src/types/app-deployer.ts:35](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-deployer.ts#L35)
 
 Params to specify a transaction for an app deployment

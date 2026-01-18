@@ -8,7 +8,7 @@
 
 > **Transaction** = `object`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L44)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L44)
 
 Contains all fields common to all transactions and serves as an envelope to all transactions type. Represents both regular and inner transactions.
 
@@ -22,7 +22,7 @@ data/transactions/transaction.go : Transaction
 
 > `optional` **applicationTransaction**: [`TransactionApplication`](TransactionApplication.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L45)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:45](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L45)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:45](https://gith
 
 > `optional` **assetConfigTransaction**: [`TransactionAssetConfig`](TransactionAssetConfig.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L46)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L46)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:46](https://gith
 
 > `optional` **assetFreezeTransaction**: [`TransactionAssetFreeze`](TransactionAssetFreeze.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L47)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:47](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L47)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:47](https://gith
 
 > `optional` **assetTransferTransaction**: [`TransactionAssetTransfer`](TransactionAssetTransfer.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L48)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:48](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L48)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:48](https://gith
 
 > `optional` **authAddr**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L55)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:55](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L55)
 
 \[sgnr\] this is included with signed transactions when the signing address does not equal the sender. The backend can use this to ensure that auth addr is equal to the accounts auth addr.
 
@@ -64,7 +64,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:55](https://gith
 
 > `optional` **closeRewards**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L60)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:60](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L60)
 
 \[rc\] rewards applied to close-remainder-to account.
 
@@ -74,7 +74,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:60](https://gith
 
 > `optional` **closingAmount**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L65)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:65](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L65)
 
 \[ca\] closing amount for transaction.
 
@@ -84,7 +84,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:65](https://gith
 
 > `optional` **confirmedRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L70)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:70](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L70)
 
 Round when the transaction was confirmed.
 
@@ -94,7 +94,7 @@ Round when the transaction was confirmed.
 
 > `optional` **createdAppId**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L75)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:75](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L75)
 
 Specifies an application index (ID) if an application was created with this transaction.
 
@@ -104,7 +104,7 @@ Specifies an application index (ID) if an application was created with this tran
 
 > `optional` **createdAssetId**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L80)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:80](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L80)
 
 Specifies an asset index (ID) if an asset was created with this transaction.
 
@@ -114,7 +114,7 @@ Specifies an asset index (ID) if an asset was created with this transaction.
 
 > **fee**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L85)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:85](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L85)
 
 \[fee\] Transaction fee.
 
@@ -124,7 +124,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:85](https://gith
 
 > **firstValid**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L90)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:90](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L90)
 
 \[fv\] First valid round for this transaction.
 
@@ -134,7 +134,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:90](https://gith
 
 > `optional` **genesisHash**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L95)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:95](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L95)
 
 \[gh\] Hash of genesis block.
 
@@ -144,7 +144,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:95](https://gith
 
 > `optional` **genesisId**: `string`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L100)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:100](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L100)
 
 \[gen\] genesis block ID.
 
@@ -154,7 +154,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:100](https://git
 
 > `optional` **globalStateDelta**: [`StateDelta`](StateDelta.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L179)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:179](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L179)
 
 ***
 
@@ -162,7 +162,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:179](https://git
 
 > `optional` **group**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L105)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:105](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L105)
 
 \[grp\] Base64 encoded byte array of a sha512/256 digest. When present indicates that this transaction is part of a transaction group and the value is the sha512/256 hash of the transactions in that group.
 
@@ -172,7 +172,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:105](https://git
 
 > `optional` **heartbeatTransaction**: [`TransactionHeartbeat`](TransactionHeartbeat.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L50)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:50](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L50)
 
 ***
 
@@ -180,7 +180,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:50](https://gith
 
 > `optional` **id**: `string`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L110)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:110](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L110)
 
 Transaction ID
 
@@ -190,7 +190,7 @@ Transaction ID
 
 > `optional` **innerTxns**: `Transaction`[]
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L189)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:189](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L189)
 
 Inner transactions produced by application execution.
 
@@ -200,7 +200,7 @@ Inner transactions produced by application execution.
 
 > `optional` **intraRoundOffset**: `number`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L115)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:115](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L115)
 
 Offset into the round where this transaction was confirmed.
 
@@ -210,7 +210,7 @@ Offset into the round where this transaction was confirmed.
 
 > `optional` **keyregTransaction**: [`TransactionKeyreg`](TransactionKeyreg.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L116)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:116](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L116)
 
 ***
 
@@ -218,7 +218,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:116](https://git
 
 > **lastValid**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L121)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:121](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L121)
 
 \[lv\] Last valid round for this transaction.
 
@@ -228,7 +228,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:121](https://git
 
 > `optional` **lease**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L126)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:126](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L126)
 
 \[lx\] Base64 encoded 32-byte array. Lease enforces mutual exclusion of transactions.  If this field is nonzero, then once the transaction is confirmed, it acquires the lease identified by the (Sender, Lease) pair of the transaction until the LastValid round passes.  While this transaction possesses the lease, no other transaction specifying this lease can be confirmed.
 
@@ -238,7 +238,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:126](https://git
 
 > `optional` **localStateDelta**: [`AccountStateDelta`](AccountStateDelta.md)[]
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L178)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:178](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L178)
 
 \[ld\] Local state key/value changes for the application being executed by this transaction.
 
@@ -248,7 +248,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:178](https://git
 
 > `optional` **logs**: `Uint8Array`[]
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L184)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:184](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L184)
 
 \[lg\] Logs for the application being executed by this transaction.
 
@@ -258,7 +258,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:184](https://git
 
 > `optional` **note**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L131)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:131](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L131)
 
 \[note\] Free form data.
 
@@ -268,7 +268,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:131](https://git
 
 > `optional` **paymentTransaction**: [`TransactionPayment`](TransactionPayment.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L132)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:132](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L132)
 
 ***
 
@@ -276,7 +276,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:132](https://git
 
 > `optional` **receiverRewards**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L137)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:137](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L137)
 
 \[rr\] rewards applied to receiver account.
 
@@ -286,7 +286,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:137](https://git
 
 > `optional` **rekeyTo**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L142)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:142](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L142)
 
 \[rekey\] when included in a valid transaction, the accounts auth addr will be updated with this value and future signatures must be signed with the key represented by this address.
 
@@ -296,7 +296,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:142](https://git
 
 > `optional` **roundTime**: `number`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L147)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:147](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L147)
 
 Time when the block this transaction is in was confirmed.
 
@@ -306,7 +306,7 @@ Time when the block this transaction is in was confirmed.
 
 > **sender**: `string`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L152)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:152](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L152)
 
 \[snd\] Sender's address.
 
@@ -316,7 +316,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:152](https://git
 
 > `optional` **senderRewards**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L157)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:157](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L157)
 
 \[rs\] rewards applied to sender account.
 
@@ -326,7 +326,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:157](https://git
 
 > `optional` **signature**: [`TransactionSignature`](TransactionSignature.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L158)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:158](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L158)
 
 ***
 
@@ -334,7 +334,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:158](https://git
 
 > `optional` **stateProofTransaction**: [`TransactionStateProof`](TransactionStateProof.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L49)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:49](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L49)
 
 ***
 
@@ -342,7 +342,7 @@ Defined in: [packages/indexer\_client/src/models/transaction.ts:49](https://gith
 
 > **txType**: `"pay"` \| `"keyreg"` \| `"acfg"` \| `"axfer"` \| `"afrz"` \| `"appl"` \| `"stpf"` \| `"hb"`
 
-Defined in: [packages/indexer\_client/src/models/transaction.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction.ts#L173)
+Defined in: [packages/indexer\_client/src/models/transaction.ts:173](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction.ts#L173)
 
 \[type\] Indicates what type of transaction this is. Different types have different fields.
 

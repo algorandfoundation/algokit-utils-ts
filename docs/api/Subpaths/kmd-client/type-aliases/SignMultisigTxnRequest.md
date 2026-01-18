@@ -8,7 +8,7 @@
 
 > **SignMultisigTxnRequest** = `object`
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L9)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L9)
 
 The request for `POST /v1/multisig/sign`
 
@@ -18,7 +18,7 @@ The request for `POST /v1/multisig/sign`
 
 > `optional` **partialMultisig**: [`MultisigSig`](MultisigSig.md)
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L10)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L10)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:10](ht
 
 > **publicKey**: `Uint8Array`
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L11)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L11)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:11](ht
 
 > `optional` **signer**: `Uint8Array`
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L12)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L12)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:12](ht
 
 > **transaction**: `Uint8Array`
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L13)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L13)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:13](ht
 
 > **walletHandleToken**: `string`
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L14)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L14)
 
 ***
 
@@ -58,4 +58,4 @@ Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:14](ht
 
 > `optional` **walletPassword**: `string`
 
-Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L15)
+Defined in: [packages/kmd\_client/src/models/sign-multisig-txn-request.ts:15](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/sign-multisig-txn-request.ts#L15)

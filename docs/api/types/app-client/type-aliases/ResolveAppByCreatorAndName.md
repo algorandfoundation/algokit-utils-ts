@@ -8,7 +8,7 @@
 
 > **ResolveAppByCreatorAndName** = [`ResolveAppByCreatorAndNameBase`](ResolveAppByCreatorAndNameBase.md) & `object`
 
-Defined in: [src/types/app-client.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L88)
+Defined in: [src/types/app-client.ts:88](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L88)
 
 Configuration to resolve app by creator and name `getCreatorAppsByName`
 

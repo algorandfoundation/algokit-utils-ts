@@ -10,7 +10,7 @@
 
 > **algorandFixture**(`fixtureConfig?`): [`AlgorandFixture`](../../../types/testing/interfaces/AlgorandFixture.md)
 
-Defined in: [src/testing/fixtures/algorand-fixture.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L60)
+Defined in: [src/testing/fixtures/algorand-fixture.ts:60](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/fixtures/algorand-fixture.ts#L60)
 
 Creates a test fixture for automated testing against Algorand.
 By default it tests against an environment variable specified client
@@ -75,7 +75,7 @@ test('My test', async () => {
 
 > **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../../../types/testing/interfaces/AlgorandFixture.md)
 
-Defined in: [src/testing/fixtures/algorand-fixture.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L75)
+Defined in: [src/testing/fixtures/algorand-fixture.ts:75](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/fixtures/algorand-fixture.ts#L75)
 
 ### Parameters
 

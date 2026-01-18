@@ -6,7 +6,7 @@
 
 # Interface: BoxReference
 
-Defined in: [src/types/app-manager.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L64)
+Defined in: [src/types/app-manager.ts:64](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L64)
 
 A grouping of the app ID and name identifier to reference an app box.
 
@@ -16,7 +16,7 @@ A grouping of the app ID and name identifier to reference an app box.
 
 > **appId**: `bigint`
 
-Defined in: [src/types/app-manager.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L68)
+Defined in: [src/types/app-manager.ts:68](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L68)
 
 A unique application id
 
@@ -26,6 +26,6 @@ A unique application id
 
 > **name**: [`BoxIdentifier`](../type-aliases/BoxIdentifier.md)
 
-Defined in: [src/types/app-manager.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L72)
+Defined in: [src/types/app-manager.ts:72](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L72)
 
 Identifier for a box name

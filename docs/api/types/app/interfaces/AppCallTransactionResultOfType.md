@@ -6,7 +6,7 @@
 
 # Interface: AppCallTransactionResultOfType\<T\>
 
-Defined in: [src/types/app.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L140)
+Defined in: [src/types/app.ts:140](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L140)
 
 The result of preparing and/or sending multiple transactions
 
@@ -30,7 +30,7 @@ The result of preparing and/or sending multiple transactions
 
 > `optional` **confirmation**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
-Defined in: [src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)
+Defined in: [src/types/transaction.ts:53](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L53)
 
 The response if the transaction was sent and waited for
 
@@ -44,7 +44,7 @@ The response if the transaction was sent and waited for
 
 > `optional` **confirmations**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]
 
-Defined in: [src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
+Defined in: [src/types/transaction.ts:63](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L63)
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction
@@ -59,7 +59,7 @@ the index of the confirmation will match the index of the underlying transaction
 
 > `optional` **return**: `T`
 
-Defined in: [src/types/app.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L142)
+Defined in: [src/types/app.ts:142](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L142)
 
 If an ABI method was called the processed return value
 
@@ -69,7 +69,7 @@ If an ABI method was called the processed return value
 
 > **transaction**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)
 
-Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
+Defined in: [src/types/transaction.ts:51](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L51)
 
 The transaction
 
@@ -83,7 +83,7 @@ The transaction
 
 > **transactions**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]
 
-Defined in: [src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
+Defined in: [src/types/transaction.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L59)
 
 The transactions that have been prepared and/or sent
 

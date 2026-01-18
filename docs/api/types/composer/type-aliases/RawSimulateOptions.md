@@ -8,7 +8,7 @@
 
 > **RawSimulateOptions** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`SimulateRequest`](../../../Subpaths/algod-client/type-aliases/SimulateRequest.md), `"txnGroups"`\>\> & `object`
 
-Defined in: [src/types/composer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L126)
+Defined in: [src/types/composer.ts:126](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L126)
 
 The raw API options to control a simulate request.
 See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction

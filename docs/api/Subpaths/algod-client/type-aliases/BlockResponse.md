@@ -8,7 +8,7 @@
 
 > **BlockResponse** = `object`
 
-Defined in: [packages/algod\_client/src/models/block-response.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block-response.ts#L5)
+Defined in: [packages/algod\_client/src/models/block-response.ts:5](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block-response.ts#L5)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/algod\_client/src/models/block-response.ts:5](https://gith
 
 > **block**: [`Block`](Block.md)
 
-Defined in: [packages/algod\_client/src/models/block-response.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block-response.ts#L7)
+Defined in: [packages/algod\_client/src/models/block-response.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block-response.ts#L7)
 
 Block data including header and transactions.
 
@@ -26,6 +26,6 @@ Block data including header and transactions.
 
 > `optional` **cert**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/algod\_client/src/models/block-response.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block-response.ts#L9)
+Defined in: [packages/algod\_client/src/models/block-response.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block-response.ts#L9)
 
 Block certificate.

@@ -6,7 +6,7 @@
 
 # Class: IndexerApi
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L43)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:43](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L43)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [packages/indexer\_client/src/apis/api-service.ts:43](https://github
 
 > **new IndexerApi**(`httpRequest`): `IndexerApi`
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L44)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L44)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [packages/indexer\_client/src/apis/api-service.ts:44](https://github
 
 > `readonly` **httpRequest**: [`BaseHttpRequest`](BaseHttpRequest.md)
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L44)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:44](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L44)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Defined in: [packages/indexer\_client/src/apis/api-service.ts:44](https://github
 
 > **healthCheck**(): `Promise`\<[`HealthCheck`](../type-aliases/HealthCheck.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L50)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:50](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L50)
 
 #### Returns
 
@@ -60,7 +60,7 @@ Defined in: [packages/indexer\_client/src/apis/api-service.ts:50](https://github
 
 > **lookupAccountAppLocalStates**(`account`, `params?`): `Promise`\<[`ApplicationLocalStatesResponse`](../type-aliases/ApplicationLocalStatesResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L70)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:70](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L70)
 
 Lookup an account's asset holdings, optionally for a specific ID.
 
@@ -98,7 +98,7 @@ Lookup an account's asset holdings, optionally for a specific ID.
 
 > **lookupAccountAssets**(`account`, `params?`): `Promise`\<[`AssetHoldingsResponse`](../type-aliases/AssetHoldingsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L93)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:93](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L93)
 
 Lookup an account's asset holdings, optionally for a specific ID.
 
@@ -136,7 +136,7 @@ Lookup an account's asset holdings, optionally for a specific ID.
 
 > **lookupAccountById**(`account`, `params?`): `Promise`\<[`AccountResponse`](../type-aliases/AccountResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L116)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:116](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L116)
 
 Lookup account information.
 
@@ -170,7 +170,7 @@ Lookup account information.
 
 > **lookupAccountCreatedApplications**(`account`, `params?`): `Promise`\<[`ApplicationsResponse`](../type-aliases/ApplicationsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L143)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:143](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L143)
 
 Lookup an account's created application parameters, optionally for a specific ID.
 
@@ -208,7 +208,7 @@ Lookup an account's created application parameters, optionally for a specific ID
 
 > **lookupAccountCreatedAssets**(`account`, `params?`): `Promise`\<[`AssetsResponse`](../type-aliases/AssetsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L166)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:166](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L166)
 
 Lookup an account's created asset parameters, optionally for a specific ID.
 
@@ -246,7 +246,7 @@ Lookup an account's created asset parameters, optionally for a specific ID.
 
 > **lookupAccountTransactions**(`account`, `params?`): `Promise`\<[`TransactionsResponse`](../type-aliases/TransactionsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L189)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:189](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L189)
 
 Lookup account transactions. Transactions are returned newest to oldest.
 
@@ -328,7 +328,7 @@ Lookup account transactions. Transactions are returned newest to oldest.
 
 > **lookupApplicationBoxByIdAndName**(`applicationId`, `boxName`): `Promise`\<[`Box`](../type-aliases/Box.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:709](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L709)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:709](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L709)
 
 Given an application ID and box name, it returns the round, box name, and value.
 
@@ -352,7 +352,7 @@ Given an application ID and box name, it returns the round, box name, and value.
 
 > **lookupApplicationById**(`applicationId`, `params?`): `Promise`\<[`ApplicationResponse`](../type-aliases/ApplicationResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L264)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:264](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L264)
 
 Lookup application.
 
@@ -378,7 +378,7 @@ Lookup application.
 
 > **lookupApplicationLogsById**(`applicationId`, `params?`): `Promise`\<[`ApplicationLogsResponse`](../type-aliases/ApplicationLogsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L284)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:284](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L284)
 
 Lookup application logs.
 
@@ -424,7 +424,7 @@ Lookup application logs.
 
 > **lookupAssetBalances**(`assetId`, `params?`): `Promise`\<[`AssetBalancesResponse`](../type-aliases/AssetBalancesResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L321)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:321](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L321)
 
 Lookup the list of accounts who hold this asset
 
@@ -466,7 +466,7 @@ Lookup the list of accounts who hold this asset
 
 > **lookupAssetById**(`assetId`, `params?`): `Promise`\<[`AssetResponse`](../type-aliases/AssetResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L356)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:356](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L356)
 
 Lookup asset information.
 
@@ -492,7 +492,7 @@ Lookup asset information.
 
 > **lookupAssetTransactions**(`assetId`, `params?`): `Promise`\<[`TransactionsResponse`](../type-aliases/TransactionsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L376)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:376](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L376)
 
 Lookup transactions for an asset. Transactions are returned oldest to newest.
 
@@ -582,7 +582,7 @@ Lookup transactions for an asset. Transactions are returned oldest to newest.
 
 > **lookupBlock**(`roundNumber`, `params?`): `Promise`\<[`Block`](../type-aliases/Block.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L435)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:435](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L435)
 
 Lookup block.
 
@@ -608,7 +608,7 @@ Lookup block.
 
 > **lookupTransactionById**(`txId`): `Promise`\<[`TransactionResponse`](../type-aliases/TransactionResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L455)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:455](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L455)
 
 Lookup a single transaction.
 
@@ -628,7 +628,7 @@ Lookup a single transaction.
 
 > **searchForAccounts**(`params?`): `Promise`\<[`AccountsResponse`](../type-aliases/AccountsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L475)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:475](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L475)
 
 Search for accounts.
 
@@ -690,7 +690,7 @@ Search for accounts.
 
 > **searchForApplicationBoxes**(`applicationId`, `params?`): `Promise`\<[`BoxesResponse`](../type-aliases/BoxesResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L519)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:519](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L519)
 
 Given an application ID, returns the box names of that application sorted lexicographically.
 
@@ -720,7 +720,7 @@ Given an application ID, returns the box names of that application sorted lexico
 
 > **searchForApplications**(`params?`): `Promise`\<[`ApplicationsResponse`](../type-aliases/ApplicationsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:539](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L539)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:539](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L539)
 
 Search for applications
 
@@ -758,7 +758,7 @@ Search for applications
 
 > **searchForAssets**(`params?`): `Promise`\<[`AssetsResponse`](../type-aliases/AssetsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L571)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:571](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L571)
 
 Search for assets.
 
@@ -804,7 +804,7 @@ Search for assets.
 
 > **searchForBlockHeaders**(`params?`): `Promise`\<[`BlockHeadersResponse`](../type-aliases/BlockHeadersResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:607](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L607)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:607](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L607)
 
 Search for block headers. Block headers are returned in ascending round order. Transactions are not included in the output.
 
@@ -858,7 +858,7 @@ Search for block headers. Block headers are returned in ascending round order. T
 
 > **searchForTransactions**(`params?`): `Promise`\<[`TransactionsResponse`](../type-aliases/TransactionsResponse.md)\>
 
-Defined in: [packages/indexer\_client/src/apis/api-service.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/apis/api-service.ts#L647)
+Defined in: [packages/indexer\_client/src/apis/api-service.ts:647](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/apis/api-service.ts#L647)
 
 Search for transactions. Transactions are returned oldest to newest unless the address parameter is used, in which case results are returned newest to oldest.
 

@@ -8,4 +8,4 @@
 
 > **ProcessedAppCallMethodCall** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`AppCallMethodCall`](AppCallMethodCall.md), `"args"`\> & `object`\>
 
-Defined in: [src/transactions/method-call.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L43)
+Defined in: [src/transactions/method-call.ts:43](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/method-call.ts#L43)

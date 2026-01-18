@@ -8,7 +8,7 @@
 
 > **ErrorTransformer** = (`error`) => `Promise`\<`Error`\>
 
-Defined in: [src/types/composer.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L155)
+Defined in: [src/types/composer.ts:155](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L155)
 
 A function that transforms an error into a new error.
 

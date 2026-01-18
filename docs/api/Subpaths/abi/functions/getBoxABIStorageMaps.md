@@ -8,7 +8,7 @@
 
 > **getBoxABIStorageMaps**(`contract`): `Record`\<`string`, [`ABIStorageMap`](../type-aliases/ABIStorageMap.md)\>
 
-Defined in: [packages/abi/src/arc56-contract.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L533)
+Defined in: [packages/abi/src/arc56-contract.ts:533](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L533)
 
 Get all box storage maps with parsed ABI types
 

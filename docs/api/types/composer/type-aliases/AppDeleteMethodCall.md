@@ -8,6 +8,6 @@
 
 > **AppDeleteMethodCall** = [`Expand`](../../expand/type-aliases/Expand.md)\<[`AppMethodCall`](AppMethodCall.md)\<[`AppDeleteParams`](AppDeleteParams.md)\>\>
 
-Defined in: [src/transactions/method-call.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L27)
+Defined in: [src/transactions/method-call.ts:27](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/method-call.ts#L27)
 
 Parameters to define an ABI method call delete transaction.

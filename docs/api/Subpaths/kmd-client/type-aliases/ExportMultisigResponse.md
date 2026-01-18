@@ -8,7 +8,7 @@
 
 > **ExportMultisigResponse** = `object`
 
-Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L7)
+Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L7)
 
 ExportMultisigResponse is the response to `POST /v1/multisig/export`
 
@@ -18,7 +18,7 @@ ExportMultisigResponse is the response to `POST /v1/multisig/export`
 
 > **multisigVersion**: `number`
 
-Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L8)
+Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L8)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:8](http
 
 > **publicKeys**: `Uint8Array`[]
 
-Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L9)
+Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L9)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:9](http
 
 > **threshold**: `number`
 
-Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L10)
+Defined in: [packages/kmd\_client/src/models/export-multisig-response.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/export-multisig-response.ts#L10)

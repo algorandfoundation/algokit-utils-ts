@@ -8,7 +8,7 @@
 
 > **InitWalletHandleTokenResponse** = `object`
 
-Defined in: [packages/kmd\_client/src/models/init-wallet-handle-token-response.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/init-wallet-handle-token-response.ts#L7)
+Defined in: [packages/kmd\_client/src/models/init-wallet-handle-token-response.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/init-wallet-handle-token-response.ts#L7)
 
 InitWalletHandleTokenResponse is the response to `POST /v1/wallet/init`
 
@@ -18,4 +18,4 @@ InitWalletHandleTokenResponse is the response to `POST /v1/wallet/init`
 
 > **walletHandleToken**: `string`
 
-Defined in: [packages/kmd\_client/src/models/init-wallet-handle-token-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/init-wallet-handle-token-response.ts#L8)
+Defined in: [packages/kmd\_client/src/models/init-wallet-handle-token-response.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/init-wallet-handle-token-response.ts#L8)

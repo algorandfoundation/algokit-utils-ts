@@ -8,7 +8,7 @@
 
 > **HoldingReference** = `object`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L220)
+Defined in: [packages/transact/src/transactions/app-call.ts:220](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/app-call.ts#L220)
 
 A grouping of the asset index and address of the account
 
@@ -18,7 +18,7 @@ A grouping of the asset index and address of the account
 
 > **address**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L225)
+Defined in: [packages/transact/src/transactions/app-call.ts:225](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/app-call.ts#L225)
 
 The address of the account holding the asset
 
@@ -28,6 +28,6 @@ The address of the account holding the asset
 
 > **assetId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L222)
+Defined in: [packages/transact/src/transactions/app-call.ts:222](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/app-call.ts#L222)
 
 The asset index of the holding

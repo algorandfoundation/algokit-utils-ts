@@ -6,7 +6,7 @@
 
 # Interface: AppMetadata
 
-Defined in: [src/types/app.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L163)
+Defined in: [src/types/app.ts:163](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L163)
 
 The metadata that can be collected about a deployed app
 
@@ -24,7 +24,7 @@ The metadata that can be collected about a deployed app
 
 > **appAddress**: `string`
 
-Defined in: [src/types/app.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L38)
+Defined in: [src/types/app.ts:38](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L38)
 
 The Algorand address of the account associated with the app
 
@@ -38,7 +38,7 @@ The Algorand address of the account associated with the app
 
 > **appId**: `number` \| `bigint`
 
-Defined in: [src/types/app.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L36)
+Defined in: [src/types/app.ts:36](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L36)
 
 The id of the app
 
@@ -52,7 +52,7 @@ The id of the app
 
 > **createdMetadata**: [`AppDeployMetadata`](AppDeployMetadata.md)
 
-Defined in: [src/types/app.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L169)
+Defined in: [src/types/app.ts:169](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L169)
 
 The metadata when the app was created
 
@@ -62,7 +62,7 @@ The metadata when the app was created
 
 > **createdRound**: `number`
 
-Defined in: [src/types/app.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L165)
+Defined in: [src/types/app.ts:165](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L165)
 
 The round the app was created
 
@@ -72,7 +72,7 @@ The round the app was created
 
 > `optional` **deletable**: `boolean`
 
-Defined in: [src/types/app.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L157)
+Defined in: [src/types/app.ts:157](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L157)
 
 Whether or not the app is deletable / permanent / unspecified
 
@@ -86,7 +86,7 @@ Whether or not the app is deletable / permanent / unspecified
 
 > **deleted**: `boolean`
 
-Defined in: [src/types/app.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L171)
+Defined in: [src/types/app.ts:171](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L171)
 
 Whether or not the app is deleted
 
@@ -96,7 +96,7 @@ Whether or not the app is deleted
 
 > **name**: `string`
 
-Defined in: [src/types/app.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L153)
+Defined in: [src/types/app.ts:153](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L153)
 
 The unique name identifier of the app within the creator account
 
@@ -110,7 +110,7 @@ The unique name identifier of the app within the creator account
 
 > `optional` **updatable**: `boolean`
 
-Defined in: [src/types/app.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L159)
+Defined in: [src/types/app.ts:159](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L159)
 
 Whether or not the app is updatable / immutable / unspecified
 
@@ -124,7 +124,7 @@ Whether or not the app is updatable / immutable / unspecified
 
 > **updatedRound**: `number`
 
-Defined in: [src/types/app.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L167)
+Defined in: [src/types/app.ts:167](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L167)
 
 The last round that the app was updated
 
@@ -134,7 +134,7 @@ The last round that the app was updated
 
 > **version**: `string`
 
-Defined in: [src/types/app.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L155)
+Defined in: [src/types/app.ts:155](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L155)
 
 The version of app that is / will be deployed
 

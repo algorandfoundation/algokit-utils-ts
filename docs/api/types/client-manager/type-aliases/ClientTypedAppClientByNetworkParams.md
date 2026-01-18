@@ -8,6 +8,6 @@
 
 > **ClientTypedAppClientByNetworkParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`AppClientParams`](../../app-client/interfaces/AppClientParams.md), `"algorand"` \| `"appSpec"` \| `"appId"`\>\>
 
-Defined in: [src/types/client-manager.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L41)
+Defined in: [src/types/client-manager.ts:41](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L41)
 
 Params to get a typed app client by network from `ClientManager`.

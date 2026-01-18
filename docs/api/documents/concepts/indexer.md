@@ -1,3 +1,9 @@
+[**@algorandfoundation/algokit-utils**](../../README.md)
+
+***
+
+[@algorandfoundation/algokit-utils](../../modules.md) / concepts/indexer
+
 # Indexer lookups / searching
 
 Indexer lookups / searching is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It provides type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control.
@@ -10,7 +16,7 @@ To import the indexer functions you can:
 import { indexer } from '@algorandfoundation/algokit-utils'
 ```
 
-All of the indexer functions require you to pass in an indexer SDK client, which you can get from [`AlgorandClient`](./algorand-client.md) via `algorand.client.indexer`. These calls are not made more easy to call by exposing via `AlgorandClient` and thus not requiring the indexer SDK client to be passed in. This is because we want to add a tiny bit of friction to using indexer, given it's an expensive API to run for node providers, the data from it can sometimes be slow and stale, and there are alternatives [that](https://github.com/algorandfoundation/algokit-subscriber-ts) [allow](https://github.com/algorand/conduit) individual projects to index subsets of chain data specific to them as a preferred option. In saying that, it's a very useful API for doing ad hoc data retrieval, writing automated tests, and many other uses.
+All of the indexer functions require you to pass in an indexer SDK client, which you can get from [`AlgorandClient`](algorand-client.md) via `algorand.client.indexer`. These calls are not made more easy to call by exposing via `AlgorandClient` and thus not requiring the indexer SDK client to be passed in. This is because we want to add a tiny bit of friction to using indexer, given it's an expensive API to run for node providers, the data from it can sometimes be slow and stale, and there are alternatives [that](https://github.com/algorandfoundation/algokit-subscriber-ts) [allow](https://github.com/algorand/conduit) individual projects to index subsets of chain data specific to them as a preferred option. In saying that, it's a very useful API for doing ad hoc data retrieval, writing automated tests, and many other uses.
 
 ## Indexer wrapper functions
 

@@ -8,7 +8,7 @@
 
 > **ARC28Event** = `object`
 
-Defined in: [packages/abi/src/arc28-event.ts:2](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc28-event.ts#L2)
+Defined in: [packages/abi/src/arc28-event.ts:2](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc28-event.ts#L2)
 
 [ARC-28](https://arc.algorand.foundation/ARCs/arc-0028) event description
 
@@ -18,7 +18,7 @@ Defined in: [packages/abi/src/arc28-event.ts:2](https://github.com/algorandfound
 
 > **args**: `object`[]
 
-Defined in: [packages/abi/src/arc28-event.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc28-event.ts#L8)
+Defined in: [packages/abi/src/arc28-event.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc28-event.ts#L8)
 
 The arguments of the event, in order
 
@@ -46,7 +46,7 @@ The type of the argument
 
 > `optional` **desc**: `string`
 
-Defined in: [packages/abi/src/arc28-event.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc28-event.ts#L6)
+Defined in: [packages/abi/src/arc28-event.ts:6](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc28-event.ts#L6)
 
 Optional, user-friendly description for the event
 
@@ -56,6 +56,6 @@ Optional, user-friendly description for the event
 
 > **name**: `string`
 
-Defined in: [packages/abi/src/arc28-event.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc28-event.ts#L4)
+Defined in: [packages/abi/src/arc28-event.ts:4](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc28-event.ts#L4)
 
 The name of the event

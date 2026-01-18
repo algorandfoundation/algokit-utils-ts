@@ -8,7 +8,7 @@
 
 > **AssetCreateParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/asset-config.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/asset-config.ts#L10)
+Defined in: [src/transactions/asset-config.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/asset-config.ts#L10)
 
 Parameters to define an asset create transaction.
 

@@ -6,7 +6,7 @@
 
 # Interface: CallConfig
 
-Defined in: [src/types/app-spec.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L247)
+Defined in: [src/types/app-spec.ts:247](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L247)
 
 Call configuration for a method
 
@@ -16,7 +16,7 @@ Call configuration for a method
 
 > `optional` **close\_out**: [`CallConfigValue`](../type-aliases/CallConfigValue.md)
 
-Defined in: [src/types/app-spec.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L253)
+Defined in: [src/types/app-spec.ts:253](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L253)
 
 Close out call config
 
@@ -26,7 +26,7 @@ Close out call config
 
 > `optional` **delete\_application**: [`CallConfigValue`](../type-aliases/CallConfigValue.md)
 
-Defined in: [src/types/app-spec.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L257)
+Defined in: [src/types/app-spec.ts:257](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L257)
 
 Delete call config
 
@@ -36,7 +36,7 @@ Delete call config
 
 > `optional` **no\_op**: [`CallConfigValue`](../type-aliases/CallConfigValue.md)
 
-Defined in: [src/types/app-spec.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L249)
+Defined in: [src/types/app-spec.ts:249](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L249)
 
 NoOp call config
 
@@ -46,7 +46,7 @@ NoOp call config
 
 > `optional` **opt\_in**: [`CallConfigValue`](../type-aliases/CallConfigValue.md)
 
-Defined in: [src/types/app-spec.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L251)
+Defined in: [src/types/app-spec.ts:251](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L251)
 
 Opt-in call config
 
@@ -56,6 +56,6 @@ Opt-in call config
 
 > `optional` **update\_application**: [`CallConfigValue`](../type-aliases/CallConfigValue.md)
 
-Defined in: [src/types/app-spec.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L255)
+Defined in: [src/types/app-spec.ts:255](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L255)
 
 Update call config

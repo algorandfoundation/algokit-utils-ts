@@ -6,7 +6,7 @@
 
 # Interface: LogSnapshotConfig
 
-Defined in: [src/types/testing.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L140)
+Defined in: [src/types/testing.ts:140](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L140)
 
 Configuration for preparing a captured log snapshot.
 This helps ensure that the provided configuration items won't appear
@@ -18,7 +18,7 @@ This helps ensure that the provided configuration items won't appear
 
 > `optional` **accounts**: (`string` \| [`Address`](../../../algokit-utils/classes/Address.md) \| [`MultisigAccount`](../../../Subpaths/transact/classes/MultisigAccount.md) \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`LogicSigAccount`](../../../Subpaths/transact/classes/LogicSigAccount.md))[]
 
-Defined in: [src/types/testing.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L144)
+Defined in: [src/types/testing.ts:144](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L144)
 
 Any accounts/addresses to replace the address for predictably
 
@@ -28,7 +28,7 @@ Any accounts/addresses to replace the address for predictably
 
 > `optional` **apps**: (`string` \| `number` \| `bigint`)[]
 
-Defined in: [src/types/testing.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L146)
+Defined in: [src/types/testing.ts:146](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L146)
 
 Any app IDs to replace predictably
 
@@ -38,7 +38,7 @@ Any app IDs to replace predictably
 
 > `optional` **filterPredicate**: (`log`) => `boolean`
 
-Defined in: [src/types/testing.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L148)
+Defined in: [src/types/testing.ts:148](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L148)
 
 Optional filter predicate to filter out logs
 
@@ -58,6 +58,6 @@ Optional filter predicate to filter out logs
 
 > `optional` **transactions**: (`string` \| [`Transaction`](../../../Subpaths/transact/classes/Transaction.md))[]
 
-Defined in: [src/types/testing.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L142)
+Defined in: [src/types/testing.ts:142](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L142)
 
 Any transaction IDs or transactions to replace the ID for predictably

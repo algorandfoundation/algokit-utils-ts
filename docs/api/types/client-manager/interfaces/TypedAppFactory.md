@@ -6,7 +6,7 @@
 
 # Interface: TypedAppFactory\<TClient\>
 
-Defined in: [src/types/client-manager.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L712)
+Defined in: [src/types/client-manager.ts:712](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L712)
 
 Interface to identify a typed factory that can be used to create and deploy an application.
 
@@ -22,7 +22,7 @@ Interface to identify a typed factory that can be used to create and deploy an a
 
 > **new TypedAppFactory**(`params`): `TClient`
 
-Defined in: [src/types/client-manager.ts:713](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L713)
+Defined in: [src/types/client-manager.ts:713](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L713)
 
 #### Parameters
 

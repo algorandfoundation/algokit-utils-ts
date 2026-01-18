@@ -8,7 +8,7 @@
 
 > **HealthCheck** = `object`
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L7)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L7)
 
 A health check response.
 
@@ -18,7 +18,7 @@ A health check response.
 
 > `optional` **data**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L12)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L12)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/indexer\_client/src/models/health-check.ts:12](https://git
 
 > **dbAvailable**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L15)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:15](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L15)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/indexer\_client/src/models/health-check.ts:15](https://git
 
 > `optional` **errors**: `string`[]
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L17)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:17](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L17)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/indexer\_client/src/models/health-check.ts:17](https://git
 
 > **isMigrating**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L14)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L14)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/indexer\_client/src/models/health-check.ts:14](https://git
 
 > **message**: `string`
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L16)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L16)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/indexer\_client/src/models/health-check.ts:16](https://git
 
 > **round**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L13)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L13)
 
 ***
 
@@ -66,6 +66,6 @@ Defined in: [packages/indexer\_client/src/models/health-check.ts:13](https://git
 
 > **version**: `string`
 
-Defined in: [packages/indexer\_client/src/models/health-check.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/health-check.ts#L11)
+Defined in: [packages/indexer\_client/src/models/health-check.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/health-check.ts#L11)
 
 Current version.

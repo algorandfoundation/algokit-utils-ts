@@ -8,7 +8,7 @@
 
 > **AppCallArgs** = [`RawAppCallArgs`](../interfaces/RawAppCallArgs.md) \| [`ABIAppCallArgs`](ABIAppCallArgs.md)
 
-Defined in: [src/types/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L94)
+Defined in: [src/types/app.ts:94](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L94)
 
 Arguments to pass to an app call either:
   * The raw app call values to pass through into the transaction (after processing); or

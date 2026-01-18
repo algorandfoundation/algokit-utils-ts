@@ -8,7 +8,7 @@
 
 > **SignedTxnWithAD** = `object`
 
-Defined in: [packages/algod\_client/src/models/block.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L139)
+Defined in: [packages/algod\_client/src/models/block.ts:139](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L139)
 
 SignedTxnWithAD is a SignedTransaction with additional ApplyData.
 
@@ -18,7 +18,7 @@ SignedTxnWithAD is a SignedTransaction with additional ApplyData.
 
 > `optional` **applyData**: [`ApplyData`](ApplyData.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L143)
+Defined in: [packages/algod\_client/src/models/block.ts:143](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L143)
 
 Apply data containing transaction execution information.
 
@@ -28,6 +28,6 @@ Apply data containing transaction execution information.
 
 > **signedTxn**: [`SignedTransaction`](../../transact/type-aliases/SignedTransaction.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L141)
+Defined in: [packages/algod\_client/src/models/block.ts:141](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L141)
 
 The signed transaction.

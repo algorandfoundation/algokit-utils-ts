@@ -8,7 +8,7 @@
 
 > **BoxIdentifier** = `string` \| `Uint8Array` \| [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/app-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L59)
+Defined in: [src/types/app-manager.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L59)
 
 Something that identifies an app box name - either a:
  * `Uint8Array` (the actual binary of the box name)

@@ -6,7 +6,7 @@
 
 # Class: TransactionComposer
 
-Defined in: [src/types/composer.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L224)
+Defined in: [src/types/composer.ts:224](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L224)
 
 TransactionComposer helps you compose and execute transactions as a transaction group.
 
@@ -16,7 +16,7 @@ TransactionComposer helps you compose and execute transactions as a transaction 
 
 > **new TransactionComposer**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L297)
+Defined in: [src/types/composer.ts:297](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L297)
 
 Create a `TransactionComposer`.
 
@@ -40,7 +40,7 @@ The `TransactionComposer` instance
 
 > **addAppCall**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:968](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L968)
+Defined in: [src/types/composer.ts:969](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L969)
 
 Add an application call transaction to the transaction group.
 
@@ -98,7 +98,7 @@ composer.addAppCall({
 
 > **addAppCallMethodCall**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:1213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1213)
+Defined in: [src/types/composer.ts:1214](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1214)
 
 Add a non-create/non-update ABI method application call transaction to the transaction group.
 
@@ -309,7 +309,7 @@ composer.addAppCallMethodCall({
 
 > **addAppCreate**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:838](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L838)
+Defined in: [src/types/composer.ts:839](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L839)
 
 Add an application create transaction to the transaction group.
 
@@ -559,7 +559,7 @@ composer.addAppCreate({
 
 > **addAppCreateMethodCall**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:1031](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1031)
+Defined in: [src/types/composer.ts:1032](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1032)
 
 Add an ABI method create application call transaction to the transaction group.
 
@@ -827,7 +827,7 @@ composer.addAppCreateMethodCall({
 
 > **addAppDelete**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:924](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L924)
+Defined in: [src/types/composer.ts:925](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L925)
 
 Add an application delete transaction to the transaction group.
 
@@ -883,7 +883,7 @@ composer.addAppDelete({
 
 > **addAppDeleteMethodCall**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:1153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1153)
+Defined in: [src/types/composer.ts:1154](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1154)
 
 Add an ABI method delete application call transaction to the transaction group.
 
@@ -1094,7 +1094,7 @@ composer.addAppDeleteMethodCall({
 
 > **addAppUpdate**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:882](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L882)
+Defined in: [src/types/composer.ts:883](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L883)
 
 Add an application update transaction to the transaction group.
 
@@ -1295,7 +1295,7 @@ composer.addAppUpdate({
 
 > **addAppUpdateMethodCall**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:1093](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1093)
+Defined in: [src/types/composer.ts:1094](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1094)
 
 Add an ABI method update application call transaction to the transaction group.
 
@@ -1520,7 +1520,7 @@ composer.addAppUpdateMethodCall({
 
 > **addAssetConfig**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:609](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L609)
+Defined in: [src/types/composer.ts:610](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L610)
 
 Add an asset config transaction to the transaction group.
 
@@ -1570,7 +1570,7 @@ composer.addAssetConfig({
 
 > **addAssetCreate**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:574](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L574)
+Defined in: [src/types/composer.ts:575](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L575)
 
 Add an asset create transaction to the transaction group.
 
@@ -1626,7 +1626,7 @@ composer.addAssetCreate({
 
 > **addAssetDestroy**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L675)
+Defined in: [src/types/composer.ts:676](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L676)
 
 Add an asset destroy transaction to the transaction group.
 
@@ -1673,7 +1673,7 @@ composer.addAssetDestroy({
 
 > **addAssetFreeze**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:643](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L643)
+Defined in: [src/types/composer.ts:644](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L644)
 
 Add an asset freeze transaction to the transaction group.
 
@@ -1722,7 +1722,7 @@ composer.addAssetFreeze({
 
 > **addAssetOptIn**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L744)
+Defined in: [src/types/composer.ts:745](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L745)
 
 Add an asset opt-in transaction to the transaction group.
 
@@ -1769,7 +1769,7 @@ composer.addAssetOptIn({
 
 > **addAssetOptOut**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:782](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L782)
+Defined in: [src/types/composer.ts:783](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L783)
 
 Add an asset opt-out transaction to the transaction group.
 
@@ -1822,7 +1822,7 @@ composer.addAssetOptOut({
 
 > **addAssetTransfer**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L712)
+Defined in: [src/types/composer.ts:713](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L713)
 
 Add an asset transfer transaction to the transaction group.
 
@@ -1874,7 +1874,7 @@ composer.addAssetTransfer({
 
 > **addOfflineKeyRegistration**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:1302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1302)
+Defined in: [src/types/composer.ts:1303](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1303)
 
 Add an offline key registration transaction to the transaction group.
 
@@ -1924,7 +1924,7 @@ composer.addOfflineKeyRegistration({
 
 > **addOnlineKeyRegistration**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:1267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1267)
+Defined in: [src/types/composer.ts:1268](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1268)
 
 Add an online key registration transaction to the transaction group.
 
@@ -1986,7 +1986,7 @@ composer.addOnlineKeyRegistration({
 
 > **addPayment**(`params`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L533)
+Defined in: [src/types/composer.ts:534](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L534)
 
 Add a payment transaction to the transaction group.
 
@@ -2033,6 +2033,7 @@ composer.addPayment({
   //  already specified, but here for completeness
   maxFee: (3000).microAlgo(),
 })
+@see {@link AlgorandClient.send} for a simpler payment API
 
 ***
 
@@ -2040,7 +2041,7 @@ composer.addPayment({
 
 > **addTransaction**(`transaction`, `signer?`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L462)
+Defined in: [src/types/composer.ts:462](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L462)
 
 Add a pre-built transaction to the transaction group.
 
@@ -2076,7 +2077,7 @@ composer.addTransaction(txn)
 
 > **addTransactionComposer**(`composer`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:493](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L493)
+Defined in: [src/types/composer.ts:493](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L493)
 
 Add another transaction composer to the current transaction composer.
 The transaction params of the input transaction composer will be added.
@@ -2112,7 +2113,7 @@ composer.addTransactionComposer(innerComposer)
 
 > **build**(): `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)\>; `transactions`: [`TransactionWithSigner`](../../../algokit-utils/interfaces/TransactionWithSigner.md)[]; \}\>
 
-Defined in: [src/types/composer.ts:1329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1329)
+Defined in: [src/types/composer.ts:1330](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1330)
 
 Build the transaction composer.
 
@@ -2139,7 +2140,7 @@ const { transactions, methodCalls } = await composer.build()
 
 > **buildTransactions**(): `Promise`\<[`BuiltTransactions`](../interfaces/BuiltTransactions.md)\>
 
-Defined in: [src/types/composer.ts:1502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1502)
+Defined in: [src/types/composer.ts:1503](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1503)
 
 Builds all transactions in the composer and returns them along with method calls and signers.
 
@@ -2164,7 +2165,7 @@ const { transactions, methodCalls, signers } = await composer.buildTransactions(
 
 > **clone**(`composerConfig?`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L419)
+Defined in: [src/types/composer.ts:419](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L419)
 
 #### Parameters
 
@@ -2182,7 +2183,7 @@ Defined in: [src/types/composer.ts:419](https://github.com/algorandfoundation/al
 
 > **count**(): `number`
 
-Defined in: [src/types/composer.ts:1312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1312)
+Defined in: [src/types/composer.ts:1313](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1313)
 
 Get the number of transactions currently added to this composer.
 
@@ -2198,7 +2199,7 @@ The number of transactions currently added to this composer
 
 > **gatherSignatures**(): `Promise`\<`Uint8Array`[]\>
 
-Defined in: [src/types/composer.ts:2100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2100)
+Defined in: [src/types/composer.ts:2101](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L2101)
 
 #### Returns
 
@@ -2210,7 +2211,7 @@ Defined in: [src/types/composer.ts:2100](https://github.com/algorandfoundation/a
 
 > **rebuild**(): `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)\>; `transactions`: [`TransactionWithSigner`](../../../algokit-utils/interfaces/TransactionWithSigner.md)[]; \}\>
 
-Defined in: [src/types/composer.ts:1784](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1784)
+Defined in: [src/types/composer.ts:1785](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1785)
 
 Rebuild the group, discarding any previously built transactions.
 This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
@@ -2233,7 +2234,7 @@ const { atc, transactions, methodCalls } = await composer.rebuild()
 
 > **registerErrorTransformer**(`transformer`): `TransactionComposer`
 
-Defined in: [src/types/composer.ts:447](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L447)
+Defined in: [src/types/composer.ts:447](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L447)
 
 Register a function that will be used to transform an error caught when simulating or executing
 
@@ -2255,7 +2256,7 @@ The composer so you can chain method calls
 
 > **send**(`params?`): `Promise`\<[`SendTransactionComposerResults`](../../transaction/interfaces/SendTransactionComposerResults.md)\>
 
-Defined in: [src/types/composer.ts:1803](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1803)
+Defined in: [src/types/composer.ts:1804](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1804)
 
 Compose the transaction group and send it to the network.
 
@@ -2285,7 +2286,7 @@ const result = await composer.send()
 
 > **setMaxFees**(`maxFees`): `void`
 
-Defined in: [src/types/composer.ts:2173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2173)
+Defined in: [src/types/composer.ts:2174](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L2174)
 
 #### Parameters
 
@@ -2305,7 +2306,7 @@ Defined in: [src/types/composer.ts:2173](https://github.com/algorandfoundation/a
 
 > **simulate**(): `Promise`\<[`SendTransactionComposerResults`](../../transaction/interfaces/SendTransactionComposerResults.md) & `object`\>
 
-Defined in: [src/types/composer.ts:1983](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1983)
+Defined in: [src/types/composer.ts:1984](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1984)
 
 Compose the transaction group and simulate sending it to the network
 
@@ -2325,7 +2326,7 @@ const result = await composer.simulate()
 
 > **simulate**(`options`): `Promise`\<[`SendTransactionComposerResults`](../../transaction/interfaces/SendTransactionComposerResults.md) & `object`\>
 
-Defined in: [src/types/composer.ts:1994](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1994)
+Defined in: [src/types/composer.ts:1995](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L1995)
 
 Compose the transaction group and simulate sending it to the network
 
@@ -2392,7 +2393,7 @@ const result = await composer.simulate({
 
 > **simulate**(`options`): `Promise`\<[`SendTransactionComposerResults`](../../transaction/interfaces/SendTransactionComposerResults.md) & `object`\>
 
-Defined in: [src/types/composer.ts:2005](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2005)
+Defined in: [src/types/composer.ts:2006](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L2006)
 
 Compose the transaction group and simulate sending it to the network
 
@@ -2422,7 +2423,7 @@ const result = await composer.simulate({
 
 > `static` **arc2Note**(`note`): `Uint8Array`
 
-Defined in: [src/types/composer.ts:2094](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2094)
+Defined in: [src/types/composer.ts:2095](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/composer.ts#L2095)
 
 Create an encoded transaction note that follows the ARC-2 spec.
 

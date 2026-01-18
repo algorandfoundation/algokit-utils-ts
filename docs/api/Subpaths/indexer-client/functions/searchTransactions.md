@@ -8,7 +8,7 @@
 
 > **searchTransactions**(`indexer`, `searchCriteria`, `paginationLimit?`): `Promise`\<[`TransactionsResponse`](../type-aliases/TransactionsResponse.md)\>
 
-Defined in: [src/indexer-client/indexer-lookup.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-client/indexer-lookup.ts#L86)
+Defined in: [src/indexer-client/indexer-lookup.ts:86](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/indexer-client/indexer-lookup.ts#L86)
 
 Allows transactions to be searched for the given criteria.
 

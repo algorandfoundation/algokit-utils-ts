@@ -8,7 +8,7 @@
 
 > **TransactionApplication** = `object`
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L28)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L28)
 
 Fields for application transactions.
 
@@ -21,7 +21,7 @@ data/transactions/application.go : ApplicationCallTxnFields
 
 > `optional` **access**: [`ResourceRef`](ResourceRef.md)[]
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L43)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:43](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L43)
 
 \[al\] Access unifies `accounts`, `foreign-apps`, `foreign-assets`, and `box-references` under a single list. If access is non-empty, these lists must be empty. If access is empty, those lists may be non-empty.
 
@@ -31,7 +31,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:43](
 
 > `optional` **accounts**: [`Address`](../../../algokit-utils/classes/Address.md)[]
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L48)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:48](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L48)
 
 \[apat\] List of accounts in addition to the sender that may be accessed from the application's approval-program and clear-state-program.
 
@@ -41,7 +41,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:48](
 
 > `optional` **applicationArgs**: `Uint8Array`[]
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L38)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:38](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L38)
 
 \[apaa\] transaction specific arguments accessed from the application's approval-program and clear-state-program.
 
@@ -51,7 +51,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:38](
 
 > **applicationId**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L32)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:32](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L32)
 
 \[apid\] ID of the application being configured or empty if creating.
 
@@ -61,7 +61,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:32](
 
 > `optional` **approvalProgram**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L70)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:70](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L70)
 
 \[apap\] Logic executed for every application transaction, except when on-completion is set to "clear". It can read and write global state for the application, as well as account-specific local state. Approval programs may reject the transaction.
 
@@ -71,7 +71,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:70](
 
 > `optional` **boxReferences**: [`BoxReference`](BoxReference.md)[]
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L53)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:53](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L53)
 
 \[apbx\] the boxes that can be accessed by this transaction (and others in the same group).
 
@@ -81,7 +81,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:53](
 
 > `optional` **clearStateProgram**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L75)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:75](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L75)
 
 \[apsu\] Logic executed for application transactions with on-completion set to "clear". It can read and write global state for the application, as well as account-specific local state. Clear state programs cannot reject the transaction.
 
@@ -91,7 +91,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:75](
 
 > `optional` **extraProgramPages**: `number`
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L80)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:80](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L80)
 
 \[epp\] specifies the additional app program len requested in pages.
 
@@ -101,7 +101,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:80](
 
 > `optional` **foreignApps**: `bigint`[]
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L58)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:58](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L58)
 
 \[apfa\] Lists the applications in addition to the application-id whose global states may be accessed by this application's approval-program and clear-state-program. The access is read-only.
 
@@ -111,7 +111,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:58](
 
 > `optional` **foreignAssets**: `bigint`[]
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L63)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:63](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L63)
 
 \[apas\] lists the assets whose parameters may be accessed by this application's ApprovalProgram and ClearStateProgram. The access is read-only.
 
@@ -121,7 +121,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:63](
 
 > `optional` **globalStateSchema**: [`StateSchema`](StateSchema.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L65)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:65](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L65)
 
 ***
 
@@ -129,7 +129,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:65](
 
 > `optional` **localStateSchema**: [`StateSchema`](StateSchema.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L64)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:64](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L64)
 
 ***
 
@@ -137,7 +137,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:64](
 
 > **onCompletion**: [`OnCompletion`](OnCompletion.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L33)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:33](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L33)
 
 ***
 
@@ -145,6 +145,6 @@ Defined in: [packages/indexer\_client/src/models/transaction-application.ts:33](
 
 > `optional` **rejectVersion**: `number`
 
-Defined in: [packages/indexer\_client/src/models/transaction-application.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-application.ts#L85)
+Defined in: [packages/indexer\_client/src/models/transaction-application.ts:85](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-application.ts#L85)
 
 \[aprv\] the lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed.

@@ -8,7 +8,7 @@
 
 > **OnCompletion** = `"noop"` \| `"optin"` \| `"closeout"` \| `"clear"` \| `"update"` \| `"delete"`
 
-Defined in: [packages/indexer\_client/src/models/on-completion.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/on-completion.ts#L15)
+Defined in: [packages/indexer\_client/src/models/on-completion.ts:15](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/on-completion.ts#L15)
 
 \[apan\] defines the what additional actions occur with the transaction.
 

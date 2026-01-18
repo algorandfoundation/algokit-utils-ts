@@ -8,6 +8,6 @@
 
 > **DeployAppDeleteMethodCall** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`AppDeleteMethodCall`](../../composer/type-aliases/AppDeleteMethodCall.md), `"appId"`\>\>
 
-Defined in: [src/types/app-deployer.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L37)
+Defined in: [src/types/app-deployer.ts:37](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-deployer.ts#L37)
 
 Params to specify a delete method call for an app deployment

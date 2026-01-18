@@ -8,6 +8,6 @@
 
 > **StructElement** = \[[`FieldName`](FieldName.md), [`ABIType`](ABIType.md)\]
 
-Defined in: [src/types/app-spec.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L276)
+Defined in: [src/types/app-spec.ts:276](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L276)
 
 The elements of the struct/tuple: `FieldName`, `ABIType`

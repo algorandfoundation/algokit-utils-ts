@@ -8,7 +8,7 @@
 
 > **prepareGroupForSending**(`composer`, `sendParams`, `additionalContext?`): `Promise`\<[`TransactionComposer`](../../types/composer/classes/TransactionComposer.md)\>
 
-Defined in: [src/transaction/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L95)
+Defined in: [src/transaction/transaction.ts:95](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transaction/transaction.ts#L95)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **getAddress**(`addr`): [`Address`](../classes/Address.md)
 
-Defined in: [packages/common/src/address.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L143)
+Defined in: [packages/common/src/address.ts:143](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L143)
 
 ## Parameters
 

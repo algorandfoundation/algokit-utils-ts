@@ -8,6 +8,6 @@
 
 > **CloneAppClientParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Partial`\<`Omit`\<[`AppClientParams`](../interfaces/AppClientParams.md), `"algorand"` \| `"appSpec"`\>\>\>
 
-Defined in: [src/types/app-client.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L302)
+Defined in: [src/types/app-client.ts:302](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L302)
 
 Parameters to clone an app client

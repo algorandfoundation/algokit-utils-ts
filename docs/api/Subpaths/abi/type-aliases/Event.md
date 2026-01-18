@@ -8,7 +8,7 @@
 
 > **Event** = `object`
 
-Defined in: [packages/abi/src/arc56-contract.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L218)
+Defined in: [packages/abi/src/arc56-contract.ts:218](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L218)
 
 ARC-28 event
 
@@ -18,7 +18,7 @@ ARC-28 event
 
 > **args**: `object`[]
 
-Defined in: [packages/abi/src/arc56-contract.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L224)
+Defined in: [packages/abi/src/arc56-contract.ts:224](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L224)
 
 The arguments of the event, in order
 
@@ -52,7 +52,7 @@ The type of the argument. The `struct` field should also be checked to determine
 
 > `optional` **desc**: `string`
 
-Defined in: [packages/abi/src/arc56-contract.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L222)
+Defined in: [packages/abi/src/arc56-contract.ts:222](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L222)
 
 Optional, user-friendly description for the event
 
@@ -62,6 +62,6 @@ Optional, user-friendly description for the event
 
 > **name**: `string`
 
-Defined in: [packages/abi/src/arc56-contract.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L220)
+Defined in: [packages/abi/src/arc56-contract.ts:220](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L220)
 
 The name of the event

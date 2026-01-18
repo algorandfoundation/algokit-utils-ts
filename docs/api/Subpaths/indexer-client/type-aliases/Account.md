@@ -8,7 +8,7 @@
 
 > **Account** = `object`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L30)
+Defined in: [packages/indexer\_client/src/models/account.ts:30](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L30)
 
 Account information at a given round.
 
@@ -21,7 +21,7 @@ data/basics/userBalance.go : AccountData
 
 > **address**: `string`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L34)
+Defined in: [packages/indexer\_client/src/models/account.ts:34](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L34)
 
 the account public key
 
@@ -31,7 +31,7 @@ the account public key
 
 > **amount**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L39)
+Defined in: [packages/indexer\_client/src/models/account.ts:39](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L39)
 
 total number of MicroAlgos in the account
 
@@ -41,7 +41,7 @@ total number of MicroAlgos in the account
 
 > **amountWithoutPendingRewards**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L51)
+Defined in: [packages/indexer\_client/src/models/account.ts:51](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L51)
 
 specifies the amount of MicroAlgos in the account, without the pending rewards.
 
@@ -51,7 +51,7 @@ specifies the amount of MicroAlgos in the account, without the pending rewards.
 
 > `optional` **appsLocalState**: [`ApplicationLocalState`](ApplicationLocalState.md)[]
 
-Defined in: [packages/indexer\_client/src/models/account.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L58)
+Defined in: [packages/indexer\_client/src/models/account.ts:58](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L58)
 
 application local data stored in this account.
 
@@ -63,7 +63,7 @@ Note the raw object uses `map[int] -> AppLocalState` for this type.
 
 > `optional` **appsTotalExtraPages**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L64)
+Defined in: [packages/indexer\_client/src/models/account.ts:64](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L64)
 
 the sum of all extra application program pages for this account.
 
@@ -73,7 +73,7 @@ the sum of all extra application program pages for this account.
 
 > `optional` **appsTotalSchema**: [`ApplicationStateSchema`](ApplicationStateSchema.md)
 
-Defined in: [packages/indexer\_client/src/models/account.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L59)
+Defined in: [packages/indexer\_client/src/models/account.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L59)
 
 ***
 
@@ -81,7 +81,7 @@ Defined in: [packages/indexer\_client/src/models/account.ts:59](https://github.c
 
 > `optional` **assets**: [`AssetHolding`](AssetHolding.md)[]
 
-Defined in: [packages/indexer\_client/src/models/account.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L71)
+Defined in: [packages/indexer\_client/src/models/account.ts:71](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L71)
 
 assets held by this account.
 
@@ -93,7 +93,7 @@ Note the raw object uses `map[int] -> AssetHolding` for this type.
 
 > `optional` **authAddr**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/indexer\_client/src/models/account.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L163)
+Defined in: [packages/indexer\_client/src/models/account.ts:163](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L163)
 
 The address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field.
 
@@ -103,7 +103,7 @@ The address against which signing should be checked. If empty, the address of th
 
 > `optional` **closedAtRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L188)
+Defined in: [packages/indexer\_client/src/models/account.ts:188](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L188)
 
 Round during which this account was most recently closed.
 
@@ -113,7 +113,7 @@ Round during which this account was most recently closed.
 
 > `optional` **createdApps**: [`Application`](Application.md)[]
 
-Defined in: [packages/indexer\_client/src/models/account.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L78)
+Defined in: [packages/indexer\_client/src/models/account.ts:78](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L78)
 
 parameters of applications created by this account including app global data.
 
@@ -125,7 +125,7 @@ Note: the raw account uses `map[int] -> AppParams` for this type.
 
 > `optional` **createdAssets**: [`Asset`](Asset.md)[]
 
-Defined in: [packages/indexer\_client/src/models/account.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L85)
+Defined in: [packages/indexer\_client/src/models/account.ts:85](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L85)
 
 parameters of assets created by this account.
 
@@ -137,7 +137,7 @@ Note: the raw account uses `map[int] -> Asset` for this type.
 
 > `optional` **createdAtRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L183)
+Defined in: [packages/indexer\_client/src/models/account.ts:183](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L183)
 
 Round during which this account first appeared in a transaction.
 
@@ -147,7 +147,7 @@ Round during which this account first appeared in a transaction.
 
 > `optional` **deleted**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L178)
+Defined in: [packages/indexer\_client/src/models/account.ts:178](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L178)
 
 Whether or not this account is currently closed.
 
@@ -157,7 +157,7 @@ Whether or not this account is currently closed.
 
 > `optional` **incentiveEligible**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L91)
+Defined in: [packages/indexer\_client/src/models/account.ts:91](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L91)
 
 can the account receive block incentives if its balance is in range at proposal time.
 
@@ -167,7 +167,7 @@ can the account receive block incentives if its balance is in range at proposal 
 
 > `optional` **lastHeartbeat**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L173)
+Defined in: [packages/indexer\_client/src/models/account.ts:173](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L173)
 
 The round in which this account last went online, or explicitly renewed their online status.
 
@@ -177,7 +177,7 @@ The round in which this account last went online, or explicitly renewed their on
 
 > `optional` **lastProposed**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L168)
+Defined in: [packages/indexer\_client/src/models/account.ts:168](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L168)
 
 The round in which this account last proposed the block.
 
@@ -187,7 +187,7 @@ The round in which this account last proposed the block.
 
 > **minBalance**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L46)
+Defined in: [packages/indexer\_client/src/models/account.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L46)
 
 MicroAlgo balance required by the account.
 
@@ -199,7 +199,7 @@ The requirement grows based on asset and application usage.
 
 > `optional` **participation**: [`AccountParticipation`](AccountParticipation.md)
 
-Defined in: [packages/indexer\_client/src/models/account.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L86)
+Defined in: [packages/indexer\_client/src/models/account.ts:86](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L86)
 
 ***
 
@@ -207,7 +207,7 @@ Defined in: [packages/indexer\_client/src/models/account.ts:86](https://github.c
 
 > **pendingRewards**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L96)
+Defined in: [packages/indexer\_client/src/models/account.ts:96](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L96)
 
 amount of MicroAlgos of pending rewards in this account.
 
@@ -217,7 +217,7 @@ amount of MicroAlgos of pending rewards in this account.
 
 > `optional` **rewardBase**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L101)
+Defined in: [packages/indexer\_client/src/models/account.ts:101](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L101)
 
 used as part of the rewards computation. Only applicable to accounts which are participating.
 
@@ -227,7 +227,7 @@ used as part of the rewards computation. Only applicable to accounts which are p
 
 > **rewards**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L106)
+Defined in: [packages/indexer\_client/src/models/account.ts:106](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L106)
 
 total rewards of MicroAlgos the account has received, including pending rewards.
 
@@ -237,7 +237,7 @@ total rewards of MicroAlgos the account has received, including pending rewards.
 
 > **round**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L111)
+Defined in: [packages/indexer\_client/src/models/account.ts:111](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L111)
 
 The round for which this information is relevant.
 
@@ -247,7 +247,7 @@ The round for which this information is relevant.
 
 > `optional` **sigType**: `"sig"` \| `"msig"` \| `"lsig"`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L128)
+Defined in: [packages/indexer\_client/src/models/account.ts:128](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L128)
 
 the type of signature used by this account, must be one of:
 * sig
@@ -261,7 +261,7 @@ the type of signature used by this account, must be one of:
 
 > **status**: `string`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L119)
+Defined in: [packages/indexer\_client/src/models/account.ts:119](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L119)
 
 voting status of the account's MicroAlgos
 * Offline - indicates that the associated account is delegated.
@@ -274,7 +274,7 @@ voting status of the account's MicroAlgos
 
 > **totalAppsOptedIn**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L133)
+Defined in: [packages/indexer\_client/src/models/account.ts:133](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L133)
 
 The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account.
 
@@ -284,7 +284,7 @@ The count of all applications that have been opted in, equivalent to the count o
 
 > **totalAssetsOptedIn**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L138)
+Defined in: [packages/indexer\_client/src/models/account.ts:138](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L138)
 
 The count of all assets that have been opted in, equivalent to the count of AssetHolding objects held by this account.
 
@@ -294,7 +294,7 @@ The count of all assets that have been opted in, equivalent to the count of Asse
 
 > **totalBoxBytes**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L143)
+Defined in: [packages/indexer\_client/src/models/account.ts:143](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L143)
 
 For app-accounts only. The total number of bytes allocated for the keys and values of boxes which belong to the associated application.
 
@@ -304,7 +304,7 @@ For app-accounts only. The total number of bytes allocated for the keys and valu
 
 > **totalBoxes**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L148)
+Defined in: [packages/indexer\_client/src/models/account.ts:148](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L148)
 
 For app-accounts only. The total number of boxes which belong to the associated application.
 
@@ -314,7 +314,7 @@ For app-accounts only. The total number of boxes which belong to the associated 
 
 > **totalCreatedApps**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L153)
+Defined in: [packages/indexer\_client/src/models/account.ts:153](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L153)
 
 The count of all apps (AppParams objects) created by this account.
 
@@ -324,6 +324,6 @@ The count of all apps (AppParams objects) created by this account.
 
 > **totalCreatedAssets**: `number`
 
-Defined in: [packages/indexer\_client/src/models/account.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account.ts#L158)
+Defined in: [packages/indexer\_client/src/models/account.ts:158](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account.ts#L158)
 
 The count of all assets (AssetParams objects) created by this account.

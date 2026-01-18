@@ -6,7 +6,7 @@
 
 # Interface: Hint
 
-Defined in: [src/types/app-spec.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L261)
+Defined in: [src/types/app-spec.ts:261](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L261)
 
 Hint information for a given method call to allow client generation
 
@@ -16,7 +16,7 @@ Hint information for a given method call to allow client generation
 
 > **call\_config**: [`CallConfig`](CallConfig.md)
 
-Defined in: [src/types/app-spec.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L266)
+Defined in: [src/types/app-spec.ts:266](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L266)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types/app-spec.ts:266](https://github.com/algorandfoundation/al
 
 > `optional` **default\_arguments**: `Record`\<`string`, [`DefaultArgument`](../type-aliases/DefaultArgument.md)\>
 
-Defined in: [src/types/app-spec.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L265)
+Defined in: [src/types/app-spec.ts:265](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L265)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types/app-spec.ts:265](https://github.com/algorandfoundation/al
 
 > `optional` **read\_only**: `boolean`
 
-Defined in: [src/types/app-spec.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L264)
+Defined in: [src/types/app-spec.ts:264](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L264)
 
 ***
 
@@ -40,6 +40,6 @@ Defined in: [src/types/app-spec.ts:264](https://github.com/algorandfoundation/al
 
 > `optional` **structs**: `Record`\<`string`, [`Struct`](Struct.md)\>
 
-Defined in: [src/types/app-spec.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L263)
+Defined in: [src/types/app-spec.ts:263](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L263)
 
 Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type

@@ -10,6 +10,10 @@
     "src/kmd-client/index.ts",
     "src/testing/index.ts"
   ],
+  "navigationLinks": {
+    "Examples": "./examples/index.html",
+    "GitHub": "https://github.com/your-username/your-repo"
+  },
   "entryPointStrategy": "expand",
   "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "examples/**/*.*"],
   "out": "docs/_html",

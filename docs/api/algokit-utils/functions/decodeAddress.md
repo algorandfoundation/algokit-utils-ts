@@ -8,7 +8,7 @@
 
 > **decodeAddress**(`address`): [`Address`](../classes/Address.md)
 
-Defined in: [packages/common/src/address.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L193)
+Defined in: [packages/common/src/address.ts:193](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L193)
 
 decodeAddress takes an Algorand address in string form and decodes it into a Uint8Array.
 

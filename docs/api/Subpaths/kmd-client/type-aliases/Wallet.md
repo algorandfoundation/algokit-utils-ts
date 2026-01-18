@@ -8,7 +8,7 @@
 
 > **Wallet** = `object`
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L9)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L9)
 
 Wallet is the API's representation of a wallet
 
@@ -18,7 +18,7 @@ Wallet is the API's representation of a wallet
 
 > **driverName**: `string`
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L10)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L10)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/kmd\_client/src/models/wallet.ts:10](https://github.com/al
 
 > **driverVersion**: `number`
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L11)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L11)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/kmd\_client/src/models/wallet.ts:11](https://github.com/al
 
 > **id**: `string`
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L12)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L12)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/kmd\_client/src/models/wallet.ts:12](https://github.com/al
 
 > **mnemonicUx**: `boolean`
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L13)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L13)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/kmd\_client/src/models/wallet.ts:13](https://github.com/al
 
 > **name**: `string`
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L14)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L14)
 
 ***
 
@@ -58,4 +58,4 @@ Defined in: [packages/kmd\_client/src/models/wallet.ts:14](https://github.com/al
 
 > **supportedTxs**: [`TxType`](TxType.md)[]
 
-Defined in: [packages/kmd\_client/src/models/wallet.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet.ts#L15)
+Defined in: [packages/kmd\_client/src/models/wallet.ts:15](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/wallet.ts#L15)

@@ -8,7 +8,7 @@
 
 > **StateProofReveal** = `object`
 
-Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L8)
+Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L8)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:8](https:
 
 > `optional` **participant**: [`StateProofParticipant`](StateProofParticipant.md)
 
-Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L14)
+Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L14)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:14](https
 
 > `optional` **position**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L12)
+Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L12)
 
 The position in the signature and participants arrays corresponding to this entry.
 
@@ -34,4 +34,4 @@ The position in the signature and participants arrays corresponding to this entr
 
 > `optional` **sigSlot**: [`StateProofSigSlot`](StateProofSigSlot.md)
 
-Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L13)
+Defined in: [packages/indexer\_client/src/models/state-proof-reveal.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/state-proof-reveal.ts#L13)

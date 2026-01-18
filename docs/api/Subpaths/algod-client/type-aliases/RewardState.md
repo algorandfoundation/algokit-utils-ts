@@ -8,7 +8,7 @@
 
 > **RewardState** = `object`
 
-Defined in: [packages/algod\_client/src/models/block.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L236)
+Defined in: [packages/algod\_client/src/models/block.ts:236](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L236)
 
 Reward distribution state for the block.
 
@@ -18,7 +18,7 @@ Reward distribution state for the block.
 
 > **feeSink**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L238)
+Defined in: [packages/algod\_client/src/models/block.ts:238](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L238)
 
 [fees] FeeSink address.
 
@@ -28,7 +28,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:238](https://github.com/
 
 > **rewardsLevel**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L242)
+Defined in: [packages/algod\_client/src/models/block.ts:242](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L242)
 
 [earn] Rewards level.
 
@@ -38,7 +38,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:242](https://github.com/
 
 > **rewardsPool**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L240)
+Defined in: [packages/algod\_client/src/models/block.ts:240](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L240)
 
 [rwd] RewardsPool address.
 
@@ -48,7 +48,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:240](https://github.com/
 
 > **rewardsRate**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L244)
+Defined in: [packages/algod\_client/src/models/block.ts:244](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L244)
 
 [rate] Rewards rate.
 
@@ -58,7 +58,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:244](https://github.com/
 
 > **rewardsRecalculationRound**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L248)
+Defined in: [packages/algod\_client/src/models/block.ts:248](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L248)
 
 [rwcalr] Rewards recalculation round.
 
@@ -68,6 +68,6 @@ Defined in: [packages/algod\_client/src/models/block.ts:248](https://github.com/
 
 > **rewardsResidue**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L246)
+Defined in: [packages/algod\_client/src/models/block.ts:246](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/block.ts#L246)
 
 [frac] Rewards residue.

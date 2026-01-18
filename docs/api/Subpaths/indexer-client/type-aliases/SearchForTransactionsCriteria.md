@@ -8,4 +8,4 @@
 
 > **SearchForTransactionsCriteria** = `Omit`\<`NonNullable`\<`Parameters`\<[`IndexerClient`](../classes/IndexerClient.md)\[`"searchForTransactions"`\]\>\[`0`\]\>, `"limit"` \| `"next"`\>
 
-Defined in: [src/indexer-client/indexer-lookup.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-client/indexer-lookup.ts#L11)
+Defined in: [src/indexer-client/indexer-lookup.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/indexer-client/indexer-lookup.ts#L11)

@@ -6,7 +6,7 @@
 
 # Class: UpdatableConfig
 
-Defined in: [src/types/config.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L28)
+Defined in: [src/types/config.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L28)
 
 Updatable AlgoKit config
 
@@ -20,7 +20,7 @@ Updatable AlgoKit config
 
 > **new UpdatableConfig**(): `UpdatableConfig`
 
-Defined in: [src/types/config.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L90)
+Defined in: [src/types/config.ts:90](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L90)
 
 #### Returns
 
@@ -34,7 +34,7 @@ Defined in: [src/types/config.ts:90](https://github.com/algorandfoundation/algok
 
 > **get** **debug**(): `boolean`
 
-Defined in: [src/types/config.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L39)
+Defined in: [src/types/config.ts:39](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L39)
 
 Whether or not debug mode is enabled
 
@@ -54,7 +54,7 @@ Whether or not debug mode is enabled
 
 > **get** **events**(): [`AsyncEventEmitter`](../../async-event-emitter/classes/AsyncEventEmitter.md)
 
-Defined in: [src/types/config.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L59)
+Defined in: [src/types/config.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L59)
 
 ##### Returns
 
@@ -72,7 +72,7 @@ Defined in: [src/types/config.ts:59](https://github.com/algorandfoundation/algok
 
 > **get** **logger**(): [`Logger`](../../logging/type-aliases/Logger.md)
 
-Defined in: [src/types/config.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L35)
+Defined in: [src/types/config.ts:35](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L35)
 
 Logger
 
@@ -92,7 +92,7 @@ Logger
 
 > **get** **maxSearchDepth**(): `number`
 
-Defined in: [src/types/config.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L55)
+Defined in: [src/types/config.ts:55](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L55)
 
 The maximum depth to search for a specific file
 
@@ -112,7 +112,7 @@ The maximum depth to search for a specific file
 
 > **get** **populateAppCallResources**(): `boolean`
 
-Defined in: [src/types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
+Defined in: [src/types/config.ts:31](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L31)
 
 Whether to enable populateAppCallResources in sendParams by default.
 Default value is false.
@@ -133,7 +133,7 @@ Default value is false.
 
 > **get** **projectRoot**(): `string` \| `null`
 
-Defined in: [src/types/config.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L43)
+Defined in: [src/types/config.ts:43](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L43)
 
 The path to the project root directory
 
@@ -153,7 +153,7 @@ The path to the project root directory
 
 > **get** **traceAll**(): `boolean`
 
-Defined in: [src/types/config.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L47)
+Defined in: [src/types/config.ts:47](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L47)
 
 Indicates whether to trace all operations
 
@@ -173,7 +173,7 @@ Indicates whether to trace all operations
 
 > **get** **traceBufferSizeMb**(): `number`
 
-Defined in: [src/types/config.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L51)
+Defined in: [src/types/config.ts:51](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L51)
 
 The size of the trace buffer in megabytes
 
@@ -191,7 +191,7 @@ The size of the trace buffer in megabytes
 
 > **configure**(`newConfig`): `void`
 
-Defined in: [src/types/config.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L107)
+Defined in: [src/types/config.ts:107](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L107)
 
 Update the AlgoKit configuration with your own configuration settings
 
@@ -213,7 +213,7 @@ Partial or complete config to replace
 
 > **getLogger**(`returnNullLogger?`): [`Logger`](../../logging/type-aliases/Logger.md)
 
-Defined in: [src/types/config.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L68)
+Defined in: [src/types/config.ts:68](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L68)
 
 Returns the current logger, or the null logger if true is passed in to `returnNullLogger`
 
@@ -237,7 +237,7 @@ The requested logger
 
 > **withDebug**(`lambda`): `void`
 
-Defined in: [src/types/config.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L80)
+Defined in: [src/types/config.ts:80](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/config.ts#L80)
 
 Temporarily run with debug set to true.
 

@@ -8,7 +8,7 @@
 
 > **ABIAppCallArgs** = [`CoreAppCallArgs`](../interfaces/CoreAppCallArgs.md) & `object`
 
-Defined in: [src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
+Defined in: [src/types/app.ts:83](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L83)
 
 App call args for an ABI call
 

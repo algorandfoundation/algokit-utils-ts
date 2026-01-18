@@ -6,7 +6,7 @@
 
 # Interface: EnsureFundedResult
 
-Defined in: [src/types/account-manager.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L25)
+Defined in: [src/types/account-manager.ts:25](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L25)
 
 Result from performing an ensureFunded call.
 
@@ -16,7 +16,7 @@ Result from performing an ensureFunded call.
 
 > **amountFunded**: [`AlgoAmount`](../../amount/classes/AlgoAmount.md)
 
-Defined in: [src/types/account-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L29)
+Defined in: [src/types/account-manager.ts:29](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L29)
 
 The amount that was sent to the account.
 
@@ -26,6 +26,6 @@ The amount that was sent to the account.
 
 > **transactionId**: `string`
 
-Defined in: [src/types/account-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L27)
+Defined in: [src/types/account-manager.ts:27](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L27)
 
 The transaction ID of the transaction that funded the account.

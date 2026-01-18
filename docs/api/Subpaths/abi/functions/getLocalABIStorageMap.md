@@ -8,7 +8,7 @@
 
 > **getLocalABIStorageMap**(`contract`, `mapName`): [`ABIStorageMap`](../type-aliases/ABIStorageMap.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:479](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L479)
+Defined in: [packages/abi/src/arc56-contract.ts:479](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L479)
 
 Get a specific local storage map with parsed ABI types
 

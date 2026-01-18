@@ -8,7 +8,7 @@
 
 > **MerkleSignatureVerifier** = `object`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L35)
+Defined in: [packages/transact/src/transactions/state-proof.ts:35](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/state-proof.ts#L35)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:35](https://githu
 
 > **commitment**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L36)
+Defined in: [packages/transact/src/transactions/state-proof.ts:36](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/state-proof.ts#L36)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:36](https://githu
 
 > **keyLifetime**: `bigint`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L37)
+Defined in: [packages/transact/src/transactions/state-proof.ts:37](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/state-proof.ts#L37)

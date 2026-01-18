@@ -8,4 +8,4 @@
 
 > `const` **warningConsoleLogger**: [`Logger`](../type-aliases/Logger.md)
 
-Defined in: [src/types/logging.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logging.ts#L32)
+Defined in: [src/types/logging.ts:32](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/logging.ts#L32)

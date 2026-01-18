@@ -8,7 +8,7 @@
 
 > **PaymentParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/payment.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/payment.ts#L8)
+Defined in: [src/transactions/payment.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/payment.ts#L8)
 
 Parameters to define a payment transaction.
 

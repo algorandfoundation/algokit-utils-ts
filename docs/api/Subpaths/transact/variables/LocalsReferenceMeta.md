@@ -8,7 +8,7 @@
 
 > `const` **LocalsReferenceMeta**: `ObjectModelMetadata`\<[`LocalsReference`](../type-aliases/LocalsReference.md)\>
 
-Defined in: [packages/transact/src/transactions/reference-types-meta.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/reference-types-meta.ts#L38)
+Defined in: [packages/transact/src/transactions/reference-types-meta.ts:38](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/reference-types-meta.ts#L38)
 
 Metadata for LocalsReference
 

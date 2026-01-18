@@ -8,7 +8,7 @@
 
 > **ExportKeyResponse** = `object`
 
-Defined in: [packages/kmd\_client/src/models/export-key-response.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/export-key-response.ts#L7)
+Defined in: [packages/kmd\_client/src/models/export-key-response.ts:7](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/export-key-response.ts#L7)
 
 ExportKeyResponse is the response to `POST /v1/key/export`
 
@@ -18,4 +18,4 @@ ExportKeyResponse is the response to `POST /v1/key/export`
 
 > **privateKey**: `Uint8Array`
 
-Defined in: [packages/kmd\_client/src/models/export-key-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/export-key-response.ts#L8)
+Defined in: [packages/kmd\_client/src/models/export-key-response.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/kmd_client/src/models/export-key-response.ts#L8)

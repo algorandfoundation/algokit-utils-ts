@@ -8,7 +8,7 @@
 
 > **AppClientCreateParams** = [`AppClientCallParams`](AppClientCallParams.md) & [`AppClientCompilationParams`](../interfaces/AppClientCompilationParams.md) & [`AppClientCreateOnComplete`](AppClientCreateOnComplete.md) & `object`
 
-Defined in: [src/types/app-client.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L223)
+Defined in: [src/types/app-client.ts:223](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-client.ts#L223)
 
 Parameters for creating a contract using ApplicationClient
 

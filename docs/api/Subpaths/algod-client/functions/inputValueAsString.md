@@ -8,7 +8,7 @@
 
 > **inputValueAsString**(`value`): `string`
 
-Defined in: [packages/algod\_client/src/core/base-http-request.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/core/base-http-request.ts#L24)
+Defined in: [packages/algod\_client/src/core/base-http-request.ts:24](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/core/base-http-request.ts#L24)
 
 ## Parameters
 

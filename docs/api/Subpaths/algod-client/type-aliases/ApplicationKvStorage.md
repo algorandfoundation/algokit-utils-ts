@@ -8,7 +8,7 @@
 
 > **ApplicationKvStorage** = `object`
 
-Defined in: [packages/algod\_client/src/models/application-kv-storage.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/application-kv-storage.ts#L9)
+Defined in: [packages/algod\_client/src/models/application-kv-storage.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/application-kv-storage.ts#L9)
 
 An application's global/local/box state.
 
@@ -18,7 +18,7 @@ An application's global/local/box state.
 
 > `optional` **account**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/algod\_client/src/models/application-kv-storage.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/application-kv-storage.ts#L18)
+Defined in: [packages/algod\_client/src/models/application-kv-storage.ts:18](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/application-kv-storage.ts#L18)
 
 The address of the account associated with the local state.
 
@@ -28,6 +28,6 @@ The address of the account associated with the local state.
 
 > **kvs**: [`AvmKeyValue`](AvmKeyValue.md)[]
 
-Defined in: [packages/algod\_client/src/models/application-kv-storage.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/application-kv-storage.ts#L13)
+Defined in: [packages/algod\_client/src/models/application-kv-storage.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/application-kv-storage.ts#L13)
 
 Key-Value pairs representing application states.

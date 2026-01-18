@@ -8,7 +8,7 @@
 
 > **AccountApplicationResponse** = `object`
 
-Defined in: [packages/algod\_client/src/models/account-application-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/account-application-response.ts#L8)
+Defined in: [packages/algod\_client/src/models/account-application-response.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/account-application-response.ts#L8)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/algod\_client/src/models/account-application-response.ts:8
 
 > `optional` **appLocalState**: [`ApplicationLocalState`](ApplicationLocalState.md)
 
-Defined in: [packages/algod\_client/src/models/account-application-response.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/account-application-response.ts#L13)
+Defined in: [packages/algod\_client/src/models/account-application-response.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/account-application-response.ts#L13)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/algod\_client/src/models/account-application-response.ts:1
 
 > `optional` **createdApp**: [`ApplicationParams`](ApplicationParams.md)
 
-Defined in: [packages/algod\_client/src/models/account-application-response.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/account-application-response.ts#L14)
+Defined in: [packages/algod\_client/src/models/account-application-response.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/account-application-response.ts#L14)
 
 ***
 
@@ -32,6 +32,6 @@ Defined in: [packages/algod\_client/src/models/account-application-response.ts:1
 
 > **round**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/account-application-response.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/account-application-response.ts#L12)
+Defined in: [packages/algod\_client/src/models/account-application-response.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/algod_client/src/models/account-application-response.ts#L12)
 
 The round for which this information is relevant.

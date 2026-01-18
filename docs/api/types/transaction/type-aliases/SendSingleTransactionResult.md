@@ -8,6 +8,6 @@
 
 > **SendSingleTransactionResult** = [`Expand`](../../expand/type-aliases/Expand.md)\<[`SendTransactionComposerResults`](../interfaces/SendTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/ConfirmedTransactionResult.md)\>
 
-Defined in: [src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+Defined in: [src/types/transaction.ts:46](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L46)
 
 Result from sending a single transaction.

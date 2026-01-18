@@ -6,7 +6,7 @@
 
 # Interface: ConfirmedTransactionResults
 
-Defined in: [src/types/transaction.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L87)
+Defined in: [src/types/transaction.ts:87](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L87)
 
 The result of sending and confirming one or more transactions, but where there is a primary transaction of interest
 
@@ -24,7 +24,7 @@ The result of sending and confirming one or more transactions, but where there i
 
 > **confirmation**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
-Defined in: [src/types/transaction.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L89)
+Defined in: [src/types/transaction.ts:89](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L89)
 
 The response from sending and waiting for the primary transaction
 
@@ -38,7 +38,7 @@ The response from sending and waiting for the primary transaction
 
 > **confirmations**: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]
 
-Defined in: [src/types/transaction.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L91)
+Defined in: [src/types/transaction.ts:91](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L91)
 
 The response from sending and waiting for the transactions
 
@@ -52,7 +52,7 @@ The response from sending and waiting for the transactions
 
 > **transaction**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)
 
-Defined in: [src/types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
+Defined in: [src/types/transaction.ts:51](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L51)
 
 The transaction
 
@@ -66,7 +66,7 @@ The transaction
 
 > **transactions**: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]
 
-Defined in: [src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
+Defined in: [src/types/transaction.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/transaction.ts#L59)
 
 The transactions that have been prepared and/or sent
 

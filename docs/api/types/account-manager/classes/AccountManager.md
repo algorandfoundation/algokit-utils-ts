@@ -6,7 +6,7 @@
 
 # Class: AccountManager
 
-Defined in: [src/types/account-manager.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L49)
+Defined in: [src/types/account-manager.ts:49](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L49)
 
 Creates and keeps track of signing accounts that can sign transactions for a sending address.
 
@@ -16,7 +16,7 @@ Creates and keeps track of signing accounts that can sign transactions for a sen
 
 > **new AccountManager**(`clientManager`): `AccountManager`
 
-Defined in: [src/types/account-manager.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L63)
+Defined in: [src/types/account-manager.ts:63](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L63)
 
 Create a new account manager.
 
@@ -46,7 +46,7 @@ const accountManager = new AccountManager(clientManager)
 
 > **get** **kmd**(): [`KmdAccountManager`](../../kmd-account-manager/classes/KmdAccountManager.md)
 
-Defined in: [src/types/account-manager.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L84)
+Defined in: [src/types/account-manager.ts:84](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L84)
 
 KMD account manager that allows you to easily get and create accounts using KMD.
 
@@ -68,7 +68,7 @@ The `KmdAccountManager` instance.
 
 > **dispenserFromEnvironment**(): `Promise`\<[`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)\>
 
-Defined in: [src/types/account-manager.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L475)
+Defined in: [src/types/account-manager.ts:475](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L475)
 
 Returns an account (with private key loaded) that can act as a dispenser from
 environment variables, or against default LocalNet if no environment variables present.
@@ -96,7 +96,7 @@ const account = await accountManager.dispenserFromEnvironment()
 
 > **ensureFunded**(`accountToFund`, `dispenserAccount`, `minSpendingBalance`, `options?`): `Promise`\<`object` & [`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-Defined in: [src/types/account-manager.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L595)
+Defined in: [src/types/account-manager.ts:597](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L597)
 
 Funds a given account using a dispenser account as a funding source such that
 the given account has a certain amount of Algo free to spend (accounting for
@@ -148,13 +148,18 @@ await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.
 )
 ```
 
+#### See
+
+ - [ensureFundedFromEnvironment](#ensurefundedfromenvironment) for environment-based dispenser
+ - [ensureFundedFromTestNetDispenserApi](#ensurefundedfromtestnetdispenserapi) for TestNet dispenser API
+
 ***
 
 ### ensureFundedFromEnvironment()
 
 > **ensureFundedFromEnvironment**(`accountToFund`, `minSpendingBalance`, `options?`): `Promise`\<`object` & [`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-Defined in: [src/types/account-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L657)
+Defined in: [src/types/account-manager.ts:659](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L659)
 
 Funds a given account using a dispenser account retrieved from the environment,
 per the `dispenserFromEnvironment` method, as a funding source such that
@@ -213,7 +218,7 @@ await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(
 
 > **ensureFundedFromTestNetDispenserApi**(`accountToFund`, `dispenserClient`, `minSpendingBalance`, `options?`): `Promise`\<[`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-Defined in: [src/types/account-manager.ts:713](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L713)
+Defined in: [src/types/account-manager.ts:715](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L715)
 
 Funds a given account using the TestNet Dispenser API as a funding source such that
 the account has a certain amount of Algo free to spend (accounting for Algo locked
@@ -273,7 +278,7 @@ await accountManager.ensureFundedFromTestNetDispenserApi("ACCOUNTADDRESS", algor
 
 > **fromEnvironment**(`name`, `fundWith?`): `Promise`\<[`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)\>
 
-Defined in: [src/types/account-manager.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L348)
+Defined in: [src/types/account-manager.ts:348](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L348)
 
 Tracks and returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
 
@@ -323,7 +328,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 > **fromKmd**(`name`, `predicate?`, `sender?`): `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) & `object`\>
 
-Defined in: [src/types/account-manager.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L383)
+Defined in: [src/types/account-manager.ts:383](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L383)
 
 Tracks and returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
 
@@ -367,7 +372,7 @@ const defaultDispenserAccount = await accountManager.fromKmd('unencrypted-defaul
 
 > **fromMnemonic**(`mnemonicSecret`, `sender?`): [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/account-manager.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L289)
+Defined in: [src/types/account-manager.ts:289](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L289)
 
 Tracks and returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
 
@@ -405,7 +410,7 @@ const rekeyedAccount = accountManager.fromMnemonic("mnemonic secret ...", "SENDE
 
 > **getAccount**(`sender`): [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/account-manager.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L224)
+Defined in: [src/types/account-manager.ts:224](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L224)
 
 Returns the `AddressWithSigner` for the given sender address.
 
@@ -440,7 +445,7 @@ const account = accountManager.getAccount(sender)
 
 > **getInformation**(`sender`): `Promise`\<[`AccountInformation`](../../account/type-aliases/AccountInformation.md)\>
 
-Defined in: [src/types/account-manager.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L243)
+Defined in: [src/types/account-manager.ts:243](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L243)
 
 Returns the given sender account's current status, balance and spendable amounts.
 
@@ -473,7 +478,7 @@ const accountInfo = await accountManager.getInformation(address);
 
 > **getSigner**(`sender`): [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
-Defined in: [src/types/account-manager.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L204)
+Defined in: [src/types/account-manager.ts:204](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L204)
 
 Returns the `TransactionSigner` for the given sender address, ready to sign a transaction for that sender.
 
@@ -506,7 +511,7 @@ const signer = accountManager.getSigner("SENDERADDRESS")
 
 > **localNetDispenser**(): `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) & `object`\>
 
-Defined in: [src/types/account-manager.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L494)
+Defined in: [src/types/account-manager.ts:494](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L494)
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
 
@@ -528,7 +533,7 @@ const account = await accountManager.localNetDispenser()
 
 > **logicsig**(`program`, `args?`): [`Address`](../../../algokit-utils/classes/Address.md) & [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) & `object`
 
-Defined in: [src/types/account-manager.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L421)
+Defined in: [src/types/account-manager.ts:421](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L421)
 
 Tracks and returns an account that represents a logic signature.
 
@@ -564,7 +569,7 @@ const account = accountManager.logicsig(program, [new Uint8Array(3, ...)])
 
 > **multisig**(`multisigParams`, `subSigners`): [`Address`](../../../algokit-utils/classes/Address.md) & [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) & `object`
 
-Defined in: [src/types/account-manager.ts:406](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L406)
+Defined in: [src/types/account-manager.ts:406](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L406)
 
 Tracks and returns an account that supports partial or full multisig signing.
 
@@ -601,7 +606,7 @@ const account = accountManager.multisig({version: 1, threshold: 1, addrs: ["ADDR
 
 > **random**(): [`Address`](../../../algokit-utils/classes/Address.md) & `object`
 
-Defined in: [src/types/account-manager.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L434)
+Defined in: [src/types/account-manager.ts:434](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L434)
 
 Tracks and returns a new, random Algorand account with secret key loaded.
 
@@ -623,7 +628,7 @@ const account = accountManager.random()
 
 > **rekeyAccount**(`account`, `rekeyTo`, `options?`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/types/account-manager.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L537)
+Defined in: [src/types/account-manager.ts:537](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L537)
 
 Rekey an account to a new address.
 
@@ -690,7 +695,7 @@ await accountManager.rekeyAccount({
 
 > **rekeyed**(`sender`, `account`): [`Address`](../../../algokit-utils/classes/Address.md) & [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) & `object`
 
-Defined in: [src/types/account-manager.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L317)
+Defined in: [src/types/account-manager.ts:317](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L317)
 
 Tracks and returns an Algorand account that is a rekeyed version of the given account to a new sender.
 
@@ -727,7 +732,7 @@ const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
 
 > **setDefaultSigner**(`signer`): `AccountManager`
 
-Defined in: [src/types/account-manager.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L104)
+Defined in: [src/types/account-manager.ts:104](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L104)
 
 Sets the default signer to use if no other signer is specified.
 
@@ -764,7 +769,7 @@ const signer = accountManager.getSigner("SENDERADDRESS")
 
 > **setSigner**(`sender`, `signer`): `AccountManager`
 
-Defined in: [src/types/account-manager.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L167)
+Defined in: [src/types/account-manager.ts:167](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L167)
 
 Tracks the given `TransactionSigner` against the given sender address for later signing.
 
@@ -801,7 +806,7 @@ const accountManager = new AccountManager(clientManager)
 
 > **setSignerFromAccount**(`account`): `AccountManager`
 
-Defined in: [src/types/account-manager.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L151)
+Defined in: [src/types/account-manager.ts:151](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L151)
 
 Tracks the given account for later signing.
 
@@ -840,7 +845,7 @@ const accountManager = new AccountManager(clientManager)
 
 > **setSigners**(`anotherAccountManager`, `overwriteExisting`): `AccountManager`
 
-Defined in: [src/types/account-manager.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L184)
+Defined in: [src/types/account-manager.ts:184](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/account-manager.ts#L184)
 
 Takes all registered signers from the given `AccountManager` and adds them to this `AccountManager`.
 

@@ -1,12 +1,18 @@
+[**@algorandfoundation/algokit-utils**](../../README.md)
+
+***
+
+[@algorandfoundation/algokit-utils](../../modules.md) / concepts/account
+
 # Account management
 
 Account management is one of the core capabilities provided by AlgoKit Utils. It allows you to create mnemonic, rekeyed, multisig, transaction signer, idempotent KMD and environment variable injected accounts that can be used to sign transactions as well as representing a sender address at the same time. This significantly simplifies management of transaction signing.
 
 ## `AccountManager`
 
-The [`AccountManager`](.../api/classes/types_account_manager.AccountManager.md) is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](./transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
+The [`AccountManager`](.../api/classes/types_account_manager.AccountManager.md) is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
 
-To get an instance of `AccountManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly:
+To get an instance of `AccountManager`, you can use either [`AlgorandClient`](algorand-client.md) via `algorand.account` or instantiate it directly:
 
 ```typescript
 import { AccountManager } from '@algorandfoundation/algokit-utils/types/account-manager'
@@ -18,11 +24,11 @@ const accountManager = new AccountManager(clientManager)
 
 The core internal type that holds information about a signer/sender pair for a transaction is [`TransactionSignerAccount`](.../api/interfaces/types_account.TransactionSignerAccount.md), which represents an `algosdk.TransactionSigner` (`signer`) along with a sender address (`addr`) as the encoded string address.
 
-Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`TransactionComposer`](./transaction-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
+Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`TransactionComposer`](transaction-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
 
 ## Registering a signer
 
-The `AccountManager` keeps track of which signer is associated with a given sender address. This is used by [`AlgorandClient`](./algorand-client.md) to automatically sign transactions by that sender. Any of the [methods](#accounts) within `AccountManager` that return an account will automatically register the signer with the sender. If however, you are creating a signer external to the `AccountManager`, for instance when using the use-wallet library in a dApp, then you need to register the signer with the `AccountManager` if you want it to be able to automatically sign transactions from that sender.
+The `AccountManager` keeps track of which signer is associated with a given sender address. This is used by [`AlgorandClient`](algorand-client.md) to automatically sign transactions by that sender. Any of the [methods](#accounts) within `AccountManager` that return an account will automatically register the signer with the sender. If however, you are creating a signer external to the `AccountManager`, for instance when using the use-wallet library in a dApp, then you need to register the signer with the `AccountManager` if you want it to be able to automatically sign transactions from that sender.
 
 There are two methods that can be used for this, `setSignerFromAccount`, which takes any number of [account based objects](#underlying-account-classes) that combine signer and sender (`TransactionSignerAccount` | `algosdk.Account` | `algosdk.LogicSigAccount` | `SigningAccount` | `MultisigAccount`), or `setSigner` which takes the sender address and the `TransactionSigner`:
 
@@ -46,7 +52,7 @@ algorand.account.setDefaultSigner(myDefaultSigner)
 
 ## Get a signer
 
-[`AlgorandClient`](./algorand-client.md) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can [retrieve the signer](.../api/classes//types_account_manager.AccountManager.md#getsigner) for a given sender address:
+[`AlgorandClient`](algorand-client.md) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can [retrieve the signer](.../api/classes//types_account_manager.AccountManager.md#getsigner) for a given sender address:
 
 ```typescript
 const signer = algorand.account.getSigner('SENDER_ADDRESS')
@@ -56,7 +62,7 @@ If there is no signer registered for that sender address it will either return t
 
 ## Accounts
 
-In order to get/register accounts for signing operations you can use the following methods on [`AccountManager`](#accountmanager) (expressed here as `algorand.account` to denote the syntax via an [`AlgorandClient`](./algorand-client.md)):
+In order to get/register accounts for signing operations you can use the following methods on [`AccountManager`](#accountmanager) (expressed here as `algorand.account` to denote the syntax via an [`AlgorandClient`](algorand-client.md)):
 
 - [`algorand.account.fromEnvironment(name, fundWith)`](.../api/classes/types_account_manager.AccountManager.md#fromenvironment) - Registers and returns an account with private key loaded by convention based on the given name identifier - either by idempotently creating the account in KMD or from environment variable via `process.env['{NAME}_MNEMONIC']` and (optionally) `process.env['{NAME}_SENDER']` (if account is rekeyed)
   - This allows you to have powerful code that will automatically create and fund an account by name locally and when deployed against TestNet/MainNet will automatically resolve from environment variables, without having to have different code
@@ -94,10 +100,10 @@ You can issue a transaction to rekey an account by using the [`algorand.account.
 - `account: string | TransactionSignerAccount` - The account address or signing account of the account that will be rekeyed
 - `rekeyTo: string | TransactionSignerAccount` - The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward. If a signing account is provided that will now be tracked as the signer for `account` in the `AccountManager` instance.
 - An `options` object, which has:
-  - [Common transaction parameters](./algorand-client.md#transaction-parameters)
-  - [Execution parameters](./algorand-client.md#sending-a-single-transaction)
+  - [Common transaction parameters](algorand-client.md)
+  - [Execution parameters](algorand-client.md)
 
-You can also pass in `rekeyTo` as a [common transaction parameter](./algorand-client.md#transaction-parameters) to any transaction.
+You can also pass in `rekeyTo` as a [common transaction parameter](algorand-client.md) to any transaction.
 
 ### Examples
 
@@ -144,7 +150,7 @@ When running LocalNet, you have an instance of the [Key Management Daemon](https
 
 The KMD SDK is fairly low level so to make use of it there is a fair bit of boilerplate code that's needed. This code has been abstracted away into the `KmdAccountManager` class.
 
-To get an instance of the `KmdAccountManager` class you can access it from [`AlgorandClient`](./algorand-client.md) via `algorand.account.kmd` or instantiate it directly (passing in a [`ClientManager`](./client.md)):
+To get an instance of the `KmdAccountManager` class you can access it from [`AlgorandClient`](algorand-client.md) via `algorand.account.kmd` or instantiate it directly (passing in a [`ClientManager`](client.md)):
 
 ```typescript
 import { KmdAccountManager } from '@algorandfoundation/algokit-utils/types/kmd-account-manager'
@@ -174,7 +180,7 @@ const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', 
 const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
 ```
 
-Some of this functionality is directly exposed from [`AccountManager`](#accountmanager), which has the added benefit of registering the account as a signer so they can be automatically used to sign transactions when using via [`AlgorandClient`](./algorand-client.md):
+Some of this functionality is directly exposed from [`AccountManager`](#accountmanager), which has the added benefit of registering the account as a signer so they can be automatically used to sign transactions when using via [`AlgorandClient`](algorand-client.md):
 
 ```typescript
 // Get and register LocalNet dispenser

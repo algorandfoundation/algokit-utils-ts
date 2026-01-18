@@ -6,7 +6,7 @@
 
 # Enumeration: ApplicationOnComplete
 
-Defined in: [src/types/indexer.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L12)
+Defined in: [src/types/indexer.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L12)
 
 Defines the what additional actions occur with the transaction https://dev.algorand.co/reference/rest-apis/indexer/#oncompletion
 
@@ -16,7 +16,7 @@ Defines the what additional actions occur with the transaction https://dev.algor
 
 > **clear**: `"clear"`
 
-Defined in: [src/types/indexer.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L16)
+Defined in: [src/types/indexer.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L16)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types/indexer.ts:16](https://github.com/algorandfoundation/algo
 
 > **closeout**: `"closeout"`
 
-Defined in: [src/types/indexer.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L15)
+Defined in: [src/types/indexer.ts:15](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L15)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types/indexer.ts:15](https://github.com/algorandfoundation/algo
 
 > **delete**: `"delete"`
 
-Defined in: [src/types/indexer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L18)
+Defined in: [src/types/indexer.ts:18](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L18)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types/indexer.ts:18](https://github.com/algorandfoundation/algo
 
 > **noop**: `"noop"`
 
-Defined in: [src/types/indexer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L13)
+Defined in: [src/types/indexer.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L13)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types/indexer.ts:13](https://github.com/algorandfoundation/algo
 
 > **optin**: `"optin"`
 
-Defined in: [src/types/indexer.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L14)
+Defined in: [src/types/indexer.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L14)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [src/types/indexer.ts:14](https://github.com/algorandfoundation/algo
 
 > **update**: `"update"`
 
-Defined in: [src/types/indexer.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L17)
+Defined in: [src/types/indexer.ts:17](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L17)

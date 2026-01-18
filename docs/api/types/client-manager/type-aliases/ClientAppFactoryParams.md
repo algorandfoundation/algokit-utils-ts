@@ -8,6 +8,6 @@
 
 > **ClientAppFactoryParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`AppFactoryParams`](../../app-factory/interfaces/AppFactoryParams.md), `"algorand"`\>\>
 
-Defined in: [src/types/client-manager.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L23)
+Defined in: [src/types/client-manager.ts:23](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/client-manager.ts#L23)
 
 Params to get an app factory from `ClientManager`.

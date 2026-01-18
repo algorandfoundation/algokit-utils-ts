@@ -8,7 +8,7 @@
 
 > **TransactionHeartbeat** = `object`
 
-Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L12)
+Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:12](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L12)
 
 Fields for a heartbeat transaction.
 
@@ -21,7 +21,7 @@ data/transactions/heartbeat.go : HeartbeatTxnFields
 
 > **hbAddress**: `string`
 
-Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L16)
+Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L16)
 
 \[hbad\] HbAddress is the account this txn is proving onlineness for.
 
@@ -31,7 +31,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:16](ht
 
 > **hbKeyDilution**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L32)
+Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:32](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L32)
 
 \[hbkd\] HbKeyDilution must match HbAddress account's current KeyDilution.
 
@@ -41,7 +41,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:32](ht
 
 > **hbProof**: [`HbProofFields`](HbProofFields.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L17)
+Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:17](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L17)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:17](ht
 
 > **hbSeed**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L22)
+Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:22](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L22)
 
 \[hbsd\] HbSeed must be the block seed for the this transaction's firstValid block.
 
@@ -59,6 +59,6 @@ Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:22](ht
 
 > **hbVoteId**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L27)
+Defined in: [packages/indexer\_client/src/models/transaction-heartbeat.ts:27](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/transaction-heartbeat.ts#L27)
 
 \[hbvid\] HbVoteID must match the HbAddress account's current VoteID.

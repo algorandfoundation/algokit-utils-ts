@@ -8,6 +8,6 @@
 
 > **AppUpdateParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<[`CommonAppCallParams`](CommonAppCallParams.md) & `object`\>
 
-Defined in: [src/transactions/app-call.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L78)
+Defined in: [src/transactions/app-call.ts:78](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/app-call.ts#L78)
 
 Parameters to define an app update transaction

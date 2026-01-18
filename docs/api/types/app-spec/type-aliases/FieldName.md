@@ -8,6 +8,6 @@
 
 > **FieldName** = `string`
 
-Defined in: [src/types/app-spec.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L270)
+Defined in: [src/types/app-spec.ts:270](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L270)
 
 The name of a field

@@ -8,6 +8,6 @@
 
 > **AppCallTransactionResult** = [`AppCallTransactionResultOfType`](../interfaces/AppCallTransactionResultOfType.md)\<[`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)\>
 
-Defined in: [src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
+Defined in: [src/types/app.ts:146](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L146)
 
 Result from calling an app

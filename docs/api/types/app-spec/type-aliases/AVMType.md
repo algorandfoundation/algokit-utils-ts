@@ -8,6 +8,6 @@
 
 > **AVMType** = `"uint64"` \| `"bytes"`
 
-Defined in: [src/types/app-spec.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L329)
+Defined in: [src/types/app-spec.ts:329](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L329)
 
 AVM data type

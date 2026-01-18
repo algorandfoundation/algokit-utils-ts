@@ -6,7 +6,7 @@
 
 # Interface: DeclaredSchemaValueSpec
 
-Defined in: [src/types/app-spec.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L332)
+Defined in: [src/types/app-spec.ts:332](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L332)
 
 Declared schema value specification
 
@@ -16,7 +16,7 @@ Declared schema value specification
 
 > `optional` **descr**: `string`
 
-Defined in: [src/types/app-spec.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L338)
+Defined in: [src/types/app-spec.ts:338](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L338)
 
 A description of the variable
 
@@ -26,7 +26,7 @@ A description of the variable
 
 > **key**: `string`
 
-Defined in: [src/types/app-spec.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L336)
+Defined in: [src/types/app-spec.ts:336](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L336)
 
 The name of the key
 
@@ -36,7 +36,7 @@ The name of the key
 
 > `optional` **static**: `boolean`
 
-Defined in: [src/types/app-spec.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L340)
+Defined in: [src/types/app-spec.ts:340](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L340)
 
 Whether or not the value is set statically (at create time only) or dynamically
 
@@ -46,6 +46,6 @@ Whether or not the value is set statically (at create time only) or dynamically
 
 > **type**: [`AVMType`](../type-aliases/AVMType.md)
 
-Defined in: [src/types/app-spec.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L334)
+Defined in: [src/types/app-spec.ts:334](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L334)
 
 The type of value

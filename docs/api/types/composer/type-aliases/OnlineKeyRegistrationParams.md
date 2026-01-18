@@ -8,7 +8,7 @@
 
 > **OnlineKeyRegistrationParams** = [`CommonTransactionParams`](CommonTransactionParams.md) & `object`
 
-Defined in: [src/transactions/key-registration.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/key-registration.ts#L6)
+Defined in: [src/transactions/key-registration.ts:6](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/key-registration.ts#L6)
 
 Parameters to define an online key registration transaction.
 

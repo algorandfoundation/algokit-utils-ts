@@ -8,7 +8,7 @@
 
 > **getLocalABIStorageKey**(`contract`, `keyName`): [`ABIStorageKey`](../type-aliases/ABIStorageKey.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L395)
+Defined in: [packages/abi/src/arc56-contract.ts:395](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/abi/src/arc56-contract.ts#L395)
 
 Get a specific local storage key with parsed ABI types
 

@@ -6,7 +6,7 @@
 
 # Interface: AlgorandFixtureConfig
 
-Defined in: [src/types/testing.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L55)
+Defined in: [src/types/testing.ts:55](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L55)
 
 Configuration for creating an Algorand testing fixture.
 
@@ -24,7 +24,7 @@ Configuration for creating an Algorand testing fixture.
 
 > `optional` **accountGetter**: (`algorand`) => `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
-Defined in: [src/types/testing.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L65)
+Defined in: [src/types/testing.ts:65](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L65)
 
 Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts.
 
@@ -44,7 +44,7 @@ Optional override for how to get an account; this allows you to retrieve account
 
 > `optional` **algod**: [`AlgodClient`](../../../Subpaths/algod-client/classes/AlgodClient.md)
 
-Defined in: [src/types/testing.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L57)
+Defined in: [src/types/testing.ts:57](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L57)
 
 An optional algod client, if not specified then it will create one against `algodConfig` (if present) then environment variables defined network (if present) or default LocalNet.
 
@@ -54,7 +54,7 @@ An optional algod client, if not specified then it will create one against `algo
 
 > `optional` **algodConfig**: [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/network-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L14)
+Defined in: [src/types/network-client.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/network-client.ts#L14)
 
 Algod client configuration
 
@@ -68,7 +68,7 @@ Algod client configuration
 
 > `optional` **indexer**: [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md)
 
-Defined in: [src/types/testing.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L59)
+Defined in: [src/types/testing.ts:59](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L59)
 
 An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet.
 
@@ -78,7 +78,7 @@ An optional indexer client, if not specified then it will create one against `in
 
 > `optional` **indexerConfig**: [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L16)
+Defined in: [src/types/network-client.ts:16](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/network-client.ts#L16)
 
 Indexer client configuration
 
@@ -92,7 +92,7 @@ Indexer client configuration
 
 > `optional` **kmd**: [`KmdClient`](../../../Subpaths/kmd-client/classes/KmdClient.md)
 
-Defined in: [src/types/testing.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L61)
+Defined in: [src/types/testing.ts:61](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L61)
 
 An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet.
 
@@ -102,7 +102,7 @@ An optional kmd client, if not specified then it will create one against `kmdCon
 
 > `optional` **kmdConfig**: [`AlgoClientConfig`](../../network-client/interfaces/AlgoClientConfig.md)
 
-Defined in: [src/types/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L18)
+Defined in: [src/types/network-client.ts:18](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/network-client.ts#L18)
 
 Kmd configuration
 
@@ -116,6 +116,6 @@ Kmd configuration
 
 > `optional` **testAccountFunding**: [`AlgoAmount`](../../amount/classes/AlgoAmount.md)
 
-Defined in: [src/types/testing.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L63)
+Defined in: [src/types/testing.ts:63](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/testing.ts#L63)
 
 The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO.

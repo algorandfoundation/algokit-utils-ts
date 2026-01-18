@@ -8,6 +8,6 @@
 
 > `const` **SOURCES\_DIR**: `"sources"` = `'sources'`
 
-Defined in: [src/types/debugging.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L13)
+Defined in: [src/types/debugging.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/debugging.ts#L13)
 
 The directory name for debug source files

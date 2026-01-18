@@ -8,7 +8,7 @@
 
 > **AppMethodCallParams** = [`CommonAppCallParams`](CommonAppCallParams.md) & `object`
 
-Defined in: [src/transactions/app-call.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/app-call.ts#L92)
+Defined in: [src/transactions/app-call.ts:92](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/app-call.ts#L92)
 
 Common parameters to define an ABI method call transaction.
 

@@ -8,7 +8,7 @@
 
 > **AccountStateDelta** = `object`
 
-Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-state-delta.ts#L9)
+Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-state-delta.ts#L9)
 
 Application state delta.
 
@@ -18,7 +18,7 @@ Application state delta.
 
 > **address**: `string`
 
-Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-state-delta.ts#L10)
+Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:10](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-state-delta.ts#L10)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:10](http
 
 > **delta**: [`StateDelta`](StateDelta.md)
 
-Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/account-state-delta.ts#L11)
+Defined in: [packages/indexer\_client/src/models/account-state-delta.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/indexer_client/src/models/account-state-delta.ts#L11)

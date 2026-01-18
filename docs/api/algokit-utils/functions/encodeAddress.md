@@ -8,7 +8,7 @@
 
 > **encodeAddress**(`address`): `string`
 
-Defined in: [packages/common/src/address.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L202)
+Defined in: [packages/common/src/address.ts:202](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L202)
 
 encodeAddress takes an Algorand address as a Uint8Array and encodes it into a string with checksum.
 

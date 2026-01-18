@@ -8,7 +8,7 @@
 
 > **AppMethodCall**\<`T`\> = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<`T`, `"args"`\>\> & `object`
 
-Defined in: [src/transactions/method-call.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L60)
+Defined in: [src/transactions/method-call.ts:60](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/transactions/method-call.ts#L60)
 
 Parameters to define an ABI method call.
 

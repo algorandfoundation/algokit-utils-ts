@@ -8,7 +8,7 @@
 
 > **AppReturn**\<`TReturn`\> = `object`
 
-Defined in: [src/types/app.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L221)
+Defined in: [src/types/app.ts:221](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L221)
 
 ## Type Parameters
 
@@ -22,6 +22,6 @@ Defined in: [src/types/app.ts:221](https://github.com/algorandfoundation/algokit
 
 > `optional` **return**: `TReturn`
 
-Defined in: [src/types/app.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L223)
+Defined in: [src/types/app.ts:223](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L223)
 
 The ABI method call return value

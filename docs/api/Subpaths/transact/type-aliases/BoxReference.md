@@ -8,7 +8,7 @@
 
 > **BoxReference** = `object`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L186)
+Defined in: [packages/transact/src/transactions/app-call.ts:186](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/app-call.ts#L186)
 
 Box reference for app call transactions.
 
@@ -21,7 +21,7 @@ of the program.
 
 > **appId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L191)
+Defined in: [packages/transact/src/transactions/app-call.ts:191](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/app-call.ts#L191)
 
 App ID that owns the box.
 A value of 0 indicates the current app.
@@ -32,6 +32,6 @@ A value of 0 indicates the current app.
 
 > **name**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L196)
+Defined in: [packages/transact/src/transactions/app-call.ts:196](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/app-call.ts#L196)
 
 Name of the box.

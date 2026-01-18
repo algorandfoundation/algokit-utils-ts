@@ -8,7 +8,7 @@
 
 > **HeartbeatTransactionFields** = `object`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L6)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:6](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/heartbeat.ts#L6)
 
 Heartbeat transaction specific fields
 
@@ -18,7 +18,7 @@ Heartbeat transaction specific fields
 
 > **address**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L8)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:8](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/heartbeat.ts#L8)
 
 Heartbeat address
 
@@ -28,7 +28,7 @@ Heartbeat address
 
 > **keyDilution**: `bigint`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L20)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:20](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/heartbeat.ts#L20)
 
 Heartbeat key dilution
 
@@ -38,7 +38,7 @@ Heartbeat key dilution
 
 > **proof**: [`HeartbeatProof`](HeartbeatProof.md)
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L11)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/heartbeat.ts#L11)
 
 Heartbeat proof
 
@@ -48,7 +48,7 @@ Heartbeat proof
 
 > **seed**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L14)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:14](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/heartbeat.ts#L14)
 
 Heartbeat seed
 
@@ -58,6 +58,6 @@ Heartbeat seed
 
 > **voteId**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L17)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:17](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/heartbeat.ts#L17)
 
 Heartbeat vote ID

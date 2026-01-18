@@ -6,7 +6,7 @@
 
 # Enumeration: AccountStatus
 
-Defined in: [src/types/indexer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L32)
+Defined in: [src/types/indexer.ts:32](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L32)
 
 Delegation status of the account
 
@@ -16,7 +16,7 @@ Delegation status of the account
 
 > **NotParticipating**: `"NotParticipating"`
 
-Defined in: [src/types/indexer.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L38)
+Defined in: [src/types/indexer.ts:38](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L38)
 
 Indicates that the associated account is neither a delegator nor a delegate
 
@@ -26,7 +26,7 @@ Indicates that the associated account is neither a delegator nor a delegate
 
 > **Offline**: `"Offline"`
 
-Defined in: [src/types/indexer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L34)
+Defined in: [src/types/indexer.ts:34](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L34)
 
 Indicates that the associated account is delegated
 
@@ -36,6 +36,6 @@ Indicates that the associated account is delegated
 
 > **Online**: `"Online"`
 
-Defined in: [src/types/indexer.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L36)
+Defined in: [src/types/indexer.ts:36](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/indexer.ts#L36)
 
 Indicates that the associated account used as part of the delegation pool

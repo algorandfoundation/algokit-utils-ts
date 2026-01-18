@@ -8,6 +8,6 @@
 
 > **SendAppTransactionResult** = [`Expand`](../../expand/type-aliases/Expand.md)\<[`SendSingleTransactionResult`](../../transaction/type-aliases/SendSingleTransactionResult.md) & `object`\>
 
-Defined in: [src/types/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L227)
+Defined in: [src/types/app.ts:227](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L227)
 
 Result from sending a single app transaction.

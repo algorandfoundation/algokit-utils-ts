@@ -8,6 +8,6 @@
 
 > `const` **ABI\_RETURN\_PREFIX**: `Uint8Array`
 
-Defined in: [src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
+Defined in: [src/types/app.ts:31](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app.ts#L31)
 
 First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values

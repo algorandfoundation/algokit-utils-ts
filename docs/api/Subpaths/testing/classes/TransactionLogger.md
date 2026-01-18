@@ -6,7 +6,7 @@
 
 # Class: TransactionLogger
 
-Defined in: [src/testing/transaction-logger.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L11)
+Defined in: [src/testing/transaction-logger.ts:11](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/transaction-logger.ts#L11)
 
 Allows you to keep track of Algorand transaction IDs by wrapping an `AlgodClient` in a proxy.
 Useful for automated tests.
@@ -29,7 +29,7 @@ Useful for automated tests.
 
 > **get** **sentTransactionIds**(): readonly `string`[]
 
-Defined in: [src/testing/transaction-logger.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L26)
+Defined in: [src/testing/transaction-logger.ts:26](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/transaction-logger.ts#L26)
 
 The list of transaction IDs that has been logged thus far.
 
@@ -43,7 +43,7 @@ readonly `string`[]
 
 > **capture**(`algod`): [`AlgodClient`](../../algod-client/classes/AlgodClient.md)
 
-Defined in: [src/testing/transaction-logger.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L53)
+Defined in: [src/testing/transaction-logger.ts:53](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/transaction-logger.ts#L53)
 
 Return a proxy that wraps the given AlgodClient with this transaction logger.
 
@@ -67,7 +67,7 @@ The wrapped `AlgodClient`, any transactions sent using this algod instance will 
 
 > **clear**(): `void`
 
-Defined in: [src/testing/transaction-logger.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L33)
+Defined in: [src/testing/transaction-logger.ts:33](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/transaction-logger.ts#L33)
 
 Clear all logged IDs.
 
@@ -81,7 +81,7 @@ Clear all logged IDs.
 
 > **logRawTransaction**(`signedTransactions`): `void`
 
-Defined in: [src/testing/transaction-logger.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L40)
+Defined in: [src/testing/transaction-logger.ts:40](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/transaction-logger.ts#L40)
 
 The method that captures raw transactions and stores the transaction IDs.
 
@@ -101,7 +101,7 @@ The method that captures raw transactions and stores the transaction IDs.
 
 > **waitForIndexer**(`indexer`): `Promise`\<`void`\>
 
-Defined in: [src/testing/transaction-logger.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L58)
+Defined in: [src/testing/transaction-logger.ts:58](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/testing/transaction-logger.ts#L58)
 
 Wait until all logged transactions IDs appear in the given `Indexer`.
 

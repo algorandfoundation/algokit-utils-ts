@@ -8,7 +8,7 @@
 
 > **decodeTransaction**(`encoded_transaction`): [`Transaction`](../classes/Transaction.md)
 
-Defined in: [packages/transact/src/transactions/transaction.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/transaction.ts#L475)
+Defined in: [packages/transact/src/transactions/transaction.ts:475](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/transaction.ts#L475)
 
 Decodes MsgPack bytes into a transaction.
 

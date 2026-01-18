@@ -8,7 +8,7 @@
 
 > **getEncodedTransactionType**(`encoded_transaction`): [`TransactionType`](../enumerations/TransactionType.md)
 
-Defined in: [packages/transact/src/transactions/transaction.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/transaction.ts#L380)
+Defined in: [packages/transact/src/transactions/transaction.ts:380](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/transaction.ts#L380)
 
 Get the transaction type from the encoded transaction.
 This is particularly useful when decoding a transaction that has an unknown type

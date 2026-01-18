@@ -8,7 +8,7 @@
 
 > **lookupAssetHoldings**(`indexer`, `assetId`, `options?`, `paginationLimit?`): `Promise`\<[`MiniAssetHolding`](../type-aliases/MiniAssetHolding.md)[]\>
 
-Defined in: [src/indexer-client/indexer-lookup.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-client/indexer-lookup.ts#L54)
+Defined in: [src/indexer-client/indexer-lookup.ts:54](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/indexer-client/indexer-lookup.ts#L54)
 
 Looks up asset holdings for the given asset; will automatically paginate through all data.
 

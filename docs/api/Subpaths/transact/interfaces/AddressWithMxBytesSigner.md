@@ -6,7 +6,7 @@
 
 # Interface: AddressWithMxBytesSigner
 
-Defined in: [packages/transact/src/signer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/signer.ts#L28)
+Defined in: [packages/transact/src/signer.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/signer.ts#L28)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [packages/transact/src/signer.ts:28](https://github.com/algorandfoun
 
 > **addr**: `Readonly`\<[`Address`](../../../algokit-utils/classes/Address.md)\>
 
-Defined in: [packages/common/src/address.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L138)
+Defined in: [packages/common/src/address.ts:138](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/common/src/address.ts#L138)
 
 #### Inherited from
 
@@ -34,4 +34,4 @@ Defined in: [packages/common/src/address.ts:138](https://github.com/algorandfoun
 
 > **mxBytesSigner**: [`MxBytesSigner`](../type-aliases/MxBytesSigner.md)
 
-Defined in: [packages/transact/src/signer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/signer.ts#L29)
+Defined in: [packages/transact/src/signer.ts:29](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/signer.ts#L29)

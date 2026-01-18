@@ -8,7 +8,7 @@
 
 > **SignedTransaction** = `object`
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L9)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:9](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L9)
 
 Represents a signed Algorand transaction
 
@@ -18,7 +18,7 @@ Represents a signed Algorand transaction
 
 > `optional` **authAddress**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L33)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:33](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L33)
 
 Optional auth address applicable if the transaction sender is a rekeyed account.
 
@@ -28,7 +28,7 @@ Optional auth address applicable if the transaction sender is a rekeyed account.
 
 > `optional` **lsig**: [`LogicSigSignature`](LogicSigSignature.md)
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L28)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:28](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L28)
 
 Optional logic signature for the transaction.
 
@@ -38,7 +38,7 @@ Optional logic signature for the transaction.
 
 > `optional` **msig**: [`MultisigSignature`](MultisigSignature.md)
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L23)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:23](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L23)
 
 Optional multisignature signature for the transaction.
 
@@ -48,7 +48,7 @@ Optional multisignature signature for the transaction.
 
 > `optional` **sig**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L18)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:18](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L18)
 
 Optional Ed25519 signature authorizing the transaction.
 
@@ -58,6 +58,6 @@ Optional Ed25519 signature authorizing the transaction.
 
 > **txn**: [`Transaction`](../classes/Transaction.md)
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L13)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:13](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/packages/transact/src/transactions/signed-transaction.ts#L13)
 
 The transaction that has been signed.

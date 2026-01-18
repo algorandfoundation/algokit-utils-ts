@@ -8,7 +8,7 @@
 
 > **CallConfigValue** = `"NEVER"` \| `"CALL"` \| `"CREATE"` \| `"ALL"`
 
-Defined in: [src/types/app-spec.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L244)
+Defined in: [src/types/app-spec.ts:244](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-spec.ts#L244)
 
 The various call configs:
  * `NEVER`: Will not be called

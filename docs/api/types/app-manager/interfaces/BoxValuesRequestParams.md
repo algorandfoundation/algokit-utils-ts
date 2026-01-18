@@ -6,7 +6,7 @@
 
 # Interface: BoxValuesRequestParams
 
-Defined in: [src/types/app-manager.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L90)
+Defined in: [src/types/app-manager.ts:90](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L90)
 
 Parameters to get and decode a box value as an ABI type.
 
@@ -16,7 +16,7 @@ Parameters to get and decode a box value as an ABI type.
 
 > **appId**: `bigint`
 
-Defined in: [src/types/app-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L92)
+Defined in: [src/types/app-manager.ts:92](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L92)
 
 The ID of the app return box names for
 
@@ -26,7 +26,7 @@ The ID of the app return box names for
 
 > **boxNames**: [`BoxIdentifier`](../type-aliases/BoxIdentifier.md)[]
 
-Defined in: [src/types/app-manager.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L94)
+Defined in: [src/types/app-manager.ts:94](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L94)
 
 The names of the boxes to return either as a string, binary array or BoxName`
 
@@ -36,6 +36,6 @@ The names of the boxes to return either as a string, binary array or BoxName`
 
 > **type**: [`ABIType`](../../../Subpaths/abi/classes/ABIType.md)
 
-Defined in: [src/types/app-manager.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L96)
+Defined in: [src/types/app-manager.ts:96](https://github.com/p2arthur/algokit-utils-ts-fork/blob/main/src/types/app-manager.ts#L96)
 
 The ABI type to decode the value using
