@@ -383,7 +383,12 @@ export interface MultisigMetadata {
   addrs: Array<Address>
 }
 
-/** Account wrapper that supports partial or full multisig signing. */
+/**
+ * Account wrapper that supports partial or full multisig signing.
+ * @example
+ * {@includeCode ./multisig.spec.ts#example-MultisigAccount-create}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.spec.ts)
+ */
 export class MultisigAccount implements AddressWithTransactionSigner, AddressWithDelegatedLsigSigner {
   _params: MultisigMetadata
   _subSigners: (AddressWithTransactionSigner & AddressWithDelegatedLsigSigner)[]

@@ -7,13 +7,18 @@ import { multisigSignatureCodec } from './transactions/signed-transaction-meta'
 describe('multisig', () => {
   describe('MultisigAccount.createMultisigSignature', () => {
     test('should create empty multisig signature with correct structure', () => {
+      // #region example-MultisigAccount-create
+      // Create a multisig account with 2-of-2 threshold
       const addrs = [
         'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
         'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
       ].map((s) => Address.fromString(s))
 
       const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+
+      // Create an empty multisig signature structure
       const multisig = msigAccount.createMultisigSignature()
+      // #endregion example-MultisigAccount-create
 
       expect(multisig.version).toBe(1)
       expect(multisig.threshold).toBe(2)
