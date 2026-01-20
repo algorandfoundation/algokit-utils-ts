@@ -98,6 +98,9 @@ export class ABIMethod {
   /**
    * Returns the signature of this ABI method.
    * @returns The signature, e.g. `my_method(unit64,string)bytes`
+   * @example
+   * {@includeCode ./abi-method.spec.ts#example-ABIMethod-getSignature}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
    */
   getSignature(): string {
     const args = this.args
@@ -113,6 +116,9 @@ export class ABIMethod {
   /**
    * Returns the method selector of this ABI method.
    * @returns The 4-byte method selector
+   * @example
+   * {@includeCode ./abi-method.spec.ts#example-ABIMethod-getSelector}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
    */
   getSelector(): Uint8Array {
     const hash = sha512.sha512_256.array(this.getSignature())
@@ -124,6 +130,9 @@ export class ABIMethod {
    * @param signature The method signature
    * e.g. `my_method(unit64,string)bytes`
    * @returns The `ABIMethod`
+   * @example
+   * {@includeCode ./abi-method.spec.ts#example-ABIMethod-fromSignature}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
    */
   static fromSignature(signature: string): ABIMethod {
     const argsStart = signature.indexOf('(')

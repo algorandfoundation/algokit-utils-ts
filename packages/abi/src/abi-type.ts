@@ -96,6 +96,9 @@ export abstract class ABIType {
    * Creates an ABI type from an ARC-4 type string.
    * @param str The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
    * @returns The corresponding ABI type
+   * @example
+   * {@includeCode ./abi-type.spec.ts#example-ABIType-from}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
    */
   static from(str: string): ABIType {
     if (str.endsWith('[]')) {
