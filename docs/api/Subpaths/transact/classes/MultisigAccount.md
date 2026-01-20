@@ -6,9 +6,28 @@
 
 # Class: MultisigAccount
 
-Defined in: [packages/transact/src/multisig.ts:387](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L387)
+Defined in: [packages/transact/src/multisig.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L392)
 
 Account wrapper that supports partial or full multisig signing.
+
+## Example
+
+```ts
+// Create a multisig account with 2-of-2 threshold
+const addrs = [
+  'RIMARGKZU46OZ77OLPDHHPUJ7YBSHRTCYMQUC64KZCCMESQAFQMYU6SL2Q',
+  'ALGOC4J2BCZ33TCKSSAMV5GAXQBMV3HDCHDBSPRBZRNSR7BM2FFDZRFGXA',
+].map((s) => Address.fromString(s))
+
+const msigAccount = new MultisigAccount({ version: 1, threshold: 2, addrs }, [])
+
+// Create an empty multisig signature structure
+const multisig = msigAccount.createMultisigSignature()
+```
+
+## See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.spec.ts)
 
 ## Implements
 
@@ -21,7 +40,7 @@ Account wrapper that supports partial or full multisig signing.
 
 > **new MultisigAccount**(`multisigParams`, `subSigners`): `MultisigAccount`
 
-Defined in: [packages/transact/src/multisig.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L428)
+Defined in: [packages/transact/src/multisig.ts:433](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L433)
 
 #### Parameters
 
@@ -43,7 +62,7 @@ Defined in: [packages/transact/src/multisig.ts:428](https://github.com/algorandf
 
 > **\_addr**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/multisig.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L390)
+Defined in: [packages/transact/src/multisig.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L395)
 
 ***
 
@@ -51,7 +70,7 @@ Defined in: [packages/transact/src/multisig.ts:390](https://github.com/algorandf
 
 > **\_lsigSigner**: [`DelegatedLsigSigner`](../type-aliases/DelegatedLsigSigner.md)
 
-Defined in: [packages/transact/src/multisig.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L392)
+Defined in: [packages/transact/src/multisig.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L397)
 
 ***
 
@@ -59,7 +78,7 @@ Defined in: [packages/transact/src/multisig.ts:392](https://github.com/algorandf
 
 > **\_params**: [`MultisigMetadata`](../interfaces/MultisigMetadata.md)
 
-Defined in: [packages/transact/src/multisig.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L388)
+Defined in: [packages/transact/src/multisig.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L393)
 
 ***
 
@@ -67,7 +86,7 @@ Defined in: [packages/transact/src/multisig.ts:388](https://github.com/algorandf
 
 > **\_signer**: [`TransactionSigner`](../type-aliases/TransactionSigner.md)
 
-Defined in: [packages/transact/src/multisig.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L391)
+Defined in: [packages/transact/src/multisig.ts:396](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L396)
 
 ***
 
@@ -75,7 +94,7 @@ Defined in: [packages/transact/src/multisig.ts:391](https://github.com/algorandf
 
 > **\_subSigners**: [`AddressWithTransactionSigner`](../interfaces/AddressWithTransactionSigner.md) & [`AddressWithDelegatedLsigSigner`](../interfaces/AddressWithDelegatedLsigSigner.md)[]
 
-Defined in: [packages/transact/src/multisig.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L389)
+Defined in: [packages/transact/src/multisig.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L394)
 
 ## Accessors
 
@@ -85,7 +104,7 @@ Defined in: [packages/transact/src/multisig.ts:389](https://github.com/algorandf
 
 > **get** **addr**(): `Readonly`\<[`Address`](../../../algokit-utils/classes/Address.md)\>
 
-Defined in: [packages/transact/src/multisig.ts:405](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L405)
+Defined in: [packages/transact/src/multisig.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L410)
 
 The address of the multisig account
 
@@ -105,7 +124,7 @@ The address of the multisig account
 
 > **get** **lsigSigner**(): [`DelegatedLsigSigner`](../type-aliases/DelegatedLsigSigner.md)
 
-Defined in: [packages/transact/src/multisig.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L414)
+Defined in: [packages/transact/src/multisig.ts:419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L419)
 
 ##### Returns
 
@@ -123,7 +142,7 @@ Defined in: [packages/transact/src/multisig.ts:414](https://github.com/algorandf
 
 > **get** **params**(): `Readonly`\<[`MultisigMetadata`](../interfaces/MultisigMetadata.md)\>
 
-Defined in: [packages/transact/src/multisig.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L395)
+Defined in: [packages/transact/src/multisig.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L400)
 
 The parameters for the multisig account
 
@@ -139,7 +158,7 @@ The parameters for the multisig account
 
 > **get** **signer**(): [`TransactionSigner`](../type-aliases/TransactionSigner.md)
 
-Defined in: [packages/transact/src/multisig.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L410)
+Defined in: [packages/transact/src/multisig.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L415)
 
 The transaction signer for the multisig account
 
@@ -159,7 +178,7 @@ The transaction signer for the multisig account
 
 > **get** **subSigners**(): [`AddressWithTransactionSigner`](../interfaces/AddressWithTransactionSigner.md) & [`AddressWithDelegatedLsigSigner`](../interfaces/AddressWithDelegatedLsigSigner.md)[]
 
-Defined in: [packages/transact/src/multisig.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L400)
+Defined in: [packages/transact/src/multisig.ts:405](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L405)
 
 The list of accounts that are present to sign transactions or lsigs
 
@@ -173,7 +192,7 @@ The list of accounts that are present to sign transactions or lsigs
 
 > **applySignature**(`msigSignature`, `pubkey`, `signature`): [`MultisigSignature`](../type-aliases/MultisigSignature.md)
 
-Defined in: [packages/transact/src/multisig.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L507)
+Defined in: [packages/transact/src/multisig.ts:512](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L512)
 
 #### Parameters
 
@@ -199,7 +218,7 @@ Defined in: [packages/transact/src/multisig.ts:507](https://github.com/algorandf
 
 > **applySignatureToTxn**(`txn`, `pubkey`, `signature`): `void`
 
-Defined in: [packages/transact/src/multisig.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L498)
+Defined in: [packages/transact/src/multisig.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L503)
 
 #### Parameters
 
@@ -225,7 +244,7 @@ Defined in: [packages/transact/src/multisig.ts:498](https://github.com/algorandf
 
 > **createMultisigSignature**(): [`MultisigSignature`](../type-aliases/MultisigSignature.md)
 
-Defined in: [packages/transact/src/multisig.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L484)
+Defined in: [packages/transact/src/multisig.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L489)
 
 #### Returns
 
@@ -237,7 +256,7 @@ Defined in: [packages/transact/src/multisig.ts:484](https://github.com/algorandf
 
 > **createMultisigTransaction**(`txn`): [`SignedTransaction`](../type-aliases/SignedTransaction.md)
 
-Defined in: [packages/transact/src/multisig.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L480)
+Defined in: [packages/transact/src/multisig.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L485)
 
 #### Parameters
 
@@ -255,7 +274,7 @@ Defined in: [packages/transact/src/multisig.ts:480](https://github.com/algorandf
 
 > `static` **fromSignature**(`signature`): `MultisigAccount`
 
-Defined in: [packages/transact/src/multisig.ts:418](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L418)
+Defined in: [packages/transact/src/multisig.ts:423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L423)
 
 #### Parameters
 

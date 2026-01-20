@@ -31,11 +31,3 @@ the transaction lease ready for inclusion in a transaction or `undefined` if the
 if the length of the data is > 32 bytes or empty
 
 ## Examples
-
-```ts
-algokit.encodeLease('UNIQUE_ID')
-```
-
-```ts
-algokit.encodeLease(new Uint8Array([1, 2, 3]))
-```

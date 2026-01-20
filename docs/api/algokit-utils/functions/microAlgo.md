@@ -8,7 +8,7 @@
 
 > **microAlgo**(`microAlgos`): [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-Defined in: [src/amount.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L82)
+Defined in: [src/amount.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L94)
 
 Returns an amount of µAlgo using AlgoAmount
 
@@ -23,3 +23,17 @@ The amount of µAlgo
 ## Returns
 
 [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
+
+## Example
+
+```ts
+// Create an AlgoAmount using the Number.prototype extension
+const amount = (100).microAlgo()
+
+// Access the value in microAlgo
+const microAlgoValue = amount.microAlgo // 100n
+```
+
+## See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)

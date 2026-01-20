@@ -50,7 +50,7 @@ const assetManager = new AssetManager(algod, () => new TransactionComposer({algo
 
 > **bulkOptIn**(`account`, `assetIds`, `options?`): `Promise`\<[`BulkAssetOptInOutResult`](../interfaces/BulkAssetOptInOutResult.md)[]\>
 
-Defined in: [src/types/asset-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L234)
+Defined in: [src/types/asset-manager.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L229)
 
 Opt an account in to a list of Algorand Standard Assets.
 
@@ -84,12 +84,15 @@ An array of records matching asset ID to transaction ID of the opt in
 
 #### Example
 
-```typescript
-// Basic example
-assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n])
-// With configuration
-assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgo(), suppressLog: true })
+```ts
+// Opt an account into multiple assets at once
+const assetIds = [dummyAssetId]
+await algorand.asset.bulkOptIn(secondAccount, assetIds)
 ```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts)
 
 ***
 
@@ -97,7 +100,7 @@ assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).micr
 
 > **bulkOptOut**(`account`, `assetIds`, `options?`): `Promise`\<[`BulkAssetOptInOutResult`](../interfaces/BulkAssetOptInOutResult.md)[]\>
 
-Defined in: [src/types/asset-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L284)
+Defined in: [src/types/asset-manager.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L275)
 
 Opt an account out of a list of Algorand Standard Assets.
 
@@ -131,12 +134,14 @@ An array of records matching asset ID to transaction ID of the opt in
 
 #### Example
 
-```typescript
-// Basic example
-assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n])
-// With configuration
-assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgo(), suppressLog: true })
+```ts
+// Opt an account out of multiple assets at once
+await algorand.asset.bulkOptOut(secondAccount, assetIds)
 ```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts)
 
 ***
 
@@ -144,7 +149,7 @@ assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance:
 
 > **getAccountInformation**(`sender`, `assetId`): `Promise`\<[`AccountAssetInformation`](../../account/type-aliases/AccountAssetInformation.md)\>
 
-Defined in: [src/types/asset-manager.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L206)
+Defined in: [src/types/asset-manager.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L205)
 
 Returns the given sender account's asset holding for a given asset.
 
@@ -184,7 +189,7 @@ const accountInfo = await assetManager.getAccountInformation(address, assetId);
 
 > **getById**(`assetId`): `Promise`\<[`AssetInformation`](../interfaces/AssetInformation.md)\>
 
-Defined in: [src/types/asset-manager.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L168)
+Defined in: [src/types/asset-manager.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L167)
 
 Returns the current asset information for the asset with the given ID.
 
@@ -204,6 +209,16 @@ The asset information
 
 #### Example
 
-```typescript
-const assetInfo = await assetManager.getById(12353n);
+```ts
+// Get asset information by ID
+const assetData = await algorand.asset.getById(result.assetId)
+
+// Access asset properties
+const creator = assetData.creator
+const total = assetData.total
+const decimals = assetData.decimals
 ```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts)

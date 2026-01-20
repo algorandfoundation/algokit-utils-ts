@@ -102,7 +102,7 @@ Defined in: [packages/abi/src/abi-method.ts:78](https://github.com/algorandfound
 
 > **getSelector**(): `Uint8Array`
 
-Defined in: [packages/abi/src/abi-method.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L117)
+Defined in: [packages/abi/src/abi-method.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L123)
 
 Returns the method selector of this ABI method.
 
@@ -112,13 +112,27 @@ Returns the method selector of this ABI method.
 
 The 4-byte method selector
 
+#### Example
+
+```ts
+// Get the 4-byte method selector for ABI method calls
+const method = ABIMethod.fromSignature('add(uint64,uint64)uint64')
+const selector = method.getSelector()
+
+// Selector is the first 4 bytes of SHA-512/256 hash of the signature
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
+
 ***
 
 ### getSignature()
 
 > **getSignature**(): `string`
 
-Defined in: [packages/abi/src/abi-method.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L102)
+Defined in: [packages/abi/src/abi-method.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L105)
 
 Returns the signature of this ABI method.
 
@@ -128,13 +142,25 @@ Returns the signature of this ABI method.
 
 The signature, e.g. `my_method(unit64,string)bytes`
 
+#### Example
+
+```ts
+// Get the full method signature string
+const method = ABIMethod.fromSignature('transfer(address,uint64)bool')
+const signature = method.getSignature()
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
+
 ***
 
 ### fromSignature()
 
 > `static` **fromSignature**(`signature`): `ABIMethod`
 
-Defined in: [packages/abi/src/abi-method.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L128)
+Defined in: [packages/abi/src/abi-method.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L137)
 
 Returns the ABI method object for a given method signature.
 
@@ -152,3 +178,18 @@ e.g. `my_method(unit64,string)bytes`
 `ABIMethod`
 
 The `ABIMethod`
+
+#### Example
+
+```ts
+// Parse a method signature string into an ABIMethod object
+const method = ABIMethod.fromSignature('add(uint64,uint64)uint64')
+
+// Access method properties
+const name = method.name // 'add'
+const argCount = method.args.length // 2
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)

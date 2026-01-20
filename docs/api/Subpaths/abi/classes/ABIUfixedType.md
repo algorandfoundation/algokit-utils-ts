@@ -6,7 +6,7 @@
 
 # Class: ABIUfixedType
 
-Defined in: [packages/abi/src/abi-type.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L225)
+Defined in: [packages/abi/src/abi-type.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L228)
 
 A fixed-point number ABI type of a specific bit size and precision.
 
@@ -24,7 +24,7 @@ A fixed-point number ABI type of a specific bit size and precision.
 
 > **new ABIUfixedType**(`bitSize`, `precision`): `ABIUfixedType`
 
-Defined in: [packages/abi/src/abi-type.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L231)
+Defined in: [packages/abi/src/abi-type.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L234)
 
 Creates a new fixed-point type.
 
@@ -56,7 +56,7 @@ The decimal precision (must be between 1 and 160)
 
 > `readonly` **bitSize**: `number`
 
-Defined in: [packages/abi/src/abi-type.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L232)
+Defined in: [packages/abi/src/abi-type.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L235)
 
 The bit size (must be a multiple of 8, between 8 and 512)
 
@@ -66,7 +66,7 @@ The bit size (must be a multiple of 8, between 8 and 512)
 
 > `readonly` **precision**: `number`
 
-Defined in: [packages/abi/src/abi-type.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L233)
+Defined in: [packages/abi/src/abi-type.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L236)
 
 The decimal precision (must be between 1 and 160)
 
@@ -100,7 +100,7 @@ The display name for this type
 
 > **get** **name**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L244)
+Defined in: [packages/abi/src/abi-type.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L247)
 
 Returns the ARC-4 type name string representation.
 
@@ -120,7 +120,7 @@ The ARC-4 type string
 
 > **byteLen**(): `number`
 
-Defined in: [packages/abi/src/abi-type.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L256)
+Defined in: [packages/abi/src/abi-type.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L259)
 
 Gets the byte length of the encoded type for static types.
 
@@ -144,7 +144,7 @@ Error if the type is dynamic
 
 > **decode**(`bytes`): [`ABIValue`](../type-aliases/ABIValue.md)
 
-Defined in: [packages/abi/src/abi-type.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L273)
+Defined in: [packages/abi/src/abi-type.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L276)
 
 Decodes bytes according to this ABI type.
 
@@ -172,7 +172,7 @@ The decoded value
 
 > **encode**(`value`): `Uint8Array`
 
-Defined in: [packages/abi/src/abi-type.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L260)
+Defined in: [packages/abi/src/abi-type.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L263)
 
 Encodes a value according to this ABI type.
 
@@ -200,7 +200,7 @@ The encoded bytes
 
 > **equals**(`other`): `boolean`
 
-Defined in: [packages/abi/src/abi-type.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L248)
+Defined in: [packages/abi/src/abi-type.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L251)
 
 Checks if this ABI type is equal to another.
 
@@ -228,7 +228,7 @@ True if the types are equal, false otherwise
 
 > **isDynamic**(): `boolean`
 
-Defined in: [packages/abi/src/abi-type.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L252)
+Defined in: [packages/abi/src/abi-type.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L255)
 
 Checks if this ABI type is dynamic (variable-length).
 
@@ -268,7 +268,7 @@ The ARC-4 type string
 
 > `static` **from**(`str`): [`ABIType`](ABIType.md)
 
-Defined in: [packages/abi/src/abi-type.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L100)
+Defined in: [packages/abi/src/abi-type.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L103)
 
 Creates an ABI type from an ARC-4 type string.
 
@@ -285,6 +285,22 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 [`ABIType`](ABIType.md)
 
 The corresponding ABI type
+
+#### Example
+
+```ts
+// Parse ABI type strings into type objects
+const uint64Type = ABIType.from('uint64')
+const tupleType = ABIType.from('(uint64,string,bool)')
+const arrayType = ABIType.from('uint32[]')
+
+// Use the type name property
+const typeName = uint64Type.name // 'uint64'
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
 
 #### Inherited from
 
