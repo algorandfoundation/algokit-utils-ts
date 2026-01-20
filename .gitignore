@@ -70,3 +70,5 @@ ENV/
 .polytest*/
 polytest_resources/
 .algokit-*
+
+docs/_html/

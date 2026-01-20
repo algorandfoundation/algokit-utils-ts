@@ -9,7 +9,6 @@ describe('GET versions', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    // Skipping this test because there is mismtach between the oas schema and what is returned for
     // genisisHashB64. The oas schema is a base64 encoded string, but the
     // returned value is a Uint8Array.
     test('Basic request and response validation', async () => {
