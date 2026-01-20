@@ -26,10 +26,20 @@ describe('Asset capability', () => {
     })
 
     expect(result.confirmation.assetId).toBeGreaterThan(0n)
+
+    // #region example-getById
+    // Get asset information by ID
     const assetData = await algorand.asset.getById(result.assetId)
-    expect(assetData.creator).toBe(testAccount.toString())
-    expect(assetData.total).toBe(1000n)
-    expect(assetData.decimals).toBe(0)
+
+    // Access asset properties
+    const creator = assetData.creator
+    const total = assetData.total
+    const decimals = assetData.decimals
+    // #endregion example-getById
+
+    expect(creator).toBe(testAccount.toString())
+    expect(total).toBe(1000n)
+    expect(decimals).toBe(0)
     expect(assetData.defaultFrozen).toBe(true)
     expect(assetData.unitName).toBe('TEST')
     expect(assetData.assetName).toBe('Test Asset')
@@ -44,13 +54,16 @@ describe('Asset capability', () => {
   test('OptIn an asset to an account succeed', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount, 1)
-    const dummyAssetIds = [dummyAssetId]
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     const secondAccountInfo = await algorand.account.getInformation(secondAccount)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(0)
 
-    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    // #region example-bulkOptIn
+    // Opt an account into multiple assets at once
+    const assetIds = [dummyAssetId]
+    await algorand.asset.bulkOptIn(secondAccount, assetIds)
+    // #endregion example-bulkOptIn
 
     const testAccountInfoAfterOptIn = await algorand.account.getInformation(secondAccount)
     expect(testAccountInfoAfterOptIn.totalAssetsOptedIn).toBe(1)
@@ -73,15 +86,18 @@ describe('Asset capability', () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount, 0)
     const dummyAssetId2 = await generateTestAsset(algorand, testAccount, 0)
-    const dummyAssetIds = [dummyAssetId, dummyAssetId2]
+    const assetIds = [dummyAssetId, dummyAssetId2]
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
-    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, assetIds, { validityWindow: 100 })
 
     const secondAccountInfo = await algorand.account.getInformation(secondAccount)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(2)
 
-    await algorand.asset.bulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    // #region example-bulkOptOut
+    // Opt an account out of multiple assets at once
+    await algorand.asset.bulkOptOut(secondAccount, assetIds)
+    // #endregion example-bulkOptOut
 
     const secondAccountInfoAfterOptOut = await algorand.account.getInformation(secondAccount)
     expect(secondAccountInfoAfterOptOut.totalAssetsOptedIn).toBe(0)

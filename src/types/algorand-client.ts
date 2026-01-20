@@ -228,6 +228,7 @@ export class AlgorandClient {
    * @returns A new instance of `TransactionComposer`.
    * @example
    * {@includeCode ./algorand-client.spec.ts#example-newGroup}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
    */
   public newGroup(composerConfig?: TransactionComposerConfig) {
     return new TransactionComposer({
@@ -276,6 +277,7 @@ export class AlgorandClient {
    * @returns An instance of the `AlgorandClient`.
    * @example
    * {@includeCode ./algorand-client.spec.ts#example-defaultLocalNet}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
    */
   public static defaultLocalNet() {
     return new AlgorandClient({

@@ -59,6 +59,7 @@ BigInt.prototype.algo = function () {
  * @param algos The amount of Algo
  * @example
  * {@includeCode ./types/amount.spec.ts#example-algos}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
  */
 export const algos = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
@@ -68,6 +69,7 @@ export const algos = (algos: number | bigint) => {
  * @param algos The amount of Algo
  * @example
  * {@includeCode ./types/amount.spec.ts#example-algo}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
  */
 export const algo = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
@@ -77,6 +79,7 @@ export const algo = (algos: number | bigint) => {
  * @param microAlgos The amount of µAlgo
  * @example
  * {@includeCode ./types/amount.spec.ts#example-microAlgos}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
  */
 export const microAlgos = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
@@ -86,6 +89,7 @@ export const microAlgos = (microAlgos: number | bigint) => {
  * @param microAlgos The amount of µAlgo
  * @example
  * {@includeCode ./types/amount.spec.ts#example-microAlgo}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
  */
 export const microAlgo = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
@@ -95,6 +99,7 @@ export const microAlgo = (microAlgos: number | bigint) => {
  * @param numberOfTransactions The of standard transaction fees to return the amount of Algo
  * @example
  * {@includeCode ./types/amount.spec.ts#example-transactionFees}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
  */
 export const transactionFees = (numberOfTransactions: number) => {
   return AlgoAmount.MicroAlgo(BigInt(numberOfTransactions) * ALGORAND_MIN_TX_FEE.microAlgo)
