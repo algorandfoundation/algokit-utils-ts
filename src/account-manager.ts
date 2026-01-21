@@ -18,7 +18,7 @@ import { AlgoAmount } from './algo-amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
-import { KmdAccountManager } from './types/kmd-account-manager'
+import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './types/transaction'
 
 /** Result from performing an ensureFunded call. */
