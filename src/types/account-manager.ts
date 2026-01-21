@@ -591,6 +591,8 @@ export class AccountManager {
    * @returns
    * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
    * - `undefined` if no funds were needed.
+   * @see {@link ensureFundedFromEnvironment} for environment-based dispenser
+   * @see {@link ensureFundedFromTestNetDispenserApi} for TestNet dispenser API
    */
   async ensureFunded(
     accountToFund: string | Address,

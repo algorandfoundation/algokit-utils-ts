@@ -46,10 +46,7 @@ function applyMultisigSubsignature(
     throw new Error('Public key not found in multisig signature')
   }
 
-  return {
-    ...multisigSignature,
-    subsigs: newSubsignatures,
-  }
+  return { ...multisigSignature, subsigs: newSubsignatures }
 }
 
 // Convert "MultisigAddr" UTF-8 to byte array
@@ -79,37 +76,19 @@ const MULTISIG_KEY_NOT_EXIST_ERROR_MSG = 'Key does not exist'
 function createMultisigTransaction(txn: Transaction, { version, threshold, addrs }: MultisigMetadata) {
   // construct the appendable multisigned transaction format
   const pks = toPublicKeys(addrs)
-  const subsignatures = pks.map(
-    (pk) =>
-      ({
-        publicKey: pk,
-        sig: undefined,
-      }) satisfies MultisigSubsignature,
-  )
+  const subsignatures = pks.map((pk) => ({ publicKey: pk, sig: undefined }) satisfies MultisigSubsignature)
 
-  const msig: MultisigSignature = {
-    version,
-    threshold,
-    subsigs: subsignatures,
-  }
+  const msig: MultisigSignature = { version, threshold, subsigs: subsignatures }
 
   // if the address of this multisig is different from the transaction sender,
   // we need to add the auth-addr field
-  const msigAddr = addressFromMultisigPreImg({
-    version,
-    threshold,
-    publicKeys: pks,
-  })
+  const msigAddr = addressFromMultisigPreImg({ version, threshold, publicKeys: pks })
   let authAddress: Address | undefined
   if (!msigAddr.equals(txn.sender)) {
     authAddress = msigAddr
   }
 
-  const signedTxn: SignedTransaction = {
-    txn: txn,
-    msig: msig,
-    authAddress,
-  }
+  const signedTxn: SignedTransaction = { txn: txn, msig: msig, authAddress }
 
   return signedTxn
 }
@@ -139,11 +118,7 @@ function createMultisigTransactionWithSignature(
   { version, threshold, publicKeys }: MultisigMetadataWithPublicKeys,
 ): SignedTransaction {
   // Create an empty encoded multisig transaction
-  const signedTxn = createMultisigTransaction(txn, {
-    version,
-    threshold,
-    addrs: publicKeys.map((pk) => new Address(pk)),
-  })
+  const signedTxn = createMultisigTransaction(txn, { version, threshold, addrs: publicKeys.map((pk) => new Address(pk)) })
 
   let keyExist = false
 
@@ -160,13 +135,7 @@ function createMultisigTransactionWithSignature(
     throw new Error(MULTISIG_KEY_NOT_EXIST_ERROR_MSG)
   }
 
-  const updatedSignedTxn: SignedTransaction = {
-    ...signedTxn,
-    msig: {
-      ...signedTxn.msig!,
-      subsigs: updatedSubsigs,
-    },
-  }
+  const updatedSignedTxn: SignedTransaction = { ...signedTxn, msig: { ...signedTxn.msig!, subsigs: updatedSubsigs } }
 
   return updatedSignedTxn
 }
@@ -175,6 +144,10 @@ function createMultisigTransactionWithSignature(
  * takes a list of multisig transaction blobs, and merges them.
  * @param multisigTxnBlobs - a list of blobs representing encoded multisig txns
  * @returns typed array msg-pack encoded multisig txn
+ * @throws {Error} If fewer than two transactions are provided
+ * @throws {Error} If transaction IDs differ between transactions
+ * @throws {Error} If auth addresses differ between transactions
+ * @throws {Error} If multisig preimages or signatures are mismatched
  */
 function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): SignedTransaction {
   if (multisigTxnBlobs.length < 2) {
@@ -235,17 +208,9 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
     })
   }
 
-  const msig: MultisigSignature = {
-    version: refSigTx.msig.version,
-    threshold: refSigTx.msig.threshold,
-    subsigs: newSubsigs,
-  }
+  const msig: MultisigSignature = { version: refSigTx.msig.version, threshold: refSigTx.msig.threshold, subsigs: newSubsigs }
 
-  const signedTxn: SignedTransaction = {
-    txn: refSigTx.txn,
-    msig: msig,
-    authAddress: refAuthAddr,
-  }
+  const signedTxn: SignedTransaction = { txn: refSigTx.txn, msig: msig, authAddress: refAuthAddr }
 
   return signedTxn
 }
@@ -258,6 +223,7 @@ function mergeMultisigTransactions(multisigTxnBlobs: SignedTransaction[]): Signe
  * @param signerAddr - address of the signer
  * @param signature - raw multisig signature
  * @returns an encoded, partially signed multisig transaction.
+ * @throws {Error} If signature length is incorrect
  */
 function partialSignWithMultisigSignature(
   transaction: Transaction,
@@ -269,14 +235,7 @@ function partialSignWithMultisigSignature(
     throw new Error(MULTISIG_SIGNATURE_LENGTH_ERROR_MSG)
   }
   const signerAddressObj = typeof signerAddr === 'string' ? Address.fromString(signerAddr) : signerAddr
-  return createMultisigTransactionWithSignature(
-    transaction,
-    {
-      rawSig: signature,
-      myPk: signerAddressObj.publicKey,
-    },
-    metadata,
-  )
+  return createMultisigTransactionWithSignature(transaction, { rawSig: signature, myPk: signerAddressObj.publicKey }, metadata)
 }
 
 /**
@@ -310,14 +269,13 @@ function appendSignRawMultisigSignature(
  * @param version - multisig version
  * @param threshold - multisig threshold
  * @param pks - array of typed array public keys
+ * @throws {Error} If multisig parameters are invalid (version, threshold, or public keys)
  */
 function addressFromMultisigPreImg({
   version,
   threshold,
   publicKeys,
-}: Omit<MultisigMetadata, 'addrs'> & {
-  publicKeys: Uint8Array[]
-}): Address {
+}: Omit<MultisigMetadata, 'addrs'> & { publicKeys: Uint8Array[] }): Address {
   if (version > 255 || version < 0) {
     // ^ a tad redundant, but in case in the future version != 1, still check for uint8
     throw new Error(`${INVALID_MSIG_VERSION_ERROR_MSG}: ${version}`)
@@ -350,11 +308,7 @@ function addressFromMultisigPreImg({
  * @param addrs - array of encoded addresses
  */
 function addressFromMultisigPreImgAddrs({ version, threshold, addrs }: MultisigMetadata): Address {
-  return addressFromMultisigPreImg({
-    version,
-    threshold,
-    publicKeys: toPublicKeys(addrs),
-  })
+  return addressFromMultisigPreImg({ version, threshold, publicKeys: toPublicKeys(addrs) })
 }
 
 /**
@@ -388,6 +342,11 @@ export interface MultisigMetadata {
  * @example
  * {@includeCode ./multisig.spec.ts#example-MultisigAccount-create}
  * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.spec.ts)
+ *
+ * @remarks
+ * A multisig account requires M-of-N signatures to authorize transactions, where M is the threshold
+ * and N is the total number of participating addresses. The same address can appear multiple times
+ * in the participant list to implement weighted voting (each occurrence counts as one signature toward the threshold).
  */
 export class MultisigAccount implements AddressWithTransactionSigner, AddressWithDelegatedLsigSigner {
   _params: MultisigMetadata
@@ -488,16 +447,9 @@ export class MultisigAccount implements AddressWithTransactionSigner, AddressWit
 
   createMultisigSignature(): MultisigSignature {
     const pks = toPublicKeys(this._params.addrs)
-    const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
-      publicKey: pk,
-      signature: undefined,
-    }))
+    const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({ publicKey: pk, signature: undefined }))
 
-    return {
-      version: this._params.version,
-      threshold: this._params.threshold,
-      subsigs: subsignatures,
-    }
+    return { version: this._params.version, threshold: this._params.threshold, subsigs: subsignatures }
   }
 
   applySignatureToTxn(txn: SignedTransaction, pubkey: Uint8Array, signature: Uint8Array): void {

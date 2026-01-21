@@ -60,6 +60,7 @@ BigInt.prototype.algo = function () {
  * @example
  * {@includeCode ./types/amount.spec.ts#example-algos}
  * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
+ * @see {@link AlgoAmount}
  */
 export const algos = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
@@ -80,6 +81,7 @@ export const algo = (algos: number | bigint) => {
  * @example
  * {@includeCode ./types/amount.spec.ts#example-microAlgos}
  * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
+ * @see {@link algos} for Algo denomination
  */
 export const microAlgos = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
