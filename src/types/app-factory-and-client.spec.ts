@@ -18,7 +18,7 @@ import { getTestingAppContract } from '../../tests/example-contracts/testing-app
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './app'
-import { AppClient } from './app-client'
+import { AppClient } from '../app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'

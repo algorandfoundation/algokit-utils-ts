@@ -11,7 +11,7 @@ import {
   AppClientParams,
   AppSourceMaps,
   ResolveAppClientByCreatorAndName,
-} from './app-client'
+} from '../app-client'
 import {
   AppDeployParams,
   DeployAppDeleteMethodCall,

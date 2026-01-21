@@ -31,10 +31,10 @@ import {
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { AddressWithTransactionSigner, OnApplicationComplete, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
-import { Config } from '../config'
-import { asJson, binaryStartsWith } from '../util'
-import { type AlgorandClient } from './algorand-client'
-import { AlgoAmount } from './amount'
+import { Config } from './config'
+import { asJson, binaryStartsWith } from './util'
+import { type AlgorandClient } from './types/algorand-client'
+import { AlgoAmount } from './types/amount'
 import {
   ABIAppCallArgs,
   AppCompilationResult,
@@ -48,10 +48,10 @@ import {
   RawAppCallArgs,
   SendAppTransactionResult,
   TealTemplateParams,
-} from './app'
-import { AppLookup } from './app-deployer'
-import { AppManager, BoxIdentifier } from './app-manager'
-import { AppSpec, arc32ToArc56 } from './app-spec'
+} from './types/app'
+import { AppLookup } from './types/app-deployer'
+import { AppManager, BoxIdentifier } from './types/app-manager'
+import { AppSpec, arc32ToArc56 } from './types/app-spec'
 import {
   AppCallMethodCall,
   AppCallParams,
@@ -63,10 +63,10 @@ import {
   AppUpdateParams,
   CommonAppCallParams,
   PaymentParams,
-} from './composer'
-import { EventType } from './lifecycle-events'
-import { LogicError } from './logic-error'
-import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+} from './types/composer'
+import { EventType } from './types/lifecycle-events'
+import { LogicError } from './types/logic-error'
+import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './types/transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
