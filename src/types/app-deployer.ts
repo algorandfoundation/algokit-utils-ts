@@ -5,7 +5,7 @@ import { TransactionType } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from '../indexer-client'
 import { calculateExtraProgramPages } from '../util'
-import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
+import { AlgorandClientTransactionSender } from '../algorand-client-transaction-sender'
 import {
   APP_DEPLOY_NOTE_DAPP,
   OnSchemaBreak,
