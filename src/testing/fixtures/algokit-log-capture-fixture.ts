@@ -1,5 +1,5 @@
 import { Config } from '../../'
-import { AlgoKitLogCaptureFixture } from '../../types/testing'
+import { AlgoKitLogCaptureFixture } from '../../testing-types'
 import { TestLogger } from '../test-logger'
 
 /**
