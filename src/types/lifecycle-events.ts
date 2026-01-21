@@ -1,4 +1,4 @@
-import { AVMTracesEventData, TealSourcesDebugEventData } from './debugging'
+import { AVMTracesEventData, TealSourcesDebugEventData } from '../debugging'
 
 export enum EventType {
   TxnGroupSimulated = 'TxnGroupSimulated',
