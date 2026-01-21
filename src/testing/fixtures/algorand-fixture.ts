@@ -1,7 +1,7 @@
 import { algos, Config } from '../../'
 import { AlgorandClient } from '../../algorand-client'
 import { ClientManager } from '../../client-manager'
-import { AlgoConfig } from '../../types/network-client'
+import { AlgoConfig } from '../../network-client'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
 import { getTestAccount } from '../account'
 import { runWhenIndexerCaughtUp } from '../indexer'

@@ -9,7 +9,7 @@ import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './composer'
-import { AlgoConfig } from './types/network-client'
+import { AlgoConfig } from './network-client'
 
 /**
  * A client that brokers easy access to Algorand functionality.
