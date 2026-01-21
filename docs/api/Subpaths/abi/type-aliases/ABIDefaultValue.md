@@ -8,7 +8,7 @@
 
 > **ABIDefaultValue** = `object`
 
-Defined in: [packages/abi/src/abi-method.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L36)
+Defined in: [packages/abi/src/abi-method.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L28)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/abi/src/abi-method.ts:36](https://github.com/algorandfound
 
 > **data**: `string`
 
-Defined in: [packages/abi/src/abi-method.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L38)
+Defined in: [packages/abi/src/abi-method.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L30)
 
 Base64 encoded bytes, base64 ARC4 encoded uint64, or UTF-8 method selector
 
@@ -26,7 +26,7 @@ Base64 encoded bytes, base64 ARC4 encoded uint64, or UTF-8 method selector
 
 > **source**: [`DefaultValueSource`](../enumerations/DefaultValueSource.md)
 
-Defined in: [packages/abi/src/abi-method.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L40)
+Defined in: [packages/abi/src/abi-method.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L32)
 
 Where the default value is coming from
 
@@ -36,6 +36,6 @@ Where the default value is coming from
 
 > `optional` **type**: [`ABIType`](../classes/ABIType.md) \| [`AVMType`](AVMType.md)
 
-Defined in: [packages/abi/src/abi-method.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L42)
+Defined in: [packages/abi/src/abi-method.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L34)
 
 How the data is encoded. This is the encoding for the data provided here, not the arg type

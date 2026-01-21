@@ -8,7 +8,7 @@
 
 > **mnemonicToMasterDerivationKey**(`mn`): `Uint8Array`
 
-Defined in: [packages/algo25/src/index.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algo25/src/index.ts#L153)
+Defined in: [packages/algo25/src/index.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algo25/src/index.ts#L157)
 
 mnemonicToMasterDerivationKey takes a mnemonic string and returns the corresponding master derivation key.
 

@@ -8,7 +8,7 @@
 
 > **getABIMethod**(`methodNameOrSignature`, `appSpec`): [`ABIMethod`](../classes/ABIMethod.md)
 
-Defined in: [packages/abi/src/abi-method.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L193)
+Defined in: [packages/abi/src/abi-method.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L181)
 
 Returns the ABI method object for a given method name or signature and ARC-56 app spec.
 
@@ -32,3 +32,7 @@ The app spec for the app
 [`ABIMethod`](../classes/ABIMethod.md)
 
 The `ABIMethod`
+
+## Throws
+
+If the method is not found in the app spec or if method name resolves to multiple methods

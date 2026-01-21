@@ -8,6 +8,6 @@
 
 > **AppClientCallArgs** = [`AppClientCallRawArgs`](AppClientCallRawArgs.md) \| [`AppClientCallABIArgs`](../interfaces/AppClientCallABIArgs.md)
 
-Defined in: [src/types/app-client.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L189)
+Defined in: [src/types/app-client.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L190)
 
 The arguments to pass to an Application Client smart contract call

@@ -8,7 +8,7 @@
 
 > **isAVMType**(`type`): `type is AVMType`
 
-Defined in: [packages/abi/src/abi-method.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L329)
+Defined in: [packages/abi/src/abi-method.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L300)
 
 ## Parameters
 

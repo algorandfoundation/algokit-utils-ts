@@ -8,7 +8,7 @@
 
 > **argTypeIsTransaction**(`type`): `type is ABITransactionType`
 
-Defined in: [packages/abi/src/abi-method.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L274)
+Defined in: [packages/abi/src/abi-method.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L245)
 
 ## Parameters
 

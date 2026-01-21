@@ -114,7 +114,7 @@ const appClient2 = await factory.getAppClientByCreatorAndName({
 </tbody>
 </table>
 
-To understand the difference between resolving by ID vs by creator and name see the underlying [app client documentation](./app-client.md#appclient).
+To understand the difference between resolving by ID vs by creator and name see the underlying [app client documentation](./app-client.md).
 
 ### App is not deployed
 

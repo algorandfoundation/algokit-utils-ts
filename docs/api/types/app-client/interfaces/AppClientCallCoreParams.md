@@ -6,7 +6,7 @@
 
 # Interface: AppClientCallCoreParams
 
-Defined in: [src/types/app-client.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L192)
+Defined in: [src/types/app-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L193)
 
 Common (core) parameters to construct a ApplicationClient contract call
 
@@ -16,7 +16,7 @@ Common (core) parameters to construct a ApplicationClient contract call
 
 > `optional` **note**: [`TransactionNote`](../../transaction/type-aliases/TransactionNote.md)
 
-Defined in: [src/types/app-client.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L196)
+Defined in: [src/types/app-client.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L197)
 
 The transaction note for the smart contract call
 
@@ -26,7 +26,7 @@ The transaction note for the smart contract call
 
 > `optional` **sender**: [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/app-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L194)
+Defined in: [src/types/app-client.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L195)
 
 The optional sender to send the transaction from, will use the application client's default sender by default if specified
 
@@ -36,6 +36,6 @@ The optional sender to send the transaction from, will use the application clien
 
 > `optional` **sendParams**: [`SendTransactionParams`](../../transaction/interfaces/SendTransactionParams.md)
 
-Defined in: [src/types/app-client.ts:198](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L198)
+Defined in: [src/types/app-client.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L199)
 
 Parameters to control transaction sending

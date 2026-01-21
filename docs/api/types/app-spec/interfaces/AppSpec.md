@@ -24,7 +24,7 @@ The config of all BARE calls (i.e. non ABI calls with no args)
 
 ### contract
 
-> **contract**: `ABIContractParams`
+> **contract**: [`ABIContractParams`](ABIContractParams.md)
 
 Defined in: [src/types/app-spec.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L180)
 

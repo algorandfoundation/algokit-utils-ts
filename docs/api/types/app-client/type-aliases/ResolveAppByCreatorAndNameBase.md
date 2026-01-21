@@ -8,7 +8,7 @@
 
 > **ResolveAppByCreatorAndNameBase** = `object`
 
-Defined in: [src/types/app-client.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L75)
+Defined in: [src/types/app-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L76)
 
 Configuration to resolve app by creator and name `getCreatorAppsByName`
 
@@ -18,7 +18,7 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 > **creatorAddress**: [`ReadableAddress`](../../../algokit-utils/type-aliases/ReadableAddress.md)
 
-Defined in: [src/types/app-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L77)
+Defined in: [src/types/app-client.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L78)
 
 The address of the app creator account to resolve the app by
 
@@ -28,7 +28,7 @@ The address of the app creator account to resolve the app by
 
 > **findExistingUsing**: [`IndexerClient`](../../../Subpaths/indexer-client/classes/IndexerClient.md) \| [`AppLookup`](../../app/interfaces/AppLookup.md)
 
-Defined in: [src/types/app-client.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L84)
+Defined in: [src/types/app-client.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L85)
 
 The mechanism to find an existing app instance metadata for the given creator and name; either:
  * An indexer instance to search the creator account apps; or
@@ -40,6 +40,6 @@ The mechanism to find an existing app instance metadata for the given creator an
 
 > `optional` **name**: `string`
 
-Defined in: [src/types/app-client.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L79)
+Defined in: [src/types/app-client.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L80)
 
 The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract)

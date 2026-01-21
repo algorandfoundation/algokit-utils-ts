@@ -8,6 +8,6 @@
 
 > **AppFactoryDeployParams** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`AppDeployParams`](../../app-deployer/type-aliases/AppDeployParams.md), `"createParams"` \| `"updateParams"` \| `"deleteParams"` \| `"metadata"`\> & `object`\>
 
-Defined in: [src/types/app-factory.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L120)
+Defined in: [src/types/app-factory.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L121)
 
 Parameters to define a deployment for an `AppFactory`

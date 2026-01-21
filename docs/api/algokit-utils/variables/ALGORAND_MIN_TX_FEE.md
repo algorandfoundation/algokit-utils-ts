@@ -8,4 +8,4 @@
 
 > `const` **ALGORAND\_MIN\_TX\_FEE**: [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-Defined in: [src/amount.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L108)
+Defined in: [src/amount.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L112)
