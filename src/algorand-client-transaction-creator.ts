@@ -1,6 +1,6 @@
 import { Expand } from '@algorandfoundation/algokit-common'
 import { Transaction } from '@algorandfoundation/algokit-transact'
-import { BuiltTransactions, TransactionComposer, TransactionComposerConfig } from './composer'
+import { BuiltTransactions, TransactionComposer, TransactionComposerConfig } from './types/composer'
 
 /** Orchestrates creating transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionCreator {
