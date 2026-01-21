@@ -15,7 +15,7 @@ import {
   type SendAppUpdateTransactionResult,
   type TealTemplateParams,
 } from './types/app'
-import { AppManager } from './types/app-manager'
+import { AppManager } from './app-manager'
 import {
   AppCreateMethodCall,
   AppCreateParams,

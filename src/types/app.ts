@@ -3,7 +3,7 @@ import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, Expand, ProgramSourceMap } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import { TransactionWithSigner } from '../transaction'
-import { BoxIdentifier, BoxReference } from './app-manager'
+import { BoxIdentifier, BoxReference } from '../app-manager'
 import {
   SendSingleTransactionResult,
   SendTransactionFrom,

@@ -20,7 +20,7 @@ import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './types/app'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
-import { AppManager } from './types/app-manager'
+import { AppManager } from './app-manager'
 import { AppSpec } from './types/app-spec'
 
 describe('ARC32: app-factory-and-app-client', () => {

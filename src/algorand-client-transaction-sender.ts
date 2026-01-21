@@ -5,7 +5,7 @@ import { Buffer } from 'buffer'
 import { Config } from './config'
 import { asJson, defaultJsonValueReplacer } from './util'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './types/app'
-import { AppManager } from './types/app-manager'
+import { AppManager } from './app-manager'
 import { AssetManager } from './types/asset-manager'
 import {
   AppCallMethodCall,

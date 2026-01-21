@@ -11,7 +11,7 @@ import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AlgoAmount } from './algo-amount'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
-import { AppManager } from './types/app-manager'
+import { AppManager } from './app-manager'
 import { AppSpec } from './types/app-spec'
 
 describe('app-client', () => {

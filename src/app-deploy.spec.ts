@@ -6,7 +6,7 @@ import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
 import { AppDeployParams } from './app-deployer'
-import { AppManager } from './types/app-manager'
+import { AppManager } from './app-manager'
 import { LogicError } from './types/logic-error'
 
 describe('deploy-app', () => {
