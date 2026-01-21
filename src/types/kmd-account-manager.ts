@@ -5,7 +5,7 @@ import { AddressWithTransactionSigner, generateAddressWithSigners } from '@algor
 import nacl from 'tweetnacl'
 import { Config } from '../config'
 import { AlgoAmount } from '../algo-amount'
-import { ClientManager } from './client-manager'
+import { ClientManager } from '../client-manager'
 import { TransactionComposer } from './composer'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance

@@ -2,12 +2,12 @@ import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-
 import { Expand } from '@algorandfoundation/algokit-common'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
-import { Config } from '../config'
-import { type AlgorandClient } from '../algorand-client'
-import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from '../app-client'
-import { AppFactory, AppFactoryParams } from '../app-factory'
-import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
-import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
+import { Config } from './config'
+import { type AlgorandClient } from './algorand-client'
+import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
+import { AppFactory, AppFactoryParams } from './app-factory'
+import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './types/dispenser-client'
+import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './types/network-client'
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {

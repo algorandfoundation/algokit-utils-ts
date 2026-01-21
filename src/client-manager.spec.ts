@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vitest } from 'vitest'
 import { Config } from '..'
-import { envResetFixture } from '../../tests/fixtures/env-fixture'
+import { envResetFixture } from '../tests/fixtures/env-fixture'
 import { ClientManager } from './client-manager'
 
 describe('ClientManager', () => {
