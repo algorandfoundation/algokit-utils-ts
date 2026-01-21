@@ -4,7 +4,7 @@ import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { AddressWithTransactionSigner, generateAddressWithSigners } from '@algorandfoundation/algokit-transact'
 import nacl from 'tweetnacl'
 import { Config } from '../config'
-import { AlgoAmount } from './amount'
+import { AlgoAmount } from '../algo-amount'
 import { ClientManager } from './client-manager'
 import { TransactionComposer } from './composer'
 

@@ -1,4 +1,4 @@
-import { AlgoAmount } from './types/amount'
+import { AlgoAmount } from './algo-amount'
 
 declare global {
   interface Number {

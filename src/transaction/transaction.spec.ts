@@ -12,7 +12,7 @@ import testingApp from '../../tests/example-contracts/testing-app/application.js
 import { algo, microAlgo } from '../amount'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
-import { AlgoAmount } from '../types/amount'
+import { AlgoAmount } from '../algo-amount'
 import { OnUpdate } from '../types/app'
 import { AppClient } from '../app-client'
 import { AppSpec } from '../types/app-spec'

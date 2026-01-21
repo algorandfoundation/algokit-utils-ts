@@ -34,7 +34,7 @@ import { Buffer } from 'buffer'
 import { Config } from './config'
 import { asJson, binaryStartsWith } from './util'
 import { type AlgorandClient } from './algorand-client'
-import { AlgoAmount } from './types/amount'
+import { AlgoAmount } from './algo-amount'
 import {
   ABIAppCallArgs,
   AppCompilationResult,

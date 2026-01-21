@@ -3,7 +3,7 @@ import { Address } from '@algorandfoundation/algokit-common'
 import { Transaction, TransactionSigner, TransactionType } from '@algorandfoundation/algokit-transact'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { algorandFixture } from '../testing'
-import { AlgoAmount } from './amount'
+import { AlgoAmount } from '../algo-amount'
 
 describe('TransactionComposer', () => {
   const fixture = algorandFixture()

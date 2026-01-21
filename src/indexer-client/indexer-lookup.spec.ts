@@ -2,7 +2,7 @@ import { Address } from '@algorandfoundation/algokit-common'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algorandFixture, runWhenIndexerCaughtUp } from '../testing'
-import { AlgoAmount } from '../types/amount'
+import { AlgoAmount } from '../algo-amount'
 import * as indexer from './indexer-lookup'
 
 describe('indexer-lookup', () => {

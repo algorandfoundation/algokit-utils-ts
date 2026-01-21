@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { algos, microAlgos, transactionFees } from '../amount'
-import { AlgoAmount } from './amount'
+import { algos, microAlgos, transactionFees } from './amount'
+import { AlgoAmount } from './algo-amount'
 
 describe('amount', () => {
   test('toString on 1', () => {

@@ -78,7 +78,7 @@ import {
 } from '../transactions/method-call'
 import { buildPayment, type PaymentParams } from '../transactions/payment'
 import { asJson } from '../util'
-import { AlgoAmount } from './amount'
+import { AlgoAmount } from '../algo-amount'
 import { AppManager } from './app-manager'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'

@@ -11,7 +11,7 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
-import { AlgoAmount } from '../types/amount'
+import { AlgoAmount } from '../algo-amount'
 import { AlgorandClient } from '../algorand-client'
 import { AlgoConfig } from './network-client'
 
