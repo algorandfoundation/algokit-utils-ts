@@ -2,7 +2,7 @@ import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address, MAX_TRANSACTION_GROUP_SIZE } from '@algorandfoundation/algokit-common'
 import { Config } from '../config'
 import { chunkArray } from '../util'
-import { AccountAssetInformation } from './account'
+import { AccountAssetInformation } from '../account'
 import { CommonTransactionParams, TransactionComposer, TransactionComposerConfig } from './composer'
 import { SendParams } from './transaction'
 

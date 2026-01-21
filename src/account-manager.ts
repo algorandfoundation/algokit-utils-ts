@@ -13,7 +13,7 @@ import {
 import nacl from 'tweetnacl'
 import { Config } from './config'
 import { calculateFundAmount, memoize } from './util'
-import { AccountInformation, DISPENSER_ACCOUNT } from './types/account'
+import { AccountInformation, DISPENSER_ACCOUNT } from './account'
 import { AlgoAmount } from './types/amount'
 import { ClientManager } from './types/client-manager'
 import { CommonTransactionParams, TransactionComposer } from './types/composer'
