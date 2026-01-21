@@ -19,7 +19,7 @@ import {
   DeployAppUpdateMethodCall,
   DeployAppUpdateParams,
 } from './app-deployer'
-import { AppSpec } from './types/app-spec'
+import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './types/composer'
 import { SendParams } from './types/transaction'
 

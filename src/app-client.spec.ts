@@ -12,7 +12,7 @@ import { AlgoAmount } from './algo-amount'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
-import { AppSpec } from './types/app-spec'
+import { AppSpec } from './app-spec'
 
 describe('app-client', () => {
   const localnet = algorandFixture()

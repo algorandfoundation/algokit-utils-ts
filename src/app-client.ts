@@ -51,7 +51,7 @@ import {
 } from './types/app'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
-import { AppSpec, arc32ToArc56 } from './types/app-spec'
+import { AppSpec, arc32ToArc56 } from './app-spec'
 import {
   AppCallMethodCall,
   AppCallParams,
