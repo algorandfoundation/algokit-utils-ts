@@ -237,13 +237,19 @@ class SchemaProcessor:
             "AlgodApi": {
                 "SimulateResponse": CustomModelExtensions(
                     imports=[
-                        "import { encodeJson } from '../core/model-runtime';",
+                        "import { encodeJson, decodeJson } from '../core/model-runtime';",
                     ],
                     methods=[
                         CustomModelMethod(
                             name="encodeSimulateResponseToJson",
                             code='''export function encodeSimulateResponseToJson(simulateResponse: SimulateResponse): string {
   return encodeJson(simulateResponse, SimulateResponseMeta, 2);
+}''',
+                        ),
+                        CustomModelMethod(
+                            name="decodeSimulateResponseFromJson",
+                            code='''export function decodeSimulateResponseFromJson(json: Record<string, unknown>): SimulateResponse {
+  return decodeJson(json, SimulateResponseMeta);
 }''',
                         ),
                     ],

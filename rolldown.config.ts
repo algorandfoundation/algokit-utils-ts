@@ -11,6 +11,7 @@ export default createConfig(
     // Package re-exports
     'src/abi/index.ts',
     'src/algo25/index.ts',
+    'src/common/index.ts',
     'src/transact/index.ts',
     'src/algod-client/index.ts',
     'src/indexer-client/index.ts',

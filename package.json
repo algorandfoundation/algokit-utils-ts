@@ -65,6 +65,11 @@
       "import": "./algo25/index.mjs",
       "require": "./algo25/index.js"
     },
+    "./common": {
+      "types": "./common/index.d.ts",
+      "import": "./common/index.mjs",
+      "require": "./common/index.js"
+    },
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
