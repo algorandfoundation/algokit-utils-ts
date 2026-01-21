@@ -6,7 +6,7 @@ import { AlgorandClientTransactionCreator } from './algorand-client-transaction-
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
-import { AssetManager } from './types/asset-manager'
+import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './types/client-manager'
 import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './types/composer'
 import { AlgoConfig } from './types/network-client'
