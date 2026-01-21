@@ -4,7 +4,7 @@ import { Transaction } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import { Config } from './config'
 import { asJson, defaultJsonValueReplacer } from './util'
-import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './types/app'
+import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './types/asset-manager'
 import {

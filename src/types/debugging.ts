@@ -4,7 +4,7 @@
 
 import { SimulateResponse, SourceMap } from '@algorandfoundation/algokit-algod-client'
 import { Expand } from '@algorandfoundation/algokit-common'
-import { CompiledTeal } from './app'
+import { CompiledTeal } from '../app'
 
 /** The directory name for AlgoKit project related files */
 export const ALGOKIT_DIR = '.algokit'

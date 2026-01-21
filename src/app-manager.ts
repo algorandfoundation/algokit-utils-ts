@@ -10,7 +10,7 @@ import {
   type AppState,
   type CompiledTeal,
   type TealTemplateParams,
-} from './types/app'
+} from './app'
 
 /** Information about an app. */
 export interface AppInformation {

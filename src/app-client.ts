@@ -48,7 +48,7 @@ import {
   RawAppCallArgs,
   SendAppTransactionResult,
   TealTemplateParams,
-} from './types/app'
+} from './app'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'

@@ -2,8 +2,8 @@ import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/alg
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, Expand, ProgramSourceMap } from '@algorandfoundation/algokit-common'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionWithSigner } from '../transaction'
-import { BoxIdentifier, BoxReference } from '../app-manager'
+import { TransactionWithSigner } from './transaction'
+import { BoxIdentifier, BoxReference } from './app-manager'
 import {
   SendSingleTransactionResult,
   SendTransactionFrom,
@@ -12,7 +12,7 @@ import {
   SendTransactionResults,
   TransactionNote,
   TransactionToSign,
-} from './transaction'
+} from './types/transaction'
 type SourceMap = ProgramSourceMap
 
 /** The name of the TEAL template variable for deploy-time immutability control */
