@@ -33,7 +33,7 @@ import { AddressWithTransactionSigner, OnApplicationComplete, Transaction, Trans
 import { Buffer } from 'buffer'
 import { Config } from './config'
 import { asJson, binaryStartsWith } from './util'
-import { type AlgorandClient } from './types/algorand-client'
+import { type AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './types/amount'
 import {
   ABIAppCallArgs,

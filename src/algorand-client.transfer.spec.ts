@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
-import { TestNetDispenserApiClient } from './dispenser-client'
+import { TestNetDispenserApiClient } from './types/dispenser-client'
 
 describe('Transfer capability', () => {
   const localnet = algorandFixture()

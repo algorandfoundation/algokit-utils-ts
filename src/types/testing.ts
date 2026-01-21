@@ -12,7 +12,7 @@ import {
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
-import { AlgorandClient } from './algorand-client'
+import { AlgorandClient } from '../algorand-client'
 import { AlgoConfig } from './network-client'
 
 /**
