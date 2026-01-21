@@ -25,6 +25,11 @@
       "import": "./index.mjs",
       "require": "./index.js"
     },
+    "./*": {
+      "types": "./*.d.ts",
+      "import": "./*.mjs",
+      "require": "./*.js"
+    },
     "./types/*": {
       "types": "./types/*.d.ts",
       "import": "./types/*.mjs",
