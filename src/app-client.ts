@@ -64,7 +64,7 @@ import {
   CommonAppCallParams,
   PaymentParams,
 } from './composer'
-import { EventType } from './types/lifecycle-events'
+import { EventType } from './lifecycle-events'
 import { LogicError } from './types/logic-error'
 import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './types/transaction'
 

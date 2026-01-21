@@ -1,4 +1,4 @@
-import { EventDataMap, EventType } from './types/lifecycle-events'
+import { EventDataMap, EventType } from './lifecycle-events'
 
 export type AsyncEventListener<T = unknown> = (event: T, eventName: string | symbol) => Promise<void> | void
 

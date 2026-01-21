@@ -80,7 +80,7 @@ import { buildPayment, type PaymentParams } from './transactions/payment'
 import { asJson } from './util'
 import { AlgoAmount } from './algo-amount'
 import { AppManager } from './app-manager'
-import { EventType } from './types/lifecycle-events'
+import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './types/network-client'
 import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './types/transaction'
 
