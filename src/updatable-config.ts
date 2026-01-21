@@ -1,5 +1,5 @@
 import { AsyncEventEmitter } from './async-event-emitter'
-import { Logger, consoleLogger, nullLogger } from './types/logging'
+import { Logger, consoleLogger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
 export interface Config {

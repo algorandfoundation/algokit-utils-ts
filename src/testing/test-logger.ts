@@ -1,4 +1,4 @@
-import { Logger } from '../types/logging'
+import { Logger } from '../logging'
 import { LogSnapshotConfig } from '../types/testing'
 import { asJson } from '../util'
 
