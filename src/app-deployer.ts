@@ -2,10 +2,10 @@ import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { Address, Expand, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
-import { Config } from '../config'
-import { lookupAccountCreatedApplicationByAddress, searchTransactions } from '../indexer-client'
-import { calculateExtraProgramPages } from '../util'
-import { AlgorandClientTransactionSender } from '../algorand-client-transaction-sender'
+import { Config } from './config'
+import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-client'
+import { calculateExtraProgramPages } from './util'
+import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
   APP_DEPLOY_NOTE_DAPP,
   OnSchemaBreak,
@@ -14,8 +14,8 @@ import {
   type SendAppCreateTransactionResult,
   type SendAppUpdateTransactionResult,
   type TealTemplateParams,
-} from './app'
-import { AppManager } from './app-manager'
+} from './types/app'
+import { AppManager } from './types/app-manager'
 import {
   AppCreateMethodCall,
   AppCreateParams,
@@ -24,8 +24,8 @@ import {
   AppUpdateMethodCall,
   AppUpdateParams,
   TransactionComposer,
-} from './composer'
-import { ConfirmedTransactionResult, SendParams } from './transaction'
+} from './types/composer'
+import { ConfirmedTransactionResult, SendParams } from './types/transaction'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>

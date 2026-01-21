@@ -4,7 +4,7 @@ import { AddressWithTransactionSigner, LogicSigAccount, TransactionSigner, Multi
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
-import { AppDeployer } from './types/app-deployer'
+import { AppDeployer } from './app-deployer'
 import { AppManager } from './types/app-manager'
 import { AssetManager } from './types/asset-manager'
 import { AlgoSdkClients, ClientManager } from './types/client-manager'

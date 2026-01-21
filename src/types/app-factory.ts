@@ -18,7 +18,7 @@ import {
   DeployAppDeleteParams,
   DeployAppUpdateMethodCall,
   DeployAppUpdateParams,
-} from './app-deployer'
+} from '../app-deployer'
 import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './composer'
 import { SendParams } from './transaction'

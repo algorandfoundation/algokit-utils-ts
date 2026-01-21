@@ -5,7 +5,7 @@ import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/e
 import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
-import { AppDeployParams } from './types/app-deployer'
+import { AppDeployParams } from './app-deployer'
 import { AppManager } from './types/app-manager'
 import { LogicError } from './types/logic-error'
 
