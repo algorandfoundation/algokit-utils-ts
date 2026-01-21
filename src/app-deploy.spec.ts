@@ -7,7 +7,7 @@ import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './app'
 import { AppDeployParams } from './app-deployer'
 import { AppManager } from './app-manager'
-import { LogicError } from './types/logic-error'
+import { LogicError } from './logic-error'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
