@@ -17,7 +17,7 @@ import { AccountInformation, DISPENSER_ACCOUNT } from './account'
 import { AlgoAmount } from './algo-amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
-import { TestNetDispenserApiClient } from './types/dispenser-client'
+import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './types/kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './types/transaction'
 

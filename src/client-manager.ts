@@ -6,7 +6,7 @@ import { Config } from './config'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
 import { AppFactory, AppFactoryParams } from './app-factory'
-import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './types/dispenser-client'
+import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
 import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './types/network-client'
 
 /** Clients from algosdk that interact with the official Algorand APIs */

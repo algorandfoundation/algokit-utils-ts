@@ -1,5 +1,5 @@
 import { Address } from '@algorandfoundation/algokit-common'
-import { asJson } from '../util'
+import { asJson } from './util'
 
 const DISPENSER_BASE_URL = 'https://api.dispenser.algorandfoundation.tools'
 const DEFAULT_DISPENSER_REQUEST_TIMEOUT = 15
