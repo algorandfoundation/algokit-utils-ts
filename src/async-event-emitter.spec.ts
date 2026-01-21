@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { Config } from '../config'
-import { algoKitLogCaptureFixture } from '../testing/fixtures/algokit-log-capture-fixture'
+import { Config } from './config'
+import { algoKitLogCaptureFixture } from './testing/fixtures/algokit-log-capture-fixture'
 
 describe('async-event-emitter', () => {
   const logging = algoKitLogCaptureFixture()
