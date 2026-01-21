@@ -5,7 +5,7 @@ import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { Config } from '../config'
 import { type AlgorandClient } from '../algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from '../app-client'
-import { AppFactory, AppFactoryParams } from './app-factory'
+import { AppFactory, AppFactoryParams } from '../app-factory'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
 import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
 

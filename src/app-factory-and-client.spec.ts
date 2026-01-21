@@ -17,11 +17,11 @@ import stateAppArc56Json from '../../tests/example-contracts/state/application.j
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
-import { OnSchemaBreak, OnUpdate } from './app'
-import { AppClient } from '../app-client'
+import { OnSchemaBreak, OnUpdate } from './types/app'
+import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
-import { AppManager } from './app-manager'
-import { AppSpec } from './app-spec'
+import { AppManager } from './types/app-manager'
+import { AppSpec } from './types/app-spec'
 
 describe('ARC32: app-factory-and-app-client', () => {
   const localnet = algorandFixture()
