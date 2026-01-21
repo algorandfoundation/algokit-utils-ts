@@ -20,7 +20,7 @@ import {
   DeployAppUpdateParams,
 } from './app-deployer'
 import { AppSpec } from './app-spec'
-import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './types/composer'
+import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './composer'
 import { SendParams } from './types/transaction'
 
 /** Parameters to create an app client */

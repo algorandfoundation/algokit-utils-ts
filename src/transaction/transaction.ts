@@ -1,6 +1,6 @@
 import { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { TransactionComposer } from '../types/composer'
+import { TransactionComposer } from '../composer'
 import {
   AdditionalTransactionComposerContext,
   SendParams,

@@ -3,7 +3,7 @@ import { Address, MAX_TRANSACTION_GROUP_SIZE } from '@algorandfoundation/algokit
 import { Config } from './config'
 import { chunkArray } from './util'
 import { AccountAssetInformation } from './account'
-import { CommonTransactionParams, TransactionComposer, TransactionComposerConfig } from './types/composer'
+import { CommonTransactionParams, TransactionComposer, TransactionComposerConfig } from './composer'
 import { SendParams } from './types/transaction'
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */

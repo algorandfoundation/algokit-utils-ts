@@ -5,7 +5,7 @@ import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/e
 import { algorandFixture } from '../testing'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
-import { AppCallMethodCall } from './types/composer'
+import { AppCallMethodCall } from './composer'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   // Decode the base64-encoded TEAL source code

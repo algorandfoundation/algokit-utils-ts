@@ -16,7 +16,7 @@ import { AlgoAmount } from '../algo-amount'
 import { OnUpdate } from '../app'
 import { AppClient } from '../app-client'
 import { AppSpec } from '../app-spec'
-import { PaymentParams, TransactionComposer } from '../types/composer'
+import { PaymentParams, TransactionComposer } from '../composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { waitForConfirmation } from './transaction'
 

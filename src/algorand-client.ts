@@ -8,7 +8,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './types/composer'
+import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './composer'
 import { AlgoConfig } from './types/network-client'
 
 /**

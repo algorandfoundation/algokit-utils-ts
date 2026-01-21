@@ -1,4 +1,4 @@
-import { RawSimulateOptions, SimulateOptions, TransactionComposer } from '../types/composer'
+import { RawSimulateOptions, SimulateOptions, TransactionComposer } from '../composer'
 
 /**
  * @deprecated Use `composer.simulate` with

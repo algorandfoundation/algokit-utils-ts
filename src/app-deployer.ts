@@ -24,7 +24,7 @@ import {
   AppUpdateMethodCall,
   AppUpdateParams,
   TransactionComposer,
-} from './types/composer'
+} from './composer'
 import { ConfirmedTransactionResult, SendParams } from './types/transaction'
 
 /** Params to specify an update transaction for an app deployment */

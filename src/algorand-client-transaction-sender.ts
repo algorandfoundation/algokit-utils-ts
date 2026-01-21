@@ -20,7 +20,7 @@ import {
   AssetOptOutParams,
   TransactionComposer,
   TransactionComposerConfig,
-} from './types/composer'
+} from './composer'
 import { SendParams, SendSingleTransactionResult } from './types/transaction'
 
 const getMethodCallForLog = ({ method, args }: { method: ABIMethod; args?: unknown[] }) => {

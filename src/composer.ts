@@ -24,8 +24,8 @@ import {
   validateTransaction,
 } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
-import { Config } from '../config'
-import { TransactionWithSigner, waitForConfirmation } from '../transaction'
+import { Config } from './config'
+import { TransactionWithSigner, waitForConfirmation } from './transaction'
 import {
   buildAppCall,
   buildAppCreate,
@@ -37,7 +37,7 @@ import {
   type AppDeleteParams,
   type AppUpdateParams,
   type CommonAppCallParams,
-} from '../transactions/app-call'
+} from './transactions/app-call'
 import {
   buildAssetOptIn,
   buildAssetOptOut,
@@ -45,7 +45,7 @@ import {
   type AssetOptInParams,
   type AssetOptOutParams,
   type AssetTransferParams,
-} from '../transactions/asset-transfer'
+} from './transactions/asset-transfer'
 
 import { MAX_TRANSACTION_GROUP_SIZE, ReadableAddress } from '@algorandfoundation/algokit-common'
 import {
@@ -57,9 +57,9 @@ import {
   type AssetCreateParams,
   type AssetDestroyParams,
   type AssetFreezeParams,
-} from '../transactions/asset-config'
-import { FeeDelta, FeePriority, calculateInnerFeeDelta } from '../transactions/fee-coverage'
-import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from '../transactions/key-registration'
+} from './transactions/asset-config'
+import { FeeDelta, FeePriority, calculateInnerFeeDelta } from './transactions/fee-coverage'
+import { buildKeyReg, type OfflineKeyRegistrationParams, type OnlineKeyRegistrationParams } from './transactions/key-registration'
 import {
   AsyncTransactionParams,
   ProcessedAppCallMethodCall,
@@ -75,14 +75,14 @@ import {
   type AppCreateMethodCall,
   type AppDeleteMethodCall,
   type AppUpdateMethodCall,
-} from '../transactions/method-call'
-import { buildPayment, type PaymentParams } from '../transactions/payment'
-import { asJson } from '../util'
-import { AlgoAmount } from '../algo-amount'
-import { AppManager } from '../app-manager'
-import { EventType } from './lifecycle-events'
-import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction'
+} from './transactions/method-call'
+import { buildPayment, type PaymentParams } from './transactions/payment'
+import { asJson } from './util'
+import { AlgoAmount } from './algo-amount'
+import { AppManager } from './app-manager'
+import { EventType } from './types/lifecycle-events'
+import { genesisIdIsLocalNet } from './types/network-client'
+import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './types/transaction'
 
 // Re-export transaction parameter types
 export type {
@@ -92,11 +92,11 @@ export type {
   AppMethodCallParams,
   AppUpdateParams,
   CommonAppCallParams,
-} from '../transactions/app-call'
-export type { AssetConfigParams, AssetCreateParams, AssetDestroyParams, AssetFreezeParams } from '../transactions/asset-config'
-export type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from '../transactions/asset-transfer'
-export type { CommonTransactionParams } from '../transactions/common'
-export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from '../transactions/key-registration'
+} from './transactions/app-call'
+export type { AssetConfigParams, AssetCreateParams, AssetDestroyParams, AssetFreezeParams } from './transactions/asset-config'
+export type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './transactions/asset-transfer'
+export type { CommonTransactionParams } from './transactions/common'
+export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from './transactions/key-registration'
 export type {
   AppCallMethodCall,
   AppCreateMethodCall,
@@ -107,8 +107,8 @@ export type {
   ProcessedAppCallMethodCall,
   ProcessedAppCreateMethodCall,
   ProcessedAppUpdateMethodCall,
-} from '../transactions/method-call'
-export type { PaymentParams } from '../transactions/payment'
+} from './transactions/method-call'
+export type { PaymentParams } from './transactions/payment'
 
 /** Options to control a simulate request, that does not require transaction signing */
 export type SkipSignaturesSimulateOptions = Expand<
