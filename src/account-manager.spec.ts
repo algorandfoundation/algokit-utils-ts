@@ -3,8 +3,8 @@ import { generateAddressWithSigners, LogicSigAccount, MultisigAccount } from '@a
 import nacl from 'tweetnacl'
 import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
-import { algo } from '../amount'
-import { algorandFixture } from '../testing'
+import { algo } from './amount'
+import { algorandFixture } from './testing'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()

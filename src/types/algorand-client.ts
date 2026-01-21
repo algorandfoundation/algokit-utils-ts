@@ -1,7 +1,7 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, LogicSigAccount, TransactionSigner, MultisigAccount } from '@algorandfoundation/algokit-transact'
-import { AccountManager } from './account-manager'
+import { AccountManager } from '../account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
