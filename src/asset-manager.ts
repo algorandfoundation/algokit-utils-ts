@@ -4,7 +4,7 @@ import { Config } from './config'
 import { chunkArray } from './util'
 import { AccountAssetInformation } from './account'
 import { CommonTransactionParams, TransactionComposer, TransactionComposerConfig } from './composer'
-import { SendParams } from './types/transaction'
+import { SendParams } from './transaction-types'
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
 export interface BulkAssetOptInOutResult {

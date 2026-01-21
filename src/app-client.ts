@@ -66,7 +66,7 @@ import {
 } from './composer'
 import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
-import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './types/transaction'
+import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction-types'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16

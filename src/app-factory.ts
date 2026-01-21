@@ -21,7 +21,7 @@ import {
 } from './app-deployer'
 import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './composer'
-import { SendParams } from './types/transaction'
+import { SendParams } from './transaction-types'
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {

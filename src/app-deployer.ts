@@ -25,7 +25,7 @@ import {
   AppUpdateParams,
   TransactionComposer,
 } from './composer'
-import { ConfirmedTransactionResult, SendParams } from './types/transaction'
+import { ConfirmedTransactionResult, SendParams } from './transaction-types'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>

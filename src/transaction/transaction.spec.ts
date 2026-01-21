@@ -17,7 +17,7 @@ import { OnUpdate } from '../app'
 import { AppClient } from '../app-client'
 import { AppSpec } from '../app-spec'
 import { PaymentParams, TransactionComposer } from '../composer'
-import { Arc2TransactionNote } from '../types/transaction'
+import { Arc2TransactionNote } from '../transaction-types'
 import { waitForConfirmation } from './transaction'
 
 describe('transaction', () => {

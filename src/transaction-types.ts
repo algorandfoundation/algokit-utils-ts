@@ -2,8 +2,8 @@ import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { Expand } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, SendingAddress, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { AlgoAmount } from '../algo-amount'
-import { TransactionComposer } from '../composer'
+import { AlgoAmount } from './algo-amount'
+import { TransactionComposer } from './composer'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

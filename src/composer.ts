@@ -82,7 +82,7 @@ import { AlgoAmount } from './algo-amount'
 import { AppManager } from './app-manager'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './types/transaction'
+import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction-types'
 
 // Re-export transaction parameter types
 export type {

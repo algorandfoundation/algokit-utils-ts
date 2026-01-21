@@ -12,7 +12,7 @@ import {
   SendTransactionResults,
   TransactionNote,
   TransactionToSign,
-} from './types/transaction'
+} from './transaction-types'
 type SourceMap = ProgramSourceMap
 
 /** The name of the TEAL template variable for deploy-time immutability control */

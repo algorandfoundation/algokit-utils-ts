@@ -19,7 +19,7 @@ import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
-import { SendParams, SendSingleTransactionResult } from './types/transaction'
+import { SendParams, SendSingleTransactionResult } from './transaction-types'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {

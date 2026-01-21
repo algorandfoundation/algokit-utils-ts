@@ -6,7 +6,7 @@ import {
   SendParams,
   SendTransactionComposerResults,
   TransactionComposerToSend,
-} from '../types/transaction'
+} from '../transaction-types'
 import { toNumber } from '../util'
 
 /** Represents an unsigned transactions and a signer that can authorize that transaction. */

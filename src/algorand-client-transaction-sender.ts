@@ -21,7 +21,7 @@ import {
   TransactionComposer,
   TransactionComposerConfig,
 } from './composer'
-import { SendParams, SendSingleTransactionResult } from './types/transaction'
+import { SendParams, SendSingleTransactionResult } from './transaction-types'
 
 const getMethodCallForLog = ({ method, args }: { method: ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
