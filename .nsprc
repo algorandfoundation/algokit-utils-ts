@@ -1,7 +1,7 @@
 {
   "1112496": {
     "active": true,
-    "notes": "Undici is updated to fix but there are peer deps that are behind 2 major versions",
+    "notes": "undici is used in @semantic-release/npm and this hasn't been fixed",
     "expiry": "2026-02-15"
   }
 }
