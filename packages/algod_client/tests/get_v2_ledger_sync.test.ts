@@ -9,10 +9,6 @@ describe('GET v2_ledger_sync', () => {
   describe('Common Tests', () => {
     // Polytest Group: Common Tests
 
-    test("Basic request and response validation", () => {
-      throw new Error("TEST NOT IMPLEMENTED");
-    });
-
     // Skipped: The GET /v2/ledger/sync endpoint requires algod to run in follower mode.
     // Standard localnet does not have follower mode enabled by default.
     test.skip('Basic request and response validation', async () => {
