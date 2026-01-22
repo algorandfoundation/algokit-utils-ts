@@ -1,5 +1,5 @@
 // Re-exports with deprecation notices for backwards compatibility
-// New imports should use '@algorandfoundation/algokit-utils/transaction-types'
+// New imports should use '@algorandfoundation/algokit-utils/transaction'
 
 import {
   type AdditionalTransactionComposerContext as _AdditionalTransactionComposerContext,
@@ -20,50 +20,50 @@ import {
   type TransactionToSign as _TransactionToSign,
 } from '../transaction/types'
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type TransactionNote = _TransactionNote
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type TransactionNoteData = _TransactionNoteData
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type Arc2TransactionNote = _Arc2TransactionNote
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendTransactionParams = _SendTransactionParams
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendSingleTransactionResult = _SendSingleTransactionResult
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendTransactionResult = _SendTransactionResult
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendTransactionResults = _SendTransactionResults
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendTransactionComposerResults = _SendTransactionComposerResults
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type ConfirmedTransactionResult = _ConfirmedTransactionResult
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type ConfirmedTransactionResults = _ConfirmedTransactionResults
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendTransactionFrom = _SendTransactionFrom
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type TransactionToSign = _TransactionToSign
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type TransactionGroupToSend = _TransactionGroupToSend
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type SendParams = _SendParams
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type AdditionalTransactionComposerContext = _AdditionalTransactionComposerContext
 
-/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
+/** @deprecated Import from `@algorandfoundation/algokit-utils/transaction` instead */
 export type TransactionComposerToSend = _TransactionComposerToSend
