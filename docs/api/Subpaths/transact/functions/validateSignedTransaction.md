@@ -8,7 +8,7 @@
 
 > **validateSignedTransaction**(`signedTransaction`): `void`
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L156)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L158)
 
 Validate a signed transaction structure
 
@@ -18,6 +18,12 @@ Validate a signed transaction structure
 
 [`SignedTransaction`](../type-aliases/SignedTransaction.md)
 
+The signed transaction to validate
+
 ## Returns
 
 `void`
+
+## Throws
+
+If multiple signature types are set or signature length is invalid

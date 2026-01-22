@@ -6,7 +6,7 @@
 
 # ~~Interface: BoxValueRequestParams~~
 
-Defined in: [src/types/app.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L279)
+Defined in: [src/types/app.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L277)
 
 ## Deprecated
 
@@ -19,7 +19,7 @@ Parameters to get and decode a box value as an ABI type.
 
 > **appId**: `number` \| `bigint`
 
-Defined in: [src/types/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L281)
+Defined in: [src/types/app.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L279)
 
 The ID of the app return box names for
 
@@ -29,7 +29,7 @@ The ID of the app return box names for
 
 > **boxName**: `string` \| `Uint8Array` \| [`BoxName`](BoxName.md)
 
-Defined in: [src/types/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L283)
+Defined in: [src/types/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L281)
 
 The name of the box to return either as a string, binary array or `BoxName`
 
@@ -39,6 +39,6 @@ The name of the box to return either as a string, binary array or `BoxName`
 
 > **type**: [`ABIType`](../../../Subpaths/abi/classes/ABIType.md)
 
-Defined in: [src/types/app.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L285)
+Defined in: [src/types/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L283)
 
 The ABI type to decode the value using

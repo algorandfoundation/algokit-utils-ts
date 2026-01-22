@@ -8,4 +8,4 @@
 
 > **AppClientCallRawArgs** = [`RawAppCallArgs`](../../app/interfaces/RawAppCallArgs.md)
 
-Defined in: [src/types/app-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L181)
+Defined in: [src/types/app-client.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L182)

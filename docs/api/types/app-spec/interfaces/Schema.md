@@ -6,7 +6,7 @@
 
 # Interface: Schema
 
-Defined in: [src/types/app-spec.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L362)
+Defined in: [src/types/app-spec.ts:368](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L368)
 
 The storage schema definition
 
@@ -16,7 +16,7 @@ The storage schema definition
 
 > **declared**: `Record`\<`string`, [`DeclaredSchemaValueSpec`](DeclaredSchemaValueSpec.md)\>
 
-Defined in: [src/types/app-spec.ts:364](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L364)
+Defined in: [src/types/app-spec.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L370)
 
 Declared storage schema
 
@@ -26,6 +26,6 @@ Declared storage schema
 
 > **reserved**: `Record`\<`string`, [`ReservedSchemaValueSpec`](ReservedSchemaValueSpec.md)\>
 
-Defined in: [src/types/app-spec.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L366)
+Defined in: [src/types/app-spec.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L372)
 
 Reserved storage schema

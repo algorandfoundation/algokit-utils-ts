@@ -8,7 +8,7 @@
 
 > **ABIReturn** = \{ `decodeError`: `undefined`; `method`: [`ABIMethod`](../classes/ABIMethod.md); `rawReturnValue`: `Uint8Array`; `returnValue`: [`ABIValue`](ABIValue.md); \} \| \{ `decodeError?`: `Error`; `method`: [`ABIMethod`](../classes/ABIMethod.md); `rawReturnValue?`: `undefined`; `returnValue?`: `undefined`; \}
 
-Defined in: [packages/abi/src/abi-method.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L54)
+Defined in: [packages/abi/src/abi-method.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L46)
 
 Represents an ABI method return value with parsed data.
 

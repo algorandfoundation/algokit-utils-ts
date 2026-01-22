@@ -8,7 +8,7 @@
 
 > **decodeAVMValue**(`avmType`, `bytes`): [`ABIValue`](../type-aliases/ABIValue.md)
 
-Defined in: [packages/abi/src/abi-method.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L295)
+Defined in: [packages/abi/src/abi-method.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L275)
 
 ## Parameters
 

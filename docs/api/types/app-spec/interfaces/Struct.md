@@ -6,7 +6,7 @@
 
 # Interface: Struct
 
-Defined in: [src/types/app-spec.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L279)
+Defined in: [src/types/app-spec.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L285)
 
 A user-defined struct/tuple type
 
@@ -16,7 +16,7 @@ A user-defined struct/tuple type
 
 > **elements**: [`StructElement`](../type-aliases/StructElement.md)[]
 
-Defined in: [src/types/app-spec.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L283)
+Defined in: [src/types/app-spec.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L289)
 
 The elements (in order) that make up the struct/tuple
 
@@ -26,6 +26,6 @@ The elements (in order) that make up the struct/tuple
 
 > **name**: `string`
 
-Defined in: [src/types/app-spec.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L281)
+Defined in: [src/types/app-spec.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L287)
 
 The name of the type

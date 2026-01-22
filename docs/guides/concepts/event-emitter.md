@@ -4,7 +4,7 @@ The Event Emitter is a capability provided by AlgoKit Utils that allows for asyn
 
 ## `AsyncEventEmitter`
 
-The [`AsyncEventEmitter`](.../api/classes/types_async_event_emitter.AsyncEventEmitter.md) is a class that manages asynchronous event emission and subscription.
+The [`AsyncEventEmitter`](../../api/types/async-event-emitter/classes/AsyncEventEmitter.md) is a class that manages asynchronous event emission and subscription.
 
 To use the `AsyncEventEmitter`, you can import it directly:
 

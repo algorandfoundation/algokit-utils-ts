@@ -8,6 +8,6 @@
 
 > **ABIType** = `string`
 
-Defined in: [src/types/app-spec.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L273)
+Defined in: [src/types/app-spec.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L279)
 
 The string name of an ABI type

@@ -101,7 +101,7 @@ Error if the type is dynamic
 
 > `abstract` **decode**(`bytes`): [`ABIValue`](../type-aliases/ABIValue.md)
 
-Defined in: [packages/abi/src/abi-type.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L93)
+Defined in: [packages/abi/src/abi-type.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L95)
 
 Decodes bytes according to this ABI type.
 
@@ -119,13 +119,17 @@ The bytes to decode
 
 The decoded value
 
+#### Throws
+
+If the bytes cannot be decoded as this type
+
 ***
 
 ### encode()
 
 > `abstract` **encode**(`value`): `Uint8Array`
 
-Defined in: [packages/abi/src/abi-type.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L86)
+Defined in: [packages/abi/src/abi-type.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L87)
 
 Encodes a value according to this ABI type.
 
@@ -142,6 +146,10 @@ The value to encode
 `Uint8Array`
 
 The encoded bytes
+
+#### Throws
+
+If the value cannot be encoded as this type
 
 ***
 
@@ -205,7 +213,7 @@ The ARC-4 type string
 
 > `static` **from**(`str`): `ABIType`
 
-Defined in: [packages/abi/src/abi-type.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L100)
+Defined in: [packages/abi/src/abi-type.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L111)
 
 Creates an ABI type from an ARC-4 type string.
 
@@ -222,3 +230,29 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 `ABIType`
 
 The corresponding ABI type
+
+#### Example
+
+```ts
+// Parse ABI type strings into type objects
+const uint64Type = ABIType.from('uint64')
+const tupleType = ABIType.from('(uint64,string,bool)')
+const arrayType = ABIType.from('uint32[]')
+
+// Use the type name property
+const typeName = uint64Type.name // 'uint64'
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
+
+#### Throws
+
+If the type string is malformed or unsupported
+
+#### Remarks
+
+Supported type formats include: `uint<N>` (8-512 bits), `ufixed<N>x<M>`, `bool`, `byte`,
+`address`, `string`, `<type>[<N>]` (static arrays), `<type>[]` (dynamic arrays),
+and `(<type1>,<type2>,...)` (tuples). This parser is recursive for nested types.

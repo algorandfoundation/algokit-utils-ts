@@ -8,7 +8,7 @@
 
 > **masterDerivationKeyToMnemonic**(`mdk`): `string`
 
-Defined in: [packages/algo25/src/index.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algo25/src/index.ts#L162)
+Defined in: [packages/algo25/src/index.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algo25/src/index.ts#L166)
 
 masterDerivationKeyToMnemonic takes a master derivation key and returns the corresponding mnemonic.
 

@@ -24,9 +24,7 @@ Get or create accounts that can sign transactions.
 
 ##### Example
 
-```ts
 const accountManager = AlgorandClient.mainNet().account;
-```
 
 ##### Returns
 
@@ -48,9 +46,7 @@ Methods for interacting with apps.
 
 ##### Example
 
-```ts
 const appManager = AlgorandClient.mainNet().app;
-```
 
 ##### Returns
 
@@ -72,9 +68,7 @@ Methods for deploying apps and managing app deployment metadata.
 
 ##### Example
 
-```ts
 const deployer = AlgorandClient.mainNet().appDeployer;
-```
 
 ##### Returns
 
@@ -96,9 +90,7 @@ Methods for interacting with assets.
 
 ##### Example
 
-```ts
 const assetManager = AlgorandClient.mainNet().asset;
-```
 
 ##### Returns
 
@@ -120,9 +112,7 @@ Get clients, including algosdk clients and app clients.
 
 ##### Example
 
-```ts
 const clientManager = AlgorandClient.mainNet().client;
-```
 
 ##### Returns
 
@@ -144,13 +134,11 @@ Methods for creating a transaction.
 
 ##### Example
 
-```ts
 const payment = await AlgorandClient.mainNet().createTransaction.payment({
  sender: "SENDERADDRESS",
  receiver: "RECEIVERADDRESS",
  amount: algo(1)
 })
-```
 
 ##### Returns
 
@@ -172,13 +160,11 @@ Methods for sending a transaction.
 
 ##### Example
 
-```ts
 const result = await AlgorandClient.mainNet().send.payment({
  sender: "SENDERADDRESS",
  receiver: "RECEIVERADDRESS",
  amount: algo(1)
 })
-```
 
 ##### Returns
 
@@ -204,9 +190,7 @@ The suggested transaction parameters.
 
 #### Example
 
-```ts
 const params = await AlgorandClient.mainNet().getSuggestedParams();
-```
 
 ***
 
@@ -233,9 +217,17 @@ A new instance of `TransactionComposer`.
 #### Example
 
 ```ts
-const composer = AlgorandClient.mainNet().newGroup();
-const result = await composer.addTransaction(payment).send()
+// Start a new transaction group with multiple payments and send
+const result = await algorand
+  .newGroup()
+  .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
+  .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(2) })
+  .send()
 ```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
 
 ***
 
@@ -527,7 +519,7 @@ Defined in: [src/types/algorand-client.ts:223](https://github.com/algorandfounda
 
 > `static` **defaultLocalNet**(): `AlgorandClient`
 
-Defined in: [src/types/algorand-client.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L281)
+Defined in: [src/types/algorand-client.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L282)
 
 Creates an `AlgorandClient` pointing at default LocalNet ports and API token.
 
@@ -540,8 +532,22 @@ An instance of the `AlgorandClient`.
 #### Example
 
 ```ts
-const algorand = AlgorandClient.defaultLocalNet();
+// Create an AlgorandClient pointing at default LocalNet ports
+const algorand = AlgorandClient.defaultLocalNet()
+
+// Create a random account and fund it from the LocalNet dispenser
+const alice = algorand.account.random()
+
+await algorand.send.payment({
+  sender: await algorand.account.localNetDispenser(),
+  receiver: alice,
+  amount: (2).algo(),
+})
 ```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
 
 ***
 
@@ -549,7 +555,7 @@ const algorand = AlgorandClient.defaultLocalNet();
 
 > `static` **fromClients**(`clients`): `AlgorandClient`
 
-Defined in: [src/types/algorand-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L324)
+Defined in: [src/types/algorand-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L325)
 
 Creates an `AlgorandClient` pointing to the given client(s).
 
@@ -569,9 +575,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
-```
 
 ***
 
@@ -579,7 +583,7 @@ const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
 
 > `static` **fromConfig**(`config`): `AlgorandClient`
 
-Defined in: [src/types/algorand-client.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L358)
+Defined in: [src/types/algorand-client.ts:359](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L359)
 
 Creates  an `AlgorandClient` from the given config.
 
@@ -599,9 +603,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig });
-```
 
 ***
 
@@ -609,7 +611,7 @@ const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig
 
 > `static` **fromEnvironment**(): `AlgorandClient`
 
-Defined in: [src/types/algorand-client.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L347)
+Defined in: [src/types/algorand-client.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L348)
 
 Creates an `AlgorandClient` loading the configuration from environment variables.
 
@@ -634,9 +636,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const client = AlgorandClient.fromEnvironment();
-```
 
 ***
 
@@ -644,7 +644,7 @@ const client = AlgorandClient.fromEnvironment();
 
 > `static` **mainNet**(): `AlgorandClient`
 
-Defined in: [src/types/algorand-client.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L309)
+Defined in: [src/types/algorand-client.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L310)
 
 Creates an `AlgorandClient` pointing at MainNet using AlgoNode.
 
@@ -656,9 +656,7 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.mainNet();
-```
 
 ***
 
@@ -666,7 +664,7 @@ const algorand = AlgorandClient.mainNet();
 
 > `static` **testNet**(): `AlgorandClient`
 
-Defined in: [src/types/algorand-client.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L295)
+Defined in: [src/types/algorand-client.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L296)
 
 Creates an `AlgorandClient` pointing at TestNet using AlgoNode.
 
@@ -678,6 +676,4 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-```ts
 const algorand = AlgorandClient.testNet();
-```

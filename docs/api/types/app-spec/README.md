@@ -8,6 +8,12 @@
 
 ## Interfaces
 
+- [ABIContractNetworkInfo](interfaces/ABIContractNetworkInfo.md)
+- [ABIContractNetworks](interfaces/ABIContractNetworks.md)
+- [ABIContractParams](interfaces/ABIContractParams.md)
+- [ABIMethodArgParams](interfaces/ABIMethodArgParams.md)
+- [ABIMethodParams](interfaces/ABIMethodParams.md)
+- [ABIMethodReturnParams](interfaces/ABIMethodReturnParams.md)
 - [AppSources](interfaces/AppSources.md)
 - [AppSpec](interfaces/AppSpec.md)
 - [CallConfig](interfaces/CallConfig.md)

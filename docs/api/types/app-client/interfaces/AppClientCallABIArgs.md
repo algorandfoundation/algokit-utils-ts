@@ -6,7 +6,7 @@
 
 # Interface: AppClientCallABIArgs
 
-Defined in: [src/types/app-client.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L183)
+Defined in: [src/types/app-client.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L184)
 
 ## Hierarchy
 
@@ -92,7 +92,7 @@ The optional lease for the transaction
 
 > **method**: `string`
 
-Defined in: [src/types/app-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L185)
+Defined in: [src/types/app-client.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L186)
 
 If calling an ABI method then either the name of the method, or the ABI signature
 

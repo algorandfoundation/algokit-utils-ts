@@ -8,7 +8,7 @@
 
 > **mnemonicFromSeed**(`seed`): `string`
 
-Defined in: [packages/algo25/src/index.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algo25/src/index.ts#L51)
+Defined in: [packages/algo25/src/index.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algo25/src/index.ts#L52)
 
 mnemonicFromSeed converts a 32-byte key into a 25 word mnemonic. The generated mnemonic includes a checksum.
 Each word in the mnemonic represents 11 bits of data, and the last 11 bits are reserved for the checksum.
@@ -26,3 +26,7 @@ Each word in the mnemonic represents 11 bits of data, and the last 11 bits are r
 `string`
 
 25 words mnemonic
+
+## Throws
+
+If seed length is not 32 bytes

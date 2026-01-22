@@ -2,8 +2,6 @@
 
 Indexer lookups / searching is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It provides type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control.
 
-To see some usage examples check out the [automated tests](../../src/indexer-lookup.spec.ts).
-
 To import the indexer functions you can:
 
 ```typescript
@@ -16,12 +14,12 @@ All of the indexer functions require you to pass in an indexer SDK client, which
 
 There is a subset of [indexer API calls](https://dev.algorand.co/reference/rest-apis/indexer) that are exposed as easy to use methods with correct typing exposed and automatic pagination for multi item returns.
 
-- [`indexer.lookupTransactionById(transactionId, algorand.client.indexer)`](.../api/modules/index.md#lookuptransactionbyid) - Finds a transaction by ID
-- [`indexer.lookupAccountByAddress(accountAddress, algorand.client.indexer)`](.../api/modules/index.md#lookupaccountbyaddress) - Finds an account by address
-- [`indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, address, getAll?, paginationLimit?)`](.../api/modules/index.md#lookupaccountcreatedapplicationbyaddress) - Finds all applications created for an account
-- [`indexer.lookupAssetHoldings(algorand.client.indexer, assetId, options?, paginationLimit?)`](.../api/modules/index.md#lookupassetholdings) - Finds all asset holdings for the given asset
-- [`indexer.searchTransactions(algorand.client.indexer, searchCriteria, paginationLimit?)`](.../api/modules/index.md#searchtransactions) - Search for transactions with a given set of criteria
-- [`indexer.executePaginatedRequest(extractItems, buildRequest)`](.../api/modules/index.md#executepaginatedrequest) - Execute the given indexer request with automatic pagination
+- `indexer.lookupTransactionById(transactionId, algorand.client.indexer)` - Finds a transaction by ID
+- `indexer.lookupAccountByAddress(accountAddress, algorand.client.indexer)` - Finds an account by address
+- `indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, address, getAll?, paginationLimit?)` - Finds all applications created for an account
+- `indexer.lookupAssetHoldings(algorand.client.indexer, assetId, options?, paginationLimit?)` - Finds all asset holdings for the given asset
+- `indexer.searchTransactions(algorand.client.indexer, searchCriteria, paginationLimit?)` - Search for transactions with a given set of criteria
+- `indexer.executePaginatedRequest(extractItems, buildRequest)` - Execute the given indexer request with automatic pagination
 
 ### Search transactions example
 

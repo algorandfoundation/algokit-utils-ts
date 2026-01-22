@@ -50,6 +50,7 @@ import {
   TealTemplateParams,
 } from './app'
 import { AppLookup } from './app-deployer'
+import type { AppFactory } from './app-factory'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
 import {
@@ -880,7 +881,6 @@ export class AppClient {
    * If the return type is an ARC-56 struct then the struct will be returned.
    *
    * @param result The SendAppTransactionResult to be mapped
-   * @param method The method that was called
    * @returns The smart contract response with an updated return value
    */
   public async processMethodCallReturn<
@@ -1604,12 +1604,9 @@ export class AppClient {
       },
 
       /**
-       *
+       * Returns all map values for the given map from box storage.
        * @param mapName The name of the map to read from
-       * @param key The key within the map as either a Buffer with the bytes or a value
-       *  that will be converted to bytes by encoding it using the specified ABI key type
-       *  in the ARC-56 spec
-       * @param appState
+       * @returns A map of all key-value pairs in the map
        */
       getMap: async (mapName: string) => {
         const metadata = getBoxABIStorageMap(that._appSpec, mapName)
@@ -1700,7 +1697,6 @@ export class AppClient {
       /**
        * Returns all map values for the given map.
        * @param mapName The name of the map to read from
-       * @param appState Optional cached value of the current state
        * @returns A map of all key-value pairs in the map as a `Record<string, ABIValue>`
        */
       getMap: async (mapName: string) => {

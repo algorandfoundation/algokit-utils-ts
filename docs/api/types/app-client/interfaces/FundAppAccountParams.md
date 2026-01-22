@@ -6,7 +6,7 @@
 
 # Interface: FundAppAccountParams
 
-Defined in: [src/types/app-client.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L234)
+Defined in: [src/types/app-client.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L235)
 
 Parameters for funding an app account
 
@@ -16,7 +16,7 @@ Parameters for funding an app account
 
 > **amount**: [`AlgoAmount`](../../amount/classes/AlgoAmount.md)
 
-Defined in: [src/types/app-client.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L235)
+Defined in: [src/types/app-client.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L236)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types/app-client.ts:235](https://github.com/algorandfoundation/
 
 > `optional` **note**: [`TransactionNote`](../../transaction/type-aliases/TransactionNote.md)
 
-Defined in: [src/types/app-client.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L239)
+Defined in: [src/types/app-client.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L240)
 
 The transaction note for the smart contract call
 
@@ -34,7 +34,7 @@ The transaction note for the smart contract call
 
 > `optional` **sender**: [`AddressWithTransactionSigner`](../../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/types/app-client.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L237)
+Defined in: [src/types/app-client.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L238)
 
 The optional sender to send the transaction from, will use the application client's default sender by default if specified
 
@@ -44,6 +44,6 @@ The optional sender to send the transaction from, will use the application clien
 
 > `optional` **sendParams**: [`SendTransactionParams`](../../transaction/interfaces/SendTransactionParams.md)
 
-Defined in: [src/types/app-client.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L241)
+Defined in: [src/types/app-client.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L242)
 
 Parameters to control transaction sending

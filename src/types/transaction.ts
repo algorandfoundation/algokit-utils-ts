@@ -92,7 +92,7 @@ export interface ConfirmedTransactionResults extends SendTransactionResult, Send
 }
 
 /**
- * @deprcated Use `SendingAddress` instead
+ * @deprecated Use `SendingAddress` instead
  */
 
 export type SendTransactionFrom = AddressWithTransactionSigner

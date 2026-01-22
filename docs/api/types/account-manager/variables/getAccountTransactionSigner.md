@@ -8,7 +8,7 @@
 
 > `const` **getAccountTransactionSigner**: (`val`) => [`TransactionSigner`](../../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
-Defined in: [src/types/account-manager.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L42)
+Defined in: [src/types/account-manager.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L41)
 
 Returns a `TransactionSigner` for the given account that can sign a transaction.
 This function has memoization, so will return the same transaction signer for a given account.

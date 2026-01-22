@@ -6,7 +6,7 @@
 
 # Interface: AppSources
 
-Defined in: [src/types/app-spec.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L231)
+Defined in: [src/types/app-spec.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L237)
 
 The TEAL source of a contract
 
@@ -16,7 +16,7 @@ The TEAL source of a contract
 
 > **approval**: `string`
 
-Defined in: [src/types/app-spec.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L233)
+Defined in: [src/types/app-spec.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L239)
 
 The TEAL source of the approval program
 
@@ -26,6 +26,6 @@ The TEAL source of the approval program
 
 > **clear**: `string`
 
-Defined in: [src/types/app-spec.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L235)
+Defined in: [src/types/app-spec.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L241)
 
 The TEAL source of the clear program

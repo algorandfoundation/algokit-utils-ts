@@ -212,9 +212,7 @@ export enum OnSchemaBreak {
 
 /** The result of compiling the approval and clear state TEAL programs for an app */
 export interface AppCompilationResult {
-  /** The result of compiling the approval program */
   compiledApproval: CompiledTeal
-  /** The result of compiling the clear state program */
   compiledClear: CompiledTeal
 }
 
