@@ -4,38 +4,55 @@
 
 ## Table of contents
 
-### References
+### Enumerations
 
-- [ALGOKIT\_DIR](index.md#algokit_dir)
-- [AVMTracesEventData](index.md#avmtraceseventdata)
-- [AlgorandClient](index.md#algorandclient)
-- [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
-- [EventDataMap](index.md#eventdatamap)
-- [EventType](index.md#eventtype)
-- [SOURCES\_DIR](index.md#sources_dir)
-- [TEAL\_FILE\_EXT](index.md#teal_file_ext)
-- [TEAL\_SOURCEMAP\_EXT](index.md#teal_sourcemap_ext)
-- [TealSourceDebugEventData](index.md#tealsourcedebugeventdata)
-- [TealSourcesDebugEventData](index.md#tealsourcesdebugeventdata)
+- [EventType](../enums/index.EventType.md)
 
 ### Classes
 
 - [Address](../classes/index.Address.md)
+- [AlgoAmount](../classes/index.AlgoAmount.md)
+- [AlgorandClient](../classes/index.AlgorandClient.md)
 
 ### Interfaces
 
+- [AdditionalTransactionComposerContext](../interfaces/index.AdditionalTransactionComposerContext.md)
 - [Addressable](../interfaces/index.Addressable.md)
+- [ConfirmedTransactionResult](../interfaces/index.ConfirmedTransactionResult.md)
+- [ConfirmedTransactionResults](../interfaces/index.ConfirmedTransactionResults.md)
+- [SendParams](../interfaces/index.SendParams.md)
+- [SendTransactionComposerResults](../interfaces/index.SendTransactionComposerResults.md)
+- [SendTransactionParams](../interfaces/index.SendTransactionParams.md)
+- [SendTransactionResult](../interfaces/index.SendTransactionResult.md)
+- [SendTransactionResults](../interfaces/index.SendTransactionResults.md)
+- [TransactionComposerToSend](../interfaces/index.TransactionComposerToSend.md)
+- [TransactionGroupToSend](../interfaces/index.TransactionGroupToSend.md)
+- [TransactionToSign](../interfaces/index.TransactionToSign.md)
 - [TransactionWithSigner](../interfaces/index.TransactionWithSigner.md)
 
 ### Type Aliases
 
+- [AVMTracesEventData](index.md#avmtraceseventdata)
+- [Arc2TransactionNote](index.md#arc2transactionnote)
+- [EventDataMap](index.md#eventdatamap)
 - [ReadableAddress](index.md#readableaddress)
+- [SendSingleTransactionResult](index.md#sendsingletransactionresult)
+- [SendTransactionFrom](index.md#sendtransactionfrom)
+- [TealSourceDebugEventData](index.md#tealsourcedebugeventdata)
+- [TealSourcesDebugEventData](index.md#tealsourcesdebugeventdata)
+- [TransactionNote](index.md#transactionnote)
+- [TransactionNoteData](index.md#transactionnotedata)
 
 ### Variables
 
+- [ALGOKIT\_DIR](index.md#algokit_dir)
 - [ALGORAND\_MIN\_TX\_FEE](index.md#algorand_min_tx_fee)
 - [ALGORAND\_ZERO\_ADDRESS\_STRING](index.md#algorand_zero_address_string)
 - [Config](index.md#config)
+- [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
+- [SOURCES\_DIR](index.md#sources_dir)
+- [TEAL\_FILE\_EXT](index.md#teal_file_ext)
+- [TEAL\_SOURCEMAP\_EXT](index.md#teal_sourcemap_ext)
 
 ### Functions
 
@@ -56,73 +73,54 @@
 - [transactionFees](index.md#transactionfees)
 - [waitForConfirmation](index.md#waitforconfirmation)
 
-## References
-
-### ALGOKIT\_DIR
-
-Re-exports [ALGOKIT_DIR](types_debugging.md#algokit_dir)
-
-___
+## Type Aliases
 
 ### AVMTracesEventData
 
-Re-exports [AVMTracesEventData](types_debugging.md#avmtraceseventdata)
+Ƭ **AVMTracesEventData**: `Object`
+
+Represents the data for AVM traces debug events emitted whenever a transaction is simulated in debug mode
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `simulateResponse` | `SimulateResponse` | The simulation response from Algod |
+
+#### Defined in
+
+[src/debugging.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L47)
 
 ___
 
-### AlgorandClient
+### Arc2TransactionNote
 
-Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+Ƭ **Arc2TransactionNote**: \{ `dAppName`: `string` ; `data`: `string` ; `format`: ``"m"`` \| ``"b"`` \| ``"u"``  } \| \{ `dAppName`: `string` ; `data`: [`TransactionNoteData`](index.md#transactionnotedata) ; `format`: ``"j"``  }
 
-___
+ARC-0002 compatible transaction note components https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
 
-### DEFAULT\_MAX\_SEARCH\_DEPTH
+#### Defined in
 
-Re-exports [DEFAULT_MAX_SEARCH_DEPTH](types_debugging.md#default_max_search_depth)
+[src/transaction/types.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L12)
 
 ___
 
 ### EventDataMap
 
-Re-exports [EventDataMap](types_lifecycle_events.md#eventdatamap)
+Ƭ **EventDataMap**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `AppCompiled` | [`TealSourcesDebugEventData`](index.md#tealsourcesdebugeventdata) |
+| `TxnGroupSimulated` | [`AVMTracesEventData`](index.md#avmtraceseventdata) |
+
+#### Defined in
+
+[src/lifecycle-events.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L8)
 
 ___
-
-### EventType
-
-Re-exports [EventType](../enums/types_lifecycle_events.EventType.md)
-
-___
-
-### SOURCES\_DIR
-
-Re-exports [SOURCES_DIR](types_debugging.md#sources_dir)
-
-___
-
-### TEAL\_FILE\_EXT
-
-Re-exports [TEAL_FILE_EXT](types_debugging.md#teal_file_ext)
-
-___
-
-### TEAL\_SOURCEMAP\_EXT
-
-Re-exports [TEAL_SOURCEMAP_EXT](types_debugging.md#teal_sourcemap_ext)
-
-___
-
-### TealSourceDebugEventData
-
-Re-exports [TealSourceDebugEventData](types_debugging.md#tealsourcedebugeventdata)
-
-___
-
-### TealSourcesDebugEventData
-
-Re-exports [TealSourcesDebugEventData](types_debugging.md#tealsourcesdebugeventdata)
-
-## Type Aliases
 
 ### ReadableAddress
 
@@ -132,15 +130,111 @@ Re-exports [TealSourcesDebugEventData](types_debugging.md#tealsourcesdebugeventd
 
 [packages/common/src/address.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L141)
 
-## Variables
+___
 
-### ALGORAND\_MIN\_TX\_FEE
+### SendSingleTransactionResult
 
-• `Const` **ALGORAND\_MIN\_TX\_FEE**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+Ƭ **SendSingleTransactionResult**: `Expand`\<[`SendTransactionComposerResults`](../interfaces/index.SendTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/index.ConfirmedTransactionResult.md)\>
+
+Result from sending a single transaction.
 
 #### Defined in
 
-[src/amount.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L93)
+[src/transaction/types.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L46)
+
+___
+
+### SendTransactionFrom
+
+Ƭ **SendTransactionFrom**: `AddressWithTransactionSigner`
+
+**`Deprcated`**
+
+Use `SendingAddress` instead
+
+#### Defined in
+
+[src/transaction/types.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L98)
+
+___
+
+### TealSourceDebugEventData
+
+Ƭ **TealSourceDebugEventData**: `Object`
+
+Represents the data for a single TEAL source
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appName` | `string` | The name of the application |
+| `compiledTeal` | `Expand`\<`Omit`\<`CompiledTeal`, ``"sourceMap"``\> & \{ `sourceMap`: `SourceMap`  }\> | The compiled TEAL code |
+| `fileName` | `string` | The name of the file |
+
+#### Defined in
+
+[src/debugging.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L27)
+
+___
+
+### TealSourcesDebugEventData
+
+Ƭ **TealSourcesDebugEventData**: `Object`
+
+Represents the data for multiple TEAL sources debug events emitted whenever an app is compiled as part of a deploy in debug mode
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sources` | [`TealSourceDebugEventData`](index.md#tealsourcedebugeventdata)[] | An array of TEAL source debug event data |
+
+#### Defined in
+
+[src/debugging.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L39)
+
+___
+
+### TransactionNote
+
+Ƭ **TransactionNote**: `Uint8Array` \| [`TransactionNoteData`](index.md#transactionnotedata) \| [`Arc2TransactionNote`](index.md#arc2transactionnote)
+
+#### Defined in
+
+[src/transaction/types.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L8)
+
+___
+
+### TransactionNoteData
+
+Ƭ **TransactionNoteData**: `string` \| ``null`` \| `undefined` \| `number` \| `any`[] \| `Record`\<`string`, `any`\>
+
+#### Defined in
+
+[src/transaction/types.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L10)
+
+## Variables
+
+### ALGOKIT\_DIR
+
+• `Const` **ALGOKIT\_DIR**: ``".algokit"``
+
+The directory name for AlgoKit project related files
+
+#### Defined in
+
+[src/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L10)
+
+___
+
+### ALGORAND\_MIN\_TX\_FEE
+
+• `Const` **ALGORAND\_MIN\_TX\_FEE**: [`AlgoAmount`](../classes/index.AlgoAmount.md)
+
+#### Defined in
+
+[src/amount.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L196)
 
 ___
 
@@ -156,7 +250,7 @@ ___
 
 ### Config
 
-• `Const` **Config**: [`UpdatableConfig`](../classes/types_config.UpdatableConfig.md)
+• `Const` **Config**: `UpdatableConfig`
 
 The AlgoKit config. To update it use the configure method.
 
@@ -164,11 +258,59 @@ The AlgoKit config. To update it use the configure method.
 
 [src/config.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/config.ts#L4)
 
+___
+
+### DEFAULT\_MAX\_SEARCH\_DEPTH
+
+• `Const` **DEFAULT\_MAX\_SEARCH\_DEPTH**: ``10``
+
+The default maximum search depth for file operations
+
+#### Defined in
+
+[src/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L22)
+
+___
+
+### SOURCES\_DIR
+
+• `Const` **SOURCES\_DIR**: ``"sources"``
+
+The directory name for debug source files
+
+#### Defined in
+
+[src/debugging.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L13)
+
+___
+
+### TEAL\_FILE\_EXT
+
+• `Const` **TEAL\_FILE\_EXT**: ``".teal"``
+
+The file extension for TEAL files
+
+#### Defined in
+
+[src/debugging.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L16)
+
+___
+
+### TEAL\_SOURCEMAP\_EXT
+
+• `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.map"``
+
+The file extension for TEAL source map files
+
+#### Defined in
+
+[src/debugging.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L19)
+
 ## Functions
 
 ### algo
 
-▸ **algo**(`algos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+▸ **algo**(`algos`): [`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 Returns an amount of Algo using AlgoAmount
 
@@ -180,17 +322,17 @@ Returns an amount of Algo using AlgoAmount
 
 #### Returns
 
-[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+[`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 #### Defined in
 
-[src/amount.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L68)
+[src/amount.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L171)
 
 ___
 
 ### algos
 
-▸ **algos**(`algos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+▸ **algos**(`algos`): [`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 Returns an amount of Algo using AlgoAmount
 
@@ -202,11 +344,11 @@ Returns an amount of Algo using AlgoAmount
 
 #### Returns
 
-[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+[`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 #### Defined in
 
-[src/amount.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L61)
+[src/amount.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L164)
 
 ___
 
@@ -294,7 +436,7 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 
 #### Defined in
 
-[src/transaction/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L28)
+[src/transaction/transaction.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L23)
 
 ___
 
@@ -364,7 +506,7 @@ ___
 
 ### microAlgo
 
-▸ **microAlgo**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+▸ **microAlgo**(`microAlgos`): [`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 Returns an amount of µAlgo using AlgoAmount
 
@@ -376,17 +518,17 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Returns
 
-[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+[`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 #### Defined in
 
-[src/amount.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L82)
+[src/amount.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L185)
 
 ___
 
 ### microAlgos
 
-▸ **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+▸ **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 Returns an amount of µAlgo using AlgoAmount
 
@@ -398,11 +540,11 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Returns
 
-[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+[`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 #### Defined in
 
-[src/amount.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L75)
+[src/amount.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L178)
 
 ___
 
@@ -414,8 +556,8 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `composer` | [`TransactionComposer`](../classes/types_composer.TransactionComposer.md) | The TransactionComposer with transaction(s) loaded. |
-| `options?` | [`RawSimulateOptions`](types_composer.md#rawsimulateoptions) | - |
+| `composer` | `TransactionComposer` | The TransactionComposer with transaction(s) loaded. |
+| `options?` | `RawSimulateOptions` | - |
 
 #### Returns
 
@@ -440,17 +582,17 @@ ___
 
 ### populateAppCallResources
 
-▸ **populateAppCallResources**(`composer`): `Promise`\<[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)\>
+▸ **populateAppCallResources**(`composer`): `Promise`\<`TransactionComposer`\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `composer` | [`TransactionComposer`](../classes/types_composer.TransactionComposer.md) | The composer containing the txn group |
+| `composer` | `TransactionComposer` | The composer containing the txn group |
 
 #### Returns
 
-`Promise`\<[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)\>
+`Promise`\<`TransactionComposer`\>
 
 A new composer with the resources populated into the transactions
 
@@ -462,25 +604,25 @@ app call resources populated into it
 
 #### Defined in
 
-[src/transaction/transaction.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L74)
+[src/transaction/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L69)
 
 ___
 
 ### prepareGroupForSending
 
-▸ **prepareGroupForSending**(`composer`, `sendParams`, `additionalContext?`): `Promise`\<[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)\>
+▸ **prepareGroupForSending**(`composer`, `sendParams`, `additionalContext?`): `Promise`\<`TransactionComposer`\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `composer` | [`TransactionComposer`](../classes/types_composer.TransactionComposer.md) | The Transaction Composer containing the txn group |
-| `sendParams` | [`SendParams`](../interfaces/types_transaction.SendParams.md) | The send params for the transaction group |
-| `additionalContext?` | [`AdditionalTransactionComposerContext`](../interfaces/types_transaction.AdditionalTransactionComposerContext.md) | Additional context used to determine how best to change the transactions in the group |
+| `composer` | `TransactionComposer` | The Transaction Composer containing the txn group |
+| `sendParams` | [`SendParams`](../interfaces/index.SendParams.md) | The send params for the transaction group |
+| `additionalContext?` | [`AdditionalTransactionComposerContext`](../interfaces/index.AdditionalTransactionComposerContext.md) | Additional context used to determine how best to change the transactions in the group |
 
 #### Returns
 
-`Promise`\<[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)\>
+`Promise`\<`TransactionComposer`\>
 
 A new Transaction Composer with the changes applied
 
@@ -494,23 +636,23 @@ based on the supplied sendParams to prepare it for sending.
 
 #### Defined in
 
-[src/transaction/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L95)
+[src/transaction/transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L90)
 
 ___
 
 ### sendTransactionComposer
 
-▸ **sendTransactionComposer**(`atcSend`): `Promise`\<[`SendTransactionComposerResults`](../interfaces/types_transaction.SendTransactionComposerResults.md)\>
+▸ **sendTransactionComposer**(`atcSend`): `Promise`\<[`SendTransactionComposerResults`](../interfaces/index.SendTransactionComposerResults.md)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `atcSend` | [`TransactionComposerToSend`](../interfaces/types_transaction.TransactionComposerToSend.md) | The parameters controlling the send, including `atc` The `TransactionComposer` and params to control send behaviour |
+| `atcSend` | [`TransactionComposerToSend`](../interfaces/index.TransactionComposerToSend.md) | The parameters controlling the send, including `atc` The `TransactionComposer` and params to control send behaviour |
 
 #### Returns
 
-`Promise`\<[`SendTransactionComposerResults`](../interfaces/types_transaction.SendTransactionComposerResults.md)\>
+`Promise`\<[`SendTransactionComposerResults`](../interfaces/index.SendTransactionComposerResults.md)\>
 
 An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
@@ -521,13 +663,13 @@ Signs and sends transactions that have been collected by an `TransactionComposer
 
 #### Defined in
 
-[src/transaction/transaction.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L121)
+[src/transaction/transaction.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L116)
 
 ___
 
 ### transactionFees
 
-▸ **transactionFees**(`numberOfTransactions`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+▸ **transactionFees**(`numberOfTransactions`): [`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 Returns an amount of µAlgo to cover standard fees for the given number of transactions using AlgoAmount
 
@@ -539,11 +681,11 @@ Returns an amount of µAlgo to cover standard fees for the given number of trans
 
 #### Returns
 
-[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+[`AlgoAmount`](../classes/index.AlgoAmount.md)
 
 #### Defined in
 
-[src/amount.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L89)
+[src/amount.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L192)
 
 ___
 
@@ -574,4 +716,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L140)
+[src/transaction/transaction.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L135)

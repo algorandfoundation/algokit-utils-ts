@@ -4,33 +4,117 @@
 
 ## Table of contents
 
-### Classes
-
-- [AppManager](../classes/types_app_manager.AppManager.md)
-
-### Interfaces
-
-- [AppInformation](../interfaces/types_app_manager.AppInformation.md)
-- [BoxReference](../interfaces/types_app_manager.BoxReference.md)
-- [BoxValueRequestParams](../interfaces/types_app_manager.BoxValueRequestParams.md)
-- [BoxValuesRequestParams](../interfaces/types_app_manager.BoxValuesRequestParams.md)
-
 ### Type Aliases
 
+- [AppInformation](types_app_manager.md#appinformation)
+- [AppManager](types_app_manager.md#appmanager)
 - [BoxIdentifier](types_app_manager.md#boxidentifier)
+- [BoxReference](types_app_manager.md#boxreference)
+- [BoxValueRequestParams](types_app_manager.md#boxvaluerequestparams)
+- [BoxValuesRequestParams](types_app_manager.md#boxvaluesrequestparams)
+
+### Variables
+
+- [AppManager](types_app_manager.md#appmanager-1)
 
 ## Type Aliases
 
-### BoxIdentifier
+### AppInformation
 
-Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| `AddressWithTransactionSigner`
+Ƭ **AppInformation**: `_AppInformation`
 
-Something that identifies an app box name - either a:
- * `Uint8Array` (the actual binary of the box name)
- * `string` (that will be encoded to a `Uint8Array`)
- * `AddressWithSigner` (that will be encoded into the
-   public key address of the corresponding account)
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
 
 #### Defined in
 
-[src/types/app-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L59)
+[src/types/app-manager.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L14)
+
+___
+
+### AppManager
+
+Ƭ **AppManager**: `_AppManager`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
+
+#### Defined in
+
+[src/types/app-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L29)
+
+[src/types/app-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L31)
+
+___
+
+### BoxIdentifier
+
+Ƭ **BoxIdentifier**: `_BoxIdentifier`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
+
+#### Defined in
+
+[src/types/app-manager.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L17)
+
+___
+
+### BoxReference
+
+Ƭ **BoxReference**: `_BoxReference`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
+
+#### Defined in
+
+[src/types/app-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L20)
+
+___
+
+### BoxValueRequestParams
+
+Ƭ **BoxValueRequestParams**: `_BoxValueRequestParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
+
+#### Defined in
+
+[src/types/app-manager.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L23)
+
+___
+
+### BoxValuesRequestParams
+
+Ƭ **BoxValuesRequestParams**: `_BoxValuesRequestParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
+
+#### Defined in
+
+[src/types/app-manager.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L26)
+
+## Variables
+
+### AppManager
+
+• `Const` **AppManager**: typeof `AppManager` = `_AppManager`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-manager` instead
+
+#### Defined in
+
+[src/types/app-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L29)
+
+[src/types/app-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L31)

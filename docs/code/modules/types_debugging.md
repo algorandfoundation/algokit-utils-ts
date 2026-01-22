@@ -22,57 +22,43 @@
 
 ### AVMTracesEventData
 
-Ƭ **AVMTracesEventData**: `Object`
+Ƭ **AVMTracesEventData**: [`AVMTracesEventData`](index.md#avmtraceseventdata)
 
-Represents the data for AVM traces debug events emitted whenever a transaction is simulated in debug mode
+**`Deprecated`**
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `simulateResponse` | `SimulateResponse` | The simulation response from Algod |
+Import from `@algorandfoundation/algokit-utils/debugging` instead
 
 #### Defined in
 
-[src/types/debugging.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L47)
+[src/types/debugging.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L37)
 
 ___
 
 ### TealSourceDebugEventData
 
-Ƭ **TealSourceDebugEventData**: `Object`
+Ƭ **TealSourceDebugEventData**: [`TealSourceDebugEventData`](index.md#tealsourcedebugeventdata)
 
-Represents the data for a single TEAL source
+**`Deprecated`**
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appName` | `string` | The name of the application |
-| `compiledTeal` | [`Expand`](types_expand.md#expand)\<`Omit`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md), ``"sourceMap"``\> & \{ `sourceMap`: `SourceMap`  }\> | The compiled TEAL code |
-| `fileName` | `string` | The name of the file |
+Import from `@algorandfoundation/algokit-utils/debugging` instead
 
 #### Defined in
 
-[src/types/debugging.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L27)
+[src/types/debugging.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L31)
 
 ___
 
 ### TealSourcesDebugEventData
 
-Ƭ **TealSourcesDebugEventData**: `Object`
+Ƭ **TealSourcesDebugEventData**: [`TealSourcesDebugEventData`](index.md#tealsourcesdebugeventdata)
 
-Represents the data for multiple TEAL sources debug events emitted whenever an app is compiled as part of a deploy in debug mode
+**`Deprecated`**
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `sources` | [`TealSourceDebugEventData`](types_debugging.md#tealsourcedebugeventdata)[] | An array of TEAL source debug event data |
+Import from `@algorandfoundation/algokit-utils/debugging` instead
 
 #### Defined in
 
-[src/types/debugging.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L39)
+[src/types/debugging.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L34)
 
 ## Variables
 
@@ -80,43 +66,9 @@ Represents the data for multiple TEAL sources debug events emitted whenever an a
 
 • `Const` **ALGOKIT\_DIR**: ``".algokit"``
 
-The directory name for AlgoKit project related files
+**`Deprecated`**
 
-#### Defined in
-
-[src/types/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L10)
-
-___
-
-### DEFAULT\_MAX\_SEARCH\_DEPTH
-
-• `Const` **DEFAULT\_MAX\_SEARCH\_DEPTH**: ``10``
-
-The default maximum search depth for file operations
-
-#### Defined in
-
-[src/types/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L22)
-
-___
-
-### SOURCES\_DIR
-
-• `Const` **SOURCES\_DIR**: ``"sources"``
-
-The directory name for debug source files
-
-#### Defined in
-
-[src/types/debugging.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L13)
-
-___
-
-### TEAL\_FILE\_EXT
-
-• `Const` **TEAL\_FILE\_EXT**: ``".teal"``
-
-The file extension for TEAL files
+Import from `@algorandfoundation/algokit-utils/debugging` instead
 
 #### Defined in
 
@@ -124,12 +76,56 @@ The file extension for TEAL files
 
 ___
 
-### TEAL\_SOURCEMAP\_EXT
+### DEFAULT\_MAX\_SEARCH\_DEPTH
 
-• `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.map"``
+• `Const` **DEFAULT\_MAX\_SEARCH\_DEPTH**: ``10``
 
-The file extension for TEAL source map files
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/debugging` instead
+
+#### Defined in
+
+[src/types/debugging.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L28)
+
+___
+
+### SOURCES\_DIR
+
+• `Const` **SOURCES\_DIR**: ``"sources"``
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/debugging` instead
 
 #### Defined in
 
 [src/types/debugging.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L19)
+
+___
+
+### TEAL\_FILE\_EXT
+
+• `Const` **TEAL\_FILE\_EXT**: ``".teal"``
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/debugging` instead
+
+#### Defined in
+
+[src/types/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L22)
+
+___
+
+### TEAL\_SOURCEMAP\_EXT
+
+• `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.map"``
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/debugging` instead
+
+#### Defined in
+
+[src/types/debugging.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L25)

@@ -4,19 +4,40 @@
 
 ## Table of contents
 
-### Classes
-
-- [AsyncEventEmitter](../classes/types_async_event_emitter.AsyncEventEmitter.md)
-
 ### Type Aliases
 
+- [AsyncEventEmitter](types_async_event_emitter.md#asynceventemitter)
 - [AsyncEventListener](types_async_event_emitter.md#asynceventlistener)
+
+### Variables
+
+- [AsyncEventEmitter](types_async_event_emitter.md#asynceventemitter-1)
 
 ## Type Aliases
 
+### AsyncEventEmitter
+
+Ƭ **AsyncEventEmitter**: `_AsyncEventEmitter`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/async-event-emitter` instead
+
+#### Defined in
+
+[src/types/async-event-emitter.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L13)
+
+[src/types/async-event-emitter.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L15)
+
+___
+
 ### AsyncEventListener
 
-Ƭ **AsyncEventListener**\<`T`\>: (`event`: `T`, `eventName`: `string` \| `symbol`) => `Promise`\<`void`\> \| `void`
+Ƭ **AsyncEventListener**\<`T`\>: `_AsyncEventListener`\<`T`\>
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/async-event-emitter` instead
 
 #### Type parameters
 
@@ -24,21 +45,22 @@
 | :------ | :------ |
 | `T` | `unknown` |
 
-#### Type declaration
+#### Defined in
 
-▸ (`event`, `eventName`): `Promise`\<`void`\> \| `void`
+[src/types/async-event-emitter.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L10)
 
-##### Parameters
+## Variables
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `T` |
-| `eventName` | `string` \| `symbol` |
+### AsyncEventEmitter
 
-##### Returns
+• `Const` **AsyncEventEmitter**: typeof `AsyncEventEmitter` = `_AsyncEventEmitter`
 
-`Promise`\<`void`\> \| `void`
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/async-event-emitter` instead
 
 #### Defined in
 
-[src/types/async-event-emitter.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L3)
+[src/types/async-event-emitter.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L13)
+
+[src/types/async-event-emitter.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L15)

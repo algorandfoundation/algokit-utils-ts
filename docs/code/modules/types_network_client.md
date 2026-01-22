@@ -4,15 +4,57 @@
 
 ## Table of contents
 
-### Interfaces
+### Type Aliases
 
-- [AlgoClientConfig](../interfaces/types_network_client.AlgoClientConfig.md)
-- [AlgoConfig](../interfaces/types_network_client.AlgoConfig.md)
-- [NetworkDetails](../interfaces/types_network_client.NetworkDetails.md)
+- [AlgoClientConfig](types_network_client.md#algoclientconfig)
+- [AlgoConfig](types_network_client.md#algoconfig)
+- [NetworkDetails](types_network_client.md#networkdetails)
 
 ### Functions
 
 - [genesisIdIsLocalNet](types_network_client.md#genesisidislocalnet)
+
+## Type Aliases
+
+### AlgoClientConfig
+
+Ƭ **AlgoClientConfig**: `_AlgoClientConfig`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/network-client` instead
+
+#### Defined in
+
+[src/types/network-client.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L12)
+
+___
+
+### AlgoConfig
+
+Ƭ **AlgoConfig**: `_AlgoConfig`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/network-client` instead
+
+#### Defined in
+
+[src/types/network-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L15)
+
+___
+
+### NetworkDetails
+
+Ƭ **NetworkDetails**: `_NetworkDetails`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/network-client` instead
+
+#### Defined in
+
+[src/types/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L18)
 
 ## Functions
 
@@ -20,20 +62,20 @@
 
 ▸ **genesisIdIsLocalNet**(`genesisId`): `boolean`
 
-Returns true if the given network genesisId is associated with a LocalNet network.
-
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `genesisId` | `string` | The network genesis ID |
+| Name | Type |
+| :------ | :------ |
+| `genesisId` | `string` |
 
 #### Returns
 
 `boolean`
 
-Whether the given genesis ID is associated with a LocalNet network
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/network-client` instead
 
 #### Defined in
 
-[src/types/network-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L40)
+[src/types/network-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L21)

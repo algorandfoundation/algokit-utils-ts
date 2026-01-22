@@ -4,40 +4,34 @@
 
 ## Table of contents
 
-### Enumerations
-
-- [OnSchemaBreak](../enums/types_app.OnSchemaBreak.md)
-- [OnUpdate](../enums/types_app.OnUpdate.md)
-
-### Interfaces
-
-- [AppCallParams](../interfaces/types_app.AppCallParams.md)
-- [AppCallTransactionResultOfType](../interfaces/types_app.AppCallTransactionResultOfType.md)
-- [AppCompilationResult](../interfaces/types_app.AppCompilationResult.md)
-- [AppDeployMetadata](../interfaces/types_app.AppDeployMetadata.md)
-- [AppLookup](../interfaces/types_app.AppLookup.md)
-- [AppMetadata](../interfaces/types_app.AppMetadata.md)
-- [AppReference](../interfaces/types_app.AppReference.md)
-- [AppState](../interfaces/types_app.AppState.md)
-- [AppStorageSchema](../interfaces/types_app.AppStorageSchema.md)
-- [BoxName](../interfaces/types_app.BoxName.md)
-- [BoxValueRequestParams](../interfaces/types_app.BoxValueRequestParams.md)
-- [BoxValuesRequestParams](../interfaces/types_app.BoxValuesRequestParams.md)
-- [CompiledTeal](../interfaces/types_app.CompiledTeal.md)
-- [CoreAppCallArgs](../interfaces/types_app.CoreAppCallArgs.md)
-- [RawAppCallArgs](../interfaces/types_app.RawAppCallArgs.md)
-- [TealTemplateParams](../interfaces/types_app.TealTemplateParams.md)
-
 ### Type Aliases
 
 - [ABIAppCallArg](types_app.md#abiappcallarg)
 - [ABIAppCallArgs](types_app.md#abiappcallargs)
 - [AppCallArgs](types_app.md#appcallargs)
+- [AppCallParams](types_app.md#appcallparams)
 - [AppCallTransactionResult](types_app.md#appcalltransactionresult)
+- [AppCallTransactionResultOfType](types_app.md#appcalltransactionresultoftype)
+- [AppCompilationResult](types_app.md#appcompilationresult)
+- [AppDeployMetadata](types_app.md#appdeploymetadata)
+- [AppLookup](types_app.md#applookup)
+- [AppMetadata](types_app.md#appmetadata)
+- [AppReference](types_app.md#appreference)
 - [AppReturn](types_app.md#appreturn)
+- [AppState](types_app.md#appstate)
+- [AppStorageSchema](types_app.md#appstorageschema)
+- [BoxName](types_app.md#boxname)
+- [BoxValueRequestParams](types_app.md#boxvaluerequestparams)
+- [BoxValuesRequestParams](types_app.md#boxvaluesrequestparams)
+- [CompiledTeal](types_app.md#compiledteal)
+- [CoreAppCallArgs](types_app.md#coreappcallargs)
+- [OnSchemaBreak](types_app.md#onschemabreak)
+- [OnUpdate](types_app.md#onupdate)
+- [RawAppCallArgs](types_app.md#rawappcallargs)
 - [SendAppCreateTransactionResult](types_app.md#sendappcreatetransactionresult)
 - [SendAppTransactionResult](types_app.md#sendapptransactionresult)
 - [SendAppUpdateTransactionResult](types_app.md#sendappupdatetransactionresult)
+- [TealTemplateParams](types_app.md#tealtemplateparams)
 
 ### Variables
 
@@ -45,41 +39,75 @@
 - [APP\_DEPLOY\_NOTE\_DAPP](types_app.md#app_deploy_note_dapp)
 - [APP\_PAGE\_MAX\_SIZE](types_app.md#app_page_max_size)
 - [DELETABLE\_TEMPLATE\_NAME](types_app.md#deletable_template_name)
+- [OnSchemaBreak](types_app.md#onschemabreak-1)
+- [OnUpdate](types_app.md#onupdate-1)
 - [UPDATABLE\_TEMPLATE\_NAME](types_app.md#updatable_template_name)
 
 ## Type Aliases
 
 ### ABIAppCallArg
 
-Ƭ **ABIAppCallArg**: `ABIValue` \| [`TransactionWithSigner`](../interfaces/index.TransactionWithSigner.md) \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| [`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`
+Ƭ **ABIAppCallArg**: `_ABIAppCallArg`
 
-An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult`
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[src/types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
 
 ___
 
 ### ABIAppCallArgs
 
-Ƭ **ABIAppCallArgs**: [`CoreAppCallArgs`](../interfaces/types_app.CoreAppCallArgs.md) & \{ `method`: `ABIMethod` ; `methodArgs`: [`ABIAppCallArg`](types_app.md#abiappcallarg)[]  }
+Ƭ **ABIAppCallArgs**: `_ABIAppCallArgs`
 
-App call args for an ABI call
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
+[src/types/app.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L76)
 
 ___
 
 ### AppCallArgs
 
-Ƭ **AppCallArgs**: [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md) \| [`ABIAppCallArgs`](types_app.md#abiappcallargs)
+Ƭ **AppCallArgs**: `_AppCallArgs`
 
-Arguments to pass to an app call either:
-  * The raw app call values to pass through into the transaction (after processing); or
-  * An ABI method definition (method and args)
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L79)
+
+___
+
+### AppCallParams
+
+Ƭ **AppCallParams**: `_AppCallParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
+
+___
+
+### AppCallTransactionResult
+
+Ƭ **AppCallTransactionResult**: `_AppCallTransactionResult`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
@@ -87,21 +115,103 @@ Arguments to pass to an app call either:
 
 ___
 
-### AppCallTransactionResult
+### AppCallTransactionResultOfType
 
-Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<`ABIReturn`\>
+Ƭ **AppCallTransactionResultOfType**\<`T`\>: `_AppCallTransactionResultOfType`\<`T`\>
 
-Result from calling an app
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
 
 #### Defined in
 
-[src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
+[src/types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
+
+___
+
+### AppCompilationResult
+
+Ƭ **AppCompilationResult**: `_AppCompilationResult`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L109)
+
+___
+
+### AppDeployMetadata
+
+Ƭ **AppDeployMetadata**: `_AppDeployMetadata`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L97)
+
+___
+
+### AppLookup
+
+Ƭ **AppLookup**: `_AppLookup`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
+
+___
+
+### AppMetadata
+
+Ƭ **AppMetadata**: `_AppMetadata`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L100)
+
+___
+
+### AppReference
+
+Ƭ **AppReference**: `_AppReference`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L64)
 
 ___
 
 ### AppReturn
 
-Ƭ **AppReturn**\<`TReturn`\>: `Object`
+Ƭ **AppReturn**\<`TReturn`\>: `_AppReturn`\<`TReturn`\>
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Type parameters
 
@@ -109,63 +219,223 @@ ___
 | :------ |
 | `TReturn` |
 
-#### Type declaration
+#### Defined in
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `return?` | `TReturn` | The ABI method call return value |
+[src/types/app.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L112)
+
+___
+
+### AppState
+
+Ƭ **AppState**: `_AppState`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L221)
+[src/types/app.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L124)
+
+___
+
+### AppStorageSchema
+
+Ƭ **AppStorageSchema**: `_AppStorageSchema`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
+
+___
+
+### BoxName
+
+Ƭ **BoxName**: `_BoxName`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L127)
+
+___
+
+### BoxValueRequestParams
+
+Ƭ **BoxValueRequestParams**: `_BoxValueRequestParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L130)
+
+___
+
+### BoxValuesRequestParams
+
+Ƭ **BoxValuesRequestParams**: `_BoxValuesRequestParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L133)
+
+___
+
+### CompiledTeal
+
+Ƭ **CompiledTeal**: `_CompiledTeal`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)
+
+___
+
+### CoreAppCallArgs
+
+Ƭ **CoreAppCallArgs**: `_CoreAppCallArgs`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L67)
+
+___
+
+### OnSchemaBreak
+
+Ƭ **OnSchemaBreak**: `_OnSchemaBreak`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)
+
+[src/types/app.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L61)
+
+___
+
+### OnUpdate
+
+Ƭ **OnUpdate**: `_OnUpdate`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L54)
+
+[src/types/app.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L56)
+
+___
+
+### RawAppCallArgs
+
+Ƭ **RawAppCallArgs**: `_RawAppCallArgs`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
 
 ___
 
 ### SendAppCreateTransactionResult
 
-Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: [`Address`](../classes/index.Address.md) ; `appId`: `bigint`  }\>
+Ƭ **SendAppCreateTransactionResult**: `_SendAppCreateTransactionResult`
 
-Result from sending a single app transaction.
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L238)
+[src/types/app.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L121)
 
 ___
 
 ### SendAppTransactionResult
 
-Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: `ABIReturn`  }\>
+Ƭ **SendAppTransactionResult**: `_SendAppTransactionResult`
 
-Result from sending a single app transaction.
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L227)
+[src/types/app.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L115)
 
 ___
 
 ### SendAppUpdateTransactionResult
 
-Ƭ **SendAppUpdateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppTransactionResult`](types_app.md#sendapptransactionresult) & `Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\>\>
+Ƭ **SendAppUpdateTransactionResult**: `_SendAppUpdateTransactionResult`
 
-Result from sending a single app transaction.
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L235)
+[src/types/app.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L118)
+
+___
+
+### TealTemplateParams
+
+Ƭ **TealTemplateParams**: `_TealTemplateParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L106)
 
 ## Variables
 
 ### ABI\_RETURN\_PREFIX
 
-• `Const` **ABI\_RETURN\_PREFIX**: `Uint8Array`
+• `Const` **ABI\_RETURN\_PREFIX**: `Uint8Array` = `_ABI_RETURN_PREFIX`
 
-First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
+[src/types/app.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L51)
 
 ___
 
@@ -173,11 +443,13 @@ ___
 
 • `Const` **APP\_DEPLOY\_NOTE\_DAPP**: ``"ALGOKIT_DEPLOYER"``
 
-The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
+[src/types/app.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L45)
 
 ___
 
@@ -185,11 +457,13 @@ ___
 
 • `Const` **APP\_PAGE\_MAX\_SIZE**: ``2048``
 
-The maximum number of bytes in a single app code page
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
+[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
 
 ___
 
@@ -197,11 +471,45 @@ ___
 
 • `Const` **DELETABLE\_TEMPLATE\_NAME**: ``"TMPL_DELETABLE"``
 
-The name of the TEAL template variable for deploy-time permanence control
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)
+[src/types/app.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L42)
+
+___
+
+### OnSchemaBreak
+
+• `Const` **OnSchemaBreak**: typeof `OnSchemaBreak` = `_OnSchemaBreak`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)
+
+[src/types/app.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L61)
+
+___
+
+### OnUpdate
+
+• `Const` **OnUpdate**: typeof `OnUpdate` = `_OnUpdate`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
+
+#### Defined in
+
+[src/types/app.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L54)
+
+[src/types/app.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L56)
 
 ___
 
@@ -209,8 +517,10 @@ ___
 
 • `Const` **UPDATABLE\_TEMPLATE\_NAME**: ``"TMPL_UPDATABLE"``
 
-The name of the TEAL template variable for deploy-time immutability control
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app` instead
 
 #### Defined in
 
-[src/types/app.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L19)
+[src/types/app.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L39)

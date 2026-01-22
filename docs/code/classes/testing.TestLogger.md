@@ -9,7 +9,7 @@ This is useful for automated testing.
 
 ## Implements
 
-- [`Logger`](../modules/types_logging.md#logger)
+- `Logger`
 
 ## Table of contents
 
@@ -48,7 +48,7 @@ Create a new test logger that wraps the given logger if provided.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `originalLogger?` | [`Logger`](../modules/types_logging.md#logger) | The optional original logger to wrap. |
+| `originalLogger?` | `Logger` | The optional original logger to wrap. |
 
 #### Returns
 
@@ -72,7 +72,7 @@ ___
 
 ### originalLogger
 
-• `Private` **originalLogger**: `undefined` \| [`Logger`](../modules/types_logging.md#logger)
+• `Private` **originalLogger**: `undefined` \| `Logger`
 
 #### Defined in
 
@@ -176,7 +176,7 @@ https://jestjs.io/docs/snapshot-testing#2-tests-should-be-deterministic
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `config?` | [`LogSnapshotConfig`](../interfaces/types_testing.LogSnapshotConfig.md) | The snapshot configuration |
+| `config?` | [`LogSnapshotConfig`](../interfaces/testing.LogSnapshotConfig.md) | The snapshot configuration |
 
 #### Returns
 

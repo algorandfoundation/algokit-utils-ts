@@ -9,6 +9,15 @@
 - [TestLogger](../classes/testing.TestLogger.md)
 - [TransactionLogger](../classes/testing.TransactionLogger.md)
 
+### Interfaces
+
+- [AlgoKitLogCaptureFixture](../interfaces/testing.AlgoKitLogCaptureFixture.md)
+- [AlgorandFixture](../interfaces/testing.AlgorandFixture.md)
+- [AlgorandFixtureConfig](../interfaces/testing.AlgorandFixtureConfig.md)
+- [AlgorandTestAutomationContext](../interfaces/testing.AlgorandTestAutomationContext.md)
+- [GetTestAccountParams](../interfaces/testing.GetTestAccountParams.md)
+- [LogSnapshotConfig](../interfaces/testing.LogSnapshotConfig.md)
+
 ### Functions
 
 - [algoKitLogCaptureFixture](testing.md#algokitlogcapturefixture)
@@ -20,13 +29,13 @@
 
 ### algoKitLogCaptureFixture
 
-▸ **algoKitLogCaptureFixture**(): [`AlgoKitLogCaptureFixture`](../interfaces/types_testing.AlgoKitLogCaptureFixture.md)
+▸ **algoKitLogCaptureFixture**(): [`AlgoKitLogCaptureFixture`](../interfaces/testing.AlgoKitLogCaptureFixture.md)
 
 Creates a test fixture for capturing AlgoKit logs.
 
 #### Returns
 
-[`AlgoKitLogCaptureFixture`](../interfaces/types_testing.AlgoKitLogCaptureFixture.md)
+[`AlgoKitLogCaptureFixture`](../interfaces/testing.AlgoKitLogCaptureFixture.md)
 
 The fixture
 
@@ -51,7 +60,7 @@ ___
 
 ### algorandFixture
 
-▸ **algorandFixture**(`fixtureConfig?`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+▸ **algorandFixture**(`fixtureConfig?`): [`AlgorandFixture`](../interfaces/testing.AlgorandFixture.md)
 
 Creates a test fixture for automated testing against Algorand.
 By default it tests against an environment variable specified client
@@ -64,11 +73,11 @@ an explicitly defined network.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `fixtureConfig?` | [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
+| `fixtureConfig?` | [`AlgorandFixtureConfig`](../interfaces/testing.AlgorandFixtureConfig.md) | The fixture configuration |
 
 #### Returns
 
-[`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+[`AlgorandFixture`](../interfaces/testing.AlgorandFixture.md)
 
 The fixture
 
@@ -118,18 +127,18 @@ test('My test', async () => {
 
 [src/testing/fixtures/algorand-fixture.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L60)
 
-▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/testing.AlgorandFixture.md)
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `fixtureConfig` | `undefined` \| [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
-| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The fixture configuration |
+| `fixtureConfig` | `undefined` \| [`AlgorandFixtureConfig`](../interfaces/testing.AlgorandFixtureConfig.md) | The fixture configuration |
+| `config` | `AlgoConfig` | The fixture configuration |
 
 #### Returns
 
-[`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+[`AlgorandFixture`](../interfaces/testing.AlgorandFixture.md)
 
 The fixture
 
@@ -157,7 +166,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
+| `params` | [`GetTestAccountParams`](../interfaces/testing.GetTestAccountParams.md) | The config for the test account to generate |
 | `algod` | `AlgodClient` | An algod client |
 | `kmd?` | `KmdClient` | A KMD client, if not specified then a default KMD client will be loaded from environment variables and if not found fallback to the default LocalNet KMD client |
 
@@ -191,8 +200,8 @@ Note: By default this will log the mnemonic of the account.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
-| `algorand` | [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) | An AlgorandClient client |
+| `params` | [`GetTestAccountParams`](../interfaces/testing.GetTestAccountParams.md) | The config for the test account to generate |
+| `algorand` | [`AlgorandClient`](../classes/index.AlgorandClient.md) | An AlgorandClient client |
 
 #### Returns
 

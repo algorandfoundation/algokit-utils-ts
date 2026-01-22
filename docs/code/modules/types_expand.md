@@ -12,10 +12,11 @@
 
 ### Expand
 
-Ƭ **Expand**\<`T`\>: `T` extends (...`args`: infer A) => infer R ? (...`args`: [`Expand`](types_expand.md#expand)\<`A`\>) => [`Expand`](types_expand.md#expand)\<`R`\> : `T` extends infer O ? \{ [K in keyof O]: O[K] } : `never`
+Ƭ **Expand**\<`T`\>: `_Expand`\<`T`\>
 
-Expands types for IntelliSense so they are more human readable
-See https://stackoverflow.com/a/69288824
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/expand` instead
 
 #### Type parameters
 
@@ -25,4 +26,4 @@ See https://stackoverflow.com/a/69288824
 
 #### Defined in
 
-[packages/common/src/expand.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/expand.ts#L5)
+[src/types/expand.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/expand.ts#L7)
