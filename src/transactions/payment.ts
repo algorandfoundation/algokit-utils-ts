@@ -1,7 +1,7 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { AlgoAmount } from '../algo-amount'
+import { AlgoAmount } from '../amount'
 import { CommonTransactionParams, buildTransactionCommonData } from './common'
 
 /** Parameters to define a payment transaction. */

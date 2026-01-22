@@ -31,10 +31,8 @@ import {
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { AddressWithTransactionSigner, OnApplicationComplete, Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
-import { Config } from './config'
-import { asJson, binaryStartsWith } from './util'
 import { type AlgorandClient } from './algorand-client'
-import { AlgoAmount } from './algo-amount'
+import { AlgoAmount } from './amount'
 import {
   ABIAppCallArgs,
   AppCompilationResult,
@@ -64,9 +62,11 @@ import {
   CommonAppCallParams,
   PaymentParams,
 } from './composer'
+import { Config } from './config'
 import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
 import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction-types'
+import { asJson, binaryStartsWith } from './util'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16

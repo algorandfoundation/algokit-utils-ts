@@ -7,12 +7,12 @@ import * as algokit from '.'
 import { algo } from '.'
 import boxMapAppSpec from '../tests/example-contracts/box_map/artifacts/BoxMapTest.arc56.json'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
-import { algoKitLogCaptureFixture, algorandFixture } from './testing'
-import { AlgoAmount } from './algo-amount'
+import { AlgoAmount } from './amount'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
+import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 
 describe('app-client', () => {
   const localnet = algorandFixture()

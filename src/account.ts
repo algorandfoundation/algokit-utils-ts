@@ -8,7 +8,7 @@ import {
 } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
-import { AlgoAmount } from './algo-amount'
+import { AlgoAmount } from './amount'
 
 /**
  * The account name identifier used for fund dispensing in test environments

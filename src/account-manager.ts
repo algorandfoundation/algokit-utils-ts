@@ -11,15 +11,15 @@ import {
   generateAddressWithSigners,
 } from '@algorandfoundation/algokit-transact'
 import nacl from 'tweetnacl'
-import { Config } from './config'
-import { calculateFundAmount, memoize } from './util'
 import { AccountInformation, DISPENSER_ACCOUNT } from './account'
-import { AlgoAmount } from './algo-amount'
+import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { CommonTransactionParams, TransactionComposer } from './composer'
+import { Config } from './config'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction-types'
+import { calculateFundAmount, memoize } from './util'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
