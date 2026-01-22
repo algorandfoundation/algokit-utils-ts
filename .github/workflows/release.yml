@@ -13,6 +13,7 @@ concurrency: release
 permissions:
   contents: write
   issues: read
+  id-token: write
 
 jobs:
   ci:
@@ -63,6 +64,8 @@ jobs:
     name: Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Generate bot token
         uses: actions/create-github-app-token@v1
@@ -82,9 +85,10 @@ jobs:
 
       # semantic-release needs node 20
       - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Download built package
         uses: actions/download-artifact@v4
@@ -105,4 +109,3 @@ jobs:
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
