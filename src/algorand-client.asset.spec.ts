@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import { algorandFixture } from '../testing'
-import { generateTestAsset } from '../testing/_asset'
+import { algorandFixture } from './testing'
+import { generateTestAsset } from './testing/_asset'
 
 describe('Asset capability', () => {
   const localnet = algorandFixture()

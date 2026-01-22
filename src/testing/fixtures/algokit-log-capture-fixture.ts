@@ -1,6 +1,6 @@
 import { Config } from '../../'
-import { AlgoKitLogCaptureFixture } from '../../testing-types'
 import { TestLogger } from '../test-logger'
+import { AlgoKitLogCaptureFixture } from '../types'
 
 /**
  * Creates a test fixture for capturing AlgoKit logs.

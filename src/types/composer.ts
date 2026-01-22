@@ -2,12 +2,18 @@
 // New imports should use '@algorandfoundation/algokit-utils/composer'
 
 import {
+  TransactionComposer as _TransactionComposer,
+  type AppCallMethodCall as _AppCallMethodCall,
   type AppCallParams as _AppCallParams,
+  type AppCreateMethodCall as _AppCreateMethodCall,
   type AppCreateParams as _AppCreateParams,
+  type AppDeleteMethodCall as _AppDeleteMethodCall,
   type AppDeleteParams as _AppDeleteParams,
+  type AppMethodCall as _AppMethodCall,
   type AppMethodCallParams as _AppMethodCallParams,
+  type AppMethodCallTransactionArgument as _AppMethodCallTransactionArgument,
+  type AppUpdateMethodCall as _AppUpdateMethodCall,
   type AppUpdateParams as _AppUpdateParams,
-  type CommonAppCallParams as _CommonAppCallParams,
   type AssetConfigParams as _AssetConfigParams,
   type AssetCreateParams as _AssetCreateParams,
   type AssetDestroyParams as _AssetDestroyParams,
@@ -15,27 +21,21 @@ import {
   type AssetOptInParams as _AssetOptInParams,
   type AssetOptOutParams as _AssetOptOutParams,
   type AssetTransferParams as _AssetTransferParams,
+  type BuiltTransactions as _BuiltTransactions,
+  type CommonAppCallParams as _CommonAppCallParams,
   type CommonTransactionParams as _CommonTransactionParams,
+  type ErrorTransformer as _ErrorTransformer,
   type OfflineKeyRegistrationParams as _OfflineKeyRegistrationParams,
   type OnlineKeyRegistrationParams as _OnlineKeyRegistrationParams,
-  type AppCallMethodCall as _AppCallMethodCall,
-  type AppCreateMethodCall as _AppCreateMethodCall,
-  type AppDeleteMethodCall as _AppDeleteMethodCall,
-  type AppMethodCall as _AppMethodCall,
-  type AppMethodCallTransactionArgument as _AppMethodCallTransactionArgument,
-  type AppUpdateMethodCall as _AppUpdateMethodCall,
+  type PaymentParams as _PaymentParams,
   type ProcessedAppCallMethodCall as _ProcessedAppCallMethodCall,
   type ProcessedAppCreateMethodCall as _ProcessedAppCreateMethodCall,
   type ProcessedAppUpdateMethodCall as _ProcessedAppUpdateMethodCall,
-  type PaymentParams as _PaymentParams,
-  type SkipSignaturesSimulateOptions as _SkipSignaturesSimulateOptions,
   type RawSimulateOptions as _RawSimulateOptions,
   type SimulateOptions as _SimulateOptions,
-  type ErrorTransformer as _ErrorTransformer,
+  type SkipSignaturesSimulateOptions as _SkipSignaturesSimulateOptions,
   type TransactionComposerConfig as _TransactionComposerConfig,
   type TransactionComposerParams as _TransactionComposerParams,
-  type BuiltTransactions as _BuiltTransactions,
-  TransactionComposer as _TransactionComposer,
 } from '../composer'
 
 /** @deprecated Import from `@algorandfoundation/algokit-utils/composer` instead */
@@ -96,7 +96,7 @@ export type AppCreateMethodCall = _AppCreateMethodCall
 export type AppDeleteMethodCall = _AppDeleteMethodCall
 
 /** @deprecated Import from `@algorandfoundation/algokit-utils/composer` instead */
-export type AppMethodCall = _AppMethodCall
+export type AppMethodCall<T> = _AppMethodCall<T>
 
 /** @deprecated Import from `@algorandfoundation/algokit-utils/composer` instead */
 export type AppMethodCallTransactionArgument = _AppMethodCallTransactionArgument

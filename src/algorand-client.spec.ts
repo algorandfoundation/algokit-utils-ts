@@ -1,11 +1,11 @@
 import { ABIType, getABIMethod } from '@algorandfoundation/algokit-abi'
 import { AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { beforeAll, describe, expect, test } from 'vitest'
-import { APP_SPEC, TestContractClient, TestContractFactory } from '../../tests/example-contracts/client/TestContractClient'
-import { algorandFixture } from '../testing'
+import { APP_SPEC, TestContractClient, TestContractFactory } from './../tests/example-contracts/client/TestContractClient'
 import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
+import { algorandFixture } from './testing'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   // Decode the base64-encoded TEAL source code
