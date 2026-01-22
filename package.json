@@ -25,11 +25,6 @@
       "import": "./index.mjs",
       "require": "./index.js"
     },
-    "./*": {
-      "types": "./*.d.ts",
-      "import": "./*.mjs",
-      "require": "./*.js"
-    },
     "./types/*": {
       "types": "./types/*.d.ts",
       "import": "./types/*.mjs",
@@ -50,6 +45,11 @@
       "import": "./transact/index.mjs",
       "require": "./transact/index.js"
     },
+    "./transaction": {
+      "types": "./transaction/index.d.ts",
+      "import": "./transaction/index.mjs",
+      "require": "./transaction/index.js"
+    },
     "./algod-client": {
       "types": "./algod-client/index.d.ts",
       "import": "./algod-client/index.mjs",
@@ -69,6 +69,11 @@
       "types": "./algo25/index.d.ts",
       "import": "./algo25/index.mjs",
       "require": "./algo25/index.js"
+    },
+    "./*": {
+      "types": "./*.d.ts",
+      "import": "./*.mjs",
+      "require": "./*.js"
     },
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"

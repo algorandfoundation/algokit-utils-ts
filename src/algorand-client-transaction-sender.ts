@@ -2,8 +2,6 @@ import { ABIMethod } from '@algorandfoundation/algokit-abi'
 import { ReadableAddress, getAddress, getApplicationAddress } from '@algorandfoundation/algokit-common'
 import { Transaction } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
-import { Config } from './config'
-import { asJson, defaultJsonValueReplacer } from './util'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
@@ -21,7 +19,9 @@ import {
   TransactionComposer,
   TransactionComposerConfig,
 } from './composer'
-import { SendParams, SendSingleTransactionResult } from './transaction-types'
+import { Config } from './config'
+import { SendParams, SendSingleTransactionResult } from './transaction/types'
+import { asJson, defaultJsonValueReplacer } from './util'
 
 const getMethodCallForLog = ({ method, args }: { method: ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>

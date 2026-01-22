@@ -2,23 +2,23 @@
 // New imports should use '@algorandfoundation/algokit-utils/transaction-types'
 
 import {
-  type TransactionNote as _TransactionNote,
-  type TransactionNoteData as _TransactionNoteData,
+  type AdditionalTransactionComposerContext as _AdditionalTransactionComposerContext,
   type Arc2TransactionNote as _Arc2TransactionNote,
-  type SendTransactionParams as _SendTransactionParams,
-  type SendSingleTransactionResult as _SendSingleTransactionResult,
-  type SendTransactionResult as _SendTransactionResult,
-  type SendTransactionResults as _SendTransactionResults,
-  type SendTransactionComposerResults as _SendTransactionComposerResults,
   type ConfirmedTransactionResult as _ConfirmedTransactionResult,
   type ConfirmedTransactionResults as _ConfirmedTransactionResults,
-  type SendTransactionFrom as _SendTransactionFrom,
-  type TransactionToSign as _TransactionToSign,
-  type TransactionGroupToSend as _TransactionGroupToSend,
   type SendParams as _SendParams,
-  type AdditionalTransactionComposerContext as _AdditionalTransactionComposerContext,
+  type SendSingleTransactionResult as _SendSingleTransactionResult,
+  type SendTransactionComposerResults as _SendTransactionComposerResults,
+  type SendTransactionFrom as _SendTransactionFrom,
+  type SendTransactionParams as _SendTransactionParams,
+  type SendTransactionResult as _SendTransactionResult,
+  type SendTransactionResults as _SendTransactionResults,
   type TransactionComposerToSend as _TransactionComposerToSend,
-} from '../transaction-types'
+  type TransactionGroupToSend as _TransactionGroupToSend,
+  type TransactionNote as _TransactionNote,
+  type TransactionNoteData as _TransactionNoteData,
+  type TransactionToSign as _TransactionToSign,
+} from '../transaction/types'
 
 /** @deprecated Import from `@algorandfoundation/algokit-utils/transaction-types` instead */
 export type TransactionNote = _TransactionNote

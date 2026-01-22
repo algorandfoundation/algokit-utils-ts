@@ -2,9 +2,6 @@ import { ABIReturn } from '@algorandfoundation/algokit-abi'
 import { Address, Expand, getAddress, getApplicationAddress, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { IndexerClient } from '@algorandfoundation/algokit-indexer-client'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
-import { Config } from './config'
-import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-client'
-import { calculateExtraProgramPages } from './util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
   APP_DEPLOY_NOTE_DAPP,
@@ -25,7 +22,10 @@ import {
   AppUpdateParams,
   TransactionComposer,
 } from './composer'
-import { ConfirmedTransactionResult, SendParams } from './transaction-types'
+import { Config } from './config'
+import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-client'
+import { ConfirmedTransactionResult, SendParams } from './transaction/types'
+import { calculateExtraProgramPages } from './util'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>

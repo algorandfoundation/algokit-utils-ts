@@ -52,7 +52,7 @@ import { AlgoAmount } from './amount'
 import { AppManager } from './app-manager'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction-types'
+import { Arc2TransactionNote, SendParams, SendTransactionComposerResults } from './transaction/types'
 import {
   buildAssetConfig,
   buildAssetCreate,

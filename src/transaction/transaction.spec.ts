@@ -16,8 +16,8 @@ import { AppSpec } from '../app-spec'
 import { PaymentParams, TransactionComposer } from '../composer'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
-import { Arc2TransactionNote } from '../transaction-types'
 import { waitForConfirmation } from './transaction'
+import { Arc2TransactionNote } from './types'
 
 describe('transaction', () => {
   const localnet = algorandFixture()

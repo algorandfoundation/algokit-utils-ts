@@ -18,7 +18,7 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { Config } from './config'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
-import { SendParams, SendSingleTransactionResult } from './transaction-types'
+import { SendParams, SendSingleTransactionResult } from './transaction/types'
 import { calculateFundAmount, memoize } from './util'
 
 /** Result from performing an ensureFunded call. */
