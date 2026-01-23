@@ -28,7 +28,7 @@ jobs:
       - name: Run CI
         uses: ./.github/actions/ci
         with:
-          node-version: 20.x
+          node-version: 22.x
           commit-lint-from: ${{ github.event.before }}
           commit-lint-to: ${{ github.sha }}
 
@@ -56,7 +56,7 @@ jobs:
       - ci
       - check_docs
     with:
-      node-version: 20.x
+      node-version: 22.x
       build-path: dist
       artifact-name: package
 
@@ -83,11 +83,11 @@ jobs:
       - name: Set Git user as GitHub actions
         run: git config --global user.email "179917785+engineering-ci[bot]@users.noreply.github.com" && git config --global user.name "engineering-ci[bot]"
 
-      # semantic-release needs node 20
-      - name: Use Node.js 20.x
+      # semantic-release v25+ needs node 22.14+
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
 
       - name: Download built package
