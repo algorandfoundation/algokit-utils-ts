@@ -28,9 +28,11 @@ export default createConfig(
     'src/config.ts',
     'src/debugging.ts',
     'src/dispenser-client.ts',
+    'src/expand.ts',
     'src/indexer.ts',
     'src/kmd-account-manager.ts',
     'src/lifecycle-events.ts',
+    'src/logging.ts',
     'src/logic-error.ts',
     'src/network-client.ts',
     // Package re-exports
