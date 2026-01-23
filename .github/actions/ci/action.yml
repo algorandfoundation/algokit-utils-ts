@@ -103,6 +103,12 @@ runs:
       working-directory: examples/abi
       run: ./verify-all.sh
 
+    - name: Reset LocalNet for Transact examples
+      shell: bash
+      run: |
+        algokit localnet reset --no-prompt
+        npx --yes wait-on tcp:4001 -t 30000
+
     - name: Verify Transact examples
       shell: bash
       working-directory: examples/transact
