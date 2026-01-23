@@ -13,12 +13,12 @@ exports[`GET v2_status_wait-for-block-after_ROUND > Common Tests > Basic request
   "catchpointVerifiedKvs": 0,
   "catchupTime": 0n,
   "lastCatchpoint": "",
-  "lastRound": 57711496n,
+  "lastRound": 58979813n,
   "lastVersion": "https://github.com/algorandfoundation/specs/tree/953304de35264fc3ef91bcd05c123242015eeaed",
   "nextVersion": "https://github.com/algorandfoundation/specs/tree/953304de35264fc3ef91bcd05c123242015eeaed",
-  "nextVersionRound": 57711497n,
+  "nextVersionRound": 58979814n,
   "nextVersionSupported": true,
   "stoppedAtUnsupportedRound": false,
-  "timeSinceLastRound": 911247959n,
+  "timeSinceLastRound": 150888008n,
 }
 `;

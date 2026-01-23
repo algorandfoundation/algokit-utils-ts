@@ -4,7 +4,7 @@ exports[`GET v2_transactions_params > Common Tests > Basic request and response 
 {
   "consensusVersion": "https://github.com/algorandfoundation/specs/tree/953304de35264fc3ef91bcd05c123242015eeaed",
   "fee": 0n,
-  "firstValid": 57711496n,
+  "firstValid": 58979813n,
   "flatFee": false,
   "genesisHash": Uint8Array [
     72,
@@ -41,7 +41,7 @@ exports[`GET v2_transactions_params > Common Tests > Basic request and response 
     34,
   ],
   "genesisId": "testnet-v1.0",
-  "lastValid": 57712496n,
+  "lastValid": 58980813n,
   "minFee": 1000n,
 }
 `;
