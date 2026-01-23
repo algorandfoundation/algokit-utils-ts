@@ -1,12 +1,7 @@
 {
-  "1109842": {
+  "1112496": {
     "active": true,
-    "notes": "Bundled dependency in NPM, which cannot be overriden and has no update available yet.",
-    "expiry": "2026-01-28"
-  },
-  "1112148": {
-    "active": true,
-    "notes": "Bundled dependency in NPM via semantic-release chain. Low severity DoS (CWE-400, CWE-1333) in diff@5.2.0 parsePatch/applyPatch functions. Cannot be overridden until npm releases updated bundle. Mitigation: Only affects dev dependencies, not production runtime. See GHSA-73rr-hh4g-fpgx",
-    "expiry": "2026-01-30"
+    "notes": "undici is used in @semantic-release/npm and this hasn't been fixed",
+    "expiry": "2026-02-15"
   }
 }

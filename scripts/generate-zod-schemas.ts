@@ -1,10 +1,10 @@
-#!/usr/bin/env npx ts-node
+#!/usr/bin/env npx tsx
 
 /**
  * Generate Zod schemas from OpenAPI 3.x specification files.
  *
  * Usage:
- *   npx ts-node scripts/generate-zod-schemas.ts \
+ *   npx tsx scripts/generate-zod-schemas.ts \
  *     --spec .algokit-oas-generator/specs/algod.oas3.json \
  *     --output packages/algod_client/tests/schemas.ts
  *
@@ -73,7 +73,7 @@ async function main() {
   const args = parseArgs(process.argv.slice(2))
 
   if (!args.spec || !args.output) {
-    console.error('Usage: npx ts-node generate-zod-schemas.ts --spec <path> --output <path>')
+    console.error('Usage: npx tsx generate-zod-schemas.ts --spec <path> --output <path>')
     process.exit(1)
   }
 
