@@ -73,12 +73,20 @@ jobs:
         working-directory: examples/abi
         run: npm ci
 
+      - name: Install algod_client examples dependencies
+        working-directory: examples/algod_client
+        run: npm ci
+
       - name: Install Transact examples dependencies
         working-directory: examples/transact
         run: npm ci
 
       - name: Verify ABI examples
         working-directory: examples/abi
+        run: ./verify-all.sh
+
+      - name: Verify algod_client examples
+        working-directory: examples/algod_client
         run: ./verify-all.sh
 
       - name: Verify Transact examples
