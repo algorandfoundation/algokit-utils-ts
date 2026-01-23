@@ -59,11 +59,12 @@ for example in "${EXAMPLES[@]}"; do
     fi
 
     # Run the example and capture output/exit code
-    if npx tsx "$example/index.ts" > /dev/null 2>&1; then
+    if OUTPUT=$(npx tsx "$example/index.ts" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else
         echo -e "${RED}FAILED${NC}"
+        echo "$OUTPUT"
         FAILED=$((FAILED + 1))
         FAILED_EXAMPLES+=("$example")
     fi
