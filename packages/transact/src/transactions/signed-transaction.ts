@@ -152,6 +152,8 @@ export function decodeSignedTransactions(encodedSignedTransactions: Uint8Array[]
 
 /**
  * Validate a signed transaction structure
+ * @param signedTransaction - The signed transaction to validate
+ * @throws {Error} If multiple signature types are set or signature length is invalid
  */
 export function validateSignedTransaction(signedTransaction: SignedTransaction): void {
   validateTransaction(signedTransaction.txn)

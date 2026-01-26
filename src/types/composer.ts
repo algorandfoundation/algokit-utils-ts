@@ -529,6 +529,7 @@ export class TransactionComposer {
    *   //  already specified, but here for completeness
    *   maxFee: (3000).microAlgo(),
    * })
+   * @see {@link AlgorandClient.send} for a simpler payment API
    */
   addPayment(params: PaymentParams): TransactionComposer {
     this.push({ data: params, type: 'pay' })

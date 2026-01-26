@@ -47,6 +47,7 @@ function computeChecksum(seed: Uint8Array): string {
  * Each word in the mnemonic represents 11 bits of data, and the last 11 bits are reserved for the checksum.
  * @param seed - 32 bytes long seed
  * @returns 25 words mnemonic
+ * @throws {RangeError} If seed length is not 32 bytes
  */
 export function mnemonicFromSeed(seed: Uint8Array) {
   // Sanity length check
@@ -93,6 +94,9 @@ function toUint8Array(buffer11: number[]): Uint8Array {
  * of the passed words is not found in the words list.
  * @param mnemonic - 25 words mnemonic
  * @returns 32 bytes long seed
+ * @throws {Error} If a word is not in the wordlist
+ * @throws {Error} If the mnemonic has an incorrect checksum
+ * @throws {Error} If the mnemonic format is incorrect
  */
 export function seedFromMnemonic(mnemonic: string) {
   const words = mnemonic.split(' ')

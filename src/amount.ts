@@ -57,6 +57,7 @@ BigInt.prototype.algo = function () {
 
 /** Returns an amount of Algo using AlgoAmount
  * @param algos The amount of Algo
+ * @see {@link AlgoAmount}
  */
 export const algos = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
@@ -71,6 +72,7 @@ export const algo = (algos: number | bigint) => {
 
 /** Returns an amount of µAlgo using AlgoAmount
  * @param microAlgos The amount of µAlgo
+ * @see {@link algos} for Algo denomination
  */
 export const microAlgos = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)

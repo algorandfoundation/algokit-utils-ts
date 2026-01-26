@@ -426,8 +426,11 @@ function getConstantBlockOffset(program: Uint8Array) {
   return Math.max(bytecblockOffset ?? 0, intcblockOffset ?? 0)
 }
 
-/** ARC-56/ARC-32 application client that allows you to manage calls and
- * state for a specific deployed instance of an app (with a known app ID). */
+/**
+ * ARC-56/ARC-32 application client that allows you to manage calls and
+ * state for a specific deployed instance of an app (with a known app ID).
+ * @see {@link AppFactory} for creating and deploying apps
+ */
 export class AppClient {
   private _appId: bigint
   private _appAddress: Address
