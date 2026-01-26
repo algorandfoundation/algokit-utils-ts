@@ -148,7 +148,7 @@ ___
 
 Ƭ **SendTransactionFrom**: `AddressWithTransactionSigner`
 
-**`Deprcated`**
+**`Deprecated`**
 
 Use `SendingAddress` instead
 
