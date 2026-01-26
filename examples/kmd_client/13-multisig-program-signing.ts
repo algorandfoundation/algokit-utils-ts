@@ -43,6 +43,7 @@ import {
   createAlgodClient,
   createKmdClient,
   createTestWallet,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
@@ -195,27 +196,10 @@ async function main() {
     // =========================================================================
     printStep(4, 'Creating a simple TEAL program')
 
-    // This is a simple logic signature program that:
-    // 1. Checks that the transaction is a payment (txn TypeEnum == 1)
-    // 2. Checks that the amount is at most 1 ALGO (1,000,000 microALGOs)
+    // Load TEAL logic signature from shared artifacts
+    // This program approves payment transactions up to 1 ALGO
     // In production, you'd have more sophisticated logic
-    const tealSource = `#pragma version 8
-// Delegated Multisig Logic Signature Example
-// This program approves payment transactions up to 1 ALGO
-
-// Check that this is a payment transaction
-txn TypeEnum
-int pay
-==
-
-// Check that the amount is <= 1 ALGO (1,000,000 microALGOs)
-txn Amount
-int 1000000
-<=
-
-// Both conditions must be true
-&&
-`
+    const tealSource = loadTealSource('delegated-payment-limit.teal')
 
     printInfo('TEAL Program Source:')
     printInfo('')

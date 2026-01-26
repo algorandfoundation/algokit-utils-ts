@@ -19,6 +19,7 @@ import {
   createAlgodClient,
   createAlgorandClient,
   createIndexerClient,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
@@ -86,67 +87,11 @@ async function main() {
   let appId2: bigint
 
   try {
-    // Simple approval program that stores a counter in global state and supports local state
-    const approvalSource = `#pragma version 10
-// Simple smart contract for demonstration
-txn ApplicationID
-int 0
-==
-bnz handle_creation
+    // Load approval program from shared artifacts that stores a counter in global state and supports local state
+    const approvalSource = loadTealSource('approval-lifecycle-counter.teal')
 
-txn OnCompletion
-int NoOp
-==
-bnz handle_noop
-
-txn OnCompletion
-int OptIn
-==
-bnz handle_optin
-
-txn OnCompletion
-int DeleteApplication
-==
-bnz handle_delete
-
-int 0
-return
-
-handle_creation:
-  byte "counter"
-  int 0
-  app_global_put
-  int 1
-  return
-
-handle_noop:
-  byte "counter"
-  app_global_get
-  int 1
-  +
-  byte "counter"
-  swap
-  app_global_put
-  int 1
-  return
-
-handle_optin:
-  txn Sender
-  byte "user_visits"
-  int 1
-  app_local_put
-  int 1
-  return
-
-handle_delete:
-  int 1
-  return
-`
-
-    const clearSource = `#pragma version 10
-int 1
-return
-`
+    // Load clear state program from shared artifacts
+    const clearSource = loadTealSource('clear-state-approve.teal')
 
     // Compile TEAL programs
     printInfo('Compiling TEAL programs...')

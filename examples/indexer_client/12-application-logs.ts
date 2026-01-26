@@ -20,6 +20,7 @@ import {
   createAlgodClient,
   createAlgorandClient,
   createIndexerClient,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
@@ -124,64 +125,12 @@ async function main() {
   let appId: bigint
 
   try {
-    // TEAL program that emits logs on each call
-    // Uses the `log` opcode to emit log entries
-    const approvalSource = `#pragma version 10
-// Application that emits logs for demonstration
+    // Load TEAL programs from shared artifacts
+    // The approval program emits logs on each call using the `log` opcode
+    const approvalSource = loadTealSource('approval-logging.teal')
 
-txn ApplicationID
-int 0
-==
-bnz handle_creation
-
-// On any call (NoOp), emit some logs
-txn OnCompletion
-int NoOp
-==
-bnz handle_call
-
-txn OnCompletion
-int DeleteApplication
-==
-bnz handle_delete
-
-int 0
-return
-
-handle_creation:
-  // Log a creation message
-  byte "App created!"
-  log
-  int 1
-  return
-
-handle_call:
-  // Emit multiple log entries
-  byte "Log entry 1: Hello from the app"
-  log
-  byte "Log entry 2: Call processed"
-  log
-  // Log the sender address
-  byte "Sender: "
-  txn Sender
-  concat
-  log
-  int 1
-  return
-
-handle_delete:
-  byte "App deleted!"
-  log
-  int 1
-  return
-`
-
-    const clearSource = `#pragma version 10
-byte "Clear state called"
-log
-int 1
-return
-`
+    // Load clear state program that logs when called
+    const clearSource = loadTealSource('clear-state-logging.teal')
 
     // Compile TEAL programs
     printInfo('Compiling TEAL programs...')

@@ -13,6 +13,7 @@ import {
   createAlgodClient,
   createAlgorandClient,
   createIndexerClient,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
@@ -100,70 +101,14 @@ async function main() {
   let appId: bigint
 
   try {
-    // Approval program that supports box operations:
+    // Load approval program from shared artifacts that supports box operations:
     // - On create: does nothing (just succeeds)
     // - On call with arg "create_box": creates a box with name from arg[1] and value from arg[2]
     // - On call with arg "delete_box": deletes a box with name from arg[1]
-    const approvalSource = `#pragma version 10
-txn ApplicationID
-bz create
+    const approvalSource = loadTealSource('approval-box-ops.teal')
 
-// Check if we're being called with "create_box" as first arg
-txn NumAppArgs
-int 0
-==
-bnz just_succeed
-
-txna ApplicationArgs 0
-byte "create_box"
-==
-bnz handle_create_box
-
-txna ApplicationArgs 0
-byte "delete_box"
-==
-bnz handle_delete_box
-
-// Default: just succeed
-b just_succeed
-
-handle_create_box:
-// Create or replace a box with the given name and value
-// Args: [0] = "create_box", [1] = box_name, [2] = box_value
-txna ApplicationArgs 1
-txna ApplicationArgs 2
-len
-box_create
-pop
-txna ApplicationArgs 1
-int 0
-txna ApplicationArgs 2
-box_replace
-int 1
-return
-
-handle_delete_box:
-// Delete a box with the given name
-// Args: [0] = "delete_box", [1] = box_name
-txna ApplicationArgs 1
-box_del
-pop
-int 1
-return
-
-just_succeed:
-int 1
-return
-
-create:
-int 1
-return
-`
-
-    const clearSource = `#pragma version 10
-int 1
-return
-`
+    // Load clear state program from shared artifacts
+    const clearSource = loadTealSource('clear-state-approve.teal')
 
     // Compile TEAL programs
     printInfo('Compiling TEAL programs...')

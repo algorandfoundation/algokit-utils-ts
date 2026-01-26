@@ -12,6 +12,7 @@ import {
   createAlgodClient,
   createAlgorandClient,
   getFundedAccount,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
@@ -72,45 +73,14 @@ async function main() {
   // =========================================================================
   printStep(2, 'Deploying a test application')
 
-  // Simple approval program that:
+  // Load approval program from shared artifacts
   // - Accepts all ApplicationCall transactions
   // - Stores a counter in global state on each call
   // - Has one global uint and one global bytes slot
-  const approvalSource = `
-#pragma version 10
-txn ApplicationID
-bz create
-// On call: increment counter
-byte "counter"
-app_global_get
-int 1
-+
-byte "counter"
-swap
-app_global_put
-byte "message"
-byte "Hello, Algorand!"
-app_global_put
-int 1
-return
-create:
-// On create: initialize counter to 0
-byte "counter"
-int 0
-app_global_put
-byte "message"
-byte "Hello, Algorand!"
-app_global_put
-int 1
-return
-`
+  const approvalSource = loadTealSource('approval-counter-message.teal')
 
-  // Simple clear state program that always succeeds
-  const clearSource = `
-#pragma version 10
-int 1
-return
-`
+  // Load clear state program from shared artifacts
+  const clearSource = loadTealSource('clear-state-approve.teal')
 
   try {
     printInfo('Compiling TEAL programs...')

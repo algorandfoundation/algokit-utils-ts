@@ -21,6 +21,7 @@ import {
   createAlgorandClient,
   createIndexerClient,
   formatMicroAlgo,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
@@ -151,14 +152,9 @@ async function main() {
 
     // 6. Application creation (appl transaction)
     printInfo('Creating application transaction...')
-    const approvalSource = `#pragma version 10
-int 1
-return
-`
-    const clearSource = `#pragma version 10
-int 1
-return
-`
+    // Load simple approval/clear programs from shared artifacts
+    const approvalSource = loadTealSource('clear-state-approve.teal')
+    const clearSource = loadTealSource('clear-state-approve.teal')
 
     const approvalResult = await algod.tealCompile(approvalSource)
     const approvalProgram = new Uint8Array(Buffer.from(approvalResult.result, 'base64'))
