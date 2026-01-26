@@ -8,22 +8,22 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Array of example directories in order
+# Array of example files in order
 EXAMPLES=(
-    "01-type-parsing"
-    "02-primitive-types"
-    "03-address-type"
-    "04-string-type"
-    "05-static-array"
-    "06-dynamic-array"
-    "07-tuple-type"
-    "08-struct-type"
-    "09-struct-tuple-conversion"
-    "10-bool-packing"
-    "11-abi-method"
-    "12-avm-types"
-    "13-type-guards"
-    "14-complex-nested"
+    "01-type-parsing.ts"
+    "02-primitive-types.ts"
+    "03-address-type.ts"
+    "04-string-type.ts"
+    "05-static-array.ts"
+    "06-dynamic-array.ts"
+    "07-tuple-type.ts"
+    "08-struct-type.ts"
+    "09-struct-tuple-conversion.ts"
+    "10-bool-packing.ts"
+    "11-abi-method.ts"
+    "12-avm-types.ts"
+    "13-type-guards.ts"
+    "14-complex-nested.ts"
 )
 
 # Colors for output
@@ -44,15 +44,15 @@ FAILED_EXAMPLES=()
 for example in "${EXAMPLES[@]}"; do
     echo -n "Running $example... "
 
-    if [ ! -f "$example.ts" ]; then
-        echo -e "${RED}FAILED${NC} ($example.ts not found)"
+    if [ ! -f "$example" ]; then
+        echo -e "${RED}FAILED${NC} (file not found)"
         FAILED=$((FAILED + 1))
         FAILED_EXAMPLES+=("$example")
         continue
     fi
 
     # Run the example and capture output/exit code
-    if OUTPUT=$(npx tsx "$example.ts" 2>&1); then
+    if OUTPUT=$(npx tsx "$example" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else

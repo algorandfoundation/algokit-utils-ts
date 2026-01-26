@@ -85,6 +85,10 @@ jobs:
         working-directory: examples/indexer_client
         run: npm ci
 
+      - name: Install kmd_client examples dependencies
+        working-directory: examples/kmd_client
+        run: npm ci
+
       - name: Verify ABI examples
         working-directory: examples/abi
         run: ./verify-all.sh
@@ -99,4 +103,8 @@ jobs:
 
       - name: Verify indexer_client examples
         working-directory: examples/indexer_client
+        run: ./verify-all.sh
+
+      - name: Verify kmd_client examples
+        working-directory: examples/kmd_client
         run: ./verify-all.sh

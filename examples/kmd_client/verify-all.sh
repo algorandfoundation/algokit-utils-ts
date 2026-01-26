@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# verify-all.sh - Run all algod_client examples and verify they work
+# verify-all.sh - Run all kmd_client examples and verify they work
 # Exit with non-zero code if any example fails
 
 set -e
@@ -10,25 +10,19 @@ cd "$SCRIPT_DIR"
 
 # Array of example files in order
 EXAMPLES=(
-    "01-node-health-status.ts"
-    "02-version-genesis.ts"
-    "03-ledger-supply.ts"
-    "04-account-info.ts"
-    "05-transaction-params.ts"
-    "06-send-transaction.ts"
-    "07-pending-transactions.ts"
-    "08-block-data.ts"
-    "09-asset-info.ts"
-    "10-application-info.ts"
-    "11-application-boxes.ts"
-    "12-teal-compile.ts"
-    "13-simulation.ts"
-    "14-state-deltas.ts"
-    "15-transaction-proof.ts"
-    "16-lightblock-proof.ts"
-    "17-state-proof.ts"
-    "18-devmode-timestamp.ts"
-    "19-sync-round.ts"
+    "01-version.ts"
+    "02-wallet-management.ts"
+    "03-wallet-sessions.ts"
+    "04-key-generation.ts"
+    "05-key-import-export.ts"
+    "06-key-listing-deletion.ts"
+    "07-master-key-export.ts"
+    "08-multisig-setup.ts"
+    "09-multisig-management.ts"
+    "10-transaction-signing.ts"
+    "11-multisig-signing.ts"
+    "12-program-signing.ts"
+    "13-multisig-program-signing.ts"
 )
 
 # Colors for output
@@ -38,7 +32,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo "========================================"
-echo "Algod Client Examples Verification Script"
+echo "KMD Client Examples Verification Script"
 echo "========================================"
 echo ""
 
