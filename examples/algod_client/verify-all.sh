@@ -49,22 +49,15 @@ FAILED_EXAMPLES=()
 for example in "${EXAMPLES[@]}"; do
     echo -n "Running $example... "
 
-    if [ ! -d "$example" ]; then
-        echo -e "${RED}FAILED${NC} (directory not found)"
-        FAILED=$((FAILED + 1))
-        FAILED_EXAMPLES+=("$example")
-        continue
-    fi
-
-    if [ ! -f "$example/index.ts" ]; then
-        echo -e "${RED}FAILED${NC} (index.ts not found)"
+    if [ ! -f "$example.ts" ]; then
+        echo -e "${RED}FAILED${NC} ($example.ts not found)"
         FAILED=$((FAILED + 1))
         FAILED_EXAMPLES+=("$example")
         continue
     fi
 
     # Run the example and capture output/exit code
-    if OUTPUT=$(npx tsx "$example/index.ts" 2>&1); then
+    if OUTPUT=$(npx tsx "$example.ts" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else

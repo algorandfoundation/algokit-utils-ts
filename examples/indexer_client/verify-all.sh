@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# verify-all.sh - Run all ABI examples and verify they work
+# verify-all.sh - Run all indexer_client examples and verify they work
 # Exit with non-zero code if any example fails
 
 set -e
@@ -8,22 +8,24 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Array of example directories in order
+# Array of example files in order
 EXAMPLES=(
-    "01-type-parsing"
-    "02-primitive-types"
-    "03-address-type"
-    "04-string-type"
-    "05-static-array"
-    "06-dynamic-array"
-    "07-tuple-type"
-    "08-struct-type"
-    "09-struct-tuple-conversion"
-    "10-bool-packing"
-    "11-abi-method"
-    "12-avm-types"
-    "13-type-guards"
-    "14-complex-nested"
+    "01-health-check.ts"
+    "02-account-lookup.ts"
+    "03-account-assets.ts"
+    "04-account-applications.ts"
+    "05-account-transactions.ts"
+    "06-transaction-lookup.ts"
+    "07-transaction-search.ts"
+    "08-asset-lookup.ts"
+    "09-asset-balances.ts"
+    "10-asset-transactions.ts"
+    "11-application-lookup.ts"
+    "12-application-logs.ts"
+    "13-application-boxes.ts"
+    "14-block-lookup.ts"
+    "15-block-headers.ts"
+    "16-pagination.ts"
 )
 
 # Colors for output
@@ -33,7 +35,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo "========================================"
-echo "ABI Examples Verification Script"
+echo "Indexer Client Examples Verification Script"
 echo "========================================"
 echo ""
 
@@ -44,15 +46,15 @@ FAILED_EXAMPLES=()
 for example in "${EXAMPLES[@]}"; do
     echo -n "Running $example... "
 
-    if [ ! -f "$example.ts" ]; then
-        echo -e "${RED}FAILED${NC} ($example.ts not found)"
+    if [ ! -f "$example" ]; then
+        echo -e "${RED}FAILED${NC} (file not found)"
         FAILED=$((FAILED + 1))
         FAILED_EXAMPLES+=("$example")
         continue
     fi
 
     # Run the example and capture output/exit code
-    if OUTPUT=$(npx tsx "$example.ts" 2>&1); then
+    if OUTPUT=$(npx tsx "$example" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else

@@ -81,6 +81,10 @@ jobs:
         working-directory: examples/transact
         run: npm ci
 
+      - name: Install indexer_client examples dependencies
+        working-directory: examples/indexer_client
+        run: npm ci
+
       - name: Verify ABI examples
         working-directory: examples/abi
         run: ./verify-all.sh
@@ -91,4 +95,8 @@ jobs:
 
       - name: Verify Transact examples
         working-directory: examples/transact
+        run: ./verify-all.sh
+
+      - name: Verify indexer_client examples
+        working-directory: examples/indexer_client
         run: ./verify-all.sh
