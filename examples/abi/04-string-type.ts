@@ -1,5 +1,5 @@
 /**
- * ABI String Type Example
+ * Example: ABI String Type
  *
  * This example demonstrates how to encode and decode dynamic strings using ABIStringType:
  * - ABIStringType encodes strings with a 2-byte length prefix followed by UTF-8 content

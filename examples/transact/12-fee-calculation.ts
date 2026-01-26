@@ -1,5 +1,5 @@
 /**
- * Fee Calculation Example
+ * Example: Fee Calculation
  *
  * This example demonstrates how to estimate transaction size and calculate fees
  * using the transact package:

@@ -1,5 +1,5 @@
 /**
- * Multisig Example
+ * Example: Multisig
  *
  * This example demonstrates how to create and use a 2-of-3 multisig account.
  *

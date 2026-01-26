@@ -1,5 +1,5 @@
 /**
- * Asset Freeze Example
+ * Example: Asset Freeze
  *
  * This example demonstrates how to freeze and unfreeze asset holdings using
  * the transact package:

@@ -1,5 +1,5 @@
 /**
- * ABI Struct Type Example
+ * Example: ABI Struct Type
  *
  * This example demonstrates how to encode and decode named structs using ABIStructType:
  * - Creating ABIStructType with named fields

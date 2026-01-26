@@ -1,5 +1,5 @@
 /**
- * Payment with Close Example
+ * Example: Payment with Close
  *
  * This example demonstrates how to close an account by transferring all remaining
  * ALGO to another account using the closeRemainderTo field in PaymentTransactionFields.

@@ -1,5 +1,5 @@
 /**
- * Payment Transaction Example
+ * Example: Payment Transaction
  *
  * This example demonstrates how to send ALGO between accounts using the transact package.
  * It shows the low-level transaction construction pattern with:

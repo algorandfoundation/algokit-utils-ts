@@ -1,5 +1,5 @@
 /**
- * ABI Address Type Example
+ * Example: ABI Address Type
  *
  * This example demonstrates how to encode and decode Algorand addresses using ABIAddressType:
  * - Encoding address strings (base32 format) to 32 bytes

@@ -1,5 +1,5 @@
 /**
- * Atomic Transaction Group Example
+ * Example: Atomic Transaction Group
  *
  * This example demonstrates how to group multiple transactions atomically.
  * All transactions in a group either succeed together or fail together.

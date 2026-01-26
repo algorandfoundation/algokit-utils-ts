@@ -1,5 +1,5 @@
 /**
- * Single Signature Example
+ * Example: Single Signature
  *
  * This example demonstrates how to create an ed25519 keypair and sign transactions
  * using the low-level transact package APIs.

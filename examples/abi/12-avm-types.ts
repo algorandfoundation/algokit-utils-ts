@@ -1,5 +1,5 @@
 /**
- * AVM Type Encoding Example
+ * Example: AVM Type Encoding
  *
  * This example demonstrates how to work with AVM-specific types:
  * - AVMBytes: Raw byte arrays (no length prefix, unlike ABI string/bytes)

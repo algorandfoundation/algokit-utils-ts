@@ -1,5 +1,5 @@
 /**
- * Asset Transfer Example
+ * Example: Asset Transfer
  *
  * This example demonstrates the full asset transfer flow using the transact package:
  * 1. Create a new Algorand Standard Asset (ASA)

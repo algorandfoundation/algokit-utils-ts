@@ -1,5 +1,5 @@
 /**
- * ABI Struct and Tuple Conversion Example
+ * Example: ABI Struct and Tuple Conversion
  *
  * This example demonstrates how to convert between struct values (named) and tuple values (positional):
  * - getTupleValueFromStructValue(): Convert struct object to tuple array

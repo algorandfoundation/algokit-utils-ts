@@ -1,5 +1,5 @@
 /**
- * Type Guards Example
+ * Example: Type Guards
  *
  * This example demonstrates how to use type guard functions to check
  * argument and type categories in the ABI system:

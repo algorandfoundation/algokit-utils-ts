@@ -1,5 +1,5 @@
 /**
- * Atomic Swap Example
+ * Example: Atomic Swap
  *
  * This example demonstrates how to perform an atomic swap of ALGO for ASA between two parties.
  * In an atomic swap:

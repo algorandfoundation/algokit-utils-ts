@@ -1,5 +1,5 @@
 /**
- * Logic Signature Example
+ * Example: Logic Signature
  *
  * This example demonstrates how to use a logic signature (lsig) to authorize transactions.
  *

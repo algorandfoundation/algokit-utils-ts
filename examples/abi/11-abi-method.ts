@@ -1,5 +1,5 @@
 /**
- * ABI Method Example
+ * Example: ABI Method
  *
  * This example demonstrates how to work with ABI methods:
  * - Parsing method signatures with ABIMethod.fromSignature()

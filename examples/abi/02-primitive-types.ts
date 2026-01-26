@@ -1,5 +1,5 @@
 /**
- * ABI Primitive Types Example
+ * Example: ABI Primitive Types
  *
  * This example demonstrates how to encode and decode primitive ABI types:
  * - ABIUintType: Unsigned integers of various bit sizes (8, 16, 32, 64, 128, 256, 512)

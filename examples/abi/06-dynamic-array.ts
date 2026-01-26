@@ -1,5 +1,5 @@
 /**
- * ABI Dynamic Array Type Example
+ * Example: ABI Dynamic Array Type
  *
  * This example demonstrates how to encode and decode variable-length arrays using ABIArrayDynamicType:
  * - uint64[]: Dynamic array of unsigned 64-bit integers

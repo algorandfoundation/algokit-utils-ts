@@ -23,10 +23,7 @@ import {
   shortenAddress,
 } from '../shared/utils.js'
 
-/**
- * Display details of a signed transaction from the pending pool
- * Using inferred type from PendingTransactionsResponse.topTransactions
- */
+/** Display details of a signed transaction from the pending pool */
 function displayPendingTransaction(txn: PendingTransactionsResponse['topTransactions'][number], index: number): void {
   printInfo(`  Transaction ${index + 1}:`)
   if (txn.txn) {

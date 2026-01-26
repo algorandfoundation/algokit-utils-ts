@@ -1,5 +1,5 @@
 /**
- * Asset Clawback Example
+ * Example: Asset Clawback
  *
  * This example demonstrates how to clawback assets from an account using
  * the clawback address and the transact package:

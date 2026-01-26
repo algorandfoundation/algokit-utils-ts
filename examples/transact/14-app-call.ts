@@ -1,5 +1,5 @@
 /**
- * Application Call Example
+ * Example: Application Call
  *
  * This example demonstrates how to deploy and interact with a smart contract
  * on Algorand using the transact package:

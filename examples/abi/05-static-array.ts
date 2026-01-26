@@ -1,5 +1,5 @@
 /**
- * ABI Static Array Type Example
+ * Example: ABI Static Array Type
  *
  * This example demonstrates how to encode and decode fixed-length arrays using ABIArrayStaticType:
  * - byte[32]: Fixed 32 bytes, common for hashes and cryptographic data

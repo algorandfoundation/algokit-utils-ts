@@ -1,5 +1,5 @@
 /**
- * Asset Create Example
+ * Example: Asset Create
  *
  * This example demonstrates how to create a new Algorand Standard Asset (ASA) using
  * the transact package. It shows the low-level transaction construction pattern with:

@@ -1,5 +1,5 @@
 /**
- * ABI Type Parsing Example
+ * Example: ABI Type Parsing
  *
  * This example demonstrates how to parse ABI type strings into type objects using ABIType.from().
  * It shows parsing of:

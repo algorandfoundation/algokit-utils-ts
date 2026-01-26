@@ -1,5 +1,5 @@
 /**
- * ABI Bool Array Packing Example
+ * Example: ABI Bool Array Packing
  *
  * This example demonstrates how bool arrays are packed efficiently in ARC-4:
  * - 8 booleans fit in 1 byte (1 bit per boolean)

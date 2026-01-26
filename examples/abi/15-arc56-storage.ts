@@ -1,5 +1,5 @@
 /**
- * ARC-56 Storage Helpers Example
+ * Example: ARC-56 Storage Helpers
  *
  * This example demonstrates how to use ARC-56 storage helpers to inspect
  * contract state key definitions and maps from an ARC-56 contract specification:

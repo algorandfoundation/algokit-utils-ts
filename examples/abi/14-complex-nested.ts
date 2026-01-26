@@ -1,5 +1,5 @@
 /**
- * ABI Complex Nested Types Example
+ * Example: ABI Complex Nested Types
  *
  * This example demonstrates how to work with deeply nested ABI types combining
  * arrays, tuples, and structs:

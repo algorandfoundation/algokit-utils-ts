@@ -56,6 +56,11 @@ import { IntMode, decode as msgpackDecode } from 'algorand-msgpack'
 
 /**
  * Format bytes for display, showing first and last few bytes
+ *
+ * @param bytes - The bytes to format
+ * @param showFirst - Number of bytes to show at the start (default: 8)
+ * @param showLast - Number of bytes to show at the end (default: 8)
+ * @returns Formatted hex string with ellipsis if truncated
  */
 function formatBytesForDisplay(bytes: Uint8Array, showFirst = 8, showLast = 8): string {
   const hex = Buffer.from(bytes).toString('hex')

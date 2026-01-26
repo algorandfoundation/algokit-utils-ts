@@ -21,7 +21,7 @@ import {
   shortenAddress,
 } from '../shared/utils.js';
 
-// Helper to decode TEAL value for display
+/** Decode a TEAL value for display */
 function decodeTealValue(value: { type: number; bytes: Uint8Array; uint: bigint }): string {
   if (value.type === 2) {
     // uint

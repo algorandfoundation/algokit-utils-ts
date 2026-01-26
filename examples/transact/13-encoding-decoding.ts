@@ -1,5 +1,5 @@
 /**
- * Encoding/Decoding Example
+ * Example: Encoding/Decoding
  *
  * This example demonstrates how to serialize and deserialize transactions
  * using the transact package:

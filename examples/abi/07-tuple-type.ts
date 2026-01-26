@@ -1,5 +1,5 @@
 /**
- * ABI Tuple Type Example
+ * Example: ABI Tuple Type
  *
  * This example demonstrates how to encode and decode tuples using ABITupleType:
  * - Tuples with mixed static types: (uint64,bool,address)
