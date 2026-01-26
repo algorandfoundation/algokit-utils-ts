@@ -1,15 +1,13 @@
 {
-  "name": "algokit-transact-examples",
-  "version": "1.0.0",
+  "name": "algokit-utils-examples",
   "private": true,
-  "description": "Transaction examples using @algorandfoundation/algokit-utils",
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "verify-all": "./verify-all.sh"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-utils": "file:../../dist",
+    "@algorandfoundation/algokit-utils": "file:../dist",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {

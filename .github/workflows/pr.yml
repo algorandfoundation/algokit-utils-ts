@@ -69,42 +69,10 @@ jobs:
           algokit localnet start
           npx --yes wait-on tcp:4001 -t 30000
 
-      - name: Install ABI examples dependencies
-        working-directory: examples/abi
+      - name: Install examples dependencies
+        working-directory: examples
         run: npm ci
 
-      - name: Install algod_client examples dependencies
-        working-directory: examples/algod_client
-        run: npm ci
-
-      - name: Install Transact examples dependencies
-        working-directory: examples/transact
-        run: npm ci
-
-      - name: Install indexer_client examples dependencies
-        working-directory: examples/indexer_client
-        run: npm ci
-
-      - name: Install kmd_client examples dependencies
-        working-directory: examples/kmd_client
-        run: npm ci
-
-      - name: Verify ABI examples
-        working-directory: examples/abi
-        run: ./verify-all.sh
-
-      - name: Verify algod_client examples
-        working-directory: examples/algod_client
-        run: ./verify-all.sh
-
-      - name: Verify Transact examples
-        working-directory: examples/transact
-        run: ./verify-all.sh
-
-      - name: Verify indexer_client examples
-        working-directory: examples/indexer_client
-        run: ./verify-all.sh
-
-      - name: Verify kmd_client examples
-        working-directory: examples/kmd_client
+      - name: Verify all examples
+        working-directory: examples
         run: ./verify-all.sh
