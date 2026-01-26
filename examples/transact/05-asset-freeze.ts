@@ -19,13 +19,11 @@ import {
   Transaction,
   TransactionType,
   assignFee,
-  generateAddressWithSigners,
   type AssetConfigTransactionFields,
   type AssetFreezeTransactionFields,
   type AssetTransferTransactionFields,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   printHeader,
@@ -34,27 +32,13 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
  */
 async function getLocalNetFundedAccount(algorand: AlgorandClient) {
   return await algorand.account.kmd.getLocalNetDispenserAccount()
-}
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
 }
 
 async function main() {
@@ -78,9 +62,9 @@ async function main() {
   printInfo(`Last valid round: ${suggestedParams.lastValid}`)
   printInfo(`Min fee: ${suggestedParams.minFee} microALGO`)
 
-  // Step 4: Generate and fund holder account
+  // Step 4: Generate and fund holder account using AlgorandClient helper
   printStep(4, 'Generate and Fund Holder Account')
-  const holder = generateAccount()
+  const holder = algorand.account.random()
   printInfo(`Holder address: ${shortenAddress(holder.addr.toString())}`)
 
   // Fund the holder with enough ALGO to cover transaction fees

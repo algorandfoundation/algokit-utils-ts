@@ -8,7 +8,7 @@
  * - LocalNet running (via `algokit localnet start`)
  */
 
-import { createIndexerClient, printError, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { createIndexerClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 async function main() {
   printHeader('Indexer Health Check Example')

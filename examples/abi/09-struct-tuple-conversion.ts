@@ -21,7 +21,7 @@ import {
   getStructValueFromTupleValue,
   getTupleValueFromStructValue,
 } from '@algorandfoundation/algokit-utils/abi'
-import { formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Struct and Tuple Conversion Example')

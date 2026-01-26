@@ -22,7 +22,7 @@ import {
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 async function main() {
   printHeader('KMD Key Listing and Deletion Example')
@@ -121,9 +121,7 @@ async function main() {
     printInfo(`Keys after deletion:  ${listAfterDelete.addresses.length}`)
     printInfo('')
 
-    const deletedKeyPresent = listAfterDelete.addresses.some(
-      (addr) => addr.toString() === keyToDeleteStr
-    )
+    const deletedKeyPresent = listAfterDelete.addresses.some((addr) => addr.toString() === keyToDeleteStr)
 
     if (!deletedKeyPresent) {
       printSuccess(`Confirmed: Key ${keyToDeleteStr.slice(0, 8)}... is no longer in the wallet`)

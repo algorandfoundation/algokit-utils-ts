@@ -18,7 +18,7 @@
 
 import { Address } from '@algorandfoundation/algokit-utils'
 import { ABIBoolType, ABIStringType, ABITupleType, ABIType, ABIUintType } from '@algorandfoundation/algokit-utils/abi'
-import { formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Tuple Type Example')

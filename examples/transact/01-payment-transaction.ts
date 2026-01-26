@@ -14,10 +14,8 @@ import {
   Transaction,
   TransactionType,
   assignFee,
-  generateAddressWithSigners,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   formatAlgo,
@@ -28,25 +26,7 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  // Generate a random keypair using tweetnacl
-  const keypair = nacl.sign.keyPair()
-
-  // Create the address and signers using generateAddressWithSigners
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -72,9 +52,9 @@ async function main() {
   printInfo(`Sender address: ${shortenAddress(sender.addr.toString())}`)
   printInfo(`Sender balance: ${formatAlgo(senderBalance.microAlgo)}`)
 
-  // Step 3: Generate a new receiver account
+  // Step 3: Generate a new receiver account using AlgorandClient helper
   printStep(3, 'Generate Receiver Account')
-  const receiver = generateAccount()
+  const receiver = algorand.account.random()
   printInfo(`Receiver address: ${shortenAddress(receiver.addr.toString())}`)
 
   // Check initial receiver balance (should be 0)

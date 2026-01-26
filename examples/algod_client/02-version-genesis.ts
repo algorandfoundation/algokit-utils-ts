@@ -8,7 +8,7 @@
  * - LocalNet running (via `algokit localnet start`)
  */
 
-import { createAlgodClient, printError, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { createAlgodClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 async function main() {
   printHeader('Version and Genesis Information Example')

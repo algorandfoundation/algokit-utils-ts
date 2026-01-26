@@ -14,15 +14,7 @@
  * - renameWallet() - Rename an existing wallet
  */
 
-import {
-  cleanupTestWallet,
-  createKmdClient,
-  printError,
-  printHeader,
-  printInfo,
-  printStep,
-  printSuccess,
-} from './shared/utils.js'
+import { cleanupTestWallet, createKmdClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 async function main() {
   printHeader('KMD Wallet Management Example')

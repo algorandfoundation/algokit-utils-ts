@@ -8,7 +8,7 @@
  * - LocalNet running (via `algokit localnet start`)
  */
 
-import { createKmdClient, printError, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { createKmdClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 async function main() {
   printHeader('KMD Version Information Example')

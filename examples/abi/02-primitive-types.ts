@@ -10,7 +10,7 @@
  */
 
 import { ABIBoolType, ABIByteType, ABIUintType } from '@algorandfoundation/algokit-utils/abi'
-import { formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Primitive Types Example')

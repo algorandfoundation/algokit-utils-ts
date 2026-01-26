@@ -18,7 +18,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format Unix timestamp to human-readable date

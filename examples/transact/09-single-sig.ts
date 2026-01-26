@@ -30,41 +30,7 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners.
- *
- * The signing process explained:
- * 1. tweetnacl generates a 32-byte public key and 64-byte secret key
- * 2. The public key IS the Algorand address (after base32 encoding with checksum)
- * 3. generateAddressWithSigners() wraps the keypair into a signer function
- * 4. The signer function signs transaction bytes using ed25519
- */
-function generateAccount() {
-  // Generate a random ed25519 keypair using tweetnacl
-  // - publicKey: 32 bytes - this becomes the Algorand address
-  // - secretKey: 64 bytes - this is used for signing (contains both private + public key)
-  const keypair = nacl.sign.keyPair()
-
-  // generateAddressWithSigners() takes the public key and a signing function:
-  // - ed25519Pubkey: The 32-byte public key from which the Algorand address is derived
-  // - rawEd25519Signer: An async function that signs arbitrary bytes with the secret key
-  //
-  // It returns an AddressWithSigners object containing:
-  // - addr: The Algorand Address derived from the public key
-  // - signer: A TransactionSigner function that can sign transactions
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      // nacl.sign.detached() creates a detached signature (just the signature, not message + signature)
-      // The signature is 64 bytes for ed25519
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -154,7 +120,8 @@ async function main() {
   printStep(5, 'Create Payment Transaction')
 
   const paymentAmount = 100_000n // 0.1 ALGO
-  const receiver = generateAccount()
+  // Use AlgorandClient helper for the receiver (this example focuses on sender signing)
+  const receiver = algorand.account.random()
 
   const payParams = await algod.suggestedParams()
 

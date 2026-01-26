@@ -15,7 +15,7 @@
 
 import { Address } from '@algorandfoundation/algokit-utils'
 import { ABIAddressType, ABIArrayStaticType, ABIByteType, ABIType, ABIUintType } from '@algorandfoundation/algokit-utils/abi'
-import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Static Array Type Example')

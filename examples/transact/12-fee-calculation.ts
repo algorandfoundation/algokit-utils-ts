@@ -15,7 +15,6 @@ import {
   assignFee,
   calculateFee,
   estimateTransactionSize,
-  generateAddressWithSigners,
   OnApplicationComplete,
   Transaction,
   TransactionType,
@@ -23,7 +22,6 @@ import {
   type AssetTransferTransactionFields,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   printHeader,
@@ -31,21 +29,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -68,7 +52,7 @@ async function main() {
   const sender = await getLocalNetFundedAccount(algorand)
   printInfo(`Sender address: ${shortenAddress(sender.addr.toString())}`)
 
-  const receiver = generateAccount()
+  const receiver = algorand.account.random()
   printInfo(`Receiver address: ${shortenAddress(receiver.addr.toString())}`)
 
   // Step 3: Get suggested transaction parameters

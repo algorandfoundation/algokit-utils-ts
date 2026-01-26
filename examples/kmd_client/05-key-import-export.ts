@@ -27,7 +27,7 @@ import {
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format bytes for display, showing first and last few bytes for security
@@ -168,8 +168,8 @@ async function main() {
     } else {
       printError('Keys do not match!')
       printInfo('')
-      printInfo(`Original key: ${  formatBytesForDisplay(originalPrivateKey)}`)
-      printInfo(`Exported key: ${  formatBytesForDisplay(exportedPrivateKey)}`)
+      printInfo(`Original key: ${formatBytesForDisplay(originalPrivateKey)}`)
+      printInfo(`Exported key: ${formatBytesForDisplay(exportedPrivateKey)}`)
     }
 
     // =========================================================================

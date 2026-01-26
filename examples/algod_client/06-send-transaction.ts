@@ -21,7 +21,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format a bigint as microAlgos and Algos

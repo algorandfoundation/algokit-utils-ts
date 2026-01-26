@@ -18,7 +18,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format a Uint8Array as a hex string

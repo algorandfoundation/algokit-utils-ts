@@ -13,14 +13,12 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import {
   assignFee,
-  generateAddressWithSigners,
   MultisigAccount,
   Transaction,
   TransactionType,
   type MultisigMetadata,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   formatAlgo,
@@ -31,21 +29,7 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners.
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -63,11 +47,11 @@ async function main() {
   const algorand = AlgorandClient.defaultLocalNet()
   printInfo('Connected to LocalNet Algod')
 
-  // Step 2: Create 3 individual accounts
+  // Step 2: Create 3 individual accounts using AlgorandClient helper
   printStep(2, 'Create 3 Individual Accounts')
-  const account1 = generateAccount()
-  const account2 = generateAccount()
-  const account3 = generateAccount()
+  const account1 = algorand.account.random()
+  const account2 = algorand.account.random()
+  const account3 = algorand.account.random()
 
   printInfo(`Account 1: ${shortenAddress(account1.addr.toString())}`)
   printInfo(`Account 2: ${shortenAddress(account2.addr.toString())}`)
@@ -143,7 +127,7 @@ async function main() {
   // Step 6: Create a payment transaction from the multisig
   printStep(6, 'Create Payment Transaction from Multisig')
 
-  const receiver = generateAccount()
+  const receiver = algorand.account.random()
   const paymentAmount = 1_000_000n // 1 ALGO
 
   const payParams = await algod.suggestedParams()

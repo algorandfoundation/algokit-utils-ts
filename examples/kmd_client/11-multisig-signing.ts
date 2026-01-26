@@ -39,7 +39,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 // Use algorand-msgpack for decoding the multisig response
 import { IntMode, decode as msgpackDecode } from 'algorand-msgpack'
 

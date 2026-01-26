@@ -12,12 +12,13 @@
 
 import {
   createAlgodClient,
+  loadTealSource,
   printError,
   printHeader,
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 async function main() {
   printHeader('TEAL Compile and Disassemble Example')
@@ -31,8 +32,7 @@ async function main() {
   printStep(1, 'Compiling a simple approval program')
 
   // A minimal approval program that always succeeds
-  const simpleSource = `#pragma version 10
-int 1`
+  const simpleSource = loadTealSource('simple-approve.teal')
 
   try {
     const compiled = await algod.tealCompile(simpleSource)
@@ -66,23 +66,7 @@ int 1`
   printStep(2, 'Compiling a more complex approval program')
 
   // A program that checks sender and approves specific transaction types
-  const complexSource = `#pragma version 10
-// Simple smart contract that:
-// - Always approves application creation
-// - Always approves application calls
-// - Always approves clear state
-
-txn ApplicationID
-bz create
-
-// Not creation, approve all calls
-int 1
-return
-
-create:
-// On create, just approve
-int 1
-return`
+  const complexSource = loadTealSource('complex-approve.teal')
 
   try {
     const compiled = await algod.tealCompile(complexSource)
@@ -112,13 +96,7 @@ return`
   printStep(3, 'Compiling with sourcemap option')
 
   // Program with multiple lines for meaningful sourcemap
-  const sourcemapSource = `#pragma version 10
-// Counter program
-byte "counter"
-int 0
-app_global_put
-int 1
-return`
+  const sourcemapSource = loadTealSource('counter-init.teal')
 
   try {
     const compiled = await algod.tealCompile(sourcemapSource, { sourcemap: true })

@@ -22,7 +22,7 @@ import {
   ABITupleType,
   ABIType,
 } from '@algorandfoundation/algokit-utils/abi'
-import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Complex Nested Types Example')

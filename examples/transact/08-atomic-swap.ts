@@ -18,13 +18,11 @@ import {
   Transaction,
   TransactionType,
   assignFee,
-  generateAddressWithSigners,
   groupTransactions,
   type AssetConfigTransactionFields,
   type AssetTransferTransactionFields,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   formatAlgo,
@@ -35,27 +33,13 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
  */
 async function getLocalNetFundedAccount(algorand: AlgorandClient) {
   return await algorand.account.kmd.getLocalNetDispenserAccount()
-}
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
 }
 
 async function main() {
@@ -74,9 +58,9 @@ async function main() {
   printInfo(`Party A address: ${shortenAddress(partyA.addr.toString())}`)
   printInfo(`Party A ALGO balance: ${formatAlgo(partyABalanceBefore.microAlgo)}`)
 
-  // Step 3: Generate and fund Party B
+  // Step 3: Generate and fund Party B using AlgorandClient helper
   printStep(3, 'Setup Party B (ALGO holder)')
-  const partyB = generateAccount()
+  const partyB = algorand.account.random()
 
   // Fund Party B with ALGO for the swap + fees
   const suggestedParams = await algod.suggestedParams()

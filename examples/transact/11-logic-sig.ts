@@ -18,39 +18,24 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import {
   assignFee,
-  generateAddressWithSigners,
   LogicSig,
   LogicSigAccount,
   Transaction,
   TransactionType,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   formatAlgo,
   getAccountBalance,
+  loadTealSource,
   printHeader,
   printInfo,
   printStep,
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners.
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -71,17 +56,13 @@ async function main() {
   // Step 2: Compile a simple TEAL program using algod.tealCompile()
   printStep(2, 'Compile TEAL Program')
 
-  // This is a simple "always approve" TEAL program
+  // Load the "always approve" TEAL program from shared artifacts
   // In real-world use cases, you would have logic that validates:
   // - Who the receiver is
   // - Maximum amount that can be sent
   // - Time-based restrictions
   // - etc.
-  const tealSource = `#pragma version 10
-// Simple logic sig that always approves
-// WARNING: In production, you should add conditions!
-int 1
-return`
+  const tealSource = loadTealSource('always-approve.teal')
 
   printInfo('TEAL source code:')
   printInfo('  #pragma version 10')
@@ -165,7 +146,7 @@ return`
   // For a non-delegated lsig, the sender is the lsig address itself
   const lsigAccount = new LogicSigAccount(programBytes)
 
-  const receiver = generateAccount()
+  const receiver = algorand.account.random()
   const paymentAmount = 1_000_000n // 1 ALGO
 
   const payParams = await algod.suggestedParams()
@@ -241,8 +222,8 @@ return`
   printInfo('can be authorized by the program without further signatures.')
   printInfo('')
 
-  // Create an account that will delegate to the lsig
-  const delegator = generateAccount()
+  // Create an account that will delegate to the lsig using AlgorandClient helper
+  const delegator = algorand.account.random()
 
   // Fund the delegator account
   const fundDelegatorParams = await algod.suggestedParams()
@@ -296,7 +277,7 @@ return`
   printInfo('  5. Then executes program to authorize the transaction')
 
   // Create a payment from the delegator, authorized by the delegated lsig
-  const delegatedReceiver = generateAccount()
+  const delegatedReceiver = algorand.account.random()
   const delegatedPaymentAmount = 500_000n // 0.5 ALGO
 
   const delegatedPayParams = await algod.suggestedParams()

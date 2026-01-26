@@ -15,10 +15,8 @@ import {
   Transaction,
   TransactionType,
   assignFee,
-  generateAddressWithSigners,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   formatAlgo,
@@ -29,23 +27,7 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -68,14 +50,14 @@ async function main() {
   const fundingAccount = await getLocalNetFundedAccount(algorand)
   printInfo(`Funding account: ${shortenAddress(fundingAccount.addr.toString())}`)
 
-  // Step 3: Generate temporary account to be closed
+  // Step 3: Generate temporary account to be closed using AlgorandClient helper
   printStep(3, 'Generate Temporary Account (will be closed)')
-  const tempAccount = generateAccount()
+  const tempAccount = algorand.account.random()
   printInfo(`Temporary account: ${shortenAddress(tempAccount.addr.toString())}`)
 
-  // Step 4: Generate close-to account (receives remaining balance)
+  // Step 4: Generate close-to account (receives remaining balance) using AlgorandClient helper
   printStep(4, 'Generate Close-To Account (receives remainder)')
-  const closeToAccount = generateAccount()
+  const closeToAccount = algorand.account.random()
   printInfo(`Close-to account: ${shortenAddress(closeToAccount.addr.toString())}`)
 
   // Step 5: Fund the temporary account

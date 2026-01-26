@@ -25,7 +25,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 async function main() {
   printHeader('Transaction Simulation Example')

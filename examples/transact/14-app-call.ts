@@ -16,37 +16,22 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import {
   assignFee,
-  generateAddressWithSigners,
   OnApplicationComplete,
   Transaction,
   TransactionType,
   type AppCallTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   formatAlgo,
+  loadTealSource,
   printHeader,
   printInfo,
   printStep,
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
-}
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
@@ -72,92 +57,13 @@ async function main() {
   // Step 3: Compile approval and clear TEAL programs
   printStep(3, 'Compile TEAL Programs')
 
-  // Simple approval program that:
-  // - Approves app creation (NoOp with appId == 0)
-  // - Approves app calls (NoOp with appId != 0)
-  // - Approves OptIn calls
-  // - Approves DeleteApplication calls
-  // - Stores a counter in global state on each call
-  // - Stores user-specific counter in local state on OptIn and calls
-  const approvalSource = `#pragma version 10
-// Simple smart contract for demonstration
-
-// Check if this is app creation
-txn ApplicationID
-int 0
-==
-bnz handle_creation
-
-// Check OnComplete action
-txn OnCompletion
-int NoOp
-==
-bnz handle_noop
-
-txn OnCompletion
-int OptIn
-==
-bnz handle_optin
-
-txn OnCompletion
-int DeleteApplication
-==
-bnz handle_delete
-
-// Reject other operations
-int 0
-return
-
-handle_creation:
-  // Initialize global counter to 0
-  byte "counter"
-  int 0
-  app_global_put
-  int 1
-  return
-
-handle_noop:
-  // Increment global counter
-  byte "counter"
-  app_global_get
-  int 1
-  +
-  byte "counter"
-  swap
-  app_global_put
-
-  // If any app args provided, log the first one
-  txn NumAppArgs
-  int 0
-  >
-  bz noop_end
-  txna ApplicationArgs 0
-  log
-
-  noop_end:
-  int 1
-  return
-
-handle_optin:
-  // Initialize local counter for this user
-  txn Sender
-  byte "user_counter"
-  int 0
-  app_local_put
-  int 1
-  return
-
-handle_delete:
-  // Allow deletion
-  int 1
-  return
-`
+  // Load approval and clear state programs from shared artifacts
+  // The approval program handles app creation, calls, opt-in, and deletion
+  // with global and local state counters
+  const approvalSource = loadTealSource('approval-counter.teal')
 
   // Simple clear state program that always approves
-  const clearSource = `#pragma version 10
-int 1
-return
-`
+  const clearSource = loadTealSource('clear-state-approve.teal')
 
   printInfo('Compiling approval program...')
   const approvalResult = await algod.tealCompile(approvalSource)
@@ -320,8 +226,8 @@ return
   // Step 7: Demonstrate OnApplicationComplete.OptIn for local state
   printStep(7, 'Demonstrate OptIn for Local State')
 
-  // Create a new account that will opt into the app
-  const optInUser = generateAccount()
+  // Create a new account that will opt into the app using AlgorandClient helper
+  const optInUser = algorand.account.random()
   printInfo(`OptIn user address: ${shortenAddress(optInUser.addr.toString())}`)
 
   // Fund the new account

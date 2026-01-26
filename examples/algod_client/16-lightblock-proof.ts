@@ -29,7 +29,7 @@ import {
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 async function main() {
   printHeader('Light Block Header Proof Example')

@@ -15,7 +15,7 @@
  */
 
 import { ABIArrayDynamicType, ABIArrayStaticType, ABIType } from '@algorandfoundation/algokit-utils/abi'
-import { formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 /**
  * Format a byte as a binary string showing all 8 bits

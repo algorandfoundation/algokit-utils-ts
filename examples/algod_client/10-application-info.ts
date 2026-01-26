@@ -18,7 +18,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js';
+} from '../shared/utils.js';
 
 // Helper to decode TEAL value for display
 function decodeTealValue(value: { type: number; bytes: Uint8Array; uint: bigint }): string {

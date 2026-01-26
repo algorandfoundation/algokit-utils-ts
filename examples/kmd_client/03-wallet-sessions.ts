@@ -15,14 +15,7 @@
  * - releaseWalletHandleToken() - Invalidate the token
  */
 
-import {
-  createKmdClient,
-  printError,
-  printHeader,
-  printInfo,
-  printStep,
-  printSuccess,
-} from './shared/utils.js'
+import { createKmdClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 async function main() {
   printHeader('KMD Wallet Session Management Example')

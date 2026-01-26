@@ -17,7 +17,7 @@
 
 import type { AVMBytes, AVMString, AVMType, AVMUint64 } from '@algorandfoundation/algokit-utils/abi'
 import { ABIType, decodeAVMValue, getABIEncodedValue, isAVMType } from '@algorandfoundation/algokit-utils/abi'
-import { formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 /**
  * Encode a value to raw AVM representation (as conceptualized in ARC-56).

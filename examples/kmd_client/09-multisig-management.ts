@@ -33,7 +33,7 @@ import {
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format bytes for display, showing first and last few bytes
@@ -201,7 +201,9 @@ async function main() {
     printInfo('Verification results:')
     printInfo(`  Version matches:   ${versionMatches ? 'Yes' : 'No'} (expected: ${multisigVersion}, got: ${exportResult.multisigVersion})`)
     printInfo(`  Threshold matches: ${thresholdMatches ? 'Yes' : 'No'} (expected: ${threshold}, got: ${exportResult.threshold})`)
-    printInfo(`  Key count matches: ${keyCountMatches ? 'Yes' : 'No'} (expected: ${publicKeys.length}, got: ${exportResult.publicKeys.length})`)
+    printInfo(
+      `  Key count matches: ${keyCountMatches ? 'Yes' : 'No'} (expected: ${publicKeys.length}, got: ${exportResult.publicKeys.length})`,
+    )
     printInfo(`  All keys match:    ${allKeysMatch ? 'Yes' : 'No'}`)
 
     if (versionMatches && thresholdMatches && allKeysMatch) {
@@ -252,9 +254,7 @@ async function main() {
     }
 
     // Check if the deleted address is still present
-    const deletedAddressStillPresent = listAfterDelete.addresses.some(
-      (addr) => addr.toString() === multisigAddress
-    )
+    const deletedAddressStillPresent = listAfterDelete.addresses.some((addr) => addr.toString() === multisigAddress)
 
     if (deletedAddressStillPresent) {
       printError('The deleted multisig address is still present (unexpected)')

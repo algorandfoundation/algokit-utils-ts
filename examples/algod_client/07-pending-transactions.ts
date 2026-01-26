@@ -21,7 +21,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Display details of a signed transaction from the pending pool

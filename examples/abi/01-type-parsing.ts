@@ -21,7 +21,7 @@ import {
   ABIType,
   ABIUintType,
 } from '@algorandfoundation/algokit-utils/abi'
-import { printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Type Parsing Example')
@@ -160,16 +160,7 @@ function main() {
   // Step 7: Type category detection using instanceof
   printStep(7, 'Type Category Detection with instanceof')
 
-  const testTypes = [
-    'uint64',
-    'bool',
-    'byte',
-    'address',
-    'string',
-    'uint64[]',
-    'byte[32]',
-    '(uint64,address)',
-  ]
+  const testTypes = ['uint64', 'bool', 'byte', 'address', 'string', 'uint64[]', 'byte[32]', '(uint64,address)']
 
   for (const typeStr of testTypes) {
     const parsedType = ABIType.from(typeStr)

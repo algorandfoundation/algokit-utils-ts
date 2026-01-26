@@ -25,7 +25,7 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet

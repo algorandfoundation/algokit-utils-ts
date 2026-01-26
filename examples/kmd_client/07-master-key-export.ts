@@ -27,7 +27,7 @@ import {
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format bytes for display, showing first and last few bytes for security

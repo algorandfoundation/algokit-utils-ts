@@ -13,7 +13,7 @@
 
 import { ABIMethod } from '@algorandfoundation/algokit-utils/abi'
 import crypto from 'crypto'
-import { formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Method Example')

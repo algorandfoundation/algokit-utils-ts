@@ -41,7 +41,7 @@ import {
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 // Get __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url)

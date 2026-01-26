@@ -20,7 +20,7 @@
 
 import { Address } from '@algorandfoundation/algokit-utils'
 import { ABIArrayDynamicType, ABIType, ABIUintType } from '@algorandfoundation/algokit-utils/abi'
-import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Dynamic Array Type Example')

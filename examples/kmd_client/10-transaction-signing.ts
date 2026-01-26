@@ -27,7 +27,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format bytes for display, showing first and last few bytes

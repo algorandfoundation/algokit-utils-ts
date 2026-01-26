@@ -17,7 +17,7 @@
 
 import { Address, ALGORAND_ZERO_ADDRESS_STRING } from '@algorandfoundation/algokit-utils'
 import { ABIAddressType } from '@algorandfoundation/algokit-utils/abi'
-import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('ABI Address Type Example')

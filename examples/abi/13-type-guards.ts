@@ -26,7 +26,7 @@ import {
   argTypeIsTransaction,
   isAVMType,
 } from '@algorandfoundation/algokit-utils/abi'
-import { printHeader, printInfo, printStep, printSuccess } from './shared/utils.js'
+import { printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
   printHeader('Type Guards Example')

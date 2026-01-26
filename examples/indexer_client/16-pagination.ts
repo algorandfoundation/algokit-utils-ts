@@ -20,7 +20,7 @@ import {
   printStep,
   printSuccess,
   shortenAddress,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 // ============================================================================
 // Generic Pagination Helper Function

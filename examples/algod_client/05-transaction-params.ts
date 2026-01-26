@@ -16,7 +16,7 @@ import {
   printInfo,
   printStep,
   printSuccess,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Format a Uint8Array as base64 string

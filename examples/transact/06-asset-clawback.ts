@@ -19,12 +19,10 @@ import {
   Transaction,
   TransactionType,
   assignFee,
-  generateAddressWithSigners,
   type AssetConfigTransactionFields,
   type AssetTransferTransactionFields,
   type PaymentTransactionFields,
 } from '@algorandfoundation/algokit-utils/transact'
-import nacl from 'tweetnacl'
 import {
   createAlgodClient,
   printHeader,
@@ -33,27 +31,13 @@ import {
   printSuccess,
   shortenAddress,
   waitForConfirmation,
-} from './shared/utils.js'
+} from '../shared/utils.js'
 
 /**
  * Gets a funded account from LocalNet's KMD wallet
  */
 async function getLocalNetFundedAccount(algorand: AlgorandClient) {
   return await algorand.account.kmd.getLocalNetDispenserAccount()
-}
-
-/**
- * Generates a random ed25519 keypair and creates an AddressWithSigners
- */
-function generateAccount() {
-  const keypair = nacl.sign.keyPair()
-  const addressWithSigners = generateAddressWithSigners({
-    ed25519Pubkey: keypair.publicKey,
-    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
-      return nacl.sign.detached(bytesToSign, keypair.secretKey)
-    },
-  })
-  return { keypair, ...addressWithSigners }
 }
 
 async function main() {
@@ -77,9 +61,9 @@ async function main() {
   printInfo(`Last valid round: ${suggestedParams.lastValid}`)
   printInfo(`Min fee: ${suggestedParams.minFee} microALGO`)
 
-  // Step 4: Generate and fund target account (will have assets clawed back)
+  // Step 4: Generate and fund target account using AlgorandClient helper (will have assets clawed back)
   printStep(4, 'Generate and Fund Target Account')
-  const target = generateAccount()
+  const target = algorand.account.random()
   printInfo(`Target address: ${shortenAddress(target.addr.toString())}`)
 
   // Fund the target with enough ALGO to cover opt-in transaction fee
@@ -110,9 +94,9 @@ async function main() {
   await waitForConfirmation(algod, fundTargetTxWithFee.txId())
   printInfo('Funded target with 1 ALGO for transaction fees')
 
-  // Step 5: Generate and fund clawback receiver account (will receive clawed back assets)
+  // Step 5: Generate and fund clawback receiver account using AlgorandClient helper (will receive clawed back assets)
   printStep(5, 'Generate and Fund Clawback Receiver Account')
-  const clawbackReceiver = generateAccount()
+  const clawbackReceiver = algorand.account.random()
   printInfo(`Clawback receiver address: ${shortenAddress(clawbackReceiver.addr.toString())}`)
 
   const fundReceiverSuggestedParams = await algod.suggestedParams()

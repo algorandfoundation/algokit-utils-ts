@@ -9,7 +9,7 @@
  */
 
 import { algo } from '@algorandfoundation/algokit-utils'
-import { createAlgodClient, createAlgorandClient, formatMicroAlgo, getFundedAccount, printHeader, printInfo, printStep, printSuccess, shortenAddress } from './shared/utils.js'
+import { createAlgodClient, createAlgorandClient, formatMicroAlgo, getFundedAccount, printHeader, printInfo, printStep, printSuccess, shortenAddress } from '../shared/utils.js'
 
 /**
  * Format a Unix timestamp to a human-readable date string
