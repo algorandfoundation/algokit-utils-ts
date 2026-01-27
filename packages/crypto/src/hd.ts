@@ -42,12 +42,11 @@ const xhd = new XHDWalletAPI()
 
 export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8Array) => {
   const seedArray = seed ?? new Uint8Array(32)
-  const newSeedBytes = new Uint8Array(32)
   if (seed === undefined) {
-    crypto.getRandomValues(newSeedBytes)
+    crypto.getRandomValues(seedArray)
   }
 
-  const rootKey = fromSeed(Buffer.from(seed === undefined ? newSeedBytes : seedArray))
+  const rootKey = fromSeed(Buffer.from(seedArray))
 
   const rawHdSigner: RawHdWalletSigner = async (bytesToSign: Uint8Array, bip44Path: BIP44Path): Promise<Uint8Array> => {
     verifyPath(bip44Path)
