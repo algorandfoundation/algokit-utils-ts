@@ -56,7 +56,7 @@ const deployer = new AppDeployer(appManager, transactionSender, indexer)
 
 > **deploy**(`deployment`): `Promise`\<[`AppDeployResult`](../type-aliases/AppDeployResult.md)\>
 
-Defined in: [src/types/app-deployer.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L173)
+Defined in: [src/types/app-deployer.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L179)
 
 Idempotently deploy (create if not exists, update if changed) an app against the given name for the given creator account, including deploy-time TEAL template placeholder substitutions (if specified).
 
@@ -167,6 +167,12 @@ Update transaction parameters to use if an update needs to be issued as part of 
 
 The result of the deployment
 
+#### Remarks
+
+This method is idempotent: calling it multiple times with the same parameters will only create the app once,
+and subsequent calls will either do nothing (if unchanged) or update/replace as configured. App lookup is
+performed by creator address and app name, stored in the transaction note field during creation.
+
 #### Example
 
 ```ts
@@ -200,7 +206,7 @@ const deployResult = await deployer.deploy({
 
 > **getCreatorAppsByName**(`creator`, `ignoreCache?`): `Promise`\<[`AppLookup`](../interfaces/AppLookup.md)\>
 
-Defined in: [src/types/app-deployer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L496)
+Defined in: [src/types/app-deployer.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L502)
 
 Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have
 an [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) `AppDeployNote` as the transaction

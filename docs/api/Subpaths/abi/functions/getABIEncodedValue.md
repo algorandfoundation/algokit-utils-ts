@@ -8,7 +8,7 @@
 
 > **getABIEncodedValue**(`type`, `value`): `Uint8Array`
 
-Defined in: [packages/abi/src/abi-method.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L335)
+Defined in: [packages/abi/src/abi-method.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L337)
 
 ## Parameters
 

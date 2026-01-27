@@ -96,7 +96,7 @@ const account = await accountManager.dispenserFromEnvironment()
 
 > **ensureFunded**(`accountToFund`, `dispenserAccount`, `minSpendingBalance`, `options?`): `Promise`\<`object` & [`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-Defined in: [src/types/account-manager.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L595)
+Defined in: [src/types/account-manager.ts:597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L597)
 
 Funds a given account using a dispenser account as a funding source such that
 the given account has a certain amount of Algo free to spend (accounting for
@@ -148,13 +148,18 @@ await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.
 )
 ```
 
+#### See
+
+ - [ensureFundedFromEnvironment](#ensurefundedfromenvironment) for environment-based dispenser
+ - [ensureFundedFromTestNetDispenserApi](#ensurefundedfromtestnetdispenserapi) for TestNet dispenser API
+
 ***
 
 ### ensureFundedFromEnvironment()
 
 > **ensureFundedFromEnvironment**(`accountToFund`, `minSpendingBalance`, `options?`): `Promise`\<`object` & [`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-Defined in: [src/types/account-manager.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L657)
+Defined in: [src/types/account-manager.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L659)
 
 Funds a given account using a dispenser account retrieved from the environment,
 per the `dispenserFromEnvironment` method, as a funding source such that
@@ -213,7 +218,7 @@ await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(
 
 > **ensureFundedFromTestNetDispenserApi**(`accountToFund`, `dispenserClient`, `minSpendingBalance`, `options?`): `Promise`\<[`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-Defined in: [src/types/account-manager.ts:713](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L713)
+Defined in: [src/types/account-manager.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L715)
 
 Funds a given account using the TestNet Dispenser API as a funding source such that
 the account has a certain amount of Algo free to spend (accounting for Algo locked

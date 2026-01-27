@@ -134,7 +134,7 @@ The signature, e.g. `my_method(unit64,string)bytes`
 
 > `static` **fromSignature**(`signature`): `ABIMethod`
 
-Defined in: [packages/abi/src/abi-method.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L128)
+Defined in: [packages/abi/src/abi-method.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L129)
 
 Returns the ABI method object for a given method signature.
 
@@ -152,3 +152,7 @@ e.g. `my_method(unit64,string)bytes`
 `ABIMethod`
 
 The `ABIMethod`
+
+#### Throws
+
+If the method signature is invalid
