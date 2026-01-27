@@ -4,7 +4,7 @@ Runnable code examples demonstrating every major feature of the `@algorandfounda
 
 ## Overview
 
-This folder contains 89 self-contained examples organized into 6 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
+This folder contains 94 self-contained examples organized into 7 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
 
 ## Prerequisites
 
@@ -52,6 +52,18 @@ ABI type parsing, encoding, and decoding following the ARC-4 specification.
 | `13-type-guards.ts` | Type guard functions for argument/type categorization |
 | `14-complex-nested.ts` | Deeply nested types combining arrays, tuples, structs |
 | `15-arc56-storage.ts` | ARC-56 storage helpers for contract state inspection |
+
+### Algo25 (`algo25/`)
+
+Mnemonic and seed conversion utilities following the Algorand 25-word mnemonic standard. No LocalNet required.
+
+| File | Description |
+|------|-------------|
+| `01-mnemonic-from-seed.ts` | Convert 32-byte seed to 25-word mnemonic |
+| `02-seed-from-mnemonic.ts` | Convert 25-word mnemonic back to 32-byte seed |
+| `03-secret-key-to-mnemonic.ts` | Convert 64-byte secret key to mnemonic |
+| `04-master-derivation-key.ts` | MDK alias functions for wallet derivation workflows |
+| `05-error-handling.ts` | Handle invalid words, checksums, and seed lengths |
 
 ### Algod Client (`algod_client/`)
 

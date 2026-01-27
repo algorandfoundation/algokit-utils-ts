@@ -78,5 +78,5 @@ if [ $FAILED -gt 0 ]; then
 fi
 
 echo ""
-echo -e "${GREEN}All examples passed!${NC}"
+echo -e "${GREEN}All ABI examples passed!${NC}"
 exit 0
