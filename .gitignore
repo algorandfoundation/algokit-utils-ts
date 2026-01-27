@@ -52,6 +52,7 @@ coverage
 # Website & Code docs generation
 code-docs/
 out/
+docs/_html/
 
 # dotenv environment variable files
 .env
