@@ -1,3 +1,6 @@
+/**
+ * @module Subpaths/testing
+ */
 export * from './account'
 export * from './fixtures'
 export * from './indexer'

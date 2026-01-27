@@ -1,3 +1,6 @@
+/**
+ * @module algokit-utils
+ */
 export {
   ALGORAND_ZERO_ADDRESS_STRING,
   Address,
