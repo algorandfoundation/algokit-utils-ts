@@ -18,6 +18,7 @@ SUITES=(
     "common"
     "indexer_client"
     "kmd_client"
+    "testing"
     "transact"
 )
 

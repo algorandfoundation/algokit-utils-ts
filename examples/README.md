@@ -4,7 +4,7 @@ Runnable code examples demonstrating every major feature of the `@algorandfounda
 
 ## Overview
 
-This folder contains 94 self-contained examples organized into 7 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
+This folder contains 101 self-contained examples organized into 8 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
 
 ## Prerequisites
 
@@ -152,6 +152,20 @@ Key Management Daemon operations for wallet and key management.
 | `11-multisig-signing.ts` | Sign multisig transactions (partial + complete) |
 | `12-program-signing.ts` | Create delegated logic signatures |
 | `13-multisig-program-signing.ts` | Create delegated multisig logic signatures |
+
+### Testing (`testing/`)
+
+Testing utilities for mock server setup and Vitest integration. No LocalNet required.
+
+| File | Description |
+|------|-------------|
+| `01-configuration-constants.ts` | Configuration constants for mock server setup |
+| `02-test-data-constants.ts` | Test data constants matching HAR file responses |
+| `03-health-check.ts` | Check mock server availability with `checkServerHealth()` |
+| `04-mock-server-connection.ts` | Connect to mock servers with `getMockServer()` |
+| `05-global-setup-factory.ts` | Create custom Vitest global setups with `createGlobalSetup()` |
+| `06-prebuilt-global-setups.ts` | Pre-built global setups for algod, indexer, kmd |
+| `07-integration-example.ts` | Complete integration example with all components |
 
 ### Transact (`transact/`)
 
