@@ -198,7 +198,7 @@ The list of accounts that are present to sign transactions or lsigs
 
 > **applySignature**(`msigSignature`, `pubkey`, `signature`): [`MultisigSignature`](../type-aliases/MultisigSignature.md)
 
-Defined in: [packages/transact/src/multisig.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L464)
+Defined in: [packages/transact/src/multisig.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L467)
 
 #### Parameters
 
@@ -224,7 +224,7 @@ Defined in: [packages/transact/src/multisig.ts:464](https://github.com/algorandf
 
 > **applySignatureToTxn**(`txn`, `pubkey`, `signature`): `void`
 
-Defined in: [packages/transact/src/multisig.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L455)
+Defined in: [packages/transact/src/multisig.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L458)
 
 #### Parameters
 
