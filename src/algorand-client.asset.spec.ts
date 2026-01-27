@@ -10,6 +10,7 @@ describe('Asset capability', () => {
     const { testAccount, algorand } = localnet.context
     const accounts = [algorand.account.random(), algorand.account.random(), algorand.account.random(), algorand.account.random()]
     const hash = new Uint8Array(32).fill(1)
+    // #region example-asset-create
     const result = await algorand.send.assetCreate({
       sender: testAccount,
       total: 1000n,
@@ -24,9 +25,12 @@ describe('Asset capability', () => {
       clawback: accounts[3],
       defaultFrozen: true,
     })
+    // #endregion example-asset-create
 
     expect(result.confirmation.assetId).toBeGreaterThan(0n)
+    // #region example-asset-getById
     const assetData = await algorand.asset.getById(result.assetId)
+    // #endregion example-asset-getById
     expect(assetData.creator).toBe(testAccount.toString())
     expect(assetData.total).toBe(1000n)
     expect(assetData.decimals).toBe(0)
@@ -50,7 +54,9 @@ describe('Asset capability', () => {
     const secondAccountInfo = await algorand.account.getInformation(secondAccount)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(0)
 
+    // #region example-bulk-opt-in
     await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    // #endregion example-bulk-opt-in
 
     const testAccountInfoAfterOptIn = await algorand.account.getInformation(secondAccount)
     expect(testAccountInfoAfterOptIn.totalAssetsOptedIn).toBe(1)
@@ -81,7 +87,9 @@ describe('Asset capability', () => {
     const secondAccountInfo = await algorand.account.getInformation(secondAccount)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(2)
 
+    // #region example-bulk-opt-out
     await algorand.asset.bulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    // #endregion example-bulk-opt-out
 
     const secondAccountInfoAfterOptOut = await algorand.account.getInformation(secondAccount)
     expect(secondAccountInfoAfterOptOut.totalAssetsOptedIn).toBe(0)
