@@ -294,7 +294,7 @@ async function main() {
 }
 
 /**
- * Display sync round response information
+ * Display the sync round response information
  */
 function displaySyncRoundResponse(response: GetSyncRoundResponse): void {
   printInfo('  GetSyncRoundResponse:')

@@ -21,7 +21,7 @@ import {
 } from '../shared/utils.js'
 
 /**
- * Format Unix timestamp to human-readable date
+ * Format a Unix timestamp to a human-readable date
  */
 function formatTimestamp(timestamp: number): string {
   return new Date(timestamp * 1000).toISOString()

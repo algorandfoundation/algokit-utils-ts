@@ -30,7 +30,7 @@ import {
 } from '../shared/utils.js'
 
 /**
- * Format bytes for display, showing first and last few bytes for security
+ * Format a byte array for display, showing first and last few bytes for security
  */
 function formatBytesForDisplay(bytes: Uint8Array, showFirst = 4, showLast = 4): string {
   const hex = Buffer.from(bytes).toString('hex')

@@ -11,7 +11,7 @@
 import { createAlgodClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 /**
- * Format nanoseconds to a human-readable string
+ * Format a nanoseconds value to a human-readable string
  */
 function formatNanoseconds(ns: bigint): string {
   const ms = Number(ns) / 1_000_000

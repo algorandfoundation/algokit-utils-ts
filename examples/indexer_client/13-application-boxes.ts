@@ -24,7 +24,7 @@ import {
 
 /**
  * Decode box name bytes to a displayable string
- * Shows as UTF-8 string if printable, otherwise as hex
+ * Shows as a UTF-8 string if printable, otherwise as hex
  */
 function decodeBoxName(nameBytes: Uint8Array): string {
   try {
@@ -45,7 +45,7 @@ function decodeBoxName(nameBytes: Uint8Array): string {
 
 /**
  * Decode box value bytes to a displayable string
- * Shows as UTF-8 string if printable, otherwise as hex
+ * Shows as a UTF-8 string if printable, otherwise as hex
  */
 function decodeBoxValue(valueBytes: Uint8Array): string {
   try {

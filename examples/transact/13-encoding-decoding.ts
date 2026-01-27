@@ -40,7 +40,7 @@ async function getLocalNetFundedAccount(algorand: AlgorandClient) {
 }
 
 /**
- * Converts bytes to hex string for display
+ * Converts bytes to a hex string for display
  */
 function bytesToHex(bytes: Uint8Array, maxLength?: number): string {
   const hex = Buffer.from(bytes).toString('hex')

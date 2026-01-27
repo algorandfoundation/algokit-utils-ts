@@ -22,7 +22,7 @@ import {
 } from '../shared/utils.js';
 
 /**
- * Format bigint microAlgos to both microAlgo and Algo representations
+ * Format a bigint microAlgos value to both microAlgo and Algo representations
  */
 function formatAmount(microAlgos: bigint): { microAlgo: string; algo: string } {
   const microAlgoStr = microAlgos.toLocaleString('en-US')

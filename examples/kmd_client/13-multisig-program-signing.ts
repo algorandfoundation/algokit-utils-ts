@@ -55,7 +55,7 @@ import {
 import { IntMode, decode as msgpackDecode } from 'algorand-msgpack'
 
 /**
- * Format bytes for display, showing first and last few bytes
+ * Format a byte array for display, showing first and last few bytes
  *
  * @param bytes - The bytes to format
  * @param showFirst - Number of bytes to show at the start (default: 8)
@@ -115,7 +115,7 @@ function decodeKmdMultisigResponse(multisigBytes: Uint8Array): MultisigSig {
 }
 
 /**
- * Convert KMD's MultisigSig to transact's MultisigSignature format
+ * Convert a KMD MultisigSig to the transact MultisigSignature format
  */
 function kmdMultisigToTransactMultisig(kmdMsig: MultisigSig): MultisigSignature {
   return {

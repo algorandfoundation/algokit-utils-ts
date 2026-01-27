@@ -26,7 +26,7 @@ function formatAsBase64(bytes: Uint8Array): string {
 }
 
 /**
- * Format bigint fee as microAlgos and Algos
+ * Format a bigint fee as microAlgos and Algos
  */
 function formatFee(microAlgos: bigint): string {
   const algoValue = Number(microAlgos) / 1_000_000

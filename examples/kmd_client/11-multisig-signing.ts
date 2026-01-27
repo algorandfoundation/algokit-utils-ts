@@ -44,19 +44,6 @@ import {
 import { IntMode, decode as msgpackDecode } from 'algorand-msgpack'
 
 /**
- * Format bytes for display, showing first and last few bytes
- */
-function formatBytesForDisplay(bytes: Uint8Array, showFirst = 8, showLast = 8): string {
-  const hex = Buffer.from(bytes).toString('hex')
-  if (bytes.length <= showFirst + showLast) {
-    return hex
-  }
-  const firstBytes = hex.slice(0, showFirst * 2)
-  const lastBytes = hex.slice(-(showLast * 2))
-  return `${firstBytes}...${lastBytes}`
-}
-
-/**
  * Format microAlgos to a human-readable string
  */
 function formatMicroAlgo(microAlgos: bigint): string {
@@ -107,7 +94,7 @@ function decodeKmdMultisigResponse(multisigBytes: Uint8Array): MultisigSig {
 }
 
 /**
- * Convert KMD's MultisigSig to transact's MultisigSignature format
+ * Convert a KMD MultisigSig to the transact MultisigSignature format
  */
 function kmdMultisigToTransactMultisig(kmdMsig: MultisigSig): MultisigSignature {
   return {

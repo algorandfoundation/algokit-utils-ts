@@ -20,7 +20,7 @@ function formatTimestamp(timestamp: bigint): string {
 }
 
 /**
- * Format bytes as hex string
+ * Format bytes as a hex string
  */
 function bytesToHex(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString('hex')

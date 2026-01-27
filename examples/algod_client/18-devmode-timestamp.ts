@@ -310,7 +310,7 @@ async function main() {
 }
 
 /**
- * Display timestamp offset information
+ * Display the timestamp offset information
  */
 function displayTimestampOffset(response: GetBlockTimeStampOffsetResponse): void {
   printInfo('  GetBlockTimeStampOffsetResponse:')

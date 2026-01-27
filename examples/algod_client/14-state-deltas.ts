@@ -339,7 +339,7 @@ function displayStateDelta(delta: LedgerStateDelta, source: string): void {
 }
 
 /**
- * Display details from TransactionGroupLedgerStateDeltasForRoundResponse
+ * Display details from a TransactionGroupLedgerStateDeltasForRoundResponse
  */
 function displayRoundDeltas(response: TransactionGroupLedgerStateDeltasForRoundResponse): void {
   printInfo('Transaction Group Deltas for Round:')
@@ -374,7 +374,7 @@ function displayRoundDeltas(response: TransactionGroupLedgerStateDeltasForRoundR
 }
 
 /**
- * Convert account status number to string
+ * Convert an account status number to a string
  */
 function getAccountStatus(status: number): string {
   switch (status) {

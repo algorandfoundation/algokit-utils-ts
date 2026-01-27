@@ -70,7 +70,7 @@ export function formatAlgo(amount: AlgoAmount | bigint | number, decimals: numbe
 }
 
 /**
- * Format microAlgo amount to a human-readable string
+ * Format a microAlgo amount to a human-readable string
  */
 export function formatMicroAlgo(microAlgo: bigint | number): string {
   const value = typeof microAlgo === 'bigint' ? Number(microAlgo) : microAlgo
@@ -214,9 +214,9 @@ export async function cleanupTestWallet(kmd: KmdClient, walletHandleToken: strin
 
 /**
  * Waits for a transaction to be confirmed
- * @param algod The AlgodClient instance
- * @param txId The transaction ID to wait for
- * @param maxRounds Maximum number of rounds to wait (default: 5)
+ * @param algod - The AlgodClient instance
+ * @param txId - The transaction ID to wait for
+ * @param maxRounds - Maximum number of rounds to wait (default: 5)
  * @returns The pending transaction response once confirmed
  */
 export async function waitForConfirmation(
@@ -248,8 +248,8 @@ export async function waitForConfirmation(
 
 /**
  * Gets the balance of an account in microAlgos
- * @param algorand The AlgorandClient instance
- * @param address The account address to check
+ * @param algorand - The AlgorandClient instance
+ * @param address - The account address to check
  * @returns The account balance as an AlgoAmount
  */
 export async function getAccountBalance(algorand: AlgorandClient, address: string): Promise<AlgoAmount> {
@@ -297,7 +297,7 @@ export async function createRandomAccount(algorand: AlgorandClient, fundingAmoun
 
 /**
  * Load TEAL source code from the shared artifacts directory
- * @param filename The name of the TEAL file to load (e.g., 'approval.teal')
+ * @param filename - The name of the TEAL file to load (e.g., 'approval.teal')
  * @returns The TEAL source code as a string
  */
 export function loadTealSource(filename: string): string {

@@ -11,7 +11,7 @@
 import { createAlgodClient, printError, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js';
 
 /**
- * Format microAlgos to both microAlgo and Algo representations
+ * Format a microAlgos value to both microAlgo and Algo representations
  */
 function formatAmount(microAlgos: bigint): { microAlgo: string; algo: string } {
   const microAlgoStr = microAlgos.toLocaleString('en-US')
