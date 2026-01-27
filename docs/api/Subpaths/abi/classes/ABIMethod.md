@@ -160,7 +160,7 @@ const signature = method.getSignature()
 
 > `static` **fromSignature**(`signature`): `ABIMethod`
 
-Defined in: [packages/abi/src/abi-method.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L129)
+Defined in: [packages/abi/src/abi-method.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L128)
 
 Returns the ABI method object for a given method signature.
 

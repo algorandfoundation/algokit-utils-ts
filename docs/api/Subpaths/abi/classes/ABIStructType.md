@@ -310,6 +310,42 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 
 The corresponding ABI type
 
+#### Example
+
+```ts
+// Parse ABI type strings into type objects
+const uint64Type = ABIType.from('uint64')
+const tupleType = ABIType.from('(uint64,string,bool)')
+const arrayType = ABIType.from('uint32[]')
+
+// Use the type name property
+const typeName = uint64Type.name // 'uint64'
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
+
+#### Throws
+
+If the type string is malformed or unsupported
+
+#### Remarks
+
+Supported type formats include: `uint<N>` (8-512 bits), `ufixed<N>x<M>`, `bool`, `byte`,
+`address`, `string`, `<type>[<N>]` (static arrays), `<type>[]` (dynamic arrays),
+and `(<type1>,<type2>,...)` (tuples). This parser is recursive for nested types.
+
+#### Inherited from
+
+[`ABIType`](ABIType.md).[`from`](ABIType.md#from)
+
+***
+
+### fromStruct()
+
+> `static` **fromStruct**(`structName`, `structs`): `ABIStructType`
+
 Defined in: [packages/abi/src/abi-type.ts:820](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L820)
 
 Creates an ABIStructType from struct name and struct definitions.

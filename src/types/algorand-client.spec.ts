@@ -92,13 +92,13 @@ describe('AlgorandClient', () => {
       .doMath({ args: { a: 1, b: 2, operation: 'sum' } })
       .composer()
 
-    // #region example-newGroup
+    // #region example-newGroup-with-composer
     const result = await algorand
       .newGroup()
       .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
       .addTransactionComposer(doMathComposer)
       .send()
-    // #endregion example-newGroup
+    // #endregion example-newGroup-with-composer
 
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
