@@ -1,4 +1,4 @@
-import { APP_PAGE_MAX_SIZE } from './types/app'
+import { APP_PAGE_MAX_SIZE } from './app'
 
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.

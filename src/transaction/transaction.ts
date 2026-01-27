@@ -1,13 +1,8 @@
 import { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { Transaction, TransactionSigner } from '@algorandfoundation/algokit-transact'
-import { TransactionComposer } from '../types/composer'
-import {
-  AdditionalTransactionComposerContext,
-  SendParams,
-  SendTransactionComposerResults,
-  TransactionComposerToSend,
-} from '../types/transaction'
+import { TransactionComposer } from '../composer'
 import { toNumber } from '../util'
+import { AdditionalTransactionComposerContext, SendParams, SendTransactionComposerResults, TransactionComposerToSend } from './types'
 
 /** Represents an unsigned transactions and a signer that can authorize that transaction. */
 export interface TransactionWithSigner {

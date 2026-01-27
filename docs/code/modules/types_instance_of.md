@@ -12,9 +12,11 @@
 
 ### InterfaceOf
 
-Ƭ **InterfaceOf**\<`ClassType`\>: \{ [Member in keyof ClassType]: ClassType[Member] }
+Ƭ **InterfaceOf**\<`ClassType`\>: `_InterfaceOf`\<`ClassType`\>
 
-A type that represents the interface of the class given as the generic parameter
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/instance-of` instead
 
 #### Type parameters
 
@@ -24,4 +26,4 @@ A type that represents the interface of the class given as the generic parameter
 
 #### Defined in
 
-[src/types/instance-of.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/instance-of.ts#L4)
+[src/types/instance-of.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/instance-of.ts#L7)

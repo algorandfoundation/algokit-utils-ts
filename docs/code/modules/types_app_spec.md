@@ -4,28 +4,25 @@
 
 ## Table of contents
 
-### Interfaces
-
-- [AppSources](../interfaces/types_app_spec.AppSources.md)
-- [AppSpec](../interfaces/types_app_spec.AppSpec.md)
-- [CallConfig](../interfaces/types_app_spec.CallConfig.md)
-- [DeclaredSchemaValueSpec](../interfaces/types_app_spec.DeclaredSchemaValueSpec.md)
-- [Hint](../interfaces/types_app_spec.Hint.md)
-- [ReservedSchemaValueSpec](../interfaces/types_app_spec.ReservedSchemaValueSpec.md)
-- [Schema](../interfaces/types_app_spec.Schema.md)
-- [SchemaSpec](../interfaces/types_app_spec.SchemaSpec.md)
-- [StateSchemaSpec](../interfaces/types_app_spec.StateSchemaSpec.md)
-- [Struct](../interfaces/types_app_spec.Struct.md)
-
 ### Type Aliases
 
 - [ABIType](types_app_spec.md#abitype)
 - [AVMType](types_app_spec.md#avmtype)
+- [AppSources](types_app_spec.md#appsources)
+- [AppSpec](types_app_spec.md#appspec)
+- [CallConfig](types_app_spec.md#callconfig)
 - [CallConfigValue](types_app_spec.md#callconfigvalue)
+- [DeclaredSchemaValueSpec](types_app_spec.md#declaredschemavaluespec)
 - [DefaultArgument](types_app_spec.md#defaultargument)
 - [FieldName](types_app_spec.md#fieldname)
+- [Hint](types_app_spec.md#hint)
 - [HintSpec](types_app_spec.md#hintspec)
+- [ReservedSchemaValueSpec](types_app_spec.md#reservedschemavaluespec)
+- [Schema](types_app_spec.md#schema)
+- [SchemaSpec](types_app_spec.md#schemaspec)
 - [StateSchema](types_app_spec.md#stateschema)
+- [StateSchemaSpec](types_app_spec.md#stateschemaspec)
+- [Struct](types_app_spec.md#struct)
 - [StructElement](types_app_spec.md#structelement)
 
 ### Functions
@@ -36,108 +33,253 @@
 
 ### ABIType
 
-Ƭ **ABIType**: `string`
+Ƭ **ABIType**: `_ABIType`
 
-The string name of an ABI type
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L273)
+[src/types/app-spec.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L51)
 
 ___
 
 ### AVMType
 
-Ƭ **AVMType**: ``"uint64"`` \| ``"bytes"``
+Ƭ **AVMType**: `_AVMType`
 
-AVM data type
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L329)
+[src/types/app-spec.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L63)
+
+___
+
+### AppSources
+
+Ƭ **AppSources**: `_AppSources`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L36)
+
+___
+
+### AppSpec
+
+Ƭ **AppSpec**: `_AppSpec`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L30)
+
+___
+
+### CallConfig
+
+Ƭ **CallConfig**: `_CallConfig`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L42)
 
 ___
 
 ### CallConfigValue
 
-Ƭ **CallConfigValue**: ``"NEVER"`` \| ``"CALL"`` \| ``"CREATE"`` \| ``"ALL"``
+Ƭ **CallConfigValue**: `_CallConfigValue`
 
-The various call configs:
- * `NEVER`: Will not be called
- * `CALL`: Can be called during a non-create call i.e. app id != 0
- * `CREATE`: Can be called during a create call i.e. app id = 0
- * `ALL`: Can be during a create OR non-create call
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L244)
+[src/types/app-spec.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L39)
+
+___
+
+### DeclaredSchemaValueSpec
+
+Ƭ **DeclaredSchemaValueSpec**: `_DeclaredSchemaValueSpec`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L66)
 
 ___
 
 ### DefaultArgument
 
-Ƭ **DefaultArgument**: \{ `data`: `ABIMethod` ; `source`: ``"abi-method"``  } \| \{ `data`: `string` ; `source`: ``"global-state"``  } \| \{ `data`: `string` ; `source`: ``"local-state"``  } \| \{ `data`: `string` \| `number` ; `source`: ``"constant"``  }
+Ƭ **DefaultArgument**: `_DefaultArgument`
 
-Defines a strategy for obtaining a default value for a given ABI arg.
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L289)
+[src/types/app-spec.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L60)
 
 ___
 
 ### FieldName
 
-Ƭ **FieldName**: `string`
+Ƭ **FieldName**: `_FieldName`
 
-The name of a field
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L270)
+[src/types/app-spec.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L48)
+
+___
+
+### Hint
+
+Ƭ **Hint**: `_Hint`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L45)
 
 ___
 
 ### HintSpec
 
-Ƭ **HintSpec**: `Record`\<`string`, [`Hint`](../interfaces/types_app_spec.Hint.md)\>
+Ƭ **HintSpec**: `_HintSpec`
 
-A lookup of encoded method call spec to hint
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L228)
+[src/types/app-spec.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L33)
+
+___
+
+### ReservedSchemaValueSpec
+
+Ƭ **ReservedSchemaValueSpec**: `_ReservedSchemaValueSpec`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L69)
+
+___
+
+### Schema
+
+Ƭ **Schema**: `_Schema`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L75)
+
+___
+
+### SchemaSpec
+
+Ƭ **SchemaSpec**: `_SchemaSpec`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L72)
 
 ___
 
 ### StateSchema
 
-Ƭ **StateSchema**: `Object`
+Ƭ **StateSchema**: `_StateSchema`
 
-Schema spec summary for global or local storage
+**`Deprecated`**
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `num_byte_slices` | `number` | Number of byte slots |
-| `num_uints` | `number` | Number of uint slots |
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L378)
+[src/types/app-spec.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L81)
+
+___
+
+### StateSchemaSpec
+
+Ƭ **StateSchemaSpec**: `_StateSchemaSpec`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L78)
+
+___
+
+### Struct
+
+Ƭ **Struct**: `_Struct`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
+
+#### Defined in
+
+[src/types/app-spec.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L57)
 
 ___
 
 ### StructElement
 
-Ƭ **StructElement**: [[`FieldName`](types_app_spec.md#fieldname), [`ABIType`](types_app_spec.md#abitype)]
+Ƭ **StructElement**: `_StructElement`
 
-The elements of the struct/tuple: `FieldName`, `ABIType`
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L276)
+[src/types/app-spec.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L54)
 
 ## Functions
 
@@ -145,26 +287,20 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 ▸ **arc32ToArc56**(`appSpec`): `Arc56Contract`
 
-Converts an ARC-32 Application Specification to an ARC-56 Contract
-
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appSpec` | [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-32 Application Specification |
+| Name | Type |
+| :------ | :------ |
+| `appSpec` | `AppSpec` |
 
 #### Returns
 
 `Arc56Contract`
 
-The ARC-56 Contract
+**`Deprecated`**
 
-**`Example`**
-
-```typescript
-const arc56AppSpec = arc32ToArc56(arc32AppSpec)
-```
+Import from `@algorandfoundation/algokit-utils/app-spec` instead
 
 #### Defined in
 
-[src/types/app-spec.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L20)
+[src/types/app-spec.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L27)

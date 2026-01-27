@@ -4,10 +4,10 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
-import { AppDeployMetadata } from './types/app'
-import { AppDeployParams } from './types/app-deployer'
-import { AppManager } from './types/app-manager'
-import { LogicError } from './types/logic-error'
+import { AppDeployMetadata } from './app'
+import { AppDeployParams } from './app-deployer'
+import { AppManager } from './app-manager'
+import { LogicError } from './logic-error'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()

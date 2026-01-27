@@ -4,65 +4,75 @@
 
 ## Table of contents
 
-### Classes
-
-- [AppDeployer](../classes/types_app_deployer.AppDeployer.md)
-
-### Interfaces
-
-- [AppLookup](../interfaces/types_app_deployer.AppLookup.md)
-- [AppMetadata](../interfaces/types_app_deployer.AppMetadata.md)
-
 ### Type Aliases
 
 - [AppDeployParams](types_app_deployer.md#appdeployparams)
 - [AppDeployResult](types_app_deployer.md#appdeployresult)
+- [AppDeployer](types_app_deployer.md#appdeployer)
+- [AppLookup](types_app_deployer.md#applookup)
+- [AppMetadata](types_app_deployer.md#appmetadata)
 - [DeployAppDeleteMethodCall](types_app_deployer.md#deployappdeletemethodcall)
 - [DeployAppDeleteParams](types_app_deployer.md#deployappdeleteparams)
 - [DeployAppUpdateMethodCall](types_app_deployer.md#deployappupdatemethodcall)
 - [DeployAppUpdateParams](types_app_deployer.md#deployappupdateparams)
 
+### Variables
+
+- [AppDeployer](types_app_deployer.md#appdeployer-1)
+
 ## Type Aliases
 
 ### AppDeployParams
 
-Ƭ **AppDeployParams**: [`Expand`](types_expand.md#expand)\<[`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `createParams`: [`AppCreateParams`](types_composer.md#appcreateparams) \| [`AppCreateMethodCall`](types_composer.md#appcreatemethodcall) ; `deleteParams`: [`DeployAppDeleteParams`](types_app_deployer.md#deployappdeleteparams) \| [`DeployAppDeleteMethodCall`](types_app_deployer.md#deployappdeletemethodcall) ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `existingDeployments?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `ignoreCache?`: `boolean` ; `metadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `onSchemaBreak?`: ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnSchemaBreak`](../enums/types_app.OnSchemaBreak.md) ; `onUpdate?`: ``"update"`` \| ``"replace"`` \| ``"fail"`` \| ``"append"`` \| [`OnUpdate`](../enums/types_app.OnUpdate.md) ; `updateParams`: [`DeployAppUpdateParams`](types_app_deployer.md#deployappupdateparams) \| [`DeployAppUpdateMethodCall`](types_app_deployer.md#deployappupdatemethodcall)  }\>
+Ƭ **AppDeployParams**: `_AppDeployParams`
 
-The parameters to idempotently deploy an app
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
 
 #### Defined in
 
-[src/types/app-deployer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L40)
+[src/types/app-deployer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L29)
 
 ___
 
 ### AppDeployResult
 
-Ƭ **AppDeployResult**: [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"create"``  } & `Omit`\<[`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md), ``"appId"`` \| ``"appAddress"``\> & [`SendAppCreateTransactionResult`](types_app.md#sendappcreatetransactionresult)\> \| [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"update"``  } & [`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md) & [`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult)\> \| [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"replace"``  } & `Omit`\<[`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md), ``"appId"`` \| ``"appAddress"``\> & [`SendAppCreateTransactionResult`](types_app.md#sendappcreatetransactionresult) & \{ `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: `ABIReturn`  }\> \| [`Expand`](types_expand.md#expand)\<\{ `operationPerformed`: ``"nothing"``  } & [`AppMetadata`](../interfaces/types_app_deployer.AppMetadata.md)\>
+Ƭ **AppDeployResult**: `_AppDeployResult`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
 
 #### Defined in
 
-[src/types/app-deployer.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L100)
+[src/types/app-deployer.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L38)
 
 ___
 
-### DeployAppDeleteMethodCall
+### AppDeployer
 
-Ƭ **DeployAppDeleteMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeleteMethodCall`](types_composer.md#appdeletemethodcall), ``"appId"``\>\>
+Ƭ **AppDeployer**: `_AppDeployer`
 
-Params to specify a delete method call for an app deployment
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
 
 #### Defined in
 
-[src/types/app-deployer.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L37)
+[src/types/app-deployer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L41)
+
+[src/types/app-deployer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L43)
 
 ___
 
-### DeployAppDeleteParams
+### AppLookup
 
-Ƭ **DeployAppDeleteParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeleteParams`](types_composer.md#appdeleteparams), ``"appId"``\>\>
+Ƭ **AppLookup**: `_AppLookup`
 
-Params to specify a transaction for an app deployment
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
 
 #### Defined in
 
@@ -70,24 +80,86 @@ Params to specify a transaction for an app deployment
 
 ___
 
-### DeployAppUpdateMethodCall
+### AppMetadata
 
-Ƭ **DeployAppUpdateMethodCall**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall), ``"appId"`` \| ``"approvalProgram"`` \| ``"clearStateProgram"``\>\>
+Ƭ **AppMetadata**: `_AppMetadata`
 
-Params to specify an update method call for an app deployment
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
 
 #### Defined in
 
-[src/types/app-deployer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L33)
+[src/types/app-deployer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L32)
+
+___
+
+### DeployAppDeleteMethodCall
+
+Ƭ **DeployAppDeleteMethodCall**: `_DeployAppDeleteMethodCall`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
+
+#### Defined in
+
+[src/types/app-deployer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L26)
+
+___
+
+### DeployAppDeleteParams
+
+Ƭ **DeployAppDeleteParams**: `_DeployAppDeleteParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
+
+#### Defined in
+
+[src/types/app-deployer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L23)
+
+___
+
+### DeployAppUpdateMethodCall
+
+Ƭ **DeployAppUpdateMethodCall**: `_DeployAppUpdateMethodCall`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
+
+#### Defined in
+
+[src/types/app-deployer.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L20)
 
 ___
 
 ### DeployAppUpdateParams
 
-Ƭ **DeployAppUpdateParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppUpdateParams`](types_composer.md#appupdateparams), ``"appId"`` \| ``"approvalProgram"`` \| ``"clearStateProgram"``\>\>
+Ƭ **DeployAppUpdateParams**: `_DeployAppUpdateParams`
 
-Params to specify an update transaction for an app deployment
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
 
 #### Defined in
 
-[src/types/app-deployer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L31)
+[src/types/app-deployer.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L17)
+
+## Variables
+
+### AppDeployer
+
+• `Const` **AppDeployer**: typeof `AppDeployer` = `_AppDeployer`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-deployer` instead
+
+#### Defined in
+
+[src/types/app-deployer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L41)
+
+[src/types/app-deployer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L43)

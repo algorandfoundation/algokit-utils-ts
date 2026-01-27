@@ -17,7 +17,7 @@ import {
   Transaction,
   TransactionType,
 } from '@algorandfoundation/algokit-transact'
-import { AppManager, BoxIdentifier, BoxReference as UtilsBoxReference } from '../types/app-manager'
+import { AppManager, BoxIdentifier, BoxReference as UtilsBoxReference } from '../app-manager'
 import { calculateExtraProgramPages } from '../util'
 import { CommonTransactionParams, buildTransactionCommonData } from './common'
 

@@ -3,7 +3,7 @@ import { Address } from '@algorandfoundation/algokit-common'
 import { KmdClient } from '@algorandfoundation/algokit-kmd-client'
 import { AddressWithSigners, AddressWithTransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AlgorandClient, Config } from '../'
-import { GetTestAccountParams } from '../types/testing'
+import { GetTestAccountParams } from './types'
 
 /**
  * @deprecated Use `getTestAccount(params, algorandClient)` instead. The `algorandClient` object can be created using `AlgorandClient.fromClients({ algod, kmd })`.
