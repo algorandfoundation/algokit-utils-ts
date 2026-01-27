@@ -1,0 +1,42 @@
+#pragma version 10
+// Simple counter app: create, noop increment, delete
+
+txn ApplicationID
+int 0
+==
+bnz handle_creation
+
+txn OnCompletion
+int NoOp
+==
+bnz handle_noop
+
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+int 0
+return
+
+handle_creation:
+  byte "counter"
+  int 0
+  app_global_put
+  int 1
+  return
+
+handle_noop:
+  byte "counter"
+  app_global_get
+  int 1
+  +
+  byte "counter"
+  swap
+  app_global_put
+  int 1
+  return
+
+handle_delete:
+  int 1
+  return

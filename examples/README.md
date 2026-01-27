@@ -4,7 +4,7 @@ Runnable code examples demonstrating every major feature of the `@algorandfounda
 
 ## Overview
 
-This folder contains 101 self-contained examples organized into 8 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
+This folder contains 116 self-contained examples organized into 9 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
 
 ## Prerequisites
 
@@ -90,6 +90,28 @@ Algorand node operations and queries using the AlgodClient.
 | `17-state-proof.ts` | Get cryptographic state proofs for cross-chain verification |
 | `18-devmode-timestamp.ts` | Control block timestamps in DevMode |
 | `19-sync-round.ts` | Manage node sync round for storage optimization |
+
+### Algorand Client (`algorand_client/`)
+
+High-level AlgorandClient API for simplified blockchain interactions.
+
+| File | Description |
+|------|-------------|
+| `01-client-instantiation.ts` | Create AlgorandClient via defaultLocalNet, testNet, mainNet, fromEnvironment, fromConfig |
+| `02-algo-amount.ts` | AlgoAmount utility for safe ALGO/microALGO arithmetic and formatting |
+| `03-signer-config.ts` | Configure transaction signers with setDefaultSigner, setSignerFromAccount, setSigner |
+| `04-params-config.ts` | Configure suggested params: validity window, caching, cache timeout |
+| `05-account-manager.ts` | Create/import accounts: random, mnemonic, KMD, multisig, logicsig, rekeyed |
+| `06-send-payment.ts` | Send ALGO payments with amount, note, and closeRemainderTo |
+| `07-send-asset-ops.ts` | ASA operations: create, config, opt-in, transfer, freeze, clawback, destroy |
+| `08-send-app-ops.ts` | Application operations: create, update, call, opt-in, close-out, delete |
+| `09-create-transaction.ts` | Create unsigned transactions for inspection and custom signing workflows |
+| `10-transaction-composer.ts` | Build atomic transaction groups with newGroup(), simulate(), send() |
+| `11-asset-manager.ts` | Query assets and perform bulk opt-in/opt-out operations |
+| `12-app-manager.ts` | Query app info, global/local state, box storage, compile TEAL |
+| `13-app-deployer.ts` | Idempotent app deployment with update/replace strategies |
+| `14-client-manager.ts` | Access raw algod/indexer/kmd clients and typed app clients |
+| `15-error-transformers.ts` | Register custom error transformers for enhanced debugging |
 
 ### Common (`common/`)
 
