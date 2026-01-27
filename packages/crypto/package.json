@@ -24,6 +24,6 @@
     "pre-commit": "run-s check-types lint:fix audit format test"
   },
   "dependencies": {
-    "@algorandfoundation/xhd-wallet-api": "file:algorandfoundation-xhd-wallet-api-1.0.3.tgz"
+    "@algorandfoundation/xhd-wallet-api": "v2.0.0-canary.1"
   }
 }
