@@ -447,7 +447,10 @@ export class MultisigAccount implements AddressWithTransactionSigner, AddressWit
 
   createMultisigSignature(): MultisigSignature {
     const pks = toPublicKeys(this._params.addrs)
-    const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({ publicKey: pk, signature: undefined }))
+    const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
+      publicKey: pk,
+      sig: undefined,
+    }))
 
     return { version: this._params.version, threshold: this._params.threshold, subsigs: subsignatures }
   }

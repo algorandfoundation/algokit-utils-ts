@@ -44,3 +44,35 @@ jobs:
           git add -N .
           # Print changed files and error out if there are changes after generating docs
           git diff --exit-code --name-only
+
+  verify-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Start LocalNet
+        run: |
+          pipx install algokit
+          algokit localnet start
+          npx --yes wait-on tcp:4001 -t 30000
+
+      - name: Install examples dependencies
+        working-directory: examples
+        run: npm ci
+
+      - name: Verify all examples
+        working-directory: examples
+        run: ./verify-all.sh
