@@ -1,0 +1,289 @@
+/**
+ * Asset Transfer Example
+ *
+ * This example demonstrates the full asset transfer flow using the transact package:
+ * 1. Create a new Algorand Standard Asset (ASA)
+ * 2. Opt-in: receiver sends 0 amount of the asset to themselves
+ * 3. Transfer assets from creator to the opted-in receiver
+ * 4. Verify receiver's asset balance after transfer
+ *
+ * Uses Transaction class with TransactionType.AssetTransfer and AssetTransferTransactionFields.
+ */
+
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import type { PendingTransactionResponse } from '@algorandfoundation/algokit-utils/algod-client'
+import {
+  Transaction,
+  TransactionType,
+  assignFee,
+  generateAddressWithSigners,
+  type AssetConfigTransactionFields,
+  type AssetTransferTransactionFields,
+  type PaymentTransactionFields,
+} from '@algorandfoundation/algokit-utils/transact'
+import nacl from 'tweetnacl'
+import {
+  createAlgodClient,
+  printHeader,
+  printInfo,
+  printStep,
+  printSuccess,
+  shortenAddress,
+  waitForConfirmation,
+} from './shared/utils.js'
+
+/**
+ * Gets a funded account from LocalNet's KMD wallet
+ */
+async function getLocalNetFundedAccount(algorand: AlgorandClient) {
+  return await algorand.account.kmd.getLocalNetDispenserAccount()
+}
+
+/**
+ * Generates a random ed25519 keypair and creates an AddressWithSigners
+ */
+function generateAccount() {
+  const keypair = nacl.sign.keyPair()
+  const addressWithSigners = generateAddressWithSigners({
+    ed25519Pubkey: keypair.publicKey,
+    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
+      return nacl.sign.detached(bytesToSign, keypair.secretKey)
+    },
+  })
+  return { keypair, ...addressWithSigners }
+}
+
+/**
+ * @example
+ * ### Run the example
+ * ```bash
+ * npx tsx examples/transact/transact-04-asset-transfer.ts
+ * ```
+ *
+ * {@includeCode ./transact-04-asset-transfer.ts}
+ */
+async function main() {
+  printHeader('Asset Transfer Example')
+
+  // Step 1: Initialize clients
+  printStep(1, 'Initialize Algod Client')
+  const algod = createAlgodClient()
+  const algorand = AlgorandClient.defaultLocalNet()
+  printInfo('Connected to LocalNet Algod')
+
+  // Step 2: Get creator account from KMD
+  printStep(2, 'Get Creator Account from KMD')
+  const creator = await getLocalNetFundedAccount(algorand)
+  printInfo(`Creator address: ${shortenAddress(creator.addr.toString())}`)
+
+  // Step 3: Get suggested transaction parameters
+  printStep(3, 'Get Suggested Transaction Parameters')
+  const suggestedParams = await algod.suggestedParams()
+  printInfo(`First valid round: ${suggestedParams.firstValid}`)
+  printInfo(`Last valid round: ${suggestedParams.lastValid}`)
+  printInfo(`Min fee: ${suggestedParams.minFee} microALGO`)
+
+  // Step 4: Generate and fund receiver account
+  printStep(4, 'Generate and Fund Receiver Account')
+
+  // Generate a new account for the receiver using generateAddressWithSigners
+  const receiver = generateAccount()
+  printInfo(`Receiver address: ${shortenAddress(receiver.addr.toString())}`)
+
+  // Fund the receiver with enough ALGO to cover transaction fees using low-level transaction
+  const fundingAmount = 1_000_000n // 1 ALGO in microALGO
+
+  const fundPaymentFields: PaymentTransactionFields = {
+    receiver: receiver.addr,
+    amount: fundingAmount,
+  }
+
+  const fundTx = new Transaction({
+    type: TransactionType.Payment,
+    sender: creator.addr,
+    firstValid: suggestedParams.firstValid,
+    lastValid: suggestedParams.lastValid,
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisId,
+    payment: fundPaymentFields,
+  })
+
+  const fundTxWithFee = assignFee(fundTx, {
+    feePerByte: suggestedParams.fee,
+    minFee: suggestedParams.minFee,
+  })
+
+  const signedFundTx = await creator.signer([fundTxWithFee], [0])
+  await algod.sendRawTransaction(signedFundTx)
+  await waitForConfirmation(algod, fundTxWithFee.txId())
+  printInfo('Funded receiver with 1 ALGO for transaction fees')
+
+  // Step 5: Create a new asset
+  printStep(5, 'Create New Asset')
+
+  // Asset parameters
+  const assetTotal = 10_000_000_000n // 10,000 units with 6 decimals
+  const assetDecimals = 6
+  const assetName = 'Transfer Test Token'
+  const assetUnitName = 'TTT'
+
+  const assetConfigFields: AssetConfigTransactionFields = {
+    assetId: 0n, // 0 indicates asset creation
+    total: assetTotal,
+    decimals: assetDecimals,
+    defaultFrozen: false,
+    assetName: assetName,
+    unitName: assetUnitName,
+    url: 'https://example.com/transfer-token',
+    manager: creator.addr,
+    reserve: creator.addr,
+    freeze: creator.addr,
+    clawback: creator.addr,
+  }
+
+  printInfo(`Creating asset: ${assetName} (${assetUnitName})`)
+  printInfo(`Total supply: ${assetTotal} (${Number(assetTotal) / Math.pow(10, assetDecimals)} ${assetUnitName})`)
+
+  // Create asset config transaction
+  const createAssetTx = new Transaction({
+    type: TransactionType.AssetConfig,
+    sender: creator.addr,
+    firstValid: suggestedParams.firstValid,
+    lastValid: suggestedParams.lastValid,
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisId,
+    assetConfig: assetConfigFields,
+  })
+
+  const createAssetTxWithFee = assignFee(createAssetTx, {
+    feePerByte: suggestedParams.fee,
+    minFee: suggestedParams.minFee,
+  })
+
+  // Sign and submit asset creation transaction
+  const signedCreateTx = await creator.signer([createAssetTxWithFee], [0])
+  const createTxId = createAssetTxWithFee.txId()
+  await algod.sendRawTransaction(signedCreateTx)
+  printInfo(`Asset creation transaction submitted: ${createTxId}`)
+
+  const createPendingInfo = (await waitForConfirmation(algod, createTxId)) as PendingTransactionResponse
+  const assetId = createPendingInfo.assetId
+  if (!assetId) {
+    throw new Error('Asset ID not found in pending transaction response')
+  }
+  printInfo(`Asset created with ID: ${assetId}`)
+  printSuccess(`Asset ${assetName} (ID: ${assetId}) created successfully!`)
+
+  // Step 6: Opt-in - Receiver sends 0 amount to themselves
+  printStep(6, 'Opt-in: Receiver Opts Into the Asset')
+  printInfo('Opt-in is done by sending 0 amount of the asset to yourself')
+
+  // Refresh suggested params for the new transaction
+  const optInSuggestedParams = await algod.suggestedParams()
+
+  const optInFields: AssetTransferTransactionFields = {
+    assetId: assetId,
+    receiver: receiver.addr, // Receiver sends to themselves
+    amount: 0n, // 0 amount for opt-in
+  }
+
+  const optInTx = new Transaction({
+    type: TransactionType.AssetTransfer,
+    sender: receiver.addr, // Receiver is the sender for opt-in
+    firstValid: optInSuggestedParams.firstValid,
+    lastValid: optInSuggestedParams.lastValid,
+    genesisHash: optInSuggestedParams.genesisHash,
+    genesisId: optInSuggestedParams.genesisId,
+    assetTransfer: optInFields,
+  })
+
+  const optInTxWithFee = assignFee(optInTx, {
+    feePerByte: optInSuggestedParams.fee,
+    minFee: optInSuggestedParams.minFee,
+  })
+
+  // Sign and submit opt-in transaction
+  const signedOptInTx = await receiver.signer([optInTxWithFee], [0])
+  const optInTxId = optInTxWithFee.txId()
+  await algod.sendRawTransaction(signedOptInTx)
+  printInfo(`Opt-in transaction submitted: ${optInTxId}`)
+
+  await waitForConfirmation(algod, optInTxId)
+  printInfo(`Receiver opted into asset ID: ${assetId}`)
+  printSuccess('Receiver successfully opted into the asset!')
+
+  // Verify receiver has 0 balance after opt-in
+  const receiverAssetInfoAfterOptIn = await algod.accountAssetInformation(receiver.addr.toString(), assetId)
+  printInfo(`Receiver asset balance after opt-in: ${receiverAssetInfoAfterOptIn.assetHolding?.amount ?? 0n}`)
+
+  // Step 7: Transfer assets from creator to receiver
+  printStep(7, 'Transfer Assets from Creator to Receiver')
+
+  const transferAmount = 1_000_000_000n // 1,000 units (with 6 decimals)
+  printInfo(`Transferring ${transferAmount} (${Number(transferAmount) / Math.pow(10, assetDecimals)} ${assetUnitName}) to receiver`)
+
+  // Refresh suggested params for the transfer transaction
+  const transferSuggestedParams = await algod.suggestedParams()
+
+  const transferFields: AssetTransferTransactionFields = {
+    assetId: assetId,
+    receiver: receiver.addr,
+    amount: transferAmount,
+  }
+
+  const transferTx = new Transaction({
+    type: TransactionType.AssetTransfer,
+    sender: creator.addr, // Creator sends the assets
+    firstValid: transferSuggestedParams.firstValid,
+    lastValid: transferSuggestedParams.lastValid,
+    genesisHash: transferSuggestedParams.genesisHash,
+    genesisId: transferSuggestedParams.genesisId,
+    assetTransfer: transferFields,
+  })
+
+  const transferTxWithFee = assignFee(transferTx, {
+    feePerByte: transferSuggestedParams.fee,
+    minFee: transferSuggestedParams.minFee,
+  })
+
+  // Sign and submit transfer transaction
+  const signedTransferTx = await creator.signer([transferTxWithFee], [0])
+  const transferTxId = transferTxWithFee.txId()
+  await algod.sendRawTransaction(signedTransferTx)
+  printInfo(`Transfer transaction submitted: ${transferTxId}`)
+
+  await waitForConfirmation(algod, transferTxId)
+  printSuccess(`Transferred ${Number(transferAmount) / Math.pow(10, assetDecimals)} ${assetUnitName} to receiver!`)
+
+  // Step 8: Verify receiver's asset balance after transfer
+  printStep(8, 'Verify Receiver Asset Balance After Transfer')
+
+  const receiverAssetInfoAfterTransfer = await algod.accountAssetInformation(receiver.addr.toString(), assetId)
+  const receiverBalance = receiverAssetInfoAfterTransfer.assetHolding?.amount ?? 0n
+  printInfo(`Receiver asset balance: ${receiverBalance} (${Number(receiverBalance) / Math.pow(10, assetDecimals)} ${assetUnitName})`)
+
+  if (receiverBalance !== transferAmount) {
+    throw new Error(`Balance mismatch: expected ${transferAmount}, got ${receiverBalance}`)
+  }
+  printSuccess(`Receiver balance verified: ${Number(receiverBalance) / Math.pow(10, assetDecimals)} ${assetUnitName}`)
+
+  // Also verify creator's remaining balance
+  const creatorAssetInfoAfterTransfer = await algod.accountAssetInformation(creator.addr.toString(), assetId)
+  const creatorBalance = creatorAssetInfoAfterTransfer.assetHolding?.amount ?? 0n
+  const expectedCreatorBalance = assetTotal - transferAmount
+  printInfo(`Creator remaining balance: ${creatorBalance} (${Number(creatorBalance) / Math.pow(10, assetDecimals)} ${assetUnitName})`)
+
+  if (creatorBalance !== expectedCreatorBalance) {
+    throw new Error(`Creator balance mismatch: expected ${expectedCreatorBalance}, got ${creatorBalance}`)
+  }
+  printSuccess(`Creator balance verified: ${Number(creatorBalance) / Math.pow(10, assetDecimals)} ${assetUnitName}`)
+
+  printSuccess('Asset transfer example completed successfully!')
+}
+
+main().catch((error) => {
+  console.error('Error:', error)
+  process.exit(1)
+})
+
+export { main as TransactAssetTransferExample }

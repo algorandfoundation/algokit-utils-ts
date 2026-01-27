@@ -8,27 +8,27 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Array of example files in order
+# Array of example slugs in order
 EXAMPLES=(
-    "01-node-health-status.ts"
-    "02-version-genesis.ts"
-    "03-ledger-supply.ts"
-    "04-account-info.ts"
-    "05-transaction-params.ts"
-    "06-send-transaction.ts"
-    "07-pending-transactions.ts"
-    "08-block-data.ts"
-    "09-asset-info.ts"
-    "10-application-info.ts"
-    "11-application-boxes.ts"
-    "12-teal-compile.ts"
-    "13-simulation.ts"
-    "14-state-deltas.ts"
-    "15-transaction-proof.ts"
-    "16-lightblock-proof.ts"
-    "17-state-proof.ts"
-    "18-devmode-timestamp.ts"
-    "19-sync-round.ts"
+    "01-node-health-status"
+    "02-version-genesis"
+    "03-ledger-supply"
+    "04-account-info"
+    "05-transaction-params"
+    "06-send-transaction"
+    "07-pending-transactions"
+    "08-block-data"
+    "09-asset-info"
+    "10-application-info"
+    "11-application-boxes"
+    "12-teal-compile"
+    "13-simulation"
+    "14-state-deltas"
+    "15-transaction-proof"
+    "16-lightblock-proof"
+    "17-state-proof"
+    "18-devmode-timestamp"
+    "19-sync-round"
 )
 
 # Colors for output
@@ -47,9 +47,10 @@ FAILED=0
 FAILED_EXAMPLES=()
 
 for example in "${EXAMPLES[@]}"; do
-    echo -n "Running $example... "
+    file_path="../algod_client-${example}.ts"
+    echo -n "Running ${file_path}... "
 
-    if [ ! -f "$example" ]; then
+    if [ ! -f "$file_path" ]; then
         echo -e "${RED}FAILED${NC} (file not found)"
         FAILED=$((FAILED + 1))
         FAILED_EXAMPLES+=("$example")
@@ -57,7 +58,7 @@ for example in "${EXAMPLES[@]}"; do
     fi
 
     # Run the example and capture output/exit code
-    if OUTPUT=$(npx tsx "$example" 2>&1); then
+    if OUTPUT=$(npx tsx "$file_path" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else

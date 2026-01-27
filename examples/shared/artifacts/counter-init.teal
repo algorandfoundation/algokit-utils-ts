@@ -1,7 +1,0 @@
-#pragma version 10
-// Counter program
-byte "counter"
-int 0
-app_global_put
-int 1
-return

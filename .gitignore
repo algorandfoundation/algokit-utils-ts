@@ -53,6 +53,7 @@ coverage
 code-docs/
 out/
 docs/_html/
+docs/_examples/
 
 # dotenv environment variable files
 .env

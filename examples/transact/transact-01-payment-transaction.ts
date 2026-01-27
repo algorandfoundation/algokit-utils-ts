@@ -1,0 +1,179 @@
+/**
+ * Payment Transaction Example
+ *
+ * This example demonstrates how to send ALGO between accounts using the transact package.
+ * It shows the low-level transaction construction pattern with:
+ * - Transaction class with TransactionType.Payment
+ * - PaymentTransactionFields for receiver and amount
+ * - assignFee() to set transaction fee from suggested params
+ * - generateAddressWithSigners for signing
+ */
+
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import {
+  Transaction,
+  TransactionType,
+  assignFee,
+  generateAddressWithSigners,
+  type PaymentTransactionFields,
+} from '@algorandfoundation/algokit-utils/transact'
+import nacl from 'tweetnacl'
+import {
+  createAlgodClient,
+  formatAlgo,
+  getAccountBalance,
+  printHeader,
+  printInfo,
+  printStep,
+  printSuccess,
+  shortenAddress,
+  waitForConfirmation,
+} from './shared/utils.js'
+
+/**
+ * Generates a random ed25519 keypair and creates an AddressWithSigners
+ */
+function generateAccount() {
+  // Generate a random keypair using tweetnacl
+  const keypair = nacl.sign.keyPair()
+
+  // Create the address and signers using generateAddressWithSigners
+  const addressWithSigners = generateAddressWithSigners({
+    ed25519Pubkey: keypair.publicKey,
+    rawEd25519Signer: async (bytesToSign: Uint8Array) => {
+      return nacl.sign.detached(bytesToSign, keypair.secretKey)
+    },
+  })
+
+  return { keypair, ...addressWithSigners }
+}
+
+/**
+ * Gets a funded account from LocalNet's KMD wallet
+ */
+async function getLocalNetFundedAccount(algorand: AlgorandClient) {
+  const dispenser = await algorand.account.kmd.getLocalNetDispenserAccount()
+  return dispenser
+}
+
+/**
+ * @example
+ * ### Run the example
+ * ```bash
+ * npx tsx examples/transact/transact-01-payment-transaction.ts
+ * ```
+ *
+ * {@includeCode ./transact-01-payment-transaction.ts}
+ */
+async function main() {
+  printHeader('Payment Transaction Example')
+
+  // Step 1: Initialize clients
+  printStep(1, 'Initialize Algod Client')
+  const algod = createAlgodClient()
+  const algorand = AlgorandClient.defaultLocalNet()
+  printInfo('Connected to LocalNet Algod')
+
+  // Step 2: Get a funded account from KMD (sender)
+  printStep(2, 'Get Funded Account from KMD')
+  const sender = await getLocalNetFundedAccount(algorand)
+  const senderBalance = await getAccountBalance(algorand, sender.addr.toString())
+  printInfo(`Sender address: ${shortenAddress(sender.addr.toString())}`)
+  printInfo(`Sender balance: ${formatAlgo(senderBalance.microAlgo)}`)
+
+  // Step 3: Generate a new receiver account
+  printStep(3, 'Generate Receiver Account')
+  const receiver = generateAccount()
+  printInfo(`Receiver address: ${shortenAddress(receiver.addr.toString())}`)
+
+  // Check initial receiver balance (should be 0)
+  let receiverBalanceBefore: bigint
+  try {
+    const info = await getAccountBalance(algorand, receiver.addr.toString())
+    receiverBalanceBefore = info.microAlgo
+  } catch {
+    // New accounts have 0 balance before being funded
+    receiverBalanceBefore = 0n
+  }
+  printInfo(`Receiver initial balance: ${formatAlgo(receiverBalanceBefore)}`)
+
+  // Step 4: Get suggested transaction parameters
+  printStep(4, 'Get Suggested Transaction Parameters')
+  const suggestedParams = await algod.suggestedParams()
+  printInfo(`First valid round: ${suggestedParams.firstValid}`)
+  printInfo(`Last valid round: ${suggestedParams.lastValid}`)
+  printInfo(`Min fee: ${suggestedParams.minFee} microALGO`)
+
+  // Step 5: Create payment transaction
+  printStep(5, 'Create Payment Transaction')
+  const paymentAmount = 1_000_000n // 1 ALGO in microALGO
+
+  // Define payment-specific fields
+  const paymentFields: PaymentTransactionFields = {
+    receiver: receiver.addr,
+    amount: paymentAmount,
+  }
+
+  // Create the transaction with all required fields
+  const transaction = new Transaction({
+    type: TransactionType.Payment,
+    sender: sender.addr,
+    firstValid: suggestedParams.firstValid,
+    lastValid: suggestedParams.lastValid,
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisId,
+    payment: paymentFields,
+  })
+
+  printInfo(`Transaction type: ${transaction.type}`)
+  printInfo(`Amount: ${formatAlgo(paymentAmount)}`)
+  printInfo(`Receiver: ${shortenAddress(receiver.addr.toString())}`)
+
+  // Step 6: Assign fee using suggested params
+  printStep(6, 'Assign Transaction Fee')
+  const transactionWithFee = assignFee(transaction, {
+    feePerByte: suggestedParams.fee,
+    minFee: suggestedParams.minFee,
+  })
+  printInfo(`Assigned fee: ${transactionWithFee.fee} microALGO`)
+
+  // Step 7: Sign the transaction
+  printStep(7, 'Sign Transaction')
+  const signedTxns = await sender.signer([transactionWithFee], [0])
+  const txId = transactionWithFee.txId()
+  printInfo(`Transaction ID: ${txId}`)
+  printInfo('Transaction signed successfully')
+
+  // Step 8: Submit transaction and wait for confirmation
+  printStep(8, 'Submit Transaction and Wait for Confirmation')
+  await algod.sendRawTransaction(signedTxns)
+  printInfo('Transaction submitted to network')
+
+  // Wait for confirmation using the utility function
+  const pendingInfo = await waitForConfirmation(algod, txId)
+  printInfo(`Transaction confirmed in round: ${pendingInfo.confirmedRound}`)
+
+  // Step 9: Verify receiver balance increased
+  printStep(9, 'Verify Receiver Balance')
+  const receiverBalanceAfter = await getAccountBalance(algorand, receiver.addr.toString())
+  printInfo(`Receiver balance after: ${formatAlgo(receiverBalanceAfter.microAlgo)}`)
+
+  const balanceIncrease = receiverBalanceAfter.microAlgo - receiverBalanceBefore
+  printInfo(`Balance increase: ${formatAlgo(balanceIncrease)}`)
+
+  // Verify the balance increased by the sent amount
+  if (balanceIncrease === paymentAmount) {
+    printSuccess(`Payment of ${formatAlgo(paymentAmount)} completed successfully!`)
+  } else {
+    throw new Error(`Expected balance increase of ${paymentAmount}, but got ${balanceIncrease}`)
+  }
+
+  printSuccess('Payment transaction example completed!')
+}
+
+main().catch((error) => {
+  console.error('Error:', error)
+  process.exit(1)
+})
+
+export { main as TransactPaymentTransactionExample }

@@ -8,22 +8,22 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Array of example files in order
+# Array of example slugs in order
 EXAMPLES=(
-    "01-payment-transaction.ts"
-    "02-payment-close.ts"
-    "03-asset-create.ts"
-    "04-asset-transfer.ts"
-    "05-asset-freeze.ts"
-    "06-asset-clawback.ts"
-    "07-atomic-group.ts"
-    "08-atomic-swap.ts"
-    "09-single-sig.ts"
-    "10-multisig.ts"
-    "11-logic-sig.ts"
-    "12-fee-calculation.ts"
-    "13-encoding-decoding.ts"
-    "14-app-call.ts"
+    "01-payment-transaction"
+    "02-payment-close"
+    "03-asset-create"
+    "04-asset-transfer"
+    "05-asset-freeze"
+    "06-asset-clawback"
+    "07-atomic-group"
+    "08-atomic-swap"
+    "09-single-sig"
+    "10-multisig"
+    "11-logic-sig"
+    "12-fee-calculation"
+    "13-encoding-decoding"
+    "14-app-call"
 )
 
 # Colors for output
@@ -42,9 +42,10 @@ FAILED=0
 FAILED_EXAMPLES=()
 
 for example in "${EXAMPLES[@]}"; do
-    echo -n "Running $example... "
+    file_path="../transact-${example}.ts"
+    echo -n "Running ${file_path}... "
 
-    if [ ! -f "$example" ]; then
+    if [ ! -f "$file_path" ]; then
         echo -e "${RED}FAILED${NC} (file not found)"
         FAILED=$((FAILED + 1))
         FAILED_EXAMPLES+=("$example")
@@ -52,7 +53,7 @@ for example in "${EXAMPLES[@]}"; do
     fi
 
     # Run the example and capture output/exit code
-    if OUTPUT=$(npx tsx "$example" 2>&1); then
+    if OUTPUT=$(npx tsx "$file_path" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else
