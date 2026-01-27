@@ -299,7 +299,8 @@ export class AccountManager {
     const generated = this._ed25519Generator(seed)
 
     const addrWithSigners = generateAddressWithSigners({
-      ...generated,
+      ed25519Pubkey: generated.ed25519Pubkey,
+      rawEd25519Signer: generated.rawEd25519Signer,
       sendingAddress: getOptionalAddress(sender),
     })
 

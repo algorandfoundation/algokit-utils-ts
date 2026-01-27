@@ -197,7 +197,7 @@ ___
 
 #### Defined in
 
-[src/types/account-manager.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L566)
+[src/types/account-manager.ts:567](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L567)
 
 ___
 
@@ -227,7 +227,7 @@ const account = await accountManager.dispenserFromEnvironment()
 
 #### Defined in
 
-[src/types/account-manager.ts:479](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L479)
+[src/types/account-manager.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L480)
 
 ___
 
@@ -270,7 +270,7 @@ await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.
 
 #### Defined in
 
-[src/types/account-manager.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L599)
+[src/types/account-manager.ts:600](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L600)
 
 ___
 
@@ -319,7 +319,7 @@ await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(
 
 #### Defined in
 
-[src/types/account-manager.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L661)
+[src/types/account-manager.ts:662](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L662)
 
 ___
 
@@ -363,7 +363,7 @@ await accountManager.ensureFundedFromTestNetDispenserApi("ACCOUNTADDRESS", algor
 
 #### Defined in
 
-[src/types/account-manager.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L717)
+[src/types/account-manager.ts:718](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L718)
 
 ___
 
@@ -408,7 +408,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/types/account-manager.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L352)
+[src/types/account-manager.ts:353](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L353)
 
 ___
 
@@ -442,7 +442,7 @@ const defaultDispenserAccount = await accountManager.fromKmd('unencrypted-defaul
 
 #### Defined in
 
-[src/types/account-manager.ts:387](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L387)
+[src/types/account-manager.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L388)
 
 ___
 
@@ -599,7 +599,7 @@ const account = await accountManager.localNetDispenser()
 
 #### Defined in
 
-[src/types/account-manager.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L498)
+[src/types/account-manager.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L499)
 
 ___
 
@@ -630,7 +630,7 @@ const account = accountManager.logicsig(program, [new Uint8Array(3, ...)])
 
 #### Defined in
 
-[src/types/account-manager.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L425)
+[src/types/account-manager.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L426)
 
 ___
 
@@ -662,7 +662,7 @@ const account = accountManager.multisig({version: 1, threshold: 1, addrs: ["ADDR
 
 #### Defined in
 
-[src/types/account-manager.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L410)
+[src/types/account-manager.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L411)
 
 ___
 
@@ -686,7 +686,7 @@ const account = accountManager.random()
 
 #### Defined in
 
-[src/types/account-manager.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L438)
+[src/types/account-manager.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L439)
 
 ___
 
@@ -746,7 +746,7 @@ await accountManager.rekeyAccount({
 
 #### Defined in
 
-[src/types/account-manager.ts:541](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L541)
+[src/types/account-manager.ts:542](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L542)
 
 ___
 
@@ -778,7 +778,7 @@ const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
 
 #### Defined in
 
-[src/types/account-manager.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L321)
+[src/types/account-manager.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L322)
 
 ___
 
