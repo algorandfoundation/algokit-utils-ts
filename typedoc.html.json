@@ -3,6 +3,10 @@
   "jsDocCompatibility": {
     "exampleTag": false
   },
+  "navigationLinks": {
+    "Examples": "/examples/",
+    "GitHub": "https://github.com/algorandfoundation/algokit-utils-ts"
+  },
   "entryPoints": [
     "src/index.ts",
     "src/abi/index.ts",
