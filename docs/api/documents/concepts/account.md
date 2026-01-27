@@ -10,11 +10,7 @@ Account management is one of the core capabilities provided by AlgoKit Utils. It
 
 ## `AccountManager`
 
-<<<<<<< HEAD
-The [`AccountManager`](.../api/classes/types_account_manager.AccountManager.md) is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
-=======
 The [`AccountManager`](../../_media/AccountManager.md) is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
->>>>>>> docs/fix-reference-warnings
 
 To get an instance of `AccountManager`, you can use either [`AlgorandClient`](algorand-client.md) via `algorand.account` or instantiate it directly:
 
@@ -56,11 +52,7 @@ algorand.account.setDefaultSigner(myDefaultSigner)
 
 ## Get a signer
 
-<<<<<<< HEAD
-[`AlgorandClient`](algorand-client.md) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can [retrieve the signer](.../api/classes//types_account_manager.AccountManager.md#getsigner) for a given sender address:
-=======
 [`AlgorandClient`](algorand-client.md) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can [retrieve the signer](../../_media/AccountManager.md#getsigner) for a given sender address:
->>>>>>> docs/fix-reference-warnings
 
 ```typescript
 const signer = algorand.account.getSigner('SENDER_ADDRESS')

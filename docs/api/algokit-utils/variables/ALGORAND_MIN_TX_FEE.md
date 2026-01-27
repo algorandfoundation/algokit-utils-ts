@@ -8,8 +8,4 @@
 
 > `const` **ALGORAND\_MIN\_TX\_FEE**: [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-<<<<<<< HEAD
-Defined in: [src/amount.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L95)
-=======
 Defined in: [src/amount.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L112)
->>>>>>> docs/fix-reference-warnings

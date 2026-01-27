@@ -105,13 +105,8 @@ const appClient6 = factory.getAppClientByCreatorAndName({
 
 Once you have an [app factory](#appfactory) you can perform the following actions:
 
-<<<<<<< HEAD
-- [`factory.create(params?)`](.../api/classes/types_app_factory.AppFactory.md#create) - Signs and sends a transaction to create an app and returns the [result of that call](app.md) and an [`AppClient`](#appclient) instance for the created app
-- [`factory.deploy(params)`](.../api/classes/types_app_factory.AppFactory.md#deploy) - Uses the [creator address and app name pattern](app-deploy.md) to find if the app has already been deployed or not and either creates, updates or replaces that app based on the [deployment rules](app-deploy.md) (i.e. it's an idempotent deployment) and returns the [result of the deployment](app-deploy.md) and an [`AppClient`](#appclient) instance for the created/updated/existing app
-=======
 - [`factory.create(params?)`](../../_media/AppFactory.md#create) - Signs and sends a transaction to create an app and returns the [result of that call](app.md) and an [`AppClient`](#appclient) instance for the created app
 - [`factory.deploy(params)`](../../_media/AppFactory.md#deploy) - Uses the [creator address and app name pattern](app-deploy.md) to find if the app has already been deployed or not and either creates, updates or replaces that app based on the [deployment rules](app-deploy.md) (i.e. it's an idempotent deployment) and returns the [result of the deployment](app-deploy.md) and an [`AppClient`](#appclient) instance for the created/updated/existing app
->>>>>>> docs/fix-reference-warnings
 
 ### Create
 
@@ -317,11 +312,7 @@ Often there is a need to fund an app account to cover minimum balance requiremen
 
 The input parameters are:
 
-<<<<<<< HEAD
-- A [`FundAppParams`](.../api/modules/types_app_client.md#fundappparams), which has the same properties as a [payment transaction](transfer.md) except `receiver` is not required and `sender` is optional (if not specified then it will be set to the app client's default sender if configured).
-=======
 - A `FundAppParams`, which has the same properties as a [payment transaction](transfer.md) except `receiver` is not required and `sender` is optional (if not specified then it will be set to the app client's default sender if configured).
->>>>>>> docs/fix-reference-warnings
 
 Note: If you are passing the funding payment in as an ABI argument so it can be validated by the ABI method then you'll want to get the funding call as a transaction, e.g.:
 

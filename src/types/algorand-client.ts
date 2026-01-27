@@ -228,11 +228,7 @@ export class AlgorandClient {
    * @returns A new instance of `TransactionComposer`.
    * @example
    * {@includeCode ./algorand-client.spec.ts#example-newGroup}
-<<<<<<< HEAD
-   * @see [Full working test](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts#L71)
-=======
    * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
->>>>>>> docs/fix-reference-warnings
    */
   public newGroup(composerConfig?: TransactionComposerConfig) {
     return new TransactionComposer({

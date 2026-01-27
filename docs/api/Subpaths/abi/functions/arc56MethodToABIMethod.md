@@ -8,11 +8,7 @@
 
 > **arc56MethodToABIMethod**(`method`, `appSpec`): [`ABIMethod`](../classes/ABIMethod.md)
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-method.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L207)
-=======
 Defined in: [packages/abi/src/abi-method.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L202)
->>>>>>> docs/fix-reference-warnings
 
 ## Parameters
 

@@ -8,11 +8,7 @@
 
 > **microAlgos**(`microAlgos`): [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-<<<<<<< HEAD
-Defined in: [src/amount.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L77)
-=======
 Defined in: [src/amount.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L88)
->>>>>>> docs/fix-reference-warnings
 
 Returns an amount of µAlgo using AlgoAmount
 
@@ -28,11 +24,6 @@ The amount of µAlgo
 
 [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-<<<<<<< HEAD
-## See
-
-[algos](algos.md) for Algo denomination
-=======
 ## Example
 
 ```ts
@@ -50,4 +41,3 @@ const algoValue = amount.algo // 0.0001
 
  - [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.spec.ts)
  - [algos](algos.md) for Algo denomination
->>>>>>> docs/fix-reference-warnings

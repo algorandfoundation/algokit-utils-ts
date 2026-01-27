@@ -8,11 +8,7 @@
 
 > **algo**(`algos`): [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-<<<<<<< HEAD
-Defined in: [src/amount.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L69)
-=======
 Defined in: [src/amount.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L77)
->>>>>>> docs/fix-reference-warnings
 
 Returns an amount of Algo using AlgoAmount
 

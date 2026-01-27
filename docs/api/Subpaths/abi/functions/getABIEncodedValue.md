@@ -8,11 +8,7 @@
 
 > **getABIEncodedValue**(`type`, `value`): `Uint8Array`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-method.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L337)
-=======
 Defined in: [packages/abi/src/abi-method.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L315)
->>>>>>> docs/fix-reference-warnings
 
 ## Parameters
 

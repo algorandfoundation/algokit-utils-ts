@@ -25,11 +25,7 @@ const assetManager = new AssetManager(algod, () => new TransactionComposer({algo
 
 To create an asset you can use `algorand.send.assetCreate(params)` (immediately send a single asset creation transaction), `algorand.createTransaction.assetCreate(params)` (construct an asset creation transaction), or `algorand.newGroup().addAssetCreate(params)` (add asset creation to a group of transactions) per [`AlgorandClient`](algorand-client.md) [transaction semantics](algorand-client.md).
 
-<<<<<<< HEAD
-The base type for specifying an asset creation transaction is [`AssetCreateParams`](.../api/modules/types_composer.md#assetcreateparams), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
-=======
 The base type for specifying an asset creation transaction is [`AssetCreateParams`](../../_media/AssetCreateParams.md), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `total: bigint` - The total amount of the smallest divisible (decimal) unit to create. For example, if `decimals` is, say, 2, then for every 100 `total` there would be 1 whole unit. This field can only be specified upon asset creation.
 - `decimals: number` - The amount of decimal places the asset should have. If unspecified then the asset will be in whole units (i.e. `0`). If 0, the asset is not divisible. If 1, the base unit of the asset is in tenths, and so on up to 19 decimal places. This field can only be specified upon asset creation.
@@ -92,11 +88,7 @@ If you have a `manager` address set on an asset, that address can send a reconfi
 
 To reconfigure an asset you can use `algorand.send.assetConfig(params)` (immediately send a single asset config transaction), `algorand.createTransaction.assetConfig(params)` (construct an asset config transaction), or `algorand.newGroup().addAssetConfig(params)` (add asset config to a group of transactions) per [`AlgorandClient`](algorand-client.md) [transaction semantics](algorand-client.md).
 
-<<<<<<< HEAD
-The base type for specifying an asset creation transaction is [`AssetConfigParams`](.../api/modules/types_composer.md#assetconfigparams), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
-=======
 The base type for specifying an asset creation transaction is [`AssetConfigParams`](../../_media/AssetConfigParams.md), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `assetId: bigint` - ID of the asset to reconfigure
 - `manager: string | undefined` - The address of the optional account that can manage the configuration of the asset and destroy it. The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`. If not set (`undefined` or `""`) the asset will become permanently immutable.
@@ -145,11 +137,7 @@ To transfer unit(s) of an asset between accounts you can use `algorand.send.asse
 
 **Note:** For an account to receive an asset it needs to have [opted-in](#opt-inout).
 
-<<<<<<< HEAD
-The base type for specifying an asset transfer transaction is [`AssetTransferParams`](.../api/modules/types_composer.md#assettransferparams), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
-=======
 The base type for specifying an asset transfer transaction is [`AssetTransferParams`](../../_media/AssetTransferParams.md), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `assetId: bigint` - ID of the asset to transfer.
 - `amount: bigint` - Amount of the asset to transfer (in smallest divisible (decimal) units).
@@ -207,11 +195,7 @@ AlgoKit Utils gives you functions that allow you to do opt-ins and opt-outs in b
 
 To opt-in to an asset you can use `algorand.send.assetOptIn(params)` (immediately send a single asset opt-in transaction), `algorand.createTransaction.assetOptIn(params)` (construct an asset opt-in transaction), or `algorand.newGroup().addAssetOptIn(params)` (add asset opt-in to a group of transactions) per [`AlgorandClient`](algorand-client.md) [transaction semantics](algorand-client.md).
 
-<<<<<<< HEAD
-The base type for specifying an asset opt-in transaction is [`AssetOptInParams`](.../api/modules/types_composer.md#assetoptinparams), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
-=======
 The base type for specifying an asset opt-in transaction is [`AssetOptInParams`](../../_media/AssetOptInParams.md), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `assetId: bigint` - The ID of the asset that will be opted-in to
 
@@ -248,11 +232,7 @@ await algorand.send.assetOptIn({
 
 To opt-out to an asset you can use `algorand.send.assetOptOut(params)` (immediately send a single asset opt-out transaction), `algorand.createTransaction.assetOptOut(params)` (construct an asset opt-out transaction), or `algorand.newGroup().addAssetOptOut(params)` (add asset opt-out to a group of transactions) per [`AlgorandClient`](algorand-client.md) [transaction semantics](algorand-client.md).
 
-<<<<<<< HEAD
-The base type for specifying an asset opt-out transaction is [`AssetOptOutParams`](.../api/modules/types_composer.md#assetoptoutparams), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
-=======
 The base type for specifying an asset opt-out transaction is [`AssetOptOutParams`](../../_media/AssetOptOutParams.md), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `assetId: bigint` - The ID of the asset that will be opted-out of
 - `creator: string` - The address of the asset creator account to close the asset position to (any remaining asset units will be sent to this account).

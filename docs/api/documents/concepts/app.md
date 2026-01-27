@@ -374,21 +374,12 @@ const boxABIValues = algorand.app.getBoxValuesFromABIType(appId, [boxName, boxNa
 
 To get reference information and metadata about an existing app you can use the following methods:
 
-<<<<<<< HEAD
-- [`algorand.app.getById(appId)`](.../api/classes/types_app_manager.AppManager.md#getbyid) - Returns current app information by app ID from an [`AppManager`](#appmanager) instance
-- [`indexer.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)`](.../api/modules/index.indexer.md#lookupaccountcreatedapplicationbyaddress) - Returns all apps created by a given account from [indexer](indexer.md)
-
-## Common app parameters
-
-When interacting with apps (creating, updating, deleting, calling), there are some [`CommonAppCallParams`](.../api/modules/types_composer.md#commonappcallparams) that you will be able to pass in to all calls in addition to the [common transaction parameters](algorand-client.md):
-=======
 - [`algorand.app.getById(appId)`](../../_media/AppManager.md#getbyid) - Returns current app information by app ID from an [`AppManager`](#appmanager) instance
 - `indexer.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)` - Returns all apps created by a given account from [indexer](indexer.md)
 
 ## Common app parameters
 
 When interacting with apps (creating, updating, deleting, calling), there are some [`CommonAppCallParams`](../../_media/CommonAppCallParams.md) that you will be able to pass in to all calls in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `appId: bigint` - ID of the application; only specified if the application is not being created.
 - `onComplete?: algosdk.OnApplicationComplete` - The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call (noting each call type will have restrictions that affect this value).

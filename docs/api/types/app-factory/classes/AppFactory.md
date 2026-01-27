@@ -6,11 +6,7 @@
 
 # Class: AppFactory
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L152)
-=======
 Defined in: [src/types/app-factory.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L153)
->>>>>>> docs/fix-reference-warnings
 
 ARC-56/ARC-32 app factory that, for a given app spec, allows you to create
 and deploy one or more app instances and to create one or more app clients
@@ -19,11 +15,7 @@ to interact with those (or other) app instances.
 ## See
 
  - [AppClient](../../app-client/classes/AppClient.md) for interacting with deployed apps
-<<<<<<< HEAD
- - AppDeployer for lower-level deployment control
-=======
  - [AppDeployer](../../app-deployer/classes/AppDeployer.md) for lower-level deployment control
->>>>>>> docs/fix-reference-warnings
 
 ## Constructors
 
@@ -31,11 +23,7 @@ to interact with those (or other) app instances.
 
 > **new AppFactory**(`params`): `AppFactory`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L179)
-=======
 Defined in: [src/types/app-factory.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L180)
->>>>>>> docs/fix-reference-warnings
 
 Create a new app factory.
 
@@ -67,11 +55,7 @@ const appFactory = new AppFactory({
 
 > `readonly` **createTransaction**: `object`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L227)
-=======
 Defined in: [src/types/app-factory.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L228)
->>>>>>> docs/fix-reference-warnings
 
 Create transactions for the current app
 
@@ -510,11 +494,7 @@ The create call transaction
 
 > `readonly` **send**: `object`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L255)
-=======
 Defined in: [src/types/app-factory.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L256)
->>>>>>> docs/fix-reference-warnings
 
 Send transactions to the current app
 
@@ -578,11 +558,7 @@ The app client and the result of the creation transaction
 
 > **get** **algorand**(): [`AlgorandClient`](../../algorand-client/classes/AlgorandClient.md)
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L203)
-=======
 Defined in: [src/types/app-factory.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L204)
->>>>>>> docs/fix-reference-warnings
 
 Return the algorand client this factory is using.
 
@@ -598,11 +574,7 @@ Return the algorand client this factory is using.
 
 > **get** **appName**(): `string`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L193)
-=======
 Defined in: [src/types/app-factory.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L194)
->>>>>>> docs/fix-reference-warnings
 
 The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
@@ -618,11 +590,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
 > **get** **appSpec**(): [`Arc56Contract`](../../../Subpaths/abi/type-aliases/Arc56Contract.md)
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:198](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L198)
-=======
 Defined in: [src/types/app-factory.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L199)
->>>>>>> docs/fix-reference-warnings
 
 The ARC-56 app spec being used
 
@@ -638,11 +606,7 @@ The ARC-56 app spec being used
 
 > **get** **params**(): `object`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L222)
-=======
 Defined in: [src/types/app-factory.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L223)
->>>>>>> docs/fix-reference-warnings
 
 Get parameters to create transactions (create and deploy related calls) for the current app.
 
@@ -1666,11 +1630,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 > **compile**(`compilation?`): `Promise`\<[`AppClientCompilationResult`](../../app-client/interfaces/AppClientCompilationResult.md)\>
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:602](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L602)
-=======
 Defined in: [src/types/app-factory.ts:603](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L603)
->>>>>>> docs/fix-reference-warnings
 
 Compiles the approval and clear state programs (if TEAL templates provided),
 performing any provided deploy-time parameter replacement and stores
@@ -1706,11 +1666,7 @@ const result = await factory.compile()
 
 > **deploy**(`params`): `Promise`\<\{ `appClient`: [`AppClient`](../../app-client/classes/AppClient.md); `result`: \{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"create"`; `return`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"update"`; `return`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteResult`: [`ConfirmedTransactionResult`](../../transaction/interfaces/ConfirmedTransactionResult.md); `deleteReturn`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `groupId`: `string` \| `undefined`; `name`: `string`; `operationPerformed`: `"replace"`; `return`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \} \| \{ `appAddress`: [`Address`](../../../algokit-utils/classes/Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../../app/interfaces/CompiledTeal.md); `createdMetadata`: [`AppDeployMetadata`](../../app/interfaces/AppDeployMetadata.md); `createdRound`: `bigint`; `deletable?`: `boolean`; `deleted`: `boolean`; `deleteReturn`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `name`: `string`; `operationPerformed`: `"nothing"`; `return`: [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md) \| `undefined`; `updatable?`: `boolean`; `updatedRound`: `bigint`; `version`: `string`; \}; \}\>
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L356)
-=======
 Defined in: [src/types/app-factory.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L357)
->>>>>>> docs/fix-reference-warnings
 
 Idempotently deploy (create if not exists, update if changed) an app against the given name for the given creator account, including deploy-time TEAL template placeholder substitutions (if specified).
 
@@ -1865,11 +1821,7 @@ const { appClient, result } = await factory.deploy({
 
 > **exportSourceMaps**(): [`AppSourceMaps`](../../app-client/interfaces/AppSourceMaps.md)
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:483](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L483)
-=======
 Defined in: [src/types/app-factory.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L484)
->>>>>>> docs/fix-reference-warnings
 
 Export the current source maps for the app.
 
@@ -1885,11 +1837,7 @@ The source maps
 
 > **exposeLogicError**(`e`, `isClearStateProgram?`): `Error`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L471)
-=======
 Defined in: [src/types/app-factory.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L472)
->>>>>>> docs/fix-reference-warnings
 
 Takes an error that may include a logic error from a call to the current app and re-exposes the
 error to include source code information via the source map and ARC-56 spec.
@@ -1920,11 +1868,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 > **getAppClientByCreatorAndName**(`params`): `Promise`\<[`AppClient`](../../app-client/classes/AppClient.md)\>
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L452)
-=======
 Defined in: [src/types/app-factory.ts:453](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L453)
->>>>>>> docs/fix-reference-warnings
 
 Returns a new `AppClient` client, resolving the app by creator address and name
 using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
@@ -2006,11 +1950,7 @@ const appClient = factory.getAppClientByCreatorAndName({ creatorAddress: 'CREATO
 
 > **getAppClientById**(`params`): [`AppClient`](../../app-client/classes/AppClient.md)
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L426)
-=======
 Defined in: [src/types/app-factory.ts:427](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L427)
->>>>>>> docs/fix-reference-warnings
 
 Returns a new `AppClient` client for an app instance of the given ID.
 
@@ -2078,11 +2018,7 @@ const appClient = factory.getAppClientById({ appId: 12345n })
 
 > **importSourceMaps**(`sourceMaps`): `void`
 
-<<<<<<< HEAD
-Defined in: [src/types/app-factory.ts:500](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L500)
-=======
 Defined in: [src/types/app-factory.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L501)
->>>>>>> docs/fix-reference-warnings
 
 Import source maps for the app.
 

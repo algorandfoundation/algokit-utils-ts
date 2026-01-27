@@ -11,11 +11,6 @@ AlgoKit contains advanced smart contract deployment capabilities that allow you 
 It's optional to use this functionality, since you can construct your own deployment logic using create / update / delete calls and your own mechanism to maintaining app metadata (like app IDs etc.), but this capability is an opinionated out-of-the-box solution that takes care of the heavy lifting for you.
 
 App deployment is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App management](app.md).
-<<<<<<< HEAD
-
-To see some usage examples check out the [automated tests](../../src/app-deploy.spec.ts).
-=======
->>>>>>> docs/fix-reference-warnings
 
 ## Smart contract development lifecycle
 
@@ -238,11 +233,7 @@ The first parameter `deployment` is an [`AppDeployParams`](../../_media/AppDeplo
 - `onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate` - determines [what should happen](../../_media/OnUpdate.md) if an update to the smart contract is detected (e.g. the TEAL code has changed since last deployment)
 - `existingDeployments?: AppLookup` - optionally allows the [app lookup retrieval](#lookup-deployed-apps-by-name) to be skipped if it's already been retrieved outside of this `AppDeployer` instance
 - `ignoreCache?: boolean` - optionally allows the [lookup cache](#lookup-deployed-apps-by-name) to be ignored and force retrieval of fresh deployment metadata from indexer
-<<<<<<< HEAD
-- Everything from [`SendParams`](.../api/interfaces/types_transaction.SendParams.md) - [transaction execution control parameters](algorand-client.md)
-=======
 - Everything from [`SendParams`](../../_media/SendParams.md) - [transaction execution control parameters](algorand-client.md)
->>>>>>> docs/fix-reference-warnings
 
 ### Idempotency
 

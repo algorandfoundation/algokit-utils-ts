@@ -179,8 +179,6 @@ e.g. `my_method(unit64,string)bytes`
 
 The `ABIMethod`
 
-<<<<<<< HEAD
-=======
 #### Example
 
 ```ts
@@ -196,7 +194,6 @@ const argCount = method.args.length // 2
 
 [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
 
->>>>>>> docs/fix-reference-warnings
 #### Throws
 
 If the method signature is invalid

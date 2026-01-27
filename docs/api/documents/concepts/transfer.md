@@ -7,21 +7,12 @@
 # Algo transfers (payments)
 
 Algo transfers, or [payments](https://dev.algorand.co/concepts/transactions/types/#payment-transaction), is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [Algo amount handling](amount.md) and [Transaction management](transaction.md). It allows you to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding.
-<<<<<<< HEAD
-
-To see some usage examples check out the [automated tests](../../src/types/algorand-client.transfer.spec.ts).
-=======
->>>>>>> docs/fix-reference-warnings
 
 ## `payment`
 
 The key function to facilitate Algo transfers is `algorand.send.payment(params)` (immediately send a single payment transaction), `algorand.createTransaction.payment(params)` (construct a payment transaction), or `algorand.newGroup().addPayment(params)` (add payment to a group of transactions) per [`AlgorandClient`](algorand-client.md) [transaction semantics](algorand-client.md).
 
-<<<<<<< HEAD
-The base type for specifying a payment transaction is [`PaymentParams`](.../api/modules/types_composer.md#paymentparams), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
-=======
 The base type for specifying a payment transaction is [`PaymentParams`](../../_media/PaymentParams.md), which has the following parameters in addition to the [common transaction parameters](algorand-client.md):
->>>>>>> docs/fix-reference-warnings
 
 - `receiver: string` - The address of the account that will receive the Algo
 - `amount: AlgoAmount` - The amount of Algo to send
@@ -123,11 +114,7 @@ await algorand.account.ensureFundedUsingDispenserAPI('ACCOUNTADDRESS', algorand.
 })
 ```
 
-<<<<<<< HEAD
-All 3 variants return an [`EnsureFundedReturnType`](.../api/modules/types_account_manager.md#) (and the first two also return a [single transaction result](algorand-client.md)) if a funding transaction was needed, or `undefined` if no transaction was required:
-=======
 All 3 variants return an `EnsureFundedReturnType` (and the first two also return a [single transaction result](algorand-client.md)) if a funding transaction was needed, or `undefined` if no transaction was required:
->>>>>>> docs/fix-reference-warnings
 
 - `amountFunded: AlgoAmount` - The number of Algo that was paid
 - `transactionId: string` - The ID of the transaction that funded the account

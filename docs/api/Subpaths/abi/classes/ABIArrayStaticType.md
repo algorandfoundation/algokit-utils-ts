@@ -6,11 +6,7 @@
 
 # Class: ABIArrayStaticType
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:609](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L609)
-=======
 Defined in: [packages/abi/src/abi-type.ts:612](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L612)
->>>>>>> docs/fix-reference-warnings
 
 A static-length array ABI type.
 
@@ -28,11 +24,7 @@ A static-length array ABI type.
 
 > **new ABIArrayStaticType**(`childType`, `length`): `ABIArrayStaticType`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:616](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L616)
-=======
 Defined in: [packages/abi/src/abi-type.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L619)
->>>>>>> docs/fix-reference-warnings
 
 Creates a new static array type.
 
@@ -68,11 +60,7 @@ If length is negative or exceeds 2^16-1
 
 > `readonly` **childType**: [`ABIType`](ABIType.md)
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:617](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L617)
-=======
 Defined in: [packages/abi/src/abi-type.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L620)
->>>>>>> docs/fix-reference-warnings
 
 The type of the array elements
 
@@ -82,11 +70,7 @@ The type of the array elements
 
 > `readonly` **length**: `number`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:618](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L618)
-=======
 Defined in: [packages/abi/src/abi-type.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L621)
->>>>>>> docs/fix-reference-warnings
 
 The fixed length of the array
 
@@ -120,11 +104,7 @@ The display name for this type
 
 > **get** **name**(): `string`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L626)
-=======
 Defined in: [packages/abi/src/abi-type.ts:629](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L629)
->>>>>>> docs/fix-reference-warnings
 
 Returns the ARC-4 type name string representation.
 
@@ -144,11 +124,7 @@ The ARC-4 type string
 
 > **byteLen**(): `number`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:638](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L638)
-=======
 Defined in: [packages/abi/src/abi-type.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L641)
->>>>>>> docs/fix-reference-warnings
 
 Gets the byte length of the encoded type for static types.
 
@@ -172,11 +148,7 @@ Error if the type is dynamic
 
 > **decode**(`bytes`): `Uint8Array` \| [`ABIValue`](../type-aliases/ABIValue.md)[]
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L664)
-=======
 Defined in: [packages/abi/src/abi-type.ts:667](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L667)
->>>>>>> docs/fix-reference-warnings
 
 Decodes bytes according to this ABI type.
 
@@ -208,11 +180,7 @@ If the bytes cannot be decoded as this type
 
 > **encode**(`value`): `Uint8Array`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L653)
-=======
 Defined in: [packages/abi/src/abi-type.ts:656](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L656)
->>>>>>> docs/fix-reference-warnings
 
 Encodes a value according to this ABI type.
 
@@ -244,11 +212,7 @@ If the value cannot be encoded as this type
 
 > **equals**(`other`): `boolean`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L630)
-=======
 Defined in: [packages/abi/src/abi-type.ts:633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L633)
->>>>>>> docs/fix-reference-warnings
 
 Checks if this ABI type is equal to another.
 
@@ -276,11 +240,7 @@ True if the types are equal, false otherwise
 
 > **isDynamic**(): `boolean`
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L634)
-=======
 Defined in: [packages/abi/src/abi-type.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L637)
->>>>>>> docs/fix-reference-warnings
 
 Checks if this ABI type is dynamic (variable-length).
 
@@ -300,11 +260,7 @@ True if the type is dynamic, false otherwise
 
 > **toABITupleType**(): [`ABITupleType`](ABITupleType.md)
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:649](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L649)
-=======
 Defined in: [packages/abi/src/abi-type.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L652)
->>>>>>> docs/fix-reference-warnings
 
 Converts this static array type to an equivalent tuple type.
 
@@ -340,11 +296,7 @@ The ARC-4 type string
 
 > `static` **from**(`str`): [`ABIType`](ABIType.md)
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-type.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L108)
-=======
 Defined in: [packages/abi/src/abi-type.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L111)
->>>>>>> docs/fix-reference-warnings
 
 Creates an ABI type from an ARC-4 type string.
 
@@ -362,8 +314,6 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 
 The corresponding ABI type
 
-<<<<<<< HEAD
-=======
 #### Example
 
 ```ts
@@ -380,7 +330,6 @@ const typeName = uint64Type.name // 'uint64'
 
 [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
 
->>>>>>> docs/fix-reference-warnings
 #### Throws
 
 If the type string is malformed or unsupported

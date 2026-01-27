@@ -8,11 +8,7 @@
 
 > **getABIMethod**(`methodNameOrSignature`, `appSpec`): [`ABIMethod`](../classes/ABIMethod.md)
 
-<<<<<<< HEAD
-Defined in: [packages/abi/src/abi-method.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L186)
-=======
 Defined in: [packages/abi/src/abi-method.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L181)
->>>>>>> docs/fix-reference-warnings
 
 Returns the ABI method object for a given method name or signature and ARC-56 app spec.
 

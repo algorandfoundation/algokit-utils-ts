@@ -102,11 +102,7 @@ Or, you can generally get away with just importing the `algorandFixture` since i
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 ```
 
-<<<<<<< HEAD
-To see how to use it consult the [testing capability page](documents/concepts/testing.md) or to see what's available look at the [reference documentation](../api/modules/testing.md).
-=======
 To see how to use it consult the [testing capability page](documents/concepts/testing.md) or to see what's available look at the [reference documentation](_media/README-1.md).
->>>>>>> docs/fix-reference-warnings
 
 ## Types
 

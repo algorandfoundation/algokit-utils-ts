@@ -96,11 +96,7 @@ const account = await accountManager.dispenserFromEnvironment()
 
 > **ensureFunded**(`accountToFund`, `dispenserAccount`, `minSpendingBalance`, `options?`): `Promise`\<`object` & [`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-<<<<<<< HEAD
-Defined in: [src/types/account-manager.ts:597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L597)
-=======
 Defined in: [src/types/account-manager.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L596)
->>>>>>> docs/fix-reference-warnings
 
 Funds a given account using a dispenser account as a funding source such that
 the given account has a certain amount of Algo free to spend (accounting for
@@ -163,11 +159,7 @@ await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.
 
 > **ensureFundedFromEnvironment**(`accountToFund`, `minSpendingBalance`, `options?`): `Promise`\<`object` & [`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-<<<<<<< HEAD
-Defined in: [src/types/account-manager.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L659)
-=======
 Defined in: [src/types/account-manager.ts:658](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L658)
->>>>>>> docs/fix-reference-warnings
 
 Funds a given account using a dispenser account retrieved from the environment,
 per the `dispenserFromEnvironment` method, as a funding source such that
@@ -226,11 +218,7 @@ await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(
 
 > **ensureFundedFromTestNetDispenserApi**(`accountToFund`, `dispenserClient`, `minSpendingBalance`, `options?`): `Promise`\<[`EnsureFundedResult`](../interfaces/EnsureFundedResult.md) \| `undefined`\>
 
-<<<<<<< HEAD
-Defined in: [src/types/account-manager.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L715)
-=======
 Defined in: [src/types/account-manager.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L714)
->>>>>>> docs/fix-reference-warnings
 
 Funds a given account using the TestNet Dispenser API as a funding source such that
 the account has a certain amount of Algo free to spend (accounting for Algo locked

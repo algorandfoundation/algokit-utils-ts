@@ -217,28 +217,17 @@ A new instance of `TransactionComposer`.
 #### Example
 
 ```ts
-<<<<<<< HEAD
-const result = await algorand
-  .newGroup()
-  .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
-  .addTransactionComposer(doMathComposer)
-=======
 // Start a new transaction group with multiple payments and send
 const result = await algorand
   .newGroup()
   .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
   .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(2) })
->>>>>>> docs/fix-reference-warnings
   .send()
 ```
 
 #### See
 
-<<<<<<< HEAD
-[Full working test](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts#L71)
-=======
 [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
->>>>>>> docs/fix-reference-warnings
 
 ***
 
@@ -542,9 +531,6 @@ An instance of the `AlgorandClient`.
 
 #### Example
 
-<<<<<<< HEAD
-const algorand = AlgorandClient.defaultLocalNet();
-=======
 ```ts
 // Create an AlgorandClient pointing at default LocalNet ports
 const algorand = AlgorandClient.defaultLocalNet()
@@ -558,7 +544,6 @@ await algorand.send.payment({
   amount: (2).algo(),
 })
 ```
->>>>>>> docs/fix-reference-warnings
 
 #### See
 

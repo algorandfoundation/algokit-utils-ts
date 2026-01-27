@@ -8,11 +8,7 @@
 
 > **transactionFees**(`numberOfTransactions`): [`AlgoAmount`](../../types/amount/classes/AlgoAmount.md)
 
-<<<<<<< HEAD
-Defined in: [src/amount.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L91)
-=======
 Defined in: [src/amount.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L108)
->>>>>>> docs/fix-reference-warnings
 
 Returns an amount of µAlgo to cover standard fees for the given number of transactions using AlgoAmount
 

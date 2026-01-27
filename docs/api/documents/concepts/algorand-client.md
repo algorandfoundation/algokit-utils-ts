@@ -109,17 +109,10 @@ The signature for the calls to send a single transaction usually look like:
 `algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonAppCallParams & SendParams): SingleSendTransactionResult`
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
-<<<<<<< HEAD
-- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](.../api/modules/types_composer.md#type-aliases)
-- [`CommonAppCallParams`](.../api/modules/types_composer.md#commonappcallparams) are the [common app call transaction parameters](app.md) that can be specified for every single app transaction
-- [`SendParams`](.../api/interfaces/types_transaction.SendParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
-- [`SendSingleTransactionResult`](.../api/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when [sending a single transaction to the network](transaction.md)
-=======
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, see the [composer type-aliases](../../_media/README-2.md) for more details
 - [`CommonAppCallParams`](../../_media/CommonAppCallParams.md) are the [common app call transaction parameters](app.md) that can be specified for every single app transaction
 - [`SendParams`](../../_media/SendParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
 - `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](transaction.md)
->>>>>>> docs/fix-reference-warnings
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
 

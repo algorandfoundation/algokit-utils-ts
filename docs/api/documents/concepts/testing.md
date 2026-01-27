@@ -242,11 +242,7 @@ The key when generating a test account is getting hold of a [dispenser](transfer
 
 To make it easier to quickly get a test account the testing capability provides the following mechanisms:
 
-<<<<<<< HEAD
-- [`algotesting.getTestAccount(testAccountParams, algod, kmd?)`](.../api/modules/testing.md#gettestaccount) - Generates a random new account, logs the mnemonic of the account (unless suppressed), funds it from the [dispenser](transfer.md)
-=======
 - `algotesting.getTestAccount(testAccountParams, algod, kmd?)` - Generates a random new account, logs the mnemonic of the account (unless suppressed), funds it from the [dispenser](transfer.md)
->>>>>>> docs/fix-reference-warnings
 - `algorandFixture.testAccount` - A test account that is always generated for every test (log output suppressed to reduce noise, but worth noting that means the mnemonic isn't logged for this account), by default it is given 10 Algo unless overridden in the [fixture config](#fixture-configuration)
 - [`algorandFixture.generateAccount(testAccountParams)`](../../_media/AlgorandTestAutomationContext.md#generateaccount) - Allows you to quickly generate a test account with the `algod` and `kmd` instances that are part of the given fixture
 
