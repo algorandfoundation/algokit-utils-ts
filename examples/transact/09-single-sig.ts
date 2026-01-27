@@ -9,6 +9,9 @@
  * - Using generateAddressWithSigners() to derive an Algorand address from the public key
  * - Understanding the relationship between ed25519 public key and Algorand address
  * - Signing transactions with a raw ed25519 signer function
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

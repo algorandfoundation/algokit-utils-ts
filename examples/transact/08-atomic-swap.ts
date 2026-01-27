@@ -10,6 +10,9 @@
  * - Both transfers succeed or both fail (atomicity)
  *
  * Key difference from regular atomic groups: different parties sign different transactions.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

@@ -25,6 +25,9 @@
  * - prefix?: Base64-encoded prefix for map keys
  *
  * The example also deploys a contract to LocalNet and reads actual state values.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'
@@ -39,13 +42,11 @@ import {
   isAVMType,
 } from '@algorandfoundation/algokit-utils/abi'
 import { readFileSync } from 'fs'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
+import { join } from 'path'
 import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
-// Get __dirname equivalent in ESM
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+// tsx provides __dirname in CJS-compatibility mode
+declare const __dirname: string
 
 /**
  * Formats a storage key type for display (either ABI type or AVM type)

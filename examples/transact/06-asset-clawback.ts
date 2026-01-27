@@ -11,6 +11,9 @@
  *
  * Uses Transaction class with TransactionType.AssetTransfer and the assetSender
  * field in AssetTransferTransactionFields for clawback operations.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

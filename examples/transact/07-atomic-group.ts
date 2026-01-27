@@ -8,6 +8,9 @@
  * - Using groupTransactions() to assign a group ID
  * - Signing all transactions with the same signer
  * - Submitting as a single atomic group
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

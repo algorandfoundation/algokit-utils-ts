@@ -11,6 +11,9 @@
  * - Call the app with application arguments
  * - Demonstrate OnApplicationComplete.OptIn for local state
  * - Delete the app at the end
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

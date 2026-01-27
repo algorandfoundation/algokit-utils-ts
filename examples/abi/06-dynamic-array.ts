@@ -16,6 +16,8 @@
  * - Length prefix: 2 bytes indicating number of elements
  * - Head section: Contains offsets (2 bytes each) pointing to where each element starts in tail
  * - Tail section: Contains the actual encoded elements
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

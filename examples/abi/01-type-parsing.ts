@@ -8,6 +8,8 @@
  * - Tuple types: (uint64,address), (bool,string,uint256)
  *
  * And demonstrates type properties and instanceof checks for type category detection.
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import {

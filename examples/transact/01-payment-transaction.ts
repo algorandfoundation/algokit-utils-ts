@@ -7,6 +7,9 @@
  * - PaymentTransactionFields for receiver and amount
  * - assignFee() to set transaction fee from suggested params
  * - generateAddressWithSigners for signing
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

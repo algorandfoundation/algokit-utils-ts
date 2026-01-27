@@ -14,6 +14,8 @@
  * - Nested tuples: inner tuples are encoded first, then treated as their component
  *
  * ARC-4 specification: Tuples are sequences of types enclosed in parentheses.
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

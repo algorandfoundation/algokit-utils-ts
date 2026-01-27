@@ -11,6 +11,8 @@
  * - No length prefix in encoding (unlike dynamic arrays)
  * - Elements are encoded consecutively
  * - Encoded length = elementSize * arrayLength
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

@@ -12,6 +12,8 @@
  * - Bools are packed left-to-right starting from the MSB (most significant bit)
  * - Array length is rounded up to the next full byte
  * - This is much more space-efficient than storing each bool as uint8
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { ABIArrayDynamicType, ABIArrayStaticType, ABIType } from '@algorandfoundation/algokit-utils/abi'

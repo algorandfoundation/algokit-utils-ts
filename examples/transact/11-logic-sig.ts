@@ -13,6 +13,9 @@
  * Logic signatures allow transactions to be authorized by a program instead of (or in addition to)
  * a cryptographic signature. This enables smart contracts that can hold and send funds based
  * purely on program logic.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

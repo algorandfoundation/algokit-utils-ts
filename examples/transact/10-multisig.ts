@@ -8,6 +8,9 @@
  * - Deriving the multisig address from the participant addresses
  * - Signing transactions with a subset of participants (2 of 3)
  * - Demonstrating that insufficient signatures (1 of 3) will fail
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

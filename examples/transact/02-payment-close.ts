@@ -8,6 +8,9 @@
  * - closeRemainderTo: Specifies an account to receive all remaining ALGO after the transaction
  * - When an account is closed, its balance becomes 0
  * - The close-to account receives: (original balance - sent amount - fee)
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

@@ -13,6 +13,8 @@
  * - getABIEncodedValue(avmType, value): Encode a value (works with both AVM and ABI types)
  * - decodeAVMValue(avmType, bytes): Decode AVM bytes back to a value
  * - isAVMType(type): Check if a type string is an AVM type
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import type { AVMBytes, AVMString, AVMType, AVMUint64 } from '@algorandfoundation/algokit-utils/abi'

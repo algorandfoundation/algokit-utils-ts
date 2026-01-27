@@ -8,6 +8,9 @@
  * - assignFee() to set fee on transaction
  * - How feePerByte, minFee, extraFee, and maxFee work
  * - Compare estimated vs actual transaction sizes
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

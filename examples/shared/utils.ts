@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { AlgodClient } from '@algorandfoundation/algokit-utils/algod-client'
 import { IndexerClient } from '@algorandfoundation/algokit-utils/indexer-client'
@@ -9,8 +8,8 @@ import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 import { ALGOD_CONFIG, INDEXER_CONFIG, KMD_CONFIG } from './constants.js'
 
 // Get the directory of this file for resolving artifact paths
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+// tsx provides __dirname in CJS-compatibility mode
+declare const __dirname: string
 
 // ============================================================================
 // Console Output Helpers

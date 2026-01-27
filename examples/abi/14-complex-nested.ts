@@ -13,6 +13,8 @@
  * - Offsets in head section point to data positions in tail section
  * - Nesting depth affects encoding complexity but follows consistent rules
  * - Round-trip encoding/decoding preserves all nested values
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

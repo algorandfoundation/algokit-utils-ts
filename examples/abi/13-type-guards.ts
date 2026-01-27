@@ -13,6 +13,8 @@
  * - Method argument handling and routing
  * - TypeScript type narrowing for safer code
  * - Determining how to encode/decode values based on type category
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import type { ABIMethodArgType } from '@algorandfoundation/algokit-utils/abi'

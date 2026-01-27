@@ -14,6 +14,8 @@
  * - Decoded values are objects with named properties (not arrays like tuples)
  *
  * ARC-4 specification: Structs are tuples with named fields for improved readability.
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import {

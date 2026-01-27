@@ -13,6 +13,8 @@
  * - 4 bytes of checksum (computed from public key)
  *
  * The ABI encoding is just the raw 32-byte public key without checksum.
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { Address, ALGORAND_ZERO_ADDRESS_STRING } from '@algorandfoundation/algokit-utils'

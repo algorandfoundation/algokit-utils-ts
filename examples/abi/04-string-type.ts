@@ -6,6 +6,8 @@
  * - Shows encoding of empty strings, ASCII text, and Unicode characters
  * - Demonstrates that strings are dynamic types (variable length)
  * - Displays byte breakdown: length prefix vs content bytes
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { ABIStringType } from '@algorandfoundation/algokit-utils/abi'

@@ -8,6 +8,9 @@
  * 4. Verify receiver's asset balance after transfer
  *
  * Uses Transaction class with TransactionType.AssetTransfer and AssetTransferTransactionFields.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

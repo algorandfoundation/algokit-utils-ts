@@ -9,6 +9,8 @@
  *
  * ABI method signatures follow the pattern: name(arg1Type,arg2Type,...)returnType
  * Examples: 'transfer(address,uint64)uint64', 'hello(string)string'
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { ABIMethod } from '@algorandfoundation/algokit-utils/abi'

@@ -7,6 +7,9 @@
  * - AssetConfigTransactionFields with all configuration options
  * - Retrieving created asset ID from pending transaction info
  * - Verifying asset parameters and creator holdings
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

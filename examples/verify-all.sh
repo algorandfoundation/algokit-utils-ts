@@ -15,6 +15,7 @@ NC='\033[0m' # No Color
 SUITES=(
     "abi"
     "algod_client"
+    "common"
     "indexer_client"
     "kmd_client"
     "transact"

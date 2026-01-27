@@ -11,6 +11,9 @@
  * 6. Verify account can transfer after unfreeze
  *
  * Uses Transaction class with TransactionType.AssetFreeze and AssetFreezeTransactionFields.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

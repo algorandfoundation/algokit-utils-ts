@@ -7,6 +7,8 @@
  * - ABIByteType: Single byte values
  *
  * Shows encode() and decode() methods, hex format display, and round-trip verification.
+ *
+ * No LocalNet required - pure ABI encoding/decoding
  */
 
 import { ABIBoolType, ABIByteType, ABIUintType } from '@algorandfoundation/algokit-utils/abi'

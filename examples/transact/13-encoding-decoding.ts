@@ -8,6 +8,9 @@
  * - decodeTransaction() to reconstruct transaction from bytes
  * - encodeSignedTransaction() and decodeSignedTransaction() for signed transactions
  * - txId() for calculating transaction ID
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
