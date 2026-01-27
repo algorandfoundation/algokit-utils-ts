@@ -11,7 +11,7 @@ App client and App factory are higher-order use case capabilities provided by Al
 
 ## `AppFactory`
 
-The [`AppFactory`](../code/classes/types_app_factory.AppFactory.md) is a class that, for a given app spec, allows you to create and deploy one or more app instances and to create one or more app clients to interact with those (or other) app instances.
+The `AppFactory` is a class that, for a given app spec, allows you to create and deploy one or more app instances and to create one or more app clients to interact with those (or other) app instances.
 
 To get an instance of `AppFactory` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.client.getAppFactory` or instantiate it directly (passing in an app spec, an `AlgorandClient` instance and other optional parameters):
 
@@ -34,7 +34,7 @@ const factory = algorand.client.getAppFactory({
 
 ## `AppClient`
 
-The [`AppClient`](../code/classes/types_app_client.AppClient.md) is a class that, for a given app spec, allows you to manage calls and state for a specific deployed instance of an app (with a known app ID).
+The `AppClient` is a class that, for a given app spec, allows you to manage calls and state for a specific deployed instance of an app (with a known app ID).
 
 To get an instance of `AppClient` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.client.getAppClient*` or instantiate it directly (passing in an app ID, app spec, `AlgorandClient` instance and other optional parameters):
 
@@ -73,8 +73,8 @@ As well as allowing you to control creation and deployment of apps, the `AppFact
 
 This is possible via two methods on the app factory:
 
-- [`factory.getAppClientById(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbyid) - Returns a new `AppClient` client for an app instance of the given ID. Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
-- [`factory.getAppClientByCreatorAndName(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbycreatorandname) - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
+- `factory.getAppClientById(params)` - Returns a new `AppClient` client for an app instance of the given ID. Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
+- `factory.getAppClientByCreatorAndName(params)` - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
 
 ```typescript
 const appClient1 = factory.getAppClientById({ appId: 12345n })
@@ -99,8 +99,8 @@ const appClient6 = factory.getAppClientByCreatorAndName({
 
 Once you have an [app factory](#appfactory) you can perform the following actions:
 
-- [`factory.create(params?)`](../code/classes/types_app_factory.AppFactory.md#create) - Signs and sends a transaction to create an app and returns the [result of that call](./app.md#creation) and an [`AppClient`](#appclient) instance for the created app
-- [`factory.deploy(params)`](../code/classes/types_app_factory.AppFactory.md#deploy) - Uses the [creator address and app name pattern](./app-deploy.md#lookup-deployed-apps-by-name) to find if the app has already been deployed or not and either creates, updates or replaces that app based on the [deployment rules](./app-deploy.md#performing-a-deployment) (i.e. it's an idempotent deployment) and returns the [result of the deployment](./app-deploy.md#return-value) and an [`AppClient`](#appclient) instance for the created/updated/existing app
+- `factory.create(params?)` - Signs and sends a transaction to create an app and returns the [result of that call](./app.md#creation) and an [`AppClient`](#appclient) instance for the created app
+- `factory.deploy(params)` - Uses the [creator address and app name pattern](./app-deploy.md#lookup-deployed-apps-by-name) to find if the app has already been deployed or not and either creates, updates or replaces that app based on the [deployment rules](./app-deploy.md#performing-a-deployment) (i.e. it's an idempotent deployment) and returns the [result of the deployment](./app-deploy.md#return-value) and an [`AppClient`](#appclient) instance for the created/updated/existing app
 
 ### Create
 
@@ -306,7 +306,7 @@ Often there is a need to fund an app account to cover minimum balance requiremen
 
 The input parameters are:
 
-- A [`FundAppParams`](../code/modules/types_app_client.md#fundappparams), which has the same properties as a [payment transaction](./transfer.md#payment) except `receiver` is not required and `sender` is optional (if not specified then it will be set to the app client's default sender if configured).
+- A `FundAppParams`, which has the same properties as a [payment transaction](./transfer.md#payment) except `receiver` is not required and `sender` is optional (if not specified then it will be set to the app client's default sender if configured).
 
 Note: If you are passing the funding payment in as an ABI argument so it can be validated by the ABI method then you'll want to get the funding call as a transaction, e.g.:
 
@@ -388,11 +388,11 @@ The information in that error message can be parsed and when combined with the [
 
 The app client and app factory automatically provide this functionality for all smart contract calls. They also expose a function that can be used for any custom calls you manually construct and need to add into your own try/catch `exposeLogicError(e: Error, isClear?: boolean)`.
 
-When an error is thrown then the resulting error that is re-thrown will be a [`LogicError` object](../code/classes/types_logic_error.LogicError.md), which has the following fields:
+When an error is thrown then the resulting error that is re-thrown will be a ``LogicError` object`, which has the following fields:
 
 - `message: string` - The formatted error message `{ERROR_MESSAGE}. at:{TEAL_LINE}. {ERROR_DESCRIPTION}`
 - `stack: string` - A stack trace of the TEAL code showing where the error was with the 5 lines either side of it
-- `led: LogicErrorDetails` - The parsed [logic error details](../code/interfaces/types_logic_error.LogicErrorDetails.md) from the error message, with the following properties:
+- `led: LogicErrorDetails` - The parsed `logic error details` from the error message, with the following properties:
   - `txId: string` - The transaction ID that triggered the error
   - `pc: number` - The program counter
   - `msg: string` - The raw error message

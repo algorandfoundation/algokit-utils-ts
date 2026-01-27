@@ -54,7 +54,7 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ### Creating transactions
 
-You can compose a transaction via `algorand.createTransaction.`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
+You can compose a transaction via `algorand.createTransaction.`, which gives you an instance of the `AlgorandClientTransactionCreator` class. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 
@@ -63,8 +63,8 @@ algorand.createTransaction.{method}(params: {ComposerTransactionTypeParams} & Co
 ```
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
-- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
-- [`CommonTransactionParams`](../code/modules/types_composer.md#commontransactionparams) are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
+- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, `see the full list`
+- `CommonTransactionParams` are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
 - `Transaction` is an unsigned `algosdk.Transaction` object, ready to be signed and sent
 
 The return type for the ABI method call methods are slightly different:
@@ -90,7 +90,7 @@ This signifies the fact that an ABI method call can actually result in multiple 
 
 ### Sending a single transaction
 
-You can compose a single transaction via `algorand.send...`, which gives you an instance of the [`AlgorandClientTransactionSender`](../code/classes/types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md) class. Intellisense will guide you on the different options.
+You can compose a single transaction via `algorand.send...`, which gives you an instance of the `AlgorandClientTransactionSender` class. Intellisense will guide you on the different options.
 
 Further documentation is present in the related capabilities:
 
@@ -103,10 +103,10 @@ The signature for the calls to send a single transaction usually look like:
 `algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonAppCallParams & SendParams): SingleSendTransactionResult`
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
-- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
-- [`CommonAppCallParams`](../code/modules/types_composer.md#commonappcallparams) are the [common app call transaction parameters](./app.md#common-app-parameters) that can be specified for every single app transaction
-- [`SendParams`](../code/interfaces/types_transaction.SendParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
-- [`SendSingleTransactionResult`](../code/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when [sending a single transaction to the network](./transaction.md#sending-a-transaction)
+- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, `see the full list`
+- `CommonAppCallParams` are the [common app call transaction parameters](./app.md#common-app-parameters) that can be specified for every single app transaction
+- `SendParams` are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
+- `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](./transaction.md#sending-a-transaction)
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
 
@@ -130,7 +130,7 @@ To create a transaction you define a set of parameters as a plain TypeScript obj
 
 There are two common base interfaces that get reused:
 
-- [`CommonTransactionParams`](../code/modules/types_composer.md#commontransactionparams)
+- `CommonTransactionParams`
   - `sender: string` - The address of the account sending the transaction.
   - `signer?: algosdk.TransactionSigner | TransactionSignerAccount` - The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured).
   - `rekeyTo?: string` - Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
@@ -144,7 +144,7 @@ There are two common base interfaces that get reused:
     - `validityWindow?: number` - How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used.
     - `firstValidRound?: bigint` - Set the first round this transaction is valid. If left undefined, the value from algod will be used. We recommend you only set this when you intentionally want this to be some time in the future.
     - `lastValidRound?: bigint` - The last round this transaction is valid. It is recommended to use `validityWindow` instead.
-- [`SendParams`](../code/interfaces/types_transaction.SendParams.md)
+- `SendParams`
   - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
   - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
   - `populateAppCallResources?: boolean` - Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
