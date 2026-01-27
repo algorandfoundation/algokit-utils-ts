@@ -3,11 +3,11 @@
   "name": "AlgoKit Utils - Examples",
   "entryPoints": ["examples/**/*.ts"],
   "entryPointStrategy": "expand",
-  "out": "docs/examples",
+  "out": "docs/_html/examples",
   "tsconfig": "examples/tsconfig.json",
   "projectDocuments": ["examples/README.md"],
   "navigationLinks": {
-    "API Docs": "/",
+    "API Docs": "../",
     "GitHub": "https://github.com/algorandfoundation/algokit-utils-ts"
   },
   "cleanOutputDir": true,

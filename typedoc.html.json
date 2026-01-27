@@ -4,7 +4,7 @@
     "exampleTag": false
   },
   "navigationLinks": {
-    "Examples": "/examples/",
+    "Examples": "./examples/",
     "GitHub": "https://github.com/algorandfoundation/algokit-utils-ts"
   },
   "entryPoints": [

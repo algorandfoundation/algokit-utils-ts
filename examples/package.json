@@ -1,6 +1,7 @@
 {
   "name": "algokit-utils-examples",
   "private": true,
+  "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "verify-all": "./verify-all.sh"

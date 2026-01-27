@@ -14,8 +14,8 @@
       "@algorandfoundation/algokit-utils/transact": ["../packages/transact/src/index.ts"]
     },
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
