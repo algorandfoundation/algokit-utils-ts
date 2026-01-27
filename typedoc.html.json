@@ -18,11 +18,11 @@
   ],
   "navigationLinks": {
     "Examples": "/examples/",
-    "GitHub": "https://github.com/your-username/your-repo"
+    "GitHub": "https://github.com/algorandfoundation/algokit-utils-ts"
   },
   "entryPointStrategy": "expand",
   "exclude": ["src/**/*.spec.ts", "tests/**/*.*"],
-  "out": "docs",
+  "out": "docs/_html",
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
   "projectDocuments": ["docs/guides/concepts/*.md", "docs/guides/migration/*.md"],
