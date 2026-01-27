@@ -186,7 +186,8 @@ export interface AppSpec {
   bare_call_config: CallConfig
 }
 
-interface ABIContractParams {
+/** ABI contract parameters from ARC-0004 */
+export interface ABIContractParams {
   name: string
   desc?: string
   networks?: ABIContractNetworks
@@ -194,15 +195,18 @@ interface ABIContractParams {
   events?: ARC28Event[]
 }
 
-interface ABIContractNetworks {
+/** Network configuration for an ABI contract */
+export interface ABIContractNetworks {
   [network: string]: ABIContractNetworkInfo
 }
 
-interface ABIContractNetworkInfo {
+/** Network info for an ABI contract */
+export interface ABIContractNetworkInfo {
   appID: number
 }
 
-interface ABIMethodParams {
+/** ABI method parameters */
+export interface ABIMethodParams {
   name: string
   desc?: string
   args: ABIMethodArgParams[]
@@ -213,13 +217,15 @@ interface ABIMethodParams {
   events?: ARC28Event[]
 }
 
-interface ABIMethodArgParams {
+/** ABI method argument parameters */
+export interface ABIMethodArgParams {
   type: string
   name?: string
   desc?: string
 }
 
-interface ABIMethodReturnParams {
+/** ABI method return parameters */
+export interface ABIMethodReturnParams {
   type: string
   desc?: string
 }

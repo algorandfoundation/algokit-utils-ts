@@ -42,6 +42,9 @@ const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
  * @param args.sendingAddress - The address that will be used as the sender of transactions. If not provided, defaults to the address derived from the ed25519 public key. This is useful when signing for a rekeyed account where the sending address differs from the auth address.
  * @param args.rawEd25519Signer - A callback function that signs raw bytes using the ed25519 private key
  * @returns An object containing the sending address and various signer functions
+ * @example
+ * {@includeCode ./signer.spec.ts#example-generateAddressWithSigners}
+ * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/signer.spec.ts)
  */
 export function generateAddressWithSigners(args: {
   ed25519Pubkey: Uint8Array

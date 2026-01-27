@@ -1,5 +1,5 @@
 import { Arc56Contract, argTypeIsTransaction, getABIDecodedValue, getABIMethod } from '@algorandfoundation/algokit-abi'
-import { Address, Expand, ProgramSourceMap, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
+import { Address, Expand, getAddress, getOptionalAddress, ProgramSourceMap, ReadableAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, OnApplicationComplete, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { type AlgorandClient } from './algorand-client'
 import { AppCompilationResult, DELETABLE_TEMPLATE_NAME, TealTemplateParams, UPDATABLE_TEMPLATE_NAME } from './app'
@@ -13,6 +13,7 @@ import {
   ResolveAppClientByCreatorAndName,
 } from './app-client'
 import {
+  AppDeployer,
   AppDeployParams,
   DeployAppDeleteMethodCall,
   DeployAppDeleteParams,

@@ -98,6 +98,9 @@ export abstract class ABIType {
    * Creates an ABI type from an ARC-4 type string.
    * @param str The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
    * @returns The corresponding ABI type
+   * @example
+   * {@includeCode ./abi-type.spec.ts#example-ABIType-from}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
    * @throws {Error} If the type string is malformed or unsupported
    *
    * @remarks
@@ -818,10 +821,7 @@ export class ABIStructType extends ABIType {
     const getStructFieldType = (structFieldType: string | StructField[]): ABIType | ABIStructField[] => {
       // When the input is an array of struct fields
       if (Array.isArray(structFieldType)) {
-        return structFieldType.map((structField) => ({
-          name: structField.name,
-          type: getStructFieldType(structField.type),
-        }))
+        return structFieldType.map((structField) => ({ name: structField.name, type: getStructFieldType(structField.type) }))
       }
 
       // When the input is a name of another struct
@@ -838,10 +838,7 @@ export class ABIStructType extends ABIType {
     const fields = structs[structName]
     return new ABIStructType(
       structName,
-      fields.map((f) => ({
-        name: f.name,
-        type: getStructFieldType(f.type),
-      })),
+      fields.map((f) => ({ name: f.name, type: getStructFieldType(f.type) })),
     )
   }
 

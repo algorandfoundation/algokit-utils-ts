@@ -6,7 +6,11 @@
 
 # Class: ABIStructType
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:742](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L742)
+=======
+Defined in: [packages/abi/src/abi-type.ts:745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L745)
+>>>>>>> docs/fix-reference-warnings
 
 A struct ABI type with named fields.
 
@@ -24,7 +28,11 @@ A struct ABI type with named fields.
 
 > **new ABIStructType**(`structName`, `structFields`): `ABIStructType`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:748](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L748)
+=======
+Defined in: [packages/abi/src/abi-type.ts:751](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L751)
+>>>>>>> docs/fix-reference-warnings
 
 Creates a new struct type.
 
@@ -56,7 +64,11 @@ The fields of the struct
 
 > `readonly` **structFields**: [`ABIStructField`](../type-aliases/ABIStructField.md)[]
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:750](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L750)
+=======
+Defined in: [packages/abi/src/abi-type.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L753)
+>>>>>>> docs/fix-reference-warnings
 
 The fields of the struct
 
@@ -66,7 +78,11 @@ The fields of the struct
 
 > `readonly` **structName**: `string`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:749](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L749)
+=======
+Defined in: [packages/abi/src/abi-type.ts:752](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L752)
+>>>>>>> docs/fix-reference-warnings
 
 The name of the struct
 
@@ -78,7 +94,11 @@ The name of the struct
 
 > **get** **displayName**(): `string`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:760](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L760)
+=======
+Defined in: [packages/abi/src/abi-type.ts:763](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L763)
+>>>>>>> docs/fix-reference-warnings
 
 Returns a user-friendly display name for this type.
 
@@ -100,7 +120,11 @@ The display name for this type
 
 > **get** **name**(): `string`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:755](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L755)
+=======
+Defined in: [packages/abi/src/abi-type.ts:758](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L758)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the ARC-4 type name string representation.
 
@@ -120,7 +144,11 @@ The ARC-4 type string
 
 > **byteLen**(): `number`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:786](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L786)
+=======
+Defined in: [packages/abi/src/abi-type.ts:789](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L789)
+>>>>>>> docs/fix-reference-warnings
 
 Gets the byte length of the encoded type for static types.
 
@@ -144,7 +172,11 @@ Error if the type is dynamic
 
 > **decode**(`bytes`): `ABIStructValue`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:862](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L862)
+=======
+Defined in: [packages/abi/src/abi-type.ts:859](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L859)
+>>>>>>> docs/fix-reference-warnings
 
 Decodes bytes according to this ABI type.
 
@@ -176,7 +208,11 @@ If the bytes cannot be decoded as this type
 
 > **encode**(`value`): `Uint8Array`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:848](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L848)
+=======
+Defined in: [packages/abi/src/abi-type.ts:845](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L845)
+>>>>>>> docs/fix-reference-warnings
 
 Encodes a value according to this ABI type.
 
@@ -208,7 +244,11 @@ If the value cannot be encoded as this type
 
 > **equals**(`other`): `boolean`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:764](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L764)
+=======
+Defined in: [packages/abi/src/abi-type.ts:767](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L767)
+>>>>>>> docs/fix-reference-warnings
 
 Checks if this ABI type is equal to another.
 
@@ -236,7 +276,11 @@ True if the types are equal, false otherwise
 
 > **isDynamic**(): `boolean`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:781](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L781)
+=======
+Defined in: [packages/abi/src/abi-type.ts:784](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L784)
+>>>>>>> docs/fix-reference-warnings
 
 Checks if this ABI type is dynamic (variable-length).
 
@@ -256,7 +300,11 @@ True if the type is dynamic, false otherwise
 
 > **toABITupleType**(): [`ABITupleType`](ABITupleType.md)
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:795](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L795)
+=======
+Defined in: [packages/abi/src/abi-type.ts:798](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L798)
+>>>>>>> docs/fix-reference-warnings
 
 Converts this struct type to an equivalent tuple type.
 
@@ -292,7 +340,11 @@ The ARC-4 type string
 
 > `static` **from**(`str`): [`ABIType`](ABIType.md)
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L108)
+=======
+Defined in: [packages/abi/src/abi-type.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L111)
+>>>>>>> docs/fix-reference-warnings
 
 Creates an ABI type from an ARC-4 type string.
 
@@ -310,6 +362,25 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 
 The corresponding ABI type
 
+<<<<<<< HEAD
+=======
+#### Example
+
+```ts
+// Parse ABI type strings into type objects
+const uint64Type = ABIType.from('uint64')
+const tupleType = ABIType.from('(uint64,string,bool)')
+const arrayType = ABIType.from('uint32[]')
+
+// Use the type name property
+const typeName = uint64Type.name // 'uint64'
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
+
+>>>>>>> docs/fix-reference-warnings
 #### Throws
 
 If the type string is malformed or unsupported
@@ -330,7 +401,11 @@ and `(<type1>,<type2>,...)` (tuples). This parser is recursive for nested types.
 
 > `static` **fromStruct**(`structName`, `structs`): `ABIStructType`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:817](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L817)
+=======
+Defined in: [packages/abi/src/abi-type.ts:820](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L820)
+>>>>>>> docs/fix-reference-warnings
 
 Creates an ABIStructType from struct name and struct definitions.
 

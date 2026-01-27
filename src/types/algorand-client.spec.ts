@@ -45,7 +45,12 @@ describe('AlgorandClient', () => {
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance
     const bobPreBalance = (await algorand.account.getInformation(bob)).balance
+
+    // #region example-send-payment
+    // Send a payment transaction
     await algorand.send.payment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
+    // #endregion example-send-payment
+
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
@@ -54,9 +59,28 @@ describe('AlgorandClient', () => {
   })
 
   test('sendAssetCreate', async () => {
+    // #region example-send-asset-create
+    // Create a new asset
     const createResult = await algorand.send.assetCreate({ sender: alice, total: 100n })
 
-    expect(createResult.assetId).toBeGreaterThan(0)
+    // Get the asset ID from the result
+    const assetId = createResult.assetId
+    // #endregion example-send-asset-create
+
+    expect(assetId).toBeGreaterThan(0)
+  })
+
+  test('newGroup example', async () => {
+    // #region example-newGroup
+    // Start a new transaction group with multiple payments and send
+    const result = await algorand
+      .newGroup()
+      .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
+      .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(2) })
+      .send()
+    // #endregion example-newGroup
+
+    expect(result.transactions.length).toBe(2)
   })
 
   test('addTransactionComposer from generated client', async () => {
@@ -282,8 +306,11 @@ describe('AlgorandClient', () => {
   })
 
   test('issue more than non-LocalNet default validity window transactions against LocalNet works', async () => {
+    // #region example-defaultLocalNet
+    // Create an AlgorandClient pointing at default LocalNet ports
     const algorand = AlgorandClient.defaultLocalNet()
 
+    // Create a random account and fund it from the LocalNet dispenser
     const alice = algorand.account.random()
 
     await algorand.send.payment({
@@ -291,6 +318,7 @@ describe('AlgorandClient', () => {
       receiver: alice,
       amount: (2).algo(),
     })
+    // #endregion example-defaultLocalNet
 
     // Default validity window is 10
     for (let i = 0; i < 10; i++) {

@@ -158,9 +158,8 @@ export class AssetManager {
    * Returns the current asset information for the asset with the given ID.
    *
    * @example
-   * ```typescript
-   * const assetInfo = await assetManager.getById(12353n);
-   * ```
+   * {@includeCode ./algorand-client.asset.spec.ts#example-getById}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts)
    *
    * @param assetId The ID of the asset
    * @returns The asset information
@@ -222,13 +221,9 @@ export class AssetManager {
    * @param account The account to opt-in
    * @param assetIds The list of asset IDs to opt-in to
    * @param options Any parameters to control the transaction or execution of the transaction
-   * @example Example using AlgorandClient
-   * ```typescript
-   * // Basic example
-   * assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n])
-   * // With configuration
-   * assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgo(), suppressLog: true })
-   * ```
+   * @example
+   * {@includeCode ./algorand-client.asset.spec.ts#example-bulkOptIn}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts)
    * @returns An array of records matching asset ID to transaction ID of the opt in
    */
   async bulkOptIn(
@@ -272,13 +267,9 @@ export class AssetManager {
    * @param account The account to opt-in
    * @param assetIds The list of asset IDs to opt-out of
    * @param options Any parameters to control the transaction or execution of the transaction
-   * @example Example using AlgorandClient
-   * ```typescript
-   * // Basic example
-   * assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n])
-   * // With configuration
-   * assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgo(), suppressLog: true })
-   * ```
+   * @example
+   * {@includeCode ./algorand-client.asset.spec.ts#example-bulkOptOut}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts)
    * @returns An array of records matching asset ID to transaction ID of the opt in
    */
   async bulkOptOut(

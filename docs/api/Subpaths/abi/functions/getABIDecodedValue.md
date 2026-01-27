@@ -8,7 +8,11 @@
 
 > **getABIDecodedValue**(`type`, `bytes`): [`ABIValue`](../type-aliases/ABIValue.md)
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-method.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L326)
+=======
+Defined in: [packages/abi/src/abi-method.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L304)
+>>>>>>> docs/fix-reference-warnings
 
 ## Parameters
 

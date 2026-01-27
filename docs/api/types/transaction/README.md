@@ -24,6 +24,6 @@
 
 - [Arc2TransactionNote](type-aliases/Arc2TransactionNote.md)
 - [SendSingleTransactionResult](type-aliases/SendSingleTransactionResult.md)
-- [SendTransactionFrom](type-aliases/SendTransactionFrom.md)
+- [~~SendTransactionFrom~~](type-aliases/SendTransactionFrom.md)
 - [TransactionNote](type-aliases/TransactionNote.md)
 - [TransactionNoteData](type-aliases/TransactionNoteData.md)

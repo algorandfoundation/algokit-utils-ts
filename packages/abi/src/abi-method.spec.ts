@@ -60,3 +60,42 @@ describe('ABIMethod.getSignature round trip', () => {
     expect(regeneratedSignature).toBe(signature)
   })
 })
+
+describe('ABIMethod examples', () => {
+  test('ABIMethod.fromSignature parses method signatures', () => {
+    // #region example-ABIMethod-fromSignature
+    // Parse a method signature string into an ABIMethod object
+    const method = ABIMethod.fromSignature('add(uint64,uint64)uint64')
+
+    // Access method properties
+    const name = method.name // 'add'
+    const argCount = method.args.length // 2
+    // #endregion example-ABIMethod-fromSignature
+
+    expect(name).toBe('add')
+    expect(argCount).toBe(2)
+  })
+
+  test('ABIMethod.getSelector returns 4-byte selector', () => {
+    // #region example-ABIMethod-getSelector
+    // Get the 4-byte method selector for ABI method calls
+    const method = ABIMethod.fromSignature('add(uint64,uint64)uint64')
+    const selector = method.getSelector()
+
+    // Selector is the first 4 bytes of SHA-512/256 hash of the signature
+    // #endregion example-ABIMethod-getSelector
+
+    expect(selector).toHaveLength(4)
+    expect(Buffer.from(selector).toString('hex')).toBe('fe6bdf69')
+  })
+
+  test('ABIMethod.getSignature returns the signature', () => {
+    // #region example-ABIMethod-getSignature
+    // Get the full method signature string
+    const method = ABIMethod.fromSignature('transfer(address,uint64)bool')
+    const signature = method.getSignature()
+    // #endregion example-ABIMethod-getSignature
+
+    expect(signature).toBe('transfer(address,uint64)bool')
+  })
+})

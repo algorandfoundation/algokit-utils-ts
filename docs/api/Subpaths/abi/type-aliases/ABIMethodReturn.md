@@ -8,7 +8,7 @@
 
 > **ABIMethodReturn** = `object`
 
-Defined in: [packages/abi/src/abi-method.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L31)
+Defined in: [packages/abi/src/abi-method.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L26)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/abi/src/abi-method.ts:31](https://github.com/algorandfound
 
 > `optional` **description**: `string`
 
-Defined in: [packages/abi/src/abi-method.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L33)
+Defined in: [packages/abi/src/abi-method.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L26)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/abi/src/abi-method.ts:33](https://github.com/algorandfound
 
 > **type**: [`ABIMethodReturnType`](ABIMethodReturnType.md)
 
-Defined in: [packages/abi/src/abi-method.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L32)
+Defined in: [packages/abi/src/abi-method.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L26)

@@ -6,7 +6,11 @@
 
 # Class: ABIUintType
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L179)
+=======
+Defined in: [packages/abi/src/abi-type.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L182)
+>>>>>>> docs/fix-reference-warnings
 
 An unsigned integer ABI type of a specific bit size.
 
@@ -24,7 +28,11 @@ An unsigned integer ABI type of a specific bit size.
 
 > **new ABIUintType**(`bitSize`): `ABIUintType`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L185)
+=======
+Defined in: [packages/abi/src/abi-type.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L188)
+>>>>>>> docs/fix-reference-warnings
 
 Creates a new unsigned integer type.
 
@@ -54,7 +62,11 @@ If bitSize is not a multiple of 8 or not between 8 and 512
 
 > `readonly` **bitSize**: `number`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L185)
+=======
+Defined in: [packages/abi/src/abi-type.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L188)
+>>>>>>> docs/fix-reference-warnings
 
 The bit size (must be a multiple of 8, between 8 and 512)
 
@@ -88,7 +100,11 @@ The display name for this type
 
 > **get** **name**(): `string`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L192)
+=======
+Defined in: [packages/abi/src/abi-type.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L195)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the ARC-4 type name string representation.
 
@@ -108,7 +124,11 @@ The ARC-4 type string
 
 > **byteLen**(): `number`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L204)
+=======
+Defined in: [packages/abi/src/abi-type.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L207)
+>>>>>>> docs/fix-reference-warnings
 
 Gets the byte length of the encoded type for static types.
 
@@ -132,7 +152,11 @@ Error if the type is dynamic
 
 > **decode**(`bytes`): [`ABIValue`](../type-aliases/ABIValue.md)
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L222)
+=======
+Defined in: [packages/abi/src/abi-type.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L225)
+>>>>>>> docs/fix-reference-warnings
 
 Decodes bytes according to this ABI type.
 
@@ -164,7 +188,11 @@ If the bytes cannot be decoded as this type
 
 > **encode**(`value`): `Uint8Array`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L208)
+=======
+Defined in: [packages/abi/src/abi-type.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L211)
+>>>>>>> docs/fix-reference-warnings
 
 Encodes a value according to this ABI type.
 
@@ -196,7 +224,11 @@ If the value cannot be encoded as this type
 
 > **equals**(`other`): `boolean`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L196)
+=======
+Defined in: [packages/abi/src/abi-type.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L199)
+>>>>>>> docs/fix-reference-warnings
 
 Checks if this ABI type is equal to another.
 
@@ -224,7 +256,11 @@ True if the types are equal, false otherwise
 
 > **isDynamic**(): `boolean`
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L200)
+=======
+Defined in: [packages/abi/src/abi-type.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L203)
+>>>>>>> docs/fix-reference-warnings
 
 Checks if this ABI type is dynamic (variable-length).
 
@@ -264,7 +300,11 @@ The ARC-4 type string
 
 > `static` **from**(`str`): [`ABIType`](ABIType.md)
 
+<<<<<<< HEAD
 Defined in: [packages/abi/src/abi-type.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L108)
+=======
+Defined in: [packages/abi/src/abi-type.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L111)
+>>>>>>> docs/fix-reference-warnings
 
 Creates an ABI type from an ARC-4 type string.
 
@@ -282,6 +322,25 @@ The ARC-4 type string (e.g., "uint256", "bool", "(uint8,address)")
 
 The corresponding ABI type
 
+<<<<<<< HEAD
+=======
+#### Example
+
+```ts
+// Parse ABI type strings into type objects
+const uint64Type = ABIType.from('uint64')
+const tupleType = ABIType.from('(uint64,string,bool)')
+const arrayType = ABIType.from('uint32[]')
+
+// Use the type name property
+const typeName = uint64Type.name // 'uint64'
+```
+
+#### See
+
+[Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.spec.ts)
+
+>>>>>>> docs/fix-reference-warnings
 #### Throws
 
 If the type string is malformed or unsupported

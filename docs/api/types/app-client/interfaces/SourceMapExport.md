@@ -6,7 +6,7 @@
 
 # Interface: SourceMapExport
 
-Defined in: [src/types/app-client.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L252)
+Defined in: [src/types/app-client.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L253)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types/app-client.ts:252](https://github.com/algorandfoundation/
 
 > **mappings**: `string`
 
-Defined in: [src/types/app-client.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L256)
+Defined in: [src/types/app-client.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L257)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types/app-client.ts:256](https://github.com/algorandfoundation/
 
 > **names**: `string`[]
 
-Defined in: [src/types/app-client.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L255)
+Defined in: [src/types/app-client.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L256)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types/app-client.ts:255](https://github.com/algorandfoundation/
 
 > **sources**: `string`[]
 
-Defined in: [src/types/app-client.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L254)
+Defined in: [src/types/app-client.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L255)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/types/app-client.ts:254](https://github.com/algorandfoundation/
 
 > **version**: `number`
 
-Defined in: [src/types/app-client.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L253)
+Defined in: [src/types/app-client.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L254)

@@ -21,17 +21,9 @@ export enum ABIReferenceType {
 export type ABIMethodArgType = ABIType | ABITransactionType | ABIReferenceType
 export type ABIMethodReturnType = ABIType | 'void'
 
-export type ABIMethodArg = {
-  type: ABIMethodArgType
-  name?: string
-  description?: string
-  defaultValue?: ABIDefaultValue
-}
+export type ABIMethodArg = { type: ABIMethodArgType; name?: string; description?: string; defaultValue?: ABIDefaultValue }
 
-export type ABIMethodReturn = {
-  type: ABIMethodReturnType
-  description?: string
-}
+export type ABIMethodReturn = { type: ABIMethodReturnType; description?: string }
 
 export type ABIDefaultValue = {
   /** Base64 encoded bytes, base64 ARC4 encoded uint64, or UTF-8 method selector */
@@ -67,9 +59,7 @@ export type ABIReturn =
   | { rawReturnValue?: undefined; returnValue?: undefined; method: ABIMethod; decodeError?: Error }
 
 /** Decoded ARC-56 struct as a struct rather than a tuple. */
-export type ABIStruct = {
-  [key: string]: ABIStruct | ABIValue
-}
+export type ABIStruct = { [key: string]: ABIStruct | ABIValue }
 
 export class ABIMethod {
   readonly name: string
@@ -98,6 +88,9 @@ export class ABIMethod {
   /**
    * Returns the signature of this ABI method.
    * @returns The signature, e.g. `my_method(unit64,string)bytes`
+   * @example
+   * {@includeCode ./abi-method.spec.ts#example-ABIMethod-getSignature}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
    */
   getSignature(): string {
     const args = this.args
@@ -113,6 +106,9 @@ export class ABIMethod {
   /**
    * Returns the method selector of this ABI method.
    * @returns The 4-byte method selector
+   * @example
+   * {@includeCode ./abi-method.spec.ts#example-ABIMethod-getSelector}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
    */
   getSelector(): Uint8Array {
     const hash = sha512.sha512_256.array(this.getSignature())
@@ -124,6 +120,9 @@ export class ABIMethod {
    * @param signature The method signature
    * e.g. `my_method(unit64,string)bytes`
    * @returns The `ABIMethod`
+   * @example
+   * {@includeCode ./abi-method.spec.ts#example-ABIMethod-fromSignature}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.spec.ts)
    * @throws {Error} If the method signature is invalid
    */
   static fromSignature(signature: string): ABIMethod {
@@ -167,11 +166,7 @@ export class ABIMethod {
     const returnType = signature.slice(argsEnd + 1)
     const returns = { type: returnType === 'void' ? ('void' as const) : ABIType.from(returnType) } satisfies ABIMethodReturn
 
-    return new ABIMethod({
-      name,
-      args,
-      returns,
-    })
+    return new ABIMethod({ name, args, returns })
   }
 }
 
@@ -219,12 +214,7 @@ export function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contra
       : undefined
 
     if (argTypeIsTransaction(type as ABIMethodArgType) || argTypeIsReference(type as ABIMethodArgType)) {
-      return {
-        type: type as ABIMethodArgType,
-        name,
-        description: desc,
-        defaultValue: convertedDefaultValue,
-      } satisfies ABIMethodArg
+      return { type: type as ABIMethodArgType, name, description: desc, defaultValue: convertedDefaultValue } satisfies ABIMethodArg
     }
 
     if (struct) {
@@ -236,12 +226,7 @@ export function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contra
       } satisfies ABIMethodArg
     }
 
-    return {
-      type: ABIType.from(type),
-      name,
-      description: desc,
-      defaultValue: convertedDefaultValue,
-    } satisfies ABIMethodArg
+    return { type: ABIType.from(type), name, description: desc, defaultValue: convertedDefaultValue } satisfies ABIMethodArg
   })
 
   const returns = {
@@ -254,14 +239,7 @@ export function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contra
     description: method.returns.desc,
   } satisfies ABIMethodReturn
 
-  return new ABIMethod({
-    name: method.name,
-    description: method.desc,
-    args,
-    returns,
-    events: method.events,
-    readonly: method.readonly,
-  })
+  return new ABIMethod({ name: method.name, description: method.desc, args, returns, events: method.events, readonly: method.readonly })
 }
 
 export function argTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {

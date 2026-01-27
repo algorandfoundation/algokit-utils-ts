@@ -10,10 +10,34 @@ describe('amount', () => {
     expect(`${algos(100)}`).toBe(`100,000,000 µALGO`)
   })
   test('microalgos to microalgos', () => {
-    expect(microAlgos(100).microAlgo).toBe(100n)
+    // #region example-microAlgos
+    // Create an amount of 100 microAlgo
+    const amount = microAlgos(100)
+
+    // Access the value in microAlgo
+    const microAlgoValue = amount.microAlgo // 100n
+
+    // Access the value in Algo
+    const algoValue = amount.algo // 0.0001
+    // #endregion example-microAlgos
+
+    expect(microAlgoValue).toBe(100n)
+    expect(algoValue).toBe(0.0001)
   })
   test('algos to microalgos', () => {
-    expect(algos(100).microAlgo).toBe(100_000_000n)
+    // #region example-algos
+    // Create an amount of 100 Algo
+    const amount = algos(100)
+
+    // Access the value in microAlgo (100 * 1_000_000)
+    const microAlgoValue = amount.microAlgo // 100_000_000n
+
+    // Access the value in Algo
+    const algoValue = amount.algo // 100
+    // #endregion example-algos
+
+    expect(microAlgoValue).toBe(100_000_000n)
+    expect(algoValue).toBe(100)
   })
   test('algos to algos', () => {
     expect(algos(100).algo).toBe(100)
@@ -24,19 +48,45 @@ describe('amount', () => {
   test('large microalgos to algos', () => {
     expect(microAlgos(100_000_000).algo).toBe(100)
   })
-  test('single transaction fee', () => {
-    expect(transactionFees(1).microAlgo).toBe(1_000n)
-  })
-  test('multiple transaction fees', () => {
-    expect(transactionFees(10).microAlgo).toBe(10_000n)
+  test('single and multiple transaction fee', () => {
+    // #region example-transactionFees
+    // Get the fee amount for a single transaction (1000 microAlgo)
+    const singleFee = transactionFees(1)
+
+    // Get the fee amount for multiple transactions
+    const multipleFees = transactionFees(10)
+
+    // Access the values
+    const singleFeeValue = singleFee.microAlgo // 1_000n
+    const multipleFeeValue = multipleFees.microAlgo // 10_000n
+    // #endregion example-transactionFees
+
+    expect(singleFeeValue).toBe(1_000n)
+    expect(multipleFeeValue).toBe(10_000n)
   })
   test('algos via Number.prototype', () => {
-    expect((100).algo()).toBeInstanceOf(AlgoAmount)
-    expect((100).algo().algo).toBe(100)
+    // #region example-algo
+    // Create an AlgoAmount using the Number.prototype extension
+    const amount = (100).algo()
+
+    // Access the value in Algo
+    const algoValue = amount.algo // 100
+    // #endregion example-algo
+
+    expect(amount).toBeInstanceOf(AlgoAmount)
+    expect(algoValue).toBe(100)
   })
   test('microAlgos via Number.prototype', () => {
-    expect((100).microAlgo()).toBeInstanceOf(AlgoAmount)
-    expect((100).microAlgo().microAlgo).toBe(100n)
+    // #region example-microAlgo
+    // Create an AlgoAmount using the Number.prototype extension
+    const amount = (100).microAlgo()
+
+    // Access the value in microAlgo
+    const microAlgoValue = amount.microAlgo // 100n
+    // #endregion example-microAlgo
+
+    expect(amount).toBeInstanceOf(AlgoAmount)
+    expect(microAlgoValue).toBe(100n)
   })
 })
 

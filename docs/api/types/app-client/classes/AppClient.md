@@ -6,14 +6,22 @@
 
 # Class: AppClient
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L434)
+=======
+Defined in: [src/types/app-client.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L435)
+>>>>>>> docs/fix-reference-warnings
 
 ARC-56/ARC-32 application client that allows you to manage calls and
 state for a specific deployed instance of an app (with a known app ID).
 
 ## See
 
+<<<<<<< HEAD
 AppFactory for creating and deploying apps
+=======
+[AppFactory](../../app-factory/classes/AppFactory.md) for creating and deploying apps
+>>>>>>> docs/fix-reference-warnings
 
 ## Constructors
 
@@ -21,7 +29,11 @@ AppFactory for creating and deploying apps
 
 > **new AppClient**(`params`): `AppClient`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L473)
+=======
+Defined in: [src/types/app-client.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L474)
+>>>>>>> docs/fix-reference-warnings
 
 Create a new app client.
 
@@ -56,7 +68,11 @@ const appClient = new AppClient({
 
 > **get** **algorand**(): [`AlgorandClient`](../../algorand-client/classes/AlgorandClient.md)
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L640)
+=======
+Defined in: [src/types/app-client.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L641)
+>>>>>>> docs/fix-reference-warnings
 
 A reference to the underlying `AlgorandClient` this app client is using.
 
@@ -72,7 +88,11 @@ A reference to the underlying `AlgorandClient` this app client is using.
 
 > **get** **appAddress**(): [`Address`](../../../algokit-utils/classes/Address.md)
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L625)
+=======
+Defined in: [src/types/app-client.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L626)
+>>>>>>> docs/fix-reference-warnings
 
 The app address of the app instance this client is linked to.
 
@@ -88,7 +108,11 @@ The app address of the app instance this client is linked to.
 
 > **get** **appId**(): `bigint`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L620)
+=======
+Defined in: [src/types/app-client.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L621)
+>>>>>>> docs/fix-reference-warnings
 
 The ID of the app instance this client is linked to.
 
@@ -104,7 +128,11 @@ The ID of the app instance this client is linked to.
 
 > **get** **appName**(): `string`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L630)
+=======
+Defined in: [src/types/app-client.ts:631](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L631)
+>>>>>>> docs/fix-reference-warnings
 
 The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
@@ -120,7 +148,11 @@ The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
 > **get** **appSpec**(): [`Arc56Contract`](../../../Subpaths/abi/type-aliases/Arc56Contract.md)
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L635)
+=======
+Defined in: [src/types/app-client.ts:636](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L636)
+>>>>>>> docs/fix-reference-warnings
 
 The ARC-56 app spec being used
 
@@ -136,7 +168,11 @@ The ARC-56 app spec being used
 
 > **get** **createTransaction**(): `object` & `object`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L664)
+=======
+Defined in: [src/types/app-client.ts:665](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L665)
+>>>>>>> docs/fix-reference-warnings
 
 Create transactions for the current app
 
@@ -150,7 +186,11 @@ Create transactions for the current app
 
 > **get** **params**(): `object` & `object`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L659)
+=======
+Defined in: [src/types/app-client.ts:660](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L660)
+>>>>>>> docs/fix-reference-warnings
 
 Get parameters to create transactions for the current app.
 
@@ -179,7 +219,11 @@ await appClient.send.call({method: 'my_method2', args: [myMethodCall]})
 
 > **get** **send**(): `object` & `object`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L669)
+=======
+Defined in: [src/types/app-client.ts:670](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L670)
+>>>>>>> docs/fix-reference-warnings
 
 Send transactions to the current app
 
@@ -193,7 +237,11 @@ Send transactions to the current app
 
 > **get** **state**(): `object`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L674)
+=======
+Defined in: [src/types/app-client.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L675)
+>>>>>>> docs/fix-reference-warnings
 
 Get state (local, global, box) from the current app
 
@@ -219,6 +267,8 @@ Returns all single-key state values in a record keyed by the key name and the va
 
 > **getMap**: (`mapName`) => `Promise`\<`Map`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md), [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)\>\>
 
+Returns all map values for the given map from box storage.
+
 ###### Parameters
 
 ###### mapName
@@ -230,6 +280,8 @@ The name of the map to read from
 ###### Returns
 
 `Promise`\<`Map`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md), [`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)\>\>
+
+A map of all key-value pairs in the map
 
 ###### box.getMapValue()
 
@@ -473,7 +525,11 @@ Optional cached value of the current state
 
 > **clone**(`params`): `AppClient`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L528)
+=======
+Defined in: [src/types/app-client.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L529)
+>>>>>>> docs/fix-reference-warnings
 
 Clone this app client with different params
 
@@ -568,7 +624,11 @@ The compiled code and any compilation results (including source maps)
 
 > **exportSourceMaps**(): [`AppSourceMaps`](../interfaces/AppSourceMaps.md)
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:844](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L844)
+=======
+Defined in: [src/types/app-client.ts:845](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L845)
+>>>>>>> docs/fix-reference-warnings
 
 Export the current source maps for the app.
 
@@ -584,7 +644,11 @@ The source maps
 
 > **exposeLogicError**(`e`, `isClearStateProgram?`): `Promise`\<`Error`\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:822](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L822)
+=======
+Defined in: [src/types/app-client.ts:823](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L823)
+>>>>>>> docs/fix-reference-warnings
 
 Takes an error that may include a logic error from a call to the current app and re-exposes the
 error to include source code information via the source map and ARC-56 spec.
@@ -615,7 +679,11 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 > **fundAppAccount**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L703)
+=======
+Defined in: [src/types/app-client.ts:704](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L704)
+>>>>>>> docs/fix-reference-warnings
 
 Funds Algo into the app account for this app.
 
@@ -759,7 +827,11 @@ await appClient.fundAppAccount({ amount: algo(1) })
 
 > **getABIMethod**(`methodNameOrSignature`): [`ABIMethod`](../../../Subpaths/abi/classes/ABIMethod.md)
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:872](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L872)
+=======
+Defined in: [src/types/app-client.ts:873](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L873)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the ABI Method spec for the given method string for the app represented by this application client instance
 
@@ -784,7 +856,11 @@ A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 
 > **getBoxNames**(): `Promise`\<[`BoxName`](../../app/interfaces/BoxName.md)[]\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:740](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L740)
+=======
+Defined in: [src/types/app-client.ts:741](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L741)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the names of all current boxes for the current app.
 
@@ -806,7 +882,11 @@ const boxNames = await appClient.getBoxNames()
 
 > **getBoxValue**(`name`): `Promise`\<`Uint8Array`\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L753)
+=======
+Defined in: [src/types/app-client.ts:754](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L754)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the value of the given box for the current app.
 
@@ -836,7 +916,11 @@ const boxValue = await appClient.getBoxValue('boxName')
 
 > **getBoxValueFromABIType**(`name`, `type`): `Promise`\<[`ABIValue`](../../../Subpaths/abi/type-aliases/ABIValue.md)\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:767](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L767)
+=======
+Defined in: [src/types/app-client.ts:768](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L768)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the value of the given box for the current app.
 
@@ -870,7 +954,11 @@ const boxValue = await appClient.getBoxValueFromABIType('boxName', new ABIUintTy
 
 > **getBoxValues**(`filter?`): `Promise`\<`object`[]\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:785](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L785)
+=======
+Defined in: [src/types/app-client.ts:786](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L786)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the values of all current boxes for the current app.
 Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
@@ -901,7 +989,11 @@ const boxValues = await appClient.getBoxValues()
 
 > **getBoxValuesFromABIType**(`type`, `filter?`): `Promise`\<`object`[]\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:805](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L805)
+=======
+Defined in: [src/types/app-client.ts:806](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L806)
+>>>>>>> docs/fix-reference-warnings
 
 Returns the values of all current boxes for the current app decoded using an ABI Type.
 Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
@@ -938,7 +1030,11 @@ const boxValues = await appClient.getBoxValuesFromABIType(new ABIUintType(32))
 
 > **getGlobalState**(): `Promise`\<[`AppState`](../../app/interfaces/AppState.md)\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L715)
+=======
+Defined in: [src/types/app-client.ts:716](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L716)
+>>>>>>> docs/fix-reference-warnings
 
 Returns raw global state for the current app.
 
@@ -960,7 +1056,11 @@ const globalState = await appClient.getGlobalState()
 
 > **getLocalState**(`address`): `Promise`\<[`AppState`](../../app/interfaces/AppState.md)\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:728](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L728)
+=======
+Defined in: [src/types/app-client.ts:729](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L729)
+>>>>>>> docs/fix-reference-warnings
 
 Returns raw local state for the given account address.
 
@@ -990,7 +1090,11 @@ const localState = await appClient.getLocalState('ACCOUNT_ADDRESS')
 
 > **importSourceMaps**(`sourceMaps`): `void`
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:861](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L861)
+=======
+Defined in: [src/types/app-client.ts:862](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L862)
+>>>>>>> docs/fix-reference-warnings
 
 Import source maps for the app.
 
@@ -1162,7 +1266,11 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 > `static` **fromCreatorAndName**(`params`): `Promise`\<`AppClient`\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:556](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L556)
+=======
+Defined in: [src/types/app-client.ts:557](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L557)
+>>>>>>> docs/fix-reference-warnings
 
 Returns a new `AppClient` client, resolving the app by creator address and name
 using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
@@ -1260,7 +1368,11 @@ const appClient = await AppClient.fromCreatorAndName({
 
 > `static` **fromNetwork**(`params`): `Promise`\<`AppClient`\>
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L585)
+=======
+Defined in: [src/types/app-client.ts:586](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L586)
+>>>>>>> docs/fix-reference-warnings
 
 Returns an `AppClient` instance for the current network based on
 pre-determined network-specific app IDs specified in the ARC-56 app spec.
@@ -1339,7 +1451,11 @@ const appClient = await AppClient.fromNetwork({
 
 > `static` **normaliseAppSpec**(`spec`): [`Arc56Contract`](../../../Subpaths/abi/type-aliases/Arc56Contract.md)
 
+<<<<<<< HEAD
 Defined in: [src/types/app-client.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L613)
+=======
+Defined in: [src/types/app-client.ts:614](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L614)
+>>>>>>> docs/fix-reference-warnings
 
 Takes a string or parsed JSON object that could be ARC-32 or ARC-56 format and
 normalises it into a parsed ARC-56 contract object.

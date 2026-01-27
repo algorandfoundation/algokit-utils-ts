@@ -602,4 +602,48 @@ describe('ABIType encode decode', () => {
     expect(() => new ABIArrayDynamicType(new ABIAddressType()).encode([false])).toThrow()
     expect(() => new ABITupleType([new ABIBoolType(), new ABIUfixedType(128, 20)]).encode([BigInt(3), true])).toThrow()
   })
+
+  describe('ABIType examples', () => {
+    test('ABIType.from parses type strings', () => {
+      // #region example-ABIType-from
+      // Parse ABI type strings into type objects
+      const uint64Type = ABIType.from('uint64')
+      const tupleType = ABIType.from('(uint64,string,bool)')
+      const arrayType = ABIType.from('uint32[]')
+
+      // Use the type name property
+      const typeName = uint64Type.name // 'uint64'
+      // #endregion example-ABIType-from
+
+      expect(typeName).toBe('uint64')
+      expect(tupleType.name).toBe('(uint64,string,bool)')
+      expect(arrayType.name).toBe('uint32[]')
+    })
+
+    test('ABIType encode and decode values', () => {
+      // #region example-ABIType-encode-decode
+      // Create an ABI type and encode a value
+      const uint64Type = ABIType.from('uint64')
+      const encoded = uint64Type.encode(42n)
+
+      // Decode bytes back to a value
+      const decoded = uint64Type.decode(encoded)
+      // #endregion example-ABIType-encode-decode
+
+      expect(decoded).toBe(42n)
+    })
+
+    test('ABITupleType encode and decode', () => {
+      // #region example-ABITupleType
+      // Create a tuple type and encode structured data
+      const tupleType = ABIType.from('(uint64,string,bool)')
+      const encoded = tupleType.encode([123n, 'hello', true])
+
+      // Decode back to tuple values
+      const decoded = tupleType.decode(encoded)
+      // #endregion example-ABITupleType
+
+      expect(decoded).toEqual([123n, 'hello', true])
+    })
+  })
 })

@@ -228,7 +228,11 @@ export class AlgorandClient {
    * @returns A new instance of `TransactionComposer`.
    * @example
    * {@includeCode ./algorand-client.spec.ts#example-newGroup}
+<<<<<<< HEAD
    * @see [Full working test](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts#L71)
+=======
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
+>>>>>>> docs/fix-reference-warnings
    */
   public newGroup(composerConfig?: TransactionComposerConfig) {
     return new TransactionComposer({
@@ -276,7 +280,8 @@ export class AlgorandClient {
    * Creates an `AlgorandClient` pointing at default LocalNet ports and API token.
    * @returns An instance of the `AlgorandClient`.
    * @example
-   * const algorand = AlgorandClient.defaultLocalNet();
+   * {@includeCode ./algorand-client.spec.ts#example-defaultLocalNet}
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.spec.ts)
    */
   public static defaultLocalNet() {
     return new AlgorandClient({

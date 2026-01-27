@@ -6,7 +6,7 @@
 
 # Interface: SchemaSpec
 
-Defined in: [src/types/app-spec.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L354)
+Defined in: [src/types/app-spec.ts:360](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L360)
 
 The schema for global and local storage
 
@@ -16,7 +16,7 @@ The schema for global and local storage
 
 > **global**: [`Schema`](Schema.md)
 
-Defined in: [src/types/app-spec.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L358)
+Defined in: [src/types/app-spec.ts:364](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L364)
 
 The global storage schema
 
@@ -26,6 +26,6 @@ The global storage schema
 
 > **local**: [`Schema`](Schema.md)
 
-Defined in: [src/types/app-spec.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L356)
+Defined in: [src/types/app-spec.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L362)
 
 The local storage schema

@@ -6,7 +6,7 @@
 
 # Interface: AppSourceMaps
 
-Defined in: [src/types/app-client.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L245)
+Defined in: [src/types/app-client.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L246)
 
 Source maps for an Algorand app
 
@@ -16,7 +16,7 @@ Source maps for an Algorand app
 
 > **approvalSourceMap**: [`SourceMapExport`](SourceMapExport.md)
 
-Defined in: [src/types/app-client.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L247)
+Defined in: [src/types/app-client.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L248)
 
 The source map of the approval program
 
@@ -26,6 +26,6 @@ The source map of the approval program
 
 > **clearSourceMap**: [`SourceMapExport`](SourceMapExport.md)
 
-Defined in: [src/types/app-client.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L249)
+Defined in: [src/types/app-client.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L250)
 
 The source map of the clear program

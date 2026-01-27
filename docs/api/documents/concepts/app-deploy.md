@@ -11,8 +11,11 @@ AlgoKit contains advanced smart contract deployment capabilities that allow you 
 It's optional to use this functionality, since you can construct your own deployment logic using create / update / delete calls and your own mechanism to maintaining app metadata (like app IDs etc.), but this capability is an opinionated out-of-the-box solution that takes care of the heavy lifting for you.
 
 App deployment is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App management](app.md).
+<<<<<<< HEAD
 
 To see some usage examples check out the [automated tests](../../src/app-deploy.spec.ts).
+=======
+>>>>>>> docs/fix-reference-warnings
 
 ## Smart contract development lifecycle
 
@@ -32,7 +35,7 @@ Namely, it described the concept of a smart contract development lifecycle:
    1. **Validate** the deployed app via automated testing of the smart contracts to provide confidence in their correctness
    2. **Call** deployed smart contract with runtime parameters to utilise it
 
-![App deployment lifecycle](../images/lifecycle.jpg)
+![App deployment lifecycle](../../_media/lifecycle.jpg)
 
 The App deployment capability provided by AlgoKit Utils helps implement **#2 Deployment**.
 
@@ -47,7 +50,7 @@ This design allows you to have the same deployment code across environments with
 
 ## `AppDeployer`
 
-The [`AppDeployer`](.../api/classes/types_app_deployer.AppDeployer.md) is a class that is used to manage app deployments and deployment metadata.
+The [`AppDeployer`](../../_media/AppDeployer.md) is a class that is used to manage app deployments and deployment metadata.
 
 To get an instance of `AppDeployer` you can use either [`AlgorandClient`](algorand-client.md) via `algorand.appDeployer` or instantiate it directly (passing in an [`AppManager`](app.md), [`AlgorandClientTransactionSender`](algorand-client.md) and optionally an indexer client instance):
 
@@ -61,7 +64,7 @@ const appDeployer = new AppDeployer(appManager, transactionSender, indexer)
 
 When AlgoKit performs a deployment of an app it creates metadata to describe that deployment and includes this metadata in an [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note on any creation and update transactions.
 
-The deployment metadata is defined in [`AppDeployMetadata`](.../api/interfaces/types_app.AppDeployMetadata.md), which is an object with:
+The deployment metadata is defined in [`AppDeployMetadata`](../../_media/AppDeployMetadata.md), which is an object with:
 
 - `name: string` - The unique name identifier of the app within the creator account
 - `version: string` - The version of app that is / will be deployed; can be an arbitrary string, but we recommend using [semver](https://semver.org/)
@@ -85,7 +88,7 @@ const app1Metadata = appLookup['app1']
 
 This method caches the result of the lookup, since it's a reasonably heavyweight call (N+1 indexer calls for N deployed apps by the creator). If you want to skip the cache to get a fresh version then you can pass in a second parameter `ignoreCache?: boolean`. This should only be needed if you are performing parallel deployments outside of the current `AppDeployer` instance, since it will keep its cache updated based on its own deployments.
 
-The return type of `getCreatorAppsByName` is [`AppLookup`](.../api/interfaces/types_app_deployer.AppLookup.md):
+The return type of `getCreatorAppsByName` is [`AppLookup`](../../_media/AppLookup.md):
 
 ```typescript
 export interface AppLookup {
@@ -96,7 +99,7 @@ export interface AppLookup {
 }
 ```
 
-The `apps` property contains a lookup by app name that resolves to the current [`AppMetadata`](.../api/interfaces/types_app_deployer.AppMetadata.md) value:
+The `apps` property contains a lookup by app name that resolves to the current [`AppMetadata`](../../_media/AppMetadata.md) value:
 
 ```typescript
 interface AppMetadata {
@@ -223,19 +226,23 @@ It will automatically [add metadata to the transaction note of the create or upd
 
 ### Input parameters
 
-The first parameter `deployment` is an [`AppDeployParams`](.../api/interfaces/types_app_deployer.AppDeployParams.md), which is an object with:
+The first parameter `deployment` is an [`AppDeployParams`](../../_media/AppDeployParams.md), which is an object with:
 
 - `metadata: AppDeployMetadata` - determines the [deployment metadata](#deployment-metadata) of the deployment
 - `createParams: AppCreateParams | AppCreateMethodCall` - the parameters for an [app creation call](app.md) (raw or ABI method call)
 - `updateParams: Omit<AppUpdateParams | AppUpdateMethodCall, 'appId' | 'approvalProgram' | 'clearStateProgram'>` - the parameters for an [app update call](app.md) (raw or ABI method call) without the `appId`, `approvalProgram` or `clearStateProgram`, since these are calculated by the `deploy` method
 - `deleteParams: Omit<AppDeleteParams | AppDeleteMethodCall, 'appId'>` - the parameters for an [app delete call](app.md) (raw or ABI method call) without the `appId`, since this is calculated by the `deploy` method
 - `deployTimeParams?: TealTemplateParams` - allows automatic substitution of [deploy-time TEAL template variables](#compilation-and-template-substitution)
-  - [`TealTemplateParams`](.../api/interfaces/types_app.TealTemplateParams.md) is a `key => value` object that will result in `TMPL_{key}` being replaced with `value` (where a string or `Uint8Array` will be appropriately encoded as bytes within the TEAL code)
-- `onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak` - determines [what should happen](.../api/enums/types_app.OnSchemaBreak.md) if a breaking change to the schema is detected (e.g. if you need more global or local state that was previously requested when the contract was originally created)
-- `onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate` - determines [what should happen](.../api/enums/types_app.OnUpdate.md) if an update to the smart contract is detected (e.g. the TEAL code has changed since last deployment)
+  - [`TealTemplateParams`](../../_media/TealTemplateParams.md) is a `key => value` object that will result in `TMPL_{key}` being replaced with `value` (where a string or `Uint8Array` will be appropriately encoded as bytes within the TEAL code)
+- `onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak` - determines [what should happen](../../_media/OnSchemaBreak.md) if a breaking change to the schema is detected (e.g. if you need more global or local state that was previously requested when the contract was originally created)
+- `onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate` - determines [what should happen](../../_media/OnUpdate.md) if an update to the smart contract is detected (e.g. the TEAL code has changed since last deployment)
 - `existingDeployments?: AppLookup` - optionally allows the [app lookup retrieval](#lookup-deployed-apps-by-name) to be skipped if it's already been retrieved outside of this `AppDeployer` instance
 - `ignoreCache?: boolean` - optionally allows the [lookup cache](#lookup-deployed-apps-by-name) to be ignored and force retrieval of fresh deployment metadata from indexer
+<<<<<<< HEAD
 - Everything from [`SendParams`](.../api/interfaces/types_transaction.SendParams.md) - [transaction execution control parameters](algorand-client.md)
+=======
+- Everything from [`SendParams`](../../_media/SendParams.md) - [transaction execution control parameters](algorand-client.md)
+>>>>>>> docs/fix-reference-warnings
 
 ### Idempotency
 
@@ -251,7 +258,7 @@ In order for a smart contract to opt-in to use this functionality, it must have 
 - `TMPL_UPDATABLE` - Which will be replaced with a `1` if an app should be updatable and `0` if it shouldn't (immutable)
 - `TMPL_DELETABLE` - Which will be replaced with a `1` if an app should be deletable and `0` if it shouldn't (permanent)
 
-If you passed in a TEAL template for the approvalProgram or clearStateProgram (i.e. a `string` rather than a `Uint8Array`) then `deploy` will return the [compilation result](.../api/interfaces/types_app.CompiledTeal.md) of substituting then compiling the TEAL template(s) in the following properties of the return value:
+If you passed in a TEAL template for the approvalProgram or clearStateProgram (i.e. a `string` rather than a `Uint8Array`) then `deploy` will return the [compilation result](../../_media/CompiledTeal.md) of substituting then compiling the TEAL template(s) in the following properties of the return value:
 
 - `compiledApproval?: CompiledTeal`
 - `compiledClear?: CompiledTeal`
@@ -307,7 +314,7 @@ myFactory.deploy({
 
 ### Return value
 
-When `deploy` executes it will return a [comprehensive result](.../api/modules/types_app_deployer.md#appdeployresult) object that describes exactly what it did and has comprehensive metadata to describe the end result of the deployed app.
+When `deploy` executes it will return a [comprehensive result](../../_media/AppDeployResult.md) object that describes exactly what it did and has comprehensive metadata to describe the end result of the deployed app.
 
 The `deploy` call itself may do one of the following (which you can determine by looking at the `operationPerformed` field on the return value from the function):
 
@@ -316,7 +323,7 @@ The `deploy` call itself may do one of the following (which you can determine by
 - `replace` - The smart contract app was deleted and created again (in an atomic transaction)
 - `nothing` - Nothing was done since it was detected the existing smart contract app deployment was up to date
 
-As well as the `operationPerformed` parameter and the [optional compilation result](#compilation-and-template-substitution), the return value will have the [`AppMetadata`](.../api/interfaces/types_app_deployer.AppMetadata.md) [fields](#deployment-metadata) present.
+As well as the `operationPerformed` parameter and the [optional compilation result](#compilation-and-template-substitution), the return value will have the [`AppMetadata`](../../_media/AppMetadata.md) [fields](#deployment-metadata) present.
 
 Based on the value of `operationPerformed` there will be other data available in the return value:
 

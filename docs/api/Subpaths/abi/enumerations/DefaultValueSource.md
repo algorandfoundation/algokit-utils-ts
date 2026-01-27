@@ -6,7 +6,7 @@
 
 # Enumeration: DefaultValueSource
 
-Defined in: [packages/abi/src/abi-method.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L45)
+Defined in: [packages/abi/src/abi-method.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L37)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [packages/abi/src/abi-method.ts:45](https://github.com/algorandfound
 
 > **Box**: `"box"`
 
-Defined in: [packages/abi/src/abi-method.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L46)
+Defined in: [packages/abi/src/abi-method.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L38)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/abi/src/abi-method.ts:46](https://github.com/algorandfound
 
 > **Global**: `"global"`
 
-Defined in: [packages/abi/src/abi-method.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L47)
+Defined in: [packages/abi/src/abi-method.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L39)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/abi/src/abi-method.ts:47](https://github.com/algorandfound
 
 > **Literal**: `"literal"`
 
-Defined in: [packages/abi/src/abi-method.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L49)
+Defined in: [packages/abi/src/abi-method.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L41)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/abi/src/abi-method.ts:49](https://github.com/algorandfound
 
 > **Local**: `"local"`
 
-Defined in: [packages/abi/src/abi-method.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L48)
+Defined in: [packages/abi/src/abi-method.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L40)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [packages/abi/src/abi-method.ts:48](https://github.com/algorandfound
 
 > **Method**: `"method"`
 
-Defined in: [packages/abi/src/abi-method.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L50)
+Defined in: [packages/abi/src/abi-method.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L42)
