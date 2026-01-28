@@ -46,7 +46,7 @@ To use this library simply include the following at the top of your file:
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
 
-As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import within the `{}` in your favourite Integrated Development Environment (IDE), or you can refer to the `reference documentation`.
+As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import within the `{}` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](../api/README.md).
 
 > [!WARNING]
 > Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as algokit`):
@@ -98,17 +98,27 @@ Or, you can generally get away with just importing the `algorandFixture` since i
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 ```
 
-To see how to use it consult the [testing capability page](../concepts/testing.md) or to see what's available look at the `reference documentation`.
+To see how to use it consult the [testing capability page](../concepts/testing.md) or to see what's available look at the [reference documentation](../api/README.md).
 
 ## Types
 
-If you want to extend or pass around any of the types the various functions take then they are all defined in isolated modules under the `types` namespace. This is to provide a better intellisense experience without overwhelming you with hundreds of types. If you determine a type to import then you can import it like so:
+All types are exported directly from the main package or from specific subpaths:
 
 ```typescript
-import {<type>} from '@algorandfoundation/types/<module>'
+import { AlgorandClient, type AccountInformation, type AppDeployParams } from '@algorandfoundation/algokit-utils'
 ```
 
-Where `<type>` would be replaced with the type and `<module>` would be replaced with the module. You can use intellisense to discover the modules and types in your favourite IDE, or you can explore the `types modules in the reference documentation`.
+Or from specific subpaths:
+
+```typescript
+import { type SendParams } from '@algorandfoundation/algokit-utils/transaction'
+import { type ABIType } from '@algorandfoundation/algokit-utils/abi'
+```
+
+Use intellisense in your IDE to discover available types, or refer to the [reference documentation](../api/README.md).
+
+> [!NOTE]
+> The `/types/*` subpath imports are deprecated. Import types directly from the main package or relevant subpaths instead.
 
 # Config and logging
 
@@ -184,4 +194,4 @@ The library helps you interact with and develop against the Algorand blockchain 
 
 # Reference documentation
 
-We have `auto-generated reference documentation for the code`.
+We have [auto-generated reference documentation](../api/README.md) for the code.
