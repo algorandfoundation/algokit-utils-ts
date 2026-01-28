@@ -43,5 +43,6 @@ export default createConfig(
     'src/algod-client/index.ts',
     'src/indexer-client/index.ts',
     'src/kmd-client/index.ts',
+    'src/crypto/index.ts',
   ],
 )
