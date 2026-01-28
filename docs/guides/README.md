@@ -6,7 +6,12 @@ The goal of this library is to provide intuitive, productive utility functions t
 
 Note: If you prefer Python there's an equivalent [Python utility library](https://github.com/algorandfoundation/algokit-utils-py).
 
-> **New to AlgoKit?** Start with the [Quick Start Tutorial](../tutorials/quick-start.md) to send your first transaction in 5 minutes.
+## Quick Links
+
+- **New to AlgoKit?** Start with the [Quick Start Tutorial](../tutorials/quick-start.md)
+- **Building an app?** See [Concepts](../concepts/algorand-client.md) and [Examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples)
+- **API Reference** - [Auto-generated docs](../api/README.md)
+- **Upgrading?** See [Migration Guides](../migration/v7-migration.md)
 
 [Core principles](#core-principles) | [Installation](#installation) | [Usage](#usage) | [Config and logging](#config-and-logging) | [Concepts](#concepts) | [Reference docs](#reference-documentation)
 
