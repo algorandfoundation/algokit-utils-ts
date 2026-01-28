@@ -22,7 +22,10 @@
   "out": "docs/_html",
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
-  "projectDocuments": ["docs/concepts/*.md", "docs/migration/*.md", "./../examples/README.md"],
+  "projectDocuments": ["docs/tutorials/README.md", "docs/concepts/*.md", "docs/migration/*.md"],
+  "navigation": {
+    "includeFolders": true
+  },
   "gitRevision": "main",
   "cleanOutputDir": true,
   "excludeReferences": true,
