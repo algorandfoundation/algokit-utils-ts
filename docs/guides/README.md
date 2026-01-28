@@ -6,6 +6,8 @@ The goal of this library is to provide intuitive, productive utility functions t
 
 Note: If you prefer Python there's an equivalent [Python utility library](https://github.com/algorandfoundation/algokit-utils-py).
 
+> **New to AlgoKit?** Start with the [Quick Start Tutorial](../tutorials/quick-start.md) to send your first transaction in 5 minutes.
+
 [Core principles](#core-principles) | [Installation](#installation) | [Usage](#usage) | [Config and logging](#config-and-logging) | [Concepts](#concepts) | [Reference docs](#reference-documentation)
 
 # Core principles
