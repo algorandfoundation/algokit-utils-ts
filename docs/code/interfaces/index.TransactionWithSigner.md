@@ -23,7 +23,7 @@ A transaction signer that can authorize txn
 
 #### Defined in
 
-[src/transaction/transaction.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L17)
+[src/transaction/transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L12)
 
 ___
 
@@ -35,4 +35,4 @@ An unsigned transaction
 
 #### Defined in
 
-[src/transaction/transaction.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L15)
+[src/transaction/transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L10)

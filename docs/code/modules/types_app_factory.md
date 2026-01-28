@@ -4,121 +4,162 @@
 
 ## Table of contents
 
-### Classes
-
-- [AppFactory](../classes/types_app_factory.AppFactory.md)
-
-### Interfaces
-
-- [AppFactoryParams](../interfaces/types_app_factory.AppFactoryParams.md)
-
 ### Type Aliases
 
+- [AppFactory](types_app_factory.md#appfactory)
 - [AppFactoryAppClientParams](types_app_factory.md#appfactoryappclientparams)
 - [AppFactoryCreateMethodCallParams](types_app_factory.md#appfactorycreatemethodcallparams)
 - [AppFactoryCreateParams](types_app_factory.md#appfactorycreateparams)
 - [AppFactoryDeployParams](types_app_factory.md#appfactorydeployparams)
+- [AppFactoryParams](types_app_factory.md#appfactoryparams)
 - [AppFactoryResolveAppClientByCreatorAndNameParams](types_app_factory.md#appfactoryresolveappclientbycreatorandnameparams)
 - [CreateOnComplete](types_app_factory.md#createoncomplete)
 - [CreateSchema](types_app_factory.md#createschema)
 
+### Variables
+
+- [AppFactory](types_app_factory.md#appfactory-1)
+
 ## Type Aliases
 
-### AppFactoryAppClientParams
+### AppFactory
 
-Ƭ **AppFactoryAppClientParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"algorand"`` \| ``"appSpec"``\>\>
+Ƭ **AppFactory**: `_AppFactory`
 
-Params to get an app client by ID from an app factory.
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L114)
+[src/types/app-factory.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L41)
+
+[src/types/app-factory.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L43)
+
+___
+
+### AppFactoryAppClientParams
+
+Ƭ **AppFactoryAppClientParams**: `_AppFactoryAppClientParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
+
+#### Defined in
+
+[src/types/app-factory.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L32)
 
 ___
 
 ### AppFactoryCreateMethodCallParams
 
-Ƭ **AppFactoryCreateMethodCallParams**: [`Expand`](types_expand.md#expand)\<[`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) & [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\>
+Ƭ **AppFactoryCreateMethodCallParams**: `_AppFactoryCreateMethodCallParams`
 
-Params to specify a create method call for an app
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L109)
+[src/types/app-factory.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L29)
 
 ___
 
 ### AppFactoryCreateParams
 
-Ƭ **AppFactoryCreateParams**: [`Expand`](types_expand.md#expand)\<[`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) & [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\>
+Ƭ **AppFactoryCreateParams**: `_AppFactoryCreateParams`
 
-Params to specify a bare (raw) create call for an app
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L106)
+[src/types/app-factory.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L26)
 
 ___
 
 ### AppFactoryDeployParams
 
-Ƭ **AppFactoryDeployParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeployParams`](types_app_deployer.md#appdeployparams), ``"createParams"`` \| ``"updateParams"`` \| ``"deleteParams"`` \| ``"metadata"``\> & \{ `appName?`: `string` ; `createParams?`: [`Expand`](types_expand.md#expand)\<[`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\> \| [`Expand`](types_expand.md#expand)\<[`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\> ; `deletable?`: `boolean` ; `deleteParams?`: [`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) \| [`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) ; `updatable?`: `boolean` ; `updateParams?`: [`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) \| [`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams)  }\>
+Ƭ **AppFactoryDeployParams**: `_AppFactoryDeployParams`
 
-Parameters to define a deployment for an `AppFactory`
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L120)
+[src/types/app-factory.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L38)
+
+___
+
+### AppFactoryParams
+
+Ƭ **AppFactoryParams**: `_AppFactoryParams`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
+
+#### Defined in
+
+[src/types/app-factory.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L17)
 
 ___
 
 ### AppFactoryResolveAppClientByCreatorAndNameParams
 
-Ƭ **AppFactoryResolveAppClientByCreatorAndNameParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`ResolveAppClientByCreatorAndName`](types_app_client.md#resolveappclientbycreatorandname), ``"algorand"`` \| ``"appSpec"``\>\>
+Ƭ **AppFactoryResolveAppClientByCreatorAndNameParams**: `_AppFactoryResolveAppClientByCreatorAndNameParams`
 
-Params to get an app client by creator address and name from an app factory.
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L117)
+[src/types/app-factory.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L35)
 
 ___
 
 ### CreateOnComplete
 
-Ƭ **CreateOnComplete**: `Object`
+Ƭ **CreateOnComplete**: `_CreateOnComplete`
 
-onComplete parameter for a create app call
+**`Deprecated`**
 
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `onComplete?` | `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearState`\> |
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L82)
+[src/types/app-factory.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L20)
 
 ___
 
 ### CreateSchema
 
-Ƭ **CreateSchema**: `Object`
+Ƭ **CreateSchema**: `_CreateSchema`
 
-Specifies a schema used for creating an app
+**`Deprecated`**
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `extraProgramPages?` | `number` | Number of extra pages required for the programs. Defaults to the number needed for the programs in this call if not specified. This is immutable once the app is created. |
-| `schema?` | \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } | The state schema for the app. This is immutable once the app is created. By default uses the ARC32/ARC-56 spec. |
-| `schema.globalByteSlices` | `number` | The number of byte slices saved in global state. |
-| `schema.globalInts` | `number` | The number of integers saved in global state. |
-| `schema.localByteSlices` | `number` | The number of byte slices saved in local state. |
-| `schema.localInts` | `number` | The number of integers saved in local state. |
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
 
 #### Defined in
 
-[src/types/app-factory.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L87)
+[src/types/app-factory.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L23)
+
+## Variables
+
+### AppFactory
+
+• `Const` **AppFactory**: typeof `AppFactory` = `_AppFactory`
+
+**`Deprecated`**
+
+Import from `@algorandfoundation/algokit-utils/app-factory` instead
+
+#### Defined in
+
+[src/types/app-factory.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L41)
+
+[src/types/app-factory.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L43)

@@ -1,299 +1,133 @@
-import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
-import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
-import { Address, Expand, ProgramSourceMap } from '@algorandfoundation/algokit-common'
-import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionWithSigner } from '../transaction'
-import { BoxIdentifier, BoxReference } from './app-manager'
+// Re-exports with deprecation notices for backwards compatibility
+// New imports should use '@algorandfoundation/algokit-utils/app'
+
 import {
-  SendSingleTransactionResult,
-  SendTransactionFrom,
-  SendTransactionParams,
-  SendTransactionResult,
-  SendTransactionResults,
-  TransactionNote,
-  TransactionToSign,
-} from './transaction'
-type SourceMap = ProgramSourceMap
+  UPDATABLE_TEMPLATE_NAME as _UPDATABLE_TEMPLATE_NAME,
+  DELETABLE_TEMPLATE_NAME as _DELETABLE_TEMPLATE_NAME,
+  APP_DEPLOY_NOTE_DAPP as _APP_DEPLOY_NOTE_DAPP,
+  APP_PAGE_MAX_SIZE as _APP_PAGE_MAX_SIZE,
+  ABI_RETURN_PREFIX as _ABI_RETURN_PREFIX,
+  OnUpdate as _OnUpdate,
+  OnSchemaBreak as _OnSchemaBreak,
+  type AppReference as _AppReference,
+  type CoreAppCallArgs as _CoreAppCallArgs,
+  type RawAppCallArgs as _RawAppCallArgs,
+  type ABIAppCallArg as _ABIAppCallArg,
+  type ABIAppCallArgs as _ABIAppCallArgs,
+  type AppCallArgs as _AppCallArgs,
+  type AppCallParams as _AppCallParams,
+  type AppStorageSchema as _AppStorageSchema,
+  type CompiledTeal as _CompiledTeal,
+  type AppCallTransactionResultOfType as _AppCallTransactionResultOfType,
+  type AppCallTransactionResult as _AppCallTransactionResult,
+  type AppDeployMetadata as _AppDeployMetadata,
+  type AppMetadata as _AppMetadata,
+  type AppLookup as _AppLookup,
+  type TealTemplateParams as _TealTemplateParams,
+  type AppCompilationResult as _AppCompilationResult,
+  type AppReturn as _AppReturn,
+  type SendAppTransactionResult as _SendAppTransactionResult,
+  type SendAppUpdateTransactionResult as _SendAppUpdateTransactionResult,
+  type SendAppCreateTransactionResult as _SendAppCreateTransactionResult,
+  type AppState as _AppState,
+  type BoxName as _BoxName,
+  type BoxValueRequestParams as _BoxValueRequestParams,
+  type BoxValuesRequestParams as _BoxValuesRequestParams,
+} from '../app'
 
-/** The name of the TEAL template variable for deploy-time immutability control */
-export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const UPDATABLE_TEMPLATE_NAME = _UPDATABLE_TEMPLATE_NAME
 
-/** The name of the TEAL template variable for deploy-time permanence control */
-export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const DELETABLE_TEMPLATE_NAME = _DELETABLE_TEMPLATE_NAME
 
-/** The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix */
-export const APP_DEPLOY_NOTE_DAPP = 'ALGOKIT_DEPLOYER'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const APP_DEPLOY_NOTE_DAPP = _APP_DEPLOY_NOTE_DAPP
 
-/** The maximum number of bytes in a single app code page */
-export const APP_PAGE_MAX_SIZE = 2048
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const APP_PAGE_MAX_SIZE = _APP_PAGE_MAX_SIZE
 
-/** First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values */
-export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const ABI_RETURN_PREFIX = _ABI_RETURN_PREFIX
 
-/** Information about an Algorand app */
-export interface AppReference {
-  /** The id of the app */
-  appId: number | bigint
-  /** The Algorand address of the account associated with the app */
-  appAddress: string
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const OnUpdate = _OnUpdate
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type OnUpdate = _OnUpdate
 
-/** Common app call arguments for ABI and non-ABI (raw) calls */
-export interface CoreAppCallArgs {
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
-  /** Any box references to load */
-  boxes?: (TransactBoxReference | BoxReference | BoxIdentifier)[]
-  /** The address of any accounts to load in */
-  accounts?: (string | Address)[]
-  /** IDs of any apps to load into the foreignApps array */
-  apps?: number[]
-  /** IDs of any assets to load into the foreignAssets array */
-  assets?: number[]
-  /** Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
-   *
-   * **Note:** Use with extreme caution and review the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying) first.
-   */
-  rekeyTo?: SendTransactionFrom | string
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export const OnSchemaBreak = _OnSchemaBreak
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type OnSchemaBreak = _OnSchemaBreak
 
-/**
- * App call args with non-ABI (raw) values (minus some processing like encoding strings as binary)
- */
-export interface RawAppCallArgs extends CoreAppCallArgs {
-  /** Any application arguments to pass through */
-  appArgs?: (Uint8Array | string)[]
-  /** Property to aid intellisense */
-  method?: undefined
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppReference = _AppReference
 
-/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
-export type ABIAppCallArg =
-  | ABIValue
-  | TransactionWithSigner
-  | TransactionToSign
-  | Transaction
-  | Promise<SendTransactionResult>
-  | SendTransactionResult
-  | undefined
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type CoreAppCallArgs = _CoreAppCallArgs
 
-/**
- * App call args for an ABI call
- */
-export type ABIAppCallArgs = CoreAppCallArgs & {
-  /** The ABI method to call */
-  method: ABIMethod
-  /** The ABI method args to pass in */
-  methodArgs: ABIAppCallArg[]
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type RawAppCallArgs = _RawAppCallArgs
 
-/** Arguments to pass to an app call either:
- *   * The raw app call values to pass through into the transaction (after processing); or
- *   * An ABI method definition (method and args)
- **/
-export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type ABIAppCallArg = _ABIAppCallArg
 
-/** Parameters representing a call to an app. */
-export interface AppCallParams extends SendTransactionParams {
-  /** The id of the app to call */
-  appId: number | bigint
-  /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
-  callType: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
-  /** The account to make the call from */
-  from: SendTransactionFrom
-  /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
-  /** The (optional) transaction note */
-  note?: TransactionNote
-  /** The arguments passed in to the app call */
-  args?: AppCallArgs
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type ABIAppCallArgs = _ABIAppCallArgs
 
-/** Parameters representing the storage schema of an app. */
-export interface AppStorageSchema {
-  /** Restricts number of ints in per-user local state */
-  localInts: number
-  /** Restricts number of byte slices in per-user local state */
-  localByteSlices: number
-  /** Restricts number of ints in global state */
-  globalInts: number
-  /** Restricts number of byte slices in global state */
-  globalByteSlices: number
-  /** Any extra pages that are needed for the smart contract; if left blank then the right number of pages will be calculated based on the teal code size */
-  extraPages?: number
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppCallArgs = _AppCallArgs
 
-/** Information about a compiled teal program */
-export interface CompiledTeal {
-  /** Original TEAL code */
-  teal: string
-  /** The compiled code */
-  compiled: string
-  /** The hash returned by the compiler */
-  compiledHash: string
-  /** The base64 encoded code as a byte array */
-  compiledBase64ToBytes: Uint8Array
-  /** Source map from the compilation */
-  sourceMap: SourceMap
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppCallParams = _AppCallParams
 
-export interface AppCallTransactionResultOfType<T> extends SendTransactionResults, SendTransactionResult {
-  /** If an ABI method was called the processed return value */
-  return?: T
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppStorageSchema = _AppStorageSchema
 
-/** Result from calling an app */
-export type AppCallTransactionResult = AppCallTransactionResultOfType<ABIReturn>
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type CompiledTeal = _CompiledTeal
 
-/**
- * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.
- */
-export interface AppDeployMetadata {
-  /** The unique name identifier of the app within the creator account */
-  name: string
-  /** The version of app that is / will be deployed */
-  version: string
-  /** Whether or not the app is deletable / permanent / unspecified */
-  deletable?: boolean
-  /** Whether or not the app is updatable / immutable / unspecified */
-  updatable?: boolean
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppCallTransactionResultOfType<T> = _AppCallTransactionResultOfType<T>
 
-/** The metadata that can be collected about a deployed app */
-export interface AppMetadata extends AppReference, AppDeployMetadata {
-  /** The round the app was created */
-  createdRound: number
-  /** The last round that the app was updated */
-  updatedRound: number
-  /** The metadata when the app was created */
-  createdMetadata: AppDeployMetadata
-  /** Whether or not the app is deleted */
-  deleted: boolean
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppCallTransactionResult = _AppCallTransactionResult
 
-/** A lookup of name -> Algorand app for a creator */
-export interface AppLookup {
-  creator: Readonly<string>
-  apps: Readonly<{
-    [name: string]: AppMetadata
-  }>
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppDeployMetadata = _AppDeployMetadata
 
-/** Dictionary of deploy-time parameters to replace in a teal template.
- *
- * Note: Looks for `TMPL_{parameter}` for template replacements i.e. you can leave out the `TMPL_`.
- *
- */
-export interface TealTemplateParams {
-  [key: string]: string | bigint | number | Uint8Array
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppMetadata = _AppMetadata
 
-/** What action to perform when deploying an app and an update is detected in the TEAL code */
-export enum OnUpdate {
-  /** Fail the deployment */
-  Fail,
-  /** Update the app */
-  UpdateApp,
-  /** Delete the app and create a new one in its place */
-  ReplaceApp,
-  /** Create a new app */
-  AppendApp,
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppLookup = _AppLookup
 
-/** What action to perform when deploying an app and a breaking schema change is detected */
-export enum OnSchemaBreak {
-  /** Fail the deployment */
-  Fail,
-  /** Delete the app and create a new one in its place */
-  ReplaceApp,
-  /** Create a new app */
-  AppendApp,
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type TealTemplateParams = _TealTemplateParams
 
-/** The result of compiling the approval and clear state TEAL programs for an app */
-export interface AppCompilationResult {
-  /** The result of compiling the approval program */
-  compiledApproval: CompiledTeal
-  /** The result of compiling the clear state program */
-  compiledClear: CompiledTeal
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppCompilationResult = _AppCompilationResult
 
-export type AppReturn<TReturn> = {
-  /** The ABI method call return value */
-  return?: TReturn
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppReturn<TReturn> = _AppReturn<TReturn>
 
-/** Result from sending a single app transaction. */
-export type SendAppTransactionResult = Expand<
-  SendSingleTransactionResult & {
-    /** If an ABI method was called the processed return value */
-    return?: ABIReturn
-  }
->
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type SendAppTransactionResult = _SendAppTransactionResult
 
-/** Result from sending a single app transaction. */
-export type SendAppUpdateTransactionResult = Expand<SendAppTransactionResult & Partial<AppCompilationResult>>
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type SendAppUpdateTransactionResult = _SendAppUpdateTransactionResult
 
-/** Result from sending a single app transaction. */
-export type SendAppCreateTransactionResult = Expand<
-  SendAppUpdateTransactionResult & {
-    /** The id of the created app */
-    appId: bigint
-    /** The Algorand address of the account associated with the app */
-    appAddress: Address
-  }
->
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type SendAppCreateTransactionResult = _SendAppCreateTransactionResult
 
-/** Object holding app state values */
-export interface AppState {
-  [key: string]:
-    | {
-        value: bigint
-        keyRaw: Uint8Array
-        keyBase64: string
-      }
-    | {
-        value: string
-        valueRaw: Uint8Array
-        valueBase64: string
-        keyRaw: Uint8Array
-        keyBase64: string
-      }
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type AppState = _AppState
 
-/**
- * The name of a box storage box */
-export interface BoxName {
-  /** Name in UTF-8 */
-  name: string
-  /** Name in binary bytes */
-  nameRaw: Uint8Array
-  /** Name in Base64 */
-  nameBase64: string
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type BoxName = _BoxName
 
-/**
- * @deprecated Use `types/app-manager/BoxValueRequestParams` instead.
- * Parameters to get and decode a box value as an ABI type.
- */
-export interface BoxValueRequestParams {
-  /** The ID of the app return box names for */
-  appId: number | bigint
-  /** The name of the box to return either as a string, binary array or `BoxName` */
-  boxName: string | Uint8Array | BoxName
-  /** The ABI type to decode the value using */
-  type: ABIType
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type BoxValueRequestParams = _BoxValueRequestParams
 
-/**
- * @deprecated Use `types/app-manager/BoxValuesRequestParams` instead.
- * Parameters to get and decode a box value as an ABI type.
- */
-export interface BoxValuesRequestParams {
-  /** The ID of the app return box names for */
-  appId: number
-  /** The names of the boxes to return either as a string, binary array or BoxName` */
-  boxNames: (string | Uint8Array | BoxName)[]
-  /** The ABI type to decode the value using */
-  type: ABIType
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/app` instead */
+export type BoxValuesRequestParams = _BoxValuesRequestParams

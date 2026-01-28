@@ -1,56 +1,15 @@
-import { EventDataMap, EventType } from './lifecycle-events'
+// Re-exports with deprecation notices for backwards compatibility
+// New imports should use '@algorandfoundation/algokit-utils/async-event-emitter'
 
-export type AsyncEventListener<T = unknown> = (event: T, eventName: string | symbol) => Promise<void> | void
+import {
+  type AsyncEventListener as _AsyncEventListener,
+  AsyncEventEmitter as _AsyncEventEmitter,
+} from '../async-event-emitter'
 
-export class AsyncEventEmitter {
-  private listenerWrapperMap = new WeakMap<AsyncEventListener, AsyncEventListener>()
-  private listenerMap: Record<string | symbol, AsyncEventListener[]> = {}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/async-event-emitter` instead */
+export type AsyncEventListener<T = unknown> = _AsyncEventListener<T>
 
-  async emitAsync<K extends string | symbol>(eventName: K, event: K extends EventType ? EventDataMap[K] : unknown): Promise<void> {
-    for (const listener of this.listenerMap[eventName] ?? []) {
-      await listener(event, eventName)
-    }
-  }
-
-  on<K extends string | symbol>(
-    eventName: K,
-    listener: AsyncEventListener<K extends EventType ? EventDataMap[K] : unknown>,
-  ): AsyncEventEmitter {
-    if (!this.listenerMap[eventName]) this.listenerMap[eventName] = []
-    this.listenerMap[eventName].push(listener as AsyncEventListener)
-    return this
-  }
-
-  once<K extends string | symbol>(
-    eventName: K,
-    listener: AsyncEventListener<K extends EventType ? EventDataMap[K] : unknown>,
-  ): AsyncEventEmitter {
-    const wrappedListener: AsyncEventListener = async (event, eventName) => {
-      try {
-        return await (listener as AsyncEventListener)(event, eventName)
-      } finally {
-        this.removeListener(eventName, wrappedListener)
-      }
-    }
-    this.listenerWrapperMap.set(listener as AsyncEventListener, wrappedListener)
-    return this.on(eventName, wrappedListener as AsyncEventListener<K extends EventType ? EventDataMap[K] : unknown>)
-  }
-
-  removeListener(eventName: string | symbol, listener: AsyncEventListener): AsyncEventEmitter {
-    const wrappedListener = this.listenerWrapperMap.get(listener)
-    if (wrappedListener) {
-      this.listenerWrapperMap.delete(listener)
-      if (this.listenerMap[eventName]?.indexOf(wrappedListener) !== -1) {
-        this.listenerMap[eventName].splice(this.listenerMap[eventName].indexOf(wrappedListener), 1)
-      }
-    } else {
-      if (this.listenerMap[eventName]?.indexOf(listener) !== -1) {
-        this.listenerMap[eventName].splice(this.listenerMap[eventName].indexOf(listener), 1)
-      }
-    }
-
-    return this
-  }
-
-  off = this.removeListener
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/async-event-emitter` instead */
+export const AsyncEventEmitter = _AsyncEventEmitter
+/** @deprecated Import from `@algorandfoundation/algokit-utils/async-event-emitter` instead */
+export type AsyncEventEmitter = _AsyncEventEmitter
