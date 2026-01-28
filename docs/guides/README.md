@@ -120,6 +120,25 @@ Use intellisense in your IDE to discover available types, or refer to the [refer
 > [!NOTE]
 > The `/types/*` subpath imports are deprecated. Import types directly from the main package or relevant subpaths instead.
 
+## Modular Imports
+
+AlgoKit Utils provides modular subpath imports for tree-shaking and focused functionality:
+
+| Subpath | Description |
+|---------|-------------|
+| Main | Core functionality including `AlgorandClient` |
+| `/testing` | Testing utilities and fixtures |
+| `/abi` | ABI encoding/decoding utilities |
+| `/transact` | Low-level transaction construction |
+| `/transaction` | Transaction types and utilities |
+| `/algo25` | Algorand 25-word mnemonic utilities |
+| `/algod-client` | Typed Algod client |
+| `/indexer-client` | Typed Indexer client |
+| `/kmd-client` | Typed KMD client |
+
+> [!TIP]
+> Using specific subpath imports can help reduce bundle size through tree-shaking.
+
 # Config and logging
 
 To configure the AlgoKit Utils library you can make use of the `Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
@@ -191,6 +210,20 @@ The library helps you interact with and develop against the Algorand blockchain 
   - [**Algo transfers (payments)**](../concepts/transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding
   - [**Automated testing**](../concepts/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
   - [**Indexer lookups / searching**](../concepts/indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
+
+# Examples
+
+We maintain [runnable examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples) organized by feature:
+
+- **[AlgorandClient](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/algorand_client)** - High-level API usage
+- **[Transact](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/transact)** - Transaction construction
+- **[ABI](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/abi)** - ABI encoding/decoding
+- **[Testing](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/testing)** - Testing utilities
+- **[Algod Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/algod_client)** - Node operations
+- **[Indexer Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/indexer_client)** - Blockchain queries
+- **[KMD Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/kmd_client)** - Key management
+- **[Algo25](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/algo25)** - Mnemonic utilities
+- **[Common](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/common)** - Utility functions
 
 # Reference documentation
 
