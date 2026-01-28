@@ -1,3 +1,7 @@
+---
+title: Examples
+---
+
 # AlgoKit Utils TypeScript Examples
 
 Runnable code examples demonstrating every major feature of the `@algorandfoundation/algokit-utils` TypeScript library.

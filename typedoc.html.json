@@ -4,7 +4,6 @@
     "exampleTag": false
   },
   "navigationLinks": {
-    "Examples": "./examples/",
     "GitHub": "https://github.com/algorandfoundation/algokit-utils-ts"
   },
   "entryPoints": [
@@ -23,7 +22,7 @@
   "out": "docs/_html",
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
-  "projectDocuments": ["docs/concepts/*.md", "docs/migration/*.md"],
+  "projectDocuments": ["docs/concepts/*.md", "docs/migration/*.md", "./../examples/README.md"],
   "gitRevision": "main",
   "cleanOutputDir": true,
   "excludeReferences": true,
