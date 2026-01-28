@@ -2,7 +2,7 @@
 
 App management is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It allows you to create, update, delete, call (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes).
 
-## `AppManager`
+## AppManager
 
 The `AppManager` is a class that is used to manage app information.
 
@@ -398,7 +398,7 @@ When making an ABI call, the `args` parameter is replaced with a different type 
     - An array of one of the above types
   - `algosdk.TransactionWithSigner`
   - `algosdk.Transaction`
-  - `Promise<Transaction>` - which allows you to use an AlgorandClient call that [returns a transaction](./algorand-client.md#creating-single-transactions) without needing to await the call
+  - `Promise<Transaction>` - which allows you to use an AlgorandClient call that [returns a transaction](./algorand-client.md#creating-transactions) without needing to await the call
   - `AppMethodCall` - parameters that define another (nested) ABI method call, which will in turn get resolved to one or more transactions
 
 ## Box references

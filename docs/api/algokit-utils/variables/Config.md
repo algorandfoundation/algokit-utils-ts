@@ -6,7 +6,7 @@
 
 # Variable: Config
 
-> `const` **Config**: `UpdatableConfig`
+> `const` **Config**: [`UpdatableConfig`](../classes/UpdatableConfig.md)
 
 Defined in: [src/config.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/config.ts#L4)
 

@@ -85,7 +85,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 ### transactionComposer?
 
-> `optional` **transactionComposer**: `TransactionComposer`
+> `optional` **transactionComposer**: [`TransactionComposer`](../classes/TransactionComposer.md)
 
 Defined in: [src/transaction/types.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L32)
 

@@ -14,7 +14,7 @@ First read the [>=7.0.0 migration guide](#700-migration-guide) below to familiar
 
 #### Step 2 - Migrate using the version 7 migration guide
 
-Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](./v7-migration.md#610-migration-guide).
+Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](./v7-migration.md#post-610-migration-guide).
 
 A simple example of the before and after follows:
 
@@ -56,7 +56,7 @@ First read the [>=7.0.0 migration guide](#700-migration-guide) below to familiar
 
 #### Step 2 - Migrate using the version 7 migration guide
 
-Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](./v7-migration.md#610-migration-guide-1).
+Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](./v7-migration.md#post-610-migration-guide).
 
 ## >=7.0.0 Migration Guide
 

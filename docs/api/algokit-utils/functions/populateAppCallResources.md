@@ -6,7 +6,7 @@
 
 # ~~Function: populateAppCallResources()~~
 
-> **populateAppCallResources**(`composer`): `Promise`\<`TransactionComposer`\>
+> **populateAppCallResources**(`composer`): `Promise`\<[`TransactionComposer`](../classes/TransactionComposer.md)\>
 
 Defined in: [src/transaction/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L69)
 
@@ -14,13 +14,13 @@ Defined in: [src/transaction/transaction.ts:69](https://github.com/algorandfound
 
 ### composer
 
-`TransactionComposer`
+[`TransactionComposer`](../classes/TransactionComposer.md)
 
 The composer containing the txn group
 
 ## Returns
 
-`Promise`\<`TransactionComposer`\>
+`Promise`\<[`TransactionComposer`](../classes/TransactionComposer.md)\>
 
 A new composer with the resources populated into the transactions
 

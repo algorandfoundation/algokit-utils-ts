@@ -28,7 +28,7 @@ The ID of the asset to look up holdings for
 
 ### options?
 
-`LookupAssetHoldingsOptions`
+[`LookupAssetHoldingsOptions`](../../../algokit-utils/interfaces/LookupAssetHoldingsOptions.md)
 
 Optional options to control the lookup
 

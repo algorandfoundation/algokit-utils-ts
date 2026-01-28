@@ -2,7 +2,7 @@
 
 The Algorand Standard Asset (asset) management functions include creating, opting in and transferring assets, which are fundamental to asset interaction in a blockchain environment.
 
-To see some usage examples check out the [automated tests](../../src/types/algorand-client.asset.spec.ts).
+To see some usage examples check out the `automated tests`.
 
 ## `AssetManager`
 

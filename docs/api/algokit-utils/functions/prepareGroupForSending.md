@@ -6,7 +6,7 @@
 
 # ~~Function: prepareGroupForSending()~~
 
-> **prepareGroupForSending**(`composer`, `sendParams`, `additionalContext?`): `Promise`\<`TransactionComposer`\>
+> **prepareGroupForSending**(`composer`, `sendParams`, `additionalContext?`): `Promise`\<[`TransactionComposer`](../classes/TransactionComposer.md)\>
 
 Defined in: [src/transaction/transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L90)
 
@@ -14,7 +14,7 @@ Defined in: [src/transaction/transaction.ts:90](https://github.com/algorandfound
 
 ### composer
 
-`TransactionComposer`
+[`TransactionComposer`](../classes/TransactionComposer.md)
 
 The Transaction Composer containing the txn group
 
@@ -32,7 +32,7 @@ Additional context used to determine how best to change the transactions in the 
 
 ## Returns
 
-`Promise`\<`TransactionComposer`\>
+`Promise`\<[`TransactionComposer`](../classes/TransactionComposer.md)\>
 
 A new Transaction Composer with the changes applied
 

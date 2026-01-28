@@ -2,7 +2,7 @@
 
 Indexer lookups / searching is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It provides type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control.
 
-To see some usage examples check out the [automated tests](../../src/indexer-lookup.spec.ts).
+To see some usage examples check out the `automated tests`.
 
 To import the indexer functions you can:
 

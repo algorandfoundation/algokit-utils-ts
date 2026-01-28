@@ -16,7 +16,7 @@ A client that brokers easy access to Algorand functionality.
 
 #### Get Signature
 
-> **get** **account**(): `AccountManager`
+> **get** **account**(): [`AccountManager`](AccountManager.md)
 
 Defined in: [src/algorand-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L181)
 
@@ -28,7 +28,7 @@ const accountManager = AlgorandClient.mainNet().account;
 
 ##### Returns
 
-`AccountManager`
+[`AccountManager`](AccountManager.md)
 
 The `AccountManager` instance.
 
@@ -38,7 +38,7 @@ The `AccountManager` instance.
 
 #### Get Signature
 
-> **get** **app**(): `AppManager`
+> **get** **app**(): [`AppManager`](AppManager.md)
 
 Defined in: [src/algorand-client.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L201)
 
@@ -50,7 +50,7 @@ const appManager = AlgorandClient.mainNet().app;
 
 ##### Returns
 
-`AppManager`
+[`AppManager`](AppManager.md)
 
 The `AppManager` instance.
 
@@ -60,7 +60,7 @@ The `AppManager` instance.
 
 #### Get Signature
 
-> **get** **appDeployer**(): `AppDeployer`
+> **get** **appDeployer**(): [`AppDeployer`](AppDeployer.md)
 
 Defined in: [src/algorand-client.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L211)
 
@@ -72,7 +72,7 @@ const deployer = AlgorandClient.mainNet().appDeployer;
 
 ##### Returns
 
-`AppDeployer`
+[`AppDeployer`](AppDeployer.md)
 
 The `AppDeployer` instance.
 
@@ -82,7 +82,7 @@ The `AppDeployer` instance.
 
 #### Get Signature
 
-> **get** **asset**(): `AssetManager`
+> **get** **asset**(): [`AssetManager`](AssetManager.md)
 
 Defined in: [src/algorand-client.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L191)
 
@@ -94,7 +94,7 @@ const assetManager = AlgorandClient.mainNet().asset;
 
 ##### Returns
 
-`AssetManager`
+[`AssetManager`](AssetManager.md)
 
 The `AssetManager` instance.
 
@@ -104,7 +104,7 @@ The `AssetManager` instance.
 
 #### Get Signature
 
-> **get** **client**(): `ClientManager`
+> **get** **client**(): [`ClientManager`](ClientManager.md)
 
 Defined in: [src/algorand-client.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L171)
 
@@ -116,7 +116,7 @@ const clientManager = AlgorandClient.mainNet().client;
 
 ##### Returns
 
-`ClientManager`
+[`ClientManager`](ClientManager.md)
 
 The `ClientManager` instance.
 
@@ -126,7 +126,7 @@ The `ClientManager` instance.
 
 #### Get Signature
 
-> **get** **createTransaction**(): `AlgorandClientTransactionCreator`
+> **get** **createTransaction**(): [`AlgorandClientTransactionCreator`](AlgorandClientTransactionCreator.md)
 
 Defined in: [src/algorand-client.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L269)
 
@@ -142,7 +142,7 @@ const payment = await AlgorandClient.mainNet().createTransaction.payment({
 
 ##### Returns
 
-`AlgorandClientTransactionCreator`
+[`AlgorandClientTransactionCreator`](AlgorandClientTransactionCreator.md)
 
 The `AlgorandClientTransactionCreator` instance.
 
@@ -152,7 +152,7 @@ The `AlgorandClientTransactionCreator` instance.
 
 #### Get Signature
 
-> **get** **send**(): `AlgorandClientTransactionSender`
+> **get** **send**(): [`AlgorandClientTransactionSender`](AlgorandClientTransactionSender.md)
 
 Defined in: [src/algorand-client.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L255)
 
@@ -168,7 +168,7 @@ const result = await AlgorandClient.mainNet().send.payment({
 
 ##### Returns
 
-`AlgorandClientTransactionSender`
+[`AlgorandClientTransactionSender`](AlgorandClientTransactionSender.md)
 
 The `AlgorandClientTransactionSender` instance.
 
@@ -196,7 +196,7 @@ const params = await AlgorandClient.mainNet().getSuggestedParams();
 
 ### newGroup()
 
-> **newGroup**(`composerConfig?`): `TransactionComposer`
+> **newGroup**(`composerConfig?`): [`TransactionComposer`](TransactionComposer.md)
 
 Defined in: [src/algorand-client.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.ts#L233)
 
@@ -206,11 +206,11 @@ Start a new `TransactionComposer` transaction group
 
 ##### composerConfig?
 
-`TransactionComposerConfig`
+[`TransactionComposerConfig`](../type-aliases/TransactionComposerConfig.md)
 
 #### Returns
 
-`TransactionComposer`
+[`TransactionComposer`](TransactionComposer.md)
 
 A new instance of `TransactionComposer`.
 
@@ -243,7 +243,7 @@ composed transaction groups made from `newGroup`
 
 ##### transformer
 
-`ErrorTransformer`
+[`ErrorTransformer`](../type-aliases/ErrorTransformer.md)
 
 #### Returns
 
@@ -506,7 +506,7 @@ Defined in: [src/algorand-client.ts:223](https://github.com/algorandfoundation/a
 
 ##### transformer
 
-`ErrorTransformer`
+[`ErrorTransformer`](../type-aliases/ErrorTransformer.md)
 
 #### Returns
 
@@ -552,7 +552,7 @@ Creates an `AlgorandClient` pointing to the given client(s).
 
 ##### clients
 
-`AlgoSdkClients`
+[`AlgoSdkClients`](../interfaces/AlgoSdkClients.md)
 
 The clients to use.
 
@@ -580,7 +580,7 @@ Creates  an `AlgorandClient` from the given config.
 
 ##### config
 
-`AlgoConfig`
+[`AlgoConfig`](../interfaces/AlgoConfig.md)
 
 The config to use.
 

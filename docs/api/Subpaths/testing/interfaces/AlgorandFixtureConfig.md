@@ -16,7 +16,7 @@ Configuration for creating an Algorand testing fixture.
 
 ### Extends
 
-- `Partial`\<`AlgoConfig`\>
+- `Partial`\<[`AlgoConfig`](../../../algokit-utils/interfaces/AlgoConfig.md)\>
 
 ## Properties
 
@@ -52,7 +52,7 @@ An optional algod client, if not specified then it will create one against `algo
 
 ### algodConfig?
 
-> `optional` **algodConfig**: `AlgoClientConfig`
+> `optional` **algodConfig**: [`AlgoClientConfig`](../../../algokit-utils/interfaces/AlgoClientConfig.md)
 
 Defined in: [src/network-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L14)
 
@@ -60,7 +60,7 @@ Algod client configuration
 
 #### Inherited from
 
-`Partial.algodConfig`
+[`AlgoConfig`](../../../algokit-utils/interfaces/AlgoConfig.md).[`algodConfig`](../../../algokit-utils/interfaces/AlgoConfig.md#algodconfig)
 
 ***
 
@@ -76,7 +76,7 @@ An optional indexer client, if not specified then it will create one against `in
 
 ### indexerConfig?
 
-> `optional` **indexerConfig**: `AlgoClientConfig`
+> `optional` **indexerConfig**: [`AlgoClientConfig`](../../../algokit-utils/interfaces/AlgoClientConfig.md)
 
 Defined in: [src/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L16)
 
@@ -84,7 +84,7 @@ Indexer client configuration
 
 #### Inherited from
 
-`Partial.indexerConfig`
+[`AlgoConfig`](../../../algokit-utils/interfaces/AlgoConfig.md).[`indexerConfig`](../../../algokit-utils/interfaces/AlgoConfig.md#indexerconfig)
 
 ***
 
@@ -100,7 +100,7 @@ An optional kmd client, if not specified then it will create one against `kmdCon
 
 ### kmdConfig?
 
-> `optional` **kmdConfig**: `AlgoClientConfig`
+> `optional` **kmdConfig**: [`AlgoClientConfig`](../../../algokit-utils/interfaces/AlgoClientConfig.md)
 
 Defined in: [src/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L18)
 
@@ -108,7 +108,7 @@ Kmd configuration
 
 #### Inherited from
 
-`Partial.kmdConfig`
+[`AlgoConfig`](../../../algokit-utils/interfaces/AlgoConfig.md).[`kmdConfig`](../../../algokit-utils/interfaces/AlgoConfig.md#kmdconfig)
 
 ***
 

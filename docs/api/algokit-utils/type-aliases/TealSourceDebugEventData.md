@@ -26,7 +26,7 @@ The name of the application
 
 ### compiledTeal
 
-> **compiledTeal**: `Expand`\<`Omit`\<`CompiledTeal`, `"sourceMap"`\> & `object`\>
+> **compiledTeal**: `Expand`\<`Omit`\<[`CompiledTeal`](../interfaces/CompiledTeal.md), `"sourceMap"`\> & `object`\>
 
 Defined in: [src/debugging.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L33)
 

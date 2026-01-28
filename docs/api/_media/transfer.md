@@ -2,9 +2,9 @@
 
 Algo transfers, or [payments](https://dev.algorand.co/concepts/transactions/types/#payment-transaction), is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [Algo amount handling](./amount.md) and [Transaction management](./transaction.md). It allows you to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding.
 
-To see some usage examples check out the [automated tests](../../src/types/algorand-client.transfer.spec.ts).
+To see some usage examples check out the `automated tests`.
 
-## `payment`
+## payment
 
 The key function to facilitate Algo transfers is `algorand.send.payment(params)` (immediately send a single payment transaction), `algorand.createTransaction.payment(params)` (construct a payment transaction), or `algorand.newGroup().addPayment(params)` (add payment to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
 
@@ -49,7 +49,7 @@ const result2 = await algorand.send.payment({
 })
 ```
 
-## `ensureFunded`
+## ensureFunded
 
 The `ensureFunded` function automatically funds an account to maintain a minimum amount of [disposable Algo](https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr). This is particularly useful for automation and deployment scripts that get run multiple times and consume Algo when run.
 

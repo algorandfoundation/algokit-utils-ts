@@ -14,13 +14,13 @@ Defined in: [src/transaction/perform-transaction-composer-simulate.ts:14](https:
 
 ### composer
 
-`TransactionComposer`
+[`TransactionComposer`](../classes/TransactionComposer.md)
 
 The TransactionComposer with transaction(s) loaded.
 
 ### options?
 
-`RawSimulateOptions`
+[`RawSimulateOptions`](../type-aliases/RawSimulateOptions.md)
 
 ## Returns
 

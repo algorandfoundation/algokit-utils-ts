@@ -9,7 +9,7 @@ App client and App factory are higher-order use case capabilities provided by Al
 >
 > If you are confused about when to use the factory vs client the mental model is: use the client if you know the app ID, use the factory if you don't know the app ID (deferred knowledge or the instance doesn't exist yet on the blockchain) or you have multiple app IDs
 
-## `AppFactory`
+## AppFactory
 
 The `AppFactory` is a class that, for a given app spec, allows you to create and deploy one or more app instances and to create one or more app clients to interact with those (or other) app instances.
 
@@ -32,7 +32,7 @@ const factory = algorand.client.getAppFactory({
 })
 ```
 
-## `AppClient`
+## AppClient
 
 The `AppClient` is a class that, for a given app spec, allows you to manage calls and state for a specific deployed instance of an app (with a known app ID).
 

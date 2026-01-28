@@ -2,7 +2,7 @@
 
 Transaction management is one of the core capabilities provided by AlgoKit Utils. It allows you to construct, simulate and send single, or grouped transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, multiple sender account types, and sending behaviour.
 
-## `ConfirmedTransactionResult`
+## ConfirmedTransactionResult
 
 All AlgoKit Utils functions that send a transaction will generally return a variant of the ``ConfirmedTransactionResult` interface` or some superset of that. This provides a consistent mechanism to interpret the results of a transaction send.
 

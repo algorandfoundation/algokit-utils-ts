@@ -43,6 +43,13 @@
 
 ***
 
+### AppDeployMetadata
+
+- [AppDeployMetadata](algokit-utils/interfaces/AppDeployMetadata.md)
+  - [AppMetadata](algokit-utils/interfaces/AppMetadata.md)
+
+***
+
 ### BaseHttpRequest
 
 - [BaseHttpRequest](Subpaths/algod-client/classes/BaseHttpRequest.md)

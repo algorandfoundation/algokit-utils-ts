@@ -87,7 +87,7 @@ The fixture configuration
 
 #### config
 
-`AlgoConfig`
+[`AlgoConfig`](../../../algokit-utils/interfaces/AlgoConfig.md)
 
 The fixture configuration
 
