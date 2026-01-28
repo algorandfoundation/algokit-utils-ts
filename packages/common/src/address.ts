@@ -1,5 +1,5 @@
 import base32 from 'hi-base32'
-import sha512 from 'js-sha512'
+import { sha512_256 } from '@noble/hashes/sha2.js'
 import { arrayEqual, concatArrays } from './array'
 import { CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH } from './constants'
 
@@ -12,11 +12,7 @@ export const MALFORMED_ADDRESS_ERROR_MSG = 'address seems to be malformed'
 export const CHECKSUM_ADDRESS_ERROR_MSG = 'wrong checksum for address'
 
 export function checksumFromPublicKey(publicKey: Uint8Array): Uint8Array {
-  return Uint8Array.from(sha512.sha512_256.array(publicKey).slice(HASH_BYTES_LENGTH - CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH))
-}
-
-function genericHash(arr: sha512.Message) {
-  return sha512.sha512_256.array(arr)
+  return Uint8Array.from(sha512_256(publicKey).slice(HASH_BYTES_LENGTH - CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH))
 }
 
 function bytesToHex(bytes: Uint8Array): string {
@@ -181,8 +177,8 @@ const APP_ID_PREFIX = new TextEncoder().encode('appID')
  */
 export function getApplicationAddress(appID: number | bigint): Address {
   const toBeSigned = concatArrays(APP_ID_PREFIX, encodeUint64(appID))
-  const hash = genericHash(toBeSigned)
-  return new Address(Uint8Array.from(hash))
+  const hash = sha512_256(toBeSigned)
+  return new Address(hash)
 }
 
 /**

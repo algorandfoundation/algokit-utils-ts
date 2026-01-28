@@ -20,6 +20,7 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction/types'
 import { calculateFundAmount, memoize } from './util'
+import { Ed25519Generator } from '@algorandfoundation/algokit-crypto'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -29,21 +30,15 @@ export interface EnsureFundedResult {
   amountFunded: AlgoAmount
 }
 
-/**
- * Returns a `TransactionSigner` for the given account that can sign a transaction.
- * This function has memoization, so will return the same transaction signer for a given account.
- * @param account An account that can sign a transaction
- * @returns A transaction signer
- * @example
- * ```typescript
- * const signer = getAccountTransactionSigner(account)
- * ```
- */
 export const getAccountTransactionSigner = memoize(function (
   account: AddressWithTransactionSigner | LogicSigAccount | MultisigAccount,
 ): TransactionSigner {
   return account.signer
 })
+
+export interface AccountManagerConfig {
+  ed25519Generator: Ed25519Generator
+}
 
 /** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
 export class AccountManager {
@@ -51,6 +46,7 @@ export class AccountManager {
   private _kmdAccountManager: KmdAccountManager
   private _accounts: { [address: string]: AddressWithTransactionSigner } = {}
   private _defaultSigner?: TransactionSigner
+  private _ed25519Generator: Ed25519Generator
 
   /**
    * Create a new account manager.
@@ -60,9 +56,10 @@ export class AccountManager {
    * const accountManager = new AccountManager(clientManager)
    * ```
    */
-  constructor(clientManager: ClientManager) {
+  constructor(clientManager: ClientManager, config: AccountManagerConfig) {
     this._clientManager = clientManager
     this._kmdAccountManager = new KmdAccountManager(clientManager)
+    this._ed25519Generator = config.ed25519Generator
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<SuggestedParams>) {
@@ -289,14 +286,12 @@ export class AccountManager {
   public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
     const seed = seedFromMnemonic(mnemonicSecret)
 
-    const keypair = nacl.sign.keyPair.fromSeed(seed)
+    const generated = this._ed25519Generator(seed)
 
     const addrWithSigners = generateAddressWithSigners({
-      ed25519Pubkey: keypair.publicKey,
+      ed25519Pubkey: generated.ed25519Pubkey,
+      rawEd25519Signer: generated.rawEd25519Signer,
       sendingAddress: getOptionalAddress(sender),
-      rawEd25519Signer: async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
-        return nacl.sign.detached(bytesToSign, keypair.secretKey)
-      },
     })
 
     return this.signerAccount(addrWithSigners)

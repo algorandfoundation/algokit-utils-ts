@@ -13,10 +13,6 @@
 
 - [AccountManager](types_account_manager.md#accountmanager-1)
 
-### Functions
-
-- [getAccountTransactionSigner](types_account_manager.md#getaccounttransactionsigner)
-
 ## Type Aliases
 
 ### AccountManager
@@ -29,9 +25,9 @@ Import from `@algorandfoundation/algokit-utils/account-manager` instead
 
 #### Defined in
 
-[src/types/account-manager.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L11)
+[src/types/account-manager.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L10)
 
-[src/types/account-manager.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L13)
+[src/types/account-manager.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L12)
 
 ___
 
@@ -45,7 +41,7 @@ Import from `@algorandfoundation/algokit-utils/account-manager` instead
 
 #### Defined in
 
-[src/types/account-manager.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L16)
+[src/types/account-manager.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L15)
 
 ## Variables
 
@@ -59,30 +55,6 @@ Import from `@algorandfoundation/algokit-utils/account-manager` instead
 
 #### Defined in
 
-[src/types/account-manager.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L11)
+[src/types/account-manager.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L10)
 
-[src/types/account-manager.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L13)
-
-## Functions
-
-### getAccountTransactionSigner
-
-▸ **getAccountTransactionSigner**(`val`): `TransactionSigner`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `val` | `MultisigAccount` \| `AddressWithTransactionSigner` \| `LogicSigAccount` |
-
-#### Returns
-
-`TransactionSigner`
-
-**`Deprecated`**
-
-Import from `@algorandfoundation/algokit-utils/account-manager` instead
-
-#### Defined in
-
-[src/types/account-manager.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L19)
+[src/types/account-manager.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L12)

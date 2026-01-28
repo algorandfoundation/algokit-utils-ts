@@ -45,7 +45,7 @@ Create a new Address object from its binary form.
 
 #### Defined in
 
-[packages/common/src/address.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L59)
+[packages/common/src/address.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L55)
 
 ## Properties
 
@@ -55,7 +55,7 @@ Create a new Address object from its binary form.
 
 #### Defined in
 
-[packages/common/src/address.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L53)
+[packages/common/src/address.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L49)
 
 ___
 
@@ -67,7 +67,7 @@ The binary form of the address. For standard accounts, this is the public key.
 
 #### Defined in
 
-[packages/common/src/address.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L50)
+[packages/common/src/address.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L46)
 
 ## Methods
 
@@ -83,7 +83,7 @@ Compute the 4 byte checksum of the address.
 
 #### Defined in
 
-[packages/common/src/address.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L76)
+[packages/common/src/address.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L72)
 
 ___
 
@@ -105,7 +105,7 @@ Check if the address is equal to another address.
 
 #### Defined in
 
-[packages/common/src/address.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L69)
+[packages/common/src/address.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L65)
 
 ___
 
@@ -121,7 +121,7 @@ Encode the address into a string form.
 
 #### Defined in
 
-[packages/common/src/address.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L83)
+[packages/common/src/address.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L79)
 
 ___
 
@@ -145,7 +145,7 @@ An Address object corresponding to the input string.
 
 #### Defined in
 
-[packages/common/src/address.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L93)
+[packages/common/src/address.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L89)
 
 ___
 
@@ -161,4 +161,4 @@ Get the zero address.
 
 #### Defined in
 
-[packages/common/src/address.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L117)
+[packages/common/src/address.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L113)
