@@ -227,4 +227,16 @@ We maintain [runnable examples](https://github.com/algorandfoundation/algokit-ut
 
 # Reference documentation
 
-We have [auto-generated reference documentation](../api/README.md) for the code.
+We have [auto-generated reference documentation](../api/README.md) including:
+
+**Key Classes:**
+- [`AlgorandClient`](../api/algokit-utils/classes/AlgorandClient.md) - Main entry point
+- [`TransactionComposer`](../api/algokit-utils/classes/TransactionComposer.md) - Transaction composition
+- [`AppClient`](../api/algokit-utils/classes/AppClient.md) - Smart contract interaction
+- [`AppFactory`](../api/algokit-utils/classes/AppFactory.md) - Contract deployment
+- [`AccountManager`](../api/algokit-utils/classes/AccountManager.md) - Account management
+- [`AssetManager`](../api/algokit-utils/classes/AssetManager.md) - Asset operations
+
+**Migration Guides:**
+- [v7 Migration](../migration/v7-migration.md) - Function-based to class-based API
+- [v8 Migration](../migration/v8-migration.md) - Upgrading to algosdk v3
