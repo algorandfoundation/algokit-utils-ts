@@ -6,7 +6,7 @@
 
 # Class: TestNetDispenserApiClient
 
-Defined in: [src/dispenser-client.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L72)
+Defined in: [src/dispenser-client.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L72)
 
 `TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
 It allows you to fund an address with Algo, refund a transaction, and get the funding limit for the Algo asset.
@@ -47,7 +47,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 > **new TestNetDispenserApiClient**(`params?`): `TestNetDispenserApiClient`
 
-Defined in: [src/dispenser-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L76)
+Defined in: [src/dispenser-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L76)
 
 #### Parameters
 
@@ -67,7 +67,7 @@ Defined in: [src/dispenser-client.ts:76](https://github.com/algorandfoundation/a
 
 > **get** **authToken**(): `string`
 
-Defined in: [src/dispenser-client.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L92)
+Defined in: [src/dispenser-client.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L92)
 
 ##### Returns
 
@@ -83,7 +83,7 @@ The authentication token used for API requests.
 
 > **get** **requestTimeout**(): `number`
 
-Defined in: [src/dispenser-client.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L96)
+Defined in: [src/dispenser-client.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L96)
 
 ##### Returns
 
@@ -97,7 +97,7 @@ The timeout for API requests, in seconds.
 
 > **fund**(`address`, `amount`): `Promise`\<`DispenserFundResponse`\>
 
-Defined in: [src/dispenser-client.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L158)
+Defined in: [src/dispenser-client.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L158)
 
 Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
 
@@ -127,7 +127,7 @@ DispenserFundResponse: An object containing the transaction ID and funded amount
 
 > **getLimit**(): `Promise`\<`DispenserLimitResponse`\>
 
-Defined in: [src/dispenser-client.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L188)
+Defined in: [src/dispenser-client.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L188)
 
 Sends a request to the dispenser API to get the funding limit for the Algo asset.
 
@@ -143,7 +143,7 @@ DispenserLimitResponse: An object containing the funding limit amount.
 
 > **refund**(`refundTxnId`): `Promise`\<`void`\>
 
-Defined in: [src/dispenser-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L179)
+Defined in: [src/dispenser-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/dispenser-client.ts#L179)
 
 Sends a refund request to the dispenser API for the specified refundTxnId.
 

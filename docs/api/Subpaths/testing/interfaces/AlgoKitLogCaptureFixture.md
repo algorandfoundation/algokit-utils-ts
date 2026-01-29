@@ -6,7 +6,7 @@
 
 # Interface: AlgoKitLogCaptureFixture
 
-Defined in: [src/testing/types.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L151)
+Defined in: [src/testing/types.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L151)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/testing/types.ts:151](https://github.com/algorandfoundation/alg
 
 > **afterEach**: () => `void`
 
-Defined in: [src/testing/types.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L161)
+Defined in: [src/testing/types.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L161)
 
 Testing framework agnostic handler method to run after each test to reset the logger.
 
@@ -28,7 +28,7 @@ Testing framework agnostic handler method to run after each test to reset the lo
 
 > **beforeEach**: () => `void`
 
-Defined in: [src/testing/types.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L157)
+Defined in: [src/testing/types.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L157)
 
 Testing framework agnostic handler method to run before each test to prepare the `testLogger` for that test.
 
@@ -44,7 +44,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 > **get** **testLogger**(): [`TestLogger`](../classes/TestLogger.md)
 
-Defined in: [src/testing/types.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L153)
+Defined in: [src/testing/types.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L153)
 
 The test logger instance for the current test
 

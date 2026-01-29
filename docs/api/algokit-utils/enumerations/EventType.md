@@ -6,7 +6,7 @@
 
 # Enumeration: EventType
 
-Defined in: [src/lifecycle-events.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L3)
+Defined in: [src/lifecycle-events.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/lifecycle-events.ts#L3)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [src/lifecycle-events.ts:3](https://github.com/algorandfoundation/al
 
 > **AppCompiled**: `"AppCompiled"`
 
-Defined in: [src/lifecycle-events.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L5)
+Defined in: [src/lifecycle-events.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/lifecycle-events.ts#L5)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/lifecycle-events.ts:5](https://github.com/algorandfoundation/al
 
 > **TxnGroupSimulated**: `"TxnGroupSimulated"`
 
-Defined in: [src/lifecycle-events.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L4)
+Defined in: [src/lifecycle-events.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/lifecycle-events.ts#L4)

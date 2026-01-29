@@ -8,7 +8,7 @@
 
 > **TransactionComposerParams** = `object`
 
-Defined in: [src/composer.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L189)
+Defined in: [src/composer.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L189)
 
 Parameters to create an `TransactionComposer`.
 
@@ -18,7 +18,7 @@ Parameters to create an `TransactionComposer`.
 
 > **algod**: [`AlgodClient`](../../Subpaths/algod-client/classes/AlgodClient.md)
 
-Defined in: [src/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L191)
+Defined in: [src/composer.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L191)
 
 The algod client to use to get suggestedParams and send the transaction group
 
@@ -28,7 +28,7 @@ The algod client to use to get suggestedParams and send the transaction group
 
 > `optional` **appManager**: [`AppManager`](../classes/AppManager.md)
 
-Defined in: [src/composer.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L204)
+Defined in: [src/composer.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L204)
 
 An existing `AppManager` to use to manage app compilation and cache compilation results.
 
@@ -40,7 +40,7 @@ If not specified then an ephemeral one will be created.
 
 > `optional` **composerConfig**: [`TransactionComposerConfig`](TransactionComposerConfig.md)
 
-Defined in: [src/composer.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L210)
+Defined in: [src/composer.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L210)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/composer.ts:210](https://github.com/algorandfoundation/algokit-
 
 > `optional` **defaultValidityWindow**: `bigint`
 
-Defined in: [src/composer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L199)
+Defined in: [src/composer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L199)
 
 How many rounds a transaction should be valid for by default; if not specified
 then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
@@ -59,7 +59,7 @@ then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
 
 > `optional` **errorTransformers**: [`ErrorTransformer`](ErrorTransformer.md)[]
 
-Defined in: [src/composer.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L209)
+Defined in: [src/composer.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L209)
 
 An array of error transformers to use when an error is caught in simulate or execute
 callbacks can later be registered with `registerErrorTransformer`
@@ -70,7 +70,7 @@ callbacks can later be registered with `registerErrorTransformer`
 
 > **getSigner**: (`address`) => [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
-Defined in: [src/composer.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L193)
+Defined in: [src/composer.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L193)
 
 The function used to get the TransactionSigner for a given address
 
@@ -90,7 +90,7 @@ The function used to get the TransactionSigner for a given address
 
 > `optional` **getSuggestedParams**: () => `Promise`\<[`SuggestedParams`](../../Subpaths/algod-client/type-aliases/SuggestedParams.md)\>
 
-Defined in: [src/composer.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L195)
+Defined in: [src/composer.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/composer.ts#L195)
 
 The method used to get SuggestedParams for transactions in the group
 

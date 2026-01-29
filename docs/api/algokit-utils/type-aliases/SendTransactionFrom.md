@@ -8,7 +8,7 @@
 
 > **SendTransactionFrom** = [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)
 
-Defined in: [src/transaction/types.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L98)
+Defined in: [src/transaction/types.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/types.ts#L98)
 
 ## Deprecated
 

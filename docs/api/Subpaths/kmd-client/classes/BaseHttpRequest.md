@@ -6,7 +6,7 @@
 
 # Abstract Class: BaseHttpRequest
 
-Defined in: [packages/kmd\_client/src/core/base-http-request.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/core/base-http-request.ts#L19)
+Defined in: [packages/kmd\_client/src/core/base-http-request.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/core/base-http-request.ts#L19)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [packages/kmd\_client/src/core/base-http-request.ts:19](https://gith
 
 > **new BaseHttpRequest**(`config`): `BaseHttpRequest`
 
-Defined in: [packages/kmd\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/core/base-http-request.ts#L20)
+Defined in: [packages/kmd\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/core/base-http-request.ts#L20)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [packages/kmd\_client/src/core/base-http-request.ts:20](https://gith
 
 > `readonly` **config**: [`ClientConfig`](../interfaces/ClientConfig.md)
 
-Defined in: [packages/kmd\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/core/base-http-request.ts#L20)
+Defined in: [packages/kmd\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/core/base-http-request.ts#L20)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Defined in: [packages/kmd\_client/src/core/base-http-request.ts:20](https://gith
 
 > `abstract` **request**\<`T`\>(`options`): `Promise`\<`T`\>
 
-Defined in: [packages/kmd\_client/src/core/base-http-request.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/core/base-http-request.ts#L21)
+Defined in: [packages/kmd\_client/src/core/base-http-request.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/core/base-http-request.ts#L21)
 
 #### Type Parameters
 

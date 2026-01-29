@@ -8,7 +8,7 @@
 
 > **getApplicationAddress**(`appID`): [`Address`](../classes/Address.md)
 
-Defined in: [packages/common/src/address.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L182)
+Defined in: [packages/common/src/address.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/common/src/address.ts#L182)
 
 Get the escrow address of an application.
 

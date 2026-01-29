@@ -6,7 +6,7 @@
 
 # Abstract Class: BaseHttpRequest
 
-Defined in: [packages/algod\_client/src/core/base-http-request.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/core/base-http-request.ts#L19)
+Defined in: [packages/algod\_client/src/core/base-http-request.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/core/base-http-request.ts#L19)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [packages/algod\_client/src/core/base-http-request.ts:19](https://gi
 
 > **new BaseHttpRequest**(`config`): `BaseHttpRequest`
 
-Defined in: [packages/algod\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/core/base-http-request.ts#L20)
+Defined in: [packages/algod\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/core/base-http-request.ts#L20)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [packages/algod\_client/src/core/base-http-request.ts:20](https://gi
 
 > `readonly` **config**: [`ClientConfig`](../interfaces/ClientConfig.md)
 
-Defined in: [packages/algod\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/core/base-http-request.ts#L20)
+Defined in: [packages/algod\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/core/base-http-request.ts#L20)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Defined in: [packages/algod\_client/src/core/base-http-request.ts:20](https://gi
 
 > `abstract` **request**\<`T`\>(`options`): `Promise`\<`T`\>
 
-Defined in: [packages/algod\_client/src/core/base-http-request.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/core/base-http-request.ts#L21)
+Defined in: [packages/algod\_client/src/core/base-http-request.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/core/base-http-request.ts#L21)
 
 #### Type Parameters
 

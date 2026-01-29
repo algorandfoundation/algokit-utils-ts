@@ -8,7 +8,7 @@
 
 > **DelegatedLsigSigner** = (`lsig`, `msig?`) => `Promise`\<`object` & \{ `sig?`: `Uint8Array`; \} \| \{ `lmsig?`: [`MultisigSignature`](MultisigSignature.md); \}\>
 
-Defined in: [packages/transact/src/logicsig.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L23)
+Defined in: [packages/transact/src/logicsig.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L23)
 
 Function for signing logic signatures for delegation
 

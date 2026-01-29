@@ -8,7 +8,7 @@
 
 > **ProgramDataSigner** = (`data`, `lsig`) => `Promise`\<`Uint8Array`\>
 
-Defined in: [packages/transact/src/logicsig.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L29)
+Defined in: [packages/transact/src/logicsig.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L29)
 
 Function for signing program data for a logic signature
 

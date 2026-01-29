@@ -8,7 +8,7 @@
 
 > **validateTransaction**(`transaction`): `void`
 
-Defined in: [packages/transact/src/transactions/transaction.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/transaction.ts#L412)
+Defined in: [packages/transact/src/transactions/transaction.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/transaction.ts#L412)
 
 Validate a transaction
 

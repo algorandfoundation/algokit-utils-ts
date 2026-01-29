@@ -8,7 +8,7 @@
 
 > **ResourceReference** = `object`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L202)
+Defined in: [packages/transact/src/transactions/app-call.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L202)
 
 Names a single resource reference. Only one of the fields should be set.
 
@@ -18,7 +18,7 @@ Names a single resource reference. Only one of the fields should be set.
 
 > `optional` **address**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L204)
+Defined in: [packages/transact/src/transactions/app-call.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L204)
 
 Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram.
 
@@ -28,7 +28,7 @@ Any account addresses whose balance record is accessible by the executing Approv
 
 > `optional` **appId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L206)
+Defined in: [packages/transact/src/transactions/app-call.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L206)
 
 Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram.
 
@@ -38,7 +38,7 @@ Application ID whose GlobalState may be read by the executing ApprovalProgram or
 
 > `optional` **assetId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L208)
+Defined in: [packages/transact/src/transactions/app-call.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L208)
 
 Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram.
 
@@ -48,7 +48,7 @@ Asset ID whose AssetParams may be read by the executing ApprovalProgram or Clear
 
 > `optional` **box**: [`BoxReference`](BoxReference.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L214)
+Defined in: [packages/transact/src/transactions/app-call.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L214)
 
 Defines a box by its name and the application ID it belongs to.
 
@@ -58,7 +58,7 @@ Defines a box by its name and the application ID it belongs to.
 
 > `optional` **holding**: [`HoldingReference`](HoldingReference.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L210)
+Defined in: [packages/transact/src/transactions/app-call.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L210)
 
 Defines a holding by referring to an Address and Asset it belongs to.
 
@@ -68,6 +68,6 @@ Defines a holding by referring to an Address and Asset it belongs to.
 
 > `optional` **locals**: [`LocalsReference`](LocalsReference.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L212)
+Defined in: [packages/transact/src/transactions/app-call.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L212)
 
 Defines a local state by referring to an Address and App it belongs to.

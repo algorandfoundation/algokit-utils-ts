@@ -8,7 +8,7 @@
 
 > **decodeSignedTransaction**(`encodedSignedTransaction`): [`SignedTransaction`](../type-aliases/SignedTransaction.md)
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L138)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/signed-transaction.ts#L138)
 
 Decodes MsgPack bytes into a signed transaction.
 

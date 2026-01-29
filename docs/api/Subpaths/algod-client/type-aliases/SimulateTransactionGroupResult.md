@@ -8,7 +8,7 @@
 
 > **SimulateTransactionGroupResult** = `object`
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L11)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L11)
 
 Simulation result for an atomic transaction group
 
@@ -18,7 +18,7 @@ Simulation result for an atomic transaction group
 
 > `optional` **appBudgetAdded**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L30)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L30)
 
 Total budget added during execution of app calls in the transaction group.
 
@@ -28,7 +28,7 @@ Total budget added during execution of app calls in the transaction group.
 
 > `optional` **appBudgetConsumed**: `number`
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L35)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L35)
 
 Total budget consumed during execution of app calls in the transaction group.
 
@@ -38,7 +38,7 @@ Total budget consumed during execution of app calls in the transaction group.
 
 > `optional` **failedAt**: `number`[]
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L25)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L25)
 
 If present, indicates which transaction in this group caused the failure. This array represents the path to the failing transaction. Indexes are zero based, the first element indicates the top-level transaction, and successive elements indicate deeper inner transactions.
 
@@ -48,7 +48,7 @@ If present, indicates which transaction in this group caused the failure. This a
 
 > `optional` **failureMessage**: `string`
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L20)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L20)
 
 If present, indicates that the transaction group failed and specifies why that happened
 
@@ -58,7 +58,7 @@ If present, indicates that the transaction group failed and specifies why that h
 
 > **txnResults**: [`SimulateTransactionResult`](SimulateTransactionResult.md)[]
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L15)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L15)
 
 Simulation result for individual transactions
 
@@ -68,4 +68,4 @@ Simulation result for individual transactions
 
 > `optional` **unnamedResourcesAccessed**: [`SimulateUnnamedResourcesAccessed`](SimulateUnnamedResourcesAccessed.md)
 
-Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-transaction-group-result.ts#L36)
+Defined in: [packages/algod\_client/src/models/simulate-transaction-group-result.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-transaction-group-result.ts#L36)

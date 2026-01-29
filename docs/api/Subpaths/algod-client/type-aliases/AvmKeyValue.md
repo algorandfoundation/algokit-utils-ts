@@ -8,7 +8,7 @@
 
 > **AvmKeyValue** = `object`
 
-Defined in: [packages/algod\_client/src/models/avm-key-value.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/avm-key-value.ts#L9)
+Defined in: [packages/algod\_client/src/models/avm-key-value.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/avm-key-value.ts#L9)
 
 Represents an AVM key-value pair in an application store.
 
@@ -18,7 +18,7 @@ Represents an AVM key-value pair in an application store.
 
 > **key**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/avm-key-value.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/avm-key-value.ts#L10)
+Defined in: [packages/algod\_client/src/models/avm-key-value.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/avm-key-value.ts#L10)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/algod\_client/src/models/avm-key-value.ts:10](https://gith
 
 > **value**: [`AvmValue`](AvmValue.md)
 
-Defined in: [packages/algod\_client/src/models/avm-key-value.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/avm-key-value.ts#L11)
+Defined in: [packages/algod\_client/src/models/avm-key-value.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/avm-key-value.ts#L11)

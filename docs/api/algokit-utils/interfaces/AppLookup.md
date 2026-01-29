@@ -6,7 +6,7 @@
 
 # Interface: AppLookup
 
-Defined in: [src/app-deployer.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L91)
+Defined in: [src/app-deployer.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L91)
 
 A lookup of name -> Algorand app for a creator
 
@@ -16,7 +16,7 @@ A lookup of name -> Algorand app for a creator
 
 > **apps**: `object`
 
-Defined in: [src/app-deployer.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L95)
+Defined in: [src/app-deployer.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L95)
 
 A hash map of app name to app metadata
 
@@ -30,6 +30,6 @@ A hash map of app name to app metadata
 
 > **creator**: `Readonly`\<[`Address`](../classes/Address.md)\>
 
-Defined in: [src/app-deployer.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L93)
+Defined in: [src/app-deployer.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L93)
 
 The address of the creator associated with this lookup

@@ -8,7 +8,7 @@
 
 > **BlockHeader** = `object`
 
-Defined in: [packages/algod\_client/src/models/block.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L310)
+Defined in: [packages/algod\_client/src/models/block.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L310)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:310](https://github.com/
 
 > `optional` **bonus**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L332)
+Defined in: [packages/algod\_client/src/models/block.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L332)
 
 [bi] Bonus incentive for block proposal.
 
@@ -26,7 +26,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:332](https://github.com/
 
 > `optional` **feesCollected**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L330)
+Defined in: [packages/algod\_client/src/models/block.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L330)
 
 [fc] Fees collected in this block.
 
@@ -36,7 +36,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:330](https://github.com/
 
 > **genesisHash**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L326)
+Defined in: [packages/algod\_client/src/models/block.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L326)
 
 [gh] Genesis hash.
 
@@ -46,7 +46,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:326](https://github.com/
 
 > **genesisId**: `string`
 
-Defined in: [packages/algod\_client/src/models/block.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L324)
+Defined in: [packages/algod\_client/src/models/block.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L324)
 
 [gen] Genesis ID.
 
@@ -56,7 +56,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:324](https://github.com/
 
 > **participationUpdates**: [`ParticipationUpdates`](ParticipationUpdates.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L346)
+Defined in: [packages/algod\_client/src/models/block.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L346)
 
 Represents participation account data that needs to be checked/acted on by the network
 
@@ -66,7 +66,7 @@ Represents participation account data that needs to be checked/acted on by the n
 
 > **previousBlockHash**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L314)
+Defined in: [packages/algod\_client/src/models/block.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L314)
 
 [prev] Previous block hash.
 
@@ -76,7 +76,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:314](https://github.com/
 
 > `optional` **previousBlockHash512**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L316)
+Defined in: [packages/algod\_client/src/models/block.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L316)
 
 [prev512] Previous block hash using SHA-512.
 
@@ -86,7 +86,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:316](https://github.com/
 
 > `optional` **proposer**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L328)
+Defined in: [packages/algod\_client/src/models/block.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L328)
 
 [prp] Proposer address.
 
@@ -96,7 +96,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:328](https://github.com/
 
 > `optional` **proposerPayout**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L334)
+Defined in: [packages/algod\_client/src/models/block.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L334)
 
 [pp] Proposer payout.
 
@@ -106,7 +106,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:334](https://github.com/
 
 > **rewardState**: [`RewardState`](RewardState.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L336)
+Defined in: [packages/algod\_client/src/models/block.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L336)
 
 Reward distribution state.
 
@@ -116,7 +116,7 @@ Reward distribution state.
 
 > **round**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L312)
+Defined in: [packages/algod\_client/src/models/block.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L312)
 
 [rnd] Round number.
 
@@ -126,7 +126,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:312](https://github.com/
 
 > **seed**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L318)
+Defined in: [packages/algod\_client/src/models/block.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L318)
 
 [seed] Sortition seed.
 
@@ -136,7 +136,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:318](https://github.com/
 
 > `optional` **stateProofTracking**: `Map`\<`number`, [`BlockStateProofTrackingData`](BlockStateProofTrackingData.md)\>
 
-Defined in: [packages/algod\_client/src/models/block.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L344)
+Defined in: [packages/algod\_client/src/models/block.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L344)
 
 [spt] State proof tracking data keyed by state proof type.
 
@@ -146,7 +146,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:344](https://github.com/
 
 > **timestamp**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L322)
+Defined in: [packages/algod\_client/src/models/block.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L322)
 
 [ts] Block timestamp in seconds since epoch.
 
@@ -156,7 +156,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:322](https://github.com/
 
 > **txnCommitments**: [`TxnCommitments`](TxnCommitments.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L320)
+Defined in: [packages/algod\_client/src/models/block.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L320)
 
 Authenticates the set of transactions appearing in the block.
 
@@ -166,7 +166,7 @@ Authenticates the set of transactions appearing in the block.
 
 > `optional` **txnCounter**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/block.ts:342](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L342)
+Defined in: [packages/algod\_client/src/models/block.ts:342](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L342)
 
 [tc] Transaction counter.
 
@@ -176,7 +176,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:342](https://github.com/
 
 > **upgradeState**: [`UpgradeState`](UpgradeState.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L338)
+Defined in: [packages/algod\_client/src/models/block.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L338)
 
 Protocol upgrade state.
 
@@ -186,6 +186,6 @@ Protocol upgrade state.
 
 > `optional` **upgradeVote**: [`UpgradeVote`](UpgradeVote.md)
 
-Defined in: [packages/algod\_client/src/models/block.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L340)
+Defined in: [packages/algod\_client/src/models/block.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L340)
 
 Protocol upgrade vote parameters.

@@ -8,7 +8,7 @@
 
 > **SignProgramMultisigRequest** = `object`
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L9)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L9)
 
 The request for `POST /v1/multisig/signprogram`
 
@@ -18,7 +18,7 @@ The request for `POST /v1/multisig/signprogram`
 
 > **address**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L10)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L10)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:10
 
 > `optional` **partialMultisig**: [`MultisigSig`](MultisigSig.md)
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L12)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L12)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:12
 
 > **program**: `Uint8Array`
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L11)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L11)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:11
 
 > **publicKey**: `Uint8Array`
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L13)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L13)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:13
 
 > `optional` **useLegacyMsig**: `boolean`
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L14)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L14)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:14
 
 > **walletHandleToken**: `string`
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L15)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L15)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:15
 
 > `optional` **walletPassword**: `string`
 
-Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/sign-program-multisig-request.ts#L16)
+Defined in: [packages/kmd\_client/src/models/sign-program-multisig-request.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/sign-program-multisig-request.ts#L16)

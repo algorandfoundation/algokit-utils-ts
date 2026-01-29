@@ -8,7 +8,7 @@
 
 > **MerkleArrayProof** = `object`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L25)
+Defined in: [packages/transact/src/transactions/state-proof.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L25)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:25](https://githu
 
 > **hashFactory**: [`HashFactory`](HashFactory.md)
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L27)
+Defined in: [packages/transact/src/transactions/state-proof.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L27)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:27](https://githu
 
 > **path**: `Uint8Array`[]
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L26)
+Defined in: [packages/transact/src/transactions/state-proof.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L26)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:26](https://githu
 
 > **treeDepth**: `number`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L28)
+Defined in: [packages/transact/src/transactions/state-proof.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L28)

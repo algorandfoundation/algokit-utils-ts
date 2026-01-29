@@ -8,7 +8,7 @@
 
 > **GenesisAllocation** = `object`
 
-Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis-allocation.ts#L59)
+Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis-allocation.ts#L59)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:59](https:/
 
 > **addr**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis-allocation.ts#L60)
+Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis-allocation.ts#L60)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:60](https:/
 
 > **comment**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis-allocation.ts#L61)
+Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis-allocation.ts#L61)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:61](https:/
 
 > **state**: `object`
 
-Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis-allocation.ts#L62)
+Defined in: [packages/algod\_client/src/models/genesis-allocation.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis-allocation.ts#L62)
 
 #### algo
 

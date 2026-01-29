@@ -8,7 +8,7 @@
 
 > **Reveal** = `object`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L61)
+Defined in: [packages/transact/src/transactions/state-proof.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L61)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:61](https://githu
 
 > **participant**: [`Participant`](Participant.md)
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L63)
+Defined in: [packages/transact/src/transactions/state-proof.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L63)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:63](https://githu
 
 > **sigslot**: [`SigslotCommit`](SigslotCommit.md)
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L62)
+Defined in: [packages/transact/src/transactions/state-proof.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L62)

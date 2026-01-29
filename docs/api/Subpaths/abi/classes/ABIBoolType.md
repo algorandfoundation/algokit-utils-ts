@@ -6,7 +6,7 @@
 
 # Class: ABIBoolType
 
-Defined in: [packages/abi/src/abi-type.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L326)
+Defined in: [packages/abi/src/abi-type.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L326)
 
 A boolean ABI type.
 
@@ -40,7 +40,7 @@ A boolean ABI type.
 
 > **get** **displayName**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L49)
+Defined in: [packages/abi/src/abi-type.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L49)
 
 Returns a user-friendly display name for this type.
 
@@ -62,7 +62,7 @@ The display name for this type
 
 > **get** **name**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L327)
+Defined in: [packages/abi/src/abi-type.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L327)
 
 Returns the ARC-4 type name string representation.
 
@@ -82,7 +82,7 @@ The ARC-4 type string
 
 > **byteLen**(): `number`
 
-Defined in: [packages/abi/src/abi-type.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L339)
+Defined in: [packages/abi/src/abi-type.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L339)
 
 Gets the byte length of the encoded type for static types.
 
@@ -106,7 +106,7 @@ Error if the type is dynamic
 
 > **decode**(`bytes`): [`ABIValue`](../type-aliases/ABIValue.md)
 
-Defined in: [packages/abi/src/abi-type.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L351)
+Defined in: [packages/abi/src/abi-type.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L351)
 
 Decodes bytes according to this ABI type.
 
@@ -134,7 +134,7 @@ The decoded value
 
 > **encode**(`value`): `Uint8Array`
 
-Defined in: [packages/abi/src/abi-type.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L343)
+Defined in: [packages/abi/src/abi-type.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L343)
 
 Encodes a value according to this ABI type.
 
@@ -162,7 +162,7 @@ The encoded bytes
 
 > **equals**(`other`): `boolean`
 
-Defined in: [packages/abi/src/abi-type.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L331)
+Defined in: [packages/abi/src/abi-type.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L331)
 
 Checks if this ABI type is equal to another.
 
@@ -190,7 +190,7 @@ True if the types are equal, false otherwise
 
 > **isDynamic**(): `boolean`
 
-Defined in: [packages/abi/src/abi-type.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L335)
+Defined in: [packages/abi/src/abi-type.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L335)
 
 Checks if this ABI type is dynamic (variable-length).
 
@@ -210,7 +210,7 @@ True if the type is dynamic, false otherwise
 
 > **toString**(): `string`
 
-Defined in: [packages/abi/src/abi-type.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L57)
+Defined in: [packages/abi/src/abi-type.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L57)
 
 Returns the ARC-4 type name string representation.
 
@@ -230,7 +230,7 @@ The ARC-4 type string
 
 > `static` **from**(`str`): [`ABIType`](ABIType.md)
 
-Defined in: [packages/abi/src/abi-type.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-type.ts#L100)
+Defined in: [packages/abi/src/abi-type.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L100)
 
 Creates an ABI type from an ARC-4 type string.
 

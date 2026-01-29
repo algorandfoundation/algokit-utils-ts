@@ -8,7 +8,7 @@
 
 > **MxBytesSigner** = (`bytesToSign`) => `Promise`\<`Uint8Array`\>
 
-Defined in: [packages/transact/src/signer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/signer.ts#L26)
+Defined in: [packages/transact/src/signer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L26)
 
 ## Parameters
 

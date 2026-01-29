@@ -8,6 +8,6 @@
 
 > `const` **SignedTransactionMeta**: `ObjectModelMetadata`\<[`SignedTransaction`](../type-aliases/SignedTransaction.md)\>
 
-Defined in: [packages/transact/src/transactions/signed-transaction-meta.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction-meta.ts#L67)
+Defined in: [packages/transact/src/transactions/signed-transaction-meta.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/signed-transaction-meta.ts#L67)
 
 Metadata for SignedTransaction

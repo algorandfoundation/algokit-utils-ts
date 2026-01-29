@@ -8,7 +8,7 @@
 
 > **Genesis** = `object`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L6)
+Defined in: [packages/algod\_client/src/models/genesis.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L6)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:6](https://github.com/
 
 > **alloc**: [`GenesisAllocation`](GenesisAllocation.md)[]
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L7)
+Defined in: [packages/algod\_client/src/models/genesis.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L7)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:7](https://github.com/
 
 > `optional` **comment**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L8)
+Defined in: [packages/algod\_client/src/models/genesis.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L8)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:8](https://github.com/
 
 > `optional` **devmode**: `boolean`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L9)
+Defined in: [packages/algod\_client/src/models/genesis.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L9)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:9](https://github.com/
 
 > **fees**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L10)
+Defined in: [packages/algod\_client/src/models/genesis.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L10)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:10](https://github.com
 
 > **id**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L11)
+Defined in: [packages/algod\_client/src/models/genesis.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L11)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:11](https://github.com
 
 > **network**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L12)
+Defined in: [packages/algod\_client/src/models/genesis.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L12)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:12](https://github.com
 
 > **proto**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L13)
+Defined in: [packages/algod\_client/src/models/genesis.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L13)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:13](https://github.com
 
 > **rwd**: `string`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L14)
+Defined in: [packages/algod\_client/src/models/genesis.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L14)
 
 ***
 
@@ -80,4 +80,4 @@ Defined in: [packages/algod\_client/src/models/genesis.ts:14](https://github.com
 
 > `optional` **timestamp**: `number`
 
-Defined in: [packages/algod\_client/src/models/genesis.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/genesis.ts#L15)
+Defined in: [packages/algod\_client/src/models/genesis.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/genesis.ts#L15)

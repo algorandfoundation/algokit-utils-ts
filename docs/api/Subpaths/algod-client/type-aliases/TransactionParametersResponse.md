@@ -8,7 +8,7 @@
 
 > **TransactionParametersResponse** = `object`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L8)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L8)
 
 TransactionParams contains the parameters that help a client construct
 a new transaction.
@@ -19,7 +19,7 @@ a new transaction.
 
 > **consensusVersion**: `string`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L13)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L13)
 
 ConsensusVersion indicates the consensus protocol version
 as of LastRound.
@@ -30,7 +30,7 @@ as of LastRound.
 
 > **fee**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L21)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L21)
 
 Fee is the suggested transaction fee
 Fee is in units of micro-Algos per byte.
@@ -43,7 +43,7 @@ at least MinTxnFee for the current network protocol.
 
 > **genesisHash**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L26)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L26)
 
 GenesisHash is the hash of the genesis block.
 
@@ -53,7 +53,7 @@ GenesisHash is the hash of the genesis block.
 
 > **genesisId**: `string`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L31)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L31)
 
 GenesisID is an ID listed in the genesis block.
 
@@ -63,7 +63,7 @@ GenesisID is an ID listed in the genesis block.
 
 > **lastRound**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L36)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L36)
 
 LastRound indicates the last round seen
 
@@ -73,7 +73,7 @@ LastRound indicates the last round seen
 
 > **minFee**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/transaction-parameters-response.ts#L42)
+Defined in: [packages/algod\_client/src/models/transaction-parameters-response.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/transaction-parameters-response.ts#L42)
 
 The minimum transaction fee (not per byte) required for the
 txn to validate for the current network protocol.

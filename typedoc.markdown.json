@@ -20,7 +20,7 @@
   "plugin": ["typedoc-plugin-markdown"],
   "tsconfig": "tsconfig.build.json",
   "readme": "docs/guides/README.md",
-  "gitRevision": "main",
+  "gitRevision": "decoupling",
   "cleanOutputDir": true,
   "excludeReferences": true,
   "includeHierarchySummary": true,

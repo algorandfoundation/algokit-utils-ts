@@ -8,7 +8,7 @@
 
 > `const` **HoldingReferenceMeta**: `ObjectModelMetadata`\<[`HoldingReference`](../type-aliases/HoldingReference.md)\>
 
-Defined in: [packages/transact/src/transactions/reference-types-meta.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/reference-types-meta.ts#L24)
+Defined in: [packages/transact/src/transactions/reference-types-meta.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/reference-types-meta.ts#L24)
 
 Metadata for HoldingReference
 

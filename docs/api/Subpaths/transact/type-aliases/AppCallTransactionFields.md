@@ -8,7 +8,7 @@
 
 > **AppCallTransactionFields** = `object`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L23)
+Defined in: [packages/transact/src/transactions/app-call.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L23)
 
 Represents an app call transaction that interacts with Algorand Smart Contracts.
 
@@ -21,7 +21,7 @@ close out of, or clear state from Algorand apps (smart contracts).
 
 > `optional` **accessReferences**: [`ResourceReference`](ResourceReference.md)[]
 
-Defined in: [packages/transact/src/transactions/app-call.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L114)
+Defined in: [packages/transact/src/transactions/app-call.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L114)
 
 Resources accessed by the application
 
@@ -31,7 +31,7 @@ Resources accessed by the application
 
 > `optional` **accountReferences**: [`Address`](../../../algokit-utils/classes/Address.md)[]
 
-Defined in: [packages/transact/src/transactions/app-call.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L90)
+Defined in: [packages/transact/src/transactions/app-call.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L90)
 
 List of accounts in addition to the sender that may be accessed
 from the app's approval program and clear state program.
@@ -42,7 +42,7 @@ from the app's approval program and clear state program.
 
 > **appId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L29)
+Defined in: [packages/transact/src/transactions/app-call.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L29)
 
 ID of the app being called.
 
@@ -54,7 +54,7 @@ Set this to 0 to indicate an app creation call.
 
 > `optional` **appReferences**: `bigint`[]
 
-Defined in: [packages/transact/src/transactions/app-call.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L96)
+Defined in: [packages/transact/src/transactions/app-call.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L96)
 
 List of apps in addition to the current app that may be called
 from the app's approval program and clear state program.
@@ -65,7 +65,7 @@ from the app's approval program and clear state program.
 
 > `optional` **approvalProgram**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L43)
+Defined in: [packages/transact/src/transactions/app-call.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L43)
 
 Logic executed for every app call transaction, except when
 on-completion is set to "clear".
@@ -79,7 +79,7 @@ Only required for app creation and update transactions.
 
 > `optional` **args**: `Uint8Array`[]
 
-Defined in: [packages/transact/src/transactions/app-call.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L84)
+Defined in: [packages/transact/src/transactions/app-call.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L84)
 
 Transaction specific arguments available in the app's
 approval program and clear state program.
@@ -90,7 +90,7 @@ approval program and clear state program.
 
 > `optional` **assetReferences**: `bigint`[]
 
-Defined in: [packages/transact/src/transactions/app-call.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L104)
+Defined in: [packages/transact/src/transactions/app-call.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L104)
 
 Lists the assets whose parameters may be accessed by this app's
 approval program and clear state program.
@@ -103,7 +103,7 @@ The access is read-only.
 
 > `optional` **boxReferences**: [`BoxReference`](BoxReference.md)[]
 
-Defined in: [packages/transact/src/transactions/app-call.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L109)
+Defined in: [packages/transact/src/transactions/app-call.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L109)
 
 The boxes that should be made available for the runtime of the program.
 
@@ -113,7 +113,7 @@ The boxes that should be made available for the runtime of the program.
 
 > `optional` **clearStateProgram**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L51)
+Defined in: [packages/transact/src/transactions/app-call.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L51)
 
 Logic executed for app call transactions with on-completion set to "clear".
 
@@ -126,7 +126,7 @@ Only required for app creation and update transactions.
 
 > `optional` **extraProgramPages**: `number`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L78)
+Defined in: [packages/transact/src/transactions/app-call.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L78)
 
 Number of additional pages allocated to the app's approval
 and clear state programs.
@@ -142,7 +142,7 @@ This cannot be changed after creation.
 
 > `optional` **globalStateSchema**: [`StateSchema`](StateSchema.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L59)
+Defined in: [packages/transact/src/transactions/app-call.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L59)
 
 Holds the maximum number of global state values.
 
@@ -155,7 +155,7 @@ This cannot be changed after creation.
 
 > `optional` **localStateSchema**: [`StateSchema`](StateSchema.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L67)
+Defined in: [packages/transact/src/transactions/app-call.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L67)
 
 Holds the maximum number of local state values.
 
@@ -168,7 +168,7 @@ This cannot be changed after creation.
 
 > **onComplete**: [`OnApplicationComplete`](../enumerations/OnApplicationComplete.md)
 
-Defined in: [packages/transact/src/transactions/app-call.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L34)
+Defined in: [packages/transact/src/transactions/app-call.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L34)
 
 Defines what additional actions occur with the transaction.
 
@@ -178,6 +178,6 @@ Defines what additional actions occur with the transaction.
 
 > `optional` **rejectVersion**: `number`
 
-Defined in: [packages/transact/src/transactions/app-call.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/app-call.ts#L119)
+Defined in: [packages/transact/src/transactions/app-call.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/app-call.ts#L119)
 
 If set, the transaction will be rejected when the app's version is greater than or equal to this value. This can be used to prevent calling an app after it has been updated. Set to 0 or leave undefined to skip the version check.

@@ -8,6 +8,6 @@
 
 > **DeployAppUpdateParams** = `Expand`\<`Omit`\<[`AppUpdateParams`](AppUpdateParams.md), `"appId"` \| `"approvalProgram"` \| `"clearStateProgram"`\>\>
 
-Defined in: [src/app-deployer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L31)
+Defined in: [src/app-deployer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L31)
 
 Params to specify an update transaction for an app deployment

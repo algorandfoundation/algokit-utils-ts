@@ -8,7 +8,7 @@
 
 > **StateProofTransactionFields** = `object`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L4)
+Defined in: [packages/transact/src/transactions/state-proof.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L4)
 
 State proof transaction specific fields
 
@@ -18,7 +18,7 @@ State proof transaction specific fields
 
 > `optional` **message**: [`StateProofMessage`](StateProofMessage.md)
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L12)
+Defined in: [packages/transact/src/transactions/state-proof.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L12)
 
 State proof message
 
@@ -28,7 +28,7 @@ State proof message
 
 > `optional` **stateProof**: [`StateProof`](StateProof.md)
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L9)
+Defined in: [packages/transact/src/transactions/state-proof.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L9)
 
 State proof
 
@@ -38,6 +38,6 @@ State proof
 
 > **stateProofType**: `number`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L6)
+Defined in: [packages/transact/src/transactions/state-proof.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L6)
 
 State proof type

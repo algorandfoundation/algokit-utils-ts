@@ -8,7 +8,7 @@
 
 > **HashFactory** = `object`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L31)
+Defined in: [packages/transact/src/transactions/state-proof.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L31)
 
 ## Properties
 
@@ -16,4 +16,4 @@ Defined in: [packages/transact/src/transactions/state-proof.ts:31](https://githu
 
 > **hashType**: `number`
 
-Defined in: [packages/transact/src/transactions/state-proof.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/state-proof.ts#L32)
+Defined in: [packages/transact/src/transactions/state-proof.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/state-proof.ts#L32)

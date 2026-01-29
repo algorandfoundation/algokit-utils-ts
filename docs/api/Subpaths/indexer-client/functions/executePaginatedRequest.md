@@ -8,7 +8,7 @@
 
 > **executePaginatedRequest**\<`TResult`, `TRequest`\>(`extractItems`, `buildRequest`): `Promise`\<`TResult`[]\>
 
-Defined in: [src/indexer-client/indexer-lookup.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-client/indexer-lookup.ts#L120)
+Defined in: [src/indexer-client/indexer-lookup.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/indexer-client/indexer-lookup.ts#L120)
 
 ## Type Parameters
 

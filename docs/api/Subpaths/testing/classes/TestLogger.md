@@ -6,7 +6,7 @@
 
 # Class: TestLogger
 
-Defined in: [src/testing/test-logger.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L8)
+Defined in: [src/testing/test-logger.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L8)
 
 Exposes an AlgoKit logger which captures log messages, while wrapping an original logger.
 This is useful for automated testing.
@@ -21,7 +21,7 @@ This is useful for automated testing.
 
 > **new TestLogger**(`originalLogger?`): `TestLogger`
 
-Defined in: [src/testing/test-logger.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L16)
+Defined in: [src/testing/test-logger.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L16)
 
 Create a new test logger that wraps the given logger if provided.
 
@@ -45,7 +45,7 @@ The optional original logger to wrap.
 
 > **get** **capturedLogs**(): `string`[]
 
-Defined in: [src/testing/test-logger.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L22)
+Defined in: [src/testing/test-logger.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L22)
 
 Returns all logs captured thus far.
 
@@ -59,7 +59,7 @@ Returns all logs captured thus far.
 
 > **clear**(): `void`
 
-Defined in: [src/testing/test-logger.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L27)
+Defined in: [src/testing/test-logger.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L27)
 
 Clears all logs captured so far.
 
@@ -73,7 +73,7 @@ Clears all logs captured so far.
 
 > **debug**(`message`, ...`optionalParams`): `void`
 
-Defined in: [src/testing/test-logger.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L80)
+Defined in: [src/testing/test-logger.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L80)
 
 #### Parameters
 
@@ -99,7 +99,7 @@ Defined in: [src/testing/test-logger.ts:80](https://github.com/algorandfoundatio
 
 > **error**(`message`, ...`optionalParams`): `void`
 
-Defined in: [src/testing/test-logger.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L64)
+Defined in: [src/testing/test-logger.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L64)
 
 #### Parameters
 
@@ -125,7 +125,7 @@ Defined in: [src/testing/test-logger.ts:64](https://github.com/algorandfoundatio
 
 > **getLogSnapshot**(`config?`): `string`
 
-Defined in: [src/testing/test-logger.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L47)
+Defined in: [src/testing/test-logger.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L47)
 
 Returns a captured log snapshot.
 This helps ensure that the provided configuration items won't appear
@@ -161,7 +161,7 @@ expect(logger.getLogSnapshot()).toMatchSnapshot()
 
 > **info**(`message`, ...`optionalParams`): `void`
 
-Defined in: [src/testing/test-logger.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L72)
+Defined in: [src/testing/test-logger.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L72)
 
 #### Parameters
 
@@ -187,7 +187,7 @@ Defined in: [src/testing/test-logger.ts:72](https://github.com/algorandfoundatio
 
 > **verbose**(`message`, ...`optionalParams`): `void`
 
-Defined in: [src/testing/test-logger.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L76)
+Defined in: [src/testing/test-logger.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L76)
 
 #### Parameters
 
@@ -213,7 +213,7 @@ Defined in: [src/testing/test-logger.ts:76](https://github.com/algorandfoundatio
 
 > **warn**(`message`, ...`optionalParams`): `void`
 
-Defined in: [src/testing/test-logger.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L68)
+Defined in: [src/testing/test-logger.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/test-logger.ts#L68)
 
 #### Parameters
 

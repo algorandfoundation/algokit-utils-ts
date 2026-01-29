@@ -8,6 +8,6 @@
 
 > **AppCreateMethodCall** = `Expand`\<`AppMethodCall`\<[`AppCreateParams`](AppCreateParams.md)\>\>
 
-Defined in: [src/transactions/method-call.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transactions/method-call.ts#L23)
+Defined in: [src/transactions/method-call.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transactions/method-call.ts#L23)
 
 Parameters to define an ABI method call create transaction.

@@ -8,7 +8,7 @@
 
 > **StateProofMessage** = `object`
 
-Defined in: [packages/algod\_client/src/models/state-proof-message.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/state-proof-message.ts#L7)
+Defined in: [packages/algod\_client/src/models/state-proof-message.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/state-proof-message.ts#L7)
 
 Represents the message that the state proofs are attesting to.
 
@@ -18,7 +18,7 @@ Represents the message that the state proofs are attesting to.
 
 > **blockHeadersCommitment**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/state-proof-message.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/state-proof-message.ts#L11)
+Defined in: [packages/algod\_client/src/models/state-proof-message.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/state-proof-message.ts#L11)
 
 The vector commitment root on all light block headers within a state proof interval.
 
@@ -28,7 +28,7 @@ The vector commitment root on all light block headers within a state proof inter
 
 > **firstAttestedRound**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/state-proof-message.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/state-proof-message.ts#L26)
+Defined in: [packages/algod\_client/src/models/state-proof-message.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/state-proof-message.ts#L26)
 
 The first round the message attests to.
 
@@ -38,7 +38,7 @@ The first round the message attests to.
 
 > **lastAttestedRound**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/state-proof-message.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/state-proof-message.ts#L31)
+Defined in: [packages/algod\_client/src/models/state-proof-message.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/state-proof-message.ts#L31)
 
 The last round the message attests to.
 
@@ -48,7 +48,7 @@ The last round the message attests to.
 
 > **lnProvenWeight**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/state-proof-message.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/state-proof-message.ts#L21)
+Defined in: [packages/algod\_client/src/models/state-proof-message.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/state-proof-message.ts#L21)
 
 An integer value representing the natural log of the proven weight with 16 bits of precision. This value would be used to verify the next state proof.
 
@@ -58,6 +58,6 @@ An integer value representing the natural log of the proven weight with 16 bits 
 
 > **votersCommitment**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/state-proof-message.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/state-proof-message.ts#L16)
+Defined in: [packages/algod\_client/src/models/state-proof-message.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/state-proof-message.ts#L16)
 
 The vector commitment root of the top N accounts to sign the next StateProof.

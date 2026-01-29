@@ -26,7 +26,7 @@
   "navigation": {
     "includeFolders": true
   },
-  "gitRevision": "main",
+  "gitRevision": "decoupling",
   "cleanOutputDir": true,
   "excludeReferences": true,
   "includeHierarchySummary": true,

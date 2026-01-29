@@ -6,7 +6,7 @@
 
 # Interface: TealTemplateParams
 
-Defined in: [src/app.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L187)
+Defined in: [src/app.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app.ts#L187)
 
 Dictionary of deploy-time parameters to replace in a teal template.
 

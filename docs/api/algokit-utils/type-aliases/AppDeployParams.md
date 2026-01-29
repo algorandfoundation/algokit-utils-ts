@@ -8,6 +8,6 @@
 
 > **AppDeployParams** = `Expand`\<[`SendParams`](../interfaces/SendParams.md) & `object`\>
 
-Defined in: [src/app-deployer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L40)
+Defined in: [src/app-deployer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L40)
 
 The parameters to idempotently deploy an app

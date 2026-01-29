@@ -6,7 +6,7 @@
 
 # Class: AsyncEventEmitter
 
-Defined in: [src/async-event-emitter.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/async-event-emitter.ts#L5)
+Defined in: [src/async-event-emitter.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/async-event-emitter.ts#L5)
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Defined in: [src/async-event-emitter.ts:5](https://github.com/algorandfoundation
 
 > **off**: (`eventName`, `listener`) => `AsyncEventEmitter`
 
-Defined in: [src/async-event-emitter.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/async-event-emitter.ts#L55)
+Defined in: [src/async-event-emitter.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/async-event-emitter.ts#L55)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [src/async-event-emitter.ts:55](https://github.com/algorandfoundatio
 
 > **emitAsync**\<`K`\>(`eventName`, `event`): `Promise`\<`void`\>
 
-Defined in: [src/async-event-emitter.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/async-event-emitter.ts#L9)
+Defined in: [src/async-event-emitter.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/async-event-emitter.ts#L9)
 
 #### Type Parameters
 
@@ -74,7 +74,7 @@ Defined in: [src/async-event-emitter.ts:9](https://github.com/algorandfoundation
 
 > **on**\<`K`\>(`eventName`, `listener`): `AsyncEventEmitter`
 
-Defined in: [src/async-event-emitter.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/async-event-emitter.ts#L15)
+Defined in: [src/async-event-emitter.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/async-event-emitter.ts#L15)
 
 #### Type Parameters
 
@@ -102,7 +102,7 @@ Defined in: [src/async-event-emitter.ts:15](https://github.com/algorandfoundatio
 
 > **once**\<`K`\>(`eventName`, `listener`): `AsyncEventEmitter`
 
-Defined in: [src/async-event-emitter.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/async-event-emitter.ts#L24)
+Defined in: [src/async-event-emitter.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/async-event-emitter.ts#L24)
 
 #### Type Parameters
 
@@ -130,7 +130,7 @@ Defined in: [src/async-event-emitter.ts:24](https://github.com/algorandfoundatio
 
 > **removeListener**(`eventName`, `listener`): `AsyncEventEmitter`
 
-Defined in: [src/async-event-emitter.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/async-event-emitter.ts#L39)
+Defined in: [src/async-event-emitter.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/async-event-emitter.ts#L39)
 
 #### Parameters
 

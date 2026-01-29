@@ -8,7 +8,7 @@
 
 > **BlockTxidsResponse** = `object`
 
-Defined in: [packages/algod\_client/src/models/block-txids-response.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block-txids-response.ts#L4)
+Defined in: [packages/algod\_client/src/models/block-txids-response.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block-txids-response.ts#L4)
 
 ## Properties
 
@@ -16,6 +16,6 @@ Defined in: [packages/algod\_client/src/models/block-txids-response.ts:4](https:
 
 > **blockTxIds**: `string`[]
 
-Defined in: [packages/algod\_client/src/models/block-txids-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block-txids-response.ts#L8)
+Defined in: [packages/algod\_client/src/models/block-txids-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block-txids-response.ts#L8)
 
 Block transaction IDs.

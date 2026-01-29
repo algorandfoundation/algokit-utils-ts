@@ -8,7 +8,7 @@
 
 > **StateProofFields** = `object`
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L14)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L14)
 
 \[sp\] represents a state proof.
 
@@ -21,7 +21,7 @@ crypto/stateproof/structs.go : StateProof
 
 > `optional` **partProofs**: [`MerkleArrayProof`](MerkleArrayProof.md)
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L25)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L25)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:25](https
 
 > `optional` **positionsToReveal**: `bigint`[]
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L40)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L40)
 
 \[pr\] Sequence of reveal positions.
 
@@ -39,7 +39,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:40](https
 
 > `optional` **reveals**: [`StateProofReveal`](StateProofReveal.md)[]
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L35)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L35)
 
 \[r\] Note that this is actually stored as a map[uint64] - Reveal in the actual msgp
 
@@ -49,7 +49,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:35](https
 
 > `optional` **saltVersion**: `number`
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L30)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L30)
 
 \[v\] Salt version of the merkle signature.
 
@@ -59,7 +59,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:30](https
 
 > `optional` **sigCommit**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L18)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L18)
 
 \[c\]
 
@@ -69,7 +69,7 @@ Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:18](https
 
 > `optional` **signedWeight**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L23)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L23)
 
 \[w\]
 
@@ -79,4 +79,4 @@ Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:23](https
 
 > `optional` **sigProofs**: [`MerkleArrayProof`](MerkleArrayProof.md)
 
-Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/state-proof-fields.ts#L24)
+Defined in: [packages/indexer\_client/src/models/state-proof-fields.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/state-proof-fields.ts#L24)

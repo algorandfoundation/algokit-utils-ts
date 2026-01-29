@@ -8,7 +8,7 @@
 
 > **ABIMethodArg** = `object`
 
-Defined in: [packages/abi/src/abi-method.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L24)
+Defined in: [packages/abi/src/abi-method.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-method.ts#L24)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/abi/src/abi-method.ts:24](https://github.com/algorandfound
 
 > `optional` **defaultValue**: [`ABIDefaultValue`](ABIDefaultValue.md)
 
-Defined in: [packages/abi/src/abi-method.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L28)
+Defined in: [packages/abi/src/abi-method.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-method.ts#L28)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/abi/src/abi-method.ts:28](https://github.com/algorandfound
 
 > `optional` **description**: `string`
 
-Defined in: [packages/abi/src/abi-method.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L27)
+Defined in: [packages/abi/src/abi-method.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-method.ts#L27)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/abi/src/abi-method.ts:27](https://github.com/algorandfound
 
 > `optional` **name**: `string`
 
-Defined in: [packages/abi/src/abi-method.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L26)
+Defined in: [packages/abi/src/abi-method.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-method.ts#L26)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [packages/abi/src/abi-method.ts:26](https://github.com/algorandfound
 
 > **type**: [`ABIMethodArgType`](ABIMethodArgType.md)
 
-Defined in: [packages/abi/src/abi-method.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/abi-method.ts#L25)
+Defined in: [packages/abi/src/abi-method.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-method.ts#L25)

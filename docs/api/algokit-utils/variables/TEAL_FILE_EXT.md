@@ -8,6 +8,6 @@
 
 > `const` **TEAL\_FILE\_EXT**: `".teal"` = `'.teal'`
 
-Defined in: [src/debugging.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L16)
+Defined in: [src/debugging.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/debugging.ts#L16)
 
 The file extension for TEAL files

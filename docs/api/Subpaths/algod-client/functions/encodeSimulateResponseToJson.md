@@ -8,7 +8,7 @@
 
 > **encodeSimulateResponseToJson**(`simulateResponse`): `string`
 
-Defined in: [packages/algod\_client/src/models/simulate-response.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-response.ts#L76)
+Defined in: [packages/algod\_client/src/models/simulate-response.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-response.ts#L76)
 
 ## Parameters
 

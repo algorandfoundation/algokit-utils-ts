@@ -8,7 +8,7 @@
 
 > **TransactionAssetFreeze** = `object`
 
-Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-asset-freeze.ts#L10)
+Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-asset-freeze.ts#L10)
 
 Fields for an asset freeze transaction.
 
@@ -21,7 +21,7 @@ data/transactions/asset.go : AssetFreezeTxnFields
 
 > **address**: `string`
 
-Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-asset-freeze.ts#L14)
+Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-asset-freeze.ts#L14)
 
 \[fadd\] Address of the account whose asset is being frozen or thawed.
 
@@ -31,7 +31,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:14]
 
 > **assetId**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-asset-freeze.ts#L19)
+Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-asset-freeze.ts#L19)
 
 \[faid\] ID of the asset being frozen or thawed.
 
@@ -41,6 +41,6 @@ Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:19]
 
 > **newFreezeStatus**: `boolean`
 
-Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-asset-freeze.ts#L24)
+Defined in: [packages/indexer\_client/src/models/transaction-asset-freeze.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-asset-freeze.ts#L24)
 
 \[afrz\] The new freeze status.

@@ -8,7 +8,7 @@
 
 > `const` **BoxReferenceMeta**: `ObjectModelMetadata`\<[`BoxReference`](../type-aliases/BoxReference.md)\>
 
-Defined in: [packages/transact/src/transactions/reference-types-meta.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/reference-types-meta.ts#L10)
+Defined in: [packages/transact/src/transactions/reference-types-meta.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/reference-types-meta.ts#L10)
 
 Metadata for BoxReference
 

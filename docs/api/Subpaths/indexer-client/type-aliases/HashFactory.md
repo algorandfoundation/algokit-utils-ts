@@ -8,7 +8,7 @@
 
 > **HashFactory** = `object`
 
-Defined in: [packages/indexer\_client/src/models/hash-factory.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/hash-factory.ts#L4)
+Defined in: [packages/indexer\_client/src/models/hash-factory.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/hash-factory.ts#L4)
 
 ## Properties
 
@@ -16,6 +16,6 @@ Defined in: [packages/indexer\_client/src/models/hash-factory.ts:4](https://gith
 
 > `optional` **hashType**: `number`
 
-Defined in: [packages/indexer\_client/src/models/hash-factory.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/hash-factory.ts#L8)
+Defined in: [packages/indexer\_client/src/models/hash-factory.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/hash-factory.ts#L8)
 
 \[t\]

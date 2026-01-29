@@ -6,7 +6,7 @@
 
 # Class: AlgorandClientTransactionCreator
 
-Defined in: [src/algorand-client-transaction-creator.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L6)
+Defined in: [src/algorand-client-transaction-creator.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L6)
 
 Orchestrates creating transactions for `AlgorandClient`.
 
@@ -16,7 +16,7 @@ Orchestrates creating transactions for `AlgorandClient`.
 
 > **new AlgorandClientTransactionCreator**(`newGroup`): `AlgorandClientTransactionCreator`
 
-Defined in: [src/algorand-client-transaction-creator.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L17)
+Defined in: [src/algorand-client-transaction-creator.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L17)
 
 Creates a new `AlgorandClientTransactionCreator`
 
@@ -44,7 +44,7 @@ const transactionCreator = new AlgorandClientTransactionCreator(() => new Transa
 
 > **appCall**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L464)
+Defined in: [src/algorand-client-transaction-creator.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L464)
 
 Create an application call transaction.
 
@@ -100,7 +100,7 @@ await algorand.createTransaction.appCall({
 
 > **appCallMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../Subpaths/abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; \}\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:667](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L667)
+Defined in: [src/algorand-client-transaction-creator.ts:667](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L667)
 
 Create an application call with ABI method call transaction.
 
@@ -311,7 +311,7 @@ await algorand.createTransaction.appCallMethodCall({
 
 > **appCreate**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L354)
+Defined in: [src/algorand-client-transaction-creator.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L354)
 
 Create an application create transaction.
 
@@ -555,7 +555,7 @@ await algorand.createTransaction.appCreate({
 
 > **appCreateMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../Subpaths/abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; \}\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:521](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L521)
+Defined in: [src/algorand-client-transaction-creator.ts:521](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L521)
 
 Create an application create call with ABI method call transaction.
 
@@ -823,7 +823,7 @@ await algorand.createTransaction.appCreateMethodCall({
 
 > **appDelete**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L428)
+Defined in: [src/algorand-client-transaction-creator.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L428)
 
 Create an application delete transaction.
 
@@ -879,7 +879,7 @@ await algorand.createTransaction.appDelete({
 
 > **appDeleteMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../Subpaths/abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; \}\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L619)
+Defined in: [src/algorand-client-transaction-creator.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L619)
 
 Create an application delete call with ABI method call transaction.
 
@@ -1090,7 +1090,7 @@ await algorand.createTransaction.appDeleteMethodCall({
 
 > **appUpdate**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L392)
+Defined in: [src/algorand-client-transaction-creator.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L392)
 
 Create an application update transaction.
 
@@ -1291,7 +1291,7 @@ await algorand.createTransaction.appUpdate({
 
 > **appUpdateMethodCall**: (`params`) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, [`ABIMethod`](../../Subpaths/abi/classes/ABIMethod.md)\>; `signers`: `Map`\<`number`, [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md)\>; `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; \}\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L571)
+Defined in: [src/algorand-client-transaction-creator.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L571)
 
 Create an application update call with ABI method call transaction.
 
@@ -1516,7 +1516,7 @@ await algorand.createTransaction.appUpdateMethodCall({
 
 > **assetConfig**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L149)
+Defined in: [src/algorand-client-transaction-creator.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L149)
 
 Create an asset config transaction to reconfigure an existing Algorand Standard Asset.
 
@@ -1571,7 +1571,7 @@ await algorand.createTransaction.assetConfig({
 
 > **assetCreate**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L113)
+Defined in: [src/algorand-client-transaction-creator.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L113)
 
 Create a create Algorand Standard Asset transaction.
 
@@ -1631,7 +1631,7 @@ await algorand.createTransaction.assetCreate({
 
 > **assetDestroy**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L211)
+Defined in: [src/algorand-client-transaction-creator.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L211)
 
 Create an Algorand Standard Asset destroy transaction.
 
@@ -1682,7 +1682,7 @@ await algorand.createTransaction.assetDestroy({
 
 > **assetFreeze**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L179)
+Defined in: [src/algorand-client-transaction-creator.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L179)
 
 Create an Algorand Standard Asset freeze transaction.
 
@@ -1731,7 +1731,7 @@ await algorand.createTransaction.assetFreeze({
 
 > **assetOptIn**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L272)
+Defined in: [src/algorand-client-transaction-creator.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L272)
 
 Create an Algorand Standard Asset opt-in transaction.
 
@@ -1778,7 +1778,7 @@ await algorand.createTransaction.assetOptIn({
 
 > **assetOptOut**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L309)
+Defined in: [src/algorand-client-transaction-creator.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L309)
 
 Create an asset opt-out transaction.
 
@@ -1834,7 +1834,7 @@ await algorand.createTransaction.assetOptOut({
 
 > **assetTransfer**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L244)
+Defined in: [src/algorand-client-transaction-creator.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L244)
 
 Create an Algorand Standard Asset transfer transaction.
 
@@ -1886,7 +1886,7 @@ await algorand.createTransaction.assetTransfer({
 
 > **offlineKeyRegistration**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:739](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L739)
+Defined in: [src/algorand-client-transaction-creator.ts:739](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L739)
 
 Create an offline key registration transaction.
 
@@ -1936,7 +1936,7 @@ await algorand.createTransaction.offlineKeyRegistration({
 
 > **onlineKeyRegistration**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:709](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L709)
+Defined in: [src/algorand-client-transaction-creator.ts:709](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L709)
 
 Create an online key registration transaction.
 
@@ -1998,7 +1998,7 @@ await algorand.createTransaction.onlineKeyRegistration({
 
 > **payment**: (`params`) => `Promise`\<[`Transaction`](../../Subpaths/transact/classes/Transaction.md)\>
 
-Defined in: [src/algorand-client-transaction-creator.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-creator.ts#L72)
+Defined in: [src/algorand-client-transaction-creator.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-creator.ts#L72)
 
 Create a payment transaction to transfer Algo between accounts.
 

@@ -6,7 +6,7 @@
 
 # Interface: SendTransactionResult
 
-Defined in: [src/transaction/types.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L49)
+Defined in: [src/transaction/types.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/types.ts#L49)
 
 The result of sending a transaction
 
@@ -25,7 +25,7 @@ The result of sending a transaction
 
 > `optional` **confirmation**: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)
 
-Defined in: [src/transaction/types.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L53)
+Defined in: [src/transaction/types.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/types.ts#L53)
 
 The response if the transaction was sent and waited for
 
@@ -35,6 +35,6 @@ The response if the transaction was sent and waited for
 
 > **transaction**: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)
 
-Defined in: [src/transaction/types.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/types.ts#L51)
+Defined in: [src/transaction/types.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/types.ts#L51)
 
 The transaction

@@ -6,7 +6,7 @@
 
 # Class: AppDeployer
 
-Defined in: [src/app-deployer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L113)
+Defined in: [src/app-deployer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L113)
 
 Allows management of deployment and deployment metadata of applications.
 
@@ -16,7 +16,7 @@ Allows management of deployment and deployment metadata of applications.
 
 > **new AppDeployer**(`appManager`, `transactionSender`, `indexer?`): `AppDeployer`
 
-Defined in: [src/app-deployer.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L129)
+Defined in: [src/app-deployer.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L129)
 
 Creates an `AppManager`
 
@@ -56,7 +56,7 @@ const deployer = new AppDeployer(appManager, transactionSender, indexer)
 
 > **deploy**(`deployment`): `Promise`\<[`AppDeployResult`](../type-aliases/AppDeployResult.md)\>
 
-Defined in: [src/app-deployer.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L173)
+Defined in: [src/app-deployer.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L173)
 
 Idempotently deploy (create if not exists, update if changed) an app against the given name for the given creator account, including deploy-time TEAL template placeholder substitutions (if specified).
 
@@ -200,7 +200,7 @@ const deployResult = await deployer.deploy({
 
 > **getCreatorAppsByName**(`creator`, `ignoreCache?`): `Promise`\<[`AppLookup`](../interfaces/AppLookup.md)\>
 
-Defined in: [src/app-deployer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deployer.ts#L496)
+Defined in: [src/app-deployer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-deployer.ts#L496)
 
 Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have
 an [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) `AppDeployNote` as the transaction

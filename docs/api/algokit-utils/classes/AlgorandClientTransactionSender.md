@@ -6,7 +6,7 @@
 
 # Class: AlgorandClientTransactionSender
 
-Defined in: [src/algorand-client-transaction-sender.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L38)
+Defined in: [src/algorand-client-transaction-sender.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L38)
 
 Orchestrates sending transactions for `AlgorandClient`.
 
@@ -16,7 +16,7 @@ Orchestrates sending transactions for `AlgorandClient`.
 
 > **new AlgorandClientTransactionSender**(`newGroup`, `assetManager`, `appManager`): `AlgorandClientTransactionSender`
 
-Defined in: [src/algorand-client-transaction-sender.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L53)
+Defined in: [src/algorand-client-transaction-sender.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L53)
 
 Creates a new `AlgorandClientSender`
 
@@ -56,7 +56,7 @@ const transactionSender = new AlgorandClientTransactionSender(() => new Transact
 
 > **appCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L735)
+Defined in: [src/algorand-client-transaction-sender.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L735)
 
 Call a smart contract.
 
@@ -118,7 +118,7 @@ await algorand.send.appCall({
 
 > **appCallMethodCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:983](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L983)
+Defined in: [src/algorand-client-transaction-sender.ts:983](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L983)
 
 Call a smart contract via an ABI method.
 
@@ -192,7 +192,7 @@ await algorand.send.appCallMethodCall({
 
 > **appCreate**: (`params`) => `Promise`\<\{ `appAddress`: [`Address`](Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L592)
+Defined in: [src/algorand-client-transaction-sender.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L592)
 
 Create a smart contract.
 
@@ -264,7 +264,7 @@ await algorand.send.appCreate({
 
 > **appCreateMethodCall**: (`params`) => `Promise`\<\{ `appAddress`: [`Address`](Address.md); `appId`: `bigint`; `compiledApproval?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:804](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L804)
+Defined in: [src/algorand-client-transaction-sender.ts:804](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L804)
 
 Create a smart contract via an ABI method.
 
@@ -348,7 +348,7 @@ await algorand.send.appCreateMethodCall({
 
 > **appDelete**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:688](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L688)
+Defined in: [src/algorand-client-transaction-sender.ts:688](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L688)
 
 Delete a smart contract.
 
@@ -410,7 +410,7 @@ await algorand.send.appDelete({
 
 > **appDeleteMethodCall**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:924](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L924)
+Defined in: [src/algorand-client-transaction-sender.ts:924](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L924)
 
 Delete a smart contract via an ABI method.
 
@@ -484,7 +484,7 @@ await algorand.send.appDeleteMethodCall({
 
 > **appUpdate**: (`params`) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L641)
+Defined in: [src/algorand-client-transaction-sender.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L641)
 
 Update a smart contract.
 
@@ -548,7 +548,7 @@ await algorand.send.appUpdate({
 
 > **appUpdateMethodCall**: (`params`) => `Promise`\<\{ `compiledApproval?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `compiledClear?`: [`CompiledTeal`](../interfaces/CompiledTeal.md); `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `return?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md); `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:865](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L865)
+Defined in: [src/algorand-client-transaction-sender.ts:865](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L865)
 
 Update a smart contract via an ABI method.
 
@@ -624,7 +624,7 @@ await algorand.send.appUpdateMethodCall({
 
 > **assetConfig**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L300)
+Defined in: [src/algorand-client-transaction-sender.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L300)
 
 Configure an existing Algorand Standard Asset.
 
@@ -685,7 +685,7 @@ await algorand.send.assetConfig({
 
 > **assetDestroy**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L380)
+Defined in: [src/algorand-client-transaction-sender.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L380)
 
 Destroys an Algorand Standard Asset.
 
@@ -742,7 +742,7 @@ await algorand.send.assetDestroy({
 
 > **assetFreeze**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L339)
+Defined in: [src/algorand-client-transaction-sender.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L339)
 
 Freeze or unfreeze an Algorand Standard Asset for an account.
 
@@ -797,7 +797,7 @@ await algorand.send.assetFreeze({
 
 > **assetOptIn**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:460](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L460)
+Defined in: [src/algorand-client-transaction-sender.ts:460](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L460)
 
 Opt an account into an Algorand Standard Asset.
 
@@ -850,7 +850,7 @@ await algorand.send.assetOptIn({
 
 > **assetTransfer**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:422](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L422)
+Defined in: [src/algorand-client-transaction-sender.ts:422](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L422)
 
 Transfer an Algorand Standard Asset.
 
@@ -908,7 +908,7 @@ await algorand.send.assetTransfer({
 
 > **offlineKeyRegistration**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:1062](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L1062)
+Defined in: [src/algorand-client-transaction-sender.ts:1062](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L1062)
 
 Register an offline key.
 
@@ -958,7 +958,7 @@ const result = await algorand.send.offlineKeyRegistration({
 
 > **onlineKeyRegistration**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:1029](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L1029)
+Defined in: [src/algorand-client-transaction-sender.ts:1029](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L1029)
 
 Register an online key.
 
@@ -1020,7 +1020,7 @@ const result = await algorand.send.onlineKeyRegistration({
 
 > **payment**: (`params`) => `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L201)
+Defined in: [src/algorand-client-transaction-sender.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L201)
 
 Send a payment transaction to transfer Algo between accounts.
 
@@ -1081,7 +1081,7 @@ const result = await algorand.send.payment({
 
 > **assetCreate**(`params`): `Promise`\<\{ `assetId`: `bigint`; `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L251)
+Defined in: [src/algorand-client-transaction-sender.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L251)
 
 Create a new Algorand Standard Asset.
 
@@ -1151,7 +1151,7 @@ await algorand.send.assetCreate({
 
 > **assetOptOut**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/algorand-client-transaction-sender.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L507)
+Defined in: [src/algorand-client-transaction-sender.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L507)
 
 Opt an account out of an Algorand Standard Asset.
 
@@ -1214,7 +1214,7 @@ await algorand.send.assetOptOut({
 
 > **newGroup**(): [`TransactionComposer`](TransactionComposer.md)
 
-Defined in: [src/algorand-client-transaction-sender.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client-transaction-sender.ts#L66)
+Defined in: [src/algorand-client-transaction-sender.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/algorand-client-transaction-sender.ts#L66)
 
 Start a new `TransactionComposer` transaction group
 

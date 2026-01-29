@@ -6,7 +6,7 @@
 
 # Class: LogicSig
 
-Defined in: [packages/transact/src/logicsig.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L31)
+Defined in: [packages/transact/src/logicsig.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L31)
 
 ## Hierarchy
 
@@ -26,7 +26,7 @@ Defined in: [packages/transact/src/logicsig.ts:31](https://github.com/algorandfo
 
 > **new LogicSig**(`program`, `programArgs?`): `LogicSig`
 
-Defined in: [packages/transact/src/logicsig.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L36)
+Defined in: [packages/transact/src/logicsig.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L36)
 
 #### Parameters
 
@@ -48,7 +48,7 @@ Defined in: [packages/transact/src/logicsig.ts:36](https://github.com/algorandfo
 
 > `protected` **\_addr**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/logicsig.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L34)
+Defined in: [packages/transact/src/logicsig.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L34)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/transact/src/logicsig.ts:34](https://github.com/algorandfo
 
 > **args**: `Uint8Array`[]
 
-Defined in: [packages/transact/src/logicsig.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L33)
+Defined in: [packages/transact/src/logicsig.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L33)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/transact/src/logicsig.ts:33](https://github.com/algorandfo
 
 > **logic**: `Uint8Array`
 
-Defined in: [packages/transact/src/logicsig.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L32)
+Defined in: [packages/transact/src/logicsig.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L32)
 
 ## Accessors
 
@@ -74,7 +74,7 @@ Defined in: [packages/transact/src/logicsig.ts:32](https://github.com/algorandfo
 
 > **get** **addr**(): [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/logicsig.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L58)
+Defined in: [packages/transact/src/logicsig.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L58)
 
 ##### Returns
 
@@ -90,7 +90,7 @@ Defined in: [packages/transact/src/logicsig.ts:58](https://github.com/algorandfo
 
 > **account**(): [`LogicSigAccount`](LogicSigAccount.md)
 
-Defined in: [packages/transact/src/logicsig.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L78)
+Defined in: [packages/transact/src/logicsig.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L78)
 
 #### Returns
 
@@ -102,7 +102,7 @@ Defined in: [packages/transact/src/logicsig.ts:78](https://github.com/algorandfo
 
 > **address**(): [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/logicsig.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L54)
+Defined in: [packages/transact/src/logicsig.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L54)
 
 #### Returns
 
@@ -114,7 +114,7 @@ Defined in: [packages/transact/src/logicsig.ts:54](https://github.com/algorandfo
 
 > **bytesToSignForDelegation**(`msig?`): `Uint8Array`
 
-Defined in: [packages/transact/src/logicsig.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L62)
+Defined in: [packages/transact/src/logicsig.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L62)
 
 #### Parameters
 
@@ -132,7 +132,7 @@ Defined in: [packages/transact/src/logicsig.ts:62](https://github.com/algorandfo
 
 > **delegatedAccount**(`delegator`): [`LogicSigAccount`](LogicSigAccount.md)
 
-Defined in: [packages/transact/src/logicsig.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L82)
+Defined in: [packages/transact/src/logicsig.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L82)
 
 #### Parameters
 
@@ -150,7 +150,7 @@ Defined in: [packages/transact/src/logicsig.ts:82](https://github.com/algorandfo
 
 > **programDataToSign**(`data`): `Uint8Array`
 
-Defined in: [packages/transact/src/logicsig.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L74)
+Defined in: [packages/transact/src/logicsig.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L74)
 
 #### Parameters
 
@@ -168,7 +168,7 @@ Defined in: [packages/transact/src/logicsig.ts:74](https://github.com/algorandfo
 
 > **signProgramData**(`data`, `signer`): `Promise`\<`Uint8Array`\>
 
-Defined in: [packages/transact/src/logicsig.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L70)
+Defined in: [packages/transact/src/logicsig.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L70)
 
 #### Parameters
 
@@ -190,7 +190,7 @@ Defined in: [packages/transact/src/logicsig.ts:70](https://github.com/algorandfo
 
 > `static` **fromBytes**(`encodedLsig`): `LogicSig`
 
-Defined in: [packages/transact/src/logicsig.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L48)
+Defined in: [packages/transact/src/logicsig.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L48)
 
 #### Parameters
 
@@ -208,7 +208,7 @@ Defined in: [packages/transact/src/logicsig.ts:48](https://github.com/algorandfo
 
 > `static` **fromSignature**(`signature`): `LogicSig`
 
-Defined in: [packages/transact/src/logicsig.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/logicsig.ts#L44)
+Defined in: [packages/transact/src/logicsig.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L44)
 
 #### Parameters
 

@@ -8,7 +8,7 @@
 
 > **EventDataMap** = `object`
 
-Defined in: [src/lifecycle-events.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L8)
+Defined in: [src/lifecycle-events.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/lifecycle-events.ts#L8)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/lifecycle-events.ts:8](https://github.com/algorandfoundation/al
 
 > **AppCompiled**: [`TealSourcesDebugEventData`](TealSourcesDebugEventData.md)
 
-Defined in: [src/lifecycle-events.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L10)
+Defined in: [src/lifecycle-events.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/lifecycle-events.ts#L10)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [src/lifecycle-events.ts:10](https://github.com/algorandfoundation/a
 
 > **TxnGroupSimulated**: [`AVMTracesEventData`](AVMTracesEventData.md)
 
-Defined in: [src/lifecycle-events.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/lifecycle-events.ts#L9)
+Defined in: [src/lifecycle-events.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/lifecycle-events.ts#L9)

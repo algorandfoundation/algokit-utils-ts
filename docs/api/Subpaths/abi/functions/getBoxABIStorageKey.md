@@ -8,7 +8,7 @@
 
 > **getBoxABIStorageKey**(`contract`, `keyName`): [`ABIStorageKey`](../type-aliases/ABIStorageKey.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L410)
+Defined in: [packages/abi/src/arc56-contract.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/arc56-contract.ts#L410)
 
 Get a specific box storage key with parsed ABI types
 

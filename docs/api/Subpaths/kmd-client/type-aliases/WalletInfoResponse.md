@@ -8,7 +8,7 @@
 
 > **WalletInfoResponse** = `object`
 
-Defined in: [packages/kmd\_client/src/models/wallet-info-response.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet-info-response.ts#L9)
+Defined in: [packages/kmd\_client/src/models/wallet-info-response.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/wallet-info-response.ts#L9)
 
 WalletInfoResponse is the response to `POST /v1/wallet/info`
 
@@ -18,4 +18,4 @@ WalletInfoResponse is the response to `POST /v1/wallet/info`
 
 > **walletHandle**: [`WalletHandle`](WalletHandle.md)
 
-Defined in: [packages/kmd\_client/src/models/wallet-info-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet-info-response.ts#L10)
+Defined in: [packages/kmd\_client/src/models/wallet-info-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/wallet-info-response.ts#L10)

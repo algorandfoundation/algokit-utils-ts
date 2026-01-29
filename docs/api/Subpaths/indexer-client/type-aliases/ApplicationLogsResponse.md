@@ -8,7 +8,7 @@
 
 > **ApplicationLogsResponse** = `object`
 
-Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/application-logs-response.ts#L6)
+Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/application-logs-response.ts#L6)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:6]
 
 > **applicationId**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/application-logs-response.ts#L10)
+Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/application-logs-response.ts#L10)
 
 \[appidx\] application index.
 
@@ -26,7 +26,7 @@ Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:10
 
 > **currentRound**: `bigint`
 
-Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/application-logs-response.ts#L15)
+Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/application-logs-response.ts#L15)
 
 Round at which the results were computed.
 
@@ -36,7 +36,7 @@ Round at which the results were computed.
 
 > `optional` **logData**: [`ApplicationLogData`](ApplicationLogData.md)[]
 
-Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/application-logs-response.ts#L21)
+Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/application-logs-response.ts#L21)
 
 ***
 
@@ -44,6 +44,6 @@ Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:21
 
 > `optional` **nextToken**: `string`
 
-Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/application-logs-response.ts#L20)
+Defined in: [packages/indexer\_client/src/models/application-logs-response.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/application-logs-response.ts#L20)
 
 Used for pagination, when making another request provide this token with the next parameter.

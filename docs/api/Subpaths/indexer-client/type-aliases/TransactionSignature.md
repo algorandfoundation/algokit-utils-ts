@@ -8,7 +8,7 @@
 
 > **TransactionSignature** = `object`
 
-Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-signature.ts#L11)
+Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-signature.ts#L11)
 
 Validation signature associated with some data. Only one of the signatures should be provided.
 
@@ -18,7 +18,7 @@ Validation signature associated with some data. Only one of the signatures shoul
 
 > `optional` **logicsig**: [`TransactionSignatureLogicsig`](TransactionSignatureLogicsig.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-signature.ts#L12)
+Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-signature.ts#L12)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:12](ht
 
 > `optional` **multisig**: [`TransactionSignatureMultisig`](TransactionSignatureMultisig.md)
 
-Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-signature.ts#L13)
+Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-signature.ts#L13)
 
 ***
 
@@ -34,6 +34,6 @@ Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:13](ht
 
 > `optional` **sig**: `Uint8Array`
 
-Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/models/transaction-signature.ts#L18)
+Defined in: [packages/indexer\_client/src/models/transaction-signature.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/models/transaction-signature.ts#L18)
 
 \[sig\] Standard ed25519 signature.

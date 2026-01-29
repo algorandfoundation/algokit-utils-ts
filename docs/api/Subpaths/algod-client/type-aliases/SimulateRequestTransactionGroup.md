@@ -8,7 +8,7 @@
 
 > **SimulateRequestTransactionGroup** = `object`
 
-Defined in: [packages/algod\_client/src/models/simulate-request-transaction-group.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-request-transaction-group.ts#L9)
+Defined in: [packages/algod\_client/src/models/simulate-request-transaction-group.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-request-transaction-group.ts#L9)
 
 A transaction group to simulate.
 
@@ -18,6 +18,6 @@ A transaction group to simulate.
 
 > **txns**: [`SignedTransaction`](../../transact/type-aliases/SignedTransaction.md)[]
 
-Defined in: [packages/algod\_client/src/models/simulate-request-transaction-group.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/simulate-request-transaction-group.ts#L13)
+Defined in: [packages/algod\_client/src/models/simulate-request-transaction-group.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/simulate-request-transaction-group.ts#L13)
 
 An atomic transaction group.

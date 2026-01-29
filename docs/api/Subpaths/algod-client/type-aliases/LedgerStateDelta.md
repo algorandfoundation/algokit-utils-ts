@@ -8,7 +8,7 @@
 
 > **LedgerStateDelta** = `object`
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:627](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L627)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:627](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L627)
 
 Describes the delta between a given round to the previous round.
 
@@ -18,7 +18,7 @@ Describes the delta between a given round to the previous round.
 
 > **accounts**: `LedgerAccountDeltas`
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:631](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L631)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:631](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L631)
 
 Modified new accounts.
 
@@ -28,7 +28,7 @@ Modified new accounts.
 
 > **block**: [`Block`](Block.md)
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L635)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L635)
 
 Block header.
 
@@ -38,7 +38,7 @@ Block header.
 
 > `optional` **creatables**: `Map`\<`number`, `LedgerModifiedCreatable`\>
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L661)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L661)
 
 New creatables creator lookup table.
 
@@ -48,7 +48,7 @@ New creatables creator lookup table.
 
 > `optional` **kvMods**: `Map`\<`Uint8Array`, `LedgerKvValueDelta`\>
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L653)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L653)
 
 Modified kv pairs.
 
@@ -58,7 +58,7 @@ Modified kv pairs.
 
 > **prevTimestamp**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:645](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L645)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:645](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L645)
 
 Previous block timestamp
 
@@ -68,7 +68,7 @@ Previous block timestamp
 
 > **stateProofNext**: `bigint`
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L641)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L641)
 
 Represents modification on StateProofNextRound field in the block header. If the block contains
 a valid state proof transaction, this field will contain the next round for state proof.
@@ -80,7 +80,7 @@ otherwise it will be set to 0.
 
 > **totals**: `LedgerAccountTotals`
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:649](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L649)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:649](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L649)
 
 The account totals reflecting the changes in this StateDelta object.
 
@@ -90,6 +90,6 @@ The account totals reflecting the changes in this StateDelta object.
 
 > `optional` **txIds**: `Map`\<`Uint8Array`, `LedgerIncludedTransactions`\>
 
-Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/ledger-state-delta.ts#L657)
+Defined in: [packages/algod\_client/src/models/ledger-state-delta.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/ledger-state-delta.ts#L657)
 
 New Txids for the txtail and TxnCounter, mapped to txn.LastValid.

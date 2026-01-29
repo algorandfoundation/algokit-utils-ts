@@ -6,7 +6,7 @@
 
 # Interface: AlgorandFixture
 
-Defined in: [src/testing/types.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L69)
+Defined in: [src/testing/types.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L69)
 
 An Algorand automated testing fixture
 
@@ -16,7 +16,7 @@ An Algorand automated testing fixture
 
 > **beforeEach**: () => `Promise`\<`void`\>
 
-Defined in: [src/testing/types.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L93)
+Defined in: [src/testing/types.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L93)
 
 #### Returns
 
@@ -33,7 +33,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 > **newScope**: () => `Promise`\<`void`\>
 
-Defined in: [src/testing/types.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L133)
+Defined in: [src/testing/types.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L133)
 
 Creates a new isolated fixture scope (clean transaction logger, AlgorandClient, testAccount, etc.).
 
@@ -83,7 +83,7 @@ describe('MY MODULE', () => {
 
 > **get** **algorand**(): [`AlgorandClient`](../../../algokit-utils/classes/AlgorandClient.md)
 
-Defined in: [src/testing/types.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L87)
+Defined in: [src/testing/types.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L87)
 
 Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
 
@@ -99,7 +99,7 @@ Retrieve an `AlgorandClient` loaded with the current context, including testAcco
 
 > **get** **context**(): [`AlgorandTestAutomationContext`](AlgorandTestAutomationContext.md)
 
-Defined in: [src/testing/types.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L82)
+Defined in: [src/testing/types.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L82)
 
 Retrieve the current context.
 Useful with destructuring.

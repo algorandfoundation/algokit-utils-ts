@@ -6,7 +6,7 @@
 
 # Interface: Addressable
 
-Defined in: [packages/common/src/address.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L137)
+Defined in: [packages/common/src/address.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/common/src/address.ts#L137)
 
 ## Hierarchy
 
@@ -25,4 +25,4 @@ Defined in: [packages/common/src/address.ts:137](https://github.com/algorandfoun
 
 > **addr**: `Readonly`\<[`Address`](../classes/Address.md)\>
 
-Defined in: [packages/common/src/address.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L138)
+Defined in: [packages/common/src/address.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/common/src/address.ts#L138)

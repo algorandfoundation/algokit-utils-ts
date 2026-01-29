@@ -8,7 +8,7 @@
 
 > **getBoxABIStorageKeys**(`contract`): `Record`\<`string`, [`ABIStorageKey`](../type-aliases/ABIStorageKey.md)\>
 
-Defined in: [packages/abi/src/arc56-contract.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L449)
+Defined in: [packages/abi/src/arc56-contract.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/arc56-contract.ts#L449)
 
 Get all box storage keys with parsed ABI types
 

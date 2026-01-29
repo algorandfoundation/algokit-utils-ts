@@ -8,7 +8,7 @@
 
 > **getOptionalAddress**(`addr`): [`Address`](../classes/Address.md) \| `undefined`
 
-Defined in: [packages/common/src/address.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/common/src/address.ts#L153)
+Defined in: [packages/common/src/address.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/common/src/address.ts#L153)
 
 ## Parameters
 

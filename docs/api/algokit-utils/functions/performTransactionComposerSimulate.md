@@ -8,7 +8,7 @@
 
 > **performTransactionComposerSimulate**(`composer`, `options?`): `Promise`\<[`SimulateResponse`](../../Subpaths/algod-client/type-aliases/SimulateResponse.md)\>
 
-Defined in: [src/transaction/perform-transaction-composer-simulate.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/perform-transaction-composer-simulate.ts#L14)
+Defined in: [src/transaction/perform-transaction-composer-simulate.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/perform-transaction-composer-simulate.ts#L14)
 
 ## Parameters
 

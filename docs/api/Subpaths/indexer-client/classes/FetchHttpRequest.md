@@ -6,7 +6,7 @@
 
 # Class: FetchHttpRequest
 
-Defined in: [packages/indexer\_client/src/core/fetch-http-request.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/fetch-http-request.ts#L61)
+Defined in: [packages/indexer\_client/src/core/fetch-http-request.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/core/fetch-http-request.ts#L61)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [packages/indexer\_client/src/core/fetch-http-request.ts:61](https:/
 
 > **new FetchHttpRequest**(`config`): `FetchHttpRequest`
 
-Defined in: [packages/indexer\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/base-http-request.ts#L20)
+Defined in: [packages/indexer\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/core/base-http-request.ts#L20)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [packages/indexer\_client/src/core/base-http-request.ts:20](https://
 
 > `readonly` **config**: [`ClientConfig`](../interfaces/ClientConfig.md)
 
-Defined in: [packages/indexer\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/base-http-request.ts#L20)
+Defined in: [packages/indexer\_client/src/core/base-http-request.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/core/base-http-request.ts#L20)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [packages/indexer\_client/src/core/base-http-request.ts:20](https://
 
 > **request**\<`T`\>(`options`): `Promise`\<`T`\>
 
-Defined in: [packages/indexer\_client/src/core/fetch-http-request.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/indexer_client/src/core/fetch-http-request.ts#L62)
+Defined in: [packages/indexer\_client/src/core/fetch-http-request.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/indexer_client/src/core/fetch-http-request.ts#L62)
 
 #### Type Parameters
 

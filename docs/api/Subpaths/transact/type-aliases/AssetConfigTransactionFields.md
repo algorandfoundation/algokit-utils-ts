@@ -8,7 +8,7 @@
 
 > **AssetConfigTransactionFields** = `object`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L13)
+Defined in: [packages/transact/src/transactions/asset-config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L13)
 
 Represents an asset configuration transaction that creates, reconfigures, or destroys assets.
 
@@ -18,7 +18,7 @@ Represents an asset configuration transaction that creates, reconfigures, or des
 
 > **assetId**: `bigint`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L21)
+Defined in: [packages/transact/src/transactions/asset-config.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L21)
 
 ID of the asset to operate on.
 
@@ -32,7 +32,7 @@ For asset destroy this is the ID of the existing asset to be destroyed.
 
 > `optional` **assetName**: `string`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L67)
+Defined in: [packages/transact/src/transactions/asset-config.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L67)
 
 The optional name of the asset.
 
@@ -46,7 +46,7 @@ This field can only be specified upon asset creation.
 
 > `optional` **clawback**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L138)
+Defined in: [packages/transact/src/transactions/asset-config.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L138)
 
 The address of the optional account that can clawback holdings of this asset from any account.
 
@@ -62,7 +62,7 @@ If not set or set to the Zero address the field is permanently empty.
 
 > `optional` **decimals**: `number`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L46)
+Defined in: [packages/transact/src/transactions/asset-config.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L46)
 
 The amount of decimal places the asset should have.
 
@@ -82,7 +82,7 @@ This field can only be specified upon asset creation.
 
 > `optional` **defaultFrozen**: `boolean`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L58)
+Defined in: [packages/transact/src/transactions/asset-config.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L58)
 
 Whether the asset is frozen by default for all accounts.
 Defaults to `false`.
@@ -99,7 +99,7 @@ This field can only be specified upon asset creation.
 
 > `optional` **freeze**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L127)
+Defined in: [packages/transact/src/transactions/asset-config.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L127)
 
 The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
 
@@ -113,7 +113,7 @@ If not set or set to the Zero address the field is permanently empty.
 
 > `optional` **manager**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L103)
+Defined in: [packages/transact/src/transactions/asset-config.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L103)
 
 The address of the optional account that can manage the configuration of the asset and destroy it.
 
@@ -127,7 +127,7 @@ If not set or set to the Zero address the asset becomes permanently immutable.
 
 > `optional` **metadataHash**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L94)
+Defined in: [packages/transact/src/transactions/asset-config.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L94)
 
 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
 
@@ -141,7 +141,7 @@ This field can only be specified upon asset creation.
 
 > `optional` **reserve**: [`Address`](../../../algokit-utils/classes/Address.md)
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L118)
+Defined in: [packages/transact/src/transactions/asset-config.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L118)
 
 The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
 
@@ -161,7 +161,7 @@ If not set or set to the Zero address the field is permanently empty.
 
 > `optional` **total**: `bigint`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L31)
+Defined in: [packages/transact/src/transactions/asset-config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L31)
 
 The total amount of the smallest divisible (decimal) unit to create.
 
@@ -176,7 +176,7 @@ This field can only be specified upon asset creation.
 
 > `optional` **unitName**: `string`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L76)
+Defined in: [packages/transact/src/transactions/asset-config.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L76)
 
 The optional name of the unit of this asset (e.g. ticker name).
 
@@ -190,7 +190,7 @@ This field can only be specified upon asset creation.
 
 > `optional` **url**: `string`
 
-Defined in: [packages/transact/src/transactions/asset-config.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/asset-config.ts#L85)
+Defined in: [packages/transact/src/transactions/asset-config.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/asset-config.ts#L85)
 
 Specifies an optional URL where more information about the asset can be retrieved (e.g. metadata).
 

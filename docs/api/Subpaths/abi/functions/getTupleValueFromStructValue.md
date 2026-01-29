@@ -8,7 +8,7 @@
 
 > **getTupleValueFromStructValue**(`structType`, `structValue`): [`ABIValue`](../type-aliases/ABIValue.md)[]
 
-Defined in: [packages/abi/src/utils.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/utils.ts#L17)
+Defined in: [packages/abi/src/utils.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/utils.ts#L17)
 
 Converts a struct value (object with named fields) to a tuple value (array).
 

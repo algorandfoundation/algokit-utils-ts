@@ -8,7 +8,7 @@
 
 > **genesisIdIsLocalNet**(`genesisId`): `boolean`
 
-Defined in: [src/network-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L40)
+Defined in: [src/network-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/network-client.ts#L40)
 
 Returns true if the given network genesisId is associated with a LocalNet network.
 

@@ -8,7 +8,7 @@
 
 > **getGlobalABIStorageMap**(`contract`, `mapName`): [`ABIStorageMap`](../type-aliases/ABIStorageMap.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L464)
+Defined in: [packages/abi/src/arc56-contract.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/arc56-contract.ts#L464)
 
 Get a specific global storage map with parsed ABI types
 

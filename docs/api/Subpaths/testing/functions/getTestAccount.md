@@ -10,7 +10,7 @@
 
 > **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & [`AddressWithTransactionSigner`](../../transact/interfaces/AddressWithTransactionSigner.md)\>
 
-Defined in: [src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
+Defined in: [src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/account.ts#L20)
 
 ### Parameters
 
@@ -51,7 +51,7 @@ Note: By default this will log the mnemonic of the account.
 
 > **getTestAccount**(`params`, `algorand`): `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
-Defined in: [src/testing/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L34)
+Defined in: [src/testing/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/account.ts#L34)
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser

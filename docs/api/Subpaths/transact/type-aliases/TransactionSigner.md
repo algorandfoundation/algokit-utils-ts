@@ -8,7 +8,7 @@
 
 > **TransactionSigner** = (`txnGroup`, `indexesToSign`) => `Promise`\<`Uint8Array`[]\>
 
-Defined in: [packages/transact/src/signer.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/signer.ts#L7)
+Defined in: [packages/transact/src/signer.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L7)
 
 Function for signing a group of transactions
 

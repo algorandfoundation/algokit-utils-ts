@@ -8,7 +8,7 @@
 
 > **populateAppCallResources**(`composer`): `Promise`\<[`TransactionComposer`](../classes/TransactionComposer.md)\>
 
-Defined in: [src/transaction/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L69)
+Defined in: [src/transaction/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/transaction.ts#L69)
 
 ## Parameters
 

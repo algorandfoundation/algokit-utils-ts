@@ -8,7 +8,7 @@
 
 > **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/AlgoAmount.md)
 
-Defined in: [src/amount.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L186)
+Defined in: [src/amount.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/amount.ts#L186)
 
 Returns an amount of µAlgo using AlgoAmount
 

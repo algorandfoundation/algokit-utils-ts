@@ -8,7 +8,7 @@
 
 > **GetBlockTimeStampOffsetResponse** = `object`
 
-Defined in: [packages/algod\_client/src/models/get-block-time-stamp-offset-response.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/get-block-time-stamp-offset-response.ts#L4)
+Defined in: [packages/algod\_client/src/models/get-block-time-stamp-offset-response.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/get-block-time-stamp-offset-response.ts#L4)
 
 ## Properties
 
@@ -16,6 +16,6 @@ Defined in: [packages/algod\_client/src/models/get-block-time-stamp-offset-respo
 
 > **offset**: `number`
 
-Defined in: [packages/algod\_client/src/models/get-block-time-stamp-offset-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/get-block-time-stamp-offset-response.ts#L8)
+Defined in: [packages/algod\_client/src/models/get-block-time-stamp-offset-response.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/get-block-time-stamp-offset-response.ts#L8)
 
 Timestamp offset in seconds.

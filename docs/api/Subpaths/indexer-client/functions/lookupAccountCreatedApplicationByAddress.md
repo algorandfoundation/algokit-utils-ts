@@ -8,7 +8,7 @@
 
 > **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll`, `paginationLimit?`): `Promise`\<[`Application`](../type-aliases/Application.md)[]\>
 
-Defined in: [src/indexer-client/indexer-lookup.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-client/indexer-lookup.ts#L23)
+Defined in: [src/indexer-client/indexer-lookup.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/indexer-client/indexer-lookup.ts#L23)
 
 Looks up applications that were created by the given address; will automatically paginate through all data.
 

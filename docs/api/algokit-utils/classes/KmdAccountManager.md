@@ -6,7 +6,7 @@
 
 # Class: KmdAccountManager
 
-Defined in: [src/kmd-account-manager.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/kmd-account-manager.ts#L13)
+Defined in: [src/kmd-account-manager.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/kmd-account-manager.ts#L13)
 
 Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
 that makes it easier to get and manage accounts using KMD.
@@ -17,7 +17,7 @@ that makes it easier to get and manage accounts using KMD.
 
 > **new KmdAccountManager**(`clientManager`): `KmdAccountManager`
 
-Defined in: [src/kmd-account-manager.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/kmd-account-manager.ts#L21)
+Defined in: [src/kmd-account-manager.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/kmd-account-manager.ts#L21)
 
 Create a new KMD manager.
 
@@ -39,7 +39,7 @@ A ClientManager client to use for algod and kmd clients
 
 > **getLocalNetDispenserAccount**(): `Promise`\<[`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)\>
 
-Defined in: [src/kmd-account-manager.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/kmd-account-manager.ts#L191)
+Defined in: [src/kmd-account-manager.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/kmd-account-manager.ts#L191)
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
 
@@ -61,7 +61,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 > **getOrCreateWalletAccount**(`name`, `fundWith?`): `Promise`\<[`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md)\>
 
-Defined in: [src/kmd-account-manager.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/kmd-account-manager.ts#L147)
+Defined in: [src/kmd-account-manager.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/kmd-account-manager.ts#L147)
 
 Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
 
@@ -107,7 +107,7 @@ const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('accoun
 
 > **getWalletAccount**(`walletName`, `predicate?`, `sender?`): `Promise`\<[`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| `undefined`\>
 
-Defined in: [src/kmd-account-manager.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/kmd-account-manager.ts#L65)
+Defined in: [src/kmd-account-manager.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/kmd-account-manager.ts#L65)
 
 Returns an Algorand signing account with private key loaded from the given KMD wallet (identified by name).
 
@@ -152,7 +152,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 
 > **kmd**(): `Promise`\<[`KmdClient`](../../Subpaths/kmd-client/classes/KmdClient.md)\>
 
-Defined in: [src/kmd-account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/kmd-account-manager.ts#L30)
+Defined in: [src/kmd-account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/kmd-account-manager.ts#L30)
 
 #### Returns
 

@@ -8,7 +8,7 @@
 
 > **validateSignedTransaction**(`signedTransaction`): `void`
 
-Defined in: [packages/transact/src/transactions/signed-transaction.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/signed-transaction.ts#L156)
+Defined in: [packages/transact/src/transactions/signed-transaction.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/signed-transaction.ts#L156)
 
 Validate a signed transaction structure
 

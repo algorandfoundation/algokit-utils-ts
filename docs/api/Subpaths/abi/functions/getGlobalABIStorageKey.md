@@ -8,7 +8,7 @@
 
 > **getGlobalABIStorageKey**(`contract`, `keyName`): [`ABIStorageKey`](../type-aliases/ABIStorageKey.md)
 
-Defined in: [packages/abi/src/arc56-contract.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/abi/src/arc56-contract.ts#L380)
+Defined in: [packages/abi/src/arc56-contract.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/arc56-contract.ts#L380)
 
 Get a specific global storage key with parsed ABI types
 

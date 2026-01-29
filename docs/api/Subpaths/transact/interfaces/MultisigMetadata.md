@@ -6,7 +6,7 @@
 
 # Interface: MultisigMetadata
 
-Defined in: [packages/transact/src/multisig.ts:368](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L368)
+Defined in: [packages/transact/src/multisig.ts:368](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/multisig.ts#L368)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/transact/src/multisig.ts:368](https://github.com/algorandf
 
 > **addrs**: [`Address`](../../../algokit-utils/classes/Address.md)[]
 
-Defined in: [packages/transact/src/multisig.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L383)
+Defined in: [packages/transact/src/multisig.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/multisig.ts#L383)
 
 A list of Algorand addresses representing possible signers for this multisig. Order is important.
 
@@ -24,7 +24,7 @@ A list of Algorand addresses representing possible signers for this multisig. Or
 
 > **threshold**: `number`
 
-Defined in: [packages/transact/src/multisig.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L378)
+Defined in: [packages/transact/src/multisig.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/multisig.ts#L378)
 
 Multisig threshold value. Authorization requires a subset of signatures,
 equal to or greater than the threshold value.
@@ -35,6 +35,6 @@ equal to or greater than the threshold value.
 
 > **version**: `number`
 
-Defined in: [packages/transact/src/multisig.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/multisig.ts#L372)
+Defined in: [packages/transact/src/multisig.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/multisig.ts#L372)
 
 Multisig version

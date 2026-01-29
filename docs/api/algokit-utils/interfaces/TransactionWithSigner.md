@@ -6,7 +6,7 @@
 
 # Interface: TransactionWithSigner
 
-Defined in: [src/transaction/transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L8)
+Defined in: [src/transaction/transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/transaction.ts#L8)
 
 Represents an unsigned transactions and a signer that can authorize that transaction.
 
@@ -16,7 +16,7 @@ Represents an unsigned transactions and a signer that can authorize that transac
 
 > **signer**: [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md)
 
-Defined in: [src/transaction/transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L12)
+Defined in: [src/transaction/transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/transaction.ts#L12)
 
 A transaction signer that can authorize txn
 
@@ -26,6 +26,6 @@ A transaction signer that can authorize txn
 
 > **txn**: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)
 
-Defined in: [src/transaction/transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L10)
+Defined in: [src/transaction/transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/transaction.ts#L10)
 
 An unsigned transaction

@@ -6,7 +6,7 @@
 
 # Class: AppClient
 
-Defined in: [src/app-client.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L434)
+Defined in: [src/app-client.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L434)
 
 ARC-56/ARC-32 application client that allows you to manage calls and
 state for a specific deployed instance of an app (with a known app ID).
@@ -21,7 +21,7 @@ state for a specific deployed instance of an app (with a known app ID).
 
 > **new AppClient**(`params`): `AppClient`
 
-Defined in: [src/app-client.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L473)
+Defined in: [src/app-client.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L473)
 
 Create a new app client.
 
@@ -56,7 +56,7 @@ const appClient = new AppClient({
 
 > **get** **algorand**(): [`AlgorandClient`](AlgorandClient.md)
 
-Defined in: [src/app-client.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L640)
+Defined in: [src/app-client.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L640)
 
 A reference to the underlying `AlgorandClient` this app client is using.
 
@@ -72,7 +72,7 @@ A reference to the underlying `AlgorandClient` this app client is using.
 
 > **get** **appAddress**(): [`Address`](Address.md)
 
-Defined in: [src/app-client.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L625)
+Defined in: [src/app-client.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L625)
 
 The app address of the app instance this client is linked to.
 
@@ -88,7 +88,7 @@ The app address of the app instance this client is linked to.
 
 > **get** **appId**(): `bigint`
 
-Defined in: [src/app-client.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L620)
+Defined in: [src/app-client.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L620)
 
 The ID of the app instance this client is linked to.
 
@@ -104,7 +104,7 @@ The ID of the app instance this client is linked to.
 
 > **get** **appName**(): `string`
 
-Defined in: [src/app-client.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L630)
+Defined in: [src/app-client.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L630)
 
 The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
@@ -120,7 +120,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec or override).
 
 > **get** **appSpec**(): [`Arc56Contract`](../../Subpaths/abi/type-aliases/Arc56Contract.md)
 
-Defined in: [src/app-client.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L635)
+Defined in: [src/app-client.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L635)
 
 The ARC-56 app spec being used
 
@@ -136,7 +136,7 @@ The ARC-56 app spec being used
 
 > **get** **createTransaction**(): `object` & `object`
 
-Defined in: [src/app-client.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L664)
+Defined in: [src/app-client.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L664)
 
 Create transactions for the current app
 
@@ -150,7 +150,7 @@ Create transactions for the current app
 
 > **get** **params**(): `object` & `object`
 
-Defined in: [src/app-client.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L659)
+Defined in: [src/app-client.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L659)
 
 Get parameters to create transactions for the current app.
 
@@ -179,7 +179,7 @@ await appClient.send.call({method: 'my_method2', args: [myMethodCall]})
 
 > **get** **send**(): `object` & `object`
 
-Defined in: [src/app-client.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L669)
+Defined in: [src/app-client.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L669)
 
 Send transactions to the current app
 
@@ -193,7 +193,7 @@ Send transactions to the current app
 
 > **get** **state**(): `object`
 
-Defined in: [src/app-client.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L674)
+Defined in: [src/app-client.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L674)
 
 Get state (local, global, box) from the current app
 
@@ -473,7 +473,7 @@ Optional cached value of the current state
 
 > **clone**(`params`): `AppClient`
 
-Defined in: [src/app-client.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L528)
+Defined in: [src/app-client.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L528)
 
 Clone this app client with different params
 
@@ -538,7 +538,7 @@ const appClient2 = appClient.clone({ defaultSender: 'NEW_SENDER_ADDRESS' })
 
 > **compile**(`compilation?`): `Promise`\<`AppClientCompilationResult`\>
 
-Defined in: [src/app-client.ts:905](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L905)
+Defined in: [src/app-client.ts:905](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L905)
 
 Compiles the approval and clear state programs (if TEAL templates provided),
 performing any provided deploy-time parameter replacement and stores
@@ -568,7 +568,7 @@ The compiled code and any compilation results (including source maps)
 
 > **exportSourceMaps**(): `AppSourceMaps`
 
-Defined in: [src/app-client.ts:844](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L844)
+Defined in: [src/app-client.ts:844](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L844)
 
 Export the current source maps for the app.
 
@@ -584,7 +584,7 @@ The source maps
 
 > **exposeLogicError**(`e`, `isClearStateProgram?`): `Promise`\<`Error`\>
 
-Defined in: [src/app-client.ts:822](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L822)
+Defined in: [src/app-client.ts:822](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L822)
 
 Takes an error that may include a logic error from a call to the current app and re-exposes the
 error to include source code information via the source map and ARC-56 spec.
@@ -615,7 +615,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 > **fundAppAccount**(`params`): `Promise`\<\{ `confirmation`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md); `confirmations`: [`PendingTransactionResponse`](../../Subpaths/algod-client/type-aliases/PendingTransactionResponse.md)[]; `groupId`: `string` \| `undefined`; `returns?`: [`ABIReturn`](../../Subpaths/abi/type-aliases/ABIReturn.md)[]; `transaction`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md); `transactions`: [`Transaction`](../../Subpaths/transact/classes/Transaction.md)[]; `txIds`: `string`[]; \}\>
 
-Defined in: [src/app-client.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L703)
+Defined in: [src/app-client.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L703)
 
 Funds Algo into the app account for this app.
 
@@ -759,7 +759,7 @@ await appClient.fundAppAccount({ amount: algo(1) })
 
 > **getABIMethod**(`methodNameOrSignature`): [`ABIMethod`](../../Subpaths/abi/classes/ABIMethod.md)
 
-Defined in: [src/app-client.ts:872](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L872)
+Defined in: [src/app-client.ts:872](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L872)
 
 Returns the ABI Method spec for the given method string for the app represented by this application client instance
 
@@ -784,7 +784,7 @@ A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 
 > **getBoxNames**(): `Promise`\<[`BoxName`](../interfaces/BoxName.md)[]\>
 
-Defined in: [src/app-client.ts:740](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L740)
+Defined in: [src/app-client.ts:740](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L740)
 
 Returns the names of all current boxes for the current app.
 
@@ -806,7 +806,7 @@ const boxNames = await appClient.getBoxNames()
 
 > **getBoxValue**(`name`): `Promise`\<`Uint8Array`\>
 
-Defined in: [src/app-client.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L753)
+Defined in: [src/app-client.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L753)
 
 Returns the value of the given box for the current app.
 
@@ -836,7 +836,7 @@ const boxValue = await appClient.getBoxValue('boxName')
 
 > **getBoxValueFromABIType**(`name`, `type`): `Promise`\<[`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md)\>
 
-Defined in: [src/app-client.ts:767](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L767)
+Defined in: [src/app-client.ts:767](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L767)
 
 Returns the value of the given box for the current app.
 
@@ -870,7 +870,7 @@ const boxValue = await appClient.getBoxValueFromABIType('boxName', new ABIUintTy
 
 > **getBoxValues**(`filter?`): `Promise`\<`object`[]\>
 
-Defined in: [src/app-client.ts:785](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L785)
+Defined in: [src/app-client.ts:785](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L785)
 
 Returns the values of all current boxes for the current app.
 Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
@@ -901,7 +901,7 @@ const boxValues = await appClient.getBoxValues()
 
 > **getBoxValuesFromABIType**(`type`, `filter?`): `Promise`\<`object`[]\>
 
-Defined in: [src/app-client.ts:805](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L805)
+Defined in: [src/app-client.ts:805](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L805)
 
 Returns the values of all current boxes for the current app decoded using an ABI Type.
 Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
@@ -938,7 +938,7 @@ const boxValues = await appClient.getBoxValuesFromABIType(new ABIUintType(32))
 
 > **getGlobalState**(): `Promise`\<[`AppState`](../interfaces/AppState.md)\>
 
-Defined in: [src/app-client.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L715)
+Defined in: [src/app-client.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L715)
 
 Returns raw global state for the current app.
 
@@ -960,7 +960,7 @@ const globalState = await appClient.getGlobalState()
 
 > **getLocalState**(`address`): `Promise`\<[`AppState`](../interfaces/AppState.md)\>
 
-Defined in: [src/app-client.ts:728](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L728)
+Defined in: [src/app-client.ts:728](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L728)
 
 Returns raw local state for the given account address.
 
@@ -990,7 +990,7 @@ const localState = await appClient.getLocalState('ACCOUNT_ADDRESS')
 
 > **importSourceMaps**(`sourceMaps`): `void`
 
-Defined in: [src/app-client.ts:861](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L861)
+Defined in: [src/app-client.ts:861](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L861)
 
 Import source maps for the app.
 
@@ -1012,7 +1012,7 @@ The source maps to import
 
 > **processMethodCallReturn**\<`TReturn`, `TResult`\>(`result`): `Promise`\<`Omit`\<`TResult`, `"return"`\> & `AppReturn`\<`TReturn`\>\>
 
-Defined in: [src/app-client.ts:886](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L886)
+Defined in: [src/app-client.ts:886](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L886)
 
 Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
 on the ARC-56 method, replacing the `return` property with the decoded type.
@@ -1049,7 +1049,7 @@ The smart contract response with an updated return value
 
 > `static` **compile**(`appSpec`, `appManager`, `compilation?`): `Promise`\<`AppClientCompilationResult`\>
 
-Defined in: [src/app-client.ts:1013](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L1013)
+Defined in: [src/app-client.ts:1013](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L1013)
 
 Compiles the approval and clear state programs (if TEAL templates provided),
 performing any provided deploy-time parameter replacement and returns
@@ -1091,7 +1091,7 @@ The compiled code and any compilation results (including source maps)
 
 > `static` **exposeLogicError**(`e`, `appSpec`, `details`): `Error`
 
-Defined in: [src/app-client.ts:929](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L929)
+Defined in: [src/app-client.ts:929](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L929)
 
 Takes an error that may include a logic error from a call to the current app and re-exposes the
 error to include source code information via the source map and ARC-56 spec.
@@ -1162,7 +1162,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 > `static` **fromCreatorAndName**(`params`): `Promise`\<`AppClient`\>
 
-Defined in: [src/app-client.ts:556](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L556)
+Defined in: [src/app-client.ts:556](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L556)
 
 Returns a new `AppClient` client, resolving the app by creator address and name
 using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
@@ -1260,7 +1260,7 @@ const appClient = await AppClient.fromCreatorAndName({
 
 > `static` **fromNetwork**(`params`): `Promise`\<`AppClient`\>
 
-Defined in: [src/app-client.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L585)
+Defined in: [src/app-client.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L585)
 
 Returns an `AppClient` instance for the current network based on
 pre-determined network-specific app IDs specified in the ARC-56 app spec.
@@ -1339,7 +1339,7 @@ const appClient = await AppClient.fromNetwork({
 
 > `static` **normaliseAppSpec**(`spec`): [`Arc56Contract`](../../Subpaths/abi/type-aliases/Arc56Contract.md)
 
-Defined in: [src/app-client.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L613)
+Defined in: [src/app-client.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L613)
 
 Takes a string or parsed JSON object that could be ARC-32 or ARC-56 format and
 normalises it into a parsed ARC-56 contract object.

@@ -9,7 +9,7 @@ Note: If you prefer Python there's an equivalent [Python utility library](https:
 ## Quick Links
 
 - **New to AlgoKit?** Start with the [Quick Start Tutorial](../tutorials/quick-start.md)
-- **Building an app?** See [Concepts](../concepts/algorand-client.md) and [Examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples)
+- **Building an app?** See [Concepts](../concepts/algorand-client.md) and [Examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples)
 - **API Reference** - [Auto-generated docs](../api/README.md)
 - **Upgrading?** See [Migration Guides](../migration/v7-migration.md)
 
@@ -206,17 +206,17 @@ The library helps you interact with and develop against the Algorand blockchain 
 
 # Examples
 
-We maintain [runnable examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples) organized by feature:
+We maintain [runnable examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples) organized by feature:
 
-- **[AlgorandClient](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/algorand_client)** - High-level API usage
-- **[Transact](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/transact)** - Transaction construction
-- **[ABI](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/abi)** - ABI encoding/decoding
-- **[Testing](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/testing)** - Testing utilities
-- **[Algod Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/algod_client)** - Node operations
-- **[Indexer Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/indexer_client)** - Blockchain queries
-- **[KMD Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/kmd_client)** - Key management
-- **[Algo25](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/algo25)** - Mnemonic utilities
-- **[Common](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples/common)** - Utility functions
+- **[AlgorandClient](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/algorand_client)** - High-level API usage
+- **[Transact](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/transact)** - Transaction construction
+- **[ABI](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/abi)** - ABI encoding/decoding
+- **[Testing](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/testing)** - Testing utilities
+- **[Algod Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/algod_client)** - Node operations
+- **[Indexer Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/indexer_client)** - Blockchain queries
+- **[KMD Client](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/kmd_client)** - Key management
+- **[Algo25](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/algo25)** - Mnemonic utilities
+- **[Common](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples/common)** - Utility functions
 
 # Reference documentation
 

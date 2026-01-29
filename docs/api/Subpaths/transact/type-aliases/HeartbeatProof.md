@@ -8,7 +8,7 @@
 
 > **HeartbeatProof** = `object`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L26)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/heartbeat.ts#L26)
 
 Heartbeat proof structure
 
@@ -18,7 +18,7 @@ Heartbeat proof structure
 
 > **pk**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L31)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/heartbeat.ts#L31)
 
 Public key (32 bytes)
 
@@ -28,7 +28,7 @@ Public key (32 bytes)
 
 > **pk1Sig**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L37)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/heartbeat.ts#L37)
 
 Public key 1 signature (64 bytes)
 
@@ -38,7 +38,7 @@ Public key 1 signature (64 bytes)
 
 > **pk2**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L34)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/heartbeat.ts#L34)
 
 Public key 2 (32 bytes)
 
@@ -48,7 +48,7 @@ Public key 2 (32 bytes)
 
 > **pk2Sig**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L40)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/heartbeat.ts#L40)
 
 Public key 2 signature (64 bytes)
 
@@ -58,6 +58,6 @@ Public key 2 signature (64 bytes)
 
 > **sig**: `Uint8Array`
 
-Defined in: [packages/transact/src/transactions/heartbeat.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/transact/src/transactions/heartbeat.ts#L28)
+Defined in: [packages/transact/src/transactions/heartbeat.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/heartbeat.ts#L28)
 
 Signature (64 bytes)

@@ -8,7 +8,7 @@
 
 > **WalletHandle** = `object`
 
-Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet-handle.ts#L10)
+Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/wallet-handle.ts#L10)
 
 WalletHandle includes the wallet the handle corresponds to
 and the number of number of seconds to expiration
@@ -19,7 +19,7 @@ and the number of number of seconds to expiration
 
 > **expiresSeconds**: `number`
 
-Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet-handle.ts#L11)
+Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/wallet-handle.ts#L11)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:11](https://github
 
 > **wallet**: [`Wallet`](Wallet.md)
 
-Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/wallet-handle.ts#L12)
+Defined in: [packages/kmd\_client/src/models/wallet-handle.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/wallet-handle.ts#L12)

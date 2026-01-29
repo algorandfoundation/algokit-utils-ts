@@ -6,7 +6,7 @@
 
 # Interface: AlgoConfig
 
-Defined in: [src/network-client.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L12)
+Defined in: [src/network-client.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/network-client.ts#L12)
 
 Configuration for algod, indexer and kmd clients.
 
@@ -16,7 +16,7 @@ Configuration for algod, indexer and kmd clients.
 
 > **algodConfig**: [`AlgoClientConfig`](AlgoClientConfig.md)
 
-Defined in: [src/network-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L14)
+Defined in: [src/network-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/network-client.ts#L14)
 
 Algod client configuration
 
@@ -26,7 +26,7 @@ Algod client configuration
 
 > `optional` **indexerConfig**: [`AlgoClientConfig`](AlgoClientConfig.md)
 
-Defined in: [src/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L16)
+Defined in: [src/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/network-client.ts#L16)
 
 Indexer client configuration
 
@@ -36,6 +36,6 @@ Indexer client configuration
 
 > `optional` **kmdConfig**: [`AlgoClientConfig`](AlgoClientConfig.md)
 
-Defined in: [src/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L18)
+Defined in: [src/network-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/network-client.ts#L18)
 
 Kmd configuration

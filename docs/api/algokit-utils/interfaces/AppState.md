@@ -6,7 +6,7 @@
 
 # Interface: AppState
 
-Defined in: [src/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L248)
+Defined in: [src/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app.ts#L248)
 
 Object holding app state values
 

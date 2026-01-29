@@ -6,7 +6,7 @@
 
 # Interface: GetTestAccountParams
 
-Defined in: [src/testing/types.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L45)
+Defined in: [src/testing/types.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L45)
 
 Parameters for the `getTestAccount` function.
 
@@ -16,7 +16,7 @@ Parameters for the `getTestAccount` function.
 
 > `optional` **accountGetter**: (`algorand`) => `Promise`\<[`Address`](../../../algokit-utils/classes/Address.md) & `object`\>
 
-Defined in: [src/testing/types.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L51)
+Defined in: [src/testing/types.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L51)
 
 Optional override for how to get a test account; this allows you to retrieve accounts from a known or cached list of accounts.
 
@@ -36,7 +36,7 @@ Optional override for how to get a test account; this allows you to retrieve acc
 
 > **initialFunds**: [`AlgoAmount`](../../../algokit-utils/classes/AlgoAmount.md)
 
-Defined in: [src/testing/types.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L47)
+Defined in: [src/testing/types.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L47)
 
 Initial funds to ensure the account has
 
@@ -46,6 +46,6 @@ Initial funds to ensure the account has
 
 > `optional` **suppressLog**: `boolean`
 
-Defined in: [src/testing/types.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/types.ts#L49)
+Defined in: [src/testing/types.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/testing/types.ts#L49)
 
 Whether to suppress the log (which includes a mnemonic) or not (default: do not suppress the log)

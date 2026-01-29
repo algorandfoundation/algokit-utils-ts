@@ -8,7 +8,7 @@
 
 > **RenameWalletRequest** = `object`
 
-Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/rename-wallet-request.ts#L7)
+Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/rename-wallet-request.ts#L7)
 
 The request for `POST /v1/wallet/rename`
 
@@ -18,7 +18,7 @@ The request for `POST /v1/wallet/rename`
 
 > **walletId**: `string`
 
-Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/rename-wallet-request.ts#L8)
+Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/rename-wallet-request.ts#L8)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:8](https:/
 
 > **walletName**: `string`
 
-Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/rename-wallet-request.ts#L9)
+Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/rename-wallet-request.ts#L9)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:9](https:/
 
 > **walletPassword**: `string`
 
-Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/kmd_client/src/models/rename-wallet-request.ts#L10)
+Defined in: [packages/kmd\_client/src/models/rename-wallet-request.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/kmd_client/src/models/rename-wallet-request.ts#L10)

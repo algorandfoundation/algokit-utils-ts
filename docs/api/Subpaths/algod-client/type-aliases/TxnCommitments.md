@@ -8,7 +8,7 @@
 
 > **TxnCommitments** = `object`
 
-Defined in: [packages/algod\_client/src/models/block.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L216)
+Defined in: [packages/algod\_client/src/models/block.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L216)
 
 Transaction commitment hashes for the block.
 
@@ -18,7 +18,7 @@ Transaction commitment hashes for the block.
 
 > **nativeSha512\_256Commitment**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L218)
+Defined in: [packages/algod\_client/src/models/block.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L218)
 
 [txn] Root of transaction merkle tree using SHA512_256.
 
@@ -28,7 +28,7 @@ Defined in: [packages/algod\_client/src/models/block.ts:218](https://github.com/
 
 > `optional` **sha256Commitment**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L220)
+Defined in: [packages/algod\_client/src/models/block.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L220)
 
 [txn256] Root of transaction vector commitment using SHA256.
 
@@ -38,6 +38,6 @@ Defined in: [packages/algod\_client/src/models/block.ts:220](https://github.com/
 
 > `optional` **sha512Commitment**: `Uint8Array`
 
-Defined in: [packages/algod\_client/src/models/block.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/packages/algod_client/src/models/block.ts#L222)
+Defined in: [packages/algod\_client/src/models/block.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algod_client/src/models/block.ts#L222)
 
 [txn512] Root of transaction vector commitment using SHA512.
