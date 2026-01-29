@@ -46,7 +46,7 @@ The `AppDeployer` is a class that is used to manage app deployments and deployme
 To get an instance of `AppDeployer` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.appDeployer` or instantiate it directly (passing in an [`AppManager`](./app.md#appmanager), [`AlgorandClientTransactionSender`](./algorand-client.md#sending-a-single-transaction) and optionally an indexer client instance):
 
 ```typescript
-import { AppDeployer } from '@algorandfoundation/algokit-utils/types/app-deployer'
+import { AppDeployer } from '@algorandfoundation/algokit-utils/app-deployer'
 
 const appDeployer = new AppDeployer(appManager, transactionSender, indexer)
 ```

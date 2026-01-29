@@ -1,8 +1,8 @@
 # AlgoKit TypeScript Utilities
 
-A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build, test and deploy solutions on the Algorand Blockchain, including APIs, console apps and dApps. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
+A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build, test and deploy solutions on the Algorand Blockchain, including APIs, console apps and dApps. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit).
 
-The goal of this library is to provide intuitive, productive utility functions that make it easier, quicker and safer to build applications on Algorand. Largely these functions provide a thin wrapper over the underlying Algorand SDK, but provide a higher level interface with sensible defaults and capabilities for common tasks that make development faster and easier.
+The goal of this library is to provide intuitive, productive utility functions that make it easier, quicker and safer to build applications on Algorand. Largely these functions provide a higher level interface with sensible defaults and capabilities for common tasks that make development faster and easier.
 
 Note: If you prefer Python there's an equivalent [Python utility library](https://github.com/algorandfoundation/algokit-utils-py).
 
@@ -19,31 +19,17 @@ Note: If you prefer Python there's an equivalent [Python utility library](https:
 
 This library is designed with the following principles:
 
-- **Modularity** - This library is a thin wrapper of modular building blocks over the Algorand SDK; the primitives from the underlying Algorand SDK are exposed and used wherever possible so you can opt-in to which parts of this library you want to use without having to use an all or nothing approach.
+- **Modularity** - This library is built with modular building blocks; you can opt-in to which parts of this library you want to use without having to use an all or nothing approach. Subpath imports enable tree-shaking for optimal bundle sizes.
 - **Type-safety** - This library provides strong TypeScript support with effort put into creating types that provide good type safety and intellisense.
 - **Productivity** - This library is built to make solution developers highly productive; it has a number of mechanisms to make common code easier and terser to write
 
 # Installation
 
-Before installing, you'll need to decide on the version you want to target. Version 7 and 8 have the same feature set, however v7 leverages algosdk@>=2.9.0<3.0, whereas v8 leverages algosdk@>=3.0.0. Your project and it's dependencies will help you decide which version to target.
-
-Once you've decided on the target version, this library can be installed from NPM using your favourite npm client, e.g.:
-
-To target algosdk@2 and use version 7 of AlgoKit Utils, run the below:
+This library can be installed from NPM using your preferred npm client, e.g.:
 
 ```
-npm install algosdk@^2.9.0 @algorandfoundation/algokit-utils@^7.0.0
+npm install @algorandfoundation/algokit-utils
 ```
-
-To target algosdk@3 and use the latest version of AlgoKit Utils, run the below:
-
-```
-npm install algosdk@^3.0.0 @algorandfoundation/algokit-utils
-```
-
-## Peer Dependencies
-
-This library uses `algosdk` as a peer dependency. Please see above to ensure you have the correct version installed in your project.
 
 # Usage
 
@@ -131,17 +117,17 @@ Use intellisense in your IDE to discover available types, or refer to the [refer
 
 AlgoKit Utils provides modular subpath imports for tree-shaking and focused functionality:
 
-| Subpath | Description |
-|---------|-------------|
-| Main | Core functionality including `AlgorandClient` |
-| `/testing` | Testing utilities and fixtures |
-| `/abi` | ABI encoding/decoding utilities |
-| `/transact` | Low-level transaction construction |
-| `/transaction` | Transaction types and utilities |
-| `/algo25` | Algorand 25-word mnemonic utilities |
-| `/algod-client` | Typed Algod client |
-| `/indexer-client` | Typed Indexer client |
-| `/kmd-client` | Typed KMD client |
+| Subpath           | Description                                   |
+| ----------------- | --------------------------------------------- |
+| Main              | Core functionality including `AlgorandClient` |
+| `/testing`        | Testing utilities and fixtures                |
+| `/abi`            | ABI encoding/decoding utilities               |
+| `/transact`       | Low-level transaction construction            |
+| `/transaction`    | Transaction types and utilities               |
+| `/algo25`         | Algorand 25-word mnemonic utilities           |
+| `/algod-client`   | Typed Algod client                            |
+| `/indexer-client` | Typed Indexer client                          |
+| `/kmd-client`     | Typed KMD client                              |
 
 > [!TIP]
 > Using specific subpath imports can help reduce bundle size through tree-shaking.
@@ -154,7 +140,7 @@ To configure the AlgoKit Utils library you can make use of the `Config` object, 
 
 AlgoKit has an in-built logging abstraction that allows the library to issue log messages without coupling the library to a particular logging library. This means you can access the AlgoKit Utils logs within your existing logging library if you have one.
 
-To do this you need to create a logging translator that exposes the following interface (``Logger``):
+To do this you need to create a logging translator that exposes the following interface (`Logger`):
 
 ```typescript
 export type Logger = {
@@ -168,7 +154,7 @@ export type Logger = {
 
 Note: this interface type is directly compatible with [Winston](https://github.com/winstonjs/winston) so you should be able to pass AlgoKit a Winston logger.
 
-By default, the ``consoleLogger`` is set as the logger, which will send log messages to the various `console.*` methods for all logs apart from verbose logs. There is also a ``nullLogger`` if you want to disable logging, or various leveled console loggers: ``verboseConsoleLogger`` (also outputs verbose logs), ``infoConsoleLogger`` (only outputs info, warning and error logs), ``warningConsoleLogger`` (only outputs warning and error logs).
+By default, the `consoleLogger` is set as the logger, which will send log messages to the various `console.*` methods for all logs apart from verbose logs. There is also a `nullLogger` if you want to disable logging, or various leveled console loggers: `verboseConsoleLogger` (also outputs verbose logs), `infoConsoleLogger` (only outputs info, warning and error logs), `warningConsoleLogger` (only outputs warning and error logs).
 
 If you want to override the logger you can use the following:
 
@@ -176,7 +162,7 @@ If you want to override the logger you can use the following:
 Config.configure({ logger: myLogger })
 ```
 
-To retrieve the current debug state you can use ``Config.logger``. To get a logger that is optionally set to the null logger based on a boolean flag you can use the ``Config.getLogger(useNullLogger)`` function.
+To retrieve the current debug state you can use `Config.logger`. To get a logger that is optionally set to the null logger based on a boolean flag you can use the `Config.getLogger(useNullLogger)` function.
 
 ## Debug mode
 
@@ -186,11 +172,11 @@ To turn on debug mode you can use the following:
 Config.configure({ debug: true })
 ```
 
-To retrieve the current debug state you can use ``Config.debug``.
+To retrieve the current debug state you can use `Config.debug`.
 
 This will turn on things like automatic tracing, more verbose logging and [advanced debugging](../concepts/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
 
-If you want to temporarily turn it on you can use the ``withDebug`` function:
+If you want to temporarily turn it on you can use the `withDebug` function:
 
 ```typescript
 Config.withDebug(() => {
@@ -237,6 +223,7 @@ We maintain [runnable examples](https://github.com/algorandfoundation/algokit-ut
 We have [auto-generated reference documentation](../api/README.md) including:
 
 **Key Classes:**
+
 - [`AlgorandClient`](../api/algokit-utils/classes/AlgorandClient.md) - Main entry point
 - [`TransactionComposer`](../api/algokit-utils/classes/TransactionComposer.md) - Transaction composition
 - [`AppClient`](../api/algokit-utils/classes/AppClient.md) - Smart contract interaction
@@ -245,5 +232,7 @@ We have [auto-generated reference documentation](../api/README.md) including:
 - [`AssetManager`](../api/algokit-utils/classes/AssetManager.md) - Asset operations
 
 **Migration Guides:**
+
 - [v7 Migration](../migration/v7-migration.md) - Function-based to class-based API
-- [v8 Migration](../migration/v8-migration.md) - Upgrading to algosdk v3
+- [v8 Migration](../migration/v8-migration.md) - Previous algosdk v3 upgrade
+

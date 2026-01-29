@@ -2,6 +2,9 @@
 
 Account management is one of the core capabilities provided by AlgoKit Utils. It allows you to create mnemonic, rekeyed, multisig, transaction signer, idempotent KMD and environment variable injected accounts that can be used to sign transactions as well as representing a sender address at the same time. This significantly simplifies management of transaction signing.
 
+> [!TIP]
+> The core account types (`TransactionSigner`, `AddressWithTransactionSigner`, `LogicSigAccount`, `MultisigAccount`) are available from the [modular imports](./modular-imports.md) via `@algorandfoundation/algokit-utils/transact`.
+
 ## `AccountManager`
 
 The `AccountManager` is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](./transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
@@ -9,29 +12,28 @@ The `AccountManager` is a class that is used to get, create, and fund accounts a
 To get an instance of `AccountManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly:
 
 ```typescript
-import { AccountManager } from '@algorandfoundation/algokit-utils/types/account-manager'
+import { AccountManager } from '@algorandfoundation/algokit-utils/account-manager'
 
 const accountManager = new AccountManager(clientManager)
 ```
 
 ## `TransactionSignerAccount`
 
-The core internal type that holds information about a signer/sender pair for a transaction is `TransactionSignerAccount`, which represents an `algosdk.TransactionSigner` (`signer`) along with a sender address (`addr`) as the encoded string address.
+The core internal type that holds information about a signer/sender pair for a transaction is `AddressWithTransactionSigner`, which represents a `TransactionSigner` (`signer`) along with a sender address (`addr`).
 
-Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`TransactionComposer`](./transaction-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
+Many methods in `AccountManager` expose an `AddressWithTransactionSigner`. `AddressWithTransactionSigner` can be used with [`TransactionComposer`](./transaction-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
 
 ## Registering a signer
 
 The `AccountManager` keeps track of which signer is associated with a given sender address. This is used by [`AlgorandClient`](./algorand-client.md) to automatically sign transactions by that sender. Any of the [methods](#accounts) within `AccountManager` that return an account will automatically register the signer with the sender. If however, you are creating a signer external to the `AccountManager`, for instance when using the use-wallet library in a dApp, then you need to register the signer with the `AccountManager` if you want it to be able to automatically sign transactions from that sender.
 
-There are two methods that can be used for this, `setSignerFromAccount`, which takes any number of [account based objects](#underlying-account-classes) that combine signer and sender (`TransactionSignerAccount` | `algosdk.Account` | `algosdk.LogicSigAccount` | `SigningAccount` | `MultisigAccount`), or `setSigner` which takes the sender address and the `TransactionSigner`:
+There are two methods that can be used for this, `setSignerFromAccount`, which takes any number of [account based objects](#underlying-account-classes) that combine signer and sender (`AddressWithTransactionSigner` | `LogicSigAccount` | `MultisigAccount`), or `setSigner` which takes the sender address and the `TransactionSigner`:
 
 ```typescript
 algorand.account
-  .setSignerFromAccount(algosdk.generateAccount())
-  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
-  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
-  .setSignerFromAccount(new MultisigAccount({ version: 1, threshold: 1, addrs: ['ADDRESS1...', 'ADDRESS2...'] }, [account1, account2]))
+  .setSignerFromAccount(algorand.account.random())
+  .setSignerFromAccount(algorand.account.logicsig(program, args))
+  .setSignerFromAccount(algorand.account.multisig({ version: 1, threshold: 1, addrs: ['ADDRESS1...', 'ADDRESS2...'] }, [account1, account2]))
   .setSignerFromAccount({ addr: 'SENDERADDRESS', signer: transactionSigner })
   .setSigner('SENDERADDRESS', transactionSigner)
 ```
@@ -70,12 +72,11 @@ In order to get/register accounts for signing operations you can use the followi
 
 ### Underlying account classes
 
-While `TransactionSignerAccount` is the main class used to represent an account that can sign, there are underlying account classes that can underpin the signer within the transaction signer account.
+While `AddressWithTransactionSigner` is the main interface used to represent an account that can sign, there are underlying account classes that can underpin the signer.
 
-- `Account` - An in-built `algosdk.Account` object that has an address and private signing key, this can be created
-- `SigningAccount` - An abstraction around `algosdk.Account` that supports rekeyed accounts
-- `LogicSigAccount` - An in-built algosdk `algosdk.LogicSigAccount` object
-- `MultisigAccount` - An abstraction around `algosdk.MultisigMetadata`, `algosdk.makeMultiSigAccountTransactionSigner`, `algosdk.multisigAddress`, `algosdk.signMultisigTransaction` and `algosdk.appendSignMultisigTransaction` that supports multisig accounts with one or more signers present
+- `AddressWithTransactionSigner` - An interface combining an address with a transaction signer, created via `algorand.account.random()` or `algorand.account.fromMnemonic()`
+- `LogicSigAccount` - A logic signature account for signing with a TEAL program
+- `MultisigAccount` - A multisig account that supports multisig transactions with one or more signers present
 
 ### Dispenser
 
@@ -147,7 +148,7 @@ The KMD SDK is fairly low level so to make use of it there is a fair bit of boil
 To get an instance of the `KmdAccountManager` class you can access it from [`AlgorandClient`](./algorand-client.md) via `algorand.account.kmd` or instantiate it directly (passing in a [`ClientManager`](./client.md)):
 
 ```typescript
-import { KmdAccountManager } from '@algorandfoundation/algokit-utils/types/kmd-account-manager'
+import { KmdAccountManager } from '@algorandfoundation/algokit-utils/kmd-account-manager'
 
 // Algod client only
 const kmdAccountManager = new KmdAccountManager(clientManager)

@@ -2,6 +2,9 @@
 
 Client management is one of the core capabilities provided by AlgoKit Utils. It allows you to create (auto-retry) [algod](https://dev.algorand.co/reference/rest-apis/algod), [indexer](https://dev.algorand.co/reference/rest-apis/indexer) and [kmd](https://dev.algorand.co/reference/rest-apis/kmd) clients against various networks resolved from environment or specified configuration.
 
+> [!TIP]
+> The API client types are available from the [modular imports](./modular-imports.md): Algod types from `@algorandfoundation/algokit-utils/algod-client`, Indexer types from `@algorandfoundation/algokit-utils/indexer-client`, and KMD types from `@algorandfoundation/algokit-utils/kmd-client`.
+
 To see some usage examples check out the `automated tests`.
 
 ## `ClientManager`
@@ -11,7 +14,7 @@ The `ClientManager` is a class that is used to manage client instances.
 To get an instance of `ClientManager` you can get it from either [`AlgorandClient`](./algorand-client.md) via `algorand.client` or instantiate it directly:
 
 ```typescript
-import { ClientManager } from '@algorandfoundation/algokit-utils/types/client-manager'
+import { ClientManager } from '@algorandfoundation/algokit-utils/client-manager'
 
 // Algod client only
 const clientManager = new ClientManager({ algod: algodClient })

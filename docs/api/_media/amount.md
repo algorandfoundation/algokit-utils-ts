@@ -2,7 +2,7 @@
 
 Algo amount handling is one of the core capabilities provided by AlgoKit Utils. It allows you to reliably and tersely specify amounts of microAlgo and Algo and safely convert between them.
 
-Any AlgoKit Utils function that needs an Algo amount will take an `AlgoAmount` object, which ensures that there is never any confusion about what value is being passed around. Whenever an AlgoKit Utils function calls into an underlying algosdk function, or if you need to take an `AlgoAmount` and pass it into an underlying algosdk function (per the `modularity principle`) you can safely and explicitly convert to microAlgo or Algo.
+Any AlgoKit Utils function that needs an Algo amount will take an `AlgoAmount` object, which ensures that there is never any confusion about what value is being passed around. You can safely and explicitly convert to microAlgo or Algo when needed.
 
 To see some usage examples check out the `automated tests`. Alternatively, you see the `reference documentation` for `AlgoAmount`.
 
@@ -13,7 +13,7 @@ The `AlgoAmount` class provides a safe wrapper around an underlying `number` amo
 To import the AlgoAmount class you can access it via:
 
 ```typescript
-import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
+import { AlgoAmount } from '@algorandfoundation/algokit-utils/amount'
 ```
 
 You may not need to import this type to use it though since there are also special methods that are exposed from the root AlgoKit Utils export and also others that extend the `number` protoype per below.
@@ -36,7 +36,7 @@ There are a few ways to create an `AlgoAmount`:
 Note: per above, to use any of the versions that reference `AlgoAmount` type itself you need to import it:
 
 ```typescript
-import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
+import { AlgoAmount } from '@algorandfoundation/algokit-utils/amount'
 ```
 
 ### Extracting a value from `AlgoAmount`

@@ -4,6 +4,9 @@ The `TransactionComposer` class allows you to easily compose one or more complia
 
 It's the core of how the [`AlgorandClient`](./algorand-client.md) class composes and sends transactions.
 
+> [!TIP]
+> ABI-related types like `ABIMethod` are available from the [modular imports](./modular-imports.md) via `@algorandfoundation/algokit-utils/abi`, and transaction types like `TransactionSigner` are available from `@algorandfoundation/algokit-utils/transact`.
+
 To get an instance of `TransactionComposer` you can either get it from an [app client](./app-client.md), from an [`AlgorandClient`](./algorand-client.md), or by new-ing up via the constructor.
 
 ```typescript
@@ -11,12 +14,12 @@ const composerFromAlgorand = algorand.newGroup()
 const composerFromAppClient = appClient.algorand.newGroup()
 const composerFromConstructor = new TransactionComposer({
   algod,
-  /* Return the algosdk.TransactionSigner for this address*/
+  /* Return the TransactionSigner for this address*/
   getSigner: (address: string) => signer,
 })
 const composerFromConstructorWithOptionalParams = new TransactionComposer({
   algod,
-  /* Return the algosdk.TransactionSigner for this address*/
+  /* Return the TransactionSigner for this address*/
   getSigner: (address: string) => signer,
   getSuggestedParams: () => algod.transactionParams().do(),
   defaultValidityWindow: 1000,
@@ -33,7 +36,7 @@ The `methods to construct a transaction` are all named `add{TransactionType}` an
 For example:
 
 ```typescript
-const myMethod = algosdk.ABIMethod.fromSignature('my_method()void')
+const myMethod = ABIMethod.fromSignature('my_method()void')
 const result = algorand
   .newGroup()
   .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (100).microAlgo() })
@@ -57,7 +60,7 @@ Additionally `send()` takes a number of parameters which allow you to opt-in to 
 For example:
 
 ```typescript
-const myMethod = algosdk.ABIMethod.fromSignature('my_method()void')
+const myMethod = ABIMethod.fromSignature('my_method()void')
 const result = algorand
   .newGroup()
   .addAppCallMethodCall({
@@ -80,7 +83,7 @@ If `my_method` in the above example accesses any resources, they will be automat
 For example:
 
 ```typescript
-const myMethod = algosdk.ABIMethod.fromSignature('my_method()void')
+const myMethod = ABIMethod.fromSignature('my_method()void')
 const result = algorand
   .newGroup()
   .addAppCallMethodCall({
@@ -99,10 +102,10 @@ Assuming the app account is not covering any of the inner transaction fees, if `
 
 The above example also has a `maxFee` of 5000 µALGO specified. An exception will be thrown if the transaction fee execeeds that value, which allows you to set fee limits. The `maxFee` field is required when enabling `coverAppCallInnerTransactionFees`.
 
-Because `maxFee` is required and an `algosdk.Transaction` does not hold any max fee information, you cannot use the generic `addTransaction()` method on the composer with `coverAppCallInnerTransactionFees` enabled. Instead use the below, which provides a better overall experience:
+Because `maxFee` is required and a `Transaction` does not hold any max fee information, you cannot use the generic `addTransaction()` method on the composer with `coverAppCallInnerTransactionFees` enabled. Instead use the below, which provides a better overall experience:
 
 ```typescript
-const myMethod = algosdk.ABIMethod.fromSignature('my_method()void')
+const myMethod = ABIMethod.fromSignature('my_method()void')
 
 // Does not work
 const result = algorand
@@ -112,7 +115,7 @@ const result = algorand
     appId: 123n,
     method: myMethod,
     args: [1, 2, 3],
-    maxFee: microAlgo(5000), // This is only used to create the algosdk.Transaction object and isn't made available to the composer.
+    maxFee: microAlgo(5000), // This is only used to create the Transaction object and isn't made available to the composer.
   })).transactions[0]),
   .send({
     coverAppCallInnerTransactionFees: true,

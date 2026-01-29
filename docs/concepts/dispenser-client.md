@@ -38,7 +38,7 @@ const dispenserClient = algorand.client.getTestNetDispenserFromEnvironment({
 Alternatively, you can construct it directly.
 
 ```ts
-import { TestNetDispenserApiClient } from '@algorandfoundation/algokit-utils/types/dispenser-client'
+import { TestNetDispenserApiClient } from '@algorandfoundation/algokit-utils/dispenser-client'
 
 // Using constructor argument
 const client = new TestNetDispenserApiClient({ authToken: 'your_auth_token' })

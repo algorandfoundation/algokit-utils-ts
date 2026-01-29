@@ -117,7 +117,7 @@ const { result, appClient } = factory.send.bare.create()
 const { result, appClient } = factory.send.bare.create({
   args: [new Uint8Array(1, 2, 3, 4)],
   staticFee: (3000).microAlgo(),
-  onComplete: algosdk.OnApplicationComplete.OptIn,
+  onComplete: OnApplicationComplete.OptIn,
   deployTimeParams: {
     ONE: 1,
     TWO: 'two',
@@ -160,7 +160,7 @@ const { result, appClient } = factory.deploy({
   createParams: {
     args: [new Uint8Array(1, 2, 3, 4)],
     staticFee: (3000).microAlgo(),
-    onComplete: algosdk.OnApplicationComplete.OptIn:
+    onComplete: OnApplicationComplete.OptIn:
   },
   updateParams: {
     args: [new Uint8Array(1, 2, 3)],
@@ -374,8 +374,8 @@ const boxName2: BoxReference = 'my-box2'
 const boxNames = appClient.getBoxNames()
 const boxValue = appClient.getBoxValue(boxName)
 const boxValues = appClient.getBoxValues([boxName, boxName2])
-const boxABIValue = appClient.getBoxValueFromABIType(boxName, algosdk.ABIStringType)
-const boxABIValues = appClient.getBoxValuesFromABIType([boxName, boxName2], algosdk.ABIStringType)
+const boxABIValue = appClient.getBoxValueFromABIType(boxName, new ABIStringType())
+const boxABIValues = appClient.getBoxValuesFromABIType([boxName, boxName2], new ABIStringType())
 ```
 
 ## Handling logic errors and diagnosing errors

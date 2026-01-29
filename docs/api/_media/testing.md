@@ -221,7 +221,7 @@ The testing capability provides the ability to capture transactions via the `Tra
 The `TransactionLogger` has the following methods:
 
 - `logRawTransaction(signedTransactions: Uint8Array | Uint8Array[])` - Logs the IDs of the given signed transaction(s)
-- `capture(algod)` - Returns a proxy `algosdk.Algodv2` instance that wraps the given `algod` client that will call `logRawTransaction` for every call to `sendRawTransaction` on that algod instance
+- `capture(algod)` - Returns a proxy `AlgodClient` instance that wraps the given `algod` client that will call `logRawTransaction` for every call to `sendRawTransaction` on that algod instance
 - `sentTransactionIds` - Returns the currently captured list of transaction IDs that have been logged
 - `clear()` - Clears the current list of transaction IDs
 - `waitForIndexer(indexer)` - [Waits for the given indexer instance to catch up](#waiting-for-indexer) with the currently logged transaction IDs

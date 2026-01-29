@@ -11,7 +11,7 @@ Get up and running with AlgoKit Utils in 5 minutes.
 ## Installation
 
 ```bash
-npm install algosdk@^3.0.0 @algorandfoundation/algokit-utils
+npm install @algorandfoundation/algokit-utils
 ```
 
 ## Your First Transaction

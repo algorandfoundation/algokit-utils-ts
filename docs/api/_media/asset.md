@@ -11,8 +11,8 @@ The `AssetManager` is a class that is used to manage asset information.
 To get an instance of `AssetManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.asset` or instantiate it directly:
 
 ```typescript
-import { AssetManager } from '@algorandfoundation/algokit-utils/types/asset-manager'
-import {TransactionComposer } from '@algorandfoundation/algokit-utils/types/composer'
+import { AssetManager } from '@algorandfoundation/algokit-utils/asset-manager'
+import { TransactionComposer } from '@algorandfoundation/algokit-utils/composer'
 
 const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
 ```

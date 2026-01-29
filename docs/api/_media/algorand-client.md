@@ -25,9 +25,9 @@ const algorand = AlgorandClient.fromConfig({ algodConfig })
 const algorand = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
 ```
 
-## Accessing SDK clients
+## Accessing API clients
 
-Once you have an `AlgorandClient` instance, you can access the SDK clients for the various Algorand APIs via the `algorand.client` property.
+Once you have an `AlgorandClient` instance, you can access the API clients for the various Algorand APIs via the `algorand.client` property.
 
 ```ts
 const algorand = AlgorandClient.defaultLocalNet()
@@ -65,7 +65,7 @@ algorand.createTransaction.{method}(params: {ComposerTransactionTypeParams} & Co
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, `see the full list`
 - `CommonTransactionParams` are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
-- `Transaction` is an unsigned `algosdk.Transaction` object, ready to be signed and sent
+- `Transaction` is an unsigned transaction object, ready to be signed and sent
 
 The return type for the ABI method call methods are slightly different:
 
@@ -78,11 +78,11 @@ Where `BuiltTransactions` looks like this:
 ```typescript
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: algosdk.Transaction[]
+  transactions: Transaction[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
-  methodCalls: Map<number, algosdk.ABIMethod>
+  methodCalls: Map<number, ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
-  signers: Map<number, algosdk.TransactionSigner>
+  signers: Map<number, TransactionSigner>
 }
 ```
 
@@ -132,7 +132,7 @@ There are two common base interfaces that get reused:
 
 - `CommonTransactionParams`
   - `sender: string` - The address of the account sending the transaction.
-  - `signer?: algosdk.TransactionSigner | TransactionSignerAccount` - The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured).
+  - `signer?: TransactionSigner | AddressWithTransactionSigner` - The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured).
   - `rekeyTo?: string` - Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
   - `note?: Uint8Array | string` - Note to attach to the transaction. Max of 1000 bytes.
   - `lease?: Uint8Array | string` - Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).

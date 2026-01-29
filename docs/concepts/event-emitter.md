@@ -9,7 +9,7 @@ The `AsyncEventEmitter` is a class that manages asynchronous event emission and 
 To use the `AsyncEventEmitter`, you can import it directly:
 
 ```typescript
-import { AsyncEventEmitter } from '@algorandfoundation/algokit-utils/types/async-event-emitter'
+import { AsyncEventEmitter } from '@algorandfoundation/algokit-utils/async-event-emitter'
 
 const emitter = new AsyncEventEmitter()
 ```
