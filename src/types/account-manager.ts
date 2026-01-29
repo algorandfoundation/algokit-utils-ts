@@ -13,3 +13,6 @@ export type AccountManager = _AccountManager
 
 /** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
 export type EnsureFundedResult = _EnsureFundedResult
+
+/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
+export const getAccountTransactionSigner = _getAccountTransactionSigner
