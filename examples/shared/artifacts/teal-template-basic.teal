@@ -1,0 +1,12 @@
+#pragma version 10
+// Template with replaceable parameters
+// TMPL_INT_VALUE will be replaced with an integer
+// TMPL_BYTES_VALUE will be replaced with bytes
+
+// Push template values
+int TMPL_INT_VALUE
+byte TMPL_BYTES_VALUE
+pop
+pop
+int 1
+return

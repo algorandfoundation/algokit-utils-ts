@@ -1,0 +1,404 @@
+{
+  "name": "ABI Package Examples",
+  "description": "Create runnable ABI (Application Binary Interface) examples for the @algorandfoundation/algokit-utils/abi subpackage. IMPORTANT: After implementing each example, you MUST run it to verify it works: `npx tsx <example>/index.ts`. The ABI package provides type encoding/decoding, method management, and ARC-56 support for Algorand smart contracts.",
+  "branchName": "ralph/abi-examples",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Infrastructure Setup - Shared Utilities",
+      "description": "As a developer, I need shared utilities and constants for all ABI examples so that examples have consistent setup and helper functions.",
+      "acceptanceCriteria": [
+        "Create examples/abi/shared/constants.ts with any common constants needed for ABI examples",
+        "Create examples/abi/shared/utils.ts with: printHeader(), printStep(), printInfo(), printSuccess(), printError(), formatBytes(), formatHex()",
+        "Create examples/abi/package.json referencing file:../../dist for @algorandfoundation/algokit-utils",
+        "Create examples/abi/tsconfig.json with ESM module settings",
+        "Create examples/abi/README.md documenting all ABI examples",
+        "npm install runs without errors in examples/abi directory",
+        "TypeScript compiles without errors: npx tsc --noEmit"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-002",
+      "title": "ABI Type Parsing Example",
+      "description": "As a developer, I want to see how to parse ABI type strings into type objects using ABIType.from().",
+      "acceptanceCriteria": [
+        "Create examples/abi/01-type-parsing/index.ts",
+        "Demonstrate ABIType.from() parsing various type strings",
+        "Parse primitive types: uint8, uint64, uint256, bool, byte, address, string",
+        "Parse array types: uint64[], byte[32], address[5]",
+        "Parse tuple types: (uint64,address), (bool,string,uint256)",
+        "Show type properties: toString(), bitSize (for uint), staticLength (for static arrays)",
+        "Demonstrate type category detection using instanceof checks",
+        "Run the example with `npx tsx 01-type-parsing/index.ts` and verify it completes successfully"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-003",
+      "title": "Primitive Types Example",
+      "description": "As a developer, I want to see how to encode and decode primitive ABI types (uint, bool, byte).",
+      "acceptanceCriteria": [
+        "Create examples/abi/02-primitive-types/index.ts",
+        "Demonstrate ABIUintType for various bit sizes: 8, 16, 32, 64, 128, 256, 512",
+        "Show encoding BigInt values for large uint types (uint256, uint512)",
+        "Demonstrate ABIBoolType encoding true/false to single byte",
+        "Demonstrate ABIByteType encoding single byte values",
+        "Show encode() and decode() methods for each type",
+        "Display encoded bytes in hex format for clarity",
+        "Verify round-trip: decode(encode(value)) equals original value",
+        "Run the example with `npx tsx 02-primitive-types/index.ts` and verify it completes successfully"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-004",
+      "title": "Address Type Example",
+      "description": "As a developer, I want to see how to encode and decode Algorand addresses using ABIAddressType.",
+      "acceptanceCriteria": [
+        "Create examples/abi/03-address-type/index.ts",
+        "Demonstrate ABIAddressType encoding address strings to 32 bytes",
+        "Show encoding from base32 address string format",
+        "Show encoding from raw 32-byte public key (Uint8Array)",
+        "Decode bytes back to address string",
+        "Verify address encoding is exactly 32 bytes (no length prefix)",
+        "Show relationship between Algorand address and public key bytes",
+        "Run the example with `npx tsx 03-address-type/index.ts` and verify it completes successfully"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-005",
+      "title": "String Type Example",
+      "description": "As a developer, I want to see how to encode and decode dynamic strings using ABIStringType.",
+      "acceptanceCriteria": [
+        "Create examples/abi/04-string-type/index.ts",
+        "Demonstrate ABIStringType encoding strings with length prefix",
+        "Show the 2-byte length prefix followed by UTF-8 encoded content",
+        "Encode various strings: empty string, ASCII, Unicode characters",
+        "Show how dynamic types include their length in the encoding",
+        "Decode strings back from bytes",
+        "Display byte breakdown: length prefix vs content bytes",
+        "Run the example with `npx tsx 04-string-type/index.ts` and verify it completes successfully"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-006",
+      "title": "Static Array Type Example",
+      "description": "As a developer, I want to see how to encode and decode fixed-length arrays using ABIArrayStaticType.",
+      "acceptanceCriteria": [
+        "Create examples/abi/05-static-array/index.ts",
+        "Demonstrate ABIArrayStaticType with various element types",
+        "Show byte[32] encoding (fixed 32 bytes, common for hashes)",
+        "Show uint64[3] encoding (fixed array of integers)",
+        "Show address[2] encoding (fixed array of addresses)",
+        "Demonstrate that static arrays have no length prefix",
+        "Show how element types are encoded consecutively",
+        "Verify encoded length matches expected: elementSize * arrayLength",
+        "Run the example with `npx tsx 05-static-array/index.ts` and verify it completes successfully"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-007",
+      "title": "Dynamic Array Type Example",
+      "description": "As a developer, I want to see how to encode and decode variable-length arrays using ABIArrayDynamicType.",
+      "acceptanceCriteria": [
+        "Create examples/abi/06-dynamic-array/index.ts",
+        "Demonstrate ABIArrayDynamicType with various element types",
+        "Show uint64[] encoding with 2-byte length prefix",
+        "Show string[] encoding demonstrating head/tail encoding for nested dynamic types",
+        "Encode arrays of different lengths to show dynamic sizing",
+        "Show the head/tail encoding pattern for arrays containing dynamic elements",
+        "Display byte layout: length prefix, head section, tail section",
+        "Run the example with `npx tsx 06-dynamic-array/index.ts` and verify it completes successfully"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-008",
+      "title": "Tuple Type Example",
+      "description": "As a developer, I want to see how to encode and decode tuples with mixed types using ABITupleType.",
+      "acceptanceCriteria": [
+        "Create examples/abi/07-tuple-type/index.ts",
+        "Demonstrate ABITupleType with mixed static types (uint64,bool,address)",
+        "Demonstrate tuples with dynamic types (uint64,string,bool)",
+        "Show head/tail encoding: static values inline, dynamic values referenced",
+        "Demonstrate nested tuples: ((uint64,bool),string)",
+        "Show how tuple elements are accessed after decoding",
+        "Display byte layout for tuples with and without dynamic elements",
+        "Run the example with `npx tsx 07-tuple-type/index.ts` and verify it completes successfully"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-009",
+      "title": "Struct Type Example",
+      "description": "As a developer, I want to see how to encode and decode named structs using ABIStructType.",
+      "acceptanceCriteria": [
+        "Create examples/abi/08-struct-type/index.ts",
+        "Demonstrate ABIStructType creation with named fields",
+        "Create a struct like: { name: string, age: uint64, active: bool }",
+        "Show encoding struct values as objects with named keys",
+        "Demonstrate that struct encoding is identical to equivalent tuple encoding",
+        "Show struct field names and types via the type object",
+        "Decode back to struct value with named fields",
+        "Run the example with `npx tsx 08-struct-type/index.ts` and verify it completes successfully"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-010",
+      "title": "Struct and Tuple Conversion Example",
+      "description": "As a developer, I want to see how to convert between struct values (named) and tuple values (positional).",
+      "acceptanceCriteria": [
+        "Create examples/abi/09-struct-tuple-conversion/index.ts",
+        "Demonstrate getTupleValueFromStructValue() function",
+        "Demonstrate getStructValueFromTupleValue() function",
+        "Show converting a struct { name: 'Alice', age: 30n } to tuple ['Alice', 30n]",
+        "Show converting a tuple back to struct with field names",
+        "Demonstrate with nested structs and complex types",
+        "Verify that struct and tuple encodings produce identical bytes",
+        "Run the example with `npx tsx 09-struct-tuple-conversion/index.ts` and verify it completes successfully"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-011",
+      "title": "Bool Array Packing Example",
+      "description": "As a developer, I want to see how bool arrays are packed efficiently (8 bools per byte).",
+      "acceptanceCriteria": [
+        "Create examples/abi/10-bool-packing/index.ts",
+        "Demonstrate static bool array encoding: bool[8] fits in 1 byte",
+        "Show how 8 bools are packed into a single byte as bits",
+        "Demonstrate bool[16] encoding into 2 bytes",
+        "Show bool arrays that don't fill a complete byte (e.g., bool[5])",
+        "Compare encoded size of bool[] vs uint8[] for same count",
+        "Decode packed bool arrays back to boolean values",
+        "Display bit-level view of packed booleans",
+        "Run the example with `npx tsx 10-bool-packing/index.ts` and verify it completes successfully"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-012",
+      "title": "ABI Method Example",
+      "description": "As a developer, I want to see how to parse method signatures and generate method selectors.",
+      "acceptanceCriteria": [
+        "Create examples/abi/11-abi-method/index.ts",
+        "Demonstrate ABIMethod.fromSignature() to parse method signatures",
+        "Parse various signatures: 'transfer(address,uint64)uint64', 'hello(string)string'",
+        "Show method name, args array, and returns type",
+        "Demonstrate getSelector() to generate 4-byte method selector",
+        "Show the relationship: first 4 bytes of SHA-512/256 of signature",
+        "Parse method with no args: 'get()uint64'",
+        "Parse method with no return: 'set(uint64)void'",
+        "Parse method with tuple args and returns",
+        "Run the example with `npx tsx 11-abi-method/index.ts` and verify it completes successfully"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-013",
+      "title": "AVM Type Encoding Example",
+      "description": "As a developer, I want to see how to encode and decode AVM-specific types (bytes, string, uint64).",
+      "acceptanceCriteria": [
+        "Create examples/abi/12-avm-types/index.ts",
+        "Demonstrate AVMBytes type for raw byte arrays",
+        "Demonstrate AVMString type for AVM stack strings",
+        "Demonstrate AVMUint64 type for 64-bit unsigned integers",
+        "Show encodeAVMValue() for encoding values to AVM representation",
+        "Show decodeAVMValue() for decoding AVM bytes to values",
+        "Compare AVM encoding vs ABI encoding for same values",
+        "Show when to use AVM types vs ABI types",
+        "Run the example with `npx tsx 12-avm-types/index.ts` and verify it completes successfully"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-014",
+      "title": "Type Guards Example",
+      "description": "As a developer, I want to see how to use type guard functions to check argument and type categories.",
+      "acceptanceCriteria": [
+        "Create examples/abi/13-type-guards/index.ts",
+        "Demonstrate argTypeIsTransaction() to check for transaction arg types",
+        "Demonstrate argTypeIsReference() to check for reference types (account, asset, app)",
+        "Demonstrate argTypeIsAbiType() to check for standard ABI types",
+        "Demonstrate isAVMType() to check for AVM-specific types",
+        "Show how these guards help with method argument handling",
+        "Test guards against various type strings: 'txn', 'pay', 'account', 'asset', 'application', 'uint64'",
+        "Show proper TypeScript usage with type narrowing",
+        "Run the example with `npx tsx 13-type-guards/index.ts` and verify it completes successfully"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-015",
+      "title": "Complex Nested Types Example",
+      "description": "As a developer, I want to see how to work with deeply nested ABI types combining arrays, tuples, and structs.",
+      "acceptanceCriteria": [
+        "Create examples/abi/14-complex-nested/index.ts",
+        "Demonstrate array of tuples: (uint64,string)[]",
+        "Demonstrate tuple containing arrays: (uint64[],string[])",
+        "Demonstrate nested structs with arrays",
+        "Show deeply nested type: ((uint64,bool)[],string,(address,uint256))[]",
+        "Encode and decode complex nested values",
+        "Display byte layout showing head/tail structure",
+        "Verify round-trip encoding/decoding preserves all nested values",
+        "Run the example with `npx tsx 14-complex-nested/index.ts` and verify it completes successfully"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-016",
+      "title": "Verification Script",
+      "description": "As a developer, I want a script to run all ABI examples and verify they work.",
+      "acceptanceCriteria": [
+        "Create examples/abi/verify-all.sh bash script",
+        "Script runs each example in order (01 through 14)",
+        "Script reports success/failure for each example",
+        "Script exits with non-zero code if any example fails",
+        "Add npm script 'verify-all' to package.json",
+        "All 14 examples pass when running ./verify-all.sh"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-002",
+        "US-003",
+        "US-004",
+        "US-005",
+        "US-006",
+        "US-007",
+        "US-008",
+        "US-009",
+        "US-010",
+        "US-011",
+        "US-012",
+        "US-013",
+        "US-014",
+        "US-015"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-017",
+      "title": "ARC-56 Storage Helpers Example",
+      "description": "As a developer, I want to see how to use ARC-56 storage helpers to read typed state keys and maps from deployed contracts.",
+      "acceptanceCriteria": [
+        "Create examples/abi/15-arc56-storage/index.ts",
+        "Load an ARC-56 contract spec (State.arc56.json from tests/example-contracts/state)",
+        "Demonstrate getGlobalABIStorageKeys() to get all global state key definitions",
+        "Demonstrate getLocalABIStorageKeys() to get all local state key definitions",
+        "Demonstrate getBoxABIStorageKeys() to get all box key definitions",
+        "Show ABIStorageKey properties: key, keyType, valueType, desc",
+        "Demonstrate getBoxABIStorageMaps() to get box map definitions",
+        "Show ABIStorageMap properties: keyType, valueType, desc, prefix",
+        "Deploy the State contract to LocalNet and read actual state values",
+        "Use the storage key types to decode raw state bytes into typed values",
+        "Run the example with `npx tsx 15-arc56-storage/index.ts` and verify it completes successfully",
+        "If LocalNet errors occur (e.g., insufficient funds, network issues), run `algokit localnet reset` and retry"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    }
+  ],
+  "metadata": {
+    "updatedAt": "2026-01-23T13:26:12.816Z"
+  }
+}
