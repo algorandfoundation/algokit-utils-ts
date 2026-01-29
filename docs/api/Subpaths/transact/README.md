@@ -67,6 +67,7 @@
 ## Variables
 
 - [BoxReferenceMeta](variables/BoxReferenceMeta.md)
+- [bytesForSigning](variables/bytesForSigning.md)
 - [HoldingReferenceMeta](variables/HoldingReferenceMeta.md)
 - [LocalsReferenceMeta](variables/LocalsReferenceMeta.md)
 - [SignedTransactionMeta](variables/SignedTransactionMeta.md)

@@ -6,7 +6,7 @@
 
 # Interface: AddressWithProgramDataSigner
 
-Defined in: [packages/transact/src/signer.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L22)
+Defined in: [packages/transact/src/signer.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L24)
 
 ## Hierarchy
 
@@ -22,7 +22,7 @@ Defined in: [packages/transact/src/signer.ts:22](https://github.com/algorandfoun
 
 > **addr**: `Readonly`\<[`Address`](../../../algokit-utils/classes/Address.md)\>
 
-Defined in: [packages/common/src/address.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/common/src/address.ts#L138)
+Defined in: [packages/common/src/address.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/common/src/address.ts#L134)
 
 #### Inherited from
 
@@ -34,4 +34,4 @@ Defined in: [packages/common/src/address.ts:138](https://github.com/algorandfoun
 
 > **programDataSigner**: [`ProgramDataSigner`](../type-aliases/ProgramDataSigner.md)
 
-Defined in: [packages/transact/src/signer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L23)
+Defined in: [packages/transact/src/signer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L25)

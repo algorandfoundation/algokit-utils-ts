@@ -21,7 +21,7 @@
   "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "examples/**/*.*"],
   "out": "docs/_html",
   "tsconfig": "tsconfig.build.json",
-  "readme": "docs/guides/README.md",
+  "readme": "docs/README.md",
   "projectDocuments": ["docs/tutorials/README.md", "docs/concepts/*.md", "docs/migration/*.md"],
   "navigation": {
     "includeFolders": true

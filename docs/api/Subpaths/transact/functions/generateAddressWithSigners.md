@@ -8,7 +8,7 @@
 
 > **generateAddressWithSigners**(`args`): `object`
 
-Defined in: [packages/transact/src/signer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L46)
+Defined in: [packages/transact/src/signer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/signer.ts#L48)
 
 Generate type-safe domain-separated signer callbacks given an ed25519 pubkey and a signing callback
 
@@ -26,7 +26,7 @@ The ed25519 public key used for signing
 
 #### rawEd25519Signer
 
-(`bytesToSign`) => `Promise`\<`Uint8Array`\>
+`RawEd25519Signer`
 
 A callback function that signs raw bytes using the ed25519 private key
 

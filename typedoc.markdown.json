@@ -19,7 +19,7 @@
   "out": "docs/api",
   "plugin": ["typedoc-plugin-markdown"],
   "tsconfig": "tsconfig.build.json",
-  "readme": "docs/guides/README.md",
+  "readme": "docs/README.md",
   "gitRevision": "decoupling",
   "cleanOutputDir": true,
   "excludeReferences": true,
