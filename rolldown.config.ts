@@ -44,5 +44,6 @@ export default createConfig(
     'src/indexer-client/index.ts',
     'src/kmd-client/index.ts',
     'src/crypto/index.ts',
+    'src/common/index.ts',
   ],
 )

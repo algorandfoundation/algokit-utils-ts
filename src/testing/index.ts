@@ -1,6 +1,7 @@
 /**
  * @module Subpaths/testing
  */
+export * from '@algorandfoundation/algokit-testing'
 export * from './account'
 export * from './fixtures'
 export * from './indexer'

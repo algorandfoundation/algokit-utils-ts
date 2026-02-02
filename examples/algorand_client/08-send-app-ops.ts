@@ -14,7 +14,7 @@
  * LocalNet required for sending transactions
  */
 
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-utils/transact'
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'
 import { loadTealSource, printError, printHeader, printInfo, printStep, printSuccess, shortenAddress } from '../shared/utils.js'
 

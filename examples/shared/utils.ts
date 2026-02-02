@@ -1,15 +1,15 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
-import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { AlgoAmount, AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { AlgodClient } from '@algorandfoundation/algokit-utils/algod-client'
 import { IndexerClient } from '@algorandfoundation/algokit-utils/indexer-client'
 import { KmdClient } from '@algorandfoundation/algokit-utils/kmd-client'
-import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
+import { readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { ALGOD_CONFIG, INDEXER_CONFIG, KMD_CONFIG } from './constants.js'
 
-// Get the directory of this file for resolving artifact paths
-// tsx provides __dirname in CJS-compatibility mode
-declare const __dirname: string
+// Get the directory of this file for resolving artifact paths (ESM-compatible)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 // ============================================================================
 // Console Output Helpers
@@ -218,11 +218,7 @@ export async function cleanupTestWallet(kmd: KmdClient, walletHandleToken: strin
  * @param maxRounds - Maximum number of rounds to wait (default: 5)
  * @returns The pending transaction response once confirmed
  */
-export async function waitForConfirmation(
-  algod: AlgodClient,
-  txId: string,
-  maxRounds: number = 5,
-): Promise<Record<string, unknown>> {
+export async function waitForConfirmation(algod: AlgodClient, txId: string, maxRounds: number = 5): Promise<Record<string, unknown>> {
   const status = await algod.status()
   let currentRound = BigInt(status.lastRound)
   const endRound = currentRound + BigInt(maxRounds)

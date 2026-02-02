@@ -16,8 +16,8 @@
  * LocalNet required for app operations
  */
 
-import { ABIType } from '@algorandfoundation/algokit-abi'
-import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { ABIType } from '@algorandfoundation/algokit-utils/abi'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-utils/transact'
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'
 import { loadTealSource, printError, printHeader, printInfo, printStep, printSuccess, shortenAddress } from '../shared/utils.js'
 
