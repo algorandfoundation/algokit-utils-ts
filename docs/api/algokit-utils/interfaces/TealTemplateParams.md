@@ -14,4 +14,4 @@ Note: Looks for `TMPL_{parameter}` for template replacements i.e. you can leave 
 
 ## Indexable
 
-\[`key`: `string`\]: `string` \| `number` \| `bigint` \| `Uint8Array`
+\[`key`: `string`\]: `string` \| `number` \| `bigint` \| `Uint8Array`\<`ArrayBufferLike`\>

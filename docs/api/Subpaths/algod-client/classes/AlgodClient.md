@@ -550,7 +550,7 @@ Send a signed transaction or array of signed transactions to the network.
 
 ##### stxOrStxs
 
-`Uint8Array` | `Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\> | `Uint8Array`\<`ArrayBufferLike`\>[]
 
 #### Returns
 
@@ -622,7 +622,7 @@ Simulate an encoded signed transaction or array of encoded signed transactions.
 
 ##### stxOrStxs
 
-`Uint8Array` | `Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\> | `Uint8Array`\<`ArrayBufferLike`\>[]
 
 #### Returns
 

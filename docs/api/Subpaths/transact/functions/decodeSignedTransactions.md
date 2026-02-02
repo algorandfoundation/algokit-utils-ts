@@ -16,7 +16,7 @@ Decodes a collection of MsgPack bytes into a signed transaction collection.
 
 ### encodedSignedTransactions
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 A collection of MsgPack encoded bytes, each representing a signed transaction.
 

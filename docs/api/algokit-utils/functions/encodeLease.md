@@ -6,7 +6,7 @@
 
 # Function: encodeLease()
 
-> **encodeLease**(`lease?`): `Uint8Array` \| `undefined`
+> **encodeLease**(`lease?`): `Uint8Array`\<`ArrayBufferLike`\> \| `undefined`
 
 Defined in: [src/transaction/transaction.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/transaction/transaction.ts#L23)
 
@@ -18,11 +18,11 @@ Encodes a transaction lease into a 32-byte array ready to be included in an Algo
 
 The transaction lease as a string or binary array or null/undefined if there is no lease
 
-`string` | `Uint8Array`
+`string` | `Uint8Array`\<`ArrayBufferLike`\>
 
 ## Returns
 
-`Uint8Array` \| `undefined`
+`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`
 
 the transaction lease ready for inclusion in a transaction or `undefined` if there is no lease
 

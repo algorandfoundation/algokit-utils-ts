@@ -6,7 +6,7 @@
 
 # Function: encodeSignedTransactions()
 
-> **encodeSignedTransactions**(`signedTransactions`): `Uint8Array`[]
+> **encodeSignedTransactions**(`signedTransactions`): `Uint8Array`\<`ArrayBufferLike`\>[]
 
 Defined in: [packages/transact/src/transactions/signed-transaction.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/signed-transaction.ts#L128)
 
@@ -24,6 +24,6 @@ A collection of signed transactions to encode
 
 ## Returns
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 A collection of MsgPack encoded bytes or an error if encoding fails.

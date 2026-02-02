@@ -1001,7 +1001,7 @@ const genesisId = network.genesisId
 
 ### genesisIdIsLocalNet()
 
-> `static` **genesisIdIsLocalNet**(`genesisId`): `boolean`
+> `static` **genesisIdIsLocalNet**(`genesisId`): genesisId is "devnet-v1" \| "sandnet-v1" \| "dockernet-v1"
 
 Defined in: [src/client-manager.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/client-manager.ts#L158)
 
@@ -1017,7 +1017,7 @@ The network genesis ID
 
 #### Returns
 
-`boolean`
+genesisId is "devnet-v1" \| "sandnet-v1" \| "dockernet-v1"
 
 Whether the given genesis ID is associated with a LocalNet network
 

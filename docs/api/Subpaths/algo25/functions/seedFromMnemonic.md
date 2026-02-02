@@ -6,7 +6,7 @@
 
 # Function: seedFromMnemonic()
 
-> **seedFromMnemonic**(`mnemonic`): `Uint8Array`
+> **seedFromMnemonic**(`mnemonic`): `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/algo25/src/index.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algo25/src/index.ts#L97)
 
@@ -24,6 +24,6 @@ of the passed words is not found in the words list.
 
 ## Returns
 
-`Uint8Array`
+`Uint8Array`\<`ArrayBufferLike`\>
 
 32 bytes long seed

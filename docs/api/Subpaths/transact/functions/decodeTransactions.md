@@ -22,7 +22,7 @@ A collection of decoded transactions or an error if decoding fails.
 
 ### encoded\_transactions
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 ## Returns
 

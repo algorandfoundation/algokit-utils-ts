@@ -32,7 +32,7 @@ Defined in: [packages/transact/src/logicsig.ts:126](https://github.com/algorandf
 
 ##### programArgs?
 
-`Uint8Array`[] | `null`
+`Uint8Array`\<`ArrayBufferLike`\>[] | `null`
 
 ##### delegator?
 
@@ -62,7 +62,7 @@ Defined in: [packages/transact/src/logicsig.ts:34](https://github.com/algorandfo
 
 ### args
 
-> **args**: `Uint8Array`[]
+> **args**: `Uint8Array`\<`ArrayBufferLike`\>[]
 
 Defined in: [packages/transact/src/logicsig.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L33)
 
@@ -102,7 +102,7 @@ Defined in: [packages/transact/src/logicsig.ts:89](https://github.com/algorandfo
 
 ### sig?
 
-> `optional` **sig**: `Uint8Array`
+> `optional` **sig**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/transact/src/logicsig.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L88)
 
@@ -258,7 +258,7 @@ Defined in: [packages/transact/src/logicsig.ts:154](https://github.com/algorandf
 
 ### signProgramData()
 
-> **signProgramData**(`data`, `signer`): `Promise`\<`Uint8Array`\>
+> **signProgramData**(`data`, `signer`): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
 Defined in: [packages/transact/src/logicsig.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/logicsig.ts#L70)
 
@@ -274,7 +274,7 @@ Defined in: [packages/transact/src/logicsig.ts:70](https://github.com/algorandfo
 
 #### Returns
 
-`Promise`\<`Uint8Array`\>
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
 #### Inherited from
 

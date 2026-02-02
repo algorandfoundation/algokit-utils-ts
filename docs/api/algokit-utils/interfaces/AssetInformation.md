@@ -36,7 +36,7 @@ Max size is 32 bytes.
 
 ### assetNameAsBytes?
 
-> `optional` **assetNameAsBytes**: `Uint8Array`
+> `optional` **assetNameAsBytes**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [src/asset-manager.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/asset-manager.ts#L117)
 
@@ -134,7 +134,7 @@ If not set the asset is permanently immutable.
 
 ### metadataHash?
 
-> `optional` **metadataHash**: `Uint8Array`
+> `optional` **metadataHash**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [src/asset-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/asset-manager.ts#L135)
 
@@ -190,7 +190,7 @@ Max size is 8 bytes.
 
 ### unitNameAsBytes?
 
-> `optional` **unitNameAsBytes**: `Uint8Array`
+> `optional` **unitNameAsBytes**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [src/asset-manager.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/asset-manager.ts#L105)
 
@@ -214,7 +214,7 @@ Max size is 96 bytes.
 
 ### urlAsBytes?
 
-> `optional` **urlAsBytes**: `Uint8Array`
+> `optional` **urlAsBytes**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [src/asset-manager.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/asset-manager.ts#L129)
 

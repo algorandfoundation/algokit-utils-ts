@@ -132,7 +132,7 @@ First round for when the transaction is valid.
 
 ### genesisHash?
 
-> `optional` **genesisHash**: `Uint8Array`
+> `optional` **genesisHash**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/transact/src/transactions/transaction.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/transaction.ts#L200)
 
@@ -164,7 +164,7 @@ A human-readable string used alongside genesis hash to identify the network.
 
 ### group?
 
-> `optional` **group**: `Uint8Array`
+> `optional` **group**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/transact/src/transactions/transaction.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/transaction.ts#L240)
 
@@ -224,7 +224,7 @@ After this round, the transaction will be expired.
 
 ### lease?
 
-> `optional` **lease**: `Uint8Array`
+> `optional` **lease**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/transact/src/transactions/transaction.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/transaction.ts#L233)
 
@@ -243,7 +243,7 @@ No other transaction sent by the same sender can be confirmed until the lease ex
 
 ### note?
 
-> `optional` **note**: `Uint8Array`
+> `optional` **note**: `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/transact/src/transactions/transaction.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/transact/src/transactions/transaction.ts#L214)
 

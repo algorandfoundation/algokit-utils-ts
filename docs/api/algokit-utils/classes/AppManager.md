@@ -155,7 +155,7 @@ const boxNames = await appManager.getBoxNames(12353n);
 
 ### getBoxValue()
 
-> **getBoxValue**(`appId`, `boxName`): `Promise`\<`Uint8Array`\>
+> **getBoxValue**(`appId`, `boxName`): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
 Defined in: [src/app-manager.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-manager.ts#L292)
 
@@ -177,7 +177,7 @@ The name of the box to return either as a string, binary array or `BoxName`
 
 #### Returns
 
-`Promise`\<`Uint8Array`\>
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
 The current box value as a byte array
 
@@ -221,7 +221,7 @@ const boxValue = await appManager.getBoxValueFromABIType({ appId: 12353n, boxNam
 
 ### getBoxValues()
 
-> **getBoxValues**(`appId`, `boxNames`): `Promise`\<`Uint8Array`[]\>
+> **getBoxValues**(`appId`, `boxNames`): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\>[]\>
 
 Defined in: [src/app-manager.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-manager.ts#L309)
 
@@ -243,7 +243,7 @@ The names of the boxes to return either as a string, binary array or `BoxName`
 
 #### Returns
 
-`Promise`\<`Uint8Array`[]\>
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\>[]\>
 
 The current box values as a byte array in the same order as the passed in box names
 

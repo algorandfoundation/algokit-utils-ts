@@ -478,7 +478,7 @@ When a signer is provided it is used to resolve the private key and sign the tra
 
 ###### signer?
 
-`Uint8Array`
+`Uint8Array`\<`ArrayBufferLike`\>
 
 ###### transaction
 
@@ -543,7 +543,7 @@ When a public key is provided it is used to resolve the private key and sign the
 
 ###### publicKey?
 
-`Uint8Array`
+`Uint8Array`\<`ArrayBufferLike`\>
 
 ###### transaction
 

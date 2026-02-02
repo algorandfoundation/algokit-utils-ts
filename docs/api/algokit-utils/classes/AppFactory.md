@@ -94,7 +94,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing).
 
@@ -156,7 +156,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -171,7 +171,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -364,7 +364,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -391,7 +391,7 @@ The method name or method signature to call if an ABI call is being emitted
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -656,7 +656,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing).
 
@@ -718,7 +718,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -733,7 +733,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -851,7 +851,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing).
 
@@ -893,7 +893,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -908,7 +908,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -984,7 +984,7 @@ The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/c
 
 ###### args?
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing).
 
@@ -1026,7 +1026,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -1041,7 +1041,7 @@ Throw an error if the fee for the transaction is more than this amount; prevents
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -1186,7 +1186,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -1213,7 +1213,7 @@ The method name or method signature to call if an ABI call is being emitted
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -1382,7 +1382,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -1409,7 +1409,7 @@ The method name or method signature to call if an ABI call is being emitted
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -1540,7 +1540,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -1567,7 +1567,7 @@ The method name or method signature to call if an ABI call is being emitted
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -1691,7 +1691,7 @@ Whether to use simulate to automatically calculate required app call inner trans
 
 ###### createParams?
 
-\{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md) \| `AppMethodCallTransactionArgument` \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `onComplete?`: [`NoOp`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
+\{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md) \| `AppMethodCallTransactionArgument` \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `onComplete?`: [`NoOp`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`\<`ArrayBufferLike`\>[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `extraProgramPages?`: `number`; `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `note?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `onComplete?`: [`NoOp`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#noop) \| [`OptIn`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#optin) \| [`CloseOut`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#closeout) \| [`UpdateApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#updateapplication) \| [`DeleteApplication`](../../Subpaths/transact/enumerations/OnApplicationComplete.md#deleteapplication); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `schema?`: \{ `globalByteSlices`: `number`; `globalInts`: `number`; `localByteSlices`: `number`; `localInts`: `number`; \}; `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
 
 Create transaction parameters to use if a create needs to be issued as part of deployment
 
@@ -1704,7 +1704,7 @@ Whether or not the contract should have deploy-time permanence control set.
 
 ###### deleteParams?
 
-\{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md) \| `AppMethodCallTransactionArgument` \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`OnApplicationComplete`](../../Subpaths/transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
+\{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`\<`ArrayBufferLike`\>[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `note?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md) \| `AppMethodCallTransactionArgument` \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `onComplete?`: [`OnApplicationComplete`](../../Subpaths/transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
 
 Delete transaction parameters to use if a create needs to be issued as part of deployment
 
@@ -1774,7 +1774,7 @@ Whether or not the contract should have deploy-time immutability control set.
 
 ###### updateParams?
 
-\{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `note?`: `string` \| `Uint8Array`; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md) \| `AppMethodCallTransactionArgument` \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`; `onComplete?`: [`OnApplicationComplete`](../../Subpaths/transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
+\{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: `Uint8Array`\<`ArrayBufferLike`\>[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `note?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \} \| \{ `accessReferences?`: [`ResourceReference`](../../Subpaths/transact/type-aliases/ResourceReference.md)[]; `accountReferences?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md)[]; `appReferences?`: `bigint`[]; `args?`: ([`ABIValue`](../../Subpaths/abi/type-aliases/ABIValue.md) \| `AppMethodCallTransactionArgument` \| `undefined`)[]; `assetReferences?`: `bigint`[]; `boxReferences?`: ([`BoxIdentifier`](../type-aliases/BoxIdentifier.md) \| [`BoxReference`](../interfaces/BoxReference.md))[]; `extraFee?`: [`AlgoAmount`](AlgoAmount.md); `firstValidRound?`: `bigint`; `lastValidRound?`: `bigint`; `lease?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `maxFee?`: [`AlgoAmount`](AlgoAmount.md); `method`: `string`; `note?`: `string` \| `Uint8Array`\<`ArrayBufferLike`\>; `onComplete?`: [`OnApplicationComplete`](../../Subpaths/transact/enumerations/OnApplicationComplete.md); `rejectVersion?`: `number`; `rekeyTo?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `sender?`: [`ReadableAddress`](../type-aliases/ReadableAddress.md); `signer?`: [`AddressWithTransactionSigner`](../../Subpaths/transact/interfaces/AddressWithTransactionSigner.md) \| [`TransactionSigner`](../../Subpaths/transact/type-aliases/TransactionSigner.md); `staticFee?`: [`AlgoAmount`](AlgoAmount.md); `validityWindow?`: `number` \| `bigint`; \}
 
 Update transaction parameters to use if a create needs to be issued as part of deployment
 

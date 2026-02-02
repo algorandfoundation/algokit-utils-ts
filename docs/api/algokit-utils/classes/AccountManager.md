@@ -551,7 +551,7 @@ The bytes that make up the compiled logic signature
 
 ##### args?
 
-`Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\>[]
 
 The (binary) arguments to pass into the logic signature
 

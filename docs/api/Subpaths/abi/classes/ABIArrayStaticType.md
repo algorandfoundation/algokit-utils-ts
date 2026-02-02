@@ -142,7 +142,7 @@ Error if the type is dynamic
 
 ### decode()
 
-> **decode**(`bytes`): `Uint8Array` \| [`ABIValue`](../type-aliases/ABIValue.md)[]
+> **decode**(`bytes`): `Uint8Array`\<`ArrayBufferLike`\> \| [`ABIValue`](../type-aliases/ABIValue.md)[]
 
 Defined in: [packages/abi/src/abi-type.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/abi/src/abi-type.ts#L652)
 
@@ -158,7 +158,7 @@ The bytes to decode
 
 #### Returns
 
-`Uint8Array` \| [`ABIValue`](../type-aliases/ABIValue.md)[]
+`Uint8Array`\<`ArrayBufferLike`\> \| [`ABIValue`](../type-aliases/ABIValue.md)[]
 
 The decoded value
 

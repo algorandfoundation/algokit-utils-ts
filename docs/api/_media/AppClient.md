@@ -670,7 +670,7 @@ The last round this transaction is valid. It is recommended to use `validityWind
 
 ###### lease?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Prevent multiple transactions with the same lease being included within the validity window.
 
@@ -691,7 +691,7 @@ The number of rounds to wait for confirmation. By default until the latest lastV
 
 ###### note?
 
-`string` \| `Uint8Array`
+`string` \| `Uint8Array`\<`ArrayBufferLike`\>
 
 Note to attach to the transaction. Max of 1000 bytes.
 
@@ -804,7 +804,7 @@ const boxNames = await appClient.getBoxNames()
 
 ### getBoxValue()
 
-> **getBoxValue**(`name`): `Promise`\<`Uint8Array`\>
+> **getBoxValue**(`name`): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
 Defined in: [src/app-client.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/app-client.ts#L753)
 
@@ -820,7 +820,7 @@ The identifier of the box to return
 
 #### Returns
 
-`Promise`\<`Uint8Array`\>
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
 The current box value as a byte array
 
@@ -1146,7 +1146,7 @@ Whether or not the code was running the clear state program (defaults to approva
 
 ###### program?
 
-`Uint8Array`
+`Uint8Array`\<`ArrayBufferLike`\>
 
 program bytes
 

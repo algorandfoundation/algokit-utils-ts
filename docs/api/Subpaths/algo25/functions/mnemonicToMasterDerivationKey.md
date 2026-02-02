@@ -6,7 +6,7 @@
 
 # Function: mnemonicToMasterDerivationKey()
 
-> **mnemonicToMasterDerivationKey**(`mn`): `Uint8Array`
+> **mnemonicToMasterDerivationKey**(`mn`): `Uint8Array`\<`ArrayBufferLike`\>
 
 Defined in: [packages/algo25/src/index.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/packages/algo25/src/index.ts#L153)
 
@@ -22,7 +22,7 @@ mnemonicToMasterDerivationKey takes a mnemonic string and returns the correspond
 
 ## Returns
 
-`Uint8Array`
+`Uint8Array`\<`ArrayBufferLike`\>
 
 Uint8Array
 

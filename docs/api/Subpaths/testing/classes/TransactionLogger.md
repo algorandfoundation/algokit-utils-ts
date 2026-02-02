@@ -89,7 +89,7 @@ The method that captures raw transactions and stores the transaction IDs.
 
 ##### signedTransactions
 
-`Uint8Array` | `Uint8Array`[]
+`Uint8Array`\<`ArrayBufferLike`\> | `Uint8Array`\<`ArrayBufferLike`\>[]
 
 #### Returns
 

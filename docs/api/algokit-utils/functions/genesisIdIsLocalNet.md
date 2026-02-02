@@ -6,7 +6,7 @@
 
 # Function: genesisIdIsLocalNet()
 
-> **genesisIdIsLocalNet**(`genesisId`): `boolean`
+> **genesisIdIsLocalNet**(`genesisId`): genesisId is "devnet-v1" \| "sandnet-v1" \| "dockernet-v1"
 
 Defined in: [src/network-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/decoupling/src/network-client.ts#L40)
 
@@ -22,6 +22,6 @@ The network genesis ID
 
 ## Returns
 
-`boolean`
+genesisId is "devnet-v1" \| "sandnet-v1" \| "dockernet-v1"
 
 Whether the given genesis ID is associated with a LocalNet network
