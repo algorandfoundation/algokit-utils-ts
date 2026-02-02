@@ -2,6 +2,16 @@ import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import type { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 
+/** Options for waiting until a specific timestamp is reached on the blockchain. */
+export interface WaitUntilTimestampOptions {
+  /** Estimated block time in seconds, used to calculate rounds to wait. Should be slightly lower than average to undershoot. Defaults to 2.7. */
+  blockTimeSeconds?: number
+  /** Polling interval in milliseconds when close to target. Defaults to 1000. */
+  pollingIntervalMs?: number
+  /** Timeout in milliseconds for the polling loop. Defaults to 5000. */
+  pollingTimeoutMs?: number
+}
+
 /**
  * Manager for LocalNet-specific network operations.
  * These methods only work on LocalNet and will throw an error if called on other networks.
@@ -164,40 +174,55 @@ export class NetworkManager {
    * Wait until a specific Unix timestamp is reached on the blockchain.
    *
    * @param targetTimestamp The target Unix timestamp in seconds
+   * @param options Optional parameters for waiting
    * @example
    * ```typescript
    * // Wait until a specific time
    * const futureTime = BigInt(Math.floor(Date.now() / 1000)) + 60n // 1 minute from now
    * await algorand.network.waitUntilTimestamp(futureTime)
+   *
+   * // Wait with custom timing parameters
+   * await algorand.network.waitUntilTimestamp(futureTime, { blockTimeSeconds: 3.0, pollingIntervalMs: 500 })
    * ```
    */
-  async waitUntilTimestamp(targetTimestamp: bigint): Promise<void> {
+  async waitUntilTimestamp(targetTimestamp: bigint, options?: WaitUntilTimestampOptions): Promise<void> {
     // Note: this method reduces the number of calls to algod
     //  by estimating the number of rounds to wait first
     //  then wait for the target round to be committed
     //  then poll every second for the right timestamp
 
-    // BLOCK_TIME_SECONDS to be slightly lower than the average block time so that it will undershoot
-    const BLOCK_TIME_SECONDS = 2.7
-    const POLLING_INTERVAL_MS = 1000
+    // blockTimeSeconds should be slightly lower than the average block time so that it will undershoot
+    const blockTimeSeconds = options?.blockTimeSeconds ?? 2.7
+    const pollingIntervalMs = options?.pollingIntervalMs ?? 1000
+    const pollingTimeoutMs = options?.pollingTimeoutMs ?? 5000
 
+    const currentStatus = await this._algod.status()
+    const currentRound = currentStatus.lastRound
+    const currentBlock = await this._algod.block(currentRound)
+    const currentBlockTimestamp = currentBlock.block.header.timestamp
+
+    if (currentBlockTimestamp >= targetTimestamp) return
+
+    const secondsToWait = Number(targetTimestamp - currentBlockTimestamp)
+    const roundsToWait = Math.floor(secondsToWait / blockTimeSeconds)
+
+    // Wait for estimated round
+    if (roundsToWait > 1) {
+      await this.waitUntilRound(currentRound + BigInt(roundsToWait))
+    }
+
+    const pollingStartTime = Date.now()
     while (true) {
-      const currentStatus = await this._algod.status()
-      const currentRound = currentStatus.lastRound
-      const currentBlock = await this._algod.block(currentRound)
-      const currentTimestamp = currentBlock.block.header.timestamp
-
-      if (currentTimestamp >= targetTimestamp) return
-
-      const secondsToWait = Number(targetTimestamp - currentTimestamp)
-      const roundsToWait = Math.floor(secondsToWait / BLOCK_TIME_SECONDS)
-
-      // Wait for estimated round or poll
-      if (roundsToWait > 1) {
-        await this.waitUntilRound(currentRound + BigInt(roundsToWait))
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL_MS))
+      const latestTimeStamp = await this.getLatestTimestamp()
+      if (latestTimeStamp > targetTimestamp) {
+        return
       }
+
+      if (Date.now() - pollingStartTime >= pollingTimeoutMs) {
+        throw new Error(`Timeout waiting for timestamp ${targetTimestamp} (current: ${latestTimeStamp})`)
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, pollingIntervalMs))
     }
   }
 
