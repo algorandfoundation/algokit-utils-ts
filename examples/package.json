@@ -1,11 +1,13 @@
 {
   "name": "algokit-utils-examples",
   "private": true,
+  "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "verify-all": "./verify-all.sh"
   },
   "dependencies": {
+    "@algorandfoundation/algokit-utils": "file:../dist",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {

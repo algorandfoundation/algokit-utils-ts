@@ -160,6 +160,9 @@ BigInt.prototype.algo = function () {
 
 /** Returns an amount of Algo using AlgoAmount
  * @param algos The amount of Algo
+ * @example
+ * {@includeCode ./amount.spec.ts#example-algos}
+ * @see {@link AlgoAmount}
  */
 export const algos = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
@@ -167,6 +170,8 @@ export const algos = (algos: number | bigint) => {
 
 /** Returns an amount of Algo using AlgoAmount
  * @param algos The amount of Algo
+ * @example
+ * {@includeCode ./amount.spec.ts#example-algo}
  */
 export const algo = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
@@ -174,6 +179,9 @@ export const algo = (algos: number | bigint) => {
 
 /** Returns an amount of µAlgo using AlgoAmount
  * @param microAlgos The amount of µAlgo
+ * @example
+ * {@includeCode ./amount.spec.ts#example-microAlgos}
+ * @see {@link algos} for Algo denomination
  */
 export const microAlgos = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
@@ -181,6 +189,8 @@ export const microAlgos = (microAlgos: number | bigint) => {
 
 /** Returns an amount of µAlgo using AlgoAmount
  * @param microAlgos The amount of µAlgo
+ * @example
+ * {@includeCode ./amount.spec.ts#example-microAlgo}
  */
 export const microAlgo = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
@@ -188,6 +198,8 @@ export const microAlgo = (microAlgos: number | bigint) => {
 
 /** Returns an amount of µAlgo to cover standard fees for the given number of transactions using AlgoAmount
  * @param numberOfTransactions The of standard transaction fees to return the amount of Algo
+ * @example
+ * {@includeCode ./amount.spec.ts#example-transactionFees}
  */
 export const transactionFees = (numberOfTransactions: number) => {
   return AlgoAmount.MicroAlgo(BigInt(numberOfTransactions) * ALGORAND_MIN_TX_FEE.microAlgo)

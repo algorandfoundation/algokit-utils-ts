@@ -40,7 +40,11 @@ export interface AccountManagerConfig {
   ed25519Generator: Ed25519Generator
 }
 
-/** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
+/**
+ * Creates and keeps track of signing accounts that can sign transactions for a sending address.
+ * @see {@link KmdAccountManager} for KMD-specific account management
+ * @see {@link AlgorandClient} for the main entry point that provides access to this manager
+ */
 export class AccountManager {
   private _clientManager: ClientManager
   private _kmdAccountManager: KmdAccountManager

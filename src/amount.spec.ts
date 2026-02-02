@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { AlgoAmount, algos, microAlgos, transactionFees } from './amount'
+import { AlgoAmount, algo, algos, microAlgo, microAlgos, transactionFees } from './amount'
 
 describe('amount', () => {
   test('toString on 1', () => {
@@ -9,10 +9,16 @@ describe('amount', () => {
     expect(`${algos(100)}`).toBe(`100,000,000 µALGO`)
   })
   test('microalgos to microalgos', () => {
-    expect(microAlgos(100).microAlgo).toBe(100n)
+    // #region example-microAlgos
+    const amount = microAlgos(100)
+    // #endregion example-microAlgos
+    expect(amount.microAlgo).toBe(100n)
   })
   test('algos to microalgos', () => {
-    expect(algos(100).microAlgo).toBe(100_000_000n)
+    // #region example-algos
+    const amount = algos(100)
+    // #endregion example-algos
+    expect(amount.microAlgo).toBe(100_000_000n)
   })
   test('algos to algos', () => {
     expect(algos(100).algo).toBe(100)
@@ -24,7 +30,10 @@ describe('amount', () => {
     expect(microAlgos(100_000_000).algo).toBe(100)
   })
   test('single transaction fee', () => {
-    expect(transactionFees(1).microAlgo).toBe(1_000n)
+    // #region example-transactionFees
+    const fee = transactionFees(1)
+    // #endregion example-transactionFees
+    expect(fee.microAlgo).toBe(1_000n)
   })
   test('multiple transaction fees', () => {
     expect(transactionFees(10).microAlgo).toBe(10_000n)
@@ -36,6 +45,18 @@ describe('amount', () => {
   test('microAlgos via Number.prototype', () => {
     expect((100).microAlgo()).toBeInstanceOf(AlgoAmount)
     expect((100).microAlgo().microAlgo).toBe(100n)
+  })
+  test('algo function', () => {
+    // #region example-algo
+    const amount = algo(5)
+    // #endregion example-algo
+    expect(amount.algo).toBe(5)
+  })
+  test('microAlgo function', () => {
+    // #region example-microAlgo
+    const amount = microAlgo(1000)
+    // #endregion example-microAlgo
+    expect(amount.microAlgo).toBe(1000n)
   })
 })
 

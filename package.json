@@ -75,6 +75,11 @@
       "import": "./crypto/index.mjs",
       "require": "./crypto/index.js"
     },
+    "./common": {
+      "types": "./common/index.d.ts",
+      "import": "./common/index.mjs",
+      "require": "./common/index.js"
+    },
     "./*": {
       "types": "./*.d.ts",
       "import": "./*.mjs",
@@ -102,7 +107,7 @@
     "format": "prettier --write . && npm run format --workspaces --if-present",
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
-    "generate:code-docs": "typedoc",
+    "generate:code-docs": "typedoc --options typedoc.html.json && typedoc --options typedoc.markdown.json",
     "pre-commit": "run-s check-types lint:fix audit format generate:code-docs test && npm run pre-commit --workspaces --if-present",
     "generate:clients": "run-p generate:client-*",
     "generate:client-algod": "cd oas-generator && uv run oas-generator https://raw.githubusercontent.com/algorandfoundation/algokit-oas-generator/main/specs/algod.oas3.json --output ../packages/algod_client/ --package-name algod_client --description \"TypeScript client for algod interaction.\" --verbose && cd ../packages/algod_client/ && npm run lint:fix && npm run format && cd ..",
@@ -122,8 +127,10 @@
     "@noble/hashes": "^2.0.1",
     "algorand-msgpack": "^1.1.0",
     "buffer": "^6.0.3",
+    "dotenv": "^16.4.5",
     "hi-base32": "^0.5.1",
     "json-bigint": "^1.0.0",
+    "tweetnacl": "^1.0.3",
     "vlq": "^2.0.4"
   },
   "devDependencies": {
@@ -141,7 +148,6 @@
     "better-npm-audit": "^3.11.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",
-    "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
@@ -154,13 +160,12 @@
     "rimraf": "^6.0.1",
     "rolldown": "^1.0.0-beta.45",
     "rolldown-plugin-dts": "^0.17.3",
-    "semantic-release": "^25.0.2",
+    "semantic-release": "^25.0.3",
     "tiny-invariant": "^1.3.1",
     "ts-node": "^10.9.1",
-    "tweetnacl": "^1.0.3",
     "tsx": "^4.21.0",
-    "typedoc": "^0.25.13",
-    "typedoc-plugin-markdown": "^3.17.1",
+    "typedoc": "^0.28.16",
+    "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.16.0",
     "uuid": "^10.0.0",

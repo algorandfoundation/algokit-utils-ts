@@ -1,12 +1,15 @@
 import fg from 'fast-glob'
+import { builtinModules } from 'node:module'
 import { LogLevel, LogOrStringHandler, RollupLog, defineConfig } from 'rolldown'
 import { dts } from 'rolldown-plugin-dts'
 import workspacePkg from './package.json' with { type: 'json' }
 
 type StringOrRegExp = string | RegExp
 
+const nodeBuiltins = builtinModules.flatMap((m) => [m, `node:${m}`])
+
 export default function createConfig(externalDependencies: StringOrRegExp[], input: string[] = ['src/index.ts']): typeof config {
-  const external = Array.from(new Set([...Object.keys(workspacePkg.dependencies || {}), ...externalDependencies]))
+  const external = Array.from(new Set([...nodeBuiltins, ...Object.keys(workspacePkg.dependencies || {}), ...externalDependencies]))
 
   const resolvedInput = input.flatMap((pattern) => {
     // If it contains glob characters or negations, resolve with fast-glob

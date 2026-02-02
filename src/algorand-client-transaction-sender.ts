@@ -167,13 +167,7 @@ export class AlgorandClientTransactionSender {
    * Send a payment transaction to transfer Algo between accounts.
    * @param params The parameters for the payment transaction
    * @example Basic example
-   * ```typescript
-   * const result = await algorand.send.payment({
-   *  sender: 'SENDERADDRESS',
-   *  receiver: 'RECEIVERADDRESS',
-   *  amount: (4).algo(),
-   * })
-   * ```
+   * {@includeCode ./algorand-client.spec.ts#example-send-payment}
    * @example Advanced example
    * ```typescript
    * const result = await algorand.send.payment({
@@ -201,6 +195,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.spec.ts)
    * @returns The result of the payment transaction and the transaction that was sent
    */
   payment = this._send((c) => c.addPayment, {
@@ -216,9 +211,7 @@ export class AlgorandClientTransactionSender {
    * @param params The parameters for the asset creation transaction
    *
    * @example Basic example
-   * ```typescript
-   * await algorand.send.assetCreate({ sender: "CREATORADDRESS", total: 100n})
-   * ```
+   * {@includeCode ./algorand-client.spec.ts#example-send-asset-create}
    * @example Advanced example
    * ```typescript
    * await algorand.send.assetCreate({
@@ -252,6 +245,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
+   * @see [Full working example](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algorand-client.spec.ts)
    * @returns The result of the asset create transaction and the transaction that was sent
    */
   assetCreate = async (params: AssetCreateParams & SendParams) => {

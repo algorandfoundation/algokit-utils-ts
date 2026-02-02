@@ -135,7 +135,10 @@ export interface AssetInformation {
   metadataHash?: Uint8Array
 }
 
-/** Allows management of asset information. */
+/**
+ * Allows management of asset information.
+ * @see {@link AlgorandClient} for the main entry point that provides access to this manager
+ */
 export class AssetManager {
   private _algod: AlgodClient
   private _newGroup: () => TransactionComposer
