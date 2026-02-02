@@ -1,0 +1,10 @@
+diff --git a/src/config.ts b/src/config.ts
+index a406c342..93eab893 100644
+--- a/src/config.ts
++++ b/src/config.ts
+@@ -1,4 +1,4 @@
+-import { UpdatableConfig } from './types/config'
++import { UpdatableConfig } from './updatable-config'
+ 
+ /** The AlgoKit config. To update it use the configure method. */
+ export const Config = new UpdatableConfig()
