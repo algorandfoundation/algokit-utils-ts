@@ -1,0 +1,72 @@
+diff --git a/src/transfer/transfer-algos.ts b/src/transactions/payment.ts
+index 6e11e7f4..b1532432 100644
+--- a/src/transfer/transfer-algos.ts
++++ b/src/transactions/payment.ts
+@@ -1,39 +1,31 @@
+-import algosdk from 'algosdk'
+-import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
+-import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
+-import { PaymentParams } from '../types/composer'
+-import { SendTransactionResult } from '../types/transaction'
+-import { AlgoTransferParams } from '../types/transfer'
+-import Algodv2 = algosdk.Algodv2
++import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
++import { ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
++import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
++import { AlgoAmount } from '../amount'
++import { CommonTransactionParams, buildTransactionCommonData } from './common'
+ 
+-/**
+- * @deprecated Use `algorand.send.payment()` / `algorand.createTransaction.payment()` instead
+- *
+- * Transfer Algo between two accounts.
+- * @param transfer The transfer definition
+- * @param algod An algod client
+- * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+- *
+- * @example Usage example
+- * ```typescript
+- * await algokit.transferAlgos({ from, to, amount: algokit.algo(1) }, algod)
+- * ```
+- */
+-export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
+-  const params: PaymentParams = {
+-    sender: getSenderAddress(transfer.from),
+-    receiver: getSenderAddress(transfer.to),
+-    amount: transfer.amount,
+-    note: encodeTransactionNote(transfer.note),
+-    lease: transfer.lease,
+-  }
++/** Parameters to define a payment transaction. */
++export type PaymentParams = CommonTransactionParams & {
++  /** The address of the account that will receive the Algo */
++  receiver: ReadableAddress
++  /** Amount to send */
++  amount: AlgoAmount
++  /** If given, close the sender account and send the remaining balance to this address
++   *
++   * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
++   */
++  closeRemainderTo?: ReadableAddress
++}
+ 
+-  return await legacySendTransactionBridge(
+-    algod,
+-    transfer.from,
+-    transfer,
+-    params,
+-    (c) => c.payment,
+-    (c) => c.payment,
+-  )
++export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
++  const commonData = buildTransactionCommonData(params, suggestedParams, defaultValidityWindow)
++  return new Transaction({
++    ...commonData,
++    type: TransactionType.Payment,
++    payment: {
++      receiver: getAddress(params.receiver),
++      amount: params.amount.microAlgos,
++      closeRemainderTo: getOptionalAddress(params.closeRemainderTo),
++    },
++  })
+ }

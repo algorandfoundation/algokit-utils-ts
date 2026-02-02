@@ -1,0 +1,135 @@
+A	src/__snapshots__/app-client.spec.ts.snap
+M	src/__snapshots__/app-deploy.spec.ts.snap
+R084	src/types/__snapshots__/app-factory-and-client.spec.ts.snap	src/__snapshots__/app-factory-and-client.spec.ts.snap
+R100	src/types/__snapshots__/async-event-emitter.spec.ts.snap	src/__snapshots__/async-event-emitter.spec.ts.snap
+A	src/abi/index.ts
+R064	src/types/account-manager.spec.ts	src/account-manager.spec.ts
+A	src/account-manager.ts
+A	src/account.ts
+D	src/account/account.ts
+D	src/account/get-account-config-from-environment.ts
+D	src/account/get-account.ts
+D	src/account/get-dispenser-account.ts
+D	src/account/index.ts
+D	src/account/mnemonic-account.ts
+A	src/algo25/index.ts
+A	src/algod-client/index.ts
+A	src/algorand-client-transaction-creator.ts
+A	src/algorand-client-transaction-sender.ts
+R098	src/types/algorand-client.asset.spec.ts	src/algorand-client.asset.spec.ts
+R083	src/types/algorand-client.spec.ts	src/algorand-client.spec.ts
+R090	src/types/algorand-client.transfer.spec.ts	src/algorand-client.transfer.spec.ts
+A	src/algorand-client.ts
+A	src/amount.spec.ts
+M	src/amount.ts
+A	src/app-client.spec.ts
+M	src/app-client.ts
+M	src/app-deploy.spec.ts
+D	src/app-deploy.ts
+A	src/app-deployer.ts
+R083	src/types/app-factory-and-client.spec.ts	src/app-factory-and-client.spec.ts
+A	src/app-factory.ts
+A	src/app-manager.ts
+A	src/app-spec.ts
+M	src/app.spec.ts
+M	src/app.ts
+A	src/asset-manager.ts
+D	src/asset.ts
+R087	src/types/async-event-emitter.spec.ts	src/async-event-emitter.spec.ts
+A	src/async-event-emitter.ts
+R083	src/types/client-manager.spec.ts	src/client-manager.spec.ts
+A	src/client-manager.ts
+A	src/composer.spec.ts
+A	src/composer.ts
+M	src/config.ts
+A	src/debugging.ts
+D	src/debugging/debugging.ts
+D	src/debugging/index.ts
+R100	src/types/dispenser-client.spec.ts	src/dispenser-client.spec.ts
+M	src/dispenser-client.ts
+A	src/expand.ts
+M	src/index.ts
+A	src/indexer-client/index.ts
+R083	src/indexer-lookup.spec.ts	src/indexer-client/indexer-lookup.spec.ts
+R050	src/indexer-lookup.ts	src/indexer-client/indexer-lookup.ts
+A	src/indexer.ts
+A	src/instance-of.ts
+A	src/kmd-account-manager.ts
+A	src/kmd-client/index.ts
+A	src/lifecycle-events.ts
+D	src/localnet/get-kmd-wallet-account.ts
+D	src/localnet/get-localnet-dispenser-account.ts
+D	src/localnet/get-or-create-kmd-wallet-account.ts
+D	src/localnet/index.ts
+D	src/localnet/is-localnet.ts
+A	src/logging.ts
+A	src/logic-error.ts
+M	src/network-client.ts
+M	src/testing/_asset.ts
+M	src/testing/account.ts
+M	src/testing/fixtures/algokit-log-capture-fixture.ts
+M	src/testing/fixtures/algorand-fixture.ts
+M	src/testing/index.ts
+M	src/testing/test-logger.ts
+M	src/testing/transaction-logger.ts
+A	src/testing/types.ts
+A	src/transact/index.ts
+M	src/transaction/index.ts
+D	src/transaction/legacy-bridge.ts
+D	src/transaction/perform-atomic-transaction-composer-simulate.ts
+A	src/transaction/perform-transaction-composer-simulate.ts
+M	src/transaction/transaction.spec.ts
+M	src/transaction/transaction.ts
+A	src/transaction/types.ts
+A	src/transactions/app-call.ts
+A	src/transactions/asset-config.ts
+A	src/transactions/asset-transfer.ts
+A	src/transactions/common.ts
+A	src/transactions/fee-coverage.spec.ts
+A	src/transactions/fee-coverage.ts
+A	src/transactions/key-registration.ts
+A	src/transactions/method-call.ts
+A	src/transactions/payment.ts
+D	src/transfer/index.ts
+D	src/transfer/transfer-algos.ts
+D	src/transfer/transfer.ts
+D	src/types/__snapshots__/app-client.spec.ts.snap
+M	src/types/account-manager.ts
+M	src/types/account.ts
+D	src/types/algo-http-client-with-retry.ts
+M	src/types/algorand-client-transaction-creator.ts
+M	src/types/algorand-client-transaction-sender.ts
+M	src/types/algorand-client.ts
+D	src/types/amount.spec.ts
+M	src/types/amount.ts
+D	src/types/app-arc56.ts
+D	src/types/app-client.spec.ts
+M	src/types/app-client.ts
+M	src/types/app-deployer.ts
+M	src/types/app-factory.ts
+M	src/types/app-manager.ts
+M	src/types/app-spec.ts
+M	src/types/app.ts
+M	src/types/asset-manager.ts
+D	src/types/asset.ts
+M	src/types/async-event-emitter.ts
+M	src/types/client-manager.ts
+D	src/types/composer.spec.ts
+M	src/types/composer.ts
+M	src/types/config.ts
+M	src/types/debugging.ts
+M	src/types/dispenser-client.ts
+M	src/types/expand.ts
+M	src/types/indexer.ts
+M	src/types/instance-of.ts
+M	src/types/kmd-account-manager.ts
+M	src/types/lifecycle-events.ts
+M	src/types/logging.ts
+M	src/types/logic-error.ts
+M	src/types/network-client.ts
+M	src/types/testing.ts
+M	src/types/transaction.ts
+D	src/types/transfer.ts
+A	src/updatable-config.ts
+D	src/util.spec.ts
+M	src/util.ts

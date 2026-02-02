@@ -1,0 +1,590 @@
+src/account.ts:export const DISPENSER_ACCOUNT = 'DISPENSER'
+src/account.ts:export type TransactionSignerAccount = AddressWithTransactionSigner
+src/account.ts:export type AccountInformation = {
+src/account.ts:export type AccountAssetInformation = {
+src/transaction/types.ts:export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
+src/transaction/types.ts:export type TransactionNoteData = string | null | undefined | number | any[] | Record<string, any>
+src/transaction/types.ts:export type Arc2TransactionNote =
+src/transaction/types.ts:export interface SendTransactionParams {
+src/transaction/types.ts:export type SendSingleTransactionResult = Expand<SendTransactionComposerResults & ConfirmedTransactionResult>
+src/transaction/types.ts:export interface SendTransactionResult {
+src/transaction/types.ts:export interface SendTransactionResults {
+src/transaction/types.ts:export interface SendTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
+src/transaction/types.ts:export interface ConfirmedTransactionResult extends SendTransactionResult {
+src/transaction/types.ts:export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
+src/transaction/types.ts:export type SendTransactionFrom = AddressWithTransactionSigner
+src/transaction/types.ts:export interface TransactionToSign {
+src/transaction/types.ts:export interface TransactionGroupToSend {
+src/transaction/types.ts:export interface SendParams {
+src/transaction/types.ts:export interface AdditionalTransactionComposerContext {
+src/transaction/types.ts:export interface TransactionComposerToSend extends SendParams {
+src/transaction/transaction.ts:export interface TransactionWithSigner {
+src/transaction/transaction.ts:export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined {
+src/transaction/transaction.ts:export async function populateAppCallResources(composer: TransactionComposer) {
+src/transaction/transaction.ts:export async function prepareGroupForSending(
+src/transaction/transaction.ts:export const sendTransactionComposer = async function (atcSend: TransactionComposerToSend): Promise<SendTransactionComposerResults> {
+src/transaction/transaction.ts:export const waitForConfirmation = async function (
+src/transaction/index.ts:export * from './perform-transaction-composer-simulate'
+src/transaction/index.ts:export * from './transaction'
+src/transaction/index.ts:export * from './types'
+src/transaction/perform-transaction-composer-simulate.ts:export async function performTransactionComposerSimulate(composer: TransactionComposer, options?: RawSimulateOptions) {
+src/expand.ts:export type { Expand } from '@algorandfoundation/algokit-common'
+src/indexer-client/indexer-lookup.ts:export type SearchForTransactionsCriteria = Omit<NonNullable<Parameters<IndexerClient['searchForTransactions']>[0]>, 'limit' | 'next'>
+src/indexer-client/indexer-lookup.ts:export async function lookupAccountCreatedApplicationByAddress(
+src/indexer-client/indexer-lookup.ts:export async function lookupAssetHoldings(
+src/indexer-client/indexer-lookup.ts:export async function searchTransactions(
+src/indexer-client/indexer-lookup.ts:export async function executePaginatedRequest<TResult, TRequest extends Promise<any>>(
+src/indexer-client/index.ts:export * from '@algorandfoundation/algokit-indexer-client'
+src/indexer-client/index.ts:export * from './indexer-lookup'
+src/types/account.ts:export const DISPENSER_ACCOUNT = _DISPENSER_ACCOUNT
+src/types/account.ts:export type AccountInformation = _AccountInformation
+src/types/account.ts:export type AccountAssetInformation = _AccountAssetInformation
+src/types/account.ts:export type TransactionSignerAccount = _TransactionSignerAccount
+src/types/expand.ts:export type Expand<T> = _Expand<T>
+src/types/testing.ts:export type AlgorandTestAutomationContext = _AlgorandTestAutomationContext
+src/types/testing.ts:export type GetTestAccountParams = _GetTestAccountParams
+src/types/testing.ts:export type AlgorandFixtureConfig = _AlgorandFixtureConfig
+src/types/testing.ts:export type AlgorandFixture = _AlgorandFixture
+src/types/testing.ts:export type LogSnapshotConfig = _LogSnapshotConfig
+src/types/testing.ts:export type AlgoKitLogCaptureFixture = _AlgoKitLogCaptureFixture
+src/types/network-client.ts:export type AlgoClientConfig = _AlgoClientConfig
+src/types/network-client.ts:export type AlgoConfig = _AlgoConfig
+src/types/network-client.ts:export type NetworkDetails = _NetworkDetails
+src/types/network-client.ts:export const genesisIdIsLocalNet = _genesisIdIsLocalNet
+src/types/app.ts:export const UPDATABLE_TEMPLATE_NAME = _UPDATABLE_TEMPLATE_NAME
+src/types/app.ts:export const DELETABLE_TEMPLATE_NAME = _DELETABLE_TEMPLATE_NAME
+src/types/app.ts:export const APP_DEPLOY_NOTE_DAPP = _APP_DEPLOY_NOTE_DAPP
+src/types/app.ts:export const APP_PAGE_MAX_SIZE = _APP_PAGE_MAX_SIZE
+src/types/app.ts:export const ABI_RETURN_PREFIX = _ABI_RETURN_PREFIX
+src/types/app.ts:export const OnUpdate = _OnUpdate
+src/types/app.ts:export type OnUpdate = _OnUpdate
+src/types/app.ts:export const OnSchemaBreak = _OnSchemaBreak
+src/types/app.ts:export type OnSchemaBreak = _OnSchemaBreak
+src/types/app.ts:export type AppReference = _AppReference
+src/types/app.ts:export type CoreAppCallArgs = _CoreAppCallArgs
+src/types/app.ts:export type RawAppCallArgs = _RawAppCallArgs
+src/types/app.ts:export type ABIAppCallArg = _ABIAppCallArg
+src/types/app.ts:export type ABIAppCallArgs = _ABIAppCallArgs
+src/types/app.ts:export type AppCallArgs = _AppCallArgs
+src/types/app.ts:export type AppCallParams = _AppCallParams
+src/types/app.ts:export type AppStorageSchema = _AppStorageSchema
+src/types/app.ts:export type CompiledTeal = _CompiledTeal
+src/types/app.ts:export type AppCallTransactionResultOfType<T> = _AppCallTransactionResultOfType<T>
+src/types/app.ts:export type AppCallTransactionResult = _AppCallTransactionResult
+src/types/app.ts:export type AppDeployMetadata = _AppDeployMetadata
+src/types/app.ts:export type AppMetadata = _AppMetadata
+src/types/app.ts:export type AppLookup = _AppLookup
+src/types/app.ts:export type TealTemplateParams = _TealTemplateParams
+src/types/app.ts:export type AppCompilationResult = _AppCompilationResult
+src/types/app.ts:export type AppReturn<TReturn> = _AppReturn<TReturn>
+src/types/app.ts:export type SendAppTransactionResult = _SendAppTransactionResult
+src/types/app.ts:export type SendAppUpdateTransactionResult = _SendAppUpdateTransactionResult
+src/types/app.ts:export type SendAppCreateTransactionResult = _SendAppCreateTransactionResult
+src/types/app.ts:export type AppState = _AppState
+src/types/app.ts:export type BoxName = _BoxName
+src/types/app.ts:export type BoxValueRequestParams = _BoxValueRequestParams
+src/types/app.ts:export type BoxValuesRequestParams = _BoxValuesRequestParams
+src/types/indexer.ts:export type LookupAssetHoldingsOptions = _LookupAssetHoldingsOptions
+src/types/indexer.ts:export const ApplicationOnComplete = _ApplicationOnComplete
+src/types/indexer.ts:export type ApplicationOnComplete = _ApplicationOnComplete
+src/types/indexer.ts:export const SignatureType = _SignatureType
+src/types/indexer.ts:export type SignatureType = _SignatureType
+src/types/indexer.ts:export const AccountStatus = _AccountStatus
+src/types/indexer.ts:export type AccountStatus = _AccountStatus
+src/types/app-client.ts:export const AppClient = _AppClient
+src/types/app-client.ts:export type AppClient = _AppClient
+src/types/app-client.ts:export type AppClientBareCallParams = _AppClientBareCallParams
+src/types/app-client.ts:export type AppClientCallABIArgs = _AppClientCallABIArgs
+src/types/app-client.ts:export type AppClientCallArgs = _AppClientCallArgs
+src/types/app-client.ts:export type AppClientCallCoreParams = _AppClientCallCoreParams
+src/types/app-client.ts:export type AppClientCallParams = _AppClientCallParams
+src/types/app-client.ts:export type AppClientCallRawArgs = _AppClientCallRawArgs
+src/types/app-client.ts:export type AppClientClearStateParams = _AppClientClearStateParams
+src/types/app-client.ts:export type AppClientCompilationParams = _AppClientCompilationParams
+src/types/app-client.ts:export type AppClientCompilationResult = _AppClientCompilationResult
+src/types/app-client.ts:export type AppClientCreateOnComplete = _AppClientCreateOnComplete
+src/types/app-client.ts:export type AppClientCreateParams = _AppClientCreateParams
+src/types/app-client.ts:export type AppClientDeployCallInterfaceParams = _AppClientDeployCallInterfaceParams
+src/types/app-client.ts:export type AppClientDeployCoreParams = _AppClientDeployCoreParams
+src/types/app-client.ts:export type AppClientDeployParams = _AppClientDeployParams
+src/types/app-client.ts:export type AppClientMethodCallParams = _AppClientMethodCallParams
+src/types/app-client.ts:export type AppClientParams = _AppClientParams
+src/types/app-client.ts:export type AppClientUpdateParams = _AppClientUpdateParams
+src/types/app-client.ts:export type AppDetails = _AppDetails
+src/types/app-client.ts:export type AppDetailsBase = _AppDetailsBase
+src/types/app-client.ts:export type AppSourceMaps = _AppSourceMaps
+src/types/app-client.ts:export type AppSpecAppDetails = _AppSpecAppDetails
+src/types/app-client.ts:export type AppSpecAppDetailsBase = _AppSpecAppDetailsBase
+src/types/app-client.ts:export type AppSpecAppDetailsByCreatorAndName = _AppSpecAppDetailsByCreatorAndName
+src/types/app-client.ts:export type AppSpecAppDetailsById = _AppSpecAppDetailsById
+src/types/app-client.ts:export type CallOnComplete = _CallOnComplete
+src/types/app-client.ts:export type CloneAppClientParams = _CloneAppClientParams
+src/types/app-client.ts:export type FundAppAccountParams = _FundAppAccountParams
+src/types/app-client.ts:export type FundAppParams = _FundAppParams
+src/types/app-client.ts:export type ResolveAppByCreatorAndName = _ResolveAppByCreatorAndName
+src/types/app-client.ts:export type ResolveAppByCreatorAndNameBase = _ResolveAppByCreatorAndNameBase
+src/types/app-client.ts:export type ResolveAppById = _ResolveAppById
+src/types/app-client.ts:export type ResolveAppByIdBase = _ResolveAppByIdBase
+src/types/app-client.ts:export type ResolveAppClientByCreatorAndName = _ResolveAppClientByCreatorAndName
+src/types/app-client.ts:export type ResolveAppClientByNetwork = _ResolveAppClientByNetwork
+src/types/app-client.ts:export type SourceMapExport = _SourceMapExport
+src/types/app-manager.ts:export type AppInformation = _AppInformation
+src/types/app-manager.ts:export type BoxIdentifier = _BoxIdentifier
+src/types/app-manager.ts:export type BoxReference = _BoxReference
+src/types/app-manager.ts:export type BoxValueRequestParams = _BoxValueRequestParams
+src/types/app-manager.ts:export type BoxValuesRequestParams = _BoxValuesRequestParams
+src/types/app-manager.ts:export const AppManager = _AppManager
+src/types/app-manager.ts:export type AppManager = _AppManager
+src/types/account-manager.ts:export const AccountManager = _AccountManager
+src/types/account-manager.ts:export type AccountManager = _AccountManager
+src/types/account-manager.ts:export type EnsureFundedResult = _EnsureFundedResult
+src/types/account-manager.ts:export const getAccountTransactionSigner = _getAccountTransactionSigner
+src/types/algorand-client-transaction-sender.ts:export const AlgorandClientTransactionSender = _AlgorandClientTransactionSender
+src/types/algorand-client-transaction-sender.ts:export type AlgorandClientTransactionSender = _AlgorandClientTransactionSender
+src/types/app-deployer.ts:export type DeployAppUpdateParams = _DeployAppUpdateParams
+src/types/app-deployer.ts:export type DeployAppUpdateMethodCall = _DeployAppUpdateMethodCall
+src/types/app-deployer.ts:export type DeployAppDeleteParams = _DeployAppDeleteParams
+src/types/app-deployer.ts:export type DeployAppDeleteMethodCall = _DeployAppDeleteMethodCall
+src/types/app-deployer.ts:export type AppDeployParams = _AppDeployParams
+src/types/app-deployer.ts:export type AppMetadata = _AppMetadata
+src/types/app-deployer.ts:export type AppLookup = _AppLookup
+src/types/app-deployer.ts:export type AppDeployResult = _AppDeployResult
+src/types/app-deployer.ts:export const AppDeployer = _AppDeployer
+src/types/app-deployer.ts:export type AppDeployer = _AppDeployer
+src/types/logic-error.ts:export type LogicErrorDetails = _LogicErrorDetails
+src/types/logic-error.ts:export const LogicError = _LogicError
+src/types/logic-error.ts:export type LogicError = _LogicError
+src/types/client-manager.ts:export type AlgoSdkClients = _AlgoSdkClients
+src/types/client-manager.ts:export type ClientAppFactoryParams = _ClientAppFactoryParams
+src/types/client-manager.ts:export type ClientResolveAppClientByCreatorAndNameParams = _ClientResolveAppClientByCreatorAndNameParams
+src/types/client-manager.ts:export type ClientAppClientParams = _ClientAppClientParams
+src/types/client-manager.ts:export type ClientAppClientByNetworkParams = _ClientAppClientByNetworkParams
+src/types/client-manager.ts:export type ClientTypedAppClientByCreatorAndNameParams = _ClientTypedAppClientByCreatorAndNameParams
+src/types/client-manager.ts:export type ClientTypedAppClientParams = _ClientTypedAppClientParams
+src/types/client-manager.ts:export type ClientTypedAppClientByNetworkParams = _ClientTypedAppClientByNetworkParams
+src/types/client-manager.ts:export type ClientTypedAppFactoryParams = _ClientTypedAppFactoryParams
+src/types/client-manager.ts:export type TypedAppClient<TClient> = _TypedAppClient<TClient>
+src/types/client-manager.ts:export type TypedAppFactory<TClient> = _TypedAppFactory<TClient>
+src/types/client-manager.ts:export const ClientManager = _ClientManager
+src/types/client-manager.ts:export type ClientManager = _ClientManager
+src/types/algorand-client.ts:export const AlgorandClient = _AlgorandClient
+src/types/algorand-client.ts:export type AlgorandClient = _AlgorandClient
+src/types/debugging.ts:export const ALGOKIT_DIR = _ALGOKIT_DIR
+src/types/debugging.ts:export const SOURCES_DIR = _SOURCES_DIR
+src/types/debugging.ts:export const TEAL_FILE_EXT = _TEAL_FILE_EXT
+src/types/debugging.ts:export const TEAL_SOURCEMAP_EXT = _TEAL_SOURCEMAP_EXT
+src/types/debugging.ts:export const DEFAULT_MAX_SEARCH_DEPTH = _DEFAULT_MAX_SEARCH_DEPTH
+src/types/debugging.ts:export type TealSourceDebugEventData = _TealSourceDebugEventData
+src/types/debugging.ts:export type TealSourcesDebugEventData = _TealSourcesDebugEventData
+src/types/debugging.ts:export type AVMTracesEventData = _AVMTracesEventData
+src/types/async-event-emitter.ts:export type AsyncEventListener<T = unknown> = _AsyncEventListener<T>
+src/types/async-event-emitter.ts:export const AsyncEventEmitter = _AsyncEventEmitter
+src/types/async-event-emitter.ts:export type AsyncEventEmitter = _AsyncEventEmitter
+src/types/kmd-account-manager.ts:export const KmdAccountManager = _KmdAccountManager
+src/types/kmd-account-manager.ts:export type KmdAccountManager = _KmdAccountManager
+src/types/algorand-client-transaction-creator.ts:export const AlgorandClientTransactionCreator = _AlgorandClientTransactionCreator
+src/types/algorand-client-transaction-creator.ts:export type AlgorandClientTransactionCreator = _AlgorandClientTransactionCreator
+src/types/app-spec.ts:export const arc32ToArc56 = _arc32ToArc56
+src/types/app-spec.ts:export type AppSpec = _AppSpec
+src/types/app-spec.ts:export type HintSpec = _HintSpec
+src/types/app-spec.ts:export type AppSources = _AppSources
+src/types/app-spec.ts:export type CallConfigValue = _CallConfigValue
+src/types/app-spec.ts:export type CallConfig = _CallConfig
+src/types/app-spec.ts:export type Hint = _Hint
+src/types/app-spec.ts:export type FieldName = _FieldName
+src/types/app-spec.ts:export type ABIType = _ABIType
+src/types/app-spec.ts:export type StructElement = _StructElement
+src/types/app-spec.ts:export type Struct = _Struct
+src/types/app-spec.ts:export type DefaultArgument = _DefaultArgument
+src/types/app-spec.ts:export type AVMType = _AVMType
+src/types/app-spec.ts:export type DeclaredSchemaValueSpec = _DeclaredSchemaValueSpec
+src/types/app-spec.ts:export type ReservedSchemaValueSpec = _ReservedSchemaValueSpec
+src/types/app-spec.ts:export type SchemaSpec = _SchemaSpec
+src/types/app-spec.ts:export type Schema = _Schema
+src/types/app-spec.ts:export type StateSchemaSpec = _StateSchemaSpec
+src/types/app-spec.ts:export type StateSchema = _StateSchema
+src/types/transaction.ts:export type TransactionNote = _TransactionNote
+src/types/transaction.ts:export type TransactionNoteData = _TransactionNoteData
+src/types/transaction.ts:export type Arc2TransactionNote = _Arc2TransactionNote
+src/types/transaction.ts:export type SendTransactionParams = _SendTransactionParams
+src/types/transaction.ts:export type SendSingleTransactionResult = _SendSingleTransactionResult
+src/types/transaction.ts:export type SendTransactionResult = _SendTransactionResult
+src/types/transaction.ts:export type SendTransactionResults = _SendTransactionResults
+src/types/transaction.ts:export type SendTransactionComposerResults = _SendTransactionComposerResults
+src/types/transaction.ts:export type ConfirmedTransactionResult = _ConfirmedTransactionResult
+src/types/transaction.ts:export type ConfirmedTransactionResults = _ConfirmedTransactionResults
+src/types/transaction.ts:export type SendTransactionFrom = _SendTransactionFrom
+src/types/transaction.ts:export type TransactionToSign = _TransactionToSign
+src/types/transaction.ts:export type TransactionGroupToSend = _TransactionGroupToSend
+src/types/transaction.ts:export type SendParams = _SendParams
+src/types/transaction.ts:export type AdditionalTransactionComposerContext = _AdditionalTransactionComposerContext
+src/types/transaction.ts:export type TransactionComposerToSend = _TransactionComposerToSend
+src/types/composer.ts:export type AppCallParams = _AppCallParams
+src/types/composer.ts:export type AppCreateParams = _AppCreateParams
+src/types/composer.ts:export type AppDeleteParams = _AppDeleteParams
+src/types/composer.ts:export type AppMethodCallParams = _AppMethodCallParams
+src/types/composer.ts:export type AppUpdateParams = _AppUpdateParams
+src/types/composer.ts:export type CommonAppCallParams = _CommonAppCallParams
+src/types/composer.ts:export type AssetConfigParams = _AssetConfigParams
+src/types/composer.ts:export type AssetCreateParams = _AssetCreateParams
+src/types/composer.ts:export type AssetDestroyParams = _AssetDestroyParams
+src/types/composer.ts:export type AssetFreezeParams = _AssetFreezeParams
+src/types/composer.ts:export type AssetOptInParams = _AssetOptInParams
+src/types/composer.ts:export type AssetOptOutParams = _AssetOptOutParams
+src/types/composer.ts:export type AssetTransferParams = _AssetTransferParams
+src/types/composer.ts:export type CommonTransactionParams = _CommonTransactionParams
+src/types/composer.ts:export type OfflineKeyRegistrationParams = _OfflineKeyRegistrationParams
+src/types/composer.ts:export type OnlineKeyRegistrationParams = _OnlineKeyRegistrationParams
+src/types/composer.ts:export type AppCallMethodCall = _AppCallMethodCall
+src/types/composer.ts:export type AppCreateMethodCall = _AppCreateMethodCall
+src/types/composer.ts:export type AppDeleteMethodCall = _AppDeleteMethodCall
+src/types/composer.ts:export type AppMethodCall<T> = _AppMethodCall<T>
+src/types/composer.ts:export type AppMethodCallTransactionArgument = _AppMethodCallTransactionArgument
+src/types/composer.ts:export type AppUpdateMethodCall = _AppUpdateMethodCall
+src/types/composer.ts:export type ProcessedAppCallMethodCall = _ProcessedAppCallMethodCall
+src/types/composer.ts:export type ProcessedAppCreateMethodCall = _ProcessedAppCreateMethodCall
+src/types/composer.ts:export type ProcessedAppUpdateMethodCall = _ProcessedAppUpdateMethodCall
+src/types/composer.ts:export type PaymentParams = _PaymentParams
+src/types/composer.ts:export type SkipSignaturesSimulateOptions = _SkipSignaturesSimulateOptions
+src/types/composer.ts:export type RawSimulateOptions = _RawSimulateOptions
+src/types/composer.ts:export type SimulateOptions = _SimulateOptions
+src/types/composer.ts:export type ErrorTransformer = _ErrorTransformer
+src/types/composer.ts:export type TransactionComposerConfig = _TransactionComposerConfig
+src/types/composer.ts:export type TransactionComposerParams = _TransactionComposerParams
+src/types/composer.ts:export type BuiltTransactions = _BuiltTransactions
+src/types/composer.ts:export const TransactionComposer = _TransactionComposer
+src/types/composer.ts:export type TransactionComposer = _TransactionComposer
+src/types/dispenser-client.ts:export type DispenserFundResponse = _DispenserFundResponse
+src/types/dispenser-client.ts:export type DispenserLimitResponse = _DispenserLimitResponse
+src/types/dispenser-client.ts:export type TestNetDispenserApiClientParams = _TestNetDispenserApiClientParams
+src/types/dispenser-client.ts:export const TestNetDispenserApiClient = _TestNetDispenserApiClient
+src/types/dispenser-client.ts:export type TestNetDispenserApiClient = _TestNetDispenserApiClient
+src/types/config.ts:export type Config = _Config
+src/types/config.ts:export const UpdatableConfig = _UpdatableConfig
+src/types/config.ts:export type UpdatableConfig = _UpdatableConfig
+src/types/lifecycle-events.ts:export const EventType = _EventType
+src/types/lifecycle-events.ts:export type EventType = _EventType
+src/types/lifecycle-events.ts:export type EventDataMap = _EventDataMap
+src/types/amount.ts:export const AlgoAmount = _AlgoAmount
+src/types/amount.ts:export type AlgoAmount = _AlgoAmount
+src/types/asset-manager.ts:export type BulkAssetOptInOutResult = _BulkAssetOptInOutResult
+src/types/asset-manager.ts:export type AssetInformation = _AssetInformation
+src/types/asset-manager.ts:export const AssetManager = _AssetManager
+src/types/asset-manager.ts:export type AssetManager = _AssetManager
+src/types/instance-of.ts:export type InterfaceOf<ClassType> = _InterfaceOf<ClassType>
+src/types/app-factory.ts:export type AppFactoryParams = _AppFactoryParams
+src/types/app-factory.ts:export type CreateOnComplete = _CreateOnComplete
+src/types/app-factory.ts:export type CreateSchema = _CreateSchema
+src/types/app-factory.ts:export type AppFactoryCreateParams = _AppFactoryCreateParams
+src/types/app-factory.ts:export type AppFactoryCreateMethodCallParams = _AppFactoryCreateMethodCallParams
+src/types/app-factory.ts:export type AppFactoryAppClientParams = _AppFactoryAppClientParams
+src/types/app-factory.ts:export type AppFactoryResolveAppClientByCreatorAndNameParams = _AppFactoryResolveAppClientByCreatorAndNameParams
+src/types/app-factory.ts:export type AppFactoryDeployParams = _AppFactoryDeployParams
+src/types/app-factory.ts:export const AppFactory = _AppFactory
+src/types/app-factory.ts:export type AppFactory = _AppFactory
+src/types/logging.ts:export type Logger = _Logger
+src/types/logging.ts:export const consoleLogger = _consoleLogger
+src/types/logging.ts:export const infoConsoleLogger = _infoConsoleLogger
+src/types/logging.ts:export const verboseConsoleLogger = _verboseConsoleLogger
+src/types/logging.ts:export const warningConsoleLogger = _warningConsoleLogger
+src/types/logging.ts:export const nullLogger = _nullLogger
+src/network-client.ts:export interface AlgoClientConfig {
+src/network-client.ts:export interface AlgoConfig {
+src/network-client.ts:export interface NetworkDetails {
+src/network-client.ts:export function genesisIdIsLocalNet(genesisId: string) {
+src/kmd-client/index.ts:export * from '@algorandfoundation/algokit-kmd-client'
+src/app.ts:export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
+src/app.ts:export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
+src/app.ts:export const APP_DEPLOY_NOTE_DAPP = 'ALGOKIT_DEPLOYER'
+src/app.ts:export const APP_PAGE_MAX_SIZE = 2048
+src/app.ts:export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
+src/app.ts:export interface AppReference {
+src/app.ts:export interface CoreAppCallArgs {
+src/app.ts:export interface RawAppCallArgs extends CoreAppCallArgs {
+src/app.ts:export type ABIAppCallArg =
+src/app.ts:export type ABIAppCallArgs = CoreAppCallArgs & {
+src/app.ts:export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
+src/app.ts:export interface AppCallParams extends SendTransactionParams {
+src/app.ts:export interface AppStorageSchema {
+src/app.ts:export interface CompiledTeal {
+src/app.ts:export interface AppCallTransactionResultOfType<T> extends SendTransactionResults, SendTransactionResult {
+src/app.ts:export type AppCallTransactionResult = AppCallTransactionResultOfType<ABIReturn>
+src/app.ts:export interface AppDeployMetadata {
+src/app.ts:export interface AppMetadata extends AppReference, AppDeployMetadata {
+src/app.ts:export interface AppLookup {
+src/app.ts:export interface TealTemplateParams {
+src/app.ts:export enum OnUpdate {
+src/app.ts:export enum OnSchemaBreak {
+src/app.ts:export interface AppCompilationResult {
+src/app.ts:export type AppReturn<TReturn> = {
+src/app.ts:export type SendAppTransactionResult = Expand<
+src/app.ts:export type SendAppUpdateTransactionResult = Expand<SendAppTransactionResult & Partial<AppCompilationResult>>
+src/app.ts:export type SendAppCreateTransactionResult = Expand<
+src/app.ts:export interface AppState {
+src/app.ts:export interface BoxName {
+src/app.ts:export interface BoxValueRequestParams {
+src/app.ts:export interface BoxValuesRequestParams {
+src/indexer.ts:export interface LookupAssetHoldingsOptions {
+src/indexer.ts:export enum ApplicationOnComplete {
+src/indexer.ts:export enum SignatureType {
+src/indexer.ts:export enum AccountStatus {
+src/app-client.ts:export type ResolveAppByCreatorAndNameBase = {
+src/app-client.ts:export type ResolveAppByCreatorAndName = ResolveAppByCreatorAndNameBase & {
+src/app-client.ts:export interface ResolveAppByIdBase {
+src/app-client.ts:export interface ResolveAppById extends ResolveAppByIdBase {
+src/app-client.ts:export type AppDetailsBase = {
+src/app-client.ts:export type AppDetails = AppDetailsBase & (ResolveAppById | ResolveAppByCreatorAndName)
+src/app-client.ts:export type AppSpecAppDetailsBase = {
+src/app-client.ts:export type AppSpecAppDetailsById = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByIdBase
+src/app-client.ts:export type AppSpecAppDetailsByCreatorAndName = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByCreatorAndNameBase
+src/app-client.ts:export type AppSpecAppDetails = AppSpecAppDetailsBase & AppDetails
+src/app-client.ts:export interface AppClientDeployCoreParams {
+src/app-client.ts:export interface AppClientDeployCallInterfaceParams {
+src/app-client.ts:export interface AppClientDeployParams extends AppClientDeployCoreParams, AppClientDeployCallInterfaceParams {
+src/app-client.ts:export type AppClientCallRawArgs = RawAppCallArgs
+src/app-client.ts:export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
+src/app-client.ts:export type AppClientCallArgs = AppClientCallRawArgs | AppClientCallABIArgs
+src/app-client.ts:export interface AppClientCallCoreParams {
+src/app-client.ts:export type AppClientCallParams = AppClientCallArgs & AppClientCallCoreParams
+src/app-client.ts:export type AppClientClearStateParams = AppClientCallRawArgs & AppClientCallCoreParams
+src/app-client.ts:export interface AppClientCompilationParams {
+src/app-client.ts:export type AppClientCreateOnComplete = {
+src/app-client.ts:export type AppClientCreateParams = AppClientCallParams &
+src/app-client.ts:export type AppClientUpdateParams = AppClientCallParams & AppClientCompilationParams
+src/app-client.ts:export interface FundAppAccountParams {
+src/app-client.ts:export interface AppSourceMaps {
+src/app-client.ts:export interface SourceMapExport {
+src/app-client.ts:export interface AppClientCompilationResult extends Partial<AppCompilationResult> {
+src/app-client.ts:export interface AppClientParams {
+src/app-client.ts:export type CloneAppClientParams = Expand<Partial<Omit<AppClientParams, 'algorand' | 'appSpec'>>>
+src/app-client.ts:export type CallOnComplete = {
+src/app-client.ts:export type AppClientBareCallParams = Expand<
+src/app-client.ts:export type AppClientMethodCallParams = Expand<
+src/app-client.ts:export type FundAppParams = Expand<
+src/app-client.ts:export type ResolveAppClientByCreatorAndName = Expand<
+src/app-client.ts:export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
+src/app-client.ts:export class AppClient {
+src/app-client.ts:        "Unable to export source maps; they haven't been loaded into this client - you need to call create, update, or deploy first",
+src/app-manager.ts:export interface AppInformation {
+src/app-manager.ts:export type BoxIdentifier = string | Uint8Array | AddressWithTransactionSigner
+src/app-manager.ts:export interface BoxReference {
+src/app-manager.ts:export interface BoxValueRequestParams {
+src/app-manager.ts:export interface BoxValuesRequestParams {
+src/app-manager.ts:export class AppManager {
+src/account-manager.ts:export interface EnsureFundedResult {
+src/account-manager.ts:export const getAccountTransactionSigner = memoize(function (
+src/account-manager.ts:export class AccountManager {
+src/abi/index.ts:export * from '@algorandfoundation/algokit-abi'
+src/algorand-client-transaction-sender.ts:export class AlgorandClientTransactionSender {
+src/app-deployer.ts:export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
+src/app-deployer.ts:export type DeployAppUpdateMethodCall = Expand<Omit<AppUpdateMethodCall, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
+src/app-deployer.ts:export type DeployAppDeleteParams = Expand<Omit<AppDeleteParams, 'appId'>>
+src/app-deployer.ts:export type DeployAppDeleteMethodCall = Expand<Omit<AppDeleteMethodCall, 'appId'>>
+src/app-deployer.ts:export type AppDeployParams = Expand<
+src/app-deployer.ts:export interface AppMetadata extends AppDeployMetadata {
+src/app-deployer.ts:export interface AppLookup {
+src/app-deployer.ts:export type AppDeployResult =
+src/app-deployer.ts:export class AppDeployer {
+src/testing/account.ts:export async function getTestAccount(
+src/testing/account.ts:export async function getTestAccount(params: GetTestAccountParams, algorand: AlgorandClient): Promise<Address & AddressWithSigners>
+src/testing/account.ts:export async function getTestAccount(
+src/testing/test-logger.ts:export class TestLogger implements Logger {
+src/testing/transaction-logger.ts:export class TransactionLogger {
+src/testing/indexer.ts:export async function runWhenIndexerCaughtUp<T>(run: () => Promise<T>): Promise<T> {
+src/testing/types.ts:export interface AlgorandTestAutomationContext {
+src/testing/types.ts:export interface GetTestAccountParams {
+src/testing/types.ts:export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
+src/testing/types.ts:export interface AlgorandFixture {
+src/testing/types.ts:export interface LogSnapshotConfig {
+src/testing/types.ts:export interface AlgoKitLogCaptureFixture {
+src/testing/_asset.ts:export async function generateTestAsset(algorand: AlgorandClient, sender: Address | string, total?: number) {
+src/testing/fixtures/algorand-fixture.ts:export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig): AlgorandFixture
+src/testing/fixtures/algorand-fixture.ts:export function algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig): AlgorandFixture
+src/testing/fixtures/algorand-fixture.ts:export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: AlgoConfig): AlgorandFixture {
+src/testing/fixtures/index.ts:export * from './algokit-log-capture-fixture'
+src/testing/fixtures/index.ts:export * from './algorand-fixture'
+src/testing/fixtures/algokit-log-capture-fixture.ts:export const algoKitLogCaptureFixture: () => AlgoKitLogCaptureFixture = () => {
+src/testing/index.ts:export * from './account'
+src/testing/index.ts:export * from './fixtures'
+src/testing/index.ts:export * from './indexer'
+src/testing/index.ts:export * from './test-logger'
+src/testing/index.ts:export * from './transaction-logger'
+src/testing/index.ts:export * from './types'
+src/logic-error.ts:export interface LogicErrorDetails {
+src/logic-error.ts:export class LogicError extends Error {
+src/client-manager.ts:export interface AlgoSdkClients {
+src/client-manager.ts:export type ClientAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand'>>
+src/client-manager.ts:export type ClientResolveAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>
+src/client-manager.ts:export type ClientAppClientParams = Expand<Omit<AppClientParams, 'algorand'>>
+src/client-manager.ts:export type ClientAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appId'>>
+src/client-manager.ts:export type ClientTypedAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>
+src/client-manager.ts:export type ClientTypedAppClientParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>
+src/client-manager.ts:export type ClientTypedAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec' | 'appId'>>
+src/client-manager.ts:export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>
+src/client-manager.ts:export class ClientManager {
+src/client-manager.ts:   * KMD client allows you to export private keys, which is useful to (for instance) get the default account in a LocalNet network.
+src/client-manager.ts:export interface TypedAppClient<TClient> {
+src/client-manager.ts:export interface TypedAppFactory<TClient> {
+src/algorand-client.ts:export class AlgorandClient {
+src/debugging.ts:export const ALGOKIT_DIR = '.algokit'
+src/debugging.ts:export const SOURCES_DIR = 'sources'
+src/debugging.ts:export const TEAL_FILE_EXT = '.teal'
+src/debugging.ts:export const TEAL_SOURCEMAP_EXT = '.teal.map'
+src/debugging.ts:export const DEFAULT_MAX_SEARCH_DEPTH = 10
+src/debugging.ts:export type TealSourceDebugEventData = {
+src/debugging.ts:export type TealSourcesDebugEventData = {
+src/debugging.ts:export type AVMTracesEventData = {
+src/transactions/app-call.ts:export type CommonAppCallParams = CommonTransactionParams & {
+src/transactions/app-call.ts:export type AppCreateParams = Expand<
+src/transactions/app-call.ts:export type AppUpdateParams = Expand<
+src/transactions/app-call.ts:export type AppCallParams = CommonAppCallParams & { onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication> }
+src/transactions/app-call.ts:export type AppMethodCallParams = CommonAppCallParams & {
+src/transactions/app-call.ts:export type AppDeleteParams = CommonAppCallParams & { onComplete?: OnApplicationComplete.DeleteApplication }
+src/transactions/app-call.ts:export const buildAppCreate = async (
+src/transactions/app-call.ts:export const buildAppUpdate = async (
+src/transactions/app-call.ts:export const buildAppCall = (
+src/transactions/app-call.ts:export function populateTransactionResources(
+src/transactions/app-call.ts:export function populateGroupResources(
+src/transactions/payment.ts:export type PaymentParams = CommonTransactionParams & {
+src/transactions/payment.ts:export const buildPayment = (params: PaymentParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
+src/transactions/asset-config.ts:export type AssetCreateParams = CommonTransactionParams & {
+src/transactions/asset-config.ts:export type AssetConfigParams = CommonTransactionParams & {
+src/transactions/asset-config.ts:export type AssetFreezeParams = CommonTransactionParams & {
+src/transactions/asset-config.ts:export type AssetDestroyParams = CommonTransactionParams & {
+src/transactions/asset-config.ts:export const buildAssetCreate = (
+src/transactions/asset-config.ts:export const buildAssetConfig = (
+src/transactions/asset-config.ts:export const buildAssetFreeze = (
+src/transactions/asset-config.ts:export const buildAssetDestroy = (
+src/transactions/asset-transfer.ts:export type AssetTransferParams = CommonTransactionParams & {
+src/transactions/asset-transfer.ts:export type AssetOptInParams = CommonTransactionParams & {
+src/transactions/asset-transfer.ts:export type AssetOptOutParams = CommonTransactionParams & {
+src/transactions/asset-transfer.ts:export const buildAssetTransfer = (
+src/transactions/asset-transfer.ts:export const buildAssetOptIn = (params: AssetOptInParams, suggestedParams: SuggestedParams, defaultValidityWindow: bigint): Transaction => {
+src/transactions/asset-transfer.ts:export const buildAssetOptOut = (
+src/transactions/common.ts:export type CommonTransactionParams = {
+src/transactions/common.ts:export type TransactionCommonData = {
+src/transactions/common.ts:export const ensureString = (data?: string | Uint8Array) => {
+src/transactions/common.ts:export const buildTransactionCommonData = (
+src/transactions/method-call.ts:export type AppCreateMethodCall = Expand<AppMethodCall<AppCreateParams>>
+src/transactions/method-call.ts:export type AppUpdateMethodCall = Expand<AppMethodCall<AppUpdateParams>>
+src/transactions/method-call.ts:export type AppDeleteMethodCall = Expand<AppMethodCall<AppDeleteParams>>
+src/transactions/method-call.ts:export type AppCallMethodCall = Expand<AppMethodCall<AppMethodCallParams>>
+src/transactions/method-call.ts:export type ProcessedAppCreateMethodCall = Expand<
+src/transactions/method-call.ts:export type ProcessedAppUpdateMethodCall = Expand<
+src/transactions/method-call.ts:export type ProcessedAppCallMethodCall = Expand<
+src/transactions/method-call.ts:export type AppMethodCallTransactionArgument =
+src/transactions/method-call.ts:export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
+src/transactions/method-call.ts:export type AsyncTransactionParams = {
+src/transactions/method-call.ts:export type TransactionParams = {
+src/transactions/method-call.ts:export function extractComposerTransactionsFromAppMethodCallParams(
+src/transactions/method-call.ts:export function processAppMethodCallArgs(args: AppMethodCallArg[] | undefined): (ABIValue | undefined)[] | undefined {
+src/transactions/method-call.ts:export const buildAppCreateMethodCall = async (
+src/transactions/method-call.ts:export const buildAppUpdateMethodCall = async (
+src/transactions/method-call.ts:export const buildAppCallMethodCall = async (
+src/transactions/fee-coverage.ts:export enum FeeDeltaType {
+src/transactions/fee-coverage.ts:export type DeficitFeeDelta = {
+src/transactions/fee-coverage.ts:export type SurplusFeeDelta = {
+src/transactions/fee-coverage.ts:export type FeeDelta = DeficitFeeDelta | SurplusFeeDelta
+src/transactions/fee-coverage.ts:export const FeeDelta = {
+src/transactions/fee-coverage.ts:export type FeePriority = CoveredPriority | ModifiableDeficitPriority | ImmutableDeficitPriority
+src/transactions/fee-coverage.ts:export const FeePriority = {
+src/transactions/fee-coverage.ts:export function calculateInnerFeeDelta(
+src/transactions/key-registration.ts:export type OnlineKeyRegistrationParams = CommonTransactionParams & {
+src/transactions/key-registration.ts:export type OfflineKeyRegistrationParams = CommonTransactionParams & {
+src/transactions/key-registration.ts:export const buildKeyReg = (
+src/async-event-emitter.ts:export type AsyncEventListener<T = unknown> = (event: T, eventName: string | symbol) => Promise<void> | void
+src/async-event-emitter.ts:export class AsyncEventEmitter {
+src/kmd-account-manager.ts:export class KmdAccountManager {
+src/updatable-config.ts:export interface Config {
+src/updatable-config.ts:export class UpdatableConfig implements Readonly<Config> {
+src/algorand-client-transaction-creator.ts:export class AlgorandClientTransactionCreator {
+src/algod-client/index.ts:export * from '@algorandfoundation/algokit-algod-client'
+src/app-spec.ts:export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
+src/app-spec.ts:export interface AppSpec {
+src/app-spec.ts:export type HintSpec = Record<string, Hint>
+src/app-spec.ts:export interface AppSources {
+src/app-spec.ts:export type CallConfigValue = 'NEVER' | 'CALL' | 'CREATE' | 'ALL'
+src/app-spec.ts:export interface CallConfig {
+src/app-spec.ts:export interface Hint {
+src/app-spec.ts:export type FieldName = string
+src/app-spec.ts:export type ABIType = string
+src/app-spec.ts:export type StructElement = [FieldName, ABIType]
+src/app-spec.ts:export interface Struct {
+src/app-spec.ts:export type DefaultArgument =
+src/app-spec.ts:export type AVMType = 'uint64' | 'bytes'
+src/app-spec.ts:export interface DeclaredSchemaValueSpec {
+src/app-spec.ts:export interface ReservedSchemaValueSpec {
+src/app-spec.ts:export interface SchemaSpec {
+src/app-spec.ts:export interface Schema {
+src/app-spec.ts:export interface StateSchemaSpec {
+src/app-spec.ts:export type StateSchema = {
+src/transact/index.ts:export * from '@algorandfoundation/algokit-transact'
+src/util.ts:export const toNumber = (value: number | bigint) => {
+src/util.ts:export class UnsafeConversionError extends Error {}
+src/util.ts:export const calculateFundAmount = (
+src/util.ts:export const isNode = () => {
+src/util.ts:export function* chunkArray<T>(array: T[], batchSize: number): Generator<T[], void> {
+src/util.ts:export const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
+src/util.ts:export const binaryStartsWith = (base: Uint8Array, startsWith: Uint8Array): boolean => {
+src/util.ts:export const defaultJsonValueReplacer = (key: string, value: unknown) => {
+src/util.ts:export const asJson = (
+src/util.ts:export const calculateExtraProgramPages = (approvalProgram: Uint8Array, clearStateProgram?: Uint8Array): number => {
+src/composer.ts:// Re-export transaction parameter types
+src/composer.ts:export type {
+src/composer.ts:export type { AssetConfigParams, AssetCreateParams, AssetDestroyParams, AssetFreezeParams } from './transactions/asset-config'
+src/composer.ts:export type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './transactions/asset-transfer'
+src/composer.ts:export type { CommonTransactionParams } from './transactions/common'
+src/composer.ts:export type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from './transactions/key-registration'
+src/composer.ts:export type {
+src/composer.ts:export type { PaymentParams } from './transactions/payment'
+src/composer.ts:export type SkipSignaturesSimulateOptions = Expand<
+src/composer.ts:export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>> & {
+src/composer.ts:export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
+src/composer.ts:export type ErrorTransformer = (error: Error) => Promise<Error>
+src/composer.ts:export type TransactionComposerConfig = {
+src/composer.ts:export type TransactionComposerParams = {
+src/composer.ts:export interface BuiltTransactions {
+src/composer.ts:export class TransactionComposer {
+src/algo25/index.ts:export * from '@algorandfoundation/algokit-algo25'
+src/index.ts:export {
+src/index.ts:export type { Addressable, ReadableAddress } from '../packages/common/src/address'
+src/index.ts:export * from './amount'
+src/index.ts:export * from './config'
+src/index.ts:export * from './transaction'
+src/index.ts:export { AlgorandClient } from './algorand-client'
+src/index.ts:export * from './debugging'
+src/index.ts:export * from './lifecycle-events'
+src/dispenser-client.ts:export interface DispenserFundResponse {
+src/dispenser-client.ts:export interface DispenserLimitResponse {
+src/dispenser-client.ts:export interface TestNetDispenserApiClientParams {
+src/dispenser-client.ts:export class TestNetDispenserApiClient {
+src/config.ts:export const Config = new UpdatableConfig()
+src/lifecycle-events.ts:export enum EventType {
+src/lifecycle-events.ts:export type EventDataMap = {
+src/amount.ts:export class AlgoAmount {
+src/amount.ts:export const algos = (algos: number | bigint) => {
+src/amount.ts:export const algo = (algos: number | bigint) => {
+src/amount.ts:export const microAlgos = (microAlgos: number | bigint) => {
+src/amount.ts:export const microAlgo = (microAlgos: number | bigint) => {
+src/amount.ts:export const transactionFees = (numberOfTransactions: number) => {
+src/amount.ts:export const ALGORAND_MIN_TX_FEE = AlgoAmount.MicroAlgo(1_000)
+src/asset-manager.ts:export interface BulkAssetOptInOutResult {
+src/asset-manager.ts:export interface AssetInformation {
+src/asset-manager.ts:export class AssetManager {
+src/instance-of.ts:export type InterfaceOf<ClassType> = {
+src/app-factory.ts:export interface AppFactoryParams {
+src/app-factory.ts:export type CreateOnComplete = {
+src/app-factory.ts:export type CreateSchema = {
+src/app-factory.ts:export type AppFactoryCreateParams = Expand<AppClientBareCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema>
+src/app-factory.ts:export type AppFactoryCreateMethodCallParams = Expand<
+src/app-factory.ts:export type AppFactoryAppClientParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>
+src/app-factory.ts:export type AppFactoryResolveAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>
+src/app-factory.ts:export type AppFactoryDeployParams = Expand<
+src/app-factory.ts:export class AppFactory {
+src/app-factory.ts:        "Unable to export source maps; they haven't been loaded into this client - you need to call create, update, or deploy first",
+src/logging.ts:export type { Logger } from '@algorandfoundation/algokit-common'
+src/logging.ts:export const consoleLogger: Logger = {
+src/logging.ts:export const infoConsoleLogger: Logger = {
+src/logging.ts:export const verboseConsoleLogger: Logger = {
+src/logging.ts:export const warningConsoleLogger: Logger = {
+src/logging.ts:export const nullLogger: Logger = {
