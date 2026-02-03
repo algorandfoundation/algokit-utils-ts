@@ -1,14 +1,19 @@
-# 🚀 Ultimate AlgoKit Utils v10 Migration Guide
+# 🚀 AlgoKit Utils v10 Migration Guide
 
-This guide documents the definitive path from v9 to v10. This is a "Decoupled" release where AlgoKit moves to native implementations, reducing dependency on `algosdk`.
+This document is the definitive guide for migrating from AlgoKit Utils v9 to v10.
+v10 is a "Decoupled" release: AlgoKit now uses native TypeScript implementations for transactions and ABI handling, removing the hard dependency on `algosdk`.
+
+> **Critical Note:** While you can still use `algosdk` alongside AlgoKit, they are no longer interchangeable in memory. You must bridge them using the methods described in Section 6.
 
 ---
 
-## 1. Executive Summary: The "Decoupling"
+## 1. Installation (Alpha Strategy)
 
-The primary shift in v10 is the **removal of `algosdk` as a hard dependency**. AlgoKit now uses native TypeScript implementations for transactions, ABI handling, and client interactions.
+Because v10 is currently in alpha and the client generator has peer dependency lags, you must install using specific tags and flags.
 
-> **Critical Note:** While you can still use `algosdk` alongside AlgoKit, they are no longer interchangeable in memory. You must bridge them using the methods in Section 6.
+```bash
+npm install @algorandfoundation/algokit-utils@10.0.0-alpha.32 @algorandfoundation/algokit-client-generator@^6.0.0-beta.1 --legacy-peer-deps
+```
 
 ---
 
@@ -16,34 +21,35 @@ The primary shift in v10 is the **removal of `algosdk` as a hard dependency**. A
 
 ### Standardized Property Names
 
-Properties have been renamed to be more idiomatic and match the Algorand protocol standards.
+Properties have been renamed to be more idiomatic and match Algorand protocol standards.
 
-| v9 Property (SDK Style) | v10 Property (AlgoKit Style) | Context                    |
-| :---------------------- | :--------------------------- | :------------------------- |
-| `index`                 | `id`                         | Asset IDs and App IDs      |
-| `txID`                  | `txId`                       | Transaction identifiers    |
-| `axfer`                 | `AssetTransfer`              | Transaction Type Enums     |
-| `applicationCall`       | `appCall`                    | Transaction field names    |
-| `applicationIndex`      | `appId`                      | Confirmations / References |
-| `from`                  | `sender`                     | Transaction objects        |
-| `to`                    | `receiver`                   | Transaction objects        |
+| v9 Property (SDK Style) | v10 Property (AlgoKit Style) | Context                          |
+| ----------------------- | ---------------------------- | -------------------------------- |
+| index                   | id                           | Asset IDs and App IDs            |
+| txID                    | txId                         | Transaction identifiers          |
+| axfer                   | AssetTransfer                | Transaction type enums           |
+| applicationCall         | appCall                      | Transaction field names          |
+| applicationIndex        | appId                        | Confirmations / references       |
+| from                    | sender                       | Transaction objects (v10 native) |
+| to                      | receiver                     | Transaction objects (v10 native) |
 
 ### Flattened Imports
 
-Deep directory imports (e.g., `/types/`, `/account/`) have been removed.
+Deep directory imports are removed.
 
-- **Before:** `import { AppSpec } from '@algorandfoundation/algokit-utils/types/app-spec'`
-- **After:** `import { AppSpec } from '@algorandfoundation/algokit-utils'`
+```ts
+// Before
+import { AppSpec } from '@algorandfoundation/algokit-utils/types/app-spec'
+
+// After
+import { AppSpec } from '@algorandfoundation/algokit-utils'
+```
 
 ---
 
 ## 3. Account Management (The AccountManager)
 
-The standalone `getAccount` function is **Deprecated**. All account logic is now centralized in the stateful `AccountManager`.
-
-### Registering and Accessing Signers
-
-The Manager tracks signers for you. Once an account is loaded, the Manager knows how to sign for that address automatically.
+The standalone `getAccount` function and `algosdk.Account` class are deprecated. Use the stateful `AccountManager` via `algorand.account`.
 
 ```ts
 // v9
@@ -51,59 +57,102 @@ const account = await getAccount('MY_ACCOUNT', algod)
 
 // v10 (Manager Pattern)
 const account = await algorand.account.fromEnvironment('MY_ACCOUNT')
-const randomAccount = algorand.account.random()
-```
-
-### Rekeying & Funding
-
-Managed operations now automatically update the internal signer registry.
-
-```ts
-// Rekeying automatically updates the manager's signer for 'ORIGINAL_ADDR'
-await algorand.account.rekeyAccount({
-  account: 'ORIGINAL_ADDR',
-  rekeyTo: 'NEW_SIGNER_ADDR',
-})
-
-// Funding is now a manager method
-await algorand.account.ensureFunded('ADDR', 'DISPENSER', algokit.algo(1))
+const random = algorand.account.random() // Synchronous
 ```
 
 ---
 
 ## 4. API Client Modernization
 
-### Removal of .do()
+### Removal of `.do()`
 
-Algod, Indexer, and KMD client methods now return Promises directly. Remove all .do() suffixes.
+Algod, Indexer, and KMD client methods now return Promises directly.
 
 ```ts
-// v9
-const status = await algorand.client.algod.status().do()
-
 // v10
 const status = await algorand.client.algod.status()
 ```
 
-### Simplified Method Names
+### Method Renaming
 
-The "get" prefix has been removed from common helper methods.
+The "get" prefix has been removed from helper methods.
 
 - `getTransactionParams()` → `transactionParams()`
 - `getSuggestedParams()` → `suggestedParams()`
 
+### Legacy Client Converters
+
+If you have legacy code that requires an `algosdk.Algodv2` client, you can wrap the v10 client:
+
+```ts
+import * as algosdk from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-utils'
+
+export function algokitAlgodToSdk(client: AlgodClient): algosdk.Algodv2 {
+  return new algosdk.Algodv2(client.httpRequest.config.headers ?? '', client.httpRequest.config.baseUrl, client.httpRequest.config.port)
+}
+```
+
 ---
 
-## 5. Smart Contract Interactions (AppClient / AppFactory)
+## 5. Transaction Bridging (The "Bridge")
+
+Since v10 native objects are not binary-compatible with `algosdk` objects, you must bridge them using Msgpack encoding.
+
+### 5.1 The "Reverse Bridge" (For Frontend Wallets)
+
+If using `@txnlab/use-wallet` or legacy SDK builders:
+
+```ts
+import { decodeTransaction } from "@algorandfoundation/algokit-utils/transact";
+
+// 1. Build using SDK
+const sdkTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({ ... });
+
+// 2. Bridge to v10 (if needed for AlgoKit logic)
+const v10Txn = decodeTransaction(algosdk.encodeMsgpack(sdkTxn));
+```
+
+### 5.2 The "Native Bridge" (For Signing)
+
+If building in v10 but signing with an SDK-based signer:
+
+```ts
+import { encodeTransactionRaw } from "@algorandfoundation/algokit-utils/transact";
+
+// 1. Create v10 txn
+const v10Txn = await algorand.createTransaction.payment({ ... });
+
+// 2. Bridge to SDK
+const sdkTxn = algosdk.decodeUnsignedTransaction(encodeTransactionRaw(v10Txn));
+```
+
+### 5.3 Helper Utilities (Copy-Paste)
+
+Use these helpers to reduce boilerplate in your codebase.
+
+```ts
+import * as algosdk from 'algosdk'
+import { decodeTransaction, encodeTransactionRaw, Transaction } from '@algorandfoundation/algokit-utils/transact'
+
+export function sdkTxnToAlgokit(txn: algosdk.Transaction): Transaction {
+  return decodeTransaction(algosdk.encodeMsgpack(txn))
+}
+
+export function algokitTxnToSdk(txn: Transaction): algosdk.Transaction {
+  return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txn))
+}
+```
+
+---
+
+## 6. Smart Contract Interactions
 
 ### ARC-56 and Structs
 
-v10 treats ARC-56 structs as first-class objects. You must pass structured objects rather than raw primitives.
+v10 treats ARC-56 structs as first-class objects. Pass structured objects, not raw primitives.
 
 ```ts
-// v9
-await appClient.send.call({ method: 'setValue', args: [1, 'hello'] })
-
 // v10
 await appClient.send.call({
   method: 'setValue',
@@ -111,64 +160,29 @@ await appClient.send.call({
 })
 ```
 
-### Transaction References (Boxes)
+### Converting Structs to SDK
 
-The boxes property is now boxReferences, and internal fields use appId.
+If you need to pass a v10 struct to an `algosdk` function, use this converter:
 
 ```ts
-// v10 Structure
-{
-  appCall: {
-    boxReferences: [{ appId: 0n, name: encoder.encode('1') }]
-  }
+export function algokitStructToSdk(value: ABIValue, type: ABIStructType): algosdk.ABIValue {
+  const sdkTuple = algosdk.ABIType.from(type.toABITupleType().toString())
+  return sdkTuple.decode(type.encode(value))
 }
 ```
 
 ---
 
-## 6. ABI & Transaction Bridging
+## 7. TypeScript Strictness & Configuration
 
-### Native ABI Type Construction
+### Solving TokenHeader vs Record
 
-Stop using algosdk ABI classes. Use the native ABIType factory.
-
-```ts
-// v9
-const uint32Type = new algosdk.ABIUintType(32)
-
-// v10
-import { ABIType } from '@algorandfoundation/algokit-abi'
-const uint32Type = ABIType.from('uint32')
-```
-
-### The Transaction Bridge (Frontend & Wallets)
-
-If you use @txnlab/use-wallet, you must bridge v10 transactions to SDK transactions before signing.
+v10 uses a strict dictionary for tokens. You cannot assign an SDK `TokenHeader` type to a v10 `AlgoClientConfig`.
 
 ```ts
-import { algokitTxnToSdk } from '@algorandfoundation/algokit-utils/transact'
-
-const v10Txn = await algorand.createTransaction.payment({ ... })
-const sdkTxn = algokitTxnToSdk(v10Txn)
-
-await activeWallet.signTransactions([sdkTxn])
-```
-
----
-
-## 7. TypeScript Strictness & Index Signatures
-
-### Solving the token Type Mismatch
-
-If you extend AlgoClientConfig, you must use Record<string, string> for tokens to satisfy the index signature.
-
-```ts
-import { AlgoClientConfig } from '@algorandfoundation/algokit-utils'
-
-export interface MyViteConfig extends AlgoClientConfig {
-  server: string
-  port: string | number
-  token: string | Record<string, string> // NOT 'TokenHeader'
+// FIX: Use Record<string, string> to satisfy index signature
+export interface MyConfig extends AlgoClientConfig {
+  token: string | Record<string, string>
 }
 ```
 
@@ -176,23 +190,16 @@ export interface MyViteConfig extends AlgoClientConfig {
 
 ## 8. Agent "One-Shot" Cheat Sheet
 
-For AI agents (Cursor, ChatGPT, Claude) to perform a "One-Shot" migration:
+Copy this table for your AI agent (Cursor/Claude) to ensure a high-accuracy migration.
 
-| Search Pattern | Replace With | Action |
-| :------------- | :----------- | :----- |
-| `\.do\(\)` | `(empty)` | Remove all .do() calls. |
-| `from:` | `sender:` | Update transaction object keys. |
-| `to:` | `receiver:` | Update transaction object keys. |
-| `applicationIndex` | `appId` | Rename in confirmations and tests. |
-| `getAccount(` | `algorand.account.fromEnvironment(` | Shift to Manager pattern. |
-| `.getTransactionParams()` | `.transactionParams()` | Fix client method name. |
-| `OnApplicationComplete\.(.*)OC` | `OnApplicationComplete.$1` | Remove 'OC' suffix from Enums. |
-
----
-
-## 9. Post-Migration Checklist
-
-- Grep Check: Run `grep -r ".do()" src/`.
-- Enum Check: Ensure `OnApplicationComplete.OptInOC` is now `OnApplicationComplete.OptIn`.
-- Generator Update: Update `@algorandfoundation/algokit-client-generator` to `^6.0.0` to generate v10-compatible clients.
-- Build Check: Run `npm run build` to verify all index signatures in config files.
+| Search Pattern                  | Replace With                         | Action                                          |
+| ------------------------------- | ------------------------------------ | ----------------------------------------------- |
+| `\.do\(\)`                      | (empty)                              | Remove all `.do()` suffixes.                    |
+| `from:`                         | `sender:`                            | Update transaction keys (if converting to v10). |
+| `to:`                           | `receiver:`                          | Update transaction keys (if converting to v10). |
+| `applicationIndex`              | `appId`                              | Rename in confirmations.                        |
+| `getAccount\(`                  | `algorand.account.fromEnvironment\(` | Shift to manager pattern.                       |
+| `\.getTransactionParams\(\)`    | `.transactionParams()`               | Fix client method name.                         |
+| `TokenHeader`                   | `Record<string, string>`             | Fix TS interface errors.                        |
+| `algo(1)`                       | `algo(1).microAlgos`                 | If passing to SDK builders.                     |
+| `OnApplicationComplete\.(.*)OC` | `OnApplicationComplete.$1`           | Remove `OC` suffix.                             |
