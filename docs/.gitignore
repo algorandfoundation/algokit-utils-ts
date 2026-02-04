@@ -2,6 +2,8 @@
 dist/
 # generated types
 .astro/
+# generated API docs (built by starlight-typedoc)
+src/content/docs/api/
 
 # dependencies
 node_modules/
