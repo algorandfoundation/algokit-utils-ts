@@ -8,13 +8,13 @@ description: "App management is a higher-order use case capability provided by A
 App management is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It allows you to create, update, delete, call (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes).
 
 > [!TIP]
-> App-related types like `OnApplicationComplete` and `BoxReference` are available from the [modular imports](./modular-imports.md) via `@algorandfoundation/algokit-utils/transact`, and ABI types like `ABIMethod`, `ABIType`, and `ABIValue` are available from `@algorandfoundation/algokit-utils/abi`.
+> App-related types like `OnApplicationComplete` and `BoxReference` are available from the [modular imports](../advanced/modular-imports.md) via `@algorandfoundation/algokit-utils/transact`, and ABI types like `ABIMethod`, `ABIType`, and `ABIValue` are available from `@algorandfoundation/algokit-utils/abi`.
 
 ## AppManager
 
 The `AppManager` is a class that is used to manage app information.
 
-To get an instance of `AppManager` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.app` or instantiate it directly (passing in an algod client instance):
+To get an instance of `AppManager` you can use either [`AlgorandClient`](../core/algorand-client.md) via `algorand.app` or instantiate it directly (passing in an algod client instance):
 
 ```typescript
 import { AppManager } from '@algorandfoundation/algokit-utils/app-manager'
@@ -63,7 +63,7 @@ const abiReturn = AppManager.getABIReturn(confirmation, abiMethod)
 
 ### Creation
 
-To create an app via a raw app transaction you can use `algorand.send.appCreate(params)` (immediately send a single app creation transaction), `algorand.createTransaction.appCreate(params)` (construct an app creation transaction), or `algorand.newGroup().addAppCreate(params)` (add app creation to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+To create an app via a raw app transaction you can use `algorand.send.appCreate(params)` (immediately send a single app creation transaction), `algorand.createTransaction.appCreate(params)` (construct an app creation transaction), or `algorand.newGroup().addAppCreate(params)` (add app creation to a group of transactions) per [`AlgorandClient`](../core/algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
 
 To create an app via an ABI method call you can use `algorand.send.appCreateMethodCall(params)` (immediately send a single app creation transaction), `algorand.createTransaction.appCreateMethodCall(params)` (construct an app creation transaction), or `algorand.newGroup().addAppCreateMethodCall(params)` (add app creation to a group of transactions).
 
@@ -140,7 +140,7 @@ const createdAppId = result.appId
 
 ### Updating
 
-To update an app via a raw app transaction you can use `algorand.send.appUpdate(params)` (immediately send a single app update transaction), `algorand.createTransaction.appUpdate(params)` (construct an app update transaction), or `algorand.newGroup().addAppUpdate(params)` (add app update to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+To update an app via a raw app transaction you can use `algorand.send.appUpdate(params)` (immediately send a single app update transaction), `algorand.createTransaction.appUpdate(params)` (construct an app update transaction), or `algorand.newGroup().addAppUpdate(params)` (add app update to a group of transactions) per [`AlgorandClient`](../core/algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
 
 To create an app via an ABI method call you can use `algorand.send.appUpdateMethodCall(params)` (immediately send a single app update transaction), `algorand.createTransaction.appUpdateMethodCall(params)` (construct an app update transaction), or `algorand.newGroup().addAppUpdateMethodCall(params)` (add app update to a group of transactions).
 
@@ -202,7 +202,7 @@ await algorand.send.appUpdateMethodCall({
 
 ### Deleting
 
-To delete an app via a raw app transaction you can use `algorand.send.appDelete(params)` (immediately send a single app deletion transaction), `algorand.createTransaction.appDelete(params)` (construct an app deletion transaction), or `algorand.newGroup().addAppDelete(params)` (add app deletion to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+To delete an app via a raw app transaction you can use `algorand.send.appDelete(params)` (immediately send a single app deletion transaction), `algorand.createTransaction.appDelete(params)` (construct an app deletion transaction), or `algorand.newGroup().addAppDelete(params)` (add app deletion to a group of transactions) per [`AlgorandClient`](../core/algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
 
 To delete an app via an ABI method call you can use `algorand.send.appDeleteMethodCall(params)` (immediately send a single app deletion transaction), `algorand.createTransaction.appDeleteMethodCall(params)` (construct an app deletion transaction), or `algorand.newGroup().addAppDeleteMethodCall(params)` (add app deletion to a group of transactions).
 
@@ -256,7 +256,7 @@ await algorand.send.appDeleteMethodCall({
 
 ## Calling
 
-To call an app via a raw app transaction you can use `algorand.send.appCall(params)` (immediately send a single app call transaction), `algorand.createTransaction.appCall(params)` (construct an app call transaction), or `algorand.newGroup().addAppCall(params)` (add app deletion to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+To call an app via a raw app transaction you can use `algorand.send.appCall(params)` (immediately send a single app call transaction), `algorand.createTransaction.appCall(params)` (construct an app call transaction), or `algorand.newGroup().addAppCall(params)` (add app deletion to a group of transactions) per [`AlgorandClient`](../core/algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
 
 To call an app via an ABI method call you can use `algorand.send.appCallMethodCall(params)` (immediately send a single app call transaction), `algorand.createTransaction.appCallMethodCall(params)` (construct an app call transaction), or `algorand.newGroup().addAppCallMethodCall(params)` (add app call to a group of transactions).
 
@@ -377,7 +377,7 @@ const boxABIValues = algorand.app.getBoxValuesFromABIType(appId, [boxName, boxNa
 To get reference information and metadata about an existing app you can use the following methods:
 
 - `algorand.app.getById(appId)` - Returns current app information by app ID from an [`AppManager`](#appmanager) instance
-- `indexer.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)` - Returns all apps created by a given account from [indexer](./indexer.md)
+- `indexer.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)` - Returns all apps created by a given account from [indexer](../advanced/indexer.md)
 
 ## Common app parameters
 

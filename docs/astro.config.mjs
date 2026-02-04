@@ -49,8 +49,37 @@ export default defineConfig({
         },
         {
           label: 'Core Concepts',
-          collapsed: false,
-          autogenerate: { directory: 'concepts' },
+          items: [
+            { slug: 'concepts/core/algorand-client' },
+            { slug: 'concepts/core/account' },
+            { slug: 'concepts/core/transaction' },
+            { slug: 'concepts/core/amount' },
+            { slug: 'concepts/core/client' },
+          ],
+        },
+        {
+          label: 'Building Applications',
+          items: [
+            { slug: 'concepts/building/app-client' },
+            { slug: 'concepts/building/app-deploy' },
+            { slug: 'concepts/building/app' },
+            { slug: 'concepts/building/typed-app-clients' },
+            { slug: 'concepts/building/asset' },
+            { slug: 'concepts/building/transfer' },
+            { slug: 'concepts/building/testing' },
+          ],
+        },
+        {
+          label: 'Advanced Topics',
+          collapsed: true,
+          items: [
+            { slug: 'concepts/advanced/transaction-composer' },
+            { slug: 'concepts/advanced/modular-imports' },
+            { slug: 'concepts/advanced/debugging' },
+            { slug: 'concepts/advanced/indexer' },
+            { slug: 'concepts/advanced/event-emitter' },
+            { slug: 'concepts/advanced/dispenser-client' },
+          ],
         },
         {
           label: 'Migration Guides',

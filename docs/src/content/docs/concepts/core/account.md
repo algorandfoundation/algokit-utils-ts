@@ -8,11 +8,11 @@ description: "Account management is one of the core capabilities provided by Alg
 Account management is one of the core capabilities provided by AlgoKit Utils. It allows you to create mnemonic, rekeyed, multisig, transaction signer, idempotent KMD and environment variable injected accounts that can be used to sign transactions as well as representing a sender address at the same time. This significantly simplifies management of transaction signing.
 
 > [!TIP]
-> The core account types (`TransactionSigner`, `AddressWithTransactionSigner`, `LogicSigAccount`, `MultisigAccount`) are available from the [modular imports](./modular-imports.md) via `@algorandfoundation/algokit-utils/transact`.
+> The core account types (`TransactionSigner`, `AddressWithTransactionSigner`, `LogicSigAccount`, `MultisigAccount`) are available from the [modular imports](../advanced/modular-imports.md) via `@algorandfoundation/algokit-utils/transact`.
 
 ## `AccountManager`
 
-The `AccountManager` is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](./transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
+The `AccountManager` is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](../advanced/transaction-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
 
 To get an instance of `AccountManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly:
 
@@ -26,7 +26,7 @@ const accountManager = new AccountManager(clientManager)
 
 The core internal type that holds information about a signer/sender pair for a transaction is `AddressWithTransactionSigner`, which represents a `TransactionSigner` (`signer`) along with a sender address (`addr`).
 
-Many methods in `AccountManager` expose an `AddressWithTransactionSigner`. `AddressWithTransactionSigner` can be used with [`TransactionComposer`](./transaction-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
+Many methods in `AccountManager` expose an `AddressWithTransactionSigner`. `AddressWithTransactionSigner` can be used with [`TransactionComposer`](../advanced/transaction-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
 
 ## Registering a signer
 

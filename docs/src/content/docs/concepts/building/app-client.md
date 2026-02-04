@@ -18,7 +18,7 @@ App client and App factory are higher-order use case capabilities provided by Al
 
 The `AppFactory` is a class that, for a given app spec, allows you to create and deploy one or more app instances and to create one or more app clients to interact with those (or other) app instances.
 
-To get an instance of `AppFactory` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.client.getAppFactory` or instantiate it directly (passing in an app spec, an `AlgorandClient` instance and other optional parameters):
+To get an instance of `AppFactory` you can use either [`AlgorandClient`](../core/algorand-client.md) via `algorand.client.getAppFactory` or instantiate it directly (passing in an app spec, an `AlgorandClient` instance and other optional parameters):
 
 ```typescript
 // Minimal example
@@ -41,7 +41,7 @@ const factory = algorand.client.getAppFactory({
 
 The `AppClient` is a class that, for a given app spec, allows you to manage calls and state for a specific deployed instance of an app (with a known app ID).
 
-To get an instance of `AppClient` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.client.getAppClient*` or instantiate it directly (passing in an app ID, app spec, `AlgorandClient` instance and other optional parameters):
+To get an instance of `AppClient` you can use either [`AlgorandClient`](../core/algorand-client.md) via `algorand.client.getAppClient*` or instantiate it directly (passing in an app ID, app spec, `AlgorandClient` instance and other optional parameters):
 
 ```typescript
 // Minimal examples
@@ -420,7 +420,7 @@ Config.configure({ debug: true })
 
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.
 
-When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](./debugging.md).
+When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](../advanced/debugging.md).
 
 ## Default arguments
 

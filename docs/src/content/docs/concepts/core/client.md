@@ -8,7 +8,7 @@ description: "Client management is one of the core capabilities provided by Algo
 Client management is one of the core capabilities provided by AlgoKit Utils. It allows you to create (auto-retry) [algod](https://dev.algorand.co/reference/rest-apis/algod), [indexer](https://dev.algorand.co/reference/rest-apis/indexer) and [kmd](https://dev.algorand.co/reference/rest-apis/kmd) clients against various networks resolved from environment or specified configuration.
 
 > [!TIP]
-> The API client types are available from the [modular imports](./modular-imports.md): Algod types from `@algorandfoundation/algokit-utils/algod-client`, Indexer types from `@algorandfoundation/algokit-utils/indexer-client`, and KMD types from `@algorandfoundation/algokit-utils/kmd-client`.
+> The API client types are available from the [modular imports](../advanced/modular-imports.md): Algod types from `@algorandfoundation/algokit-utils/algod-client`, Indexer types from `@algorandfoundation/algokit-utils/indexer-client`, and KMD types from `@algorandfoundation/algokit-utils/kmd-client`.
 
 To see some usage examples check out the `automated tests`.
 
@@ -95,11 +95,11 @@ algorand.client.kmd // Throws error
 
 ### Creating an app client instance
 
-See [how to create app clients via ClientManager via AlgorandClient](./app-client.md#dynamically-creating-clients-for-a-given-app-spec).
+See [how to create app clients via ClientManager via AlgorandClient](../building/app-client.md#dynamically-creating-clients-for-a-given-app-spec).
 
 ### Creating a TestNet dispenser API client instance
 
-You can also create a [TestNet dispenser API client instance](./dispenser-client.md#creating-a-dispenser-client) from `ClientManager` too.
+You can also create a [TestNet dispenser API client instance](../advanced/dispenser-client.md#creating-a-dispenser-client) from `ClientManager` too.
 
 ## Automatic retry
 

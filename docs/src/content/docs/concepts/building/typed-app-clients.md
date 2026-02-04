@@ -30,7 +30,7 @@ Note: AlgoKit Utils >= 7.0.0 is compatible with the older 3.0.0 generated typed 
 
 ## Getting a typed client instance
 
-To get an instance of a typed client you can use an [`AlgorandClient`](./algorand-client.md) instance or a typed app [`Factory`](#creating-a-typed-factory-instance) instance.
+To get an instance of a typed client you can use an [`AlgorandClient`](../core/algorand-client.md) instance or a typed app [`Factory`](#creating-a-typed-factory-instance) instance.
 
 The approach to obtaining a client instance depends on how many app clients you require for a given app spec and if the app has already been deployed, which is summarised below:
 

@@ -7,12 +7,12 @@ description: "The `TransactionComposer` class allows you to easily compose one o
 
 The `TransactionComposer` class allows you to easily compose one or more compliant Algorand transactions and execute and/or simulate them.
 
-It's the core of how the [`AlgorandClient`](./algorand-client.md) class composes and sends transactions.
+It's the core of how the [`AlgorandClient`](../core/algorand-client.md) class composes and sends transactions.
 
 > [!TIP]
 > ABI-related types like `ABIMethod` are available from the [modular imports](./modular-imports.md) via `@algorandfoundation/algokit-utils/abi`, and transaction types like `TransactionSigner` are available from `@algorandfoundation/algokit-utils/transact`.
 
-To get an instance of `TransactionComposer` you can either get it from an [app client](./app-client.md), from an [`AlgorandClient`](./algorand-client.md), or by new-ing up via the constructor.
+To get an instance of `TransactionComposer` you can either get it from an [app client](../building/app-client.md), from an [`AlgorandClient`](../core/algorand-client.md), or by new-ing up via the constructor.
 
 ```typescript
 const composerFromAlgorand = algorand.newGroup()
