@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install docs dependencies
+        run: npm ci --prefix docs
+
       - name: Build documentation
         run: npm run docs:build
 
