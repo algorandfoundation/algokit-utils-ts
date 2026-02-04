@@ -6,6 +6,8 @@ import remarkGithubAlerts from 'remark-github-alerts';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://algorandfoundation.github.io',
+  base: '/algokit-utils-ts/',
   markdown: {
     remarkPlugins: [remarkGithubAlerts],
   },
