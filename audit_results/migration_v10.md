@@ -1,296 +1,276 @@
-# AlgoKit Utils v10 Migration Guide
+# Migrating AlgoKit Utils v9 To v10
 
-AlgoKit Utils v10 represents a major architectural shift. It decouples the library from `algosdk` and introduces `AlgorandClient` as a unified, fluent entry point for all interactions.
+This guide outlines the steps required to migrate your code from AlgoKit Utils v9 to v10. Version 10 represents a major architectural shift, decoupling the library from `algosdk` and introducing a unified, fluent API via `AlgorandClient`.
 
-**Key Changes At A Glance**
-- No `algosdk` dependency: You no longer need to import `algosdk` for standard operations.
-- Fluent API: Replaces standalone functions (e.g., `transferAlgos`) with chained methods (e.g., `algorand.send.payment`).
-- ARC-56 default: `AppClient` now defaults to ARC-56 for improved type safety and debugging.
-- Modular structure: Imports are streamlined and grouped by domain.
+This guide is divided into two sections:
 
-## Quick Start: The New Entry Point
+- Migration Checklist: A systematic approach to the upgrade.
+- Breaking Changes: Specific code transformations with "Before" and "After" examples.
 
-In v9, you manually managed algod, indexer, and kmd clients. In v10, the `AlgorandClient` manages this lifecycle for you.
+## Migration Checklist
 
-**Initialization Mapping**
+Use this checklist to work through the required changes when migrating from v9 to v10:
 
-| v9 (Legacy) | v10 (Recommended) |
-| :-- | :-- |
-| `getAlgoClient(...)` | `AlgorandClient.fromNetwork(...)` |
-| `getAlgoIndexerClient(...)` | Managed internally by `AlgorandClient` |
-| `getAccount(...)` | `algorand.account.fromEnvironment(...)` |
+- Initialization: Replace manual algod and indexer client creation with `AlgorandClient`.
+- Signers: Replace `Account` objects (with private keys) with `AddressWithTransactionSigner`.
+- Transactions: Refactor standalone transaction functions (e.g., `transferAlgos`) to `algorand.send.[type]`.
+- Naming: Update property names to use `id` instead of `index` (e.g., `assetId`, `appId`) and `txId`.
+- BigInt: Ensure all monetary amounts and IDs use `bigint` (e.g., `1000n`) or `AlgoAmount`.
+- App deployment: Replace direct `AppClient` instantiation with `AppFactory` for ARC-56 deployments.
+- Method calls: Rename `methodArgs` to `args` and `boxes` to `boxReferences` in smart contract calls.
+- Client calls: Remove `.do()` from all raw algod and indexer client calls.
 
-**v9 Pattern**
+## Migration Table
 
-```ts
-import { getAlgoClient, getAlgoIndexerClient } from '@algorandfoundation/algokit-utils';
+| Concept        | v9 Implementation       | v10 Implementation                | Notes                                  |
+| :------------- | :---------------------- | :-------------------------------- | :------------------------------------- |
+| Entry point    | `getAlgoClient()`       | `AlgorandClient.fromNetwork()`    | The "God Object" that manages clients. |
+| Payments       | `transferAlgos()`       | `algorand.send.payment()`         | Fluent API syntax.                     |
+| Asset transfer | `transferAsset()`       | `algorand.send.assetTransfer()`   | Renamed for consistency.               |
+| App deployment | `appClient.deploy()`    | `appFactory.deploy()`             | Separation of factory vs instance.     |
+| Identity       | `Account` (with `.sk`)  | `AddressWithTransactionSigner`    | Secret keys are no longer exposed.     |
+| Funding        | `ensureFunded()`        | `algorand.account.ensureFunded()` | Moved to account manager.              |
+| Wait           | `waitForConfirmation()` | Automatic / `result.confirmation` | v10 awaits confirmation by default.    |
+| Raw client     | `algod.status().do()`   | `algorand.client.algod.status()`  | No more builder pattern for clients.   |
 
-const algod = getAlgoClient(config);
-const indexer = getAlgoIndexerClient(config);
-```
+## Breaking Changes And Refactoring
 
-**v10 Pattern**
+### 1. The New Entry Point: AlgorandClient
 
-```ts
-import { AlgorandClient } from '@algorandfoundation/algokit-utils';
+In v9, you manually managed connections to algod, indexer, and kmd. In v10, `AlgorandClient` acts as a unified facade for all network interactions.
 
-// Connects to LocalNet automatically if no config is provided
-const algorand = AlgorandClient.defaultLocalNet();
-
-// Or connect to a specific network
-const mainnet = AlgorandClient.mainNet();
-```
-
-## Accounts And Signers
-
-The `Account` class and wrappers like `SigningAccount` or `MultisigAccount` are replaced by a standardized Signer pattern (`AddressWithTransactionSigner`). This decouples the private key from the logic and enables better hardware wallet and rekey support.
-
-**Loading Accounts**
-
-v9: `getAccount`
+**Before - v9**
 
 ```ts
-const account = await getAccount({ name: 'DEPLOYER', algod });
-// account.sk was accessible here
+import { getAlgoClient, getAlgoIndexerClient } from '@algorandfoundation/algokit-utils'
+
+const algod = getAlgoClient(getAlgoNodeConfig('testnet', 'algod'))
+const indexer = getAlgoIndexerClient(getAlgoNodeConfig('testnet', 'indexer'))
 ```
 
-v10: `AccountManager`
+**After - v10**
 
 ```ts
-const account = await algorand.account.fromEnvironment('DEPLOYER');
-// Use account.addr for references
-// Use account.signer for transactions
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+
+// Automatically connects to LocalNet or environment configuration
+const algorand = AlgorandClient.defaultLocalNet()
+
+// Or connect to specific networks
+const testnet = AlgorandClient.testNet()
 ```
 
-**Custom Signers (Manual Keypairs)**
+### 2. Accounts And Signers
 
-If you are generating keys manually (e.g., for tests), use `generateAddressWithSigners`.
+The `Account` class, which held private keys (`sk`), has been removed to improve security and flexibility. v10 uses a Signer pattern: you pass the address, and `AlgorandClient` resolves the signing capability internally (e.g., via KMD, mnemonic, or environment).
+
+**Before - v9**
 
 ```ts
-import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils';
-import nacl from 'tweetnacl';
+import { getAccount } from '@algorandfoundation/algokit-utils'
 
-const keys = nacl.sign.keyPair();
-const account = generateAddressWithSigners({
-  address: keys.publicKey, // or use 'ed25519Pubkey'
-  signer: async (txnGroup, indexes) => {
-    // Implement signing logic here
-    return txnGroup.map(tx => nacl.sign(tx, keys.secretKey));
-  },
-});
+// Account object containing private key
+const sender = await getAccount({ name: 'SENDER', algod })
+console.log(sender.sk)
 ```
 
-## Transactions: The Fluent API
+**After - v10**
 
-Standalone functional wrappers have been moved into the `AlgorandClient` fluent interface.
+```ts
+// Returns an AddressWithTransactionSigner
+const sender = await algorand.account.fromEnvironment('SENDER')
+
+// Use .addr to get the public key string
+console.log(sender.addr)
+```
+
+**Manual Signers (Keypairs)**
+
+If you generate random keys for testing, wrap them in a signer.
+
+**Before - v9**
+
+```ts
+import { account } from 'algosdk'
+
+const acct = algosdk.generateAccount()
+```
+
+**After - v10**
+
+```ts
+import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils'
+import nacl from 'tweetnacl'
+
+const keys = nacl.sign.keyPair()
+const acct = generateAddressWithSigners({
+  ed25519Pubkey: keys.publicKey,
+  rawEd25519Signer: async (bytes) => nacl.sign.detached(bytes, keys.secretKey),
+})
+```
+
+### 3. Transactions: The Fluent API
+
+Standalone functional wrappers (like `transferAlgos`) have been replaced by the `algorand.send` namespace.
 
 **Payment (Algo Transfer)**
 
-v9
+**Before - v9**
 
 ```ts
-import { transferAlgos, algos } from '@algorandfoundation/algokit-utils';
+import { transferAlgos, algos } from '@algorandfoundation/algokit-utils'
 
-await transferAlgos({
-  from: sender,
-  to: receiver,
-  amount: algos(5),
-}, algod);
+await transferAlgos(
+  {
+    from: sender,
+    to: receiver,
+    amount: algos(5),
+  },
+  algod,
+)
 ```
 
-v10
+**After - v10**
 
 ```ts
-import { AlgoAmount } from '@algorandfoundation/algokit-utils';
+import { AlgoAmount } from '@algorandfoundation/algokit-utils'
 
 await algorand.send.payment({
   sender: sender.addr,
   receiver: receiver.addr,
-  amount: AlgoAmount.Algos(5), // or (5).algos() if using prototypes
-});
+  amount: AlgoAmount.Algos(5), // or (5).algos()
+})
 ```
 
 **Asset Transfer**
 
-v9
+**Before - v9**
 
 ```ts
-await transferAsset({
-  from: sender,
-  to: receiver,
-  assetID: 12345,
-  amount: 10,
-}, algod);
+await transferAsset(
+  {
+    from: sender,
+    to: receiver,
+    assetID: 123,
+    amount: 10,
+  },
+  algod,
+)
 ```
 
-v10
+**After - v10**
 
 ```ts
 await algorand.send.assetTransfer({
   sender: sender.addr,
   receiver: receiver.addr,
-  assetId: 12345n, // Note: BigInt is preferred
+  assetId: 123n, // assetID -> assetId, number -> bigint
   amount: 10n,
-});
+})
 ```
 
-**Naming Note**
+### 4. Smart Contracts: ARC-56 And AppFactory
 
-v10 standardizes on `id` (e.g., `assetId`, `appId`, `txId`) instead of `index` or `ID`.
+v10 defaults to ARC-56 (an evolution of ARC-4). The `AppClient` responsibility has been split:
 
-## Smart Contracts: ARC-56 And AppFactory
+- `AppFactory`: Handles creating and deploying applications.
+- `AppClient`: Handles interacting with deployed applications.
 
-v10 embraces ARC-56 as the default standard for application specifications. The workflow shifts from a direct `AppClient` constructor to an `AppFactory` pattern, which handles deployment and spawns clients.
+**Deployment**
 
-**Deploying An App**
-
-v9 (ARC-4)
+**Before - v9**
 
 ```ts
-const appClient = algokit.getAppClient({
-  app: appSpec, // ARC-4 JSON
-  resolveBy: 'creatorAndName',
-  sender: deployer,
-  creatorAddress: deployer,
-}, algod);
+const appClient = algokit.getAppClient(
+  {
+    resolveBy: 'creatorAndName',
+    app: appSpec, // ARC-4 JSON
+    sender: deployer,
+    creatorAddress: deployer,
+  },
+  algod,
+)
 
 const app = await appClient.deploy({
   allowUpdate: true,
   deployTimeParams: { VALUE: 1 },
-});
+})
 ```
 
-v10 (ARC-56)
+**After - v10**
 
 ```ts
 // 1. Create the factory
 const factory = algorand.client.getAppFactory({
   appSpec: arc56Spec, // ARC-56 JSON
   defaultSender: deployer.addr,
-});
+})
 
-// 2. Deploy using the factory
+// 2. Deploy
 const { appClient, result } = await factory.deploy({
   updatable: true,
   deployTimeParams: { VALUE: 1 },
-  // Native support for constructor method arguments
   createParams: {
-    method: 'create',
+    method: 'create', // Constructor args are now strongly typed
     args: ['arg1'],
   },
-});
+})
 ```
 
-**Calling Methods**
+**Method Calls**
 
-v9
+Property names have been normalized for clarity.
+
+**Before - v9**
 
 ```ts
 await appClient.call({
   method: 'hello',
   methodArgs: ['world'],
   boxes: [{ appIndex: 0, name: 'box1' }],
-});
+})
 ```
 
-v10
+**After - v10**
 
 ```ts
 await appClient.send.call({
   method: 'hello',
-  args: ['world'],
-  // "boxReferences" replaces "boxes"
-  boxReferences: ['box1'],
-});
+  args: ['world'], // methodArgs -> args
+  boxReferences: ['box1'], // boxes -> boxReferences (supports simple strings)
+})
 ```
 
-## Advanced: Native Client Access
+### 5. Naming And Type Standardizations
 
-In v9, you accessed clients via `algod.do()`. In v10, the wrapper clients provide direct, typed methods without the `.do()` builder pattern.
+To align with the ecosystem, specific property names and types have been standardized.
 
-v9
+| Feature           | v9 Name                  | v10 Name  | Type Change      |
+| :---------------- | :----------------------- | :-------- | :--------------- |
+| Transaction ID    | `txID`                   | `txId`    | string           |
+| Asset index       | `assetIndex` / `assetID` | `assetId` | number -> bigint |
+| Application index | `appIndex` / `appID`     | `appId`   | number -> bigint |
+| Application call  | `applicationCall`        | `appCall` | -                |
+| Payment           | `payment`                | `payment` | -                |
+
+### 6. Atomic Groups And Simulation
+
+In v9, constructing atomic groups often involved `assignGroupID` or manually managing the `AtomicTransactionComposer`. In v10, `AlgorandClient` provides a fluent composer API via `newGroup()`.\n\n**Composing A Group**\n\nYou can chain multiple transactions together. The client handles assigning group IDs and signing automatically.\n\n**Before - v9**\n\n```ts\nconst composer = new algosdk.AtomicTransactionComposer();\n\n// Add payment\ncomposer.addTransaction({\n  txn: algosdk.makePaymentTxnWithSuggestedParamsFromObject({ ... }),\n  signer: sender.signer,\n});\n\n// Add app call\ncomposer.addMethodCall({\n  appID: 123,\n  method: myMethod,\n  methodArgs: ['arg1'],\n  sender: sender.addr,\n  signer: sender.signer,\n  suggestedParams,\n});\n\nawait composer.execute(algod, 4);\n```\n\n**After - v10**\n\n```ts\nconst result = await algorand\n  .newGroup()\n  .addPayment({\n    sender: sender.addr,\n    receiver: receiver.addr,\n    amount: (1).algos(),\n  })\n  .addAppCallMethodCall({\n    appId: 123n,\n    method: 'my_method',\n    args: ['arg1'],\n    sender: sender.addr,\n  })\n  .send(); // Automatically groups, signs, sends, and waits\n```\n\n**Simulation**\n\nDebugging in v9 was often separate from execution. In v10, you can switch any group from `.send()` to `.simulate()`.\n\n```ts\nconst result = await algorand\n  .newGroup()\n  .addPayment({ ... })\n  .addAppCallMethodCall({ ... })\n  .simulate({ allowUnnamedResources: true });\n\nconsole.log(result.simulateResponse);\n```\n\n**Summary Of Additions**\n\n- `algorand.newGroup()`: Essential for atomic swaps.\n- `.simulate()`: A DX improvement that should not be missed.\n*** End Patch}>}}/>
+
+### 7. Removing `.do()` From Clients
+
+The wrapped algod and indexer clients in v10 no longer use the builder pattern with `.do()`. Methods are now async and accept parameters directly.
+
+**Before - v9**
 
 ```ts
-const info = await algod.accountInformation(addr).do();
+const info = await algod.accountInformation(addr).do()
+const params = await algod.getTransactionParams().do()
 ```
 
-v10
+**After - v10**
 
 ```ts
-const info = await algorand.client.algod.accountInformation(addr);
-```
-
-## Interoperability (The Bridge)
-
-If you must maintain `algosdk` types (e.g., for legacy libraries), v10 provides converters.
-
-```ts
-import * as algosdk from 'algosdk';
-import { decodeTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-utils/transact';
-
-// algosdk -> v10
-const v10Txn = decodeTransaction(algosdk.encodeMsgpack(sdkTxn));
-
-// v10 -> algosdk
-const sdkTxn = algosdk.decodeUnsignedTransaction(encodeTransactionRaw(v10Txn));
-```
-
-## AI Agent Cheat Sheet
-
-Copy the block below into your AI coding assistant (Cursor, Windsurf, Copilot) to help it migrate your code automatically.
-
-```md
-# AlgoKit v9 to v10 Migration Rules
-
-You are migrating TypeScript code from AlgoKit Utils v9 to v10.
-v10 is a breaking change that removes `algosdk` as a public dependency and introduces `AlgorandClient`.
-
-## Core Rules
-
-1. **Entry Point:** Replace manual `algod`/`indexer` instantiation with `const algorand = AlgorandClient.defaultLocalNet()` (or `fromNetwork`).
-2. **Accounts:** Replace `getAccount` with `algorand.account.fromEnvironment()`. The `Account` class is removed; use `AddressWithTransactionSigner`.
-3. **Fluency:** Replace standalone functions (`transferAlgos`, `transferAsset`, `deployApp`) with `algorand.send.*` methods.
-4. **BigInt:** v10 uses `bigint` for all monetary amounts and IDs. Ensure literals have `n` suffix (e.g. `1000n`).
-
-## Symbol Mapping
-
-| v9 Symbol             | v10 Equivalent                  | Context            |
-| :-------------------- | :------------------------------ | :----------------- |
-| `transferAlgos`       | `algorand.send.payment`         | Payments           |
-| `transferAsset`       | `algorand.send.assetTransfer`   | Assets             |
-| `getAppClient`        | `algorand.client.getAppFactory` | App Deployment     |
-| `getAlgoClient`       | `AlgorandClient` constructor    | Setup              |
-| `algosdk.Transaction` | `Transaction` (internal)        | Types              |
-| `txID()`              | `txId()`                        | Naming             |
-| `assetIndex`          | `assetId`                       | Naming             |
-| `appIndex`            | `appId`                         | Naming             |
-| `applicationCall`     | `appCall`                       | Transaction Fields |
-
-## Code Patterns
-
-### 1. Payment
-
-// OLD
-await transferAlgos({ from: sender, to: receiver, amount: algos(1) }, algod);
-// NEW
-await algorand.send.payment({ sender: sender.addr, receiver: receiver.addr, amount: (1).algos() });
-
-### 2. App Call
-
-// OLD
-appClient.call({ method: 'my_method', methodArgs: ['arg'], boxes: ['box1'] });
-// NEW
-appClient.send.call({ method: 'my_method', args: ['arg'], boxReferences: ['box1'] });
-
-### 3. Deploy
-
-// OLD
-const client = getAppClient(...); await client.deploy(...);
-// NEW
-const factory = algorand.client.getAppFactory(...); const { appClient } = await factory.deploy(...);
-
-## Important
-
-- If you see `algosdk.make...Txn`, replace with `algorand.createTransaction...`.
-- If you see `.do()` on an algod request, remove `.do()` and pass params as the second argument.
+const info = await algorand.client.algod.accountInformation(addr)
+const params = await algorand.client.algod.transactionParams()
 ```
