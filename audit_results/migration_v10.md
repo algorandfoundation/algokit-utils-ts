@@ -301,7 +301,7 @@ const result = await algorand
     args: ['arg1'],
     sender: sender.addr,
   })
-  .send(); // Automatically groups, signs, sends, and waits
+  .send() // Automatically groups, signs, sends, and waits
 ```
 
 **Simulation**
@@ -323,7 +323,49 @@ console.log(result.simulateResponse);
 - `algorand.newGroup()`: Essential for atomic swaps.
 - `.simulate()`: A DX improvement that should not be missed.
 
-### 7. Removing `.do()` From Clients
+### 7. Testing Changes
+
+If you use `algorandFixture` in your tests (e.g., with Vitest or Jest), the properties exposed by the context have changed to favor `AlgorandClient`.
+
+**Before - v9**
+
+```ts
+import { algorandFixture } from '@algorandfoundation/algokit-utils/testing';
+
+const localnet = algorandFixture();
+
+beforeEach(localnet.beforeEach);
+
+test('my test', async () => {
+  const { algod, indexer, testAccount } = localnet.context;
+  // logic using algod directly...
+});
+```
+
+**After - v10**
+
+```ts
+import { algorandFixture } from '@algorandfoundation/algokit-utils/testing';
+
+const localnet = algorandFixture();
+
+beforeEach(localnet.beforeEach);
+
+test('my test', async () => {
+  const { algorand, testAccount } = localnet.context;
+
+  // Use the fluent client in tests
+  await algorand.send.payment({
+    sender: testAccount.addr,
+    receiver: testAccount.addr,
+    amount: (1).algos(),
+  });
+});
+```
+
+Note: If you still need the raw algod in tests, you can access it via `algorand.client.algod`.
+
+### 8. Removing `.do()` From Clients
 
 The wrapped algod and indexer clients in v10 no longer use the builder pattern with `.do()`. Methods are now async and accept parameters directly.
 
