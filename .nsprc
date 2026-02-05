@@ -3,5 +3,15 @@
     "active": true,
     "notes": "Bundled dependency in NPM, which cannot be overriden and has no update available yet.",
     "expiry": "2026-07-31"
+  },
+  "GHSA-3966-f6p6-2qr9": {
+    "active": true,
+    "notes": "pnpm audit: npm cli vulnerability via semantic-release. Pending upstream fix.",
+    "expiry": "2026-08-31"
+  },
+  "GHSA-67mh-4wv8-2f99": {
+    "active": true,
+    "notes": "pnpm audit: esbuild vulnerability via vite/vitest. Pending upstream fix.",
+    "expiry": "2026-08-31"
   }
 }
