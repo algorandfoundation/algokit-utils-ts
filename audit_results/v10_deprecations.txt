@@ -103,10 +103,10 @@ src/types/app-manager.ts:22:/** @deprecated Import from `@algorandfoundation/alg
 src/types/app-manager.ts:25:/** @deprecated Import from `@algorandfoundation/algokit-utils/app-manager` instead */
 src/types/app-manager.ts:28:/** @deprecated Import from `@algorandfoundation/algokit-utils/app-manager` instead */
 src/types/app-manager.ts:30:/** @deprecated Import from `@algorandfoundation/algokit-utils/app-manager` instead */
-src/types/account-manager.ts:10:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
-src/types/account-manager.ts:12:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
-src/types/account-manager.ts:15:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
-src/types/account-manager.ts:18:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
+src/types/account-manager.ts:9:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
+src/types/account-manager.ts:11:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
+src/types/account-manager.ts:14:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
+src/types/account-manager.ts:17:/** @deprecated Import from `@algorandfoundation/algokit-utils/account-manager` instead */
 src/types/algorand-client-transaction-sender.ts:6:/** @deprecated Import from `@algorandfoundation/algokit-utils/algorand-client-transaction-sender` instead */
 src/types/algorand-client-transaction-sender.ts:8:/** @deprecated Import from `@algorandfoundation/algokit-utils/algorand-client-transaction-sender` instead */
 src/types/app-deployer.ts:16:/** @deprecated Import from `@algorandfoundation/algokit-utils/app-deployer` instead */

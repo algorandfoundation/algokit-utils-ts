@@ -1,8 +1,8 @@
 diff --git a/src/app-client.ts b/src/app-client.ts
-index 54f48914..77b3b666 100644
+index 54f48914..5fb72a10 100644
 --- a/src/app-client.ts
 +++ b/src/app-client.ts
-@@ -1,95 +1,1724 @@
+@@ -1,95 +1,1727 @@
 -import algosdk from 'algosdk'
 -import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetailsById, ApplicationClient } from './types/app-client'
 -import Algodv2 = algosdk.Algodv2
@@ -75,44 +75,7 @@ index 54f48914..77b3b666 100644
 +import { LogicError } from './logic-error'
 +import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction/types'
 +import { asJson, binaryStartsWith } from './util'
- 
--/**
-- * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
-- * `algorand.client.getAppClientByCreatorAndName`.
-- * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
-- * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
-- *
-- * Create a new ApplicationClient instance
-- * @param appDetails The details of the app
-- * @param algod An algod instance
-- *
-- * @example Resolve by creator and name
-- * const client = algokit.getAppClient(
-- *     {
-- *       resolveBy: 'creatorAndName',
-- *       app: {appSpec},
-- *       sender: {account},
-- *       creatorAddress: {creator},
-- *       findExistingUsing: indexerClient,
-- *     },
-- *     algodClient,
-- *   )
-- *
-- * @example Resolve by id:
-- * const client = algokit.getAppClient(
-- *     {
-- *       resolveBy: 'id',
-- *       app: {appSpec},
-- *       sender: {account},
-- *       id: {id},
-- *     },
-- *    algodClient,
-- * )
-- *
-- * @returns The application client
-- */
--export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
--  return new ApplicationClient(appDetails, algod)
++
 +/** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 +const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
 +
@@ -299,34 +262,47 @@ index 54f48914..77b3b666 100644
 +  sources: string[]
 +  names: string[]
 +  mappings: string
- }
++}
  
  /**
-- * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById`.
+- * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
+- * `algorand.client.getAppClientByCreatorAndName`.
 - * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
 - * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
 - *
-- *
-- * Create a new ApplicationClient instance by id
+- * Create a new ApplicationClient instance
 - * @param appDetails The details of the app
 - * @param algod An algod instance
+- *
+- * @example Resolve by creator and name
+- * const client = algokit.getAppClient(
+- *     {
+- *       resolveBy: 'creatorAndName',
+- *       app: {appSpec},
+- *       sender: {account},
+- *       creatorAddress: {creator},
+- *       findExistingUsing: indexerClient,
+- *     },
+- *     algodClient,
+- *   )
 + * The result of asking an `AppClient` to compile a program.
   *
-- * @example
-- * const client = algokit.getAppClientById(
+- * @example Resolve by id:
+- * const client = algokit.getAppClient(
 - *     {
+- *       resolveBy: 'id',
 - *       app: {appSpec},
 - *       sender: {account},
 - *       id: {id},
 - *     },
-- *     algodClient,
-- *   )
+- *    algodClient,
+- * )
 - *
 - * @returns The application client
 + * Always contains the compiled bytecode, and may contain the result of compiling TEAL (including sourcemap) if it was available.
   */
--export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algodv2) {
--  return new ApplicationClient({ ...appDetails, resolveBy: 'id' }, algod)
+-export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
+-  return new ApplicationClient(appDetails, algod)
 +export interface AppClientCompilationResult extends Partial<AppCompilationResult> {
 +  /** The compiled bytecode of the approval program, ready to deploy to algod */
 +  approvalProgram: Uint8Array
@@ -362,8 +338,8 @@ index 54f48914..77b3b666 100644
 +  approvalSourceMap?: ProgramSourceMap
 +  /** Optional source map for the clear state program */
 +  clearSourceMap?: ProgramSourceMap
-+}
-+
+ }
+ 
 +/** Parameters to clone an app client */
 +export type CloneAppClientParams = Expand<Partial<Omit<AppClientParams, 'algorand' | 'appSpec'>>>
 +
@@ -371,8 +347,8 @@ index 54f48914..77b3b666 100644
 +export type CallOnComplete = {
 +  /** On-complete of the call; defaults to no-op */
 +  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
- }
- 
++}
++
 +/** AppClient common parameters for a bare app call */
 +export type AppClientBareCallParams = Expand<
 +  Omit<CommonAppCallParams, 'appId' | 'sender' | 'onComplete'> & {
@@ -436,34 +412,33 @@ index 54f48914..77b3b666 100644
 +const INT_CBLOCK = 32
 +
  /**
-- * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientByCreatorAndName`.
+- * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById`.
 - * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
 - * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
-+ * Get the offset of the last constant block at the beginning of the program
-+ * This value is used to calculate the program counter for an ARC56 program that has a pcOffsetMethod of "cblocks"
-  *
 - *
-- * Create a new ApplicationClient instance by creator and name
-- * @param appDetails The details of the app by creator and name
+- *
+- * Create a new ApplicationClient instance by id
+- * @param appDetails The details of the app
 - * @param algod An algod instance
 - *
 - * @example
-- * const client = algokit.getAppClientByCreatorAndName(
+- * const client = algokit.getAppClientById(
 - *     {
-- *       app: appSpec,
-- *       sender: account,
-- *       creatorAddress: account,
-- *       findExistingUsing: indexerClient,
+- *       app: {appSpec},
+- *       sender: {account},
+- *       id: {id},
 - *     },
 - *     algodClient,
 - *   )
-- *
++ * Get the offset of the last constant block at the beginning of the program
++ * This value is used to calculate the program counter for an ARC56 program that has a pcOffsetMethod of "cblocks"
+  *
 - * @returns The application client
 + * @param program The program to parse
 + * @returns The PC value of the opcode after the last constant block
   */
--export function getAppClientByCreatorAndName(appDetails: AppSpecAppDetailsByCreatorAndName, algod: Algodv2) {
--  return new ApplicationClient({ ...appDetails, resolveBy: 'creatorAndName' }, algod)
+-export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algodv2) {
+-  return new ApplicationClient({ ...appDetails, resolveBy: 'id' }, algod)
 +function getConstantBlockOffset(program: Uint8Array) {
 +  const bytes = [...program]
 +
@@ -512,10 +487,36 @@ index 54f48914..77b3b666 100644
 +  }
 +
 +  return Math.max(bytecblockOffset ?? 0, intcblockOffset ?? 0)
-+}
-+
-+/** ARC-56/ARC-32 application client that allows you to manage calls and
-+ * state for a specific deployed instance of an app (with a known app ID). */
+ }
+ 
+ /**
+- * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientByCreatorAndName`.
+- * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+- * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+- *
+- *
+- * Create a new ApplicationClient instance by creator and name
+- * @param appDetails The details of the app by creator and name
+- * @param algod An algod instance
+- *
+- * @example
+- * const client = algokit.getAppClientByCreatorAndName(
+- *     {
+- *       app: appSpec,
+- *       sender: account,
+- *       creatorAddress: account,
+- *       findExistingUsing: indexerClient,
+- *     },
+- *     algodClient,
+- *   )
+- *
+- * @returns The application client
++ * ARC-56/ARC-32 application client that allows you to manage calls and
++ * state for a specific deployed instance of an app (with a known app ID).
++ * @see {@link AppFactory} for creating and deploying apps
+  */
+-export function getAppClientByCreatorAndName(appDetails: AppSpecAppDetailsByCreatorAndName, algod: Algodv2) {
+-  return new ApplicationClient({ ...appDetails, resolveBy: 'creatorAndName' }, algod)
 +export class AppClient {
 +  private _appId: bigint
 +  private _appAddress: Address

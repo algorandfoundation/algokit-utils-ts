@@ -28,6 +28,7 @@ src/transaction/index.ts:export * from './perform-transaction-composer-simulate'
 src/transaction/index.ts:export * from './transaction'
 src/transaction/index.ts:export * from './types'
 src/transaction/perform-transaction-composer-simulate.ts:export async function performTransactionComposerSimulate(composer: TransactionComposer, options?: RawSimulateOptions) {
+src/crypto/index.ts:export * from '@algorandfoundation/algokit-crypto'
 src/expand.ts:export type { Expand } from '@algorandfoundation/algokit-common'
 src/indexer-client/indexer-lookup.ts:export type SearchForTransactionsCriteria = Omit<NonNullable<Parameters<IndexerClient['searchForTransactions']>[0]>, 'limit' | 'next'>
 src/indexer-client/indexer-lookup.ts:export async function lookupAccountCreatedApplicationByAddress(
@@ -373,6 +374,7 @@ src/app-manager.ts:export interface BoxValuesRequestParams {
 src/app-manager.ts:export class AppManager {
 src/account-manager.ts:export interface EnsureFundedResult {
 src/account-manager.ts:export const getAccountTransactionSigner = memoize(function (
+src/account-manager.ts:export interface AccountManagerConfig {
 src/account-manager.ts:export class AccountManager {
 src/abi/index.ts:export * from '@algorandfoundation/algokit-abi'
 src/algorand-client-transaction-sender.ts:export class AlgorandClientTransactionSender {
@@ -404,6 +406,7 @@ src/testing/fixtures/algorand-fixture.ts:export function algorandFixture(fixture
 src/testing/fixtures/index.ts:export * from './algokit-log-capture-fixture'
 src/testing/fixtures/index.ts:export * from './algorand-fixture'
 src/testing/fixtures/algokit-log-capture-fixture.ts:export const algoKitLogCaptureFixture: () => AlgoKitLogCaptureFixture = () => {
+src/testing/index.ts:export * from '@algorandfoundation/algokit-testing'
 src/testing/index.ts:export * from './account'
 src/testing/index.ts:export * from './fixtures'
 src/testing/index.ts:export * from './indexer'
@@ -492,6 +495,7 @@ src/transactions/fee-coverage.ts:export function calculateInnerFeeDelta(
 src/transactions/key-registration.ts:export type OnlineKeyRegistrationParams = CommonTransactionParams & {
 src/transactions/key-registration.ts:export type OfflineKeyRegistrationParams = CommonTransactionParams & {
 src/transactions/key-registration.ts:export const buildKeyReg = (
+src/common/index.ts:export * from "@algorandfoundation/algokit-common";
 src/async-event-emitter.ts:export type AsyncEventListener<T = unknown> = (event: T, eventName: string | symbol) => Promise<void> | void
 src/async-event-emitter.ts:export class AsyncEventEmitter {
 src/kmd-account-manager.ts:export class KmdAccountManager {
@@ -554,6 +558,36 @@ src/index.ts:export * from './transaction'
 src/index.ts:export { AlgorandClient } from './algorand-client'
 src/index.ts:export * from './debugging'
 src/index.ts:export * from './lifecycle-events'
+src/index.ts:export { AccountManager, getAccountTransactionSigner } from './account-manager'
+src/index.ts:export type { EnsureFundedResult } from './account-manager'
+src/index.ts:export { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
+src/index.ts:export { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
+src/index.ts:export { AppDeployer } from './app-deployer'
+src/index.ts:export type {
+src/index.ts:export { AppManager } from './app-manager'
+src/index.ts:export type { AppInformation, BoxIdentifier, BoxReference, BoxValueRequestParams, BoxValuesRequestParams } from './app-manager'
+src/index.ts:export { AssetManager } from './asset-manager'
+src/index.ts:export type { BulkAssetOptInOutResult, AssetInformation } from './asset-manager'
+src/index.ts:export { ClientManager } from './client-manager'
+src/index.ts:export type {
+src/index.ts:export { TransactionComposer } from './composer'
+src/index.ts:export type {
+src/index.ts:export type { LookupAssetHoldingsOptions } from './indexer'
+src/index.ts:export type { AlgoClientConfig, AlgoConfig, NetworkDetails } from './network-client'
+src/index.ts:export { genesisIdIsLocalNet } from './network-client'
+src/index.ts:export { UpdatableConfig } from './updatable-config'
+src/index.ts:export type { Config as AlgoKitConfig } from './updatable-config'
+src/index.ts:export type {
+src/index.ts:export type { AccountInformation, AccountAssetInformation } from './account'
+src/index.ts:export type { AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
+src/index.ts:export { AppClient } from './app-client'
+src/index.ts:export type { AppFactoryParams } from './app-factory'
+src/index.ts:export { AppFactory } from './app-factory'
+src/index.ts:export type { AppDeleteMethodCall, AppUpdateMethodCall, AppCreateMethodCall } from './transactions/method-call'
+src/index.ts:export type { AppDeleteParams, AppUpdateParams, AppCreateParams } from './transactions/app-call'
+src/index.ts:export { AsyncEventEmitter } from './async-event-emitter'
+src/index.ts:export { KmdAccountManager } from './kmd-account-manager'
+src/index.ts:export { TestNetDispenserApiClient } from './dispenser-client'
 src/dispenser-client.ts:export interface DispenserFundResponse {
 src/dispenser-client.ts:export interface DispenserLimitResponse {
 src/dispenser-client.ts:export interface TestNetDispenserApiClientParams {

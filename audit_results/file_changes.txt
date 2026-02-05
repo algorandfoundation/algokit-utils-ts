@@ -16,8 +16,8 @@ A	src/algo25/index.ts
 A	src/algod-client/index.ts
 A	src/algorand-client-transaction-creator.ts
 A	src/algorand-client-transaction-sender.ts
-R098	src/types/algorand-client.asset.spec.ts	src/algorand-client.asset.spec.ts
-R083	src/types/algorand-client.spec.ts	src/algorand-client.spec.ts
+R095	src/types/algorand-client.asset.spec.ts	src/algorand-client.asset.spec.ts
+R080	src/types/algorand-client.spec.ts	src/algorand-client.spec.ts
 R090	src/types/algorand-client.transfer.spec.ts	src/algorand-client.transfer.spec.ts
 A	src/algorand-client.ts
 A	src/amount.spec.ts
@@ -39,9 +39,11 @@ R087	src/types/async-event-emitter.spec.ts	src/async-event-emitter.spec.ts
 A	src/async-event-emitter.ts
 R083	src/types/client-manager.spec.ts	src/client-manager.spec.ts
 A	src/client-manager.ts
+A	src/common/index.ts
 A	src/composer.spec.ts
 A	src/composer.ts
 M	src/config.ts
+A	src/crypto/index.ts
 A	src/debugging.ts
 D	src/debugging/debugging.ts
 D	src/debugging/index.ts
