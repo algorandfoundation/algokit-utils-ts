@@ -73,6 +73,7 @@
     "@rollup/plugin-typescript": "^12.1.2",
     "@tsconfig/node20": "^20.1.4",
     "@types/uuid": "^10.0.0",
+    "@types/node": "^20.11.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@vitest/coverage-v8": "^2.1.2",
     "algosdk": "^3.5.2",
