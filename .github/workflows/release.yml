@@ -35,19 +35,24 @@ jobs:
   check_docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Check docs are up to date
-        shell: bash
-        run: |
-          npm ci --ignore-scripts
-          npm run generate:code-docs
-          # Add untracked files as empty so they come up in diff
-          git add -N .
-          # Print changed files and error out if there are changes after generating docs
-          git diff --exit-code --name-only
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install docs dependencies
+        run: npm ci --prefix docs
+
+      - name: Verify documentation builds
+        run: npm run docs:build
 
   build:
     name: Build
@@ -134,13 +139,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: npm ci
 
-      - name: Generate HTML documentation
-        run: npm run generate:code-docs
+      - name: Install docs dependencies
+        run: npm ci --prefix docs
+
+      - name: Build documentation
+        run: npm run docs:build
 
       - name: Publish docs to GitHub Pages
         id: deployment
         uses: algorandfoundation/algokit-shared-config/.github/actions/publish-docs@main
         with:
-          artifact_path: docs/_html
+          artifact_path: docs/dist
