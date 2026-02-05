@@ -255,7 +255,73 @@ To align with the ecosystem, specific property names and types have been standar
 
 ### 6. Atomic Groups And Simulation
 
-In v9, constructing atomic groups often involved `assignGroupID` or manually managing the `AtomicTransactionComposer`. In v10, `AlgorandClient` provides a fluent composer API via `newGroup()`.\n\n**Composing A Group**\n\nYou can chain multiple transactions together. The client handles assigning group IDs and signing automatically.\n\n**Before - v9**\n\n```ts\nconst composer = new algosdk.AtomicTransactionComposer();\n\n// Add payment\ncomposer.addTransaction({\n  txn: algosdk.makePaymentTxnWithSuggestedParamsFromObject({ ... }),\n  signer: sender.signer,\n});\n\n// Add app call\ncomposer.addMethodCall({\n  appID: 123,\n  method: myMethod,\n  methodArgs: ['arg1'],\n  sender: sender.addr,\n  signer: sender.signer,\n  suggestedParams,\n});\n\nawait composer.execute(algod, 4);\n```\n\n**After - v10**\n\n```ts\nconst result = await algorand\n  .newGroup()\n  .addPayment({\n    sender: sender.addr,\n    receiver: receiver.addr,\n    amount: (1).algos(),\n  })\n  .addAppCallMethodCall({\n    appId: 123n,\n    method: 'my_method',\n    args: ['arg1'],\n    sender: sender.addr,\n  })\n  .send(); // Automatically groups, signs, sends, and waits\n```\n\n**Simulation**\n\nDebugging in v9 was often separate from execution. In v10, you can switch any group from `.send()` to `.simulate()`.\n\n```ts\nconst result = await algorand\n  .newGroup()\n  .addPayment({ ... })\n  .addAppCallMethodCall({ ... })\n  .simulate({ allowUnnamedResources: true });\n\nconsole.log(result.simulateResponse);\n```\n\n**Summary Of Additions**\n\n- `algorand.newGroup()`: Essential for atomic swaps.\n- `.simulate()`: A DX improvement that should not be missed.\n*** End Patch}>}}/>
+In v9, constructing atomic groups often involved `assignGroupID` or manually managing the `AtomicTransactionComposer`. In v10, `AlgorandClient` provides a fluent composer API via `newGroup()`.
+
+**Composing A Group**
+
+You can chain multiple transactions together. The client handles assigning group IDs and signing automatically.
+
+**Before - v9**
+
+```ts
+const composer = new algosdk.AtomicTransactionComposer();
+
+// Add payment
+composer.addTransaction({
+  txn: algosdk.makePaymentTxnWithSuggestedParamsFromObject({ ... }),
+  signer: sender.signer,
+});
+
+// Add app call
+composer.addMethodCall({
+  appID: 123,
+  method: myMethod,
+  methodArgs: ['arg1'],
+  sender: sender.addr,
+  signer: sender.signer,
+  suggestedParams,
+});
+
+await composer.execute(algod, 4);
+```
+
+**After - v10**
+
+```ts
+const result = await algorand
+  .newGroup()
+  .addPayment({
+    sender: sender.addr,
+    receiver: receiver.addr,
+    amount: (1).algos(),
+  })
+  .addAppCallMethodCall({
+    appId: 123n,
+    method: 'my_method',
+    args: ['arg1'],
+    sender: sender.addr,
+  })
+  .send(); // Automatically groups, signs, sends, and waits
+```
+
+**Simulation**
+
+Debugging in v9 was often separate from execution. In v10, you can switch any group from `.send()` to `.simulate()`.
+
+```ts
+const result = await algorand
+  .newGroup()
+  .addPayment({ ... })
+  .addAppCallMethodCall({ ... })
+  .simulate({ allowUnnamedResources: true });
+
+console.log(result.simulateResponse);
+```
+
+**Summary Of Additions**
+
+- `algorand.newGroup()`: Essential for atomic swaps.
+- `.simulate()`: A DX improvement that should not be missed.
 
 ### 7. Removing `.do()` From Clients
 
