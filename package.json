@@ -46,7 +46,7 @@
     "lint": "node ./scripts/run-eslint.mjs ./src/",
     "lint:fix": "node ./scripts/run-eslint.mjs ./src/ --fix",
     "check-types": "tsc --noEmit",
-    "audit": "better-npm-audit audit",
+    "audit": "pnpm audit",
     "format": "prettier --write .",
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
