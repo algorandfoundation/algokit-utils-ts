@@ -3,7 +3,7 @@
   "configurations": [
     {
       "command": "./node_modules/.bin/astro dev",
-      "name": "Development server",
+      "name": "Utils-ts Docs server",
       "request": "launch",
       "type": "node-terminal"
     }
