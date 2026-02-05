@@ -16,7 +16,7 @@ To create a Dispenser Client, you need to provide an authorization token. This c
 
 If both methods are used, the constructor argument takes precedence.
 
-The recommended way to get a TestNet dispenser API client is [via `ClientManager`](../core/client.md):
+The recommended way to get a TestNet dispenser API client is [via `ClientManager`](../../core/client):
 
 ```typescript
 // With auth token

@@ -5,13 +5,13 @@ description: "Algo transfers, or [payments](https://dev.algorand.co/concepts/tra
 
 # Algo transfers (payments)
 
-Algo transfers, or [payments](https://dev.algorand.co/concepts/transactions/types/#payment-transaction), is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [Algo amount handling](../core/amount.md) and [Transaction management](../core/transaction.md). It allows you to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding.
+Algo transfers, or [payments](https://dev.algorand.co/concepts/transactions/types/#payment-transaction), is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [Algo amount handling](../../core/amount) and [Transaction management](../../core/transaction). It allows you to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding.
 
 To see some usage examples check out the `automated tests`.
 
 ## payment
 
-The key function to facilitate Algo transfers is `algorand.send.payment(params)` (immediately send a single payment transaction), `algorand.createTransaction.payment(params)` (construct a payment transaction), or `algorand.newGroup().addPayment(params)` (add payment to a group of transactions) per [`AlgorandClient`](../core/algorand-client.md) [transaction semantics](../core/algorand-client.md#creating-and-issuing-transactions).
+The key function to facilitate Algo transfers is `algorand.send.payment(params)` (immediately send a single payment transaction), `algorand.createTransaction.payment(params)` (construct a payment transaction), or `algorand.newGroup().addPayment(params)` (add payment to a group of transactions) per [`AlgorandClient`](../../core/algorand-client) [transaction semantics](../core/algorand-client.md#creating-and-issuing-transactions).
 
 The base type for specifying a payment transaction is `PaymentParams`, which has the following parameters in addition to the [common transaction parameters](../core/algorand-client.md#transaction-parameters):
 
@@ -73,7 +73,7 @@ The general structure of these calls is similar, they all take:
 - The source (dispenser):
   - In `ensureFunded`: `dispenserAccount: string | TransactionSignerAccount` - the address or signing account of the account to use as a dispenser
   - In `ensureFundedFromEnvironment`: Not specified, loaded automatically from the ephemeral environment
-  - In `ensureFundedFromTestNetDispenserApi`: `dispenserClient: TestNetDispenserApiClient` - a client instance of the [TestNet dispenser API](../advanced/dispenser-client.md)
+  - In `ensureFundedFromTestNetDispenserApi`: `dispenserClient: TestNetDispenserApiClient` - a client instance of the [TestNet dispenser API](../../advanced/dispenser-client)
 - `minSpendingBalance: AlgoAmount` - The minimum balance of Algo that the account should have available to spend (i.e., on top of the minimum balance requirement)
 - An `options` object, which has:
   - [Common transaction parameters](./algorand-client.md#transaction-parameters) (not for TestNet Dispenser API)
@@ -128,7 +128,7 @@ If you want to programmatically send funds to an account so it can transact then
 
 There's a number of ways to get a dispensing account in AlgoKit Utils:
 
-- Get a dispenser via [account manager](../core/account.md#dispenser) - either automatically from [LocalNet](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/localnet.md) or from the environment
+- Get a dispenser via [account manager](../../core/account#dispenser) - either automatically from [LocalNet](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/localnet.md) or from the environment
 - By programmatically creating one of the many account types via [account manager](../core/account.md#accounts)
 - By programmatically interacting with [KMD](../core/account.md#kmd-account-management) if running against LocalNet
-- By using the [AlgoKit TestNet Dispenser API client](../advanced/dispenser-client.md) which can be used to fund accounts on TestNet via a dedicated API service
+- By using the [AlgoKit TestNet Dispenser API client](../../advanced/dispenser-client) which can be used to fund accounts on TestNet via a dedicated API service

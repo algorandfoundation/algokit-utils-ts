@@ -9,7 +9,7 @@ AlgoKit contains advanced smart contract deployment capabilities that allow you 
 
 It's optional to use this functionality, since you can construct your own deployment logic using create / update / delete calls and your own mechanism to maintaining app metadata (like app IDs etc.), but this capability is an opinionated out-of-the-box solution that takes care of the heavy lifting for you.
 
-App deployment is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App management](./app.md).
+App deployment is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App management](../app).
 
 To see some usage examples check out the `automated tests`.
 
@@ -48,7 +48,7 @@ This design allows you to have the same deployment code across environments with
 
 The `AppDeployer` is a class that is used to manage app deployments and deployment metadata.
 
-To get an instance of `AppDeployer` you can use either [`AlgorandClient`](../core/algorand-client.md) via `algorand.appDeployer` or instantiate it directly (passing in an [`AppManager`](./app.md#appmanager), [`AlgorandClientTransactionSender`](./algorand-client.md#sending-a-single-transaction) and optionally an indexer client instance):
+To get an instance of `AppDeployer` you can use either [`AlgorandClient`](../../core/algorand-client) via `algorand.appDeployer` or instantiate it directly (passing in an [`AppManager`](./app.md#appmanager), [`AlgorandClientTransactionSender`](../../core/algorand-client#sending-a-single-transaction) and optionally an indexer client instance):
 
 ```typescript
 import { AppDeployer } from '@algorandfoundation/algokit-utils/app-deployer'
@@ -320,4 +320,4 @@ As well as the `operationPerformed` parameter and the [optional compilation resu
 Based on the value of `operationPerformed` there will be other data available in the return value:
 
 - If `create`, `update` or `replace` then it will have the relevant [`SendAppTransactionResult`](./app.md#calling-an-app) values
-- If `replace` then it will also have `{deleteReturn?: ABIReturn, deleteResult: ConfirmedTransactionResult}` to capture the [result](./algorand-client.md#sending-a-single-transaction) of the deletion of the existing app
+- If `replace` then it will also have `{deleteReturn?: ABIReturn, deleteResult: ConfirmedTransactionResult}` to capture the [result](../../core/algorand-client#sending-a-single-transaction) of the deletion of the existing app

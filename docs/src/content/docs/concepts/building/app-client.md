@@ -1,14 +1,14 @@
 ---
 title: "App client and App factory"
-description: "App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App managem..."
+description: "App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy) and [App managem..."
 ---
 
 # App client and App factory
 
 > [!NOTE]
-> This page covers the untyped app client, but we recommend using [typed clients](./typed-app-clients.md), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
+> This page covers the untyped app client, but we recommend using [typed clients](../typed-app-clients), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
 
-App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). They allow you to access high productivity application clients that work with [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) and [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
+App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](../app-deploy) and [App management](../app). They allow you to access high productivity application clients that work with [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) and [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
 
 > ![NOTE]
 >
@@ -18,7 +18,7 @@ App client and App factory are higher-order use case capabilities provided by Al
 
 The `AppFactory` is a class that, for a given app spec, allows you to create and deploy one or more app instances and to create one or more app clients to interact with those (or other) app instances.
 
-To get an instance of `AppFactory` you can use either [`AlgorandClient`](../core/algorand-client.md) via `algorand.client.getAppFactory` or instantiate it directly (passing in an app spec, an `AlgorandClient` instance and other optional parameters):
+To get an instance of `AppFactory` you can use either [`AlgorandClient`](../../core/algorand-client) via `algorand.client.getAppFactory` or instantiate it directly (passing in an app spec, an `AlgorandClient` instance and other optional parameters):
 
 ```typescript
 // Minimal example
@@ -41,7 +41,7 @@ const factory = algorand.client.getAppFactory({
 
 The `AppClient` is a class that, for a given app spec, allows you to manage calls and state for a specific deployed instance of an app (with a known app ID).
 
-To get an instance of `AppClient` you can use either [`AlgorandClient`](../core/algorand-client.md) via `algorand.client.getAppClient*` or instantiate it directly (passing in an app ID, app spec, `AlgorandClient` instance and other optional parameters):
+To get an instance of `AppClient` you can use either [`AlgorandClient`](../../core/algorand-client) via `algorand.client.getAppClient*` or instantiate it directly (passing in an app ID, app spec, `AlgorandClient` instance and other optional parameters):
 
 ```typescript
 // Minimal examples
@@ -420,7 +420,7 @@ Config.configure({ debug: true })
 
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.
 
-When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](../advanced/debugging.md).
+When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](../../advanced/debugging).
 
 ## Default arguments
 

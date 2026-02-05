@@ -114,14 +114,14 @@ When calling `algorandFixture()` you can optionally pass in some fixture configu
 - `algod?: Algodv2` - An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `indexer?: Indexer` - An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `kmd?: Kmd` - An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
-- `testAccountFunding?: AlgoAmount` - The [amount](../core/amount.md) of funds to allocate to the default testing account, if not specified then it will get `10` ALGO
+- `testAccountFunding?: AlgoAmount` - The [amount](../../core/amount) of funds to allocate to the default testing account, if not specified then it will get `10` ALGO
 - `accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Address & AddressWithSigners>` - Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts.
 
 ### Using the fixture context
 
 The `fixture.context` property is of type `AlgorandTestAutomationContext` exposes the following properties from which you can pick which ones you want in a given test using an object [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment):
 
-- `algorand: AlgorandClient` - An [`AlgorandClient`](../core/algorand-client.md) instance
+- `algorand: AlgorandClient` - An [`AlgorandClient`](../../core/algorand-client) instance
 - `algod: Algodv2` - Proxy Algod client instance that will log sent transactions in `transactionLogger`
 - `indexer: Indexer` - Indexer client instance
 - `kmd: Kmd` - KMD client instance
