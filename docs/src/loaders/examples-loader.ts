@@ -69,9 +69,12 @@ const CATEGORIES: Record<string, CategoryMeta> = {
   },
 }
 
-/**
- * Parse JSDoc comment from TypeScript file content
- */
+function lineSeparator(text: string, isBullet: boolean, lastWasBullet: boolean): string {
+  if (!text) return ''
+  if (isBullet || lastWasBullet) return '\n'
+  return ' '
+}
+
 function parseJSDoc(content: string): { title: string; description: string; prerequisites: string } {
   const jsdocMatch = content.match(/\/\*\*\n([\s\S]*?)\*\//)
 
@@ -100,41 +103,29 @@ function parseJSDoc(content: string): { title: string; description: string; prer
       inPrerequisites = true
       lastLineWasBullet = false
       const prereqContent = line.replace(/prerequisites:?\s*/i, '').trim()
-      if (prereqContent) {
-        prerequisites = prereqContent
+      if (prereqContent) prerequisites = prereqContent
+      continue
+    }
+
+    if (line.startsWith('@')) continue
+
+    if (!line) {
+      lastLineWasBullet = false
+      if (inPrerequisites) {
+        if (prerequisites) prerequisites += '\n'
+      } else if (description) {
+        description += '\n'
       }
       continue
     }
 
+    const isBullet = line.startsWith('-') || line.startsWith('•')
     if (inPrerequisites) {
-      if (!line) {
-        lastLineWasBullet = false
-        if (prerequisites) prerequisites += '\n'
-        continue
-      }
-      const isBullet = line.startsWith('-') || line.startsWith('•')
-      if (isBullet) {
-        prerequisites += (prerequisites ? '\n' : '') + line
-      } else if (!line.startsWith('@')) {
-        const sep = !prerequisites ? '' : lastLineWasBullet ? '\n' : ' '
-        prerequisites += sep + line
-      }
-      lastLineWasBullet = isBullet
-    } else if (!line.startsWith('@')) {
-      if (!line) {
-        lastLineWasBullet = false
-        if (description) description += '\n'
-        continue
-      }
-      const isBullet = line.startsWith('-') || line.startsWith('•')
-      if (isBullet) {
-        description += (description ? '\n' : '') + line
-      } else {
-        const sep = !description ? '' : lastLineWasBullet ? '\n' : ' '
-        description += sep + line
-      }
-      lastLineWasBullet = isBullet
+      prerequisites += lineSeparator(prerequisites, isBullet, lastLineWasBullet) + line
+    } else {
+      description += lineSeparator(description, isBullet, lastLineWasBullet) + line
     }
+    lastLineWasBullet = isBullet
   }
 
   return {
@@ -152,9 +143,6 @@ function extractOrder(filename: string): number {
   return match ? parseInt(match[1], 10) : 999
 }
 
-/**
- * Create a URL-friendly slug from filename
- */
 function createSlug(filename: string): string {
   return filename.replace(/\.ts$/, '').replace(/_/g, '-')
 }
@@ -208,7 +196,6 @@ export function examplesLoader(): Loader {
         }
       }
 
-      // Sort entries by category and order
       entries.sort((a, b) => {
         if (a.category !== b.category) {
           return a.category.localeCompare(b.category)
@@ -218,7 +205,6 @@ export function examplesLoader(): Loader {
 
       logger.info(`Found ${entries.length} examples across ${Object.keys(CATEGORIES).length} categories`)
 
-      // Store each entry
       for (const entry of entries) {
         store.set({
           id: entry.id,
