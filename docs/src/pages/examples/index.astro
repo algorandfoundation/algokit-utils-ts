@@ -35,7 +35,15 @@ const categoryData = Object.entries(CATEGORIES).map(([dirName, meta]) => ({
   <h2>Quick Start</h2>
   <pre><code>{`# Clone the repository
 git clone https://github.com/algorandfoundation/algokit-utils-ts.git
-cd algokit-utils-ts/examples
+cd algokit-utils-ts
+
+# Install dependencies and build the package
+npm ci
+npm run build
+
+# Install examples dependencies
+cd examples
+npm ci
 
 # Run any example
 npm run example algorand_client/01-client-instantiation.ts`}</code></pre>

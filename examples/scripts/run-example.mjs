@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,33 +10,21 @@ const distDir = path.join(repoRootDir, "dist");
 const tsconfigPath = path.join(rootDir, "tsconfig.run.json");
 
 function printUsage() {
-  console.error("Usage: npm run example <file-or-name> [args...]");
-  console.error("Examples:");
-  console.error("  npm run example indexer_client/01-health-check.ts");
-  console.error("  npm run example 01-health-check.ts");
+  console.error(`Usage: npm run example <file-or-name> [args...]
+Examples:
+  npm run example indexer_client/01-health-check.ts
+  npm run example 01-health-check.ts`);
 }
 
 function ensureDist() {
-  try {
-    if (statSync(distDir).isDirectory()) return;
-  } catch {
-    // fall through to build
-  }
+  if (existsSync(distDir) && statSync(distDir).isDirectory()) return;
 
-  console.error("dist/ not found; running npm run build...");
-  const { status } = spawnSync("npm", ["run", "build"], {
-    cwd: repoRootDir,
-    stdio: "inherit",
-  });
-  if (status !== 0) process.exit(1);
+  console.error(`Error: dist/ folder not found. Please build the project first by running 'npm run build' from the repository root (${repoRootDir})`);
+  process.exit(1);
 }
 
 function isFile(p) {
-  try {
-    return statSync(p).isFile();
-  } catch {
-    return false;
-  }
+  return existsSync(p) && statSync(p).isFile();
 }
 
 const [input, ...restArgs] = process.argv.slice(2);
@@ -50,23 +38,15 @@ ensureDist();
 const inputHasPathSep = input.includes("/") || input.includes(path.sep);
 const cwd = process.cwd();
 
-let resolvedPath = null;
-for (const p of [path.resolve(cwd, input), path.resolve(rootDir, input)]) {
-  if (p.endsWith(".ts") && isFile(p)) {
-    resolvedPath = p;
-    break;
-  }
-}
+let resolvedPath = [path.resolve(cwd, input), path.resolve(rootDir, input)]
+  .find((p) => p.endsWith(".ts") && isFile(p));
 
 if (!resolvedPath && !inputHasPathSep) {
-  const dirs = readdirSync(rootDir, { withFileTypes: true })
+  const matches = readdirSync(rootDir, { withFileTypes: true })
     .filter((e) => e.isDirectory())
-    .map((e) => path.join(rootDir, e.name));
-  const matches = [];
-  for (const dir of dirs) {
-    const candidate = path.join(dir, input);
-    if (isFile(candidate)) matches.push(path.relative(rootDir, candidate));
-  }
+    .map((e) => path.join(rootDir, e.name, input))
+    .filter(isFile)
+    .map((p) => path.relative(rootDir, p));
 
   if (matches.length === 1) {
     resolvedPath = path.join(rootDir, matches[0]);
