@@ -10,7 +10,8 @@
  * - These aliases exist for wallet derivation workflows where the terminology
  *   "master derivation key" is more familiar than "seed"
  *
- * No LocalNet required - pure utility functions (aliases)
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

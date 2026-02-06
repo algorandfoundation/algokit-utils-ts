@@ -8,7 +8,8 @@
  * - Application escrow addresses
  * - State proof verification
  *
- * No LocalNet required - pure cryptographic function
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

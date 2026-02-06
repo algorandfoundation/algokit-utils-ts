@@ -12,7 +12,8 @@
  * - algorand.client.getAppFactory() - Get app factory for creating/deploying apps
  * - When to use raw clients vs AlgorandClient methods
  *
- * LocalNet required for client access
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

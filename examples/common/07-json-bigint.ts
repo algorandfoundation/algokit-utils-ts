@@ -13,7 +13,8 @@
  * - Comparison with native JSON.parse() showing precision loss
  * - Algorand-relevant examples with microAlgo amounts
  *
- * No LocalNet required - pure JSON utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { parseJson, stringifyJson } from '@algorandfoundation/algokit-utils/common'

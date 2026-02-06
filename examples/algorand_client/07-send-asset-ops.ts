@@ -11,7 +11,8 @@
  * - algorand.send.assetOptOut() to opt out and close asset holding
  * - algorand.send.assetDestroy() to destroy an asset
  *
- * LocalNet required for sending transactions
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

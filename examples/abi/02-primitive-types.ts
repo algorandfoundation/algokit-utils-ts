@@ -8,7 +8,8 @@
  *
  * Shows encode() and decode() methods, hex format display, and round-trip verification.
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { ABIBoolType, ABIByteType, ABIUintType } from '@algorandfoundation/algokit-utils/abi'

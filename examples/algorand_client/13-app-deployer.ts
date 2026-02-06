@@ -13,7 +13,8 @@
  * - Deployment metadata stored in app global state
  * - App name used for idempotent lookups
  *
- * LocalNet required for app deployment
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

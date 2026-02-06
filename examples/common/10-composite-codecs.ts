@@ -14,7 +14,8 @@
  * - Encoding nested structures (array of arrays, map of arrays)
  * - Round-trip verification for each composite codec
  *
- * No LocalNet required - pure codec functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type { EncodingFormat } from '@algorandfoundation/algokit-utils/common'

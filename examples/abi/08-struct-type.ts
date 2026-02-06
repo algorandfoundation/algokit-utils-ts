@@ -15,7 +15,8 @@
  *
  * ARC-4 specification: Structs are tuples with named fields for improved readability.
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

@@ -8,7 +8,8 @@
  * - getSuggestedParams() to manually fetch suggested params
  * - Performance benefits of caching when sending multiple transactions
  *
- * LocalNet required to fetch suggested params and send transactions
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

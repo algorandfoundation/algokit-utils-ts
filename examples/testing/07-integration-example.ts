@@ -12,6 +12,10 @@
  *
  * This example works with or without a running mock server, providing
  * helpful guidance in either case.
+ *
+ * Prerequisites:
+ * - No LocalNet required
+ * - Mock server optional (provides setup guidance if unavailable)
  */
 
 import {

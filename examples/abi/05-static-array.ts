@@ -12,7 +12,8 @@
  * - Elements are encoded consecutively
  * - Encoded length = elementSize * arrayLength
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

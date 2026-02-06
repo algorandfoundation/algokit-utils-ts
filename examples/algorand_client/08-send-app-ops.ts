@@ -11,7 +11,8 @@
  * - algorand.send.appDelete() to delete the application
  * - Passing application arguments, accounts, assets, apps references
  *
- * LocalNet required for sending transactions
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { OnApplicationComplete } from '@algorandfoundation/algokit-utils/transact'

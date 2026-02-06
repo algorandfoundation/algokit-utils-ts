@@ -7,6 +7,10 @@
  *
  * This example works whether or not mock servers are running - it just
  * reports the status of each server.
+ *
+ * Prerequisites:
+ * - No LocalNet required
+ * - Mock server optional (reports status either way)
  */
 
 import {

@@ -4,7 +4,8 @@
  * This example displays all the protocol constants available in the common package.
  * These constants define limits, sizes, and separators used throughout Algorand.
  *
- * No LocalNet required - pure constants display
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

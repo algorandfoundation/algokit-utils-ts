@@ -10,7 +10,8 @@
  * - The checksum word is verified to ensure mnemonic integrity
  * - Round-trip conversion: seed -> mnemonic -> seed produces identical bytes
  *
- * No LocalNet required - pure utility function
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { mnemonicFromSeed, seedFromMnemonic } from '@algorandfoundation/algokit-utils/algo25'

@@ -15,7 +15,8 @@
  * - addressCodec for encoding/decoding Algorand addresses
  * - Round-trip verification: decode(encode(value)) equals original
  *
- * No LocalNet required - pure codec functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type { EncodingFormat } from '@algorandfoundation/algokit-utils/common'

@@ -9,7 +9,8 @@
  * - secretKeyToMnemonic() extracts the first 32 bytes (seed portion) and converts to mnemonic
  * - This produces the same result as calling mnemonicFromSeed() on the seed directly
  *
- * No LocalNet required - pure utility function
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { mnemonicFromSeed, secretKeyToMnemonic } from '@algorandfoundation/algokit-utils/algo25'

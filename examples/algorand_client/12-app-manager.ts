@@ -13,7 +13,8 @@
  * - algorand.app.compileTeal() to compile TEAL source code
  * - algorand.app.compileTealTemplate() to compile TEAL with template variables
  *
- * LocalNet required for app operations
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { ABIType } from '@algorandfoundation/algokit-utils/abi'

@@ -14,7 +14,8 @@
  * - Field renaming with wireKey vs property name
  * - Round-trip encoding with ObjectModelCodec
  *
- * No LocalNet required - pure codec functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type {

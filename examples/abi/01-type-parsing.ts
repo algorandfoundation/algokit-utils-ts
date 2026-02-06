@@ -9,7 +9,8 @@
  *
  * And demonstrates type properties and instanceof checks for type category detection.
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

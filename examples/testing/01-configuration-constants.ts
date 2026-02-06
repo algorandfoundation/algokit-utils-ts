@@ -6,6 +6,9 @@
  * used to configure mock servers for testing Algorand client integrations.
  *
  * No mock server is required - this example just displays the constants.
+ *
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

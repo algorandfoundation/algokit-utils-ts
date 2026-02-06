@@ -12,7 +12,8 @@
  * - Adding transactions with different signers
  * - Group ID assigned to all transactions in the group
  *
- * LocalNet required for sending transactions
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

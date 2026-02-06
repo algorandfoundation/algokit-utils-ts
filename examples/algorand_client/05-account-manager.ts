@@ -14,7 +14,8 @@
  * - algorand.account.ensureFunded() to ensure account has minimum balance
  * - algorand.account.ensureFundedFromEnvironment() for dispenser funding
  *
- * LocalNet required for KMD access and account operations
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

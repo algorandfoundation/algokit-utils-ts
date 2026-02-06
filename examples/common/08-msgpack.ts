@@ -14,7 +14,8 @@
  * - Uint8Array (bytes) encoding
  * - Size comparison: MessagePack vs JSON
  *
- * No LocalNet required - pure encoding utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { arrayEqual, decodeMsgpack, encodeMsgpack, stringifyJson } from '@algorandfoundation/algokit-utils/common'
