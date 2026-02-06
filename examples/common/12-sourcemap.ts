@@ -1,5 +1,5 @@
 /**
- * Sourcemap Example
+ * Example: Sourcemap
  *
  * This example demonstrates how to use ProgramSourceMap for mapping TEAL
  * program counters (PC) to source locations for debugging purposes.

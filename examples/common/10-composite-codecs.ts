@@ -1,5 +1,5 @@
 /**
- * Composite Codecs Example
+ * Example: Composite Codecs
  *
  * This example demonstrates how to use composite codec types for encoding/decoding
  * arrays, maps, and records in wire format (JSON or MessagePack).

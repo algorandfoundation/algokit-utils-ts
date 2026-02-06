@@ -1,5 +1,5 @@
 /**
- * Logger Type Example
+ * Example: Logger Type
  *
  * This example demonstrates the Logger interface for consistent logging
  * across the AlgoKit Utils SDK.

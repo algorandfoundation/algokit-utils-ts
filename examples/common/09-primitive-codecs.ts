@@ -1,5 +1,5 @@
 /**
- * Primitive Codecs Example
+ * Example: Primitive Codecs
  *
  * This example demonstrates how to use primitive codec types for encoding/decoding
  * basic values in wire format (JSON or MessagePack).

@@ -1,5 +1,5 @@
 /**
- * JSON BigInt Example
+ * Example: JSON BigInt
  *
  * This example demonstrates parsing and stringifying JSON with BigInt support
  * for handling large numbers safely without precision loss.

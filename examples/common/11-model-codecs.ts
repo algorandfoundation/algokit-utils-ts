@@ -1,5 +1,5 @@
 /**
- * Model Codecs Example
+ * Example: Model Codecs
  *
  * This example demonstrates how to use model codecs for encoding/decoding
  * complex object structures with field metadata.

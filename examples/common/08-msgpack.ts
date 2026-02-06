@@ -1,5 +1,5 @@
 /**
- * MessagePack Example
+ * Example: MessagePack
  *
  * This example demonstrates encoding and decoding MessagePack data,
  * which is used for Algorand transaction encoding.
