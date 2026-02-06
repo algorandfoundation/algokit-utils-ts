@@ -2,7 +2,7 @@ import type { Loader } from 'astro/loaders'
 import fs from 'node:fs'
 import path from 'node:path'
 
-interface ExampleEntry {
+type ExampleEntry = {
   id: string
   title: string
   description: string
@@ -91,12 +91,14 @@ function parseJSDoc(content: string): { title: string; description: string; prer
   let description = ''
   let prerequisites = ''
   let inPrerequisites = false
+  let lastLineWasBullet = false
 
   for (const line of lines) {
     if (line.startsWith('Example:')) continue
 
     if (line.toLowerCase().startsWith('prerequisites:') || line.toLowerCase() === 'prerequisites') {
       inPrerequisites = true
+      lastLineWasBullet = false
       const prereqContent = line.replace(/prerequisites:?\s*/i, '').trim()
       if (prereqContent) {
         prerequisites = prereqContent
@@ -105,18 +107,33 @@ function parseJSDoc(content: string): { title: string; description: string; prer
     }
 
     if (inPrerequisites) {
-      if (line.startsWith('-') || line.startsWith('•')) {
-        prerequisites += (prerequisites ? '\n' : '') + line
-      } else if (line && !line.startsWith('@')) {
-        prerequisites += (prerequisites ? ' ' : '') + line
+      if (!line) {
+        lastLineWasBullet = false
+        if (prerequisites) prerequisites += '\n'
+        continue
       }
-    } else if (line && !line.startsWith('@')) {
-      // Part of description
-      if (line.startsWith('-') || line.startsWith('•')) {
+      const isBullet = line.startsWith('-') || line.startsWith('•')
+      if (isBullet) {
+        prerequisites += (prerequisites ? '\n' : '') + line
+      } else if (!line.startsWith('@')) {
+        const sep = !prerequisites ? '' : lastLineWasBullet ? '\n' : ' '
+        prerequisites += sep + line
+      }
+      lastLineWasBullet = isBullet
+    } else if (!line.startsWith('@')) {
+      if (!line) {
+        lastLineWasBullet = false
+        if (description) description += '\n'
+        continue
+      }
+      const isBullet = line.startsWith('-') || line.startsWith('•')
+      if (isBullet) {
         description += (description ? '\n' : '') + line
       } else {
-        description += (description ? ' ' : '') + line
+        const sep = !description ? '' : lastLineWasBullet ? '\n' : ' '
+        description += sep + line
       }
+      lastLineWasBullet = isBullet
     }
   }
 
@@ -184,7 +201,7 @@ export function examplesLoader(): Loader {
             categoryLabel: meta.label,
             order,
             filename,
-            runCommand: `npx tsx ${categoryDir}/${filename}`,
+            runCommand: `npm run example ${categoryDir}/${filename}`,
           }
 
           entries.push(entry)

@@ -47,7 +47,30 @@ const categoryExamples = allExamples
             <td>
               <a href={`/algokit-utils-ts/examples/${example.id}/`}>{example.data.title}</a>
             </td>
-            <td>{example.data.description.split('.')[0]}.</td>
+            <td>{(() => {
+              const text = example.data.description || ''
+              const lines = text.split('\n')
+              const elements: any[] = []
+              let bulletBuffer: string[] = []
+              const flushBullets = () => {
+                if (bulletBuffer.length > 0) {
+                  elements.push(<ul>{bulletBuffer.map((b) => <li set:html={b} />)}</ul>)
+                  bulletBuffer = []
+                }
+              }
+              for (const line of lines) {
+                const trimmed = line.trim()
+                if (!trimmed) continue
+                if (/^[-•]\s/.test(trimmed)) {
+                  bulletBuffer.push(trimmed.replace(/^[-•]\s*/, ''))
+                } else {
+                  flushBullets()
+                  elements.push(<p set:html={trimmed} />)
+                }
+              }
+              flushBullets()
+              return elements
+            })()}</td>
           </tr>
         ))
       }
@@ -57,5 +80,5 @@ const categoryExamples = allExamples
   <h2>Quick Start</h2>
   <p>Run any example from the repository's <code>examples</code> directory:</p>
   <pre><code>cd examples
-npx tsx {dirName}/01-*.ts</code></pre>
+npm run example {dirName}/01-*.ts</code></pre>
 </StarlightPage>

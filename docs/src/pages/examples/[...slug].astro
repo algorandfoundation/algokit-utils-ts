@@ -44,7 +44,32 @@ const githubUrl = `https://github.com/algorandfoundation/algokit-utils-ts/blob/m
   <p><a href={`/algokit-utils-ts/examples/${categorySlug}/`}>&larr; Back to {categoryLabel}</a></p>
 
   <h2 id="description">Description</h2>
-  <p>{description || 'This example demonstrates usage of the AlgoKit Utils TypeScript library.'}</p>
+  {(() => {
+    const text = description || 'This example demonstrates usage of the AlgoKit Utils TypeScript library.'
+    const lines = text.split('\n')
+    const elements: any[] = []
+    let bulletBuffer: string[] = []
+
+    const flushBullets = () => {
+      if (bulletBuffer.length > 0) {
+        elements.push(<ul>{bulletBuffer.map((b) => <li set:html={b} />)}</ul>)
+        bulletBuffer = []
+      }
+    }
+
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed) continue
+      if (/^[-•]\s/.test(trimmed)) {
+        bulletBuffer.push(trimmed.replace(/^[-•]\s*/, ''))
+      } else {
+        flushBullets()
+        elements.push(<p set:html={trimmed} />)
+      }
+    }
+    flushBullets()
+    return elements
+  })()}
 
   <h2 id="prerequisites">Prerequisites</h2>
   <ul>
