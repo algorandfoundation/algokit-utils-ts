@@ -13,7 +13,8 @@
  * - How multiple transformers can be chained
  * - The transformer function signature: (error: Error) => Promise<Error>
  *
- * LocalNet required for triggering transaction errors
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

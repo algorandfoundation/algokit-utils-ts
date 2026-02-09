@@ -14,7 +14,8 @@
  * - Nesting depth affects encoding complexity but follows consistent rules
  * - Round-trip encoding/decoding preserves all nested values
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

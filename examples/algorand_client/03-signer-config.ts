@@ -9,7 +9,8 @@
  * - Registering multiple signers for different accounts
  * - How the default signer is used when no specific signer is registered
  *
- * LocalNet required for transaction signing
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

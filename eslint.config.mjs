@@ -11,6 +11,7 @@ export default tseslint.config(
       'dist/**',
       'build/**',
       'coverage/**',
+      'examples/scripts/**.mjs',
       '**/generated/types.d.ts',
       '**/generated/types.ts',
       '.idea/**',

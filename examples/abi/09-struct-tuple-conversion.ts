@@ -13,7 +13,8 @@
  * - Struct format: object with named properties (more readable)
  * - Tuple format: array with positional elements (matches ABI encoding)
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

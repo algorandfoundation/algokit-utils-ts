@@ -14,7 +14,8 @@
  * - TypeScript type narrowing for safer code
  * - Determining how to encode/decode values based on type category
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type { ABIMethodArgType } from '@algorandfoundation/algokit-utils/abi'

@@ -18,7 +18,8 @@
  * - Manual signing with account.signer() function
  * - Sending signed transactions via algorand.client.algod.sendRawTransaction()
  *
- * LocalNet required for suggested params and account funding
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

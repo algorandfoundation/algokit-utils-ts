@@ -60,7 +60,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build package
+      - name: Build
         run: npm run build
 
       - name: Start LocalNet

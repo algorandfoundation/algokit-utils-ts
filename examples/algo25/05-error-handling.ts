@@ -9,7 +9,8 @@
  * - FAIL_TO_DECODE_MNEMONIC_ERROR_MSG: Thrown when checksum validation fails
  * - RangeError: Thrown when seed length is not 32 bytes
  *
- * No LocalNet required - demonstrates error conditions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

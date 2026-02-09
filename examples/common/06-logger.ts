@@ -1,5 +1,5 @@
 /**
- * Logger Type Example
+ * Example: Logger Type
  *
  * This example demonstrates the Logger interface for consistent logging
  * across the AlgoKit Utils SDK.
@@ -11,7 +11,8 @@
  * - Custom formatting logger
  * - Compatibility with common logging patterns
  *
- * No LocalNet required - pure type/interface example
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type { Logger } from '@algorandfoundation/algokit-utils/common'

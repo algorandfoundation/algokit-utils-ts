@@ -16,11 +16,16 @@ Some examples (marked "No LocalNet required") work with pure utility functions a
 ## Quick Start
 
 ```bash
-# From the examples directory
+# Install dependencies and build the package
+npm ci
+npm run build
+
+# Install examples dependencies
 cd examples
+npm ci
 
 # Run a single example
-npx tsx transact/01-payment-transaction.ts
+npm run example transact/01-payment-transaction.ts
 
 # Run all examples in a category
 ./transact/verify-all.sh

@@ -10,7 +10,8 @@
  * - Efficiency comparison: bulk operations vs individual opt-ins
  * - Error handling for non-existent assets and non-opted-in accounts
  *
- * LocalNet required for asset operations
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'

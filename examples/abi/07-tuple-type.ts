@@ -15,7 +15,8 @@
  *
  * ARC-4 specification: Tuples are sequences of types enclosed in parentheses.
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { Address } from '@algorandfoundation/algokit-utils'

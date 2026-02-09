@@ -12,6 +12,9 @@
  * NOTE: This example documents the factory pattern without invoking the setup
  * (no running server needed). The setup functions are designed for use in
  * vitest.config.ts, not direct invocation.
+ *
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

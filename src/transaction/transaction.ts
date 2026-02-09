@@ -53,7 +53,6 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
  * Take an existing Transaction Composer and return a new one with the required
  * app call resources populated into it
  *
- * @param algod The algod client to use for the simulation
  * @param composer The composer containing the txn group
  * @returns A new composer with the resources populated into the transactions
  *
@@ -110,7 +109,6 @@ export async function prepareGroupForSending(
  * @deprecated Use `composer.send()` directly
  * Signs and sends transactions that have been collected by an `TransactionComposer`.
  * @param atcSend The parameters controlling the send, including `atc` The `TransactionComposer` and params to control send behaviour
- * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendTransactionComposer = async function (atcSend: TransactionComposerToSend): Promise<SendTransactionComposerResults> {

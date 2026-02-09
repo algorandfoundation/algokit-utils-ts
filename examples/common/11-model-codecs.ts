@@ -1,5 +1,5 @@
 /**
- * Model Codecs Example
+ * Example: Model Codecs
  *
  * This example demonstrates how to use model codecs for encoding/decoding
  * complex object structures with field metadata.
@@ -14,7 +14,8 @@
  * - Field renaming with wireKey vs property name
  * - Round-trip encoding with ObjectModelCodec
  *
- * No LocalNet required - pure codec functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type {

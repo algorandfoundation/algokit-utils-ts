@@ -1,0 +1,126 @@
+---
+import { getCollection } from 'astro:content'
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro'
+import { CATEGORIES } from '../../loaders/examples-loader'
+
+// Get all examples to count per category
+const allExamples = await getCollection('examples')
+
+// Count examples per category
+const categoryCounts: Record<string, number> = {}
+for (const example of allExamples) {
+  const cat = example.data.category
+  categoryCounts[cat] = (categoryCounts[cat] || 0) + 1
+}
+
+// Prepare category data for display
+const categoryData = Object.entries(CATEGORIES).map(([dirName, meta]) => ({
+  dirName,
+  ...meta,
+  count: categoryCounts[dirName] || 0,
+}))
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Code Examples',
+    description: '116 runnable TypeScript examples demonstrating AlgoKit Utils features',
+  }}
+>
+  <p>
+    Browse <strong>{allExamples.length}</strong> runnable TypeScript examples organized by feature area. Each example is
+    self-contained and demonstrates specific functionality of the AlgoKit Utils library.
+  </p>
+
+  <h2>Quick Start</h2>
+  <pre><code>{`# Clone the repository
+git clone https://github.com/algorandfoundation/algokit-utils-ts.git
+cd algokit-utils-ts
+
+# Install dependencies and build the package
+npm ci
+npm run build
+
+# Install examples dependencies
+cd examples
+npm ci
+
+# Run any example
+npm run example algorand_client/01-client-instantiation.ts`}</code></pre>
+
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>Node.js &gt;= 20.0</li>
+    <li>
+      <a href="https://github.com/algorandfoundation/algokit-cli">AlgoKit CLI</a> installed
+    </li>
+    <li>
+      LocalNet running for network examples (<code>algokit localnet start</code>)
+    </li>
+  </ul>
+  <p>
+    <em>Some examples marked "No LocalNet required" work with pure utility functions.</em>
+  </p>
+
+  <h2>Categories</h2>
+
+  <div class="card-grid">
+    {
+      categoryData.map((cat) => (
+        <a href={`/algokit-utils-ts/examples/${cat.slug}/`} class="card">
+          <h3>{cat.label}</h3>
+          <p>{cat.description}</p>
+          <span class="count">{cat.count} examples</span>
+        </a>
+      ))
+    }
+  </div>
+</StarlightPage>
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .card {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--sl-color-accent);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: var(--sl-color-white);
+  }
+
+  .card p {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  .card .count {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+</style>

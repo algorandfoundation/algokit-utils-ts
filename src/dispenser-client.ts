@@ -55,9 +55,10 @@ export interface TestNetDispenserApiClientParams {
  * @property {string} authToken - The authentication token used for API requests.
  * @property {number} requestTimeout - The timeout for API requests, in seconds.
  *
- * @method fund - Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
- * @method refund - Sends a refund request to the dispenser API for the specified refundTxnId.
- * @method limit - Sends a request to the dispenser API to get the funding limit for the Algo asset.
+ * Methods:
+ * - `fund` - Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
+ * - `refund` - Sends a refund request to the dispenser API for the specified refundTxnId.
+ * - `limit` - Sends a request to the dispenser API to get the funding limit for the Algo asset.
  *
  * @example
  * ```typescript

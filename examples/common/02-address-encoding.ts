@@ -10,7 +10,8 @@
  * - Round-trip verification: encode(decode(address)) equals original
  * - Understanding the relationship between public key bytes and checksum
  *
- * No LocalNet required - pure utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

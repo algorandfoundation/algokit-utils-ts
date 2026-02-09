@@ -1,5 +1,5 @@
 /**
- * Primitive Codecs Example
+ * Example: Primitive Codecs
  *
  * This example demonstrates how to use primitive codec types for encoding/decoding
  * basic values in wire format (JSON or MessagePack).
@@ -15,7 +15,8 @@
  * - addressCodec for encoding/decoding Algorand addresses
  * - Round-trip verification: decode(encode(value)) equals original
  *
- * No LocalNet required - pure codec functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import type { EncodingFormat } from '@algorandfoundation/algokit-utils/common'

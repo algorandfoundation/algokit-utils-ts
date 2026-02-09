@@ -11,7 +11,8 @@
  * - Accessing the 32-byte public key property
  * - Using address constants: ALGORAND_ADDRESS_LENGTH, ALGORAND_ZERO_ADDRESS_STRING
  *
- * No LocalNet required - pure utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

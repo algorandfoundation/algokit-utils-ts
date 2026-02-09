@@ -7,7 +7,8 @@
  * - Demonstrates that strings are dynamic types (variable length)
  * - Displays byte breakdown: length prefix vs content bytes
  *
- * No LocalNet required - pure ABI encoding/decoding
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { ABIStringType } from '@algorandfoundation/algokit-utils/abi'

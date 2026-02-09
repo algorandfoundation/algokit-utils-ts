@@ -10,7 +10,8 @@
  * - AlgorandClient.fromClients() with pre-configured algod/indexer/kmd clients
  * - Verifying connection by calling algod.status()
  *
- * LocalNet required to verify connection works
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'

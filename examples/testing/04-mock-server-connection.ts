@@ -9,6 +9,10 @@
  *
  * This example requires MOCK_ALGOD_URL environment variable and a running
  * mock server for a successful connection - otherwise it shows helpful error messages.
+ *
+ * Prerequisites:
+ * - No LocalNet required
+ * - `MOCK_ALGOD_URL` env var and running mock server for successful connection
  */
 
 import {

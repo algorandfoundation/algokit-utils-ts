@@ -1,5 +1,5 @@
 /**
- * MessagePack Example
+ * Example: MessagePack
  *
  * This example demonstrates encoding and decoding MessagePack data,
  * which is used for Algorand transaction encoding.
@@ -14,7 +14,8 @@
  * - Uint8Array (bytes) encoding
  * - Size comparison: MessagePack vs JSON
  *
- * No LocalNet required - pure encoding utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { arrayEqual, decodeMsgpack, encodeMsgpack, stringifyJson } from '@algorandfoundation/algokit-utils/common'

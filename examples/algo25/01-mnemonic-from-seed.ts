@@ -10,7 +10,8 @@
  * - A 25th checksum word is computed from the SHA-512/256 hash of the seed
  * - The mnemonic is deterministic: same seed always produces same mnemonic
  *
- * No LocalNet required - pure utility function
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { mnemonicFromSeed } from '@algorandfoundation/algokit-utils/algo25'

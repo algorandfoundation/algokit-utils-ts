@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "example": "node ./scripts/run-example.mjs",
     "typecheck": "tsc --noEmit",
     "verify-all": "./verify-all.sh"
   },
@@ -11,6 +12,7 @@
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
+    "tsx": "^4.21.0",
     "typescript": "^5.4.5"
   },
   "engines": {

@@ -13,7 +13,8 @@
  * - Using AlgoAmount with payment transactions
  * - Avoiding floating point precision issues
  *
- * No LocalNet required - pure utility class demonstration (except for payment example)
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { algo, ALGORAND_MIN_TX_FEE, AlgorandClient, algos, microAlgo, microAlgos, transactionFees } from '@algorandfoundation/algokit-utils'

@@ -6,7 +6,8 @@
  * - arrayEqual() for comparing two arrays element-by-element
  * - concatArrays() for joining multiple Uint8Arrays into a new array
  *
- * No LocalNet required - pure utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { arrayEqual, concatArrays } from '@algorandfoundation/algokit-utils/common'

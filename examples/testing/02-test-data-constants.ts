@@ -6,6 +6,9 @@
  * the pre-recorded HAR file responses used by the mock server.
  *
  * No mock server is required - this example just displays the constants.
+ *
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import {

@@ -10,7 +10,8 @@
  * - Displaying transaction ID and confirmed round
  * - Verifying balances before and after payment
  *
- * LocalNet required for sending transactions
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
  */
 
 import { AlgorandClient, algo, microAlgo } from '@algorandfoundation/algokit-utils'

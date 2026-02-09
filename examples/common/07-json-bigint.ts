@@ -1,5 +1,5 @@
 /**
- * JSON BigInt Example
+ * Example: JSON BigInt
  *
  * This example demonstrates parsing and stringifying JSON with BigInt support
  * for handling large numbers safely without precision loss.
@@ -13,7 +13,8 @@
  * - Comparison with native JSON.parse() showing precision loss
  * - Algorand-relevant examples with microAlgo amounts
  *
- * No LocalNet required - pure JSON utility functions
+ * Prerequisites:
+ * - No LocalNet required
  */
 
 import { parseJson, stringifyJson } from '@algorandfoundation/algokit-utils/common'
