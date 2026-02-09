@@ -7,7 +7,6 @@ import {
   ed25519Verifier,
   nobleEd25519Generator,
   nobleEd25519Verifier,
-  peikertXHdAccountGenerator,
   peikertXHdWalletGenerator,
 } from '@algorandfoundation/algokit-crypto'
 import { LogicSig, LogicSigAccount } from './logicsig'
@@ -78,19 +77,19 @@ describe('signer', () => {
   })
 
   test('generateSigners with peikertXHdAccountGenerator', async () => {
-    const { hdRootKey } = await peikertXHdWalletGenerator()
-    const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0)
+    const { accountGenerator } = await peikertXHdWalletGenerator()
+    const generated = await accountGenerator(0, 0)
     const addressWithSigners = generateAddressWithSigners(generated)
 
     runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('full example xHD mx bytes flow', async () => {
-    // Generate a new rootkey
-    const { hdRootKey } = await peikertXHdWalletGenerator() // peikertXHdWalletGenerator from algokit-crypto
+    // Generate a new wallet with rootkey and account generator
+    const { accountGenerator } = await peikertXHdWalletGenerator() // peikertXHdWalletGenerator from algokit-crypto
 
     // Generate an account at BIP44 path m/44'/283'/0'/0/0
-    const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0) // peikertXHdAccountGenerator from algokit-crypto
+    const generated = await accountGenerator(0, 0) // accountGenerator from peikertXHdWalletGenerator result
 
     // Generate Algorand-specific signing functions
     const addressWithSigners = generateAddressWithSigners(generated) // generateAddressWithSigners from algokit-transact
