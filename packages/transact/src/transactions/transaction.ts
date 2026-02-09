@@ -10,8 +10,8 @@ import {
   concatArrays,
   decodeMsgpack,
   encodeMsgpack,
-  hash,
 } from '@algorandfoundation/algokit-common'
+import { hash } from '@algorandfoundation/algokit-crypto'
 import base32 from 'hi-base32'
 import { AppCallTransactionFields, validateAppCallTransaction } from './app-call'
 import { AssetConfigTransactionFields, validateAssetConfigTransaction } from './asset-config'

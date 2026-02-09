@@ -1,5 +1,5 @@
 import english from './english.js'
-import { hash } from '@algorandfoundation/algokit-common'
+import { hash } from '@algorandfoundation/algokit-crypto'
 export const FAIL_TO_DECODE_MNEMONIC_ERROR_MSG = 'failed to decode mnemonic'
 export const NOT_IN_WORDS_LIST_ERROR_MSG = 'the mnemonic contains a word that is not in the wordlist'
 

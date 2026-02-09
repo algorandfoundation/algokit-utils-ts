@@ -1,4 +1,5 @@
-import { Address, Addressable, concatArrays, decodeMsgpack, hash } from '@algorandfoundation/algokit-common'
+import { Address, Addressable, concatArrays, decodeMsgpack } from '@algorandfoundation/algokit-common'
+import { hash } from '@algorandfoundation/algokit-crypto'
 import { MultisigAccount } from './multisig'
 import { AddressWithDelegatedLsigSigner, TransactionSigner } from './signer'
 import {

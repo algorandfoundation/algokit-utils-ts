@@ -4,10 +4,10 @@ import {
   ALGORAND_CHECKSUM_BYTE_LENGTH,
   arrayEqual,
   getAddress,
-  hash,
   PUBLIC_KEY_BYTE_LENGTH,
   SIGNATURE_BYTE_LENGTH,
 } from '@algorandfoundation/algokit-common'
+import { hash } from '@algorandfoundation/algokit-crypto'
 import { DelegatedLsigSigner } from './logicsig'
 import { AddressWithDelegatedLsigSigner, AddressWithTransactionSigner, TransactionSigner } from './signer'
 import {
