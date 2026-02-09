@@ -1,0 +1,90 @@
+#pragma version 10
+// Full lifecycle app V2 - increments counter by 2 instead of 1
+// Used for demonstrating app updates
+
+// Check if this is app creation
+txn ApplicationID
+int 0
+==
+bnz handle_creation
+
+// Check OnComplete action
+txn OnCompletion
+int NoOp
+==
+bnz handle_noop
+
+txn OnCompletion
+int OptIn
+==
+bnz handle_optin
+
+txn OnCompletion
+int CloseOut
+==
+bnz handle_closeout
+
+txn OnCompletion
+int UpdateApplication
+==
+bnz handle_update
+
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+// Reject other operations
+int 0
+return
+
+handle_creation:
+  byte "counter"
+  int 0
+  app_global_put
+  byte "message"
+  byte "Hello, World!"
+  app_global_put
+  int 1
+  return
+
+handle_noop:
+  // V2: Increment global counter by 2 instead of 1
+  byte "counter"
+  app_global_get
+  int 2
+  +
+  byte "counter"
+  swap
+  app_global_put
+
+  txn NumAppArgs
+  int 0
+  >
+  bz noop_end
+  txna ApplicationArgs 0
+  log
+
+  noop_end:
+  int 1
+  return
+
+handle_optin:
+  txn Sender
+  byte "user_visits"
+  int 0
+  app_local_put
+  int 1
+  return
+
+handle_closeout:
+  int 1
+  return
+
+handle_update:
+  int 1
+  return
+
+handle_delete:
+  int 1
+  return

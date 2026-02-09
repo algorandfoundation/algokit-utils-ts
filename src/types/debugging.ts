@@ -1,50 +1,37 @@
-/**
- * An asynchronous event listener
- */
+// Re-exports with deprecation notices for backwards compatibility
+// New imports should use '@algorandfoundation/algokit-utils/debugging'
 
-import { SimulateResponse, SourceMap } from '@algorandfoundation/algokit-algod-client'
-import { Expand } from '@algorandfoundation/algokit-common'
-import { CompiledTeal } from './app'
+import {
+  ALGOKIT_DIR as _ALGOKIT_DIR,
+  SOURCES_DIR as _SOURCES_DIR,
+  TEAL_FILE_EXT as _TEAL_FILE_EXT,
+  TEAL_SOURCEMAP_EXT as _TEAL_SOURCEMAP_EXT,
+  DEFAULT_MAX_SEARCH_DEPTH as _DEFAULT_MAX_SEARCH_DEPTH,
+  type TealSourceDebugEventData as _TealSourceDebugEventData,
+  type TealSourcesDebugEventData as _TealSourcesDebugEventData,
+  type AVMTracesEventData as _AVMTracesEventData,
+} from '../debugging'
 
-/** The directory name for AlgoKit project related files */
-export const ALGOKIT_DIR = '.algokit'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export const ALGOKIT_DIR = _ALGOKIT_DIR
 
-/** The directory name for debug source files */
-export const SOURCES_DIR = 'sources'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export const SOURCES_DIR = _SOURCES_DIR
 
-/** The file extension for TEAL files */
-export const TEAL_FILE_EXT = '.teal'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export const TEAL_FILE_EXT = _TEAL_FILE_EXT
 
-/** The file extension for TEAL source map files */
-export const TEAL_SOURCEMAP_EXT = '.teal.map'
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export const TEAL_SOURCEMAP_EXT = _TEAL_SOURCEMAP_EXT
 
-/** The default maximum search depth for file operations */
-export const DEFAULT_MAX_SEARCH_DEPTH = 10
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export const DEFAULT_MAX_SEARCH_DEPTH = _DEFAULT_MAX_SEARCH_DEPTH
 
-/**
- * Represents the data for a single TEAL source
- */
-export type TealSourceDebugEventData = {
-  /** The name of the application */
-  appName: string
-  /** The name of the file */
-  fileName: string
-  /** The compiled TEAL code */
-  compiledTeal: Expand<Omit<CompiledTeal, 'sourceMap'> & { sourceMap: SourceMap }>
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export type TealSourceDebugEventData = _TealSourceDebugEventData
 
-/**
- * Represents the data for multiple TEAL sources debug events emitted whenever an app is compiled as part of a deploy in debug mode
- */
-export type TealSourcesDebugEventData = {
-  /** An array of TEAL source debug event data */
-  sources: TealSourceDebugEventData[]
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export type TealSourcesDebugEventData = _TealSourcesDebugEventData
 
-/**
- * Represents the data for AVM traces debug events emitted whenever a transaction is simulated in debug mode
- */
-export type AVMTracesEventData = {
-  /** The simulation response from Algod */
-  simulateResponse: SimulateResponse
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/debugging` instead */
+export type AVMTracesEventData = _AVMTracesEventData

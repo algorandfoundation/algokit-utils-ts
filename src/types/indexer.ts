@@ -1,39 +1,27 @@
-/** Options when looking up an asset's account holdings, https://dev.algorand.co/reference/rest-apis/indexer#get-v2assetsasset-idbalances */
-export interface LookupAssetHoldingsOptions {
-  /** Results should have a decimal units amount less than this value. */
-  currencyLessThan?: number | bigint
-  /** Results should have a decimal units amount greater than this value. */
-  currencyGreaterThan?: number | bigint
-  /** Include all items including closed accounts and opted-out asset holdings. */
-  includeAll?: boolean
-}
+// Re-exports with deprecation notices for backwards compatibility
+// New imports should use '@algorandfoundation/algokit-utils/indexer'
 
-/** Defines the what additional actions occur with the transaction https://dev.algorand.co/reference/rest-apis/indexer/#oncompletion */
-export enum ApplicationOnComplete {
-  noop = 'noop',
-  optin = 'optin',
-  closeout = 'closeout',
-  clear = 'clear',
-  update = 'update',
-  delete = 'delete',
-}
+import {
+  type LookupAssetHoldingsOptions as _LookupAssetHoldingsOptions,
+  ApplicationOnComplete as _ApplicationOnComplete,
+  SignatureType as _SignatureType,
+  AccountStatus as _AccountStatus,
+} from '../indexer'
 
-/** Type of signature used by an account */
-export enum SignatureType {
-  /** Normal signature */
-  sig = 'sig',
-  /** Multisig */
-  msig = 'msig',
-  /** Logic signature */
-  lsig = 'lsig',
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export type LookupAssetHoldingsOptions = _LookupAssetHoldingsOptions
 
-/** Delegation status of the account */
-export enum AccountStatus {
-  /** Indicates that the associated account is delegated */
-  Offline = 'Offline',
-  /** Indicates that the associated account used as part of the delegation pool */
-  Online = 'Online',
-  /** Indicates that the associated account is neither a delegator nor a delegate */
-  NotParticipating = 'NotParticipating',
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export const ApplicationOnComplete = _ApplicationOnComplete
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export type ApplicationOnComplete = _ApplicationOnComplete
+
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export const SignatureType = _SignatureType
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export type SignatureType = _SignatureType
+
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export const AccountStatus = _AccountStatus
+/** @deprecated Import from `@algorandfoundation/algokit-utils/indexer` instead */
+export type AccountStatus = _AccountStatus

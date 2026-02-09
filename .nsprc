@@ -1,7 +1,17 @@
 {
-  "1112496": {
+  "1112659": {
     "active": true,
-    "notes": "undici is used in @semantic-release/npm and this hasn't been fixed",
-    "expiry": "2026-02-15"
+    "notes": "tar is bundled inside npm (used by @semantic-release/npm) - overrides cannot fix bundled deps, waiting for upstream fix",
+    "expiry": "2026-03-01"
+  },
+  "1112954": {
+    "active": true,
+    "notes": "@isaacs/brace-expansion is bundled inside npm - overrides cannot fix bundled deps, waiting for upstream fix",
+    "expiry": "2026-03-01"
+  },
+  "1112810": {
+    "active": true,
+    "notes": "npm cli vulnerability - bundled dependency, waiting for upstream fix",
+    "expiry": "2026-03-01"
   }
 }

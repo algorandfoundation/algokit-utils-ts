@@ -1,1 +1,4 @@
-export * from '@algorandfoundation/algokit-common'
+/**
+ * @module Subpaths/common
+ */
+export * from "@algorandfoundation/algokit-common";

@@ -1,6 +1,6 @@
-import { Logger } from '../types/logging'
-import { LogSnapshotConfig } from '../types/testing'
+import { Logger } from '../logging'
 import { asJson } from '../util'
+import { LogSnapshotConfig } from './types'
 
 /** Exposes an AlgoKit logger which captures log messages, while wrapping an original logger.
  * This is useful for automated testing.

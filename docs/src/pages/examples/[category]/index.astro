@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content'
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro'
+import { CATEGORIES } from '../../../loaders/examples-loader'
+
+export async function getStaticPaths() {
+  // Generate a page for each category
+  return Object.entries(CATEGORIES).map(([dirName, meta]) => ({
+    params: { category: meta.slug },
+    props: { dirName, meta },
+  }))
+}
+
+const { dirName, meta } = Astro.props
+const { label, description } = meta
+
+// Get all examples for this category
+const allExamples = await getCollection('examples')
+const categoryExamples = allExamples
+  .filter((e) => e.data.category === dirName)
+  .sort((a, b) => a.data.order - b.data.order)
+---
+
+<StarlightPage
+  frontmatter={{
+    title: label,
+    description: description,
+  }}
+>
+  <p><a href="/algokit-utils-ts/examples/">&larr; Back to Examples Overview</a></p>
+
+  <p>{description}</p>
+
+  <h2>Examples ({categoryExamples.length})</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Example</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        categoryExamples.map((example) => (
+          <tr>
+            <td>
+              <a href={`/algokit-utils-ts/examples/${example.id}/`}>{example.data.title}</a>
+            </td>
+            <td>{(() => {
+              const text = example.data.description || ''
+              const lines = text.split('\n')
+              const elements: any[] = []
+              let bulletBuffer: string[] = []
+              const flushBullets = () => {
+                if (bulletBuffer.length > 0) {
+                  elements.push(<ul>{bulletBuffer.map((b) => <li set:html={b} />)}</ul>)
+                  bulletBuffer = []
+                }
+              }
+              for (const line of lines) {
+                const trimmed = line.trim()
+                if (!trimmed) continue
+                if (/^[-•]\s/.test(trimmed)) {
+                  bulletBuffer.push(trimmed.replace(/^[-•]\s*/, ''))
+                } else {
+                  flushBullets()
+                  elements.push(<p set:html={trimmed} />)
+                }
+              }
+              flushBullets()
+              return elements
+            })()}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <h2>Quick Start</h2>
+  <p>Run any example from the repository's <code>examples</code> directory:</p>
+  <pre><code>cd examples
+npm run example {dirName}/01-*.ts</code></pre>
+</StarlightPage>

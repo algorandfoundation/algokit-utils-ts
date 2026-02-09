@@ -18,7 +18,7 @@ import {
   ResolveAppClientByCreatorAndName,
   ResolveAppClientByNetwork,
   AppClient as _AppClient,
-} from '../../../src/types/app-client'
+} from '../../../src/app-client'
 import {
   AppFactoryAppClientParams,
   AppFactoryDeployParams,

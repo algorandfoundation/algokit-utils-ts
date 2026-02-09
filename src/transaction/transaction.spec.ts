@@ -9,16 +9,15 @@ import externalARC32 from '../../tests/example-contracts/resource-packer/artifac
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
 import testingApp from '../../tests/example-contracts/testing-app/application.json'
-import { algo, microAlgo } from '../amount'
+import { AlgoAmount, algo, microAlgo } from '../amount'
+import { OnUpdate } from '../app'
+import { AppClient } from '../app-client'
+import { AppSpec } from '../app-spec'
+import { PaymentParams, TransactionComposer } from '../composer'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
-import { AlgoAmount } from '../types/amount'
-import { OnUpdate } from '../types/app'
-import { AppClient } from '../types/app-client'
-import { AppSpec } from '../types/app-spec'
-import { PaymentParams, TransactionComposer } from '../types/composer'
-import { Arc2TransactionNote } from '../types/transaction'
 import { waitForConfirmation } from './transaction'
+import { Arc2TransactionNote } from './types'
 
 describe('transaction', () => {
   const localnet = algorandFixture()

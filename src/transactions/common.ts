@@ -1,8 +1,8 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress, getAddress, getOptionalAddress } from '@algorandfoundation/algokit-common'
 import { AddressWithTransactionSigner, SendingAddress, TransactionSigner } from '@algorandfoundation/algokit-transact'
+import { AlgoAmount } from '../amount'
 import { encodeLease } from '../transaction'
-import { AlgoAmount } from '../types/amount'
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
