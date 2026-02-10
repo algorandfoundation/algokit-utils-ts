@@ -9,7 +9,11 @@ type StringOrRegExp = string | RegExp
 const nodeBuiltins = builtinModules.flatMap((m) => [m, `node:${m}`])
 
 export default function createConfig(externalDependencies: StringOrRegExp[], input: string[] = ['src/index.ts']): typeof config {
-  const external = Array.from(new Set([...nodeBuiltins, ...Object.keys(workspacePkg.dependencies || {}), ...externalDependencies]))
+  const external: StringOrRegExp[] = [
+    ...nodeBuiltins,
+    ...[...Object.keys(workspacePkg.dependencies || {}), ...externalDependencies]
+      .map(dep => typeof dep === 'string' ? new RegExp(`^${dep}($|\\/|\\\\)`) : dep),
+  ]
 
   const resolvedInput = input.flatMap((pattern) => {
     // If it contains glob characters or negations, resolve with fast-glob

@@ -127,6 +127,8 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
+    "@algorandfoundation/xhd-wallet-api": "2.0.0-canary.1",
+    "@noble/ed25519": "^3.0.0",
     "@noble/hashes": "^2.0.1",
     "algorand-msgpack": "^1.1.0",
     "buffer": "^6.0.3",
