@@ -1,5 +1,5 @@
 import type { Address } from '@algorandfoundation/algokit-common'
-import { decodeMsgpack, encodeMsgpack } from '@algorandfoundation/algokit-common'
+import { decodeMsgpack, encodeMsgpack, stringifyJson } from '@algorandfoundation/algokit-common'
 import { signedTransactionCodec } from './signed-transaction-meta'
 import { Transaction, validateTransaction } from './transaction'
 
@@ -168,4 +168,20 @@ export function validateSignedTransaction(signedTransaction: SignedTransaction):
   if (signedTransaction.sig && signedTransaction.sig.length !== 64) {
     throw new Error('Signature must be 64 bytes')
   }
+}
+
+/**
+ * Encode a signed transaction to wire-format JSON string.
+ *
+ * Wire format uses short keys (e.g., `amt`, `fv`, `snd`) matching the Algorand protocol.
+ * Useful for debugging, logging, or any scenario requiring human-readable JSON
+ * that preserves the canonical field names.
+ *
+ * @param signedTransaction - The signed transaction to encode
+ * @param space - Optional indentation for pretty-printing
+ * @returns JSON string in wire format
+ */
+export function encodeSignedTransactionToJson(signedTransaction: SignedTransaction, space?: number): string {
+  const wireFormat = signedTransactionCodec.encode(signedTransaction, 'json')
+  return stringifyJson(wireFormat, undefined, space)
 }

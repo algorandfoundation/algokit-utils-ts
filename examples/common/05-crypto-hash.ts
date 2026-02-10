@@ -12,13 +12,8 @@
  * - No LocalNet required
  */
 
-import {
-  arrayEqual,
-  concatArrays,
-  hash,
-  HASH_BYTES_LENGTH,
-  TRANSACTION_DOMAIN_SEPARATOR,
-} from '@algorandfoundation/algokit-utils/common'
+import { arrayEqual, concatArrays, HASH_BYTES_LENGTH, TRANSACTION_DOMAIN_SEPARATOR } from '@algorandfoundation/algokit-utils/common'
+import { hash } from '@algorandfoundation/algokit-utils/crypto'
 import { formatBytes, formatHex, printHeader, printInfo, printStep, printSuccess } from '../shared/utils.js'
 
 function main() {
@@ -78,8 +73,22 @@ function main() {
   // Simulate a minimal transaction-like structure
   const fakeTxPayload = new Uint8Array([
     0x01, // version
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, // first valid round (8 bytes)
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, // last valid round (8 bytes)
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x01, // first valid round (8 bytes)
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x0a, // last valid round (8 bytes)
     // ... simplified for demonstration
   ])
 
