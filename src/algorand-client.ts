@@ -1,6 +1,7 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress } from '@algorandfoundation/algokit-common'
-import { AddressWithTransactionSigner, LogicSigAccount, TransactionSigner, MultisigAccount } from '@algorandfoundation/algokit-transact'
+import { nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
+import { AddressWithTransactionSigner, LogicSigAccount, MultisigAccount, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AccountManager, AccountManagerConfig } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
@@ -10,8 +11,7 @@ import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer, TransactionComposerConfig } from './composer'
 import { AlgoConfig } from './network-client'
-import { nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
-
+import { NetworkManager } from './network-manager'
 
 /**
  * A client that brokers easy access to Algorand functionality.
@@ -22,6 +22,7 @@ export class AlgorandClient {
   private _appManager: AppManager
   private _appDeployer: AppDeployer
   private _assetManager: AssetManager
+  private _networkManager: NetworkManager
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
 
@@ -43,6 +44,7 @@ export class AlgorandClient {
     this._accountManager = new AccountManager(this._clientManager, { ed25519Generator: config.ed25519Generator ?? nobleEd25519Generator })
     this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, (config) => this.newGroup(config))
+    this._networkManager = new NetworkManager(this._clientManager.algod, this)
     this._transactionSender = new AlgorandClientTransactionSender((config) => this.newGroup(config), this._assetManager, this._appManager)
     this._transactionCreator = new AlgorandClientTransactionCreator((config) => this.newGroup(config))
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
@@ -212,6 +214,26 @@ export class AlgorandClient {
    */
   public get appDeployer() {
     return this._appDeployer
+  }
+
+  /**
+   * Methods for interacting with the network.
+   * Provides utilities for querying blockchain state and waiting for specific conditions.
+   * @returns The `NetworkManager` instance.
+   * @example
+   * ```typescript
+   * // Get last round
+   * const lastRound = await algorand.network.getLastRound()
+   *
+   * // Wait for a specific round
+   * await algorand.network.waitUntilRound(1000n)
+   *
+   * // LocalNet-specific: block warp
+   * await algorand.network.localNet.blockWarp(100n)
+   * ```
+   */
+  public get network() {
+    return this._networkManager
   }
 
   /**
