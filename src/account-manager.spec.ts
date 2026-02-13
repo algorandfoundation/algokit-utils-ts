@@ -5,6 +5,8 @@ import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algo } from './amount'
 import { algorandFixture } from './testing'
+import { ed25519Generator, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
+import { Address } from '@algorandfoundation/algokit-common'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()
@@ -103,5 +105,41 @@ describe('AccountManager', () => {
     expect(result.confirmation.txn.lsig?.lmsig?.subsigs[0].sig).toBeDefined()
     expect(result.confirmation.txn.lsig?.lmsig?.subsigs[1].sig).toBeDefined()
     expect(result.confirmation.txn.lsig?.lmsig?.subsigs[2].sig).toBeUndefined()
+  })
+
+  test('ed25519 secret key from ENV', async () => {
+    const { algorand } = localnet.context
+    const ed25519Account = ed25519Generator()
+    await algorand.account.ensureFundedFromEnvironment(new Address(ed25519Account.ed25519Pubkey), algo(1))
+
+    const name = uuid()
+    process.env[`${name}_SECRET_KEY`] = Buffer.from(ed25519Account.ed25519SecretKey).toString('hex')
+
+    const fromEnv = await algorand.account.fromEnvironment(name)
+
+    await algorand.send.payment({
+      sender: fromEnv.addr,
+      receiver: fromEnv.addr,
+      amount: algo(0),
+    })
+  })
+
+  test('hd secret key from ENV', async () => {
+    const { algorand } = localnet.context
+    const { accountGenerator } = await peikertXHdWalletGenerator()
+    const generated = await accountGenerator(0, 0)
+
+    await algorand.account.ensureFundedFromEnvironment(new Address(generated.ed25519Pubkey), algo(1))
+
+    const name = uuid()
+    process.env[`${name}_SECRET_KEY`] = Buffer.from(generated.extendedPrivateKey).toString('hex')
+
+    const fromEnv = await algorand.account.fromEnvironment(name)
+
+    await algorand.send.payment({
+      sender: fromEnv.addr,
+      receiver: fromEnv.addr,
+      amount: algo(0),
+    })
   })
 })

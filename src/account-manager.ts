@@ -20,7 +20,7 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction/types'
 import { calculateFundAmount, memoize } from './util'
-import { Ed25519Generator } from '@algorandfoundation/algokit-crypto'
+import { Ed25519Generator, nobleEd25519Generator, recoverDerivedKeypair } from '@algorandfoundation/algokit-crypto'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -354,6 +354,21 @@ export class AccountManager {
 
     if (accountMnemonic) {
       return this.fromMnemonic(accountMnemonic, sender)
+    }
+
+    const accountSk = process.env[`${name.toUpperCase()}_SECRET_KEY`]
+
+    if (accountSk) {
+      const keyBytes = Buffer.from(accountSk, 'hex')
+      if (keyBytes.byteLength === 32) {
+        const keypair = nobleEd25519Generator(keyBytes)
+        return this.signerAccount(generateAddressWithSigners({ ...keypair, sendingAddress: getOptionalAddress(sender) }))
+      } else if (keyBytes.length === 96) {
+        const recovered = recoverDerivedKeypair(keyBytes)
+        return this.signerAccount(generateAddressWithSigners({ ...recovered, sendingAddress: getOptionalAddress(sender) }))
+      } else {
+        throw new Error(`Invalid private key for account ${name}: expected 32 or 96 bytes in hex format, got ${keyBytes.length} bytes`)
+      }
     }
 
     if (await this._clientManager.isLocalNet()) {
