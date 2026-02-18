@@ -1,6 +1,6 @@
 ---
 title: "v8 migration"
-description: "Version 8 of AlgoKit Utils adds support for algosdk@3. This algosdk version has a number of major breaking changes and as a result we have also needed to make some breaking changes to support it. All ..."
+description: "Version 8 of AlgoKit Utils adds support for algosdk@3. This algosdk version has a number of major breaking changes and as a result we have also needed to make some breaking changes to support it. All changes between version 7 and 8 have been made to support algosdk@3."
 ---
 
 Version 8 of AlgoKit Utils adds support for algosdk@3. This algosdk version has a number of major breaking changes and as a result we have also needed to make some breaking changes to support it. All changes between version 7 and 8 have been made to support algosdk@3.
