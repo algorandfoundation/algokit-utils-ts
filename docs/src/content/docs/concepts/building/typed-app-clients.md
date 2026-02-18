@@ -3,8 +3,6 @@ title: "Typed application clients"
 description: "Typed application clients are automatically generated, typed TypeScript deployment and invocation clients for smart contracts that have a defined [ARC-56](https://github.com/algorandfoundation/ARCs/pu..."
 ---
 
-# Typed application clients
-
 Typed application clients are automatically generated, typed TypeScript deployment and invocation clients for smart contracts that have a defined [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) or [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application specification so that the development experience is easier with less upskill ramp-up and less deployment errors. These clients give you a type-safe, intellisense-driven experience for invoking the smart contract.
 
 Typed application clients are the recommended way of interacting with smart contracts. If you don't have/want a typed client, but have an ARC-56/ARC-32 app spec then you can use the [non-typed application clients](../app-client) and if you want to call a smart contract you don't have an app spec file for you can use the underlying [app management](../app) and [app deployment](../app-deploy) functionality to manually construct transactions.

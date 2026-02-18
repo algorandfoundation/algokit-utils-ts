@@ -1,9 +1,7 @@
 ---
-title: 'v10 migration'
+title: 'AlgoKit Utils TypeScript: v9 to v10 Migration Guide'
 description: 'Version 10 of AlgoKit Utils is a major architectural evolution. It eliminates direct dependency on algosdk, introduces unified and type-safe API clients, and migrates all usage to a fluent, modern AlgorandClient. This release breaks compatibility with prior function-based and algosdk-centric patterns. Use this guide to systematically update entry points, imports, transaction, app, and indexer flows for a clean transition to the new modular, address-first interface.'
 ---
-
-# AlgoKit Utils TypeScript: v9 to v10 Migration Guide
 
 ## Overview
 

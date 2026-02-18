@@ -2,8 +2,6 @@
 title: Quick Start
 ---
 
-# Quick Start
-
 Get up and running with AlgoKit Utils in 5 minutes.
 
 ## Prerequisites

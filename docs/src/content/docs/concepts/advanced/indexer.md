@@ -3,8 +3,6 @@ title: "Indexer lookups / searching"
 description: "Indexer lookups / searching is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It provides type-safe indexer API wrappers (no more `Record<str..."
 ---
 
-# Indexer lookups / searching
-
 Indexer lookups / searching is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It provides type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control.
 
 To see some usage examples check out the `automated tests`.

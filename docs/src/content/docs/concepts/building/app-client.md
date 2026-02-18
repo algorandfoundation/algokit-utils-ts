@@ -3,8 +3,6 @@ title: "App client and App factory"
 description: "App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy) and [App managem..."
 ---
 
-# App client and App factory
-
 > [!NOTE]
 > This page covers the untyped app client, but we recommend using [typed clients](../typed-app-clients), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
 

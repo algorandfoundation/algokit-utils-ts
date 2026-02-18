@@ -3,8 +3,6 @@ title: "v8 migration"
 description: "Version 8 of AlgoKit Utils adds support for algosdk@3. This algosdk version has a number of major breaking changes and as a result we have also needed to make some breaking changes to support it. All ..."
 ---
 
-# v8 migration
-
 Version 8 of AlgoKit Utils adds support for algosdk@3. This algosdk version has a number of major breaking changes and as a result we have also needed to make some breaking changes to support it. All changes between version 7 and 8 have been made to support algosdk@3.
 
 Depending on the complexity of your project, you may find that first migrating to version 7, then migrating to version 8 is easier and offers a more gradual experience. Either way this migration will heavily reference the [v7 migration guide](../v7-migration) as it documents the majority of changes you will likely need to make.
