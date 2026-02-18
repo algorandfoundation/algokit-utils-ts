@@ -9,9 +9,14 @@
     "notes": "@isaacs/brace-expansion is bundled inside npm - overrides cannot fix bundled deps, waiting for upstream fix",
     "expiry": "2026-03-01"
   },
-  "1112810": {
+  "1113214": {
     "active": true,
-    "notes": "npm cli vulnerability - bundled dependency, waiting for upstream fix",
-    "expiry": "2026-03-01"
+    "notes": "ajv ReDoS via $data option - dev dep via eslint, waiting for upstream eslint migration off ajv v6",
+    "expiry": "2026-03-18"
+  },
+  "1113249": {
+    "active": true,
+    "notes": "tar hardlink/symlink escape - bundled inside npm, waiting for npm release with tar >=7.5.8",
+    "expiry": "2026-03-18"
   }
 }

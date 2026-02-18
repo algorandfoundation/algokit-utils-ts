@@ -3,8 +3,6 @@ title: "Transaction composer"
 description: "The `TransactionComposer` class allows you to easily compose one or more compliant Algorand transactions and execute and/or simulate them."
 ---
 
-# Transaction composer
-
 The `TransactionComposer` class allows you to easily compose one or more compliant Algorand transactions and execute and/or simulate them.
 
 It's the core of how the [`AlgorandClient`](../../core/algorand-client) class composes and sends transactions.

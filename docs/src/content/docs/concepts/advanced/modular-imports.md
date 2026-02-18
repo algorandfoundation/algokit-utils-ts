@@ -3,8 +3,6 @@ title: "Modular imports"
 description: "AlgoKit Utils is designed with a modular architecture that allows you to import only the functionality you need. This enables better tree-shaking and smaller bundle sizes for your applications."
 ---
 
-# Modular imports
-
 AlgoKit Utils is designed with a modular architecture that allows you to import only the functionality you need. This enables better tree-shaking and smaller bundle sizes for your applications.
 
 ## Package architecture

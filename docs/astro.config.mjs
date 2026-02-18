@@ -1,8 +1,8 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
-import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc';
-import remarkGithubAlerts from 'remark-github-alerts';
+import starlight from '@astrojs/starlight'
+import { defineConfig } from 'astro/config'
+import remarkGithubAlerts from 'remark-github-alerts'
+import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,6 +14,11 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'AlgoKit Utils TypeScript',
+      customCss: [
+        'remark-github-alerts/styles/github-colors-light.css',
+        'remark-github-alerts/styles/github-colors-dark-media.css',
+        'remark-github-alerts/styles/github-base.css',
+      ],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/algorandfoundation/algokit-utils-ts' },
         { icon: 'discord', label: 'Discord', href: 'https://discord.gg/algorand' },
@@ -108,4 +113,4 @@ export default defineConfig({
       ],
     }),
   ],
-});
+})
