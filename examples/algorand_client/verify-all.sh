@@ -8,7 +8,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Array of example files in order (01-15)
+# Array of example files in order (01-16)
 EXAMPLES=(
     "01-client-instantiation.ts"
     "02-algo-amount.ts"
@@ -25,6 +25,7 @@ EXAMPLES=(
     "13-app-deployer.ts"
     "14-client-manager.ts"
     "15-error-transformers.ts"
+    "16-leases.ts"
 )
 
 # Colors for output
