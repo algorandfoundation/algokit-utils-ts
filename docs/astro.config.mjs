@@ -49,10 +49,16 @@ export default defineConfig({
             gitRevision: 'main',
           },
         }),
-        starlightLinksValidator({
-          errorOnInvalidHashes: false,
-          errorOnLocalLinks: false,
-        }),
+        // Skip link validation during devportal builds — cross-site links
+        // (e.g. /concepts/smart-contracts/...) only resolve in the full portal.
+        ...(process.env.SKIP_LINK_VALIDATION
+          ? []
+          : [
+              starlightLinksValidator({
+                errorOnInvalidHashes: false,
+                errorOnLocalLinks: false,
+              }),
+            ]),
       ],
       sidebar: [...sidebar, typeDocSidebarGroup],
     }),
