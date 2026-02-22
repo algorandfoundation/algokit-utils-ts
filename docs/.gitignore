@@ -1,5 +1,7 @@
 # build output
 dist/
+# devportal build output
+dist-devportal/
 # generated types
 .astro/
 # generated API docs (built by starlight-typedoc)

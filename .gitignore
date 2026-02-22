@@ -53,6 +53,8 @@ coverage
 code-docs/
 out/
 docs/_html/
+dist-devportal/
+devportal-docs.tar.gz
 
 # dotenv environment variable files
 .env
