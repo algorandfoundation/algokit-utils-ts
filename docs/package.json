@@ -8,9 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "normalize-links": "npx tsx normalize-links.ts",
-    "build-sidebar": "npx tsx build-sidebar-json.ts",
-    "build-devportal": "npm run build && npm run normalize-links && npm run build-sidebar"
+    "normalize-links": "tsx normalize-links.ts",
+    "build-sidebar": "tsx build-sidebar-json.ts",
+    "build-devportal": "SKIP_LINK_VALIDATION=1 pnpm run build && pnpm run normalize-links && pnpm run build-sidebar"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.37.6",
