@@ -1,0 +1,102 @@
+name: Publish DevPortal Docs
+
+on:
+  schedule:
+    # Nightly at 2:00 AM UTC
+    - cron: '0 2 * * *'
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to build from'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: write
+
+jobs:
+  publish-docs:
+    name: Build and Publish Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install docs dependencies
+        run: npm ci --prefix docs
+
+      - name: Build devportal artifact
+        working-directory: docs
+        run: npm run build-devportal
+
+      - name: Prepare dist-devportal
+        working-directory: docs
+        run: |
+          mkdir -p dist-devportal/content
+
+          # Copy root content files (index.mdx etc)
+          find src/content/docs -maxdepth 1 -type f \( -name '*.md' -o -name '*.mdx' \) -exec cp {} dist-devportal/content/ \;
+
+          # Copy guides and API content
+          cp -R src/content/docs/guides dist-devportal/content/ 2>/dev/null || true
+          cp -R src/content/docs/api dist-devportal/content/ 2>/dev/null || true
+
+          # Generate manifest
+          cat > dist-devportal/manifest.json <<MANIFEST
+          {
+            "repo": "${GITHUB_REPOSITORY}",
+            "ref": "${GITHUB_SHA}",
+            "tag": "${GITHUB_REF_NAME}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          MANIFEST
+
+      - name: Create tarball
+        working-directory: docs
+        run: |
+          cd dist-devportal
+          tar czf ../devportal-docs.tar.gz .
+
+      - name: Determine release tag
+        id: release-tag
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=docs-latest" >> "$GITHUB_OUTPUT"
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upsert docs-latest release (nightly/manual)
+        if: steps.release-tag.outputs.prerelease == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: docs-latest
+          name: 'Documentation (Latest)'
+          body: 'Rolling pre-release with latest documentation build.'
+          prerelease: true
+          files: docs/devportal-docs.tar.gz
+          fail_on_unmatched_files: true
+
+      - name: Attach to version release (tag push)
+        if: steps.release-tag.outputs.prerelease == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: docs/devportal-docs.tar.gz
+          fail_on_unmatched_files: true
