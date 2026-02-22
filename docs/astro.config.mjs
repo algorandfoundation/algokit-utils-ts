@@ -2,6 +2,7 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 import remarkGithubAlerts from 'remark-github-alerts'
+import starlightLinksValidator from 'starlight-links-validator'
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 import { sidebar } from './sidebar.config'
 
@@ -47,6 +48,10 @@ export default defineConfig({
             excludeReferences: true,
             gitRevision: 'main',
           },
+        }),
+        starlightLinksValidator({
+          errorOnInvalidHashes: false,
+          errorOnLocalLinks: false,
         }),
       ],
       sidebar: [...sidebar, typeDocSidebarGroup],
