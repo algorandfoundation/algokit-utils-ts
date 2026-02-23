@@ -47,8 +47,9 @@ jobs:
       - name: Install docs dependencies
         run: pnpm install --frozen-lockfile --dir docs
 
-      - name: Verify documentation builds
-        run: npm run docs:build
+      - name: Build devportal artifact
+        working-directory: docs
+        run: pnpm run build-devportal
 
   verify-examples:
     runs-on: ubuntu-latest

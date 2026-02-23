@@ -56,8 +56,9 @@ jobs:
       - name: Install docs dependencies
         run: pnpm install --frozen-lockfile --dir docs
 
-      - name: Verify documentation builds
-        run: npm run docs:build
+      - name: Build devportal artifact
+        working-directory: docs
+        run: pnpm run build-devportal
 
   build:
     name: Build
@@ -154,7 +155,8 @@ jobs:
         run: pnpm install --frozen-lockfile --dir docs
 
       - name: Build documentation
-        run: npm run docs:build
+        working-directory: docs
+        run: SKIP_LINK_VALIDATION=1 pnpm run build
 
       - name: Publish docs to GitHub Pages
         id: deployment
