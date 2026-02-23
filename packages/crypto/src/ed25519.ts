@@ -61,3 +61,41 @@ export const nobleEd25519Generator: Ed25519Generator = (seed?: Uint8Array) => {
  * @returns An object containing the ed25519 public key, secret key, and a raw signer function.
  */
 export const ed25519Generator: Ed25519Generator = nobleEd25519Generator
+
+export type Ed25519SigningKey = {
+  ed25519Pubkey: Uint8Array
+  rawEd25519Signer: RawEd25519Signer
+}
+
+export type WrappedEd25519Seed = {
+  unwrapEd25519Seed: () => Promise<Uint8Array>
+  wrapEd25519Seed: () => Promise<void>
+}
+
+export const nobleEd25519SigningKeyFromWrappedSeed = async (wrapUnwrap: WrappedEd25519Seed): Promise<Ed25519SigningKey> => {
+  const signer = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
+    const secretKey = new Uint8Array(32)
+    let signature: Uint8Array
+    try {
+      secretKey.set(await wrapUnwrap.unwrapEd25519Seed())
+      signature = await ed.signAsync(bytesToSign, secretKey)
+    } finally {
+      secretKey.fill(0)
+      await wrapUnwrap.wrapEd25519Seed()
+    }
+    return signature
+  }
+
+  let pubkey: Uint8Array
+  try {
+    pubkey = await ed.getPublicKeyAsync(await wrapUnwrap.unwrapEd25519Seed())
+  } finally {
+    await wrapUnwrap.wrapEd25519Seed()
+  }
+  return {
+    ed25519Pubkey: pubkey,
+    rawEd25519Signer: signer,
+  }
+}
+
+export const ed25519SigningKeyFromWrappedSeed = nobleEd25519SigningKeyFromWrappedSeed

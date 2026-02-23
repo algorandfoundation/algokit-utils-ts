@@ -6,6 +6,7 @@ import {
   ed25519Generator,
   ed25519Verifier,
   nobleEd25519Generator,
+  nobleEd25519SigningKeyFromWrappedSeed,
   nobleEd25519Verifier,
   peikertXHdAccountGenerator,
   peikertXHdWalletGenerator,
@@ -110,5 +111,17 @@ describe('signer', () => {
     // Demonstrate it is not a raw signature
     const isRawValid = await ed25519Verifier(mxBytesSig, message, addressWithSigners.addr.publicKey)
     expect(isRawValid).toBe(false)
+  })
+
+  test('addr with signers from wrapped seed', async () => {
+    const seed = ed.utils.randomSecretKey()
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => seed,
+      wrapEd25519Seed: async () => {},
+    }
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
+    const addressWithSigners = generateAddressWithSigners(signingKey)
+
+    runTests(addressWithSigners, signingKey.ed25519Pubkey)
   })
 })
