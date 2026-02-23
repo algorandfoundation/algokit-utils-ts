@@ -43,13 +43,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 22
 
-      - name: Install dependencies
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install root dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: npm ci --prefix docs
+        run: pnpm install --frozen-lockfile --dir docs
 
       - name: Verify documentation builds
         run: npm run docs:build
@@ -135,14 +140,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
-          cache: 'npm'
+          node-version: 22
 
-      - name: Install dependencies
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install root dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: npm ci --prefix docs
+        run: pnpm install --frozen-lockfile --dir docs
 
       - name: Build documentation
         run: npm run docs:build
