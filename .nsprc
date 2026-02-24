@@ -1,22 +1,7 @@
 {
-  "1112659": {
+  "1113371": {
     "active": true,
-    "notes": "tar is bundled inside npm (used by @semantic-release/npm) - overrides cannot fix bundled deps, waiting for upstream fix",
-    "expiry": "2026-03-01"
-  },
-  "1112954": {
-    "active": true,
-    "notes": "@isaacs/brace-expansion is bundled inside npm - overrides cannot fix bundled deps, waiting for upstream fix",
-    "expiry": "2026-03-01"
-  },
-  "1113214": {
-    "active": true,
-    "notes": "ajv ReDoS via $data option - dev dep via eslint, waiting for upstream eslint migration off ajv v6",
-    "expiry": "2026-03-18"
-  },
-  "1113249": {
-    "active": true,
-    "notes": "tar hardlink/symlink escape - bundled inside npm, waiting for npm release with tar >=7.5.8",
-    "expiry": "2026-03-18"
+    "notes": "This is a dep for dev deps (eslint & tealscript)",
+    "expiry": "2026-03-24"
   }
 }
