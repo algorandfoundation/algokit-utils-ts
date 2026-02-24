@@ -124,4 +124,73 @@ describe('signer', () => {
 
     runTests(addressWithSigners, signingKey.ed25519Pubkey)
   })
+
+  test('wrapped seed rejects invalid seed length when deriving pubkey', async () => {
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => new Uint8Array(31),
+      wrapEd25519Seed: async () => {},
+    }
+
+    await expect(nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)).rejects.toThrow(
+      'Expected unwrapped Ed25519 seed to be 32 bytes, got 31.',
+    )
+  })
+
+  test('wrapped seed rejects invalid seed length when signing', async () => {
+    const seed = ed.utils.randomSecretKey()
+    let unwrapCallCount = 0
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => {
+        unwrapCallCount += 1
+        return unwrapCallCount === 1 ? seed : new Uint8Array(31)
+      },
+      wrapEd25519Seed: async () => {},
+    }
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
+
+    await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow(
+      'Expected unwrapped Ed25519 seed to be 32 bytes, got 31.',
+    )
+  })
+
+  test('wrapped seed reports both pubkey and wrap failures', async () => {
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => {
+        throw new Error('unwrap failed')
+      },
+      wrapEd25519Seed: async () => {
+        throw new Error('wrap failed')
+      },
+    }
+
+    await expect(nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)).rejects.toThrow(
+      'Deriving Ed25519 public key failed and failed to re-wrap Ed25519 seed. Check both errors for details.',
+    )
+  })
+
+  test('wrapped seed reports both signing and wrap failures', async () => {
+    const seed = ed.utils.randomSecretKey()
+    let unwrapShouldFail = false
+    let wrapShouldFail = false
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => {
+        if (unwrapShouldFail) {
+          throw new Error('unwrap failed')
+        }
+        return seed
+      },
+      wrapEd25519Seed: async () => {
+        if (wrapShouldFail) {
+          throw new Error('wrap failed')
+        }
+      },
+    }
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
+
+    unwrapShouldFail = true
+    wrapShouldFail = true
+    await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow(
+      'Signing failed and failed to re-wrap Ed25519 seed. Check both errors for details.',
+    )
+  })
 })
