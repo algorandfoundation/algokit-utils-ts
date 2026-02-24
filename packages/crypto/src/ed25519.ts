@@ -99,28 +99,30 @@ export type WrappedEd25519Seed = {
 /**
  * Creates an Ed25519 signing key from a wrapped seed using the @noble/ed25519 implementation.
  *
+ * NOTE: This function will zero out the seed after the wrap function is called
+ *
  * @param wrapUnwrap - The wrapped seed provider that unwraps and re-wraps the Ed25519 seed.
  * @returns A promise that resolves to an Ed25519 signing key containing the public key and raw signer.
  */
 export const nobleEd25519SigningKeyFromWrappedSeed = async (wrapUnwrap: WrappedEd25519Seed): Promise<Ed25519SigningKey> => {
   const signer = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
-    const secretKey = new Uint8Array(ED25519_SEED_LENGTH)
+    let seed: Uint8Array | undefined = undefined
     let signature!: Uint8Array
     let signingError: unknown
     let wrapError: unknown
     try {
-      const seed = await wrapUnwrap.unwrapEd25519Seed()
+      seed = await wrapUnwrap.unwrapEd25519Seed()
       assertEd25519SeedLength(seed)
-      secretKey.set(seed)
-      signature = await ed.signAsync(bytesToSign, secretKey)
+      signature = await ed.signAsync(bytesToSign, seed)
     } catch (error) {
       signingError = error
     } finally {
-      secretKey.fill(0)
       try {
         await wrapUnwrap.wrapEd25519Seed()
       } catch (error) {
         wrapError = error
+      } finally {
+        seed?.fill(0)
       }
     }
 
@@ -142,8 +144,9 @@ export const nobleEd25519SigningKeyFromWrappedSeed = async (wrapUnwrap: WrappedE
   let pubkey!: Uint8Array
   let pubkeyError: unknown
   let wrapError: unknown
+  let seed: Uint8Array | undefined = undefined
   try {
-    const seed = await wrapUnwrap.unwrapEd25519Seed()
+    seed = await wrapUnwrap.unwrapEd25519Seed()
     assertEd25519SeedLength(seed)
     pubkey = await ed.getPublicKeyAsync(seed)
   } catch (error) {
@@ -153,6 +156,8 @@ export const nobleEd25519SigningKeyFromWrappedSeed = async (wrapUnwrap: WrappedE
       await wrapUnwrap.wrapEd25519Seed()
     } catch (error) {
       wrapError = error
+    } finally {
+      seed?.fill(0)
     }
   }
 
@@ -177,6 +182,8 @@ export const nobleEd25519SigningKeyFromWrappedSeed = async (wrapUnwrap: WrappedE
 /**
  * Creates an ed25519 signing key from a wrapped seed using the default ed25519 implementation (currently @noble/ed25519).
  * The implementation may change in the future. To explicitly use the @noble/ed25519 implementation, use `nobleEd25519SigningKeyFromWrappedSeed`.
+ *
+ * NOTE: This function will zero out the seed after the wrap function is called
  *
  * @param wrapUnwrap - The wrapped seed provider that unwraps and re-wraps the ed25519 seed.
  * @returns A promise that resolves to an ed25519 signing key with public key and raw signer.

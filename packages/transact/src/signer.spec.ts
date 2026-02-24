@@ -116,7 +116,7 @@ describe('signer', () => {
   test('addr with signers from wrapped seed', async () => {
     const seed = ed.utils.randomSecretKey()
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => seed,
+      unwrapEd25519Seed: async () => new Uint8Array(seed),
       wrapEd25519Seed: async () => {},
     }
     const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
