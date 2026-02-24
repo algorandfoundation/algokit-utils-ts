@@ -55,7 +55,7 @@ describe('signer', () => {
     }
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner })
 
-    runTests(addressWithSigners, keypair.publicKey)
+    await runTests(addressWithSigners, keypair.publicKey)
   })
 
   test('generateSigners with @noble/ed25519', async () => {
@@ -66,7 +66,7 @@ describe('signer', () => {
     }
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: publicKey, rawEd25519Signer: rawSigner })
 
-    runTests(addressWithSigners, publicKey)
+    await runTests(addressWithSigners, publicKey)
   })
 
   test('generateSigners with nobleEd25519Generator', async () => {
@@ -75,7 +75,7 @@ describe('signer', () => {
     const generated = ed25519Generator()
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    runTests(addressWithSigners, generated.ed25519Pubkey)
+    await runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('generateSigners with peikertXHdAccountGenerator', async () => {
@@ -83,7 +83,7 @@ describe('signer', () => {
     const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0)
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    runTests(addressWithSigners, generated.ed25519Pubkey)
+    await runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('full example xHD mx bytes flow', async () => {
@@ -122,7 +122,7 @@ describe('signer', () => {
     const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
     const addressWithSigners = generateAddressWithSigners(signingKey)
 
-    runTests(addressWithSigners, signingKey.ed25519Pubkey)
+    await runTests(addressWithSigners, signingKey.ed25519Pubkey)
   })
 
   test('wrapped seed rejects invalid seed length when deriving pubkey', async () => {
