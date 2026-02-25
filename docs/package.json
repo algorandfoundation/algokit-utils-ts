@@ -27,6 +27,7 @@
     "typedoc-plugin-markdown": "^4.9.0"
   },
   "devDependencies": {
+    "@algorandfoundation/devportal-docs": "file:/Users/larkinyoung/dev/af/devportal-fork/packages/devportal-docs/algorandfoundation-devportal-docs-0.1.0.tgz",
     "tsx": "^4.21.0"
   }
 }

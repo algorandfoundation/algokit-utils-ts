@@ -52,7 +52,7 @@ importers:
 packages:
 
   '@algorandfoundation/devportal-docs@file:../../devportal-fork/packages/devportal-docs/algorandfoundation-devportal-docs-0.1.0.tgz':
-    resolution: {integrity: sha512-1XkLXZ4Hp2OZXSUpP4Wyaxmm3S/a0WTz/fUJpz/TUKFgAmWwN4dEpmLv+XT6A0heUHmQg8wpssFEY+fkd/Y+LA==, tarball: file:../../devportal-fork/packages/devportal-docs/algorandfoundation-devportal-docs-0.1.0.tgz}
+    resolution: {integrity: sha512-21dh4HIyfMBz57Iu4mFoRXqHfEi0yFEAs3JnRrg7DlVbWQmycKMDxNLU4kmpSo1aQaextSuI9RMYs0oYOilJpw==, tarball: file:../../devportal-fork/packages/devportal-docs/algorandfoundation-devportal-docs-0.1.0.tgz}
     version: 0.1.0
     engines: {node: '>=18'}
     hasBin: true

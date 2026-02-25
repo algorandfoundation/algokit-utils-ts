@@ -19,6 +19,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'AlgoKit Utils TypeScript',
+      logo: { light: './public/logo-light.png', dark: './public/logo-dark.png', replacesTitle: true },
       customCss: [
         css,
         fonts,
