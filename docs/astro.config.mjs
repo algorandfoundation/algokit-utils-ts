@@ -1,4 +1,5 @@
 // @ts-check
+import { css, fonts } from '@algorandfoundation/devportal-docs/theme'
 import starlight from '@astrojs/starlight'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
@@ -19,6 +20,8 @@ export default defineConfig({
     starlight({
       title: 'AlgoKit Utils TypeScript',
       customCss: [
+        css,
+        fonts,
         './src/styles/global.css',
         'remark-github-alerts/styles/github-colors-light.css',
         'remark-github-alerts/styles/github-colors-dark-media.css',
@@ -50,6 +53,7 @@ export default defineConfig({
           typeDoc: {
             excludeReferences: true,
             gitRevision: 'main',
+            entryFileName: 'index.md',
           },
         }),
         // Skip link validation during devportal builds — cross-site links
