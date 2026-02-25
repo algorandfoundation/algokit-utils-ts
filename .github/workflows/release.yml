@@ -56,6 +56,8 @@ jobs:
       - name: Install docs dependencies
         run: pnpm install --frozen-lockfile --dir docs
 
+      # Verify the devportal artifact builds successfully.
+      # Actual publishing is handled by publish-devportal-docs.yml.
       - name: Build devportal artifact
         working-directory: docs
         run: pnpm run build-devportal

@@ -2,7 +2,7 @@ import type { StarlightUserConfig } from '@astrojs/starlight/types'
 
 /**
  * Serializable replacements for non-serializable sidebar entries.
- * Appended to sidebar.json by build-sidebar-json.mjs (not used locally).
+ * Appended to sidebar.json by build-sidebar-json.ts (not used locally).
  * Replaces typeDocSidebarGroup which can't be serialized.
  */
 export const devportalFallbacks: NonNullable<StarlightUserConfig['sidebar']> = [

@@ -212,7 +212,7 @@ function normalizeLinksInContent(
   // doesn't match patterns inside them (e.g. TemplateVar[bool]("X")).
   const codeSlots: string[] = [];
   const placeholder = (i: number) => `\x00CODE${i}\x00`;
-  let safeContent = content.replace(/```[\s\S]*?```|`[^`\n]+`/g, (m) => {
+  let safeContent = content.replace(/```[\s\S]*?```|`(?:\\`|[^`\n])+`/g, (m) => {
     codeSlots.push(m);
     return placeholder(codeSlots.length - 1);
   });
