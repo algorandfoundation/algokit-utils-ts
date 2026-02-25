@@ -1,5 +1,6 @@
 // @ts-check
 import starlight from '@astrojs/starlight'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 import remarkGithubAlerts from 'remark-github-alerts'
 import starlightLinksValidator from 'starlight-links-validator'
@@ -13,10 +14,12 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkGithubAlerts],
   },
+  vite: { plugins: [tailwindcss()] },
   integrations: [
     starlight({
       title: 'AlgoKit Utils TypeScript',
       customCss: [
+        './src/styles/global.css',
         'remark-github-alerts/styles/github-colors-light.css',
         'remark-github-alerts/styles/github-colors-dark-media.css',
         'remark-github-alerts/styles/github-base.css',
