@@ -8,9 +8,6 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "normalize-links": "tsx normalize-links.ts",
-    "build-sidebar": "tsx build-sidebar-json.ts",
-    "build-devportal": "SKIP_LINK_VALIDATION=1 pnpm run build && pnpm run normalize-links && pnpm run build-sidebar",
     "docs:devportal": "astro build && devportal-docs build"
   },
   "dependencies": {
