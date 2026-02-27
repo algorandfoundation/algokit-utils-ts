@@ -6,9 +6,8 @@ import {
   ed25519Generator,
   ed25519Verifier,
   nobleEd25519Generator,
-  nobleEd25519SigningKeyFromWrappedSeed,
+  nobleEd25519SigningKeyFromWrappedSecret,
   nobleEd25519Verifier,
-  peikertXHdAccountGenerator,
   peikertXHdWalletGenerator,
 } from '@algorandfoundation/algokit-crypto'
 import { LogicSig, LogicSigAccount } from './logicsig'
@@ -55,7 +54,7 @@ describe('signer', () => {
     }
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner })
 
-    await runTests(addressWithSigners, keypair.publicKey)
+    runTests(addressWithSigners, keypair.publicKey)
   })
 
   test('generateSigners with @noble/ed25519', async () => {
@@ -66,7 +65,7 @@ describe('signer', () => {
     }
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: publicKey, rawEd25519Signer: rawSigner })
 
-    await runTests(addressWithSigners, publicKey)
+    runTests(addressWithSigners, publicKey)
   })
 
   test('generateSigners with nobleEd25519Generator', async () => {
@@ -75,23 +74,23 @@ describe('signer', () => {
     const generated = ed25519Generator()
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    await runTests(addressWithSigners, generated.ed25519Pubkey)
+    runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('generateSigners with peikertXHdAccountGenerator', async () => {
-    const { hdRootKey } = await peikertXHdWalletGenerator()
-    const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0)
+    const { accountGenerator } = await peikertXHdWalletGenerator()
+    const generated = await accountGenerator(0, 0)
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    await runTests(addressWithSigners, generated.ed25519Pubkey)
+    runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('full example xHD mx bytes flow', async () => {
-    // Generate a new rootkey
-    const { hdRootKey } = await peikertXHdWalletGenerator() // peikertXHdWalletGenerator from algokit-crypto
+    // Generate a new wallet with rootkey and account generator
+    const { accountGenerator } = await peikertXHdWalletGenerator() // peikertXHdWalletGenerator from algokit-crypto
 
     // Generate an account at BIP44 path m/44'/283'/0'/0/0
-    const generated = await peikertXHdAccountGenerator(hdRootKey, 0, 0) // peikertXHdAccountGenerator from algokit-crypto
+    const generated = await accountGenerator(0, 0) // accountGenerator from peikertXHdWalletGenerator result
 
     // Generate Algorand-specific signing functions
     const addressWithSigners = generateAddressWithSigners(generated) // generateAddressWithSigners from algokit-transact
@@ -119,7 +118,33 @@ describe('signer', () => {
       unwrapEd25519Seed: async () => new Uint8Array(seed),
       wrapEd25519Seed: async () => {},
     }
-    const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
+    const addressWithSigners = generateAddressWithSigners(signingKey)
+
+    await runTests(addressWithSigners, signingKey.ed25519Pubkey)
+  })
+
+  test('addr with signers from wrapped scalar || prefix', async () => {
+    const { accountGenerator } = await peikertXHdWalletGenerator()
+    const generated = await accountGenerator(0, 0)
+    const wrappedScalarAndPrefix = {
+      unwrapHdScalarAndPrefix: async () => new Uint8Array(generated.extendedPrivateKey.slice(0, 64)),
+      wrapHdScalarAndPrefix: async () => {},
+    }
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedScalarAndPrefix)
+    const addressWithSigners = generateAddressWithSigners(signingKey)
+
+    await runTests(addressWithSigners, signingKey.ed25519Pubkey)
+  })
+
+  test('addr with signers from wrapped extended private key', async () => {
+    const { accountGenerator } = await peikertXHdWalletGenerator()
+    const generated = await accountGenerator(0, 0)
+    const wrappedExtendedPrivateKey = {
+      unwrapHdExtendedPrivateKey: async () => new Uint8Array(generated.extendedPrivateKey),
+      wrapHdExtendedPrivateKey: async () => {},
+    }
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedExtendedPrivateKey)
     const addressWithSigners = generateAddressWithSigners(signingKey)
 
     await runTests(addressWithSigners, signingKey.ed25519Pubkey)
@@ -131,7 +156,7 @@ describe('signer', () => {
       wrapEd25519Seed: async () => {},
     }
 
-    await expect(nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)).rejects.toThrow(
+    await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)).rejects.toThrow(
       'Expected unwrapped Ed25519 seed to be 32 bytes, got 31.',
     )
   })
@@ -146,7 +171,7 @@ describe('signer', () => {
       },
       wrapEd25519Seed: async () => {},
     }
-    const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
 
     await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow(
       'Expected unwrapped Ed25519 seed to be 32 bytes, got 31.',
@@ -163,7 +188,7 @@ describe('signer', () => {
       },
     }
 
-    await expect(nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)).rejects.toThrow(
+    await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)).rejects.toThrow(
       'Deriving Ed25519 public key failed and failed to re-wrap Ed25519 seed. Check both errors for details.',
     )
   })
@@ -185,7 +210,7 @@ describe('signer', () => {
         }
       },
     }
-    const signingKey = await nobleEd25519SigningKeyFromWrappedSeed(wrappedSeed)
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
 
     unwrapShouldFail = true
     wrapShouldFail = true
