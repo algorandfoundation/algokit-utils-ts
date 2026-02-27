@@ -57,7 +57,7 @@ export type WrappedHdScalarAndPrefix = {
    */
   unwrapHdScalarAndPrefix: () => Promise<Uint8Array>
   /**
-   * Re-wraps the scalar || prefix  after use.
+   * Re-wraps the scalar || prefix after use.
    */
   wrapHdScalarAndPrefix: () => Promise<void>
 }
@@ -71,7 +71,7 @@ export type WrappedHdExtendedPrivateKey = {
    */
   unwrapHdExtendedPrivateKey: () => Promise<Uint8Array>
   /**
-   * Re-wraps the scalar || prefix  after use.
+   * Re-wraps the scalar || prefix || chain_code after use.
    */
   wrapHdExtendedPrivateKey: () => Promise<void>
 }

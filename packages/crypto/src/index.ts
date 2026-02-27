@@ -16,7 +16,7 @@ const ED25519_SEED_LENGTH = 32
 const ED25519_SCALAR_AND_PREFIX_LENGTH = 64
 const ED25519_EXTENDED_PRIVATE_KEY_LENGTH = 96
 
-const assertEd25519SecretLength = (seed: Uint8Array, secretType: 'seed' | 'scalar || prefix' | 'extended'): void => {
+const assertEd25519SecretLength = (secret: Uint8Array, secretType: 'seed' | 'scalar || prefix' | 'extended'): void => {
   let expectedLength: number
   switch (secretType) {
     case 'seed':
@@ -32,15 +32,15 @@ const assertEd25519SecretLength = (seed: Uint8Array, secretType: 'seed' | 'scala
       throw new Error(`Unknown secret type: ${secretType}`)
   }
 
-  if (seed.length !== expectedLength) {
-    throw new Error(`Expected unwrapped Ed25519 ${secretType} to be ${expectedLength} bytes, got ${seed.length}.`)
+  if (secret.length !== expectedLength) {
+    throw new Error(`Expected unwrapped Ed25519 ${secretType} to be ${expectedLength} bytes, got ${secret.length}.`)
   }
 }
 
 const throwWrapUnwrapErrors = (operationError: unknown, wrapError: unknown, operationName: string): never => {
   throw new AggregateError(
     [operationError, wrapError],
-    `${operationName} failed and failed to re-wrap Ed25519 seed. Check both errors for details.`,
+    `${operationName} failed and failed to re-wrap Ed25519 secret. Check both errors for details.`,
   )
 }
 
@@ -82,9 +82,9 @@ function rawPubkey(extendedSecretKey: Uint8Array): Uint8Array {
 /**
  * Creates an Ed25519 signing key from a wrapped secret using the @noble/ed25519 implementation.
  *
- * NOTE: This function will zero out the seed after the wrap function is called
+ * NOTE: This function will zero out the unwrapped secret after the wrap function is called.
  *
- * @param wrapUnwrap - The wrapped seed provider that unwraps and re-wraps the Ed25519 secret.
+ * @param wrapUnwrap - The wrapped secret provider that unwraps and re-wraps the Ed25519 secret.
  * @returns A promise that resolves to an Ed25519 signing key containing the public key and raw signer.
  */
 export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: WrappedEd25519Secret): Promise<Ed25519SigningKey> => {
@@ -101,7 +101,7 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
 
   const signer = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
     let secret: Uint8Array | undefined = undefined
-    let signature!: Uint8Array
+    let signature: Uint8Array | undefined = undefined
     let signingError: unknown
     let wrapError: unknown
     try {
@@ -144,10 +144,14 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
       throw wrapError
     }
 
+    if (signature === undefined) {
+      throw new Error('Signing failed unexpectedly without an error.')
+    }
+
     return signature
   }
 
-  let pubkey!: Uint8Array
+  let pubkey: Uint8Array | undefined = undefined
   let pubkeyError: unknown
   let wrapError: unknown
   let secret: Uint8Array | undefined = undefined
@@ -191,6 +195,10 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
     throw wrapError
   }
 
+  if (pubkey === undefined) {
+    throw new Error('Deriving Ed25519 public key failed unexpectedly without an error.')
+  }
+
   return {
     ed25519Pubkey: pubkey,
     rawEd25519Signer: signer,
@@ -198,12 +206,12 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
 }
 
 /**
- * Creates an ed25519 signing key from a wrapped seed using the default ed25519 implementation (currently @noble/ed25519).
- * The implementation may change in the future. To explicitly use the @noble/ed25519 implementation, use `nobleEd25519SigningKeyFromWrappedSeed`.
+ * Creates an ed25519 signing key from a wrapped secret using the default ed25519 implementation (currently @noble/ed25519).
+ * The implementation may change in the future. To explicitly use the @noble/ed25519 implementation, use `nobleEd25519SigningKeyFromWrappedSecret`.
  *
- * NOTE: This function will zero out the seed after the wrap function is called
+ * NOTE: This function will zero out the unwrapped secret after the wrap function is called.
  *
- * @param wrapUnwrap - The wrapped seed provider that unwraps and re-wraps the ed25519 seed.
+ * @param wrapUnwrap - The wrapped secret provider that unwraps and re-wraps the ed25519 secret.
  * @returns A promise that resolves to an ed25519 signing key with public key and raw signer.
  */
 export const ed25519SigningKeyFromWrappedSecret = nobleEd25519SigningKeyFromWrappedSecret

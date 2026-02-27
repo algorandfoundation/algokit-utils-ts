@@ -54,7 +54,7 @@ describe('signer', () => {
     }
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: keypair.publicKey, rawEd25519Signer: rawSigner })
 
-    runTests(addressWithSigners, keypair.publicKey)
+    await runTests(addressWithSigners, keypair.publicKey)
   })
 
   test('generateSigners with @noble/ed25519', async () => {
@@ -65,7 +65,7 @@ describe('signer', () => {
     }
     const addressWithSigners = generateAddressWithSigners({ ed25519Pubkey: publicKey, rawEd25519Signer: rawSigner })
 
-    runTests(addressWithSigners, publicKey)
+    await runTests(addressWithSigners, publicKey)
   })
 
   test('generateSigners with nobleEd25519Generator', async () => {
@@ -74,7 +74,7 @@ describe('signer', () => {
     const generated = ed25519Generator()
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    runTests(addressWithSigners, generated.ed25519Pubkey)
+    await runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('generateSigners with peikertXHdAccountGenerator', async () => {
@@ -82,7 +82,7 @@ describe('signer', () => {
     const generated = await accountGenerator(0, 0)
     const addressWithSigners = generateAddressWithSigners(generated)
 
-    runTests(addressWithSigners, generated.ed25519Pubkey)
+    await runTests(addressWithSigners, generated.ed25519Pubkey)
   })
 
   test('full example xHD mx bytes flow', async () => {
@@ -189,7 +189,7 @@ describe('signer', () => {
     }
 
     await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)).rejects.toThrow(
-      'Deriving Ed25519 public key failed and failed to re-wrap Ed25519 seed. Check both errors for details.',
+      'Deriving Ed25519 public key failed and failed to re-wrap Ed25519 secret. Check both errors for details.',
     )
   })
 
@@ -215,7 +215,65 @@ describe('signer', () => {
     unwrapShouldFail = true
     wrapShouldFail = true
     await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow(
-      'Signing failed and failed to re-wrap Ed25519 seed. Check both errors for details.',
+      'Signing failed and failed to re-wrap Ed25519 secret. Check both errors for details.',
     )
+  })
+
+  test('wrapped HD scalar and prefix rejects invalid length', async () => {
+    const wrappedHdScalarAndPrefix = {
+      unwrapHdScalarAndPrefix: async () => new Uint8Array(63),
+      wrapHdScalarAndPrefix: async () => {},
+    }
+
+    await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdScalarAndPrefix)).rejects.toThrow(
+      'Expected unwrapped Ed25519 scalar || prefix to be 64 bytes, got 63.',
+    )
+  })
+
+  test('wrapped HD extended private key rejects invalid length', async () => {
+    const wrappedHdExtendedPrivateKey = {
+      unwrapHdExtendedPrivateKey: async () => new Uint8Array(95),
+      wrapHdExtendedPrivateKey: async () => {},
+    }
+
+    await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)).rejects.toThrow(
+      'Expected unwrapped Ed25519 extended to be 96 bytes, got 95.',
+    )
+  })
+
+  test('wrapped seed zeroes seed after successful signing', async () => {
+    const seed = ed.utils.randomSecretKey()
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => seed,
+      wrapEd25519Seed: async () => {},
+    }
+
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
+    await signingKey.rawEd25519Signer(new Uint8Array([10, 20, 30]))
+
+    expect(Array.from(seed).every((byte) => byte === 0)).toBe(true)
+  })
+
+  test('wrapped seed zeroes seed after failed signing', async () => {
+    const seed = ed.utils.randomSecretKey()
+    let unwrapCallCount = 0
+    let wrapCallCount = 0
+    const wrappedSeed = {
+      unwrapEd25519Seed: async () => {
+        unwrapCallCount += 1
+        return unwrapCallCount === 1 ? new Uint8Array(seed) : seed
+      },
+      wrapEd25519Seed: async () => {
+        wrapCallCount += 1
+        if (wrapCallCount > 1) {
+          throw new Error('wrap failed')
+        }
+      },
+    }
+
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
+    await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow('wrap failed')
+
+    expect(Array.from(seed).every((byte) => byte === 0)).toBe(true)
   })
 })
