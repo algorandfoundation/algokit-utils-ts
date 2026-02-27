@@ -18,5 +18,10 @@
     "active": true,
     "notes": "tar hardlink/symlink escape - bundled inside npm, waiting for npm release with tar >=7.5.8",
     "expiry": "2026-03-18"
+  },
+  "1113296": {
+    "active": true,
+    "notes": "minimatch ReDoS via glob, test-exclude, typescript-eslint, eslint v8, npm — requires eslint v9 + vitest v4 migration or upstream fix",
+    "expiry": "2026-06-01"
   }
 }

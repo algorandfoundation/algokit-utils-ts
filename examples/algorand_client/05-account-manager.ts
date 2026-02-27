@@ -188,26 +188,55 @@ async function main() {
 
   printSuccess('Created logic signature account')
 
-  // Step 7: Create a rekeyed account reference with algorand.account.rekeyed()
-  printStep(7, 'Create rekeyed account with algorand.account.rekeyed()')
-  printInfo('rekeyed() creates a reference to an account that has been rekeyed')
-  printInfo('The "sender" is the original address, but signing uses a different account')
+  // Step 7: On-chain rekey with algorand.account.rekeyAccount()
+  printStep(7, 'On-chain rekey with algorand.account.rekeyAccount()')
+  printInfo('rekeyAccount() performs an on-chain rekey transaction')
+  printInfo('After rekeying, transactions from the original account are signed by the auth account')
 
   // Create an account that will be the "auth" account (the one that signs)
   const authAccount = algorand.account.random()
 
-  // Create a rekeyed reference: sender = randomAccount, but auth = authAccount
-  const rekeyedAccount = algorand.account.rekeyed(randomAccount.addr, authAccount)
+  // Fund both accounts so we can demonstrate the rekey
+  printInfo(`\nFunding accounts for rekey demonstration...`)
+  await algorand.account.ensureFundedFromEnvironment(randomAccount.addr, algo(5))
+  await algorand.account.ensureFundedFromEnvironment(authAccount.addr, algo(5))
+  printInfo(`  randomAccount: ${shortenAddress(randomAccount.addr.toString())} (funded)`)
+  printInfo(`  authAccount: ${shortenAddress(authAccount.addr.toString())} (funded)`)
 
-  printInfo(`\nRekeyed account reference created:`)
+  // Perform the on-chain rekey: randomAccount will now be signed by authAccount
+  printInfo(`\nRekeying randomAccount to authAccount...`)
+  const rekeyResult = await algorand.account.rekeyAccount(randomAccount.addr, authAccount)
+  printInfo(`  txId: ${rekeyResult.txIds[0]}`)
+  printInfo(`  confirmed in round: ${rekeyResult.confirmation.confirmedRound}`)
+  printSuccess('On-chain rekey completed')
+
+  // Verify the rekey by checking on-chain account info
+  const rekeyedInfo = await algorand.account.getInformation(randomAccount.addr)
+  printInfo(`\nOn-chain verification:`)
+  printInfo(`  authAddr: ${rekeyedInfo.authAddr ? shortenAddress(rekeyedInfo.authAddr.toString()) : 'none'}`)
+
+  // Send a payment from randomAccount — now signed by authAccount automatically
+  printInfo(`\nSending payment from rekeyed account to verify...`)
+  const rekeyPayment = await algorand.send.payment({
+    sender: randomAccount.addr,
+    receiver: authAccount.addr,
+    amount: algo(1),
+  })
+  printInfo(`  txId: ${rekeyPayment.txIds[0]}`)
+  printInfo(`  confirmed in round: ${rekeyPayment.confirmation.confirmedRound}`)
+  printSuccess('Payment from rekeyed account succeeded (signed by authAccount)')
+
+  // Also show rekeyed() for creating a manual reference
+  printInfo(`\nYou can also create a rekeyed reference manually with rekeyed():`)
+  const rekeyedAccount = algorand.account.rekeyed(randomAccount.addr, authAccount)
   printInfo(`  sender addr: ${shortenAddress(rekeyedAccount.addr.toString())}`)
   printInfo(`  auth account: ${shortenAddress(authAccount.addr.toString())}`)
   printInfo(`  signer: Uses authAccount's signer`)
   printInfo('')
-  printInfo('Use case: After rekeying account A to account B,')
-  printInfo('transactions from A are signed by B\'s private key')
+  printInfo('Note: rekeyAccount() auto-registers the rekeyed signer,')
+  printInfo('so rekeyed() is only needed if you set up the reference without the on-chain call')
 
-  printSuccess('Created rekeyed account reference')
+  printSuccess('Demonstrated on-chain rekey flow')
 
   // Step 8: Fetch account information with algorand.account.getInformation()
   printStep(8, 'Fetch account info with algorand.account.getInformation()')
