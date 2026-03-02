@@ -8,6 +8,7 @@
  * - How signers are automatically used when sending transactions
  * - Registering multiple signers for different accounts
  * - How the default signer is used when no specific signer is registered
+ * - getSigner() and getAccount() to retrieve previously registered signers
  *
  * Prerequisites:
  * - LocalNet running (via `algokit localnet start`)
@@ -255,8 +256,36 @@ async function main() {
 
   printSuccess('Successfully configured AlgorandClient with method chaining')
 
-  // Step 9: Summary
-  printStep(9, 'Summary')
+  // Step 9: Retrieve signers and accounts with getSigner() and getAccount()
+  printStep(9, 'Retrieve signers and accounts with getSigner() and getAccount()')
+  printInfo('algorand.account.getSigner(address) retrieves the TransactionSigner registered for an address')
+  printInfo('algorand.account.getAccount(address) retrieves the full AddressWithSigner for an address')
+
+  // Retrieve the signer for account1 (registered via method chaining in step 8)
+  const retrievedSigner = algorand8.account.getSigner(account1.addr)
+  printInfo(`\nRetrieved signer for Account 1: ${shortenAddress(account1.addr.toString())}`)
+  printSuccess('getSigner() returned a TransactionSigner')
+
+  // Retrieve the full AddressWithSigner for account2
+  const retrievedAccount = algorand8.account.getAccount(account2.addr)
+  printInfo(`\nRetrieved account for Account 2: ${shortenAddress(retrievedAccount.addr.toString())}`)
+  printSuccess('getAccount() returned AddressWithSigner (addr + signer)')
+
+  // Use the retrieved signer in a transaction via addTransaction
+  const txnWithRetrievedSigner = await algorand8.send.payment({
+    sender: account1.addr,
+    receiver: account2.addr,
+    amount: algo(0.05),
+    signer: retrievedSigner,
+  })
+  printInfo(`\nPayment sent using retrieved signer:`)
+  printInfo(`  Transaction ID: ${txnWithRetrievedSigner.txIds[0]}`)
+  printInfo(`  Confirmed in round: ${txnWithRetrievedSigner.confirmation.confirmedRound}`)
+
+  printSuccess('Successfully retrieved and used signers via getSigner() and getAccount()')
+
+  // Step 10: Summary
+  printStep(10, 'Summary')
   printInfo('Signer configuration methods:')
   printInfo('')
   printInfo('setDefaultSigner(signer):')
@@ -272,6 +301,14 @@ async function main() {
   printInfo('setSigner(address, signer):')
   printInfo('  - Registers a TransactionSigner for a specific address')
   printInfo('  - Gives fine-grained control over signing')
+  printInfo('')
+  printInfo('getSigner(address):')
+  printInfo('  - Retrieves the TransactionSigner registered for an address')
+  printInfo('  - Falls back to default signer if no specific signer registered')
+  printInfo('')
+  printInfo('getAccount(address):')
+  printInfo('  - Retrieves the AddressWithSigner for an address')
+  printInfo('  - Returns both the address and its registered signer')
   printInfo('')
   printInfo('Signer resolution order:')
   printInfo('  1. Specific signer registered for the address')
