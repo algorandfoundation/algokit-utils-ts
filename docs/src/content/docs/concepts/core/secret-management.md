@@ -25,6 +25,12 @@ plaintext and ensures it is only loaded in memory when signing.
 When working with a ed25519 seed or mnemonic, you can implement the `WrappedEd25519Seed` interface which allows you to wrap and unwrap the seed as needed. For example, with `@napi-rs/keyring`:
 
 ```ts
+import { ed25519SigningKeyFromWrappedSecret, WrappedEd25519Seed } from '@algorandfoundation/algokit-crypto'
+import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
+import { mnemonicFromSeed, seedFromMnemonic } from '@algorandfoundation/algokit-utils/algo25'
+import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
+import { Entry } from '@napi-rs/keyring'
+
 const wrappedSeed: WrappedEd25519Seed = {
   unwrapEd25519Seed: async () => {
     const entry = new Entry('algorand', MNEMONIC_NAME)
@@ -61,6 +67,15 @@ const pay = await AlgorandClient.defaultLocalNet().send.payment({
 HD accounts have a 96-byte expanded secret key that can be used in a similar manner to the ed25519 seed, except we need to implement `WrappedHDExpandedSecretKey` interface. For example, with `@napi-rs/keyring`:
 
 ```ts
+import {
+  ed25519SigningKeyFromWrappedSecret,
+  peikertXHdWalletGenerator,
+  WrappedHdExtendedPrivateKey,
+} from '@algorandfoundation/algokit-crypto'
+import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
+import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
+import { Entry } from '@napi-rs/keyring'
+
 const wrappedSeed: WrappedHdExtendedPrivateKey = {
   unwrapHdExtendedPrivateKey: async () => {
     const entry = new Entry('algorand', SECRET_NAME)
@@ -112,6 +127,11 @@ If you are using a KMS in CI, the best practice for performing signing operation
 Using the KMS, you can retrieve the public key and implement `RawEd25519Signer` signer which can then be used to generate an Algorand address and all Algorand-specific signing functions. For example, with AWS:
 
 ```ts
+import { RawEd25519Signer } from '@algorandfoundation/algokit-crypto'
+import { AlgorandClient, microAlgos } from '@algorandfoundation/algokit-utils'
+import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
+import { KMSClient, SignCommand, GetPublicKeyCommand, SignCommandInput, GetPublicKeyCommandInput } from '@aws-sdk/client-kms'
+
 // The following environment variables must be set for this to work:
 // - AWS_REGION
 // - KEY_ID
