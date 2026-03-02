@@ -1,6 +1,6 @@
 import { Ed25519SigningKey, WrappedEd25519Seed } from './ed25519'
 import * as ed from '@noble/ed25519'
-import { WrappedHdExtendedPrivateKey, WrappedHdScalarAndPrefix } from './hd'
+import { WrappedHdExtendedPrivateKey } from './hd'
 import { ed25519 } from '@noble/curves/ed25519.js'
 import { sha512 } from '@noble/hashes/sha2.js'
 import { bytesToNumberLE, numberToBytesLE } from '@noble/curves/utils.js'
@@ -10,22 +10,18 @@ export * from './ed25519'
 export * from './hash'
 export * from './hd'
 
-export type WrappedEd25519Secret = WrappedEd25519Seed | WrappedHdScalarAndPrefix | WrappedHdExtendedPrivateKey
+export type WrappedEd25519Secret = WrappedEd25519Seed | WrappedHdExtendedPrivateKey
 
 const ED25519_SEED_LENGTH = 32
-const ED25519_SCALAR_AND_PREFIX_LENGTH = 64
 const ED25519_EXTENDED_PRIVATE_KEY_LENGTH = 96
 
-const assertEd25519SecretLength = (secret: Uint8Array, secretType: 'seed' | 'scalar || prefix' | 'extended'): void => {
+const assertEd25519SecretLength = (secret: Uint8Array, secretType: 'ed25519 seed' | 'HD extended key'): void => {
   let expectedLength: number
   switch (secretType) {
-    case 'seed':
+    case 'ed25519 seed':
       expectedLength = ED25519_SEED_LENGTH
       break
-    case 'scalar || prefix':
-      expectedLength = ED25519_SCALAR_AND_PREFIX_LENGTH
-      break
-    case 'extended':
+    case 'HD extended key':
       expectedLength = ED25519_EXTENDED_PRIVATE_KEY_LENGTH
       break
     default:
@@ -33,7 +29,7 @@ const assertEd25519SecretLength = (secret: Uint8Array, secretType: 'seed' | 'sca
   }
 
   if (secret.length !== expectedLength) {
-    throw new Error(`Expected unwrapped Ed25519 ${secretType} to be ${expectedLength} bytes, got ${secret.length}.`)
+    throw new Error(`Expected unwrapped ${secretType} to be ${expectedLength} bytes, got ${secret.length}.`)
   }
 }
 
@@ -91,8 +87,6 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
   let wrapFunction: () => Promise<void>
   if ('wrapEd25519Seed' in wrapUnwrap) {
     wrapFunction = wrapUnwrap.wrapEd25519Seed
-  } else if ('wrapHdScalarAndPrefix' in wrapUnwrap) {
-    wrapFunction = wrapUnwrap.wrapHdScalarAndPrefix
   } else if ('wrapHdExtendedPrivateKey' in wrapUnwrap) {
     wrapFunction = wrapUnwrap.wrapHdExtendedPrivateKey
   } else {
@@ -107,15 +101,11 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
     try {
       if ('unwrapEd25519Seed' in wrapUnwrap) {
         secret = await wrapUnwrap.unwrapEd25519Seed()
-        assertEd25519SecretLength(secret, 'seed')
+        assertEd25519SecretLength(secret, 'ed25519 seed')
         signature = await ed.signAsync(bytesToSign, secret)
-      } else if ('unwrapHdScalarAndPrefix' in wrapUnwrap) {
-        secret = await wrapUnwrap.unwrapHdScalarAndPrefix()
-        assertEd25519SecretLength(secret, 'scalar || prefix')
-        signature = rawSign(secret, bytesToSign)
       } else if ('unwrapHdExtendedPrivateKey' in wrapUnwrap) {
         secret = await wrapUnwrap.unwrapHdExtendedPrivateKey()
-        assertEd25519SecretLength(secret, 'extended')
+        assertEd25519SecretLength(secret, 'HD extended key')
         signature = rawSign(secret.slice(0, 64), bytesToSign)
       } else {
         throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
@@ -158,15 +148,11 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
   try {
     if ('unwrapEd25519Seed' in wrapUnwrap) {
       secret = await wrapUnwrap.unwrapEd25519Seed()
-      assertEd25519SecretLength(secret, 'seed')
+      assertEd25519SecretLength(secret, 'ed25519 seed')
       pubkey = await ed.getPublicKeyAsync(secret)
-    } else if ('unwrapHdScalarAndPrefix' in wrapUnwrap) {
-      secret = await wrapUnwrap.unwrapHdScalarAndPrefix()
-      assertEd25519SecretLength(secret, 'scalar || prefix')
-      pubkey = rawPubkey(secret)
     } else if ('unwrapHdExtendedPrivateKey' in wrapUnwrap) {
       secret = await wrapUnwrap.unwrapHdExtendedPrivateKey()
-      assertEd25519SecretLength(secret, 'extended')
+      assertEd25519SecretLength(secret, 'HD extended key')
       pubkey = rawPubkey(secret.slice(0, 64))
     } else {
       throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')

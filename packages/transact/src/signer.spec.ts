@@ -124,19 +124,6 @@ describe('signer', () => {
     await runTests(addressWithSigners, signingKey.ed25519Pubkey)
   })
 
-  test('addr with signers from wrapped scalar || prefix', async () => {
-    const { accountGenerator } = await peikertXHdWalletGenerator()
-    const generated = await accountGenerator(0, 0)
-    const wrappedScalarAndPrefix = {
-      unwrapHdScalarAndPrefix: async () => new Uint8Array(generated.extendedPrivateKey.slice(0, 64)),
-      wrapHdScalarAndPrefix: async () => {},
-    }
-    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedScalarAndPrefix)
-    const addressWithSigners = generateAddressWithSigners(signingKey)
-
-    await runTests(addressWithSigners, signingKey.ed25519Pubkey)
-  })
-
   test('addr with signers from wrapped extended private key', async () => {
     const { accountGenerator } = await peikertXHdWalletGenerator()
     const generated = await accountGenerator(0, 0)
@@ -157,7 +144,7 @@ describe('signer', () => {
     }
 
     await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)).rejects.toThrow(
-      'Expected unwrapped Ed25519 seed to be 32 bytes, got 31.',
+      'Expected unwrapped ed25519 seed to be 32 bytes, got 31.',
     )
   })
 
@@ -174,7 +161,7 @@ describe('signer', () => {
     const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
 
     await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow(
-      'Expected unwrapped Ed25519 seed to be 32 bytes, got 31.',
+      'Expected unwrapped ed25519 seed to be 32 bytes, got 31.',
     )
   })
 
@@ -219,17 +206,6 @@ describe('signer', () => {
     )
   })
 
-  test('wrapped HD scalar and prefix rejects invalid length', async () => {
-    const wrappedHdScalarAndPrefix = {
-      unwrapHdScalarAndPrefix: async () => new Uint8Array(63),
-      wrapHdScalarAndPrefix: async () => {},
-    }
-
-    await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdScalarAndPrefix)).rejects.toThrow(
-      'Expected unwrapped Ed25519 scalar || prefix to be 64 bytes, got 63.',
-    )
-  })
-
   test('wrapped HD extended private key rejects invalid length', async () => {
     const wrappedHdExtendedPrivateKey = {
       unwrapHdExtendedPrivateKey: async () => new Uint8Array(95),
@@ -237,7 +213,7 @@ describe('signer', () => {
     }
 
     await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)).rejects.toThrow(
-      'Expected unwrapped Ed25519 extended to be 96 bytes, got 95.',
+      'Expected unwrapped HD extended key to be 96 bytes, got 95.',
     )
   })
 

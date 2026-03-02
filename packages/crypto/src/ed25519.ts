@@ -68,7 +68,7 @@ export type Ed25519SigningKey = {
 }
 
 /**
- * Represents an Ed25519 seed that can be unwrapped for short-lived use and then re-wrapped.
+ * Represents a 32-byte Ed25519 seed that can be unwrapped for short-lived use and then re-wrapped.
  */
 export type WrappedEd25519Seed = {
   /**
