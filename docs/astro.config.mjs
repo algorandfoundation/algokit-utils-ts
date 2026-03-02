@@ -62,6 +62,7 @@ export default defineConfig({
             { slug: 'concepts/core/transaction' },
             { slug: 'concepts/core/amount' },
             { slug: 'concepts/core/client' },
+            { slug: 'concepts/core/secret-management' },
           ],
         },
         {

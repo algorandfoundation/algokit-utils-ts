@@ -29,6 +29,15 @@ const wrappedSeed: WrappedHdExtendedPrivateKey = {
       throw new Error(`No mnemonic found in keyring for ${SECRET_NAME}`)
     }
 
+    // The last 32 bytes of the extended private key is the chain code, which is not needed for signing. This means in most cases you can
+    // just store the first 64 bytes and then pad the secret to 96 bytes in the unwrap function. If you are storing the full 96 bytes,
+    // you can just return the secret as is.
+    if (esk.length === 64) {
+      const paddedEsk = new Uint8Array(96)
+      paddedEsk.set(esk, 0)
+      return paddedEsk
+    }
+
     return new Uint8Array(esk)
   },
   wrapHdExtendedPrivateKey: async () => {},
