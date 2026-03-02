@@ -4,7 +4,7 @@ Runnable code examples demonstrating every major feature of the `@algorandfounda
 
 ## Overview
 
-This folder contains 116 self-contained examples organized into 9 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
+This folder contains 117 self-contained examples organized into 9 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
 
 ## Prerequisites
 
@@ -104,9 +104,9 @@ High-level AlgorandClient API for simplified blockchain interactions.
 | ---------------------------- | ---------------------------------------------------------------------------------------- |
 | `01-client-instantiation.ts` | Create AlgorandClient via defaultLocalNet, testNet, mainNet, fromEnvironment, fromConfig |
 | `02-algo-amount.ts`          | AlgoAmount utility for safe ALGO/microALGO arithmetic and formatting                     |
-| `03-signer-config.ts`        | Configure transaction signers with setDefaultSigner, setSignerFromAccount, setSigner     |
+| `03-signer-config.ts`        | Configure signers: setDefaultSigner, setSignerFromAccount, setSigner, getSigner, getAccount |
 | `04-params-config.ts`        | Configure suggested params: validity window, caching, cache timeout                      |
-| `05-account-manager.ts`      | Create/import accounts: random, mnemonic, KMD, multisig, logicsig, rekeyed               |
+| `05-account-manager.ts`      | Account management: create, import, rekey, fund, and query accounts                         |
 | `06-send-payment.ts`         | Send ALGO payments with amount, note, and closeRemainderTo                               |
 | `07-send-asset-ops.ts`       | ASA operations: create, config, opt-in, transfer, freeze, clawback, destroy              |
 | `08-send-app-ops.ts`         | Application operations: create, update, call, opt-in, close-out, delete                  |
@@ -117,6 +117,7 @@ High-level AlgorandClient API for simplified blockchain interactions.
 | `13-app-deployer.ts`         | Idempotent app deployment with update/replace strategies                                 |
 | `14-client-manager.ts`       | Access raw algod/indexer/kmd clients and typed app clients                               |
 | `15-error-transformers.ts`   | Register custom error transformers for enhanced debugging                                |
+| `16-leases.ts`               | Prevent duplicate transactions using string and Uint8Array leases                           |
 
 ### Common (`common/`)
 
