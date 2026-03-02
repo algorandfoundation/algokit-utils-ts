@@ -1,15 +1,56 @@
 import { RawEd25519Signer } from '@algorandfoundation/algokit-crypto'
 import { AlgorandClient, microAlgos } from '@algorandfoundation/algokit-utils'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
-import { KMSClient, SignCommand, GetPublicKeyCommand } from '@aws-sdk/client-kms'
+import { KMSClient, SignCommand, GetPublicKeyCommand, SignCommandInput, GetPublicKeyCommandInput } from '@aws-sdk/client-kms'
+import nacl from 'tweetnacl'
 import 'dotenv/config'
 
-// The following environment variables must be set for this to work:
-// - AWS_REGION
-// - KEY_ID
-// - AWS_ACCESS_KEY_ID
-// - AWS_SECRET_ACCESS_KEY
-const kms = new KMSClient({ region: process.env.AWS_REGION })
+// Mock KMSClient for local development/testing when AWS credentials are not available
+class MockKMSClient {
+  private keyPair: nacl.SignKeyPair
+
+  constructor() {
+    console.warn('AWS_REGION not set, using MockKMSClient with in-memory key pair. This is not secure and should only be used for testing.')
+    // Generate a deterministic key pair for consistent testing
+    this.keyPair = nacl.sign.keyPair()
+  }
+
+  async send(command: SignCommand | GetPublicKeyCommand): Promise<unknown> {
+    const cmd = command as { constructor: { name: string }; input?: SignCommandInput | GetPublicKeyCommandInput }
+
+    if (command instanceof SignCommand) {
+      const input = command.input as SignCommandInput
+      if (!input.Message) {
+        throw new Error('No message provided for signing')
+      }
+
+      // Sign the message using tweetnacl
+      const signature = nacl.sign.detached(input.Message, this.keyPair.secretKey)
+
+      return {
+        Signature: signature,
+        SigningAlgorithm: 'ED25519_SHA_512',
+      }
+    }
+
+    if (command instanceof GetPublicKeyCommand) {
+      // Create SPKI format public key (DER-encoded SubjectPublicKeyInfo)
+      // Ed25519 SPKI prefix: 0x30 0x2a 0x30 0x05 0x06 0x03 0x2b 0x65 0x70 0x03 0x21 0x00
+      const ed25519SpkiPrefix = Buffer.from([0x30, 0x2a, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x03, 0x21, 0x00])
+      const publicKey = Buffer.concat([ed25519SpkiPrefix, Buffer.from(this.keyPair.publicKey)])
+
+      return {
+        PublicKey: publicKey,
+        KeySpec: 'ED25519',
+      }
+    }
+
+    throw new Error(`Unsupported command type: ${cmd.constructor.name}`)
+  }
+}
+
+// Use mock client if AWS_REGION is not set, otherwise use real AWS KMS
+const kms = process.env.AWS_REGION ? new KMSClient({ region: process.env.AWS_REGION }) : (new MockKMSClient() as unknown as KMSClient)
 
 const rawEd25519Signer: RawEd25519Signer = async (data: Uint8Array): Promise<Uint8Array> => {
   const resp = await kms.send(
