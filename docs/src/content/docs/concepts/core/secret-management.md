@@ -112,6 +112,11 @@ If you are using a KMS in CI, the best practice for performing signing operation
 Using the KMS, you can retrieve the public key and implement `RawEd25519Signer` signer which can then be used to generate an Algorand address and all Algorand-specific signing functions. For example, with AWS:
 
 ```ts
+// The following environment variables must be set for this to work:
+// - AWS_REGION
+// - KEY_ID
+// - AWS_ACCESS_KEY_ID
+// - AWS_SECRET_ACCESS_KEY
 const kms = new KMSClient({ region: process.env.AWS_REGION });
 
 const rawEd25519Signer: RawEd25519Signer = async (data: Uint8Array): Promise<Uint8Array> => {
