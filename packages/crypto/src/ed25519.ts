@@ -61,3 +61,22 @@ export const nobleEd25519Generator: Ed25519Generator = (seed?: Uint8Array) => {
  * @returns An object containing the ed25519 public key, secret key, and a raw signer function.
  */
 export const ed25519Generator: Ed25519Generator = nobleEd25519Generator
+
+export type Ed25519SigningKey = {
+  ed25519Pubkey: Uint8Array
+  rawEd25519Signer: RawEd25519Signer
+}
+
+/**
+ * Represents a 32-byte Ed25519 seed that can be unwrapped for short-lived use and then re-wrapped.
+ */
+export type WrappedEd25519Seed = {
+  /**
+   * Unwraps and returns the 32-byte Ed25519 seed.
+   */
+  unwrapEd25519Seed: () => Promise<Uint8Array>
+  /**
+   * Re-wraps the Ed25519 seed after use.
+   */
+  wrapEd25519Seed: () => Promise<void>
+}

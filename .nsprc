@@ -1,27 +1,42 @@
 {
-  "1112659": {
+  "1113542": {
     "active": true,
-    "notes": "tar is bundled inside npm (used by @semantic-release/npm) - overrides cannot fix bundled deps, waiting for upstream fix",
-    "expiry": "2026-03-01"
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
   },
-  "1112954": {
+  "1113544": {
     "active": true,
-    "notes": "@isaacs/brace-expansion is bundled inside npm - overrides cannot fix bundled deps, waiting for upstream fix",
-    "expiry": "2026-03-01"
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
   },
-  "1113214": {
+  "1113545": {
     "active": true,
-    "notes": "ajv ReDoS via $data option - dev dep via eslint, waiting for upstream eslint migration off ajv v6",
-    "expiry": "2026-03-18"
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
   },
-  "1113249": {
+  "1113546": {
     "active": true,
-    "notes": "tar hardlink/symlink escape - bundled inside npm, waiting for npm release with tar >=7.5.8",
-    "expiry": "2026-03-18"
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
   },
-  "1113296": {
+  "1113550": {
     "active": true,
-    "notes": "minimatch ReDoS via glob, test-exclude, typescript-eslint, eslint v8, npm — requires eslint v9 + vitest v4 migration or upstream fix",
-    "expiry": "2026-06-01"
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
+  },
+  "1113552": {
+    "active": true,
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
+  },
+  "1113553": {
+    "active": true,
+    "notes": "Dev tooling dependency chain (eslint/typescript-estree -> minimatch)",
+    "expiry": "2026-03-29"
+  },
+  "1113515": {
+    "active": true,
+    "notes": "Dev tooling dependency (rollup used for local build)",
+    "expiry": "2026-03-29"
   }
 }
