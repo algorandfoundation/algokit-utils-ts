@@ -1,3 +1,14 @@
+/**
+ * Example: Ed25519 Signing from AWS KMS
+ *
+ * This example demonstrates how to use the AWS KMS
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
+ */
+
+/* eslint-disable no-console */
+
 import { RawEd25519Signer } from '@algorandfoundation/algokit-crypto'
 import { AlgorandClient, microAlgos } from '@algorandfoundation/algokit-utils'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'

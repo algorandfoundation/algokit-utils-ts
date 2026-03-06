@@ -1,5 +1,15 @@
-/* eslint-disable no-console */
+/**
+ * Example: Ed25519 Signing From Keyring
+ *
+ * This example demonstrates how to retrieve secrets from a keyring and use them to sign
+ * transactions.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
+ * - OS that has keyring support
+ */
 
+/* eslint-disable no-console */
 import { ed25519SigningKeyFromWrappedSecret, WrappedEd25519Seed } from '@algorandfoundation/algokit-crypto'
 import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
 import { mnemonicFromSeed, seedFromMnemonic } from '@algorandfoundation/algokit-utils/algo25'

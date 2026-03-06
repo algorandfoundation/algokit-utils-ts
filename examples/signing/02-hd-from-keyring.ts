@@ -1,4 +1,13 @@
-/* eslint-disable no-console */
+/**
+ * Example: HD Signing From Keyring
+ *
+ * This example demonstrates how to retrieve secrets from a keyring and use them to sign
+ * transactions.
+ *
+ * Prerequisites:
+ * - LocalNet running (via `algokit localnet start`)
+ * - OS that has keyring support
+ */
 
 import {
   ed25519SigningKeyFromWrappedSecret,
