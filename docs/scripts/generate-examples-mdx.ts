@@ -68,7 +68,7 @@ sidebar:
 
 ## Description
 
-${description}
+${description.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\{/g, '&#123;').replace(/\}/g, '&#125;')}
 
 ## Prerequisites
 
