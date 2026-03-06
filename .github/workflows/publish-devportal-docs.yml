@@ -17,6 +17,8 @@ jobs:
         with:
           node-version: 20
 
+      - uses: pnpm/action-setup@v4
+
       - name: Install root dependencies
         run: npm ci
 

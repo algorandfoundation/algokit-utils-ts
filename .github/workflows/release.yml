@@ -45,11 +45,13 @@ jobs:
         with:
           node-version: 22.x
 
+      - uses: pnpm/action-setup@v4
+
       - name: Install dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: npm ci --prefix docs
+        run: cd docs && pnpm install --frozen-lockfile
 
       - name: Verify documentation builds
         run: npm run docs:build
@@ -138,11 +140,13 @@ jobs:
           node-version: 22.x
           cache: 'npm'
 
+      - uses: pnpm/action-setup@v4
+
       - name: Install dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: npm ci --prefix docs
+        run: cd docs && pnpm install --frozen-lockfile
 
       - name: Build documentation
         run: npm run docs:build
