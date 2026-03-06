@@ -2,7 +2,9 @@ name: Publish DevPortal Docs
 
 on:
   workflow_dispatch:
-  pull_request: # temporary: remove once workflow_dispatch is available in UI
+  push:
+    branches: [ci/add-publish-to-devportal-workflow] # change to decoupling, then main when ready
+    tags: ['v*']
 
 permissions:
   contents: write
