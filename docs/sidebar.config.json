@@ -44,6 +44,22 @@
     "autogenerate": { "directory": "migration" }
   },
   {
+    "label": "Examples",
+    "collapsed": true,
+    "items": [
+      { "label": "Overview", "slug": "examples" },
+      { "label": "ABI", "slug": "examples/abi" },
+      { "label": "Algo25", "slug": "examples/algo25" },
+      { "label": "Algod Client", "slug": "examples/algod-client" },
+      { "label": "Algorand Client", "slug": "examples/algorand-client" },
+      { "label": "Common", "slug": "examples/common" },
+      { "label": "Indexer Client", "slug": "examples/indexer-client" },
+      { "label": "KMD Client", "slug": "examples/kmd-client" },
+      { "label": "Testing", "slug": "examples/testing" },
+      { "label": "Transact", "slug": "examples/transact" }
+    ]
+  },
+  {
     "label": "API Reference",
     "collapsed": true,
     "items": [
