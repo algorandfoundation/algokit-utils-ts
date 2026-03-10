@@ -1465,8 +1465,14 @@ export class TransactionComposer {
         validateTransaction(transaction)
         transactions.push(transaction)
 
+        let signer: TransactionSigner | undefined
         if (ctxn.data.signer) {
-          const signer = 'signer' in ctxn.data.signer ? ctxn.data.signer.signer : ctxn.data.signer
+          signer = 'signer' in ctxn.data.signer ? ctxn.data.signer.signer : ctxn.data.signer
+        }
+        if (!signer && typeof ctxn.data.sender === 'object' && 'signer' in ctxn.data.sender) {
+          signer = ctxn.data.sender.signer
+        }
+        if (signer) {
           signers.set(transactionIndex, signer)
         }
         transactionIndex++
