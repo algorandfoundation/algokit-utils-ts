@@ -45,18 +45,18 @@ jobs:
         with:
           node-version: 22.x
 
-      - uses: pnpm/action-setup@v4 # remove version when root migrates to pnpm
+      - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          package_json_file: docs/package.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: cd docs && pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --dir docs
 
       - name: Verify documentation builds
-        run: npm run docs:build
+        run: pnpm --dir docs build
 
   build:
     name: Build
@@ -142,18 +142,18 @@ jobs:
           node-version: 22.x
           cache: 'npm'
 
-      - uses: pnpm/action-setup@v4 # remove version when root migrates to pnpm
+      - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          package_json_file: docs/package.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: cd docs && pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --dir docs
 
       - name: Build documentation
-        run: npm run docs:build
+        run: pnpm --dir docs build
 
       - name: Publish docs to GitHub Pages
         id: deployment

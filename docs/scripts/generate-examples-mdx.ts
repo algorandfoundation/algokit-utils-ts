@@ -134,7 +134,7 @@ for (const [categorySlug, examples] of Object.entries(allExamplesByCategory)) {
       let bulletBuffer: string[] = []
       const flushBullets = () => {
         if (bulletBuffer.length > 0) {
-          descHtml += '<ul>' + bulletBuffer.map((b) => `<li>${escapeForMdx(b)}</li>`).join('') + '</ul>'
+          descHtml += `<ul>${bulletBuffer.map((b) => `<li>${escapeForMdx(b)}</li>`).join('')}</ul>`
           bulletBuffer = []
         }
       }
@@ -191,7 +191,7 @@ npm run example ${examples[0].categoryDir}/01-*.ts
 
 // Top-level examples index — custom card grid matching original index.astro
 const categoryCards = Object.entries(CATEGORIES)
-  .map(([dirName, meta]) => {
+  .map(([_dirName, meta]) => {
     const count = allExamplesByCategory[meta.slug]?.length ?? 0
     return `<a href="${meta.slug}/" class="card">
   <h3>${meta.label}</h3>

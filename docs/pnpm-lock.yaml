@@ -30,9 +30,6 @@ importers:
         specifier: ^4.9.0
         version: 4.10.0(typedoc@0.28.17(typescript@5.9.3))
     devDependencies:
-      '@types/node':
-        specifier: ^22
-        version: 22.19.15
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
