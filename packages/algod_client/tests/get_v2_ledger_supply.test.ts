@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
+import { AlgodClient } from '../src'
 import { config } from './config'
+import { SupplyResponse } from './schemas'
 
 describe('GET v2_ledger_supply', () => {
   // Polytest Suite: GET v2_ledger_supply
@@ -13,6 +14,7 @@ describe('GET v2_ledger_supply', () => {
 
       const result = await client.supply()
 
+      SupplyResponse.parse(result)
       expect(result).toMatchSnapshot()
     })
   })

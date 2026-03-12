@@ -100,7 +100,7 @@ async function main() {
   console.log(`Sorted ${sortedNames.length} schemas by dependencies`)
 
   // Generate Zod code
-  const zodCode = generateZodCode(sortedNames, schemaInfos, recursiveSchemas, args.strict ?? false)
+  const zodCode = generateZodCode(sortedNames, schemaInfos, recursiveSchemas, args.strict ?? false, args.spec)
 
   // Write output
   const outputDir = path.dirname(args.output)
@@ -124,7 +124,8 @@ async function main() {
  */
 function toCamelCase(str: string): string {
   // Handle both kebab-case (dashes) and snake_case (underscores)
-  return str.replace(/[-_]([a-z0-9])/g, (_, letter) => letter.toUpperCase())
+  const camel = str.replace(/[-_]([a-z0-9])/g, (_, letter) => letter.toUpperCase())
+  return camel.charAt(0).toLowerCase() + camel.slice(1)
 }
 
 // =============================================================================
@@ -343,11 +344,43 @@ function topologicalSort(schemaInfos: Map<string, SchemaInfo>): string[] {
 // Zod Code Generation
 // =============================================================================
 
+/**
+ * Check if the spec path is for the algod API
+ */
+function isAlgodSpec(specPath: string): boolean {
+  return specPath.includes('algod.oas3.json')
+}
+
+/**
+ * Generate algod-specific schema extensions that don't come from the OAS spec
+ */
+function generateAlgodExtensions(): string {
+  const lines: string[] = [
+    '// =============================================================================',
+    '// Algod-specific extensions',
+    '// =============================================================================',
+    '',
+    '/**',
+    ' * Contains parameters relevant to the creation of a new transaction in a specific network at a specific time.',
+    ' * This extends TransactionParametersResponse by removing lastRound and adding transaction validity fields.',
+    ' */',
+    'export const SuggestedParams = TransactionParametersResponse.omit({ lastRound: true }).extend({',
+    '  flatFee: z.boolean(),',
+    '  firstValid: z.bigint(),',
+    '  lastValid: z.bigint()',
+    '})',
+    '',
+  ]
+
+  return lines.join('\n')
+}
+
 function generateZodCode(
   sortedNames: string[],
   schemaInfos: Map<string, SchemaInfo>,
   recursiveSchemas: Set<string>,
   strict: boolean,
+  specPath: string,
 ): string {
   const lines: string[] = [
     '/**',
@@ -377,6 +410,11 @@ function generateZodCode(
     const zodSchema = generateSchemaZod(name, info, recursiveSchemas, strict)
     lines.push(zodSchema)
     lines.push('')
+  }
+
+  // Add algod-specific extensions if this is the algod spec
+  if (isAlgodSpec(specPath)) {
+    lines.push(generateAlgodExtensions())
   }
 
   return lines.join('\n')

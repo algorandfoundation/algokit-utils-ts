@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
+import { AlgodClient } from '../src'
 import { config } from './config'
 
 describe('GET ready', () => {
@@ -11,9 +11,10 @@ describe('GET ready', () => {
     test('Basic request and response validation', async () => {
       const client = new AlgodClient(config)
 
+      // getReady returns void when node is caught up
       const result = await client.ready()
 
-      expect(result).toMatchSnapshot()
+      expect(result).toBeUndefined()
     })
   })
 })

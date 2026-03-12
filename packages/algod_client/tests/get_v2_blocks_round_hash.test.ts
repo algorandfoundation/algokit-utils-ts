@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
-import { TEST_ROUND, config } from './config'
+import { AlgodClient } from '../src'
+import { config, TEST_ROUND } from './config'
+import { BlockHashResponse } from './schemas'
 
 describe('GET v2_blocks_ROUND_hash', () => {
   // Polytest Suite: GET v2_blocks_ROUND_hash
@@ -13,6 +14,7 @@ describe('GET v2_blocks_ROUND_hash', () => {
 
       const result = await client.blockHash(TEST_ROUND)
 
+      BlockHashResponse.parse(result)
       expect(result).toMatchSnapshot()
     })
   })

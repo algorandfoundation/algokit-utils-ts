@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { AlgodClient } from '../src/client'
+import { AlgodClient } from '../src'
 import { config } from './config'
+import { NodeStatusResponse } from './schemas'
 
 describe('GET v2_status', () => {
   // Polytest Suite: GET v2_status
@@ -13,6 +14,7 @@ describe('GET v2_status', () => {
 
       const result = await client.status()
 
+      NodeStatusResponse.parse(result)
       expect(result).toMatchSnapshot()
     })
   })
