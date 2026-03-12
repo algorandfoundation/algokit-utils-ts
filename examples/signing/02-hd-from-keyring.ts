@@ -13,7 +13,7 @@ import {
   ed25519SigningKeyFromWrappedSecret,
   peikertXHdWalletGenerator,
   WrappedHdExtendedPrivateKey,
-} from '@algorandfoundation/algokit-crypto'
+} from '@algorandfoundation/algokit-utils/crypto'
 import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
 import { Entry } from '@napi-rs/keyring'

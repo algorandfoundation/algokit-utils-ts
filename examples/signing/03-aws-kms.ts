@@ -9,7 +9,7 @@
 
 /* eslint-disable no-console */
 
-import { RawEd25519Signer } from '@algorandfoundation/algokit-crypto'
+import { RawEd25519Signer } from '@algorandfoundation/algokit-utils/crypto'
 import { AlgorandClient, microAlgos } from '@algorandfoundation/algokit-utils'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
 import { KMSClient, SignCommand, GetPublicKeyCommand, SignCommandInput, GetPublicKeyCommandInput } from '@aws-sdk/client-kms'

@@ -25,7 +25,7 @@ plaintext and ensures it is only loaded in memory when signing.
 When working with a ed25519 seed or mnemonic, you can implement the `WrappedEd25519Seed` interface which allows you to wrap and unwrap the seed as needed. For example, with `@napi-rs/keyring`:
 
 ```ts
-import { ed25519SigningKeyFromWrappedSecret, WrappedEd25519Seed } from '@algorandfoundation/algokit-crypto'
+import { ed25519SigningKeyFromWrappedSecret, WrappedEd25519Seed } from '@algorandfoundation/algokit-utils/crypto'
 import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
 import { mnemonicFromSeed, seedFromMnemonic } from '@algorandfoundation/algokit-utils/algo25'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
@@ -71,7 +71,7 @@ import {
   ed25519SigningKeyFromWrappedSecret,
   peikertXHdWalletGenerator,
   WrappedHdExtendedPrivateKey,
-} from '@algorandfoundation/algokit-crypto'
+} from '@algorandfoundation/algokit-utils/crypto'
 import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
 import { Entry } from '@napi-rs/keyring'
@@ -127,7 +127,7 @@ If you are using a KMS in CI, the best practice for performing signing operation
 Using the KMS, you can retrieve the public key and implement `RawEd25519Signer` signer which can then be used to generate an Algorand address and all Algorand-specific signing functions. For example, with AWS:
 
 ```ts
-import { RawEd25519Signer } from '@algorandfoundation/algokit-crypto'
+import { RawEd25519Signer } from '@algorandfoundation/algokit-utils/crypto'
 import { AlgorandClient, microAlgos } from '@algorandfoundation/algokit-utils'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
 import { KMSClient, SignCommand, GetPublicKeyCommand, SignCommandInput, GetPublicKeyCommandInput } from '@aws-sdk/client-kms'

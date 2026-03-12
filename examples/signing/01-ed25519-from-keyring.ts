@@ -10,7 +10,7 @@
  */
 
 /* eslint-disable no-console */
-import { ed25519SigningKeyFromWrappedSecret, WrappedEd25519Seed } from '@algorandfoundation/algokit-crypto'
+import { ed25519SigningKeyFromWrappedSecret, WrappedEd25519Seed } from '@algorandfoundation/algokit-utils/crypto'
 import { algo, AlgorandClient, microAlgo } from '@algorandfoundation/algokit-utils'
 import { mnemonicFromSeed, seedFromMnemonic } from '@algorandfoundation/algokit-utils/algo25'
 import { generateAddressWithSigners } from '@algorandfoundation/algokit-utils/transact'
