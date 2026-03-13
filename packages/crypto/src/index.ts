@@ -41,9 +41,9 @@ const throwWrapUnwrapErrors = (operationError: unknown, wrapError: unknown, oper
 }
 
 function rawSign(extendedSecretKey: Uint8Array, data: Uint8Array): Uint8Array {
-  const scalar = bytesToNumberLE(extendedSecretKey.slice(0, 32))
+  const scalar = bytesToNumberLE(extendedSecretKey.subarray(0, 32))
 
-  const kR = extendedSecretKey.slice(32, 64)
+  const kR = extendedSecretKey.subarray(32, 64)
 
   // (1): pubKey = scalar * G
   const publicKey = rawPubkey(extendedSecretKey)
@@ -66,7 +66,7 @@ function rawSign(extendedSecretKey: Uint8Array, data: Uint8Array): Uint8Array {
 }
 
 function rawPubkey(extendedSecretKey: Uint8Array): Uint8Array {
-  const scalar = bytesToNumberLE(extendedSecretKey.slice(0, 32))
+  const scalar = bytesToNumberLE(extendedSecretKey.subarray(0, 32))
   const clearedTopBitScalar = scalar & ((1n << 255n) - 1n)
   const reducedScalar = mod(clearedTopBitScalar, ed25519.Point.Fn.ORDER)
 
@@ -106,7 +106,7 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
       } else if ('unwrapHdExtendedPrivateKey' in wrapUnwrap) {
         secret = await wrapUnwrap.unwrapHdExtendedPrivateKey()
         assertEd25519SecretLength(secret, 'HD extended key')
-        signature = rawSign(secret.slice(0, 64), bytesToSign)
+        signature = rawSign(secret.subarray(0, 64), bytesToSign)
       } else {
         throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
       }
@@ -153,7 +153,7 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
     } else if ('unwrapHdExtendedPrivateKey' in wrapUnwrap) {
       secret = await wrapUnwrap.unwrapHdExtendedPrivateKey()
       assertEd25519SecretLength(secret, 'HD extended key')
-      pubkey = rawPubkey(secret.slice(0, 64))
+      pubkey = rawPubkey(secret.subarray(0, 64))
     } else {
       throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
     }
