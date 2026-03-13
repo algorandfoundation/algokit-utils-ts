@@ -20,7 +20,7 @@ import { Entry } from '@napi-rs/keyring'
 
 const SECRET_NAME = 'algorand-mainnet-mnemonic'
 
-// Setup: Creating an HD account an save the extended private key in the keyring.
+// Setup: Creating an HD account and saving the extended private key in the keyring.
 const seed = crypto.getRandomValues(new Uint8Array(32))
 const { accountGenerator } = await peikertXHdWalletGenerator(seed)
 const esk = (await accountGenerator(0, 0)).extendedPrivateKey
