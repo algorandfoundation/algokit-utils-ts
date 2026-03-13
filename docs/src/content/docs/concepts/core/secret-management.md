@@ -114,7 +114,7 @@ await AlgorandClient.defaultLocalNet().send.payment({
 
 ### Note on KMS Authentication in CI
 
-If you are using a KMS in CI, the best practice for performing signing operations OIDC. For guides for setting up OIDC, refer to the [GitHub documentation](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments).
+If you are using a KMS in CI, the best practice for performing signing operations is to use OIDC. For guides for setting up OIDC, refer to the [GitHub documentation](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments).
 
 ### Signing with AWS KMS
 
