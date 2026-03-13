@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# verify-all.sh - Run all transact examples and verify they work
+# verify-all.sh - Run all signing examples and verify they work
 # Exit with non-zero code if any example fails
 
 set -e
@@ -22,7 +22,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo "========================================"
-echo "Transact Examples Verification Script"
+echo "Signing Examples Verification Script"
 echo "========================================"
 echo ""
 
@@ -67,5 +67,5 @@ if [ $FAILED -gt 0 ]; then
 fi
 
 echo ""
-echo -e "${GREEN}All Transact examples passed!${NC}"
+echo -e "${GREEN}All Signing examples passed!${NC}"
 exit 0

@@ -19,6 +19,7 @@ SUITES=(
     "common"
     "indexer_client"
     "kmd_client"
+    "signing"
     "testing"
     "transact"
 )

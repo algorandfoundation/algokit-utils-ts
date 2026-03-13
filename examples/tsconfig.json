@@ -8,6 +8,7 @@
       "@algorandfoundation/algokit-utils/algo25": ["../packages/algo25/src/index.ts"],
       "@algorandfoundation/algokit-utils/algod-client": ["../packages/algod_client/src/index.ts"],
       "@algorandfoundation/algokit-utils/common": ["../packages/common/src/index.ts"],
+      "@algorandfoundation/algokit-utils/crypto": ["../packages/crypto/src/index.ts"],
       "@algorandfoundation/algokit-utils/indexer-client": ["../packages/indexer_client/src/index.ts"],
       "@algorandfoundation/algokit-utils/kmd-client": ["../packages/kmd_client/src/index.ts"],
       "@algorandfoundation/algokit-utils/testing": ["../packages/testing/src/index.ts"],
