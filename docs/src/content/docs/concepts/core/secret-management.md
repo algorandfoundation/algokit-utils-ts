@@ -64,7 +64,7 @@ const pay = await AlgorandClient.defaultLocalNet().send.payment({
 
 ### HD Expanded Secret Key
 
-HD accounts have a 96-byte expanded secret key that can be used in a similar manner to the ed25519 seed, except we need to implement `WrappedHDExpandedSecretKey` interface. For example, with `@napi-rs/keyring`:
+HD accounts have a 96-byte expanded secret key that can be used in a similar manner to the ed25519 seed, except we need to implement the `WrappedHdExtendedPrivateKey` interface. For example, with `@napi-rs/keyring`:
 
 ```ts
 import {
@@ -116,7 +116,7 @@ await AlgorandClient.defaultLocalNet().send.payment({
 })
 ```
 
-## Siging with a KMS
+## Signing with a KMS
 
 ### Note on KMS Authentication in CI
 
@@ -180,9 +180,9 @@ const ed25519Pubkey = spki.subarray(12); // 32 bytes
 const addrWithSigner = generateAddressWithSigners({ rawEd25519Signer, ed25519Pubkey });
 ```
 
-# Sharing Secrets and Multisig
+## Sharing Secrets and Multisig
 
-It's common for a application to have multiple developers that can deploy changes to mainnet. It may be tempting to share a secret for a single account (manually or through a secrets manager), but this is **not recommended**. Instead, it is recommended to setup a multisig account between all the developers. The multisig account can be a 1/N threshold, which would still allow a single developer to make changes. The benefit of a multisig is that secrets do not need to be shared and all actions are immutably auditable on-chain. Each developer should then follow the practices outlined above.
+It's common for an application to have multiple developers that can deploy changes to mainnet. It may be tempting to share a secret for a single account (manually or through a secrets manager), but this is **not recommended**. Instead, it is recommended to setup a multisig account between all the developers. The multisig account can be a 1/N threshold, which would still allow a single developer to make changes. The benefit of a multisig is that secrets do not need to be shared and all actions are immutably auditable on-chain. Each developer should then follow the practices outlined above.
 
 ```ts
 const addrWithSigners = generateAddressWithSigners({ rawEd25519Signer: signer, ed25519Pubkey: pubkey });
@@ -208,7 +208,7 @@ const pay = algorand.send.payment({
 })
 ```
 
-# Key Rotation
+## Key Rotation
 
 Algorand has native support for key rotation through a feature called rekeying. Rekeying allows the blockchain address to stay the same while allowing for rotation of the underlying keypair. For example, a common pattern is to have an admin address that can deploy changes to a production contract. Rekeying allows the admin address to remain constant in the contract but allow the secrets used to authorize transactions to rotate. Rekeying can be done with any transaction type, but the simplest is to do a 0 ALGO payment to oneself with the rekeyTo field set.
 

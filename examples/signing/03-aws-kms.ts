@@ -1,7 +1,7 @@
 /**
  * Example: Ed25519 Signing from AWS KMS
  *
- * This example demonstrates how to use the AWS KMS
+ * This example demonstrates how to use the AWS KMS to perform Ed25519 signing for Algorand transactions.
  *
  * Prerequisites:
  * - LocalNet running (via `algokit localnet start`)
