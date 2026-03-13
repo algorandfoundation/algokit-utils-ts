@@ -45,14 +45,18 @@ jobs:
         with:
           node-version: 22.x
 
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: docs/package.json
+
       - name: Install dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: npm ci --prefix docs
+        run: pnpm install --frozen-lockfile --dir docs
 
       - name: Verify documentation builds
-        run: npm run docs:build
+        run: pnpm --dir docs build
 
   build:
     name: Build
@@ -138,14 +142,18 @@ jobs:
           node-version: 22.x
           cache: 'npm'
 
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: docs/package.json
+
       - name: Install dependencies
         run: npm ci
 
       - name: Install docs dependencies
-        run: npm ci --prefix docs
+        run: pnpm install --frozen-lockfile --dir docs
 
       - name: Build documentation
-        run: npm run docs:build
+        run: pnpm --dir docs build
 
       - name: Publish docs to GitHub Pages
         id: deployment
