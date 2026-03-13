@@ -4,6 +4,8 @@ dist/
 .astro/
 # generated API docs (built by starlight-typedoc)
 src/content/docs/api/
+# generated examples MDX (built by scripts/generate-examples-mdx.ts)
+src/content/docs/examples/
 
 # dependencies
 node_modules/

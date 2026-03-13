@@ -69,13 +69,13 @@ const CATEGORIES: Record<string, CategoryMeta> = {
   },
 }
 
-function lineSeparator(text: string, isBullet: boolean, lastWasBullet: boolean): string {
+export function lineSeparator(text: string, isBullet: boolean, lastWasBullet: boolean): string {
   if (!text) return ''
   if (isBullet || lastWasBullet) return '\n'
   return ' '
 }
 
-function parseJSDoc(content: string): { title: string; description: string; prerequisites: string } {
+export function parseJSDoc(content: string): { title: string; description: string; prerequisites: string } {
   const jsdocMatch = content.match(/\/\*\*\n([\s\S]*?)\*\//)
 
   if (!jsdocMatch) {
@@ -138,12 +138,12 @@ function parseJSDoc(content: string): { title: string; description: string; prer
 /**
  * Extract order number from filename (e.g., "01-example.ts" -> 1)
  */
-function extractOrder(filename: string): number {
+export function extractOrder(filename: string): number {
   const match = filename.match(/^(\d+)-/)
   return match ? parseInt(match[1], 10) : 999
 }
 
-function createSlug(filename: string): string {
+export function createSlug(filename: string): string {
   return filename.replace(/\.ts$/, '').replace(/_/g, '-')
 }
 
