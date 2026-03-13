@@ -38,5 +38,15 @@
     "active": true,
     "notes": "Dev tooling dependency (rollup used for local build)",
     "expiry": "2026-03-29"
+  },
+  "1114200": {
+    "active": true,
+    "notes": "Dev tooling dependency (npm -> tar)",
+    "expiry": "2026-03-29"
+  },
+  "1114302": {
+    "active": true,
+    "notes": "Dev tooling dependency (npm -> tar)",
+    "expiry": "2026-03-29"
   }
 }

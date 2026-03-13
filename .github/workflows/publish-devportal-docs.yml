@@ -1,0 +1,35 @@
+name: Publish DevPortal Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ci/add-publish-to-devportal-workflow] # change to decoupling, then main when ready
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  publish-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: docs/package.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish DevPortal Docs
+        uses: algorandfoundation/devportal/.github/actions/publish-devportal-docs@ci/update-publish-devportal-docs-workflow
+        with:
+          docs-dir: docs

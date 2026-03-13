@@ -1,9 +1,16 @@
 import { ABIMethod, ABITupleType, ABIType } from '@algorandfoundation/algokit-abi'
 import { Address } from '@algorandfoundation/algokit-common'
-import { Transaction, TransactionSigner, TransactionType } from '@algorandfoundation/algokit-transact'
+import {
+  decodeSignedTransaction,
+  generateAddressWithSigners,
+  Transaction,
+  TransactionSigner,
+  TransactionType,
+} from '@algorandfoundation/algokit-transact'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { AlgoAmount } from './amount'
+import { algo, AlgoAmount } from './amount'
 import { algorandFixture } from './testing'
+import { nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
 
 describe('TransactionComposer', () => {
   const fixture = algorandFixture()
@@ -612,5 +619,37 @@ describe('TransactionComposer', () => {
 
       await expect(composer.gatherSignatures()).rejects.toThrow('Transactions at indexes [0] were not signed')
     })
+  })
+
+  test('should use signer from sender', async () => {
+    const { algorand } = fixture
+
+    // Generate an account outside of the algorand client and fund it
+    const generated = nobleEd25519Generator()
+    const addressWithSigners = generateAddressWithSigners(generated)
+
+    await algorand.account.ensureFundedFromEnvironment(addressWithSigners.addr, algo(1))
+
+    // First verify that the signer isn't found when we only pass the address
+    const addrOnlyComposer = algorand.newGroup()
+    addrOnlyComposer.addPayment({
+      sender: addressWithSigners.addr,
+      receiver: addressWithSigners.addr,
+      amount: algo(0),
+    })
+    await expect(addrOnlyComposer.gatherSignatures()).rejects.toThrow(`No signer found for address ${addressWithSigners.addr}`)
+
+    // Then verify that the signer is found when we pass the address with the signer
+    const composer = algorand.newGroup()
+    composer.addPayment({
+      sender: addressWithSigners,
+      receiver: addressWithSigners,
+      amount: algo(0),
+    })
+
+    const signedTxns = await composer.gatherSignatures()
+
+    expect(signedTxns).toHaveLength(1)
+    expect(decodeSignedTransaction(signedTxns[0]).sig!.length).toBe(64)
   })
 })
