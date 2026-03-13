@@ -108,7 +108,6 @@ await algorand.account.ensureFundedFromEnvironment(algorandAccount.addr, microAl
 
 await algorand.send.payment({
   sender: algorandAccount,
-  signer: algorandAccount,
   amount: microAlgos(0),
   receiver: algorandAccount,
 })

@@ -52,11 +52,8 @@ const algorand = AlgorandClient.defaultLocalNet()
 
 await algorand.account.ensureFundedFromEnvironment(algorandAccount.addr, algo(1))
 
-// FIXME: No signer found when algorandAccount is sender without explicit signer
-// FIXME: Logs show Sending 0 µALGO from [object Object] to [object Object] via transaction UKEP7PS5G7YAX22ECEQZAOFGHKZZOAMJ3SMJ3VC3UYCJVTRQIN4A
 const pay = await AlgorandClient.defaultLocalNet().send.payment({
   sender: algorandAccount,
-  signer: algorandAccount,
   receiver: algorandAccount,
   amount: microAlgo(0),
 })
@@ -106,11 +103,8 @@ const algorand = AlgorandClient.defaultLocalNet()
 
 await algorand.account.ensureFundedFromEnvironment(algorandAccount.addr, algo(1))
 
-// FIXME: No signer found when algorandAccount is sender without explicit signer
-// FIXME: Logs show Sending 0 µALGO from [object Object] to [object Object] via transaction UKEP7PS5G7YAX22ECEQZAOFGHKZZOAMJ3SMJ3VC3UYCJVTRQIN4A
 await AlgorandClient.defaultLocalNet().send.payment({
   sender: algorandAccount,
-  signer: algorandAccount,
   receiver: algorandAccount,
   amount: microAlgo(0),
 })
