@@ -67,8 +67,12 @@ function rawSign(extendedSecretKey: Uint8Array, data: Uint8Array): Uint8Array {
 
 function rawPubkey(extendedSecretKey: Uint8Array): Uint8Array {
   const scalar = bytesToNumberLE(extendedSecretKey.subarray(0, 32))
-  const clearedTopBitScalar = scalar & ((1n << 255n) - 1n)
-  const reducedScalar = mod(clearedTopBitScalar, ed25519.Point.Fn.ORDER)
+  if ((scalar & (1n << 255n)) !== 0n) {
+    throw new Error(
+      'Invalid HD-expanded Ed25519 secret scalar: most-significant bit (bit 255) of the 32-byte scalar must be 0 for rawSign/rawPubkey inputs.',
+    )
+  }
+  const reducedScalar = mod(scalar, ed25519.Point.Fn.ORDER)
 
   // pubKey = scalar * G
   const publicKey = ed25519.Point.BASE.multiply(reducedScalar)

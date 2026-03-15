@@ -217,6 +217,51 @@ describe('signer', () => {
     )
   })
 
+  test('wrapped HD extended private key rejects scalar with high bit set during pubkey derivation', async () => {
+    const extendedKey = new Uint8Array(96)
+    // Fill with arbitrary data
+    for (let i = 0; i < 96; i++) {
+      extendedKey[i] = i
+    }
+    // Set bit 255 in scalar (byte 31 of the scalar, which is byte 31 overall)
+    extendedKey[31] = 0x80
+
+    const wrappedHdExtendedPrivateKey = {
+      unwrapHdExtendedPrivateKey: async () => extendedKey,
+      wrapHdExtendedPrivateKey: async () => {},
+    }
+
+    await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)).rejects.toThrow(
+      'Invalid HD-expanded Ed25519 secret scalar: most-significant bit (bit 255) of the 32-byte scalar must be 0 for rawSign/rawPubkey inputs.',
+    )
+  })
+
+  test('wrapped HD extended private key rejects scalar with high bit set during signing', async () => {
+    // First create a valid key to get a working signer
+    const { accountGenerator } = await peikertXHdWalletGenerator()
+    const generated = await accountGenerator(0, 0)
+
+    let callCount = 0
+    const extendedKey = new Uint8Array(generated.extendedPrivateKey)
+    // Create an invalid version with bit 255 set in scalar
+    const invalidExtendedKey = new Uint8Array(extendedKey)
+    invalidExtendedKey[31] = 0x80
+
+    const wrappedHdExtendedPrivateKey = {
+      unwrapHdExtendedPrivateKey: async () => {
+        callCount++
+        return callCount === 1 ? extendedKey : invalidExtendedKey
+      },
+      wrapHdExtendedPrivateKey: async () => {},
+    }
+
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)
+
+    await expect(signingKey.rawEd25519Signer(new Uint8Array([1, 2, 3]))).rejects.toThrow(
+      'Invalid HD-expanded Ed25519 secret scalar: most-significant bit (bit 255) of the 32-byte scalar must be 0 for rawSign/rawPubkey inputs.',
+    )
+  })
+
   test('wrapped seed zeroes seed after successful signing', async () => {
     const seed = ed.utils.randomSecretKey()
     const wrappedSeed = {
