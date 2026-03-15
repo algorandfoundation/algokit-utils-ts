@@ -196,7 +196,7 @@ export class AppDeployer {
 
     if (existingDeployments && existingDeployments.creator.toString() !== createParams.sender.toString()) {
       throw new Error(
-        `Received invalid existingDeployments value for creator ${existingDeployments.creator} when attempting to deploy for creator ${createParams.sender}`,
+        `Received invalid existingDeployments value for creator ${existingDeployments.creator} when attempting to deploy for creator ${getAddress(createParams.sender)}`,
       )
     }
     if (!existingDeployments && !this._indexer) {
@@ -206,7 +206,7 @@ export class AppDeployer {
     }
 
     Config.getLogger(sendParams?.suppressLog).info(
-      `Idempotently deploying app "${metadata.name}" from creator ${createParams.sender} using ${createParams.approvalProgram.length} bytes of ${typeof createParams.approvalProgram === 'string' ? 'teal code' : 'AVM bytecode'} and ${createParams.clearStateProgram.length} bytes of ${typeof createParams.approvalProgram === 'string' ? 'teal code' : 'AVM bytecode'}`,
+      `Idempotently deploying app "${metadata.name}" from creator ${getAddress(createParams.sender)} using ${createParams.approvalProgram.length} bytes of ${typeof createParams.approvalProgram === 'string' ? 'teal code' : 'AVM bytecode'} and ${createParams.clearStateProgram.length} bytes of ${typeof createParams.approvalProgram === 'string' ? 'teal code' : 'AVM bytecode'}`,
     )
 
     // Compile code if required
@@ -249,7 +249,7 @@ export class AppDeployer {
     }
     const updateApp = async (existingApp: AppMetadata) => {
       Config.getLogger(sendParams?.suppressLog).info(
-        `Updating existing ${metadata.name} app for ${createParams.sender} to version ${metadata.version}.`,
+        `Updating existing ${metadata.name} app for ${getAddress(createParams.sender)} to version ${metadata.version}.`,
       )
       const result = await ('method' in updateParams
         ? this._transactionSender.appUpdateMethodCall({
@@ -286,11 +286,11 @@ export class AppDeployer {
     }
     const replaceApp = async (existingApp: AppMetadata) => {
       Config.getLogger(sendParams?.suppressLog).info(
-        `Deploying a new ${metadata.name} app for ${createParams.sender}; deploying app with version ${metadata.version}.`,
+        `Deploying a new ${metadata.name} app for ${getAddress(createParams.sender)}; deploying app with version ${metadata.version}.`,
       )
 
       Config.getLogger(sendParams?.suppressLog).warn(
-        `Deleting existing ${metadata.name} app with id ${existingApp.appId} from ${deleteParams.sender} account.`,
+        `Deleting existing ${metadata.name} app with id ${existingApp.appId} from ${getAddress(deleteParams.sender)} account.`,
       )
 
       const composer = this._transactionSender.newGroup()
@@ -313,7 +313,7 @@ export class AppDeployer {
       Config.getLogger(sendParams?.suppressLog).warn(
         `Sent transactions ${transaction.txId()} to create app with id ${confirmation.appId} and ${deleteTransaction.txId()} to delete app with id ${
           existingApp.appId
-        } from ${createParams.sender} account.`,
+        } from ${getAddress(createParams.sender)} account.`,
       )
 
       const appMetadata: AppMetadata = {
@@ -352,14 +352,14 @@ export class AppDeployer {
     const existingApp = apps.apps[metadata.name]
     if (!existingApp || existingApp.deleted) {
       Config.getLogger(sendParams?.suppressLog).info(
-        `App ${metadata.name} not found in apps created by ${createParams.sender}; deploying app with version ${metadata.version}.`,
+        `App ${metadata.name} not found in apps created by ${getAddress(createParams.sender)}; deploying app with version ${metadata.version}.`,
       )
 
       return await createApp()
     }
 
     Config.getLogger(sendParams?.suppressLog).info(
-      `Existing app ${metadata.name} found by creator ${createParams.sender}, with app id ${existingApp.appId} and version ${existingApp.version}.`,
+      `Existing app ${metadata.name} found by creator ${getAddress(createParams.sender)}, with app id ${existingApp.appId} and version ${existingApp.version}.`,
     )
 
     const existingAppRecord = await this._appManager.getById(existingApp.appId)
@@ -423,7 +423,7 @@ export class AppDeployer {
 
     if (isUpdate) {
       Config.getLogger(sendParams?.suppressLog).info(
-        `Detected a TEAL update in app ${existingApp.appId} for creator ${createParams.sender}`,
+        `Detected a TEAL update in app ${existingApp.appId} for creator ${getAddress(createParams.sender)}`,
       )
 
       if (onUpdate === undefined || onUpdate === 'fail' || onUpdate === OnUpdate.Fail) {
