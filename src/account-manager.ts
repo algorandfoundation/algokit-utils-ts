@@ -204,7 +204,7 @@ export class AccountManager {
    */
   public getSigner(sender: ReadableAddress): TransactionSigner {
     const signer = this._accounts[getAddress(sender).toString()]?.signer ?? this._defaultSigner
-    if (!signer) throw new Error(`No signer found for address ${sender}`)
+    if (!signer) throw new Error(`No signer found for address ${getAddress(sender)}`)
     return signer
   }
 
@@ -224,7 +224,7 @@ export class AccountManager {
    */
   public getAccount(sender: ReadableAddress): AddressWithTransactionSigner {
     const account = this._accounts[getAddress(sender).toString()]
-    if (!account) throw new Error(`No signer found for address ${sender}`)
+    if (!account) throw new Error(`No signer found for address ${getAddress(sender)}`)
     return account
   }
 
