@@ -57,6 +57,11 @@ const CATEGORIES: Record<string, CategoryMeta> = {
     description: 'Key Management Daemon operations for wallet and key management.',
     slug: 'kmd-client',
   },
+  signing: {
+    label: 'Signing',
+    description: 'Transaction signing with keyrings and cloud KMS providers.',
+    slug: 'signing',
+  },
   testing: {
     label: 'Testing',
     description: 'Testing utilities for mock server setup and Vitest integration.',
