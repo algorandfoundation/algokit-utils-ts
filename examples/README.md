@@ -4,7 +4,7 @@ Runnable code examples demonstrating every major feature of the `@algorandfounda
 
 ## Overview
 
-This folder contains 117 self-contained examples organized into 9 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
+This folder contains 120 self-contained examples organized into 10 categories. Each example is a standalone TypeScript file that demonstrates specific functionality, progressing from basic to advanced usage within each category.
 
 ## Prerequisites
 
@@ -180,6 +180,16 @@ Key Management Daemon operations for wallet and key management.
 | `11-multisig-signing.ts`         | Sign multisig transactions (partial + complete)    |
 | `12-program-signing.ts`          | Create delegated logic signatures                  |
 | `13-multisig-program-signing.ts` | Create delegated multisig logic signatures         |
+
+### Signing (`signing/`)
+
+External signing providers and keyring integration for transaction signing.
+
+| File                         | Description                                            |
+| ---------------------------- | ------------------------------------------------------ |
+| `01-ed25519-from-keyring.ts` | Retrieve secrets from OS keyring and sign transactions |
+| `02-hd-from-keyring.ts`     | HD wallet signing using keyring-stored secrets         |
+| `03-aws-kms.ts`             | Ed25519 signing using AWS KMS                          |
 
 ### Testing (`testing/`)
 
