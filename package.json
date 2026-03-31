@@ -10,7 +10,7 @@
     "url": "https://github.com/algorandfoundation/algokit-utils-ts.git"
   },
   "engines": {
-    "node": ">=20.0"
+    "node": ">=24.0"
   },
   "type": "commonjs",
   "main": "index.js",
