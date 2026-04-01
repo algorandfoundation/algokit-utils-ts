@@ -8,7 +8,7 @@ This folder contains 120 self-contained examples organized into 10 categories. E
 
 ## Prerequisites
 
-- Node.js >= 20.0
+- Node.js >= 24.0
 - [AlgoKit LocalNet](https://github.com/algorandfoundation/algokit-cli) running (for network examples)
 
 Some examples (marked "No LocalNet required") work with pure utility functions and don't need a running network.

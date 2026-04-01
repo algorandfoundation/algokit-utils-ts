@@ -9,7 +9,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { CATEGORIES, parseJSDoc, extractOrder, createSlug } from '../src/loaders/examples-loader.ts'
+import { CATEGORIES, createSlug, extractOrder, parseJSDoc } from '../src/loaders/examples-loader.ts'
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..', '..')
 const EXAMPLES_DIR = path.join(REPO_ROOT, 'examples')
@@ -234,7 +234,7 @@ npm run example algorand_client/01-client-instantiation.ts
 
 ## Prerequisites
 
-- Node.js >= 20.0
+- Node.js >= 24
 - [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli) installed
 - LocalNet running for network examples (\`algokit localnet start\`)
 
