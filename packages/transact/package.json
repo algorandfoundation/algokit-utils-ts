@@ -19,7 +19,6 @@
     "lint": "eslint ./src/",
     "lint:fix": "eslint ./src/ --fix",
     "check-types": "tsc --noEmit",
-    "audit": "better-npm-audit audit",
     "format": "prettier --config ../../.prettierrc.cjs --ignore-path ../../.prettierignore --write .",
     "pre-commit": "run-s check-types lint:fix audit format test",
     "polytest:generate": "polytest --config test_configs/transact.jsonc --git https://github.com/algorandfoundation/algokit-polytest#main generate -t vitest",
@@ -28,6 +27,6 @@
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
-    "@noble/ed25519": "^3.0.0"
+    "@noble/ed25519": "3.0.0"
   }
 }

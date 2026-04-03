@@ -12,18 +12,18 @@ Note: If you prefer Python there's an equivalent [Python utility library](https:
 
 Before installing, you'll need to decide on the version you want to target. Version 7 and 8 have the same feature set, however v7 leverages algosdk@>=2.9.0<3.0, whereas v8 leverages algosdk@>=3.0.0. Your project and it's dependencies will help you decide which version to target.
 
-Once you've decided on the target version, this library can be installed from NPM using your favourite npm client, e.g.:
+Once you've decided on the target version, this library can be installed from NPM using your favourite package manager, e.g.:
 
 To target algosdk@2 and use version 7 of AlgoKit Utils, run the below:
 
 ```
-npm install algosdk@^2.9.0 @algorandfoundation/algokit-utils@^7.0.0
+pnpm install algosdk@^2.9.0 @algorandfoundation/algokit-utils@^7.0.0
 ```
 
 To target algosdk@3 and use the latest version of AlgoKit Utils, run the below:
 
 ```
-npm install algosdk@^3.0.0 @algorandfoundation/algokit-utils
+pnpm install algosdk@^3.0.0 @algorandfoundation/algokit-utils
 ```
 
 Now you can import the library:
@@ -60,7 +60,7 @@ algokit localnet start
 To run tests you can use VS Code, or:
 
 ```bash
-npm run test
+pnpm run test
 ```
 
 ### Prerequisites
@@ -90,13 +90,13 @@ The `algod_client`, `indexer_client`, and `kmd_client` packages use a mock serve
 1. Init algokit-polytest on first run
 
 ```bash
-npm run polytest:init
+pnpm run polytest:init
 ```
 
 2. Start the mock servers:
 
 ```bash
-npm run polytest:start-mock-servers
+pnpm run polytest:start-mock-servers
 ```
 
 This starts algod (port 8000), indexer (port 8002), and kmd (port 8001) in the background.
@@ -113,11 +113,11 @@ Environment variables can also be set via `.env` file in project root (copy from
 
 ```bash
 # after setting env vars via export or .env file
-npm run test
+pnpm run test
 ```
 
 4. Stop servers when done:
 
 ```bash
-npm run polytest:stop-mock-servers
+pnpm run polytest:stop-mock-servers
 ```

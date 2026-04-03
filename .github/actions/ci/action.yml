@@ -17,39 +17,42 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - uses: pnpm/action-setup@v4
+      with:
+        package_json_file: package.json
+
     - name: Setup Node.js
       uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
-        cache: 'npm'
 
     - name: Install dependencies
       shell: bash
-      run: npm ci
+      run: pnpm install --frozen-lockfile
 
     - name: Setup Polytest
       uses: algorandfoundation/algokit-polytest/.github/actions/setup-polytest@main
 
     - name: Validate polytest algod_client tests
       shell: bash
-      run: npm run polytest:validate-algod
+      run: pnpm run polytest:validate-algod
 
     - name: Generate transact polytest files
       shell: bash
       working-directory: packages/transact/
-      run: npm run polytest:generate
+      run: pnpm run polytest:generate
 
     - name: Commit lint
       shell: bash
-      run: npx commitlint --from ${{ inputs.commit-lint-from }} --to ${{ inputs.commit-lint-to }} --verbose
+      run: pnpm exec commitlint --from ${{ inputs.commit-lint-from }} --to ${{ inputs.commit-lint-to }} --verbose
 
     - name: Lint
       shell: bash
-      run: npm run lint
+      run: pnpm run lint
 
     - name: Check types
       shell: bash
-      run: npm run check-types
+      run: pnpm run check-types
 
     # Start localnet for integration tests
     - name: Start LocalNet
@@ -57,7 +60,7 @@ runs:
       run: |
         pipx install algokit
         algokit localnet start
-        npx --yes wait-on tcp:4001 -t 30000
+        pnpm dlx wait-on tcp:4001 -t 30000
 
     # Start mock servers using composite action
     - name: Start algod mock server
@@ -77,12 +80,12 @@ runs:
 
     - name: Run tests
       shell: bash
-      run: npm run test -- --silent
+      run: pnpm run test -- --silent
 
     - name: Audit
       shell: bash
-      run: npm run audit
+      run: pnpm audit
 
     - name: Build
       shell: bash
-      run: npm run build
+      run: pnpm run build
