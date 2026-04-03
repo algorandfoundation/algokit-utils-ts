@@ -25,10 +25,10 @@ This library is designed with the following principles:
 
 # Installation
 
-This library can be installed from NPM using your preferred npm client, e.g.:
+This library can be installed from NPM using your preferred package manager, e.g.:
 
 ```
-npm install @algorandfoundation/algokit-utils
+pnpm install @algorandfoundation/algokit-utils
 ```
 
 # Usage
