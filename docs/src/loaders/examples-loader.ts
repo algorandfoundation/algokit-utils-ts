@@ -194,7 +194,7 @@ export function examplesLoader(): Loader {
             categoryLabel: meta.label,
             order,
             filename,
-            runCommand: `npm run example ${categoryDir}/${filename}`,
+            runCommand: `pnpm run example ${categoryDir}/${filename}`,
           }
 
           entries.push(entry)
@@ -221,4 +221,4 @@ export function examplesLoader(): Loader {
 }
 
 export { CATEGORIES }
-export type { ExampleEntry, CategoryMeta }
+export type { CategoryMeta, ExampleEntry }

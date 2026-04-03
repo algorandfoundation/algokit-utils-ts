@@ -50,7 +50,7 @@ for example in "${EXAMPLES[@]}"; do
     fi
 
     # Run the example and capture output/exit code
-    if OUTPUT=$(npm run example "$example" 2>&1); then
+    if OUTPUT=$(pnpm run example "$example" 2>&1); then
         echo -e "${GREEN}PASSED${NC}"
         PASSED=$((PASSED + 1))
     else

@@ -8,7 +8,7 @@
     "verify-all": "./verify-all.sh"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-utils": "file:../dist",
+    "@algorandfoundation/algokit-utils": "link:../dist",
     "@aws-sdk/client-kms": "3.1000.0",
     "@napi-rs/keyring": "1.2.0",
     "tweetnacl": "1.0.3"

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@algorandfoundation/algokit-utils": ["../src/index.ts"],
       "@algorandfoundation/algokit-utils/types/*": ["../src/types/*"],

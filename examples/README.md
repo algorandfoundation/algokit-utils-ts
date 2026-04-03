@@ -17,15 +17,15 @@ Some examples (marked "No LocalNet required") work with pure utility functions a
 
 ```bash
 # Install dependencies and build the package
-npm ci
-npm run build
+pnpm install --frozen-lockfile
+pnpm build
 
 # Install examples dependencies
 cd examples
-npm ci
+pnpm install --frozen-lockfile
 
 # Run a single example
-npm run example transact/01-payment-transaction.ts
+pnpm run example transact/01-payment-transaction.ts
 
 # Run all examples in a category
 ./transact/verify-all.sh
@@ -260,8 +260,8 @@ The `shared/` directory contains common utilities:
 ### Running Tests
 
 ```bash
-npm run typecheck    # Type check all examples
-npm run verify-all   # Run all verification scripts
+pnpm run typecheck    # Type check all examples
+pnpm run verify-all   # Run all verification scripts
 ```
 
 ## License
