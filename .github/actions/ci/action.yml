@@ -4,7 +4,7 @@ inputs:
   node-version:
     description: 'Node.js version to use'
     required: false
-    default: '20.x'
+    default: '24.x'
   commit-lint-from:
     description: 'Git SHA to lint commits from'
     required: false
@@ -18,7 +18,7 @@ runs:
   using: 'composite'
   steps:
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'npm'

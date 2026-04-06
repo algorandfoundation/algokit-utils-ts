@@ -1,13 +1,13 @@
 ---
-title: "Quick Start"
-description: "Get up and running with AlgoKit Utils in 5 minutes."
+title: 'Quick Start'
+description: 'Get up and running with AlgoKit Utils in 5 minutes.'
 ---
 
 Get up and running with AlgoKit Utils in 5 minutes.
 
 ## Prerequisites
 
-- Node.js >= 20.0
+- Node.js >= 24
 - [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli) installed
 - LocalNet running (`algokit localnet start`)
 

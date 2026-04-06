@@ -10,7 +10,7 @@
     "url": "https://github.com/algorandfoundation/algokit-utils-ts.git"
   },
   "engines": {
-    "node": ">=20.0"
+    "node": ">=24.0"
   },
   "type": "commonjs",
   "main": "index.js",
@@ -149,7 +149,7 @@
     "@eslint/js": "^9.15.0",
     "@makerx/prettier-config": "^2.0.0",
     "@makerx/ts-toolkit": "4.0.0-beta.24",
-    "@tsconfig/node20": "^20.1.4",
+    "@tsconfig/node24": "^24.0.4",
     "@types/json-bigint": "^1.0.4",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",

@@ -21,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Run CI
         uses: ./.github/actions/ci
         with:
-          node-version: 22.x
+          node-version: 24.x
           commit-lint-from: ${{ github.event.before }}
           commit-lint-to: ${{ github.sha }}
 
@@ -36,14 +36,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - uses: pnpm/action-setup@v4
         with:
@@ -65,7 +65,7 @@ jobs:
       - ci
       - check_docs
     with:
-      node-version: 22.x
+      node-version: 24.x
       build-path: dist
       artifact-name: package
 
@@ -77,13 +77,13 @@ jobs:
       id-token: write
     steps:
       - name: Generate bot token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         id: app_token
         with:
           app-id: ${{ secrets.BOT_ID }}
           private-key: ${{ secrets.BOT_SK }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Fetch entire repository history so we can determine version number from it
           fetch-depth: 0
@@ -93,14 +93,14 @@ jobs:
         run: git config --global user.email "179917785+engineering-ci[bot]@users.noreply.github.com" && git config --global user.name "engineering-ci[bot]"
 
       # semantic-release v25+ needs node 22.14+
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
 
       - name: Download built package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: package
           path: artifacts
@@ -134,12 +134,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           cache: 'npm'
 
       - uses: pnpm/action-setup@v4
