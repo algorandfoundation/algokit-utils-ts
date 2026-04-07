@@ -162,7 +162,7 @@
     "@types/node": "25.0.0",
     "@types/uuid": "10.0.0",
     "@typescript-eslint/eslint-plugin": "8.8.1",
-    "@vitest/coverage-v8": "4.0.5",
+    "@vitest/coverage-v8": "4.1.2",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "5.0.0",
     "dotenv-cli": "7.4.2",
@@ -184,7 +184,7 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.16.0",
     "uuid": "10.0.0",
-    "vitest": "4.0.5",
+    "vitest": "4.1.2",
     "vitest-fetch-mock": "0.4.5"
   },
   "release": {
