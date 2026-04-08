@@ -1,7 +1,17 @@
 {
-  "1109842": {
+  "1115543": {
     "active": true,
-    "notes": "Bundled dependency in NPM, which cannot be overriden and has no update available yet.",
-    "expiry": "2026-01-28"
+    "notes": "brace-expansion bundled inside npm in @semantic-release/npm - waiting for upstream fix",
+    "expiry": "2026-06-01"
+  },
+  "1115551": {
+    "active": true,
+    "notes": "picomatch bundled inside npm in @semantic-release/npm - waiting for upstream fix",
+    "expiry": "2026-06-01"
+  },
+  "1115554": {
+    "active": true,
+    "notes": "picomatch bundled inside npm in @semantic-release/npm - waiting for upstream fix",
+    "expiry": "2026-06-01"
   }
 }

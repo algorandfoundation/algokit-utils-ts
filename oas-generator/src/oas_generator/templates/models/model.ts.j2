@@ -1,0 +1,204 @@
+{% set modelName = schema_name | ts_pascal_case %}
+{% set descriptor = descriptor %}
+{% set isObject = descriptor.is_object %}
+{% set isArray = descriptor.is_array %}
+{% set refTypes = schema | collect_schema_refs(schema_name) %}
+{% set uses_signed_txn = schema | schema_uses_signed_txn(schemas) %}
+{% set uses_box_reference = schema | schema_uses_box_reference(schemas) %}
+{% set uses_holding_reference = schema | schema_uses_holding_reference(schemas) %}
+{% set uses_locals_reference = schema | schema_uses_locals_reference(schemas) %}
+{% set schemaSignedTxn = schema.get('x-algokit-signed-txn') is true %}
+{% set schemaBytes = schema.get('format') == 'byte' %}
+{% set schemaBytesB64 = schema.get('x-algokit-bytes-base64') is true %}
+{% set schemaBigint = schema.get('x-algokit-bigint') is true %}
+{% set schemaAddress = schema.get('x-algorand-format') == 'Address' %}
+{% set schemaByteLength = schema.get('x-algokit-byte-length') %}
+import type { Address, ObjectModelMetadata, ArrayModelMetadata, PrimitiveModelMetadata } from '@algorandfoundation/algokit-common';
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  booleanCodec,
+  bytesCodec,
+  bytesBase64Codec,
+  addressCodec,
+  ArrayCodec,
+  bytesArrayCodec,
+  bigIntArrayCodec,
+  addressArrayCodec,
+  numberArrayCodec,
+  booleanArrayCodec,
+  stringArrayCodec,
+  ObjectModelCodec,
+  ArrayModelCodec,
+  PrimitiveModelCodec,
+  RecordCodec,
+  unknownCodec,
+  FixedBytesCodec,
+  fixedBytes32Codec,
+  fixedBytes64Codec,
+  fixedBytes1793Codec,
+} from '@algorandfoundation/algokit-common';
+{# Import canonical types and Metas from transact when vendor extension types are used #}
+{% if uses_signed_txn or uses_box_reference or uses_holding_reference or uses_locals_reference %}
+{% set transact_types = [] %}
+{% set transact_metas = [] %}
+{% if uses_signed_txn %}
+{% set transact_types = transact_types + ['SignedTransaction'] %}
+{% set transact_metas = transact_metas + ['SignedTransactionMeta'] %}
+{% endif %}
+{% if uses_box_reference %}
+{% set transact_types = transact_types + ['BoxReference'] %}
+{% set transact_metas = transact_metas + ['BoxReferenceMeta'] %}
+{% endif %}
+{% if uses_holding_reference %}
+{% set transact_types = transact_types + ['HoldingReference'] %}
+{% set transact_metas = transact_metas + ['HoldingReferenceMeta'] %}
+{% endif %}
+{% if uses_locals_reference %}
+{% set transact_types = transact_types + ['LocalsReference'] %}
+{% set transact_metas = transact_metas + ['LocalsReferenceMeta'] %}
+{% endif %}
+import type { {{ transact_types | join(', ') }} } from '@algorandfoundation/algokit-transact';
+import { {{ transact_metas | join(', ') }} } from '@algorandfoundation/algokit-transact';
+{% endif %}
+{% set ns = namespace(refs_with_meta=[]) %}
+{% if descriptor.is_object %}
+{%   for f in descriptor.fields %}
+{%     if f.ref_model and f.ref_model not in ns.refs_with_meta %}
+{%       set ns.refs_with_meta = ns.refs_with_meta + [f.ref_model] %}
+{%     endif %}
+{%   endfor %}
+{% endif %}
+{% if descriptor.is_array and descriptor.array_item_ref %}
+{%   if descriptor.array_item_ref not in ns.refs_with_meta %}
+{%     set ns.refs_with_meta = ns.refs_with_meta + [descriptor.array_item_ref] %}
+{%   endif %}
+{% endif %}
+{# Identify types that are re-exports from transact #}
+{# These schemas have vendor extensions - their canonical types come directly from transact #}
+{# We don't need to import from local files for these since ts_type returns the canonical name #}
+{% set ns2 = namespace(transact_reexports=[]) %}
+{% for r in refTypes %}
+{%   set r_schema = schemas.get(r) %}
+{%   if r_schema and (r_schema.get('x-algokit-signed-txn') is true or r_schema.get('x-algokit-box-reference') is true or r_schema.get('x-algokit-holding-reference') is true or r_schema.get('x-algokit-locals-reference') is true) %}
+{%     set ns2.transact_reexports = ns2.transact_reexports + [r] %}
+{%   endif %}
+{% endfor %}
+{% for r in refTypes %}
+{%   set r_schema = schemas.get(r) %}
+{%   set is_reexport = r in ns2.transact_reexports %}
+{#   Skip vendor extension re-exports - their types come from transact directly #}
+{%   if not is_reexport %}
+import type { {{ r }} } from './{{ r | ts_kebab_case }}';
+{%     if r in ns.refs_with_meta %}
+import { {{ r }}Meta } from './{{ r | ts_kebab_case }}';
+{%     endif %}
+{%   endif %}
+{% endfor %}
+{% for custom_import in custom_imports %}
+{{ custom_import }}
+{% endfor %}
+
+{% macro inline_object_meta(inline_schema, required_fields, meta_name) -%}
+{ name: '{{ meta_name }}', kind: 'object', fields: [
+{%- for prop_name, prop_schema in inline_schema.get('properties', {}).items() %}
+{%- set prop_byte_length = prop_schema.get('x-algokit-byte-length') %}
+    {
+      name: '{{ prop_name | ts_camel_case }}',
+      wireKey: '{{ prop_name }}',
+      optional: {{ 'false' if prop_name in required_fields else 'true' }},
+      codec: {%- if prop_schema.get('x-algorand-format') == 'Address' -%}
+        addressCodec
+      {%- elif (prop_schema.get('format') == 'byte' or prop_schema.get('x-algokit-bytes-base64')) and prop_byte_length is not none -%}
+        {%- if prop_byte_length == 32 -%}
+        fixedBytes32Codec
+        {%- elif prop_byte_length == 64 -%}
+        fixedBytes64Codec
+        {%- elif prop_byte_length == 1793 -%}
+        fixedBytes1793Codec
+        {%- else -%}
+        new FixedBytesCodec({{ prop_byte_length }})
+        {%- endif -%}
+      {%- elif prop_schema.get('x-algokit-bytes-base64') -%}
+        bytesBase64Codec
+      {%- elif prop_schema.get('format') == 'byte' -%}
+        bytesCodec
+      {%- elif prop_schema.get('x-algokit-bigint') -%}
+        bigIntCodec
+      {%- elif prop_schema.get('type') == 'number' or prop_schema.get('type') == 'integer' -%}
+        numberCodec
+      {%- elif prop_schema.get('type') == 'boolean' -%}
+        booleanCodec
+      {%- else -%}
+        stringCodec
+      {%- endif %},
+    },
+{%- endfor %}
+  ] }
+{%- endmacro %}
+
+{% if descriptor.is_object %}
+{%   for f in descriptor.fields %}
+{%     if f.inline_object_schema %}
+const {{ f.inline_meta_name }}: ObjectModelMetadata<{{ modelName }}['{{ f.name }}']> = {{ inline_object_meta(f.inline_object_schema, f.inline_object_schema.get('required', []), f.inline_meta_name) }};
+
+{%     endif %}
+{%   endfor %}
+{% endif %}
+
+{{ schema.description | ts_doc_comment }}
+{% if isObject and schema.get('allOf') is not defined and schema.get('oneOf') is not defined and schema.get('anyOf') is not defined %}
+export interface {{ modelName }} {
+{%   for f in descriptor.fields %}
+  {{ f.name }}{{ '' if not f.is_optional else '?' }}: {{ f.ts_type }};
+{%   endfor %}
+}
+{% else %}
+export type {{ modelName }} = {{ schema | ts_type(schemas) }};
+{% endif %}
+
+export const {{ modelName }}Meta: {% if isObject %}ObjectModelMetadata<{{ modelName }}>{% elif isArray %}ArrayModelMetadata{% else %}PrimitiveModelMetadata{% endif %} = {
+  name: '{{ modelName }}',
+  kind: {% if isObject %}'object'{% elif isArray %}'array'{% else %}'primitive'{% endif %},
+{% if isObject %}
+  fields: [
+{%   for f in descriptor.fields %}
+    {
+      name: '{{ f.name }}',
+      wireKey: '{{ f.wire_name }}',
+      optional: {{ 'true' if f.is_optional else 'false' }},
+      codec: {{ f | field_codec_expr(modelName) }},
+    },
+{%   endfor %}
+  ],
+{% elif isArray %}
+  codec: {{ array_item_codec_expr(descriptor.array_item_ref, descriptor.array_item_is_signed_txn, descriptor.array_item_is_bytes, descriptor.array_item_is_bytes_b64, descriptor.array_item_is_bigint, descriptor.array_item_is_number, descriptor.array_item_is_boolean, descriptor.array_item_is_address, descriptor.array_item_is_box_reference, descriptor.array_item_is_holding_reference, descriptor.array_item_is_locals_reference, descriptor.array_item_byte_length) }},
+{% else %}
+{%   if schemaSignedTxn %}
+  codec: new ObjectModelCodec(SignedTransactionMeta),
+{%   elif (schemaBytes or schemaBytesB64) and schemaByteLength is not none %}
+{%     if schemaByteLength == 32 %}
+  codec: fixedBytes32Codec,
+{%     elif schemaByteLength == 64 %}
+  codec: fixedBytes64Codec,
+{%     elif schemaByteLength == 1793 %}
+  codec: fixedBytes1793Codec,
+{%     else %}
+  codec: new FixedBytesCodec({{ schemaByteLength }}),
+{%     endif %}
+{%   elif schemaBytesB64 %}
+  codec: bytesBase64Codec,
+{%   elif schemaBytes %}
+  codec: bytesCodec,
+{%   elif schemaBigint %}
+  codec: bigIntCodec,
+{%   else %}
+  codec: stringCodec,
+{%   endif %}
+{% endif %}
+};
+{% for method in custom_methods %}
+
+{{ method.code }}
+{% endfor %}

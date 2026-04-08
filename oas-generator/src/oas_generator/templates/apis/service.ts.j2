@@ -1,0 +1,146 @@
+import type { BaseHttpRequest } from '../core/base-http-request';
+import { encodeJson, encodeMsgpack, decodeJson, decodeMsgpack } from '../core/model-runtime';
+import { ReadableAddress, type EncodingFormat } from '@algorandfoundation/algokit-common';
+{% if custom_imports %}
+{% for import_statement in custom_imports %}
+{{ import_statement }}
+{% endfor %}
+{% endif %}
+{% if import_types and import_types|length > 0 %}
+{% set sorted = import_types | sort %}
+import type { {{ sorted | join(', ') }} } from '../models/index';
+import { {% for t in sorted | reject('equalto', 'SuggestedParams') %}{{ t }}Meta{% if not loop.last %}, {% endif %}{% endfor %} } from '../models/model-meta';
+{% endif %}
+
+{% macro base_meta(type_name) -%}
+{%- set t = type_name.strip() -%}
+{%- if t in import_types -%}
+{{ t }}Meta
+{%- else -%}
+null
+{%- endif -%}
+{%- endmacro %}
+
+{% macro meta_expr(type_name) -%}
+{%- set meta = base_meta(type_name) -%}
+{%- if meta == 'null' -%}
+undefined
+{%- else -%}
+{{ meta }}
+{%- endif -%}
+{%- endmacro %}
+
+export class {{ service_class_name }} {
+  constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+  private mimeTypeFor(format: EncodingFormat | 'text'): string {
+    return format === 'json' ? 'application/json' : format === 'msgpack' ? 'application/msgpack' : 'text/plain';
+  }
+
+{% for op in operations %}
+  {% set is_raw_bytes_body = op.requestBody and op.requestBody.tsType == 'Uint8Array' %}
+  {{ op.description | ts_doc_comment }}
+  {% if op.isPrivate %}private async _{% else %}async {% endif %}{{ op.operationId | ts_camel_case }}(
+{%- for p in op.pathParameters %}
+    {{ p.varName }}: {{ p.tsType }},
+{%- endfor %}
+{%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
+    body{% if not op.requestBody.required %}?{% endif %}: {{ op.requestBody.tsType }},
+{%- endif %}
+{%- if op.otherParameters|length > 0 %}
+    params?: {
+{%- for p in op.otherParameters %}
+      {{ p.varName }}{% if not p.required %}?{% endif %}: {{ p.tsType }};
+{%- endfor %}
+    }
+{%- endif %}
+  ): Promise<{{ op.responseTsType }}> {
+    const headers: Record<string, string> = {};
+    {% set body_format = 'msgpack' if op.forceMsgpackQuery else 'json' %}
+    const responseFormat: EncodingFormat = '{{ body_format }}'
+    headers['Accept'] = this.mimeTypeFor(responseFormat);
+
+    {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
+      {% if is_raw_bytes_body %}
+    const serializedBody = body ?? undefined;
+    const mediaType = '{{op.requestBody.mediaType}}';
+    headers['Content-Type'] = mediaType;
+      {% else %}
+    const bodyMeta = {{ meta_expr(op.requestBody.tsType) }};
+    const mediaType = this.mimeTypeFor(!bodyMeta ? 'text' : responseFormat);
+    if (mediaType) headers['Content-Type'] = mediaType;
+        {% if op.requestBody and not meta_expr(op.requestBody.tsType) == 'undefined' %}
+          {% if body_format == 'json' %}
+    const serializedBody = body ? encodeJson(body, bodyMeta) : undefined;
+          {% else %}
+    const serializedBody = body ? encodeMsgpack(body, bodyMeta) : undefined;
+          {% endif %}
+        {% else %}
+    const serializedBody = body;
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {% set query_params = op.otherParameters | selectattr('in', 'equalto', 'query') | list %}
+    {% set header_params = op.otherParameters | selectattr('in', 'equalto', 'header') | list %}
+    {% if header_params|length > 0 %}
+    for (const param of [{% for p in header_params %}{ name: '{{ p.name }}', value: params?.{{ p.varName }} }{% if not loop.last %}, {% endif %}{% endfor %}]) {
+      if (param.value !== undefined) headers[param.name] = String(param.value);
+    }
+    {% endif %}
+
+    {% if op.responseTsType == 'void' %}
+    await this.httpRequest.request<void>({
+    {% else %}
+      {% if body_format == 'msgpack' %}
+    const payload = await this.httpRequest.request<Uint8Array>({
+      {% elif meta_expr(op.responseTsType) == 'undefined' %}
+    const payload = await this.httpRequest.request<{{ op.responseTsType }}>({
+      {% else %}
+    const payload = await this.httpRequest.request<Record<string, unknown>>({
+      {% endif %}
+    {% endif %}
+      method: '{{ op.method }}',
+      url: '{{ op.path }}',
+      path: {
+{%- for p in op.pathParameters %}
+        '{{ p.name }}': {{ p.varName }},
+{%- endfor %}
+      },
+      query: {
+{%- for p in query_params %}
+        '{{ p.name }}': params?.{{ p.varName }},
+{%- endfor %}
+{%- if op.forceMsgpackQuery %}
+        'format': 'msgpack',
+{%- endif %}
+      },
+      headers,
+      {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
+      body: serializedBody,
+      {% else %}
+      body: undefined,
+      {% endif %}
+    });
+
+    {% if op.responseTsType != 'void' %}
+      {% if meta_expr(op.responseTsType) == 'undefined' %}
+    return payload;
+      {% else %}
+        {% if body_format == 'json' %}
+    return decodeJson(payload, {{ meta_expr(op.responseTsType) }});
+        {% else %}
+    return decodeMsgpack(payload, {{ meta_expr(op.responseTsType) }});
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  }
+
+{% endfor %}
+{% if custom_methods %}
+{% for method in custom_methods %}
+
+  {{ method }}
+{% endfor %}
+{% endif %}
+}

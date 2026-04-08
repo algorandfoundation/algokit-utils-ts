@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - release
+      - decoupling
   workflow_dispatch:
 
 concurrency: release
@@ -12,37 +13,50 @@ concurrency: release
 permissions:
   contents: write
   issues: read
+  id-token: write
 
 jobs:
   ci:
     name: Continuous Integration
-    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
-    with:
-      node-version: 20.x
-      run-commit-lint: true
-      pre-test-script: |
-        pipx install algokit
-        algokit localnet start
-        npx --yes wait-on tcp:4001 -t 30000
-      audit-script: |
-        npm run audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Run CI
+        uses: ./.github/actions/ci
+        with:
+          node-version: 24.x
+          commit-lint-from: ${{ github.event.before }}
+          commit-lint-to: ${{ github.sha }}
 
   check_docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
-      - name: Check docs are up to date
-        shell: bash
-        run: |
-          npm ci --ignore-scripts
-          npm run generate:code-docs
-          # Add untracked files as empty so they come up in diff
-          git add -N .
-          # Print changed files and error out if there are changes after generating docs
-          git diff --exit-code --name-only
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: docs/package.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install docs dependencies
+        run: pnpm install --frozen-lockfile --dir docs
+
+      - name: Verify documentation builds
+        run: pnpm --dir docs build
 
   build:
     name: Build
@@ -51,7 +65,7 @@ jobs:
       - ci
       - check_docs
     with:
-      node-version: 20.x
+      node-version: 24.x
       build-path: dist
       artifact-name: package
 
@@ -59,15 +73,17 @@ jobs:
     name: Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Generate bot token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         id: app_token
         with:
           app-id: ${{ secrets.BOT_ID }}
           private-key: ${{ secrets.BOT_SK }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Fetch entire repository history so we can determine version number from it
           fetch-depth: 0
@@ -76,14 +92,15 @@ jobs:
       - name: Set Git user as GitHub actions
         run: git config --global user.email "179917785+engineering-ci[bot]@users.noreply.github.com" && git config --global user.name "engineering-ci[bot]"
 
-      # semantic-release needs node 20
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
+      # semantic-release v25+ needs node 22.14+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 24.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Download built package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: package
           path: artifacts
@@ -101,4 +118,45 @@ jobs:
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish_docs:
+    name: Publish Documentation
+    runs-on: ubuntu-latest
+    needs:
+      - ci
+      - check_docs
+    if: github.ref == 'refs/heads/decoupling'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: 'npm'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: docs/package.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install docs dependencies
+        run: pnpm install --frozen-lockfile --dir docs
+
+      - name: Build documentation
+        run: pnpm --dir docs build
+
+      - name: Publish docs to GitHub Pages
+        id: deployment
+        uses: algorandfoundation/algokit-shared-config/.github/actions/publish-docs@main
+        with:
+          artifact_path: docs/dist

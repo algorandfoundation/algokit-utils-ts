@@ -52,8 +52,24 @@ coverage
 # Website & Code docs generation
 code-docs/
 out/
+docs/_html/
 
 # dotenv environment variable files
 .env
 .env.*
 !.env.template
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+ENV/
+
+.polytest*/
+polytest_resources/
+.algokit-*
+
+.claude/

@@ -1,11 +1,11 @@
 import { algos, Config } from '../../'
-import { AlgorandClient } from '../../types/algorand-client'
-import { ClientManager } from '../../types/client-manager'
-import { AlgoConfig } from '../../types/network-client'
-import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
+import { AlgorandClient } from '../../algorand-client'
+import { ClientManager } from '../../client-manager'
+import { AlgoConfig } from '../../network-client'
 import { getTestAccount } from '../account'
 import { runWhenIndexerCaughtUp } from '../indexer'
 import { TransactionLogger } from '../transaction-logger'
+import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../types'
 
 /**
  * Creates a test fixture for automated testing against Algorand.
@@ -42,7 +42,7 @@ import { TransactionLogger } from '../transaction-logger'
  * @example With config
  * ```typescript
  * const fixture = algorandFixture({
- *  algod: new Algodv2('localhost', 12345, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+ *  algod: new AlgodClient({ baseUrl: 'http://localhost:12345', headers: { 'X-Algo-API-Token': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' } }),
  *  // ...
  * })
  *
@@ -114,7 +114,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       },
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
-      waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(transactionId).do()),
+      waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionById(transactionId)),
     }
   }
 

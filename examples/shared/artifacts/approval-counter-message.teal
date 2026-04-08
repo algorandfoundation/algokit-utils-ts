@@ -1,0 +1,26 @@
+#pragma version 10
+txn ApplicationID
+bz create
+// On call: increment counter
+byte "counter"
+app_global_get
+int 1
++
+byte "counter"
+swap
+app_global_put
+byte "message"
+byte "Hello, Algorand!"
+app_global_put
+int 1
+return
+create:
+// On create: initialize counter to 0
+byte "counter"
+int 0
+app_global_put
+byte "message"
+byte "Hello, Algorand!"
+app_global_put
+int 1
+return

@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET v2_accounts_ACCOUNT-ID_assets > Common Tests > Basic request and response validation 1`] = `
+{
+  "assets": [
+    {
+      "amount": 0n,
+      "assetId": 705457144n,
+      "deleted": false,
+      "isFrozen": false,
+      "optedInAtRound": 42227833n,
+    },
+  ],
+  "currentRound": 57774717n,
+  "nextToken": "705457144",
+}
+`;

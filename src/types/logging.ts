@@ -1,53 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-console */
+// Re-exports with deprecation notices for backwards compatibility
+// New imports should use '@algorandfoundation/algokit-utils/logging'
 
-/** General purpose logger type, compatible with Winston and others. */
-export type Logger = {
-  error(message: string, ...optionalParams: unknown[]): void
-  warn(message: string, ...optionalParams: unknown[]): void
-  info(message: string, ...optionalParams: unknown[]): void
-  verbose(message: string, ...optionalParams: unknown[]): void
-  debug(message: string, ...optionalParams: unknown[]): void
-}
+import {
+  type Logger as _Logger,
+  consoleLogger as _consoleLogger,
+  infoConsoleLogger as _infoConsoleLogger,
+  verboseConsoleLogger as _verboseConsoleLogger,
+  warningConsoleLogger as _warningConsoleLogger,
+  nullLogger as _nullLogger,
+} from '../logging'
 
-/** A logger implementation that writes to console */
-export const consoleLogger: Logger = {
-  error: console.error,
-  warn: console.warn,
-  info: console.info,
-  verbose: () => {},
-  debug: console.debug,
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/logging` instead */
+export type Logger = _Logger
 
-export const infoConsoleLogger: Logger = {
-  error: console.error,
-  warn: console.warn,
-  info: console.info,
-  verbose: () => {},
-  debug: () => {},
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/logging` instead */
+export const consoleLogger = _consoleLogger
 
-export const verboseConsoleLogger: Logger = {
-  error: console.error,
-  warn: console.warn,
-  info: console.info,
-  verbose: console.trace,
-  debug: console.debug,
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/logging` instead */
+export const infoConsoleLogger = _infoConsoleLogger
 
-export const warningConsoleLogger: Logger = {
-  error: console.error,
-  warn: console.warn,
-  info: () => {},
-  verbose: () => {},
-  debug: () => {},
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/logging` instead */
+export const verboseConsoleLogger = _verboseConsoleLogger
 
-/** A logger implementation that does nothing */
-export const nullLogger: Logger = {
-  error: function (message: string, ...optionalParams: unknown[]): void {},
-  warn: function (message: string, ...optionalParams: unknown[]): void {},
-  info: function (message: string, ...optionalParams: unknown[]): void {},
-  verbose: function (message: string, ...optionalParams: unknown[]): void {},
-  debug: function (message: string, ...optionalParams: unknown[]): void {},
-}
+/** @deprecated Import from `@algorandfoundation/algokit-utils/logging` instead */
+export const warningConsoleLogger = _warningConsoleLogger
+
+/** @deprecated Import from `@algorandfoundation/algokit-utils/logging` instead */
+export const nullLogger = _nullLogger

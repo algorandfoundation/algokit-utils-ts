@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET health > Common Tests > Basic request and response validation 1`] = `
+{
+  "data": {
+    "migration-required": false,
+    "read-only-mode": true,
+  },
+  "dbAvailable": true,
+  "isMigrating": false,
+  "message": "57772761",
+  "round": 57772761n,
+  "version": "3.9.0",
+}
+`;

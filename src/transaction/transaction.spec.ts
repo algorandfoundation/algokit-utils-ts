@@ -1,4 +1,6 @@
-import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
+import { ABIType } from '@algorandfoundation/algokit-abi'
+import { Address, getApplicationAddress } from '@algorandfoundation/algokit-common'
+import { AddressWithTransactionSigner, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -7,16 +9,15 @@ import externalARC32 from '../../tests/example-contracts/resource-packer/artifac
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
 import testingApp from '../../tests/example-contracts/testing-app/application.json'
-import { algo, microAlgo } from '../amount'
+import { AlgoAmount, algo, microAlgo } from '../amount'
+import { OnUpdate } from '../app'
+import { AppClient } from '../app-client'
+import { AppSpec } from '../app-spec'
+import { PaymentParams, TransactionComposer } from '../composer'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
-import { AlgoAmount } from '../types/amount'
-import { OnUpdate } from '../types/app'
-import { AppClient } from '../types/app-client'
-import { AppSpec } from '../types/app-spec'
-import { PaymentParams, TransactionComposer } from '../types/composer'
-import { Arc2TransactionNote } from '../types/transaction'
-import { getABIReturnValue, populateAppCallResources, waitForConfirmation } from './transaction'
+import { waitForConfirmation } from './transaction'
+import { Arc2TransactionNote } from './types'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
@@ -135,9 +136,9 @@ describe('transaction', () => {
     const { algorand, algod } = localnet.context
     const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
-      await waitForConfirmation(txn.txID(), 5, algod)
+      await waitForConfirmation(txn.txId(), 5, algod)
     } catch (e: unknown) {
-      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
+      expect((e as Error).message).toEqual(`Transaction ${txn.txId()} not confirmed after 5 rounds`)
     }
   })
 
@@ -151,7 +152,7 @@ describe('transaction', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const messageRegex = new RegExp(
-        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${txn2.txId()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
@@ -467,7 +468,7 @@ describe('transaction', () => {
       await Promise.all(
         result.transactions.map(async (txn) => {
           expect(Buffer.from(txn.group!).toString('base64')).toBe(result.groupId)
-          await localnet.context.waitForIndexerTransaction(txn.txID())
+          await localnet.context.waitForIndexerTransaction(txn.txId())
         }),
       )
     })
@@ -787,7 +788,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
     Config.configure({ populateAppCallResources: false })
   })
 
-  let alice: Address & Account
+  let alice: Address
 
   describe('accounts', () => {
     test('addressBalance: unavailable Account', async () => {
@@ -799,7 +800,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
     })
 
     test('addressBalance', async () => {
-      await appClient.send.call({ method: 'addressBalance', args: [alice.addr] })
+      await appClient.send.call({ method: 'addressBalance', args: [alice] })
     })
   })
 
@@ -889,20 +890,24 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
 
   describe('sendTransaction', () => {
     test('addressBalance: unavailable Account', async () => {
+      const { algorand } = fixture.context
+
       await expect(
         appClient.send.call({
           method: 'addressBalance',
-          args: [algosdk.generateAccount().addr.toString()],
+          args: [algorand.account.random().addr.toString()],
           populateAppCallResources: false,
         }),
       ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {
+      const { algorand } = fixture.context
+
       const result = await appClient.send.call({
         method: 'addressBalance',
-        args: [algosdk.generateAccount().addr.toString()],
-        onComplete: algosdk.OnApplicationComplete.NoOpOC,
+        args: [algorand.account.random().addr.toString()],
+        onComplete: OnApplicationComplete.NoOp,
       })
 
       // Ensure the transaction was not sent via simulate
@@ -957,7 +962,7 @@ describe('Resource population: Mixed', () => {
   describe('mixed', () => {
     test('same account', async () => {
       const { algorand, testAccount } = fixture.context
-      const acct = algosdk.generateAccount()
+      const acct = algorand.account.random()
 
       const rekeyedTo = algorand.account.random()
       await algorand.account.rekeyAccount(testAccount, rekeyedTo)
@@ -968,8 +973,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallAccts = transactions[0].appCall?.accountReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -986,14 +991,14 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(
           await v9Client.params.call({
             method: 'addressBalance',
-            args: [algosdk.getApplicationAddress(externalAppID).toString()],
+            args: [getApplicationAddress(externalAppID).toString()],
             sender: testAccount,
           }),
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallApps = transactions[0].appCall?.appReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1045,7 +1050,7 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
-  let testAccount: algosdk.Address & algosdk.Account
+  let testAccount: Address & AddressWithTransactionSigner
 
   beforeEach(fixture.newScope)
 
@@ -1102,7 +1107,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1123,7 +1128,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1137,9 +1142,9 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.applicationCall?.boxes?.[0]
+    const boxRef = result.transaction.appCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
-    expect(boxRef?.appIndex).toBe(0n)
+    expect(boxRef?.appId).toBe(0n)
   })
 
   test('order is deterministic', async () => {
@@ -1186,28 +1191,26 @@ describe('Resource population: meta', () => {
       composer.addAppCallMethodCall(await v9AppClient.params.call({ method: 'dummy', note: `${i}` }))
     }
 
-    const atc = (await composer.build()).atc
     const getResources = async () => {
-      const populatedAtc = await populateAppCallResources(atc, algorand.client.algod)
-
       const resources = []
-      for (const txnWithSigner of populatedAtc.buildGroup()) {
+      const transactionsWithSigners = (await composer.build()).transactions
+      for (const txnWithSigner of transactionsWithSigners) {
         const txn = txnWithSigner.txn
 
-        for (const acct of txn.applicationCall?.accounts ?? []) {
+        for (const acct of txn.appCall?.accountReferences ?? []) {
           resources.push(acct.toString())
         }
 
-        for (const asset of txn.applicationCall?.foreignAssets ?? []) {
+        for (const asset of txn.appCall?.assetReferences ?? []) {
           resources.push(asset.toString())
         }
 
-        for (const app of txn.applicationCall?.foreignApps ?? []) {
+        for (const app of txn.appCall?.appReferences ?? []) {
           resources.push(app.toString())
         }
 
-        for (const box of txn.applicationCall?.boxes ?? []) {
-          resources.push(`${box.appIndex}-${box.name.toString()}`)
+        for (const box of txn.appCall?.boxReferences ?? []) {
+          resources.push(`${box.appId}-${box.name.toString()}`)
         }
       }
 
@@ -1227,82 +1230,77 @@ describe('Resource population: meta', () => {
 
 describe('abi return', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getABIResult = (type: string, value: any) => {
+  const encodeThenDecodeValue = (type: string, value: any) => {
     const abiType = ABIType.from(type)
-    const result = {
-      method: new ABIMethod({ name: '', args: [], returns: { type: type } }),
-      rawReturnValue: abiType.encode(value),
-      returnValue: abiType.decode(abiType.encode(value)),
-      txID: '',
-    } as algosdk.ABIResult
-    return getABIReturnValue(result, abiType)
+    const encoded = abiType.encode(value)
+    return abiType.decode(encoded)
   }
 
   test('uint32', () => {
-    expect(getABIResult('uint32', 0).returnValue).toBe(0)
-    expect(getABIResult('uint32', 0n).returnValue).toBe(0)
-    expect(getABIResult('uint32', 1).returnValue).toBe(1)
-    expect(getABIResult('uint32', 1n).returnValue).toBe(1)
-    expect(getABIResult('uint32', 2 ** 32 - 1).returnValue).toBe(2 ** 32 - 1)
-    expect(getABIResult('uint32', 2n ** 32n - 1n).returnValue).toBe(2 ** 32 - 1)
+    expect(encodeThenDecodeValue('uint32', 0)).toBe(0)
+    expect(encodeThenDecodeValue('uint32', 0n)).toBe(0)
+    expect(encodeThenDecodeValue('uint32', 1)).toBe(1)
+    expect(encodeThenDecodeValue('uint32', 1n)).toBe(1)
+    expect(encodeThenDecodeValue('uint32', 2 ** 32 - 1)).toBe(2 ** 32 - 1)
+    expect(encodeThenDecodeValue('uint32', 2n ** 32n - 1n)).toBe(2 ** 32 - 1)
   })
 
   test('uint64', () => {
-    expect(getABIResult('uint64', 0).returnValue).toBe(0n)
-    expect(getABIResult('uint64', 1).returnValue).toBe(1n)
-    expect(getABIResult('uint64', 2 ** 32 - 1).returnValue).toBe(2n ** 32n - 1n)
-    expect(getABIResult('uint64', 2n ** 64n - 1n).returnValue).toBe(2n ** 64n - 1n)
+    expect(encodeThenDecodeValue('uint64', 0)).toBe(0n)
+    expect(encodeThenDecodeValue('uint64', 1)).toBe(1n)
+    expect(encodeThenDecodeValue('uint64', 2 ** 32 - 1)).toBe(2n ** 32n - 1n)
+    expect(encodeThenDecodeValue('uint64', 2n ** 64n - 1n)).toBe(2n ** 64n - 1n)
   })
 
   test('uint32[]', () => {
-    expect(getABIResult('uint32[]', [0]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[]', [0n]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[]', [1]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[]', [1n]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
-    expect(getABIResult('uint32[]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+    expect(encodeThenDecodeValue('uint32[]', [0])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[]', [0n])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[]', [1])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[]', [1n])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[]', [1, 2, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[]', [1n, 2n, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[]', [2 ** 32 - 1])).toEqual([2 ** 32 - 1])
+    expect(encodeThenDecodeValue('uint32[]', [2n ** 32n - 1n, 1])).toEqual([2 ** 32 - 1, 1])
   })
 
   test('uint32[n]', () => {
-    expect(getABIResult('uint32[1]', [0]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[1]', [0n]).returnValue).toEqual([0])
-    expect(getABIResult('uint32[1]', [1]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[1]', [1n]).returnValue).toEqual([1])
-    expect(getABIResult('uint32[3]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[3]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
-    expect(getABIResult('uint32[1]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
-    expect(getABIResult('uint32[2]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+    expect(encodeThenDecodeValue('uint32[1]', [0])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[1]', [0n])).toEqual([0])
+    expect(encodeThenDecodeValue('uint32[1]', [1])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[1]', [1n])).toEqual([1])
+    expect(encodeThenDecodeValue('uint32[3]', [1, 2, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[3]', [1n, 2n, 3])).toEqual([1, 2, 3])
+    expect(encodeThenDecodeValue('uint32[1]', [2 ** 32 - 1])).toEqual([2 ** 32 - 1])
+    expect(encodeThenDecodeValue('uint32[2]', [2n ** 32n - 1n, 1])).toEqual([2 ** 32 - 1, 1])
   })
 
   test('uint64[]', () => {
-    expect(getABIResult('uint64[]', [0]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[]', [0n]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[]', [1]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[]', [1n]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
-    expect(getABIResult('uint64[]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+    expect(encodeThenDecodeValue('uint64[]', [0])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[]', [0n])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[]', [1])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[]', [1n])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[]', [1, 2, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[]', [1n, 2n, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[]', [2 ** 32 - 1])).toEqual([2n ** 32n - 1n])
+    expect(encodeThenDecodeValue('uint64[]', [2n ** 64n - 1n, 1])).toEqual([2n ** 64n - 1n, 1n])
   })
 
   test('uint64[n]', () => {
-    expect(getABIResult('uint64[1]', [0]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[1]', [0n]).returnValue).toEqual([0n])
-    expect(getABIResult('uint64[1]', [1]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[1]', [1n]).returnValue).toEqual([1n])
-    expect(getABIResult('uint64[3]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[3]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
-    expect(getABIResult('uint64[1]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
-    expect(getABIResult('uint64[2]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+    expect(encodeThenDecodeValue('uint64[1]', [0])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[1]', [0n])).toEqual([0n])
+    expect(encodeThenDecodeValue('uint64[1]', [1])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[1]', [1n])).toEqual([1n])
+    expect(encodeThenDecodeValue('uint64[3]', [1, 2, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[3]', [1n, 2n, 3])).toEqual([1n, 2n, 3n])
+    expect(encodeThenDecodeValue('uint64[1]', [2 ** 32 - 1])).toEqual([2n ** 32n - 1n])
+    expect(encodeThenDecodeValue('uint64[2]', [2n ** 64n - 1n, 1])).toEqual([2n ** 64n - 1n, 1n])
   })
 
   test('(uint32,uint64,(uint32,uint64),uint32[],uint64[])', () => {
     const type = '(uint32,uint64,(uint32,uint64),uint32[],uint64[])'
-    expect(getABIResult(type, [0, 0, [0, 0], [0], [0]]).returnValue).toEqual([0, 0n, [0, 0n], [0], [0n]])
-    expect(getABIResult(type, [1, 1, [1, 1], [1], [1]]).returnValue).toEqual([1, 1n, [1, 1n], [1], [1n]])
-    expect(getABIResult(type, [2 ** 32 - 1, 2n ** 64n - 1n, [2 ** 32 - 1, 2n ** 64n - 1n], [1, 2, 3], [1, 2, 3]]).returnValue).toEqual([
+    expect(encodeThenDecodeValue(type, [0, 0, [0, 0], [0], [0]])).toEqual([0, 0n, [0, 0n], [0], [0n]])
+    expect(encodeThenDecodeValue(type, [1, 1, [1, 1], [1], [1]])).toEqual([1, 1n, [1, 1n], [1], [1n]])
+    expect(encodeThenDecodeValue(type, [2 ** 32 - 1, 2n ** 64n - 1n, [2 ** 32 - 1, 2n ** 64n - 1n], [1, 2, 3], [1, 2, 3]])).toEqual([
       2 ** 32 - 1,
       2n ** 64n - 1n,
       [2 ** 32 - 1, 2n ** 64n - 1n],
@@ -1319,8 +1317,8 @@ describe('access references', () => {
   let appClient: AppClient
   let externalClient: AppClient
 
-  let alice: algosdk.Address
-  let getTestAccounts: (count: number) => Promise<algosdk.Address[]>
+  let alice: Address
+  let getTestAccounts: (count: number) => Promise<Address[]>
 
   beforeEach(fixture.newScope)
 
@@ -1378,7 +1376,7 @@ describe('access references', () => {
         populateAppCallResources: false,
         accountReferences: [alice, ...(await getTestAccounts(8))],
       }),
-    ).rejects.toThrow(/max number of accounts is 8/)
+    ).rejects.toThrow(/Account references cannot exceed 8 refs, got 9/)
   })
 
   test('up to 16 access addresses can be used', async () => {
@@ -1437,7 +1435,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { address: alice, assetId } }],
+      accessReferences: [{ holding: { address: alice, assetId: assetId } }],
     })
   })
 

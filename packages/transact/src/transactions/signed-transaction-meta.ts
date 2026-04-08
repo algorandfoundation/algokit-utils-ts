@@ -1,0 +1,94 @@
+import type { ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  ArrayCodec,
+  ObjectModelCodec,
+  addressCodec,
+  bytesArrayCodec,
+  bytesCodec,
+  fixedBytes32Codec,
+  fixedBytes64Codec,
+  numberCodec,
+} from '@algorandfoundation/algokit-common'
+import { LogicSigSignature, MultisigSignature, MultisigSubsignature, SignedTransaction } from './signed-transaction'
+import { transactionCodec } from './transaction'
+
+const MultisigSubsignatureMeta: ObjectModelMetadata<MultisigSubsignature> = {
+  name: 'MultisigSubsignature',
+  kind: 'object',
+  fields: [
+    { name: 'publicKey', wireKey: 'pk', optional: false, codec: fixedBytes32Codec },
+    { name: 'sig', wireKey: 's', optional: true, codec: fixedBytes64Codec },
+  ],
+}
+
+const MultisigSignatureMeta: ObjectModelMetadata<MultisigSignature> = {
+  name: 'MultisigSignature',
+  kind: 'object',
+  fields: [
+    { name: 'version', wireKey: 'v', optional: false, codec: numberCodec },
+    { name: 'threshold', wireKey: 'thr', optional: false, codec: numberCodec },
+    {
+      name: 'subsigs',
+      wireKey: 'subsig',
+      optional: false,
+      codec: new ArrayCodec(new ObjectModelCodec(MultisigSubsignatureMeta)),
+    },
+  ],
+}
+
+const LogicSigSignatureMeta: ObjectModelMetadata<LogicSigSignature> = {
+  name: 'LogicSignature',
+  kind: 'object',
+  fields: [
+    { name: 'logic', wireKey: 'l', optional: false, codec: bytesCodec },
+    { name: 'args', wireKey: 'arg', optional: true, codec: bytesArrayCodec },
+    { name: 'sig', wireKey: 'sig', optional: true, codec: fixedBytes64Codec },
+    {
+      name: 'msig',
+      wireKey: 'msig',
+      optional: true,
+      codec: new ObjectModelCodec(MultisigSignatureMeta),
+    },
+    {
+      name: 'lmsig',
+      wireKey: 'lmsig',
+      optional: true,
+      codec: new ObjectModelCodec(MultisigSignatureMeta),
+    },
+  ],
+}
+
+export const multisigSignatureCodec = new ObjectModelCodec<MultisigSignature>(MultisigSignatureMeta)
+export const logicSigSignatureCodec = new ObjectModelCodec<LogicSigSignature>(LogicSigSignatureMeta)
+
+/**
+ * Metadata for SignedTransaction
+ */
+export const SignedTransactionMeta: ObjectModelMetadata<SignedTransaction> = {
+  name: 'SignedTransaction',
+  kind: 'object',
+  fields: [
+    {
+      name: 'txn',
+      wireKey: 'txn',
+      optional: false,
+      codec: transactionCodec,
+    },
+    { name: 'sig', wireKey: 'sig', optional: true, codec: fixedBytes64Codec },
+    {
+      name: 'msig',
+      wireKey: 'msig',
+      optional: true,
+      codec: multisigSignatureCodec,
+    },
+    {
+      name: 'lsig',
+      wireKey: 'lsig',
+      optional: true,
+      codec: logicSigSignatureCodec,
+    },
+    { name: 'authAddress', wireKey: 'sgnr', optional: true, codec: addressCodec },
+  ],
+}
+
+export const signedTransactionCodec = new ObjectModelCodec<SignedTransaction>(SignedTransactionMeta)
