@@ -8,14 +8,14 @@
     "verify-all": "./verify-all.sh"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-utils": "file:../dist",
-    "@aws-sdk/client-kms": "^3.1000.0",
-    "@napi-rs/keyring": "^1.2.0",
-    "tweetnacl": "^1.0.3"
+    "@algorandfoundation/algokit-utils": "link:../dist",
+    "@aws-sdk/client-kms": "3.1000.0",
+    "@napi-rs/keyring": "1.2.0",
+    "tweetnacl": "1.0.3"
   },
   "devDependencies": {
-    "tsx": "^4.21.0",
-    "typescript": "^5.4.5"
+    "tsx": "4.21.0",
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": ">=24.0"

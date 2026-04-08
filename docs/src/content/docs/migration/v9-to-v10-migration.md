@@ -813,8 +813,8 @@ err.traces[0].trace // Typed object structure
 ### Step 1: Update Dependencies
 
 ```bash
-npm install @algorandfoundation/algokit-utils@latest
-npm uninstall algosdk  # No longer needed as direct dependency
+pnpm install @algorandfoundation/algokit-utils@latest
+pnpm remove algosdk  # No longer needed as direct dependency
 ```
 
 ### Step 2: Update Entry Point

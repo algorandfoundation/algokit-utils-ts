@@ -10,16 +10,16 @@ const distDir = path.join(repoRootDir, "dist");
 const tsconfigPath = path.join(rootDir, "tsconfig.run.json");
 
 function printUsage() {
-  console.error(`Usage: npm run example <file-or-name> [args...]
+  console.error(`Usage: pnpm run example <file-or-name> [args...]
 Examples:
-  npm run example indexer_client/01-health-check.ts
-  npm run example 01-health-check.ts`);
+  pnpm run example indexer_client/01-health-check.ts
+  pnpm run example 01-health-check.ts`);
 }
 
 function ensureDist() {
   if (existsSync(distDir) && statSync(distDir).isDirectory()) return;
 
-  console.error(`Error: dist/ folder not found. Please build the project first by running 'npm run build' from the repository root (${repoRootDir})`);
+  console.error(`Error: dist/ folder not found. Please build the project first by running 'pnpm build' from the repository root (${repoRootDir})`);
   process.exit(1);
 }
 

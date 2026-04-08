@@ -148,7 +148,7 @@ async function main() {
     printInfo('To run the mock server locally, you have several options:')
     printInfo('')
     printInfo('Option 1: Using algokit-polytest CLI')
-    printInfo('  npm install -g algokit-polytest')
+    printInfo('  pnpm install -g algokit-polytest')
     printInfo('  algokit-polytest serve')
     printInfo('')
     printInfo('Option 2: Set environment variable to external server')

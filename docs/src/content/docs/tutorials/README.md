@@ -13,7 +13,7 @@ Get up and running with AlgoKit Utils in 5 minutes.
 ## Installation
 
 ```bash
-npm install @algorandfoundation/algokit-utils
+pnpm install @algorandfoundation/algokit-utils
 ```
 
 ## Your First Transaction

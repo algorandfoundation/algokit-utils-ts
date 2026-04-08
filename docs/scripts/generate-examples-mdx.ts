@@ -45,7 +45,7 @@ for (const [categoryDir, meta] of Object.entries(CATEGORIES)) {
     const order = extractOrder(filename)
     const slug = createSlug(filename)
     const githubUrl = `${GITHUB_BASE}/${categoryDir}/${filename}`
-    const runCommand = `npm run example ${categoryDir}/${filename}`
+    const runCommand = `pnpm run example ${categoryDir}/${filename}`
 
     const prereqList = prerequisites
       .split('\n')
@@ -183,7 +183,7 @@ Run any example from the repository's \`examples\` directory:
 
 \`\`\`bash
 cd examples
-npm run example ${examples[0].categoryDir}/01-*.ts
+pnpm run example ${examples[0].categoryDir}/01-*.ts
 \`\`\`
 `,
   )
@@ -221,15 +221,15 @@ git clone https://github.com/algorandfoundation/algokit-utils-ts.git
 cd algokit-utils-ts
 
 # Install dependencies and build the package
-npm ci
-npm run build
+pnpm install --frozen-lockfile
+pnpm build
 
 # Install examples dependencies
 cd examples
-npm ci
+pnpm install --frozen-lockfile
 
 # Run any example
-npm run example algorand_client/01-client-instantiation.ts
+pnpm run example algorand_client/01-client-instantiation.ts
 \`\`\`
 
 ## Prerequisites
