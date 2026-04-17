@@ -125,7 +125,7 @@ jobs:
     needs:
       - ci
       - check_docs
-    if: github.ref == 'refs/heads/decoupling'
+    if: github.ref == 'refs/heads/main'
     permissions:
       pages: write
       id-token: write
