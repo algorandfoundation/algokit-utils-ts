@@ -121,7 +121,9 @@
     "polytest:generate-algod": "polytest --config test_configs/algod_client.jsonc --git 'https://github.com/algorandfoundation/algokit-polytest#main' generate -t vitest",
     "polytest:start-mock-servers": "cd .polytest_algokit-polytest/resources/mock-server/scripts/ && ./start_all_servers.sh && cd ../../../..",
     "polytest:stop-mock-servers": "cd .polytest_algokit-polytest/resources/mock-server/scripts/ && ./stop_all_servers.sh && cd ../../../..",
-    "generate:schemas": "npm run generate:schema --workspaces --if-present"
+    "generate:schemas": "npm run generate:schema --workspaces --if-present",
+    "polytest:generate-wallet": "polytest --config test_configs/wallet.json --git https://github.com/algorandfoundation/algokit-polytest#feat/wallet_utils generate -t vitest",
+    "polytest:run-wallet": "polytest --config test_configs/wallet.json --git https://github.com/algorandfoundation/algokit-polytest#feat/wallet_utils run -t vitest"
   },
   "overrides": {
     "esbuild": "0.25.0",
