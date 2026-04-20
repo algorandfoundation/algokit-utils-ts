@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 
-describe("AK-992", () => {
-  // Polytest Suite: AK-992
+describe("Epic AK-992", () => {
+  // Polytest Suite: Epic AK-992
 
-  describe("AK-992", () => {
-    // Polytest Group: AK-992
+  describe("AK-992 Stories", () => {
+    // Polytest Group: AK-992 Stories
 
     /* 
       AK-993: Create address. As a user I would like to create an address using 24 or 25 mnemonic words so that I can receive funds

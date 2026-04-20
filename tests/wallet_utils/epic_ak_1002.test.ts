@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 
-describe("AK-1002", () => {
-  // Polytest Suite: AK-1002
+describe("Epic AK-1002", () => {
+  // Polytest Suite: Epic AK-1002
 
-  describe("AK-1002", () => {
-    // Polytest Group: AK-1002
+  describe("AK-1002 Stories", () => {
+    // Polytest Group: AK-1002 Stories
 
     /* 
       AK-1018: Review transaction. As a user I want to review a transaction so I know that its safe to sign it

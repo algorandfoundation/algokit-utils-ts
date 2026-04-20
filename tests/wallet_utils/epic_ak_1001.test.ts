@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 
-describe("AK-1001", () => {
-  // Polytest Suite: AK-1001
+describe("Epic AK-1001", () => {
+  // Polytest Suite: Epic AK-1001
 
-  describe("AK-1001", () => {
-    // Polytest Group: AK-1001
+  describe("AK-1001 Stories", () => {
+    // Polytest Group: AK-1001 Stories
 
     /* 
       AK-995: Split funds. As a user I would like to split my funds over various accounts without having to remember additional mnemonics

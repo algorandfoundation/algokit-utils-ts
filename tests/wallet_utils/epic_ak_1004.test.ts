@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 
-describe("AK-1004", () => {
-  // Polytest Suite: AK-1004
+describe("Epic AK-1004", () => {
+  // Polytest Suite: Epic AK-1004
 
-  describe("AK-1004", () => {
-    // Polytest Group: AK-1004
+  describe("AK-1004 Stories", () => {
+    // Polytest Group: AK-1004 Stories
 
     /* 
       AK-1025: Wallet connect. As a user I would like to connect to a Dapp with wallet connect so I can use its services

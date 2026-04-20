@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 
-describe("AK-1000", () => {
-  // Polytest Suite: AK-1000
+describe("Epic AK-1000", () => {
+  // Polytest Suite: Epic AK-1000
 
-  describe("AK-1000", () => {
-    // Polytest Group: AK-1000
+  describe("AK-1000 Stories", () => {
+    // Polytest Group: AK-1000 Stories
 
     /* 
       AK-996: View only wallet. As a user I want to add a public address to my wallet to view it’s balance (and make transactions)

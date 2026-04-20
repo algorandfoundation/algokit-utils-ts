@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 
-describe("AK-1003", () => {
-  // Polytest Suite: AK-1003
+describe("Epic AK-1003", () => {
+  // Polytest Suite: Epic AK-1003
 
-  describe("AK-1003", () => {
-    // Polytest Group: AK-1003
+  describe("AK-1003 Stories", () => {
+    // Polytest Group: AK-1003 Stories
 
     /* 
       AK-1022: Stake funds. As a user I want to be able to stake my funds so that I can receive rewards
