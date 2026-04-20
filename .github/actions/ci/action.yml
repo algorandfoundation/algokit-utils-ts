@@ -29,6 +29,8 @@ runs:
 
     - name: Setup Polytest
       uses: algorandfoundation/algokit-polytest/.github/actions/setup-polytest@main
+      with:
+        version: 0.7.0
 
     - name: Validate polytest algod_client tests
       shell: bash
