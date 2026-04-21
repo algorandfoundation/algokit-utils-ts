@@ -24,7 +24,7 @@ export type HdAccountGenerator = (
 const xhd = new XHDWalletAPI()
 
 export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8Array) => {
-  const seedArray = seed ?? new Uint8Array(32)
+  const seedArray = seed ?? new Uint8Array(64)
   if (seed === undefined) {
     crypto.getRandomValues(seedArray)
   }
