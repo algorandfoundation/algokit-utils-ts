@@ -1,5 +1,5 @@
 /**
- * @module Subpaths/indexer-client
+ * @module algokit-utils/indexer-client
  */
 export * from '@algorandfoundation/algokit-indexer-client'
 export * from './indexer-lookup'

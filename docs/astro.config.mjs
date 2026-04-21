@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 import remarkGithubAlerts from 'remark-github-alerts'
 import starlightTypeDoc from 'starlight-typedoc'
+import remarkFixIndexUrls from './plugins/remark-fix-index-urls'
 import sidebarConfig from './sidebar.config.json'
 
 // https://astro.build/config
@@ -10,7 +11,7 @@ export default defineConfig({
   site: 'https://algorandfoundation.github.io',
   base: '/algokit-utils-ts/',
   markdown: {
-    remarkPlugins: [remarkGithubAlerts],
+    remarkPlugins: [remarkGithubAlerts, remarkFixIndexUrls],
   },
   integrations: [
     starlight({
@@ -31,11 +32,12 @@ export default defineConfig({
             '../src/testing/index.ts',
             '../src/abi/index.ts',
             '../src/transact/index.ts',
-            '../src/transaction/index.ts',
             '../src/algod-client/index.ts',
             '../src/indexer-client/index.ts',
             '../src/kmd-client/index.ts',
             '../src/algo25/index.ts',
+            '../src/common/index.ts',
+            '../src/crypto/index.ts',
           ],
           tsconfig: '../tsconfig.build.json',
           output: 'api',

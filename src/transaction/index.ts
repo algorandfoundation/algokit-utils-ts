@@ -1,5 +1,5 @@
 /**
- * @module Subpaths/transaction
+ * @module algokit-utils/transaction
  */
 export * from './perform-transaction-composer-simulate'
 export * from './transaction'

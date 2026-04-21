@@ -30,9 +30,15 @@ importers:
         specifier: ^4.9.0
         version: 4.10.0(typedoc@0.28.17(typescript@5.9.3))
     devDependencies:
+      '@types/mdast':
+        specifier: ^4.0.4
+        version: 4.0.4
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
+      unist-util-visit:
+        specifier: ^5.1.0
+        version: 5.1.0
 
 packages:
 
