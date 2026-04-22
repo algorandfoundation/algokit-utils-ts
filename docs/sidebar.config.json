@@ -66,14 +66,15 @@
     "collapsed": true,
     "items": [
       { "label": "algokit-utils", "autogenerate": { "directory": "api/algokit-utils" } },
-      { "label": "Subpaths/abi", "autogenerate": { "directory": "api/Subpaths/abi" } },
-      { "label": "Subpaths/algo25", "autogenerate": { "directory": "api/Subpaths/algo25" } },
-      { "label": "Subpaths/algod-client", "autogenerate": { "directory": "api/Subpaths/algod-client" } },
-      { "label": "Subpaths/indexer-client", "autogenerate": { "directory": "api/Subpaths/indexer-client" } },
-      { "label": "Subpaths/kmd-client", "autogenerate": { "directory": "api/Subpaths/kmd-client" } },
-      { "label": "Subpaths/testing", "autogenerate": { "directory": "api/Subpaths/testing" } },
-      { "label": "Subpaths/transact", "autogenerate": { "directory": "api/Subpaths/transact" } },
-      { "label": "Subpaths/transaction", "autogenerate": { "directory": "api/Subpaths/transaction" } }
+      { "label": "algokit-utils/abi", "autogenerate": { "directory": "api/algokit-utils/abi" } },
+      { "label": "algokit-utils/algo25", "autogenerate": { "directory": "api/algokit-utils/algo25" } },
+      { "label": "algokit-utils/algod-client", "autogenerate": { "directory": "api/algokit-utils/algod-client" } },
+      { "label": "algokit-utils/indexer-client", "autogenerate": { "directory": "api/algokit-utils/indexer-client" } },
+      { "label": "algokit-utils/kmd-client", "autogenerate": { "directory": "api/algokit-utils/kmd-client" } },
+      { "label": "algokit-utils/testing", "autogenerate": { "directory": "api/algokit-utils/testing" } },
+      { "label": "algokit-utils/transact", "autogenerate": { "directory": "api/algokit-utils/transact" } },
+      { "label": "algokit-utils/common", "autogenerate": { "directory": "api/algokit-utils/common" } },
+      { "label": "algokit-utils/crypto", "autogenerate": { "directory": "api/algokit-utils/crypto" } }
     ]
   }
 ]

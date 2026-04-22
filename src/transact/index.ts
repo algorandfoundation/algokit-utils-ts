@@ -1,4 +1,4 @@
 /**
- * @module Subpaths/transact
+ * @module algokit-utils/transact
  */
 export * from '@algorandfoundation/algokit-transact'

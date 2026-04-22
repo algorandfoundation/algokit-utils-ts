@@ -1,5 +1,5 @@
 /**
- * @module Subpaths/testing
+ * @module algokit-utils/testing
  */
 export * from '@algorandfoundation/algokit-testing'
 export * from './account'

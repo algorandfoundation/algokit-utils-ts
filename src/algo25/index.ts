@@ -1,4 +1,4 @@
 /**
- * @module Subpaths/algo25
+ * @module algokit-utils/algo25
  */
 export * from '@algorandfoundation/algokit-algo25'
