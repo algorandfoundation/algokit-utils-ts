@@ -191,7 +191,7 @@ describe('Epic AK-1003', () => {
           const balance = info.amount
           const online = info.participation !== undefined
           const eligible = online ? (info.incentiveEligible ?? false) : false
-          const enoughStake = online ? balance > 30_000e6 : false
+          const enoughStake = online ? balance > BigInt(30_000e6) : false
 
           let incentiveStatus: 'offline' | 'earning' | 'fee not paid' | 'not enough stake' = 'offline'
 
