@@ -60,14 +60,40 @@ jobs:
 
   build:
     name: Build
-    uses: makerxstudio/shared-config/.github/workflows/node-build-zip.yml@main
+    runs-on: ubuntu-latest
     needs:
       - ci
       - check_docs
-    with:
-      node-version: 24.x
-      build-path: dist
-      artifact-name: package
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Rebuild and prepare
+        run: npm rebuild && npm run prepare --if-present
+
+      - name: Build
+        run: npm run build
+
+      - name: Zip build folder
+        run: cd dist && zip -q -r ../package.zip *
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: package
+          path: package.zip
+          if-no-files-found: error
 
   release:
     name: Release
@@ -77,7 +103,7 @@ jobs:
       id-token: write
     steps:
       - name: Generate bot token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         id: app_token
         with:
           app-id: ${{ secrets.BOT_ID }}
@@ -100,7 +126,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Download built package
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: package
           path: artifacts
