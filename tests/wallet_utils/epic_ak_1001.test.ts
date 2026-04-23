@@ -2,7 +2,7 @@ import { expect, test, describe, beforeAll } from 'vitest'
 import { balance, deriveHdAccountsFromMnemonic, getAssetBalance, getAssetInfo, getAccountAssets } from './common'
 import { AlgorandClient, microAlgos, TransactionComposer } from '../../src'
 
-describe('Epic AK-1001', async () => {
+describe('Epic AK-1001', () => {
   let algorand: AlgorandClient
 
   beforeAll(async () => {
