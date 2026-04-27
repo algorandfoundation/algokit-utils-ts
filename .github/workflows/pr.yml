@@ -9,60 +9,35 @@ permissions:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Run CI
-        uses: ./.github/actions/ci
-        with:
-          node-version: 24.x
-          commit-lint-from: ${{ github.event.pull_request.base.sha }}
-          commit-lint-to: ${{ github.event.pull_request.head.sha }}
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-ci.yml@chore/node-npm
+    with:
+      run-commit-lint: true
+      run-build: true
+      audit-script: npm run audit
+      test-script: npm run test -- --silent
+      install-algokit: true
+      setup-polytest: true
+      polytest-validate-script: npm run polytest:validate-algod
+      polytest-generate-script: npm run polytest:generate
+      polytest-generate-working-directory: packages/transact
+      run-mock-servers: true
 
   check-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.x
-
-      - uses: pnpm/action-setup@v4
-        with:
-          package_json_file: docs/package.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install docs dependencies
-        run: pnpm install --frozen-lockfile --dir docs
-
-      - name: Verify documentation builds
-        run: pnpm --dir docs build
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@chore/node-npm
 
   verify-examples:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code
+      - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v6
         with:
           node-version: 24.x
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Build
         run: npm run build
@@ -75,7 +50,7 @@ jobs:
 
       - name: Install examples dependencies
         working-directory: examples
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Verify all examples
         working-directory: examples
