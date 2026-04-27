@@ -17,83 +17,31 @@ permissions:
 
 jobs:
   ci:
-    name: Continuous Integration
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Run CI
-        uses: ./.github/actions/ci
-        with:
-          node-version: 24.x
-          commit-lint-from: ${{ github.event.before }}
-          commit-lint-to: ${{ github.sha }}
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-ci.yml@chore/node-npm
+    with:
+      run-commit-lint: true
+      run-build: true
+      audit-script: npm run audit
+      test-script: npm run test -- --silent
+      install-algokit: true
+      setup-polytest: true
+      polytest-validate-script: npm run polytest:validate-algod
+      polytest-generate-script: npm run polytest:generate
+      polytest-generate-working-directory: packages/transact
+      run-mock-servers: true
 
   check_docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.x
-
-      - uses: pnpm/action-setup@v4
-        with:
-          package_json_file: docs/package.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install docs dependencies
-        run: pnpm install --frozen-lockfile --dir docs
-
-      - name: Verify documentation builds
-        run: pnpm --dir docs build
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@chore/node-npm
 
   build:
     name: Build
-    runs-on: ubuntu-latest
     needs:
       - ci
       - check_docs
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Use Node.js 24.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.x
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Rebuild and prepare
-        run: npm rebuild && npm run prepare --if-present
-
-      - name: Build
-        run: npm run build
-
-      - name: Zip build folder
-        run: cd dist && zip -q -r ../package.zip *
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: package
-          path: package.zip
-          if-no-files-found: error
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-build-zip.yml@chore/node-npm
+    with:
+      build-path: dist
+      artifact-name: package
 
   release:
     name: Release
@@ -109,24 +57,22 @@ jobs:
           app-id: ${{ secrets.BOT_ID }}
           private-key: ${{ secrets.BOT_SK }}
 
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
-          # Fetch entire repository history so we can determine version number from it
           fetch-depth: 0
           token: ${{ steps.app_token.outputs.token }}
 
       - name: Set Git user as GitHub actions
         run: git config --global user.email "179917785+engineering-ci[bot]@users.noreply.github.com" && git config --global user.name "engineering-ci[bot]"
 
-      # semantic-release v25+ needs node 22.14+
       - name: Use Node.js 24.x
         uses: actions/setup-node@v6
         with:
           node-version: 24.x
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Download built package
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: package
           path: artifacts
@@ -146,43 +92,8 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
 
   publish_docs:
-    name: Publish Documentation
-    runs-on: ubuntu-latest
     needs:
       - ci
       - check_docs
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.x
-          cache: 'npm'
-
-      - uses: pnpm/action-setup@v4
-        with:
-          package_json_file: docs/package.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install docs dependencies
-        run: pnpm install --frozen-lockfile --dir docs
-
-      - name: Build documentation
-        run: pnpm --dir docs build
-
-      - name: Publish docs to GitHub Pages
-        id: deployment
-        uses: algorandfoundation/algokit-shared-config/.github/actions/publish-docs@main
-        with:
-          artifact_path: docs/dist
+    if: github.ref == 'refs/heads/release'
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/publish-docs.yml@chore/node-npm
