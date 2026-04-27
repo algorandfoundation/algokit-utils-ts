@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  ci:
+  build-and-test:
     uses: algorandfoundation/algokit-shared-config/.github/workflows/node-ci.yml@chore/node-npm
     with:
       run-commit-lint: true
@@ -22,10 +22,10 @@ jobs:
       polytest-generate-working-directory: packages/transact
       run-mock-servers: true
 
-  check_docs:
+  check-docs:
     uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@chore/node-npm
 
-  verify_examples:
+  verify-examples:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
