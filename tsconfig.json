@@ -23,6 +23,6 @@
       "@algorandfoundation/algokit-crypto": ["./packages/crypto/src"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["**/*.algo.ts"]
 }
