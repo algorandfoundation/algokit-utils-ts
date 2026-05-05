@@ -24,11 +24,7 @@ jobs:
       audit-script: npm run audit
       test-script: npm run test -- --silent
       install-algokit: true
-      setup-polytest: true
-      polytest-validate-script: npm run polytest:validate-algod
-      polytest-generate-script: npm run polytest:generate
-      polytest-generate-working-directory: packages/transact
-      run-mock-servers: true
+      polytest: true
 
   check_docs:
     uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@chore/node-npm
