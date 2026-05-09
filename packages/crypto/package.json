@@ -24,6 +24,7 @@
     "pre-commit": "run-s check-types lint:fix audit format test"
   },
   "dependencies": {
-    "@algorandfoundation/xhd-wallet-api": "v2.0.0-canary.1"
+    "@algorandfoundation/xhd-wallet-api": "v2.0.0-canary.1",
+    "@scure/bip39": "^2.2.0"
   }
 }

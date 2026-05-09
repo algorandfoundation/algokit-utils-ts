@@ -1,6 +1,21 @@
 import { BIP32DerivationType, fromSeed, KeyContext, XHDWalletAPI, harden } from '@algorandfoundation/xhd-wallet-api'
 import { RawEd25519Signer } from './ed25519'
 export type BIP44Path = [number, number, number, number, number]
+import { mnemonicToSeedSync } from '@scure/bip39'
+
+const xhd = new XHDWalletAPI()
+
+export function hdSeedFromMnemonic(mnemonic: string): Uint8Array {
+  return mnemonicToSeedSync(mnemonic)
+}
+
+export function hdRootKeyFromSeed(seed: Uint8Array): Uint8Array {
+  return fromSeed(Buffer.from(seed))
+}
+
+export function hdRootKeyFromMnemonic(mnemonic: string): Uint8Array {
+  return hdRootKeyFromSeed(hdSeedFromMnemonic(mnemonic))
+}
 
 export type HdWalletGenerator = (seed?: Uint8Array) => Promise<{
   hdRootKey: Uint8Array
@@ -20,8 +35,6 @@ export type HdAccountGenerator = (
   /** A signer function that can sign bytes using the ed25519 secret key corresponding to the generated account and index. */
   rawEd25519Signer: RawEd25519Signer
 }>
-
-const xhd = new XHDWalletAPI()
 
 export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8Array) => {
   const seedArray = seed ?? new Uint8Array(64)

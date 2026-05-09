@@ -20,7 +20,7 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction/types'
 import { calculateFundAmount, memoize } from './util'
-import { Ed25519Generator } from '@algorandfoundation/algokit-crypto'
+import { Ed25519Generator, hdSeedFromMnemonic, HdWalletGenerator } from '@algorandfoundation/algokit-crypto'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -38,6 +38,7 @@ export const getAccountTransactionSigner = memoize(function (
 
 export interface AccountManagerConfig {
   ed25519Generator: Ed25519Generator
+  hdWalletGenerator: HdWalletGenerator
 }
 
 /**
@@ -51,6 +52,7 @@ export class AccountManager {
   private _accounts: { [address: string]: AddressWithTransactionSigner } = {}
   private _defaultSigner?: TransactionSigner
   private _ed25519Generator: Ed25519Generator
+  private _hdWalletGenerator: HdWalletGenerator
 
   /**
    * Create a new account manager.
@@ -64,6 +66,7 @@ export class AccountManager {
     this._clientManager = clientManager
     this._kmdAccountManager = new KmdAccountManager(clientManager)
     this._ed25519Generator = config.ed25519Generator
+    this._hdWalletGenerator = config.hdWalletGenerator
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<SuggestedParams>) {
@@ -287,7 +290,7 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
+  public fromMnemonic(mnemonicSecret: string, sender?: ReadableAddress): AddressWithTransactionSigner {
     const seed = seedFromMnemonic(mnemonicSecret)
 
     const generated = this._ed25519Generator(seed)
@@ -298,6 +301,43 @@ export class AccountManager {
       sendingAddress: getOptionalAddress(sender),
     })
 
+    return this.signerAccount(addrWithSigners)
+  }
+
+  /**
+   * Tracks and returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking an HD (BIP44) mnemonic secret.
+   *
+   * This method generates accounts using hierarchical deterministic (HD) wallet derivation, allowing you to
+   * derive multiple accounts from a single mnemonic using a derivation path.
+   *
+   * @example Default derivation (account 0, index 0)
+   * ```typescript
+   * const account = await accountManager.fromHdMnemonic("mnemonic secret ...")
+   * ```
+   * @example Specific derivation path
+   * ```typescript
+   * const account = await accountManager.fromHdMnemonic("mnemonic secret ...", { path: { account: 0, index: 5 } })
+   * ```
+   * @example Rekeyed account with specific derivation
+   * ```typescript
+   * const account = await accountManager.fromHdMnemonic("mnemonic secret ...", {
+   *   sender: "SENDERADDRESS...",
+   *   path: { account: 0, index: 1 }
+   * })
+   * ```
+   * @param mnemonicSecret The HD mnemonic secret representing the private key seed; **Note: Be careful how the mnemonic is handled**,
+   *  never commit it into source control and ideally load it from the environment (ideally via a secret storage service) rather than the file system.
+   * @param opts Optional parameters
+   * @param opts.sender The optional sender address to use this signer for (aka a rekeyed account)
+   * @param opts.path The BIP44 derivation path with `account` and `index` numbers (defaults to `{ account: 0, index: 0 }`)
+   * @returns The account with transaction signer capabilities
+   */
+  public async fromHdMnemonic(mnemonicSecret: string, opts: { sender?: ReadableAddress; path?: { account: number; index: number } }) {
+    const seed = hdSeedFromMnemonic(mnemonicSecret)
+    const generator = await this._hdWalletGenerator(seed)
+    const generated = await generator.accountGenerator(opts.path?.account ?? 0, opts.path?.index ?? 0)
+
+    const addrWithSigners = generateAddressWithSigners({ ...generated, sendingAddress: getOptionalAddress(opts.sender) })
     return this.signerAccount(addrWithSigners)
   }
 
