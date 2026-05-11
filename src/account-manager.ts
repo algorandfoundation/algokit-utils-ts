@@ -284,6 +284,8 @@ export class AccountManager {
   }
 
   /**
+   * @deprecated Use {@link AccountManager.fromSecret} instead
+   *
    * Tracks and returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
    *
    * @example
