@@ -7,7 +7,7 @@ import { algo, microAlgo } from './amount'
 import { algorandFixture } from './testing'
 import { ed25519 } from '@noble/curves/ed25519.js'
 import { KeyContext, XHDWalletAPI } from '@algorandfoundation/xhd-wallet-api'
-import { hdRootKeyFromMnemonic, hdSeedFromMnemonic, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
+import { hdRootKeyFromMnemonic, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()
