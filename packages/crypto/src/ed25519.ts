@@ -80,3 +80,14 @@ export type WrappedEd25519Seed = {
    */
   wrap?: () => Promise<void>
 }
+
+export type WrappedLegacyMnemonic = {
+  /**
+   * Unwraps and returns the mnemonic.
+   */
+  legacyMnemonic: () => Promise<string>
+  /**
+   * Re-wraps the mnemonic after use.
+   */
+  wrap?: () => Promise<void>
+}

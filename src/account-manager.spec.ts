@@ -147,4 +147,16 @@ describe('AccountManager', () => {
     await algorand.account.ensureFundedFromEnvironment(account, microAlgo(200_000))
     await algorand.send.payment({ sender: account, receiver: account, amount: microAlgo(0) })
   })
+
+  test('from wrapped legacy mnemonic', async () => {
+    const { algorand } = localnet.context
+    const keypair = ed25519.keygen()
+
+    const account = await algorand.account.fromSecret({ legacyMnemonic: async () => secretKeyToMnemonic(keypair.secretKey) })
+
+    expect(account.publicKey).toEqual(keypair.publicKey)
+
+    await algorand.account.ensureFundedFromEnvironment(account, microAlgo(200_000))
+    await algorand.send.payment({ sender: account, receiver: account, amount: microAlgo(0) })
+  })
 })

@@ -1,16 +1,18 @@
-import { Ed25519SigningKey, WrappedEd25519Seed } from './ed25519'
+import { Ed25519SigningKey, WrappedEd25519Seed, WrappedLegacyMnemonic } from './ed25519'
 import * as ed from '@noble/ed25519'
 import { hdSeedFromMnemonic, peikertXHdWalletGenerator, WrappedHdExtendedPrivateKey, WrappedHdMnemonic } from './hd'
 import { ed25519 } from '@noble/curves/ed25519.js'
 import { sha512 } from '@noble/hashes/sha2.js'
 import { bytesToNumberLE, numberToBytesLE } from '@noble/curves/utils.js'
 import { mod } from '@noble/curves/abstract/modular.js'
+import { seedFromMnemonic } from '@algorandfoundation/algokit-algo25'
 
 export * from './ed25519'
 export * from './hash'
 export * from './hd'
+export { seedFromMnemonic } from '@algorandfoundation/algokit-algo25'
 
-export type WrappedEd25519Secret = WrappedEd25519Seed | WrappedHdExtendedPrivateKey | WrappedHdMnemonic
+export type WrappedEd25519Secret = WrappedEd25519Seed | WrappedHdExtendedPrivateKey | WrappedHdMnemonic | WrappedLegacyMnemonic
 
 const ED25519_SEED_LENGTH = 32
 const ED25519_EXTENDED_PRIVATE_KEY_LENGTH = 96
@@ -111,6 +113,10 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (
         const generator = await peikertXHdWalletGenerator(secret)
         const acct = await generator.accountGenerator(hdPath?.account ?? 0, hdPath?.index ?? 0)
         signature = await acct.rawEd25519Signer(bytesToSign)
+      } else if ('legacyMnemonic' in wrapped) {
+        const mnemonic = await wrapped.legacyMnemonic()
+        secret = seedFromMnemonic(mnemonic)
+        signature = await ed.signAsync(bytesToSign, secret)
       } else {
         throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
       }
@@ -164,6 +170,10 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (
       const generator = await peikertXHdWalletGenerator(secret)
       const acct = await generator.accountGenerator(hdPath?.account ?? 0, hdPath?.index ?? 0)
       pubkey = acct.ed25519Pubkey
+    } else if ('legacyMnemonic' in wrapped) {
+      const mnemonic = await wrapped.legacyMnemonic()
+      secret = seedFromMnemonic(mnemonic)
+      pubkey = await ed.getPublicKeyAsync(secret)
     } else {
       throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
     }
