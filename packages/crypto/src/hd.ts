@@ -67,15 +67,26 @@ export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8A
  *
  * It should be noted that the `chain_code` is NOT used for signing. It can, however, be used for key derivation.
  * If your secret is only used for signing, it is recommended to only store the first 64 bytes in the secret store
- * and then pad the secret to 96 bytes in the unwrap function
+ * and then pad the secret to 96 bytes in the `hdExtendedPrivateKey` function
  */
 export type WrappedHdExtendedPrivateKey = {
   /**
    * Unwraps and returns the 96-byte HD `scalar (aka LHS or zL) || prefix (aka RHS or zR) || chain_code`.
    */
-  unwrapHdExtendedPrivateKey: () => Promise<Uint8Array>
+  hdExtendedPrivateKey: () => Promise<Uint8Array>
   /**
    * Re-wraps the `scalar (aka LHS or zL) || prefix (aka RHS or zR) || chain_code` after use.
    */
-  wrapHdExtendedPrivateKey: () => Promise<void>
+  wrap?: () => Promise<void>
+}
+
+export type WrappedHdMnemonic = {
+  /**
+   * Unwraps and returns the mnemonic.
+   */
+  hdMnemonic: () => Promise<string>
+  /**
+   * Re-wraps the mnemonic after use.
+   */
+  wrap?: () => Promise<void>
 }

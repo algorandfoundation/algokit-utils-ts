@@ -1,6 +1,6 @@
 import { Ed25519SigningKey, WrappedEd25519Seed } from './ed25519'
 import * as ed from '@noble/ed25519'
-import { WrappedHdExtendedPrivateKey } from './hd'
+import { hdSeedFromMnemonic, peikertXHdWalletGenerator, WrappedHdExtendedPrivateKey, WrappedHdMnemonic } from './hd'
 import { ed25519 } from '@noble/curves/ed25519.js'
 import { sha512 } from '@noble/hashes/sha2.js'
 import { bytesToNumberLE, numberToBytesLE } from '@noble/curves/utils.js'
@@ -10,7 +10,7 @@ export * from './ed25519'
 export * from './hash'
 export * from './hd'
 
-export type WrappedEd25519Secret = WrappedEd25519Seed | WrappedHdExtendedPrivateKey
+export type WrappedEd25519Secret = WrappedEd25519Seed | WrappedHdExtendedPrivateKey | WrappedHdMnemonic
 
 const ED25519_SEED_LENGTH = 32
 const ED25519_EXTENDED_PRIVATE_KEY_LENGTH = 96
@@ -84,33 +84,33 @@ function rawPubkey(extendedSecretKey: Uint8Array): Uint8Array {
  *
  * NOTE: This function will zero out the unwrapped secret after the wrap function is called.
  *
- * @param wrapUnwrap - The wrapped secret provider that unwraps and re-wraps the Ed25519 secret.
+ * @param wrapped - The wrapped secret provider that unwraps and re-wraps the Ed25519 secret.
  * @returns A promise that resolves to an Ed25519 signing key containing the public key and raw signer.
  */
-export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: WrappedEd25519Secret): Promise<Ed25519SigningKey> => {
-  let wrapFunction: () => Promise<void>
-  if ('wrapEd25519Seed' in wrapUnwrap) {
-    wrapFunction = wrapUnwrap.wrapEd25519Seed
-  } else if ('wrapHdExtendedPrivateKey' in wrapUnwrap) {
-    wrapFunction = wrapUnwrap.wrapHdExtendedPrivateKey
-  } else {
-    throw new Error('Invalid WrappedEd25519Secret: missing wrap function')
-  }
-
+export const nobleEd25519SigningKeyFromWrappedSecret = async (
+  wrapped: WrappedEd25519Secret,
+  hdPath?: { account: number; index: number },
+): Promise<Ed25519SigningKey> => {
   const signer = async (bytesToSign: Uint8Array): Promise<Uint8Array> => {
     let secret: Uint8Array | undefined = undefined
     let signature: Uint8Array | undefined = undefined
     let signingError: unknown
     let wrapError: unknown
     try {
-      if ('unwrapEd25519Seed' in wrapUnwrap) {
-        secret = await wrapUnwrap.unwrapEd25519Seed()
+      if ('ed25519Seed' in wrapped) {
+        secret = await wrapped.ed25519Seed()
         assertEd25519SecretLength(secret, 'ed25519 seed')
         signature = await ed.signAsync(bytesToSign, secret)
-      } else if ('unwrapHdExtendedPrivateKey' in wrapUnwrap) {
-        secret = await wrapUnwrap.unwrapHdExtendedPrivateKey()
+      } else if ('hdExtendedPrivateKey' in wrapped) {
+        secret = await wrapped.hdExtendedPrivateKey()
         assertEd25519SecretLength(secret, 'HD extended key')
         signature = rawSign(secret.subarray(0, 64), bytesToSign)
+      } else if ('hdMnemonic' in wrapped) {
+        const mnemonic = await wrapped.hdMnemonic()
+        secret = hdSeedFromMnemonic(mnemonic)
+        const generator = await peikertXHdWalletGenerator(secret)
+        const acct = await generator.accountGenerator(hdPath?.account ?? 0, hdPath?.index ?? 0)
+        signature = await acct.rawEd25519Signer(bytesToSign)
       } else {
         throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
       }
@@ -118,7 +118,7 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
       signingError = error
     } finally {
       try {
-        await wrapFunction()
+        if (wrapped.wrap) await wrapped.wrap()
       } catch (error) {
         wrapError = error
       } finally {
@@ -150,14 +150,20 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
   let wrapError: unknown
   let secret: Uint8Array | undefined = undefined
   try {
-    if ('unwrapEd25519Seed' in wrapUnwrap) {
-      secret = await wrapUnwrap.unwrapEd25519Seed()
+    if ('ed25519Seed' in wrapped) {
+      secret = await wrapped.ed25519Seed()
       assertEd25519SecretLength(secret, 'ed25519 seed')
       pubkey = await ed.getPublicKeyAsync(secret)
-    } else if ('unwrapHdExtendedPrivateKey' in wrapUnwrap) {
-      secret = await wrapUnwrap.unwrapHdExtendedPrivateKey()
+    } else if ('hdExtendedPrivateKey' in wrapped) {
+      secret = await wrapped.hdExtendedPrivateKey()
       assertEd25519SecretLength(secret, 'HD extended key')
       pubkey = rawPubkey(secret.subarray(0, 64))
+    } else if ('hdMnemonic' in wrapped) {
+      const mnemonic = await wrapped.hdMnemonic()
+      secret = hdSeedFromMnemonic(mnemonic)
+      const generator = await peikertXHdWalletGenerator(secret)
+      const acct = await generator.accountGenerator(hdPath?.account ?? 0, hdPath?.index ?? 0)
+      pubkey = acct.ed25519Pubkey
     } else {
       throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
     }
@@ -165,7 +171,7 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (wrapUnwrap: Wrappe
     pubkeyError = error
   } finally {
     try {
-      await wrapFunction()
+      if (wrapped.wrap) await wrapped.wrap()
     } catch (error) {
       wrapError = error
     } finally {

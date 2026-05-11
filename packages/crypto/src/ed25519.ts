@@ -74,9 +74,9 @@ export type WrappedEd25519Seed = {
   /**
    * Unwraps and returns the 32-byte Ed25519 seed.
    */
-  unwrapEd25519Seed: () => Promise<Uint8Array>
+  ed25519Seed: () => Promise<Uint8Array>
   /**
    * Re-wraps the Ed25519 seed after use.
    */
-  wrapEd25519Seed: () => Promise<void>
+  wrap?: () => Promise<void>
 }
