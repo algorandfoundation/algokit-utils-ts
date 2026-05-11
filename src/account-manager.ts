@@ -312,6 +312,56 @@ export class AccountManager {
     return this.signerAccount(addrWithSigners)
   }
 
+  /**
+   * Tracks and returns an Algorand account with signer loaded from a wrapped secret.
+   *
+   * The wrapped secret can be one of the following formats:
+   * * **`ed25519Seed`**: An async function that returns the raw Ed25519 seed bytes
+   * * **`hdExtendedPrivateKey`**: An async function that returns the HD extended private key bytes
+   * * **`hdMnemonic`**: An async function that returns the HD wallet mnemonic phrase (requires `hdPath` option)
+   * * **`legacyMnemonic`**: An async function that returns a legacy Algorand mnemonic phrase
+   *
+   * @example From Ed25519 seed
+   * ```typescript
+   * const keypair = ed25519.keygen()
+   * const account = await algorand.account.fromSecret({
+   *   ed25519Seed: async () => keypair.secretKey.slice()
+   * })
+   * ```
+   * @example From HD extended private key
+   * ```typescript
+   * const generated = await (await peikertXHdWalletGenerator()).accountGenerator(0, 0)
+   * const account = await algorand.account.fromSecret({
+   *   hdExtendedPrivateKey: async () => generated.extendedPrivateKey.slice()
+   * })
+   * ```
+   * @example From HD mnemonic with derivation path
+   * ```typescript
+   * const mnemonic = 'abandon '.repeat(24).trim()
+   * const account = await algorand.account.fromSecret(
+   *   { hdMnemonic: async () => mnemonic },
+   *   { hdPath: { account: 1, index: 2 } }
+   * )
+   * ```
+   * @example From legacy mnemonic
+   * ```typescript
+   * const keypair = ed25519.keygen()
+   * const account = await algorand.account.fromSecret({
+   *   legacyMnemonic: async () => secretKeyToMnemonic(keypair.secretKey)
+   * })
+   * ```
+   * @example With rekeyed sender address
+   * ```typescript
+   * const account = await algorand.account.fromSecret(
+   *   { ed25519Seed: async () => keypair.secretKey.slice() },
+   *   { sendingAddress: 'SENDERADDRESS...' }
+   * )
+   * ```
+   *
+   * @param secret The wrapped secret containing one of the supported key formats
+   * @param opts Optional configuration for HD derivation path or rekeyed sender address
+   * @returns The account with signer loaded
+   */
   public async fromSecret(
     secret: WrappedEd25519Secret,
     opts?: { sendingAddress?: ReadableAddress; hdPath?: { account: number; index: number } },
