@@ -115,8 +115,7 @@ describe('signer', () => {
   test('addr with signers from wrapped seed', async () => {
     const seed = ed.utils.randomSecretKey()
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => new Uint8Array(seed),
-      wrapEd25519Seed: async () => {},
+      ed25519Seed: async () => new Uint8Array(seed),
     }
     const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
     const addressWithSigners = generateAddressWithSigners(signingKey)
@@ -128,8 +127,7 @@ describe('signer', () => {
     const { accountGenerator } = await peikertXHdWalletGenerator()
     const generated = await accountGenerator(0, 0)
     const wrappedExtendedPrivateKey = {
-      unwrapHdExtendedPrivateKey: async () => new Uint8Array(generated.extendedPrivateKey),
-      wrapHdExtendedPrivateKey: async () => {},
+      hdExtendedPrivateKey: async () => new Uint8Array(generated.extendedPrivateKey),
     }
     const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedExtendedPrivateKey)
     const addressWithSigners = generateAddressWithSigners(signingKey)
@@ -139,7 +137,7 @@ describe('signer', () => {
 
   test('wrapped seed rejects invalid seed length when deriving pubkey', async () => {
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => new Uint8Array(31),
+      ed25519Seed: async () => new Uint8Array(31),
       wrapEd25519Seed: async () => {},
     }
 
@@ -152,11 +150,10 @@ describe('signer', () => {
     const seed = ed.utils.randomSecretKey()
     let unwrapCallCount = 0
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => {
+      ed25519Seed: async () => {
         unwrapCallCount += 1
         return unwrapCallCount === 1 ? seed : new Uint8Array(31)
       },
-      wrapEd25519Seed: async () => {},
     }
     const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
 
@@ -167,10 +164,10 @@ describe('signer', () => {
 
   test('wrapped seed reports both pubkey and wrap failures', async () => {
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => {
+      ed25519Seed: async () => {
         throw new Error('unwrap failed')
       },
-      wrapEd25519Seed: async () => {
+      wrap: async () => {
         throw new Error('wrap failed')
       },
     }
@@ -185,13 +182,13 @@ describe('signer', () => {
     let unwrapShouldFail = false
     let wrapShouldFail = false
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => {
+      ed25519Seed: async () => {
         if (unwrapShouldFail) {
           throw new Error('unwrap failed')
         }
         return seed
       },
-      wrapEd25519Seed: async () => {
+      wrap: async () => {
         if (wrapShouldFail) {
           throw new Error('wrap failed')
         }
@@ -208,8 +205,7 @@ describe('signer', () => {
 
   test('wrapped HD extended private key rejects invalid length', async () => {
     const wrappedHdExtendedPrivateKey = {
-      unwrapHdExtendedPrivateKey: async () => new Uint8Array(95),
-      wrapHdExtendedPrivateKey: async () => {},
+      hdExtendedPrivateKey: async () => new Uint8Array(95),
     }
 
     await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)).rejects.toThrow(
@@ -227,8 +223,7 @@ describe('signer', () => {
     extendedKey[31] = 0x80
 
     const wrappedHdExtendedPrivateKey = {
-      unwrapHdExtendedPrivateKey: async () => extendedKey,
-      wrapHdExtendedPrivateKey: async () => {},
+      hdExtendedPrivateKey: async () => extendedKey,
     }
 
     await expect(nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)).rejects.toThrow(
@@ -248,11 +243,10 @@ describe('signer', () => {
     invalidExtendedKey[31] = 0x80
 
     const wrappedHdExtendedPrivateKey = {
-      unwrapHdExtendedPrivateKey: async () => {
+      hdExtendedPrivateKey: async () => {
         callCount++
         return callCount === 1 ? extendedKey : invalidExtendedKey
       },
-      wrapHdExtendedPrivateKey: async () => {},
     }
 
     const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedHdExtendedPrivateKey)
@@ -265,8 +259,7 @@ describe('signer', () => {
   test('wrapped seed zeroes seed after successful signing', async () => {
     const seed = ed.utils.randomSecretKey()
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => seed,
-      wrapEd25519Seed: async () => {},
+      ed25519Seed: async () => seed,
     }
 
     const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(wrappedSeed)
@@ -280,11 +273,11 @@ describe('signer', () => {
     let unwrapCallCount = 0
     let wrapCallCount = 0
     const wrappedSeed = {
-      unwrapEd25519Seed: async () => {
+      ed25519Seed: async () => {
         unwrapCallCount += 1
         return unwrapCallCount === 1 ? new Uint8Array(seed) : seed
       },
-      wrapEd25519Seed: async () => {
+      wrap: async () => {
         wrapCallCount += 1
         if (wrapCallCount > 1) {
           throw new Error('wrap failed')
