@@ -30,7 +30,7 @@ entry.setSecret(esk)
 
 // Example: Signing a transaction using the extended private key from the keyring.
 const wrappedSeed: WrappedHdExtendedPrivateKey = {
-  unwrapHdExtendedPrivateKey: async () => {
+  hdExtendedPrivateKey: async () => {
     const entry = new Entry('algorand', SECRET_NAME)
     const esk = entry.getSecret()
 
@@ -49,7 +49,6 @@ const wrappedSeed: WrappedHdExtendedPrivateKey = {
 
     return new Uint8Array(esk)
   },
-  wrapHdExtendedPrivateKey: async () => {},
 }
 
 const signingKey = await ed25519SigningKeyFromWrappedSecret(wrappedSeed)

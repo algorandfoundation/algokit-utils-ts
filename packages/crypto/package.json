@@ -10,6 +10,10 @@
   },
   "type": "commonjs",
   "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./algo25": "./src/algo25/index.js"
+  },
   "files": [
     "**/*"
   ],

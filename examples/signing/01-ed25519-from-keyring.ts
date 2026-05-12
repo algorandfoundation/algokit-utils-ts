@@ -26,7 +26,7 @@ const entry = new Entry('algorand', MNEMONIC_NAME)
 entry.setPassword(mnemonic)
 
 const wrappedSeed: WrappedEd25519Seed = {
-  unwrapEd25519Seed: async () => {
+  ed25519Seed: async () => {
     const entry = new Entry('algorand', MNEMONIC_NAME)
     const mn = entry.getPassword()
 
@@ -36,7 +36,6 @@ const wrappedSeed: WrappedEd25519Seed = {
 
     return seedFromMnemonic(mn)
   },
-  wrapEd25519Seed: async () => {},
 }
 
 const signingKey = await ed25519SigningKeyFromWrappedSecret(wrappedSeed)
