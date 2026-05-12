@@ -1705,7 +1705,7 @@ export class TransactionComposer {
 
     // Handle any simulation failures
     if (groupResponse.failureMessage) {
-      if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('fee too small')) {
+      if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('too small')) {
         throw new Error(
           'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
         )
