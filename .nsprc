@@ -13,5 +13,20 @@
     "active": true,
     "notes": "picomatch bundled inside npm in @semantic-release/npm - waiting for upstream fix",
     "expiry": "2026-06-01"
+  },
+  "1117683": {
+    "active": true,
+    "notes": "ip-address bundled inside npm in @semantic-release/npm - waiting for upstream fix",
+    "expiry": "2026-06-01"
+  },
+  "1117870": {
+    "active": true,
+    "notes": "fast-uri pulled in transitively via ajv in @algorandfoundation/xhd-wallet-api - waiting for upstream fix",
+    "expiry": "2026-06-01"
+  },
+  "1117884": {
+    "active": true,
+    "notes": "fast-uri pulled in transitively via ajv in @algorandfoundation/xhd-wallet-api - waiting for upstream fix",
+    "expiry": "2026-06-01"
   }
 }
