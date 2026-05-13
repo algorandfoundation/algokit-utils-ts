@@ -234,7 +234,7 @@ npm run example algorand_client/01-client-instantiation.ts
 
 ## Prerequisites
 
-- Node.js >= 24
+- Node.js >= 22
 - [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli) installed
 - LocalNet running for network examples (\`algokit localnet start\`)
 
