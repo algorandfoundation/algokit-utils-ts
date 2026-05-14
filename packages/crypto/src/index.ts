@@ -117,6 +117,8 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (
         secret = seedFromMnemonic(mnemonic)
         signature = await ed.signAsync(bytesToSign, secret)
       } else {
+        // TS will throw an error here if we add a new type to the union and don't have a condition for it
+        const _: never = wrapped
         throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
       }
     } catch (error) {
@@ -174,6 +176,8 @@ export const nobleEd25519SigningKeyFromWrappedSecret = async (
       secret = seedFromMnemonic(mnemonic)
       pubkey = await ed.getPublicKeyAsync(secret)
     } else {
+      // TS will throw an error here if we add a new type to the union and don't have a condition for it
+      const _: never = wrapped
       throw new Error('Invalid WrappedEd25519Secret: missing unwrap function')
     }
   } catch (error) {
