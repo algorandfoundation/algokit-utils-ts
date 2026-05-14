@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-and-test:
-    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-ci.yml@chore/node-npm
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-ci.yml@main
     with:
       run-commit-lint: true
       run-build: true
@@ -19,7 +19,7 @@ jobs:
       polytest: true
 
   check-docs:
-    uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@chore/node-npm
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@main
 
   verify-examples:
     runs-on: ubuntu-latest
