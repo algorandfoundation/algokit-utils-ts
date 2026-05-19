@@ -18,7 +18,7 @@ jobs:
       install-algokit: true
       polytest: true
 
-  check_docs:
+  check-docs:
     uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@main
 
   verify-examples:
