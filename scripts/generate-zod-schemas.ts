@@ -386,7 +386,7 @@ function generateSchemaZod(name: string, info: SchemaInfo, recursiveSchemas: Set
   const schema = info.schema
   const isRecursive = recursiveSchemas.has(name)
 
-  let zodExpr = schemaToZod(schema, info.bigintFields, recursiveSchemas, strict, name)
+  const zodExpr = schemaToZod(schema, info.bigintFields, recursiveSchemas, strict, name)
 
   // Wrap recursive schemas with z.lazy()
   if (isRecursive) {

@@ -7,7 +7,7 @@ Get up and running with AlgoKit Utils in 5 minutes.
 
 ## Prerequisites
 
-- Node.js >= 24
+- Node.js >= 22
 - [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli) installed
 - LocalNet running (`algokit localnet start`)
 
