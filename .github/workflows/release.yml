@@ -88,8 +88,13 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
 
   publish_docs:
+    name: Publish docs to GitHub Pages
     needs:
       - ci
       - check_docs
-    if: github.ref == 'refs/heads/release'
+    if: github.ref_name == 'release'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: algorandfoundation/algokit-shared-config/.github/workflows/publish-docs.yml@main
