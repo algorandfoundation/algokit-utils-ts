@@ -185,10 +185,6 @@
       },
       {
         "name": "release"
-      },
-      {
-        "name": "decoupling",
-        "prerelease": "alpha"
       }
     ],
     "plugins": [
