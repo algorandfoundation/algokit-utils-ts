@@ -69,7 +69,7 @@ async function main() {
 
   // Generate a test mnemonic for demo purposes
   // In practice, you would load this from environment variables or secure storage
-  const { mnemonicFromSeed } = await import('@algorandfoundation/algokit-algo25')
+  const { mnemonicFromSeed } = await import('@algorandfoundation/algokit-utils/algo25')
 
   // Create a random 32-byte seed and generate a mnemonic from it
   const randomSeed = crypto.getRandomValues(new Uint8Array(32))

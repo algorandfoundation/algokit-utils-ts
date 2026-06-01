@@ -3,8 +3,11 @@ import { generateAddressWithSigners, LogicSigAccount, MultisigAccount } from '@a
 import nacl from 'tweetnacl'
 import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
-import { algo } from './amount'
+import { algo, microAlgo } from './amount'
 import { algorandFixture } from './testing'
+import { ed25519 } from '@noble/curves/ed25519.js'
+import { KeyContext, XHDWalletAPI } from '@algorandfoundation/xhd-wallet-api'
+import { hdRootKeyFromMnemonic, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()
@@ -103,5 +106,57 @@ describe('AccountManager', () => {
     expect(result.confirmation.txn.lsig?.lmsig?.subsigs[0].sig).toBeDefined()
     expect(result.confirmation.txn.lsig?.lmsig?.subsigs[1].sig).toBeDefined()
     expect(result.confirmation.txn.lsig?.lmsig?.subsigs[2].sig).toBeUndefined()
+  })
+
+  test('from wrapped ed25519 seed', async () => {
+    const { algorand } = localnet.context
+    const keypair = ed25519.keygen()
+
+    const account = await algorand.account.fromSecret({ ed25519Seed: async () => keypair.secretKey.slice() })
+
+    expect(account.publicKey).toEqual(keypair.publicKey)
+
+    await algorand.account.ensureFundedFromEnvironment(account, microAlgo(200_000))
+    await algorand.send.payment({ sender: account, receiver: account, amount: microAlgo(0) })
+  })
+
+  test('from wrapped HD xPrv', async () => {
+    const { algorand } = localnet.context
+    const generated = await (await peikertXHdWalletGenerator()).accountGenerator(0, 0)
+
+    const account = await algorand.account.fromSecret({ hdExtendedPrivateKey: async () => generated.extendedPrivateKey.slice() })
+
+    expect(account.publicKey).toEqual(generated.ed25519Pubkey)
+
+    await algorand.account.ensureFundedFromEnvironment(account, microAlgo(200_000))
+    await algorand.send.payment({ sender: account, receiver: account, amount: microAlgo(0) })
+  })
+
+  test('from wrapped HD mnemonic', async () => {
+    const { algorand } = localnet.context
+
+    const mnemonic = 'abandon '.repeat(24).trim()
+    const rootKey = hdRootKeyFromMnemonic(mnemonic)
+    const xhd = new XHDWalletAPI()
+    const pubkey = await xhd.keyGen(rootKey, KeyContext.Address, 1, 2)
+
+    const account = await algorand.account.fromSecret({ hdMnemonic: async () => mnemonic }, { hdPath: { account: 1, index: 2 } })
+
+    expect(account.publicKey).toEqual(pubkey)
+
+    await algorand.account.ensureFundedFromEnvironment(account, microAlgo(200_000))
+    await algorand.send.payment({ sender: account, receiver: account, amount: microAlgo(0) })
+  })
+
+  test('from wrapped legacy mnemonic', async () => {
+    const { algorand } = localnet.context
+    const keypair = ed25519.keygen()
+
+    const account = await algorand.account.fromSecret({ legacyMnemonic: async () => secretKeyToMnemonic(keypair.secretKey) })
+
+    expect(account.publicKey).toEqual(keypair.publicKey)
+
+    await algorand.account.ensureFundedFromEnvironment(account, microAlgo(200_000))
+    await algorand.send.payment({ sender: account, receiver: account, amount: microAlgo(0) })
   })
 })

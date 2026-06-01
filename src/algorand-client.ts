@@ -1,6 +1,6 @@
 import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { Address, ReadableAddress } from '@algorandfoundation/algokit-common'
-import { nobleEd25519Generator } from '@algorandfoundation/algokit-crypto'
+import { nobleEd25519Generator, peikertXHdWalletGenerator } from '@algorandfoundation/algokit-crypto'
 import { AddressWithTransactionSigner, LogicSigAccount, MultisigAccount, TransactionSigner } from '@algorandfoundation/algokit-transact'
 import { AccountManager, AccountManagerConfig } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
@@ -41,7 +41,10 @@ export class AlgorandClient {
 
   private constructor(config: (AlgoConfig | AlgoSdkClients) & Partial<AccountManagerConfig>) {
     this._clientManager = new ClientManager(config, this)
-    this._accountManager = new AccountManager(this._clientManager, { ed25519Generator: config.ed25519Generator ?? nobleEd25519Generator })
+    this._accountManager = new AccountManager(this._clientManager, {
+      ed25519Generator: config.ed25519Generator ?? nobleEd25519Generator,
+      hdWalletGenerator: config.hdWalletGenerator ?? peikertXHdWalletGenerator,
+    })
     this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, (config) => this.newGroup(config))
     this._networkManager = new NetworkManager(this._clientManager.algod, this)

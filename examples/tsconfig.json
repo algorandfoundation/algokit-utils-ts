@@ -5,7 +5,7 @@
       "@algorandfoundation/algokit-utils": ["../src/index.ts"],
       "@algorandfoundation/algokit-utils/types/*": ["../src/types/*"],
       "@algorandfoundation/algokit-utils/abi": ["../packages/abi/src/index.ts"],
-      "@algorandfoundation/algokit-utils/algo25": ["../packages/algo25/src/index.ts"],
+      "@algorandfoundation/algokit-utils/algo25": ["src/algo25/index.ts"],
       "@algorandfoundation/algokit-utils/algod-client": ["../packages/algod_client/src/index.ts"],
       "@algorandfoundation/algokit-utils/common": ["../packages/common/src/index.ts"],
       "@algorandfoundation/algokit-utils/crypto": ["../packages/crypto/src/index.ts"],

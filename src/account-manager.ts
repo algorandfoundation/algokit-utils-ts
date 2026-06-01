@@ -20,7 +20,13 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction/types'
 import { calculateFundAmount, memoize } from './util'
-import { Ed25519Generator } from '@algorandfoundation/algokit-crypto'
+import {
+  Ed25519Generator,
+  HdWalletGenerator,
+  nobleEd25519SigningKeyFromWrappedSecret,
+  WrappedEd25519Secret,
+} from '@algorandfoundation/algokit-crypto'
+import { sign } from 'crypto'
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -38,6 +44,7 @@ export const getAccountTransactionSigner = memoize(function (
 
 export interface AccountManagerConfig {
   ed25519Generator: Ed25519Generator
+  hdWalletGenerator: HdWalletGenerator
 }
 
 /**
@@ -51,6 +58,7 @@ export class AccountManager {
   private _accounts: { [address: string]: AddressWithTransactionSigner } = {}
   private _defaultSigner?: TransactionSigner
   private _ed25519Generator: Ed25519Generator
+  private _hdWalletGenerator: HdWalletGenerator
 
   /**
    * Create a new account manager.
@@ -64,6 +72,7 @@ export class AccountManager {
     this._clientManager = clientManager
     this._kmdAccountManager = new KmdAccountManager(clientManager)
     this._ed25519Generator = config.ed25519Generator
+    this._hdWalletGenerator = config.hdWalletGenerator
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<SuggestedParams>) {
@@ -275,6 +284,8 @@ export class AccountManager {
   }
 
   /**
+   * @deprecated Use {@link AccountManager.fromSecret} instead
+   *
    * Tracks and returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
    *
    * @example
@@ -287,7 +298,7 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string | Address): AddressWithTransactionSigner {
+  public fromMnemonic(mnemonicSecret: string, sender?: ReadableAddress): AddressWithTransactionSigner {
     const seed = seedFromMnemonic(mnemonicSecret)
 
     const generated = this._ed25519Generator(seed)
@@ -296,6 +307,70 @@ export class AccountManager {
       ed25519Pubkey: generated.ed25519Pubkey,
       rawEd25519Signer: generated.rawEd25519Signer,
       sendingAddress: getOptionalAddress(sender),
+    })
+
+    return this.signerAccount(addrWithSigners)
+  }
+
+  /**
+   * Tracks and returns an Algorand account with signer loaded from a wrapped secret.
+   *
+   * The wrapped secret can be one of the following formats:
+   * * **`ed25519Seed`**: An async function that returns the raw Ed25519 seed bytes
+   * * **`hdExtendedPrivateKey`**: An async function that returns the HD extended private key bytes
+   * * **`hdMnemonic`**: An async function that returns the HD wallet mnemonic phrase (requires `hdPath` option)
+   * * **`legacyMnemonic`**: An async function that returns a legacy Algorand mnemonic phrase
+   *
+   * @example From Ed25519 seed
+   * ```typescript
+   * const keypair = ed25519.keygen()
+   * const account = await algorand.account.fromSecret({
+   *   ed25519Seed: async () => keypair.secretKey.slice()
+   * })
+   * ```
+   * @example From HD extended private key
+   * ```typescript
+   * const generated = await (await peikertXHdWalletGenerator()).accountGenerator(0, 0)
+   * const account = await algorand.account.fromSecret({
+   *   hdExtendedPrivateKey: async () => generated.extendedPrivateKey.slice()
+   * })
+   * ```
+   * @example From HD mnemonic with derivation path
+   * ```typescript
+   * const mnemonic = 'abandon '.repeat(24).trim()
+   * const account = await algorand.account.fromSecret(
+   *   { hdMnemonic: async () => mnemonic },
+   *   { hdPath: { account: 1, index: 2 } }
+   * )
+   * ```
+   * @example From legacy mnemonic
+   * ```typescript
+   * const keypair = ed25519.keygen()
+   * const account = await algorand.account.fromSecret({
+   *   legacyMnemonic: async () => secretKeyToMnemonic(keypair.secretKey)
+   * })
+   * ```
+   * @example With rekeyed sender address
+   * ```typescript
+   * const account = await algorand.account.fromSecret(
+   *   { ed25519Seed: async () => keypair.secretKey.slice() },
+   *   { sendingAddress: 'SENDERADDRESS...' }
+   * )
+   * ```
+   *
+   * @param secret The wrapped secret containing one of the supported key formats
+   * @param opts Optional configuration for HD derivation path or rekeyed sender address
+   * @returns The account with signer loaded
+   */
+  public async fromSecret(
+    secret: WrappedEd25519Secret,
+    opts?: { sendingAddress?: ReadableAddress; hdPath?: { account: number; index: number } },
+  ) {
+    const signingKey = await nobleEd25519SigningKeyFromWrappedSecret(secret, opts?.hdPath)
+
+    const addrWithSigners = generateAddressWithSigners({
+      ...signingKey,
+      sendingAddress: getOptionalAddress(opts?.sendingAddress),
     })
 
     return this.signerAccount(addrWithSigners)

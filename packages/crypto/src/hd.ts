@@ -1,6 +1,21 @@
 import { BIP32DerivationType, fromSeed, KeyContext, XHDWalletAPI, harden } from '@algorandfoundation/xhd-wallet-api'
 import { RawEd25519Signer } from './ed25519'
 export type BIP44Path = [number, number, number, number, number]
+import { mnemonicToSeedSync } from '@scure/bip39'
+
+const xhd = new XHDWalletAPI()
+
+export function hdSeedFromMnemonic(mnemonic: string): Uint8Array {
+  return mnemonicToSeedSync(mnemonic)
+}
+
+export function hdRootKeyFromSeed(seed: Uint8Array): Uint8Array {
+  return fromSeed(Buffer.from(seed))
+}
+
+export function hdRootKeyFromMnemonic(mnemonic: string): Uint8Array {
+  return hdRootKeyFromSeed(hdSeedFromMnemonic(mnemonic))
+}
 
 export type HdWalletGenerator = (seed?: Uint8Array) => Promise<{
   hdRootKey: Uint8Array
@@ -20,8 +35,6 @@ export type HdAccountGenerator = (
   /** A signer function that can sign bytes using the ed25519 secret key corresponding to the generated account and index. */
   rawEd25519Signer: RawEd25519Signer
 }>
-
-const xhd = new XHDWalletAPI()
 
 export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8Array) => {
   const seedArray = seed ?? new Uint8Array(64)
@@ -54,15 +67,26 @@ export const peikertXHdWalletGenerator: HdWalletGenerator = async (seed?: Uint8A
  *
  * It should be noted that the `chain_code` is NOT used for signing. It can, however, be used for key derivation.
  * If your secret is only used for signing, it is recommended to only store the first 64 bytes in the secret store
- * and then pad the secret to 96 bytes in the unwrap function
+ * and then pad the secret to 96 bytes in the `hdExtendedPrivateKey` function
  */
 export type WrappedHdExtendedPrivateKey = {
   /**
    * Unwraps and returns the 96-byte HD `scalar (aka LHS or zL) || prefix (aka RHS or zR) || chain_code`.
    */
-  unwrapHdExtendedPrivateKey: () => Promise<Uint8Array>
+  hdExtendedPrivateKey: () => Promise<Uint8Array>
   /**
    * Re-wraps the `scalar (aka LHS or zL) || prefix (aka RHS or zR) || chain_code` after use.
    */
-  wrapHdExtendedPrivateKey: () => Promise<void>
+  wrap?: () => Promise<void>
+}
+
+export type WrappedHdMnemonic = {
+  /**
+   * Unwraps and returns the mnemonic.
+   */
+  hdMnemonic: () => Promise<string>
+  /**
+   * Re-wraps the mnemonic after use.
+   */
+  wrap?: () => Promise<void>
 }
