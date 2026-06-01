@@ -6,7 +6,7 @@
   "author": "Algorand Foundation",
   "license": "MIT",
   "engines": {
-    "node": ">=24.0"
+    "node": ">=22.0"
   },
   "type": "module",
   "main": "./src/index.ts",

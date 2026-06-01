@@ -6,7 +6,7 @@ Get up and running with AlgoKit Utils in 5 minutes.
 
 ## Prerequisites
 
-- Node.js >= 24.0
+- Node.js >= 22.0
 - [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli) installed
 - LocalNet running (`algokit localnet start`)
 
@@ -69,4 +69,4 @@ npx tsx hello-algorand.ts
 - [AlgorandClient](../concepts/algorand-client.md) - Learn about the main entry point
 - [Account Management](../concepts/account.md) - Different ways to create and manage accounts
 - [Transaction Management](../concepts/transaction.md) - Build and send transactions
-- [Examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/decoupling/examples) - Browse 100+ runnable examples
+- [Examples](https://github.com/algorandfoundation/algokit-utils-ts/tree/main/examples) - Browse 100+ runnable examples
