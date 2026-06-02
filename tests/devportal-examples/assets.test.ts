@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algo } from '../../src'
 import { algorandFixture } from '../../src/testing'
@@ -41,8 +39,6 @@ describe('devportal asset examples', () => {
       assetName: 'My Asset',
     })
 
-    console.log('Fungible asset created with ID:', createFungibleResult.assetId)
-
     /**
      * Send an asset create transaction creating a 1 to 1 unique NFT
      */
@@ -55,8 +51,6 @@ describe('devportal asset examples', () => {
       url: 'metadata URL',
       metadataHash: new Uint8Array(32).fill(1),
     })
-
-    console.log('NFT created with ID:', createNFTResult.assetId)
 
     // example: ASSET_CREATE_TRANSACTION
 
@@ -101,11 +95,12 @@ describe('devportal asset examples', () => {
       amount: 1n,
     })
 
-    console.log('Asset transfer transaction ID:', transferResult.transaction.txId())
-
     // example: ASSET_TRANSFER_TRANSACTION
 
+    const receiverHolding = await algorand.asset.getAccountInformation(randomAccountB, assetId)
+
     expect(transferResult).toBeDefined()
+    expect(receiverHolding.balance).toBe(1n)
   })
 
   test('asset clawback', async () => {
@@ -156,8 +151,6 @@ describe('devportal asset examples', () => {
       clawbackTarget: randomAccountB, // account that is being clawed back from
     })
 
-    console.log('Asset clawback transaction ID:', txnResult.transaction.txId())
-
     // example: ASSET_CLAWBACK_TRANSACTION
 
     expect(txnResult).toBeDefined()
@@ -201,8 +194,6 @@ describe('devportal asset examples', () => {
       frozen: true,
     })
 
-    console.log('Asset freeze transaction ID:', freezeResult.transaction.txId())
-
     /**
      * Send an asset unfreeze transaction unfreezing an asset with asset id 1234
      */
@@ -213,12 +204,13 @@ describe('devportal asset examples', () => {
       frozen: false,
     })
 
-    console.log('Asset unfreeze transaction ID:', unfreezeResult.transaction.txId())
-
     // example: ASSET_FREEZE_TRANSACTION
+
+    const frozenHolding = await algorand.asset.getAccountInformation(randomAccountB, assetId)
 
     expect(freezeResult).toBeDefined()
     expect(unfreezeResult).toBeDefined()
+    expect(frozenHolding.frozen).toBe(false)
   })
 
   test('asset update', async () => {
@@ -261,8 +253,6 @@ describe('devportal asset examples', () => {
       freeze: randomAccountB,
       clawback: randomAccountB,
     })
-
-    console.log('Asset update transaction ID:', txnResult.transaction.txId())
 
     // example: ASSET_UPDATE_TRANSACTION
 
@@ -319,11 +309,10 @@ describe('devportal asset examples', () => {
       assetId: assetId,
     })
 
-    console.log('Asset destroy transaction ID:', destroyResult.transaction.txId())
-
     // example: ASSET_DESTROY_TRANSACTION
 
     expect(destroyResult).toBeDefined()
+    await expect(algorand.asset.getById(assetId)).rejects.toThrow()
   })
 
   test('asset opt-in', async () => {
@@ -342,7 +331,7 @@ describe('devportal asset examples', () => {
     // example: ASSET_OPT_IN_TRANSACTION
 
     /**
-     * Send an asset opt in transaction for randomAccountA opting in to asset with asset id 1234
+     * Send an asset opt in transaction for randomAccountB opting in to asset with asset id 1234
      *
      * Parameters for an asset opt in transaction:
      * - sender: The address of the account that will opt in to the asset
@@ -352,8 +341,6 @@ describe('devportal asset examples', () => {
       sender: randomAccountB,
       assetId: assetId,
     })
-
-    console.log('Asset opt-in transaction ID:', optInResult.transaction.txId())
 
     // example: ASSET_OPT_IN_TRANSACTION
 
@@ -397,7 +384,7 @@ describe('devportal asset examples', () => {
     // example: ASSET_OPT_OUT_TRANSACTION
 
     /**
-     * Send an asset opt out transaction for randomAccountA opting out of asset with asset id 1234
+     * Send an asset opt out transaction for randomAccountB opting out of asset with asset id 1234
      *
      * Parameters for an asset opt out transaction:
      * - sender: The address of the account that will opt out of the asset
@@ -411,8 +398,6 @@ describe('devportal asset examples', () => {
       creator: randomAccountA,
       ensureZeroBalance: true,
     })
-
-    console.log('Asset opt-out transaction ID:', optOutResult.transaction.txId())
 
     // example: ASSET_OPT_OUT_TRANSACTION
 
@@ -446,17 +431,12 @@ describe('devportal asset examples', () => {
      * Transactions will be sent in batches of 16 as transaction groups.
      *
      * @param account The account to opt-in
-     * @param assetIds The list of asset IDs to opt-out of
+     * @param assetIds The list of asset IDs to opt-in to
      * @param options Any parameters to control the transaction or execution of the transaction
      *
      * @returns An array of records matching asset ID to transaction ID of the opt in
      */
     const bulkOptInResult = await algorand.asset.bulkOptIn(randomAccountB, assetIds)
-
-    console.log(
-      'Asset bulk opt-in transaction IDs:',
-      bulkOptInResult.map((r) => r.transactionId),
-    )
 
     // example: ASSET_BULK_OPT_IN_TRANSACTION
 
@@ -493,18 +473,13 @@ describe('devportal asset examples', () => {
      *
      * Transactions will be sent in batches of 16 as transaction groups.
      *
-     * @param account The account to opt-in
+     * @param account The account to opt-out
      * @param assetIds The list of asset IDs to opt-out of
      * @param options Any parameters to control the transaction or execution of the transaction
      *
      * @returns An array of records matching asset ID to transaction ID of the opt out
      */
     const bulkOptOutResult = await algorand.asset.bulkOptOut(randomAccountB, assetIds)
-
-    console.log(
-      'Asset bulk opt-out transaction IDs:',
-      bulkOptOutResult.map((r) => r.transactionId),
-    )
 
     // example: ASSET_BULK_OPT_OUT_TRANSACTION
 
@@ -553,9 +528,6 @@ describe('devportal asset examples', () => {
      *     defaults to undefined
      */
     const assetInfo = await algorand.asset.getById(assetId)
-
-    console.log(assetInfo.assetName)
-    console.log(assetInfo.total)
 
     // example: GET_ASSET_INFORMATION
 
