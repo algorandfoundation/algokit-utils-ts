@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algo } from '../../src'
 import { algorandFixture } from '../../src/testing'
@@ -39,6 +41,8 @@ describe('devportal asset examples', () => {
       assetName: 'My Asset',
     })
 
+    console.log('Fungible asset created with ID:', createFungibleResult.assetId)
+
     /**
      * Send an asset create transaction creating a 1 to 1 unique NFT
      */
@@ -51,6 +55,8 @@ describe('devportal asset examples', () => {
       url: 'metadata URL',
       metadataHash: new Uint8Array(32).fill(1),
     })
+
+    console.log('NFT created with ID:', createNFTResult.assetId)
 
     // example: ASSET_CREATE_TRANSACTION
 
@@ -94,6 +100,8 @@ describe('devportal asset examples', () => {
       receiver: randomAccountB,
       amount: 1n,
     })
+
+    console.log('Asset transfer transaction ID:', transferResult.transaction.txId())
 
     // example: ASSET_TRANSFER_TRANSACTION
 
@@ -151,6 +159,8 @@ describe('devportal asset examples', () => {
       clawbackTarget: randomAccountB, // account that is being clawed back from
     })
 
+    console.log('Asset clawback transaction ID:', txnResult.transaction.txId())
+
     // example: ASSET_CLAWBACK_TRANSACTION
 
     expect(txnResult).toBeDefined()
@@ -194,6 +204,8 @@ describe('devportal asset examples', () => {
       frozen: true,
     })
 
+    console.log('Asset freeze transaction ID:', freezeResult.transaction.txId())
+
     /**
      * Send an asset unfreeze transaction unfreezing an asset with asset id 1234
      */
@@ -203,6 +215,8 @@ describe('devportal asset examples', () => {
       freezeTarget: randomAccountB, // The account to freeze or unfreeze
       frozen: false,
     })
+
+    console.log('Asset unfreeze transaction ID:', unfreezeResult.transaction.txId())
 
     // example: ASSET_FREEZE_TRANSACTION
 
@@ -253,6 +267,8 @@ describe('devportal asset examples', () => {
       freeze: randomAccountB,
       clawback: randomAccountB,
     })
+
+    console.log('Asset update transaction ID:', txnResult.transaction.txId())
 
     // example: ASSET_UPDATE_TRANSACTION
 
@@ -309,6 +325,8 @@ describe('devportal asset examples', () => {
       assetId: assetId,
     })
 
+    console.log('Asset destroy transaction ID:', destroyResult.transaction.txId())
+
     // example: ASSET_DESTROY_TRANSACTION
 
     expect(destroyResult).toBeDefined()
@@ -341,6 +359,8 @@ describe('devportal asset examples', () => {
       sender: randomAccountB,
       assetId: assetId,
     })
+
+    console.log('Asset opt-in transaction ID:', optInResult.transaction.txId())
 
     // example: ASSET_OPT_IN_TRANSACTION
 
@@ -399,6 +419,8 @@ describe('devportal asset examples', () => {
       ensureZeroBalance: true,
     })
 
+    console.log('Asset opt-out transaction ID:', optOutResult.transaction.txId())
+
     // example: ASSET_OPT_OUT_TRANSACTION
 
     expect(optOutResult).toBeDefined()
@@ -437,6 +459,11 @@ describe('devportal asset examples', () => {
      * @returns An array of records matching asset ID to transaction ID of the opt in
      */
     const bulkOptInResult = await algorand.asset.bulkOptIn(randomAccountB, assetIds)
+
+    console.log(
+      'Asset bulk opt-in transaction IDs:',
+      bulkOptInResult.map((r) => r.transactionId),
+    )
 
     // example: ASSET_BULK_OPT_IN_TRANSACTION
 
@@ -480,6 +507,11 @@ describe('devportal asset examples', () => {
      * @returns An array of records matching asset ID to transaction ID of the opt out
      */
     const bulkOptOutResult = await algorand.asset.bulkOptOut(randomAccountB, assetIds)
+
+    console.log(
+      'Asset bulk opt-out transaction IDs:',
+      bulkOptOutResult.map((r) => r.transactionId),
+    )
 
     // example: ASSET_BULK_OPT_OUT_TRANSACTION
 
@@ -528,6 +560,9 @@ describe('devportal asset examples', () => {
      *     defaults to undefined
      */
     const assetInfo = await algorand.asset.getById(assetId)
+
+    console.log(assetInfo.assetName)
+    console.log(assetInfo.total)
 
     // example: GET_ASSET_INFORMATION
 
