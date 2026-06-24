@@ -83,6 +83,7 @@
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-unused-imports": "^4.3.0",
     "fast-glob": "^3.3.2",
     "magic-string": "^0.30.11",
     "npm-run-all2": "^8.0.4",
