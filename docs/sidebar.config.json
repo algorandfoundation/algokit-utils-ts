@@ -1,0 +1,50 @@
+[
+  { "label": "Home", "link": "/" },
+  {
+    "label": "Getting Started",
+    "items": [{ "label": "Quick Start", "slug": "tutorials/quick-start" }]
+  },
+  {
+    "label": "Core Concepts",
+    "items": [
+      { "slug": "concepts/algorand-client" },
+      { "slug": "concepts/account" },
+      { "slug": "concepts/transaction" },
+      { "slug": "concepts/amount" },
+      { "slug": "concepts/client" }
+    ]
+  },
+  {
+    "label": "Building Applications",
+    "items": [
+      { "slug": "concepts/app-client" },
+      { "slug": "concepts/app-deploy" },
+      { "slug": "concepts/app" },
+      { "slug": "concepts/typed-app-clients" },
+      { "slug": "concepts/asset" },
+      { "slug": "concepts/transfer" },
+      { "slug": "concepts/testing" }
+    ]
+  },
+  {
+    "label": "Advanced Topics",
+    "collapsed": true,
+    "items": [
+      { "slug": "concepts/transaction-composer" },
+      { "slug": "concepts/debugging" },
+      { "slug": "concepts/indexer" },
+      { "slug": "concepts/event-emitter" },
+      { "slug": "concepts/dispenser-client" }
+    ]
+  },
+  {
+    "label": "Migration Guides",
+    "collapsed": true,
+    "autogenerate": { "directory": "migration" }
+  },
+  {
+    "label": "API Reference",
+    "collapsed": true,
+    "autogenerate": { "directory": "api" }
+  }
+]

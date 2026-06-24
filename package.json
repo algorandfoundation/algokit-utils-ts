@@ -50,8 +50,10 @@
     "format": "prettier --write .",
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
-    "generate:code-docs": "typedoc",
-    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs"
+    "docs:dev": "pnpm --dir docs run dev",
+    "docs:build": "pnpm --dir docs run build",
+    "docs:preview": "pnpm --dir docs run preview",
+    "pre-commit": "run-s check-types lint:fix audit format test"
   },
   "overrides": {
     "esbuild": "0.25.0"
@@ -93,8 +95,6 @@
     "ts-node": "^10.9.1",
     "tslib": "^2.6.2",
     "tsx": "^4.21.0",
-    "typedoc": "^0.25.13",
-    "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.16.0",
     "uuid": "^10.0.0",

@@ -26,21 +26,9 @@ jobs:
       install-algokit: true
 
   check_docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 1
-      - name: Check docs are up to date
-        shell: bash
-        run: |
-          npm ci --ignore-scripts
-          npm run generate:code-docs
-          # Add untracked files as empty so they come up in diff
-          git add -N .
-          # Print changed files and error out if there are changes after generating docs
-          git diff --exit-code --name-only
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@main
+    with:
+      node-version: 20.x
 
   build:
     name: Build
@@ -100,3 +88,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish_docs:
+    name: Publish docs to GitHub Pages
+    needs: release
+    if: github.ref_name == 'main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/publish-docs.yml@main

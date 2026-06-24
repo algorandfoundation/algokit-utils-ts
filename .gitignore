@@ -57,3 +57,6 @@ out/
 .env
 .env.*
 !.env.template
+
+# local agent/editor settings
+.claude/

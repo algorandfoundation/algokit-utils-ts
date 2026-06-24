@@ -10,7 +10,7 @@ coverage
 **/generated/types.ts
 # don't format ide files
 .idea
-# don't format auto generated code docs
-docs/code
+# docs is a self-contained pnpm project with its own tooling
+docs
 # don't format test contract artifacts
 tests/example-contracts/**/*.json
