@@ -103,13 +103,7 @@
   },
   "release": {
     "branches": [
-      {
-        "name": "main",
-        "prerelease": "beta"
-      },
-      {
-        "name": "release"
-      }
+      "main"
     ],
     "plugins": [
       [
