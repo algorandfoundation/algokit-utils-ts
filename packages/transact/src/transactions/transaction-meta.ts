@@ -337,12 +337,14 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
         if (box.appId && box.appId !== appId) {
           appIndex = ensure({ appId: box.appId })
         }
-        accessList.push({
-          b: {
-            i: numberCodec.encodeOptional(appIndex, format),
-            n: bytesCodec.encodeOptional(box.name, format),
-          },
-        })
+        const wireBox = {
+          i: numberCodec.encodeOptional(appIndex, format),
+          n: bytesCodec.encodeOptional(box.name, format),
+        }
+
+        // An empty ResourceRef is the canonical representation of additional
+        // box I/O budget. Do not wrap it in a non-canonical empty BoxRef.
+        accessList.push(wireBox.i === undefined && wireBox.n === undefined ? {} : { b: wireBox })
         continue
       }
     }
@@ -430,21 +432,23 @@ class AppCallDataCodec extends Codec<AppCallTransactionFields | undefined, Recor
         continue
       }
 
+      // Empty ResourceRefs are valid and contribute additional box I/O budget.
+      if (d === undefined && s === undefined && p === undefined && !h && !l && !b) {
+        result.push({ box: { appId: 0n, name: new Uint8Array() } })
+        continue
+      }
+
       // Box reference (b)
       if (b) {
         const boxAppIdx = (b.i ?? 0) as number
         const name = b.n as WireString | undefined
-
-        if (!name) {
-          throw new Error('Access list box reference is missing name')
-        }
 
         const boxAppId = boxAppIdx === 0 ? 0n : (wireResourceReferences[boxAppIdx - 1].p! as WireBigInt)
 
         result.push({
           box: {
             appId: bigIntCodec.decode(boxAppId, format),
-            name: bytesCodec.decode(name, format),
+            name: name === undefined ? new Uint8Array() : bytesCodec.decode(name, format),
           },
         })
         continue
