@@ -17,6 +17,7 @@ jobs:
       test-script: npm run test -- --silent
       install-algokit: true
       polytest: true
+      polytest-version: "0.8.0"
 
   check-docs:
     uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@main
