@@ -8,8 +8,8 @@ export class NestedStruct extends Contract {
 
   state = GlobalStateMap<uint64, Struct2>({ prefix: '', maxKeys: 10 })
 
-  setValue(key: uint64, value: string): void {
-    this.state(key).value = { x: { a: value } }
+  setValue(key: uint64, value: Struct2): void {
+    this.state(key).value = value
   }
 
   getValue(key: uint64): Struct2 {

@@ -1,10 +1,11 @@
+import path from 'path'
 import { defineConfig } from 'vitest/config'
 export default defineConfig({
   appType: 'custom',
   test: {
-    include: ['**/*.spec.ts'],
-    exclude: ['node_modules'],
-    setupFiles: ['tests/setup.ts'],
+    projects: ['.'],
+    include: ['**/*.spec.ts', '**/*.test.ts'],
+    exclude: ['node_modules', 'packages/**', '.polytest*/**/*', '**/polytest_resources/**'],
     coverage: {
       include: ['src/**/*.ts'],
       exclude: ['tests/*.*'],
