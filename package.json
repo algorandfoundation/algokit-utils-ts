@@ -66,18 +66,10 @@
     "picomatch": ">=4.0.2"
   },
   "dependencies": {
-    "@algorandfoundation/xhd-wallet-api": "2.0.0-canary.1",
-    "@noble/curves": "^2.0.1",
-    "@noble/ed25519": "^3.0.0",
-    "@noble/hashes": "^2.0.1",
-    "@scure/bip39": "^2.2.0",
-    "algorand-msgpack": "^1.1.0",
-    "buffer": "^6.0.3",
-    "dotenv": "^16.4.5",
-    "hi-base32": "^0.5.1",
-    "json-bigint": "^1.0.0",
-    "tweetnacl": "^1.0.3",
-    "vlq": "^2.0.4"
+    "buffer": "^6.0.3"
+  },
+  "peerDependencies": {
+    "algosdk": "^3.5.2"
   },
   "devDependencies": {
     "@algorandfoundation/tealscript": "^0.106.3",
@@ -180,8 +172,5 @@
       ],
       "@semantic-release/github"
     ]
-  },
-  "peerDependencies": {
-    "algosdk": "^3.6.0"
   }
 }
