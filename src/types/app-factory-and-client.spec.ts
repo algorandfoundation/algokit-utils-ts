@@ -564,7 +564,7 @@ describe('ARC32: app-factory-and-app-client', () => {
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(e.stack).toContain('assert failed')
+        expect(e.message).toContain('assert failed')
       }
 
       newClient.importSourceMaps(JSON.parse(JSON.stringify(oldSourceMaps)))
@@ -1070,7 +1070,7 @@ retsub
       const { appClient } = await factory.deploy({ createParams: { method: 'createApplication' } })
 
       it('correctly decodes the nested struct', async () => {
-        await appClient.send.call({ method: 'setValue', args: [1, 'hello'] })
+        await appClient.send.call({ method: 'setValue', args: [1, { x: { a: 'hello' } }] })
 
         const result = await appClient.send.call({ method: 'getValue', args: [1] })
 
@@ -1105,7 +1105,7 @@ retsub
       const { appClient } = await factory.deploy({ createParams: { method: 'createApplication' } })
 
       it('correctly decodes the nested struct', async () => {
-        await appClient.send.call({ method: 'setValue', args: [1, 'hello'] })
+        await appClient.send.call({ method: 'setValue', args: [1, { x: { a: 'hello' } }] })
 
         const result = await appClient.send.call({ method: 'getValue', args: [1] })
 

@@ -1,13 +1,12 @@
-import { Address } from '@algorandfoundation/algokit-common'
+import algosdk, { Address } from 'algosdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
+import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
 import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
 import { AppDeployParams } from '../../../src/types/app-deployer'
-import { AppManager } from '../../../src/types/app-manager'
 import { AppSpec } from '../../../src/types/app-spec'
-import { AppCreateParams, TransactionComposer } from '../../../src/types/composer'
+import { AppCreateParams } from '../../../src/types/composer'
 import { Arc2TransactionNote } from '../../../src/types/transaction'
-import { AddressWithSigners } from '@algorandfoundation/algokit-transact'
 
 export const getTestingAppContract = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'), 'utf-8')
@@ -26,14 +25,14 @@ export const getTestingAppContract = async () => {
   }
 }
 
-export const getTestingAppCreateParams = async (from: AddressWithSigners, metadata: AppDeployMetadata) => {
+export const getTestingAppCreateParams = async (from: algosdk.Account, metadata: AppDeployMetadata) => {
   const contract = await getTestingAppContract()
   return {
     sender: from.addr,
-    approvalProgram: AppManager.replaceTealTemplateDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
+    approvalProgram: replaceDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
     clearStateProgram: contract.clearStateProgram,
     schema: contract.stateSchema,
-    note: TransactionComposer.arc2Note({
+    note: encodeTransactionNote({
       dAppName: APP_DEPLOY_NOTE_DAPP,
       data: metadata,
       format: 'j',
