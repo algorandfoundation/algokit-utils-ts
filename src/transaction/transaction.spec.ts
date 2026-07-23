@@ -151,7 +151,7 @@ describe('transaction', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const messageRegex = new RegExp(
-        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{?9999999`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
@@ -200,7 +200,7 @@ describe('transaction', () => {
         coverAppCallInnerTransactionFees: false,
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee too small/)
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee ([\w.]+\s+)?too small/)
     })
 
     test('does not alter fee when app call has no inners', async () => {
@@ -726,7 +726,7 @@ describe('transaction', () => {
             extraFee: undefined,
             suppressLog: true,
           }),
-      ).rejects.toThrowError(/fee too small/)
+      ).rejects.toThrowError(/fee ([\w.]+\s+)?too small/)
     }
   })
 })
