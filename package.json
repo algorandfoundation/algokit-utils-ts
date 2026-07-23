@@ -38,9 +38,6 @@
     "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
