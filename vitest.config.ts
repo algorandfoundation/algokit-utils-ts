@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     projects: ['.'],
     include: ['**/*.spec.ts', '**/*.test.ts'],
-    exclude: ['node_modules', 'packages/**', '.polytest*/**/*', '**/polytest_resources/**'],
+    exclude: ['node_modules', 'packages/**'],
     coverage: {
       include: ['src/**/*.ts'],
       exclude: ['tests/*.*'],

@@ -21,7 +21,7 @@ jobs:
       audit-script: npm run audit
       test-script: npm run test -- --silent
       install-algokit: true
-      polytest: true
+      polytest: false
 
   check_docs:
     uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@main
