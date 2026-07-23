@@ -1,0 +1,17 @@
+[
+  { "label": "Home", "link": "/" },
+  {
+    "label": "Capabilities",
+    "autogenerate": { "directory": "capabilities" }
+  },
+  {
+    "label": "Migration Guides",
+    "collapsed": true,
+    "autogenerate": { "directory": "migration" }
+  },
+  {
+    "label": "API Reference",
+    "collapsed": true,
+    "autogenerate": { "directory": "api" }
+  }
+]
