@@ -30,56 +30,6 @@
       "import": "./types/*.mjs",
       "require": "./types/*.js"
     },
-    "./testing": {
-      "types": "./testing/index.d.ts",
-      "import": "./testing/index.mjs",
-      "require": "./testing/index.js"
-    },
-    "./abi": {
-      "types": "./abi/index.d.ts",
-      "import": "./abi/index.mjs",
-      "require": "./abi/index.js"
-    },
-    "./transact": {
-      "types": "./transact/index.d.ts",
-      "import": "./transact/index.mjs",
-      "require": "./transact/index.js"
-    },
-    "./transaction": {
-      "types": "./transaction/index.d.ts",
-      "import": "./transaction/index.mjs",
-      "require": "./transaction/index.js"
-    },
-    "./algod-client": {
-      "types": "./algod-client/index.d.ts",
-      "import": "./algod-client/index.mjs",
-      "require": "./algod-client/index.js"
-    },
-    "./indexer-client": {
-      "types": "./indexer-client/index.d.ts",
-      "import": "./indexer-client/index.mjs",
-      "require": "./indexer-client/index.js"
-    },
-    "./kmd-client": {
-      "types": "./kmd-client/index.d.ts",
-      "import": "./kmd-client/index.mjs",
-      "require": "./kmd-client/index.js"
-    },
-    "./algo25": {
-      "types": "./algo25/index.d.ts",
-      "import": "./algo25/index.mjs",
-      "require": "./algo25/index.js"
-    },
-    "./crypto": {
-      "types": "./crypto/index.d.ts",
-      "import": "./crypto/index.mjs",
-      "require": "./crypto/index.js"
-    },
-    "./common": {
-      "types": "./common/index.d.ts",
-      "import": "./common/index.mjs",
-      "require": "./common/index.js"
-    },
     "./*": {
       "types": "./*.d.ts",
       "import": "./*.mjs",

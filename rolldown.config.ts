@@ -35,16 +35,5 @@ export default createConfig(
     'src/logging.ts',
     'src/logic-error.ts',
     'src/network-client.ts',
-    // Package re-exports
-    'src/abi/index.ts',
-    'src/algo25/index.ts',
-    'src/common/index.ts',
-    'src/transact/index.ts',
-    'src/transaction/index.ts',
-    'src/algod-client/index.ts',
-    'src/indexer-client/index.ts',
-    'src/kmd-client/index.ts',
-    'src/crypto/index.ts',
-    'src/common/index.ts',
   ],
 )
