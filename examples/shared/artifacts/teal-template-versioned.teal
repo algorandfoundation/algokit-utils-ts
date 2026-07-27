@@ -1,0 +1,78 @@
+#pragma version 10
+// Versioned App - Version TMPL_VERSION
+// This comment changes bytecode when version changes
+
+txn ApplicationID
+int 0
+==
+bnz handle_creation
+
+txn OnCompletion
+int NoOp
+==
+bnz handle_noop
+
+txn OnCompletion
+int OptIn
+==
+bnz handle_optin
+
+txn OnCompletion
+int CloseOut
+==
+bnz handle_closeout
+
+txn OnCompletion
+int UpdateApplication
+==
+bnz handle_update
+
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+int 0
+return
+
+handle_creation:
+  // Store the version in global state
+  byte "version"
+  int TMPL_VERSION
+  app_global_put
+  // Initialize a counter
+  byte "counter"
+  int 0
+  app_global_put
+  int 1
+  return
+
+handle_noop:
+  // Increment counter on each call
+  byte "counter"
+  app_global_get
+  int 1
+  +
+  byte "counter"
+  swap
+  app_global_put
+  int 1
+  return
+
+handle_optin:
+  int 1
+  return
+
+handle_closeout:
+  int 1
+  return
+
+handle_update:
+  // Check if updates are allowed via deploy-time control
+  int TMPL_UPDATABLE
+  return
+
+handle_delete:
+  // Check if deletion is allowed via deploy-time control
+  int TMPL_DELETABLE
+  return

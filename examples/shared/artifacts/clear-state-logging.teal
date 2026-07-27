@@ -1,0 +1,5 @@
+#pragma version 10
+byte "Clear state called"
+log
+int 1
+return

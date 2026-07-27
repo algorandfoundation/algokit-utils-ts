@@ -1,0 +1,5 @@
+#pragma version 10
+// Simple logic sig that always approves
+// WARNING: In production, you should add conditions!
+int 1
+return

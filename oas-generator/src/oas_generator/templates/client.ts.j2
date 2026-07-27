@@ -1,0 +1,9 @@
+import type { ClientConfig } from './core/client-config';
+import { FetchHttpRequest } from './core/fetch-http-request';
+import { {{ service_class_name }} } from './apis/api-service';
+
+export class {{ client_class_name }} extends {{ service_class_name }} {
+  constructor(config: ClientConfig) {
+    super(new FetchHttpRequest(config));
+  }
+}

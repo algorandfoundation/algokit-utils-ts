@@ -1,5 +1,5 @@
-import { Address } from 'algosdk'
-import { AlgorandClient } from '../types/algorand-client'
+import { Address } from '@algorandfoundation/algokit-common'
+import { AlgorandClient } from '../algorand-client'
 
 export async function generateTestAsset(algorand: AlgorandClient, sender: Address | string, total?: number) {
   total = !total ? Math.floor(Math.random() * 100) + 20 : total

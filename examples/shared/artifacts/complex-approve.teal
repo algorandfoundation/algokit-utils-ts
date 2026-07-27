@@ -1,0 +1,17 @@
+#pragma version 10
+// Simple smart contract that:
+// - Always approves application creation
+// - Always approves application calls
+// - Always approves clear state
+
+txn ApplicationID
+bz create
+
+// Not creation, approve all calls
+int 1
+return
+
+create:
+// On create, just approve
+int 1
+return

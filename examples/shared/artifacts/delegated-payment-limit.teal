@@ -1,0 +1,16 @@
+#pragma version 8
+// Delegated Logic Signature Example
+// This program approves payment transactions up to 1 ALGO
+
+// Check that this is a payment transaction
+txn TypeEnum
+int pay
+==
+
+// Check that the amount is <= 1 ALGO (1,000,000 microALGOs)
+txn Amount
+int 1000000
+<=
+
+// Both conditions must be true
+&&

@@ -1,4 +1,4 @@
-import { UpdatableConfig } from './types/config'
+import { UpdatableConfig } from './updatable-config'
 
 /** The AlgoKit config. To update it use the configure method. */
 export const Config = new UpdatableConfig()

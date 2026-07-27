@@ -1,2 +1,6 @@
-export * from './perform-atomic-transaction-composer-simulate'
+/**
+ * @module algokit-utils/transaction
+ */
+export * from './perform-transaction-composer-simulate'
 export * from './transaction'
+export * from './types'

@@ -1,10 +1,24 @@
+import path from 'path'
 import { defineConfig } from 'vitest/config'
 export default defineConfig({
   appType: 'custom',
+  resolve: {
+    alias: {
+      '@algorandfoundation/algokit-abi': path.resolve(__dirname, 'packages/abi/src'),
+      '@algorandfoundation/algokit-common': path.resolve(__dirname, 'packages/common/src'),
+      '@algorandfoundation/algokit-transact': path.resolve(__dirname, 'packages/transact/src'),
+      '@algorandfoundation/algokit-algod-client': path.resolve(__dirname, 'packages/algod_client/src'),
+      '@algorandfoundation/algokit-indexer-client': path.resolve(__dirname, 'packages/indexer_client/src'),
+      '@algorandfoundation/algokit-kmd-client': path.resolve(__dirname, 'packages/kmd_client/src'),
+      '@algorandfoundation/algokit-testing': path.resolve(__dirname, 'packages/testing/src'),
+      '@algorandfoundation/algokit-algo25': path.resolve(__dirname, 'packages/algo25/src'),
+      '@algorandfoundation/algokit-crypto': path.resolve(__dirname, 'packages/crypto/src'),
+    },
+  },
   test: {
-    include: ['**/*.spec.ts'],
-    exclude: ['node_modules'],
-    setupFiles: ['tests/setup.ts'],
+    projects: ['.', 'packages/*'],
+    include: ['**/*.spec.ts', '**/*.test.ts'],
+    exclude: ['node_modules', 'packages/**', '.polytest*/**/*', '**/polytest_resources/**'],
     coverage: {
       include: ['src/**/*.ts'],
       exclude: ['tests/*.*'],

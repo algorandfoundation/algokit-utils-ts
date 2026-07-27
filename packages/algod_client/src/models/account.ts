@@ -1,0 +1,342 @@
+import type { Address, ObjectModelMetadata } from '@algorandfoundation/algokit-common'
+import {
+  stringCodec,
+  numberCodec,
+  bigIntCodec,
+  booleanCodec,
+  addressCodec,
+  ArrayCodec,
+  ObjectModelCodec,
+} from '@algorandfoundation/algokit-common'
+import type { AccountParticipation } from './account-participation'
+import { AccountParticipationMeta } from './account-participation'
+import type { Application } from './application'
+import { ApplicationMeta } from './application'
+import type { ApplicationLocalState } from './application-local-state'
+import { ApplicationLocalStateMeta } from './application-local-state'
+import type { ApplicationStateSchema } from './application-state-schema'
+import { ApplicationStateSchemaMeta } from './application-state-schema'
+import type { Asset } from './asset'
+import { AssetMeta } from './asset'
+import type { AssetHolding } from './asset-holding'
+import { AssetHoldingMeta } from './asset-holding'
+
+/**
+ * Account information at a given round.
+ *
+ * Definition:
+ * data/basics/userBalance.go : AccountData
+ */
+export type Account = {
+  /**
+   * the account public key
+   */
+  address: Address
+
+  /**
+   * \[algo\] total number of MicroAlgos in the account
+   */
+  amount: bigint
+
+  /**
+   * MicroAlgo balance required by the account.
+   *
+   * The requirement grows based on asset and application usage.
+   */
+  minBalance: bigint
+
+  /**
+   * specifies the amount of MicroAlgos in the account, without the pending rewards.
+   */
+  amountWithoutPendingRewards: bigint
+
+  /**
+   * \[appl\] applications local data stored in this account.
+   *
+   * Note the raw object uses `map[int] -> AppLocalState` for this type.
+   */
+  appsLocalState?: ApplicationLocalState[]
+
+  /**
+   * The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account.
+   */
+  totalAppsOptedIn: number
+  appsTotalSchema?: ApplicationStateSchema
+
+  /**
+   * \[teap\] the sum of all extra application program pages for this account.
+   */
+  appsTotalExtraPages?: number
+
+  /**
+   * \[asset\] assets held by this account.
+   *
+   * Note the raw object uses `map[int] -> AssetHolding` for this type.
+   */
+  assets?: AssetHolding[]
+
+  /**
+   * The count of all assets that have been opted in, equivalent to the count of AssetHolding objects held by this account.
+   */
+  totalAssetsOptedIn: number
+
+  /**
+   * \[appp\] parameters of applications created by this account including app global data.
+   *
+   * Note: the raw account uses `map[int] -> AppParams` for this type.
+   */
+  createdApps?: Application[]
+
+  /**
+   * The count of all apps (AppParams objects) created by this account.
+   */
+  totalCreatedApps: number
+
+  /**
+   * \[apar\] parameters of assets created by this account.
+   *
+   * Note: the raw account uses `map[int] -> Asset` for this type.
+   */
+  createdAssets?: Asset[]
+
+  /**
+   * The count of all assets (AssetParams objects) created by this account.
+   */
+  totalCreatedAssets: number
+
+  /**
+   * \[tbx\] The number of existing boxes created by this account's app.
+   */
+  totalBoxes?: number
+
+  /**
+   * \[tbxb\] The total number of bytes used by this account's app's box keys and values.
+   */
+  totalBoxBytes?: number
+  participation?: AccountParticipation
+
+  /**
+   * Whether or not the account can receive block incentives if its balance is in range at proposal time.
+   */
+  incentiveEligible?: boolean
+
+  /**
+   * amount of MicroAlgos of pending rewards in this account.
+   */
+  pendingRewards: bigint
+
+  /**
+   * \[ebase\] used as part of the rewards computation. Only applicable to accounts which are participating.
+   */
+  rewardBase?: bigint
+
+  /**
+   * \[ern\] total rewards of MicroAlgos the account has received, including pending rewards.
+   */
+  rewards: bigint
+
+  /**
+   * The round for which this information is relevant.
+   */
+  round: bigint
+
+  /**
+   * \[onl\] delegation status of the account's MicroAlgos
+   * * Offline - indicates that the associated account is delegated.
+   * *  Online  - indicates that the associated account used as part of the delegation pool.
+   * *   NotParticipating - indicates that the associated account is neither a delegator nor a delegate.
+   */
+  status: string
+
+  /**
+   * Indicates what type of signature is used by this account, must be one of:
+   * * sig
+   * * msig
+   * * lsig
+   */
+  sigType?: 'sig' | 'msig' | 'lsig'
+
+  /**
+   * \[spend\] the address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field.
+   */
+  authAddr?: Address
+
+  /**
+   * The round in which this account last proposed the block.
+   */
+  lastProposed?: bigint
+
+  /**
+   * The round in which this account last went online, or explicitly renewed their online status.
+   */
+  lastHeartbeat?: bigint
+}
+
+export const AccountMeta: ObjectModelMetadata<Account> = {
+  name: 'Account',
+  kind: 'object',
+  fields: [
+    {
+      name: 'address',
+      wireKey: 'address',
+      optional: false,
+      codec: addressCodec,
+    },
+    {
+      name: 'amount',
+      wireKey: 'amount',
+      optional: false,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'minBalance',
+      wireKey: 'min-balance',
+      optional: false,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'amountWithoutPendingRewards',
+      wireKey: 'amount-without-pending-rewards',
+      optional: false,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'appsLocalState',
+      wireKey: 'apps-local-state',
+      optional: true,
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationLocalStateMeta)),
+    },
+    {
+      name: 'totalAppsOptedIn',
+      wireKey: 'total-apps-opted-in',
+      optional: false,
+      codec: numberCodec,
+    },
+    {
+      name: 'appsTotalSchema',
+      wireKey: 'apps-total-schema',
+      optional: true,
+      codec: new ObjectModelCodec(ApplicationStateSchemaMeta),
+    },
+    {
+      name: 'appsTotalExtraPages',
+      wireKey: 'apps-total-extra-pages',
+      optional: true,
+      codec: numberCodec,
+    },
+    {
+      name: 'assets',
+      wireKey: 'assets',
+      optional: true,
+      codec: new ArrayCodec(new ObjectModelCodec(AssetHoldingMeta)),
+    },
+    {
+      name: 'totalAssetsOptedIn',
+      wireKey: 'total-assets-opted-in',
+      optional: false,
+      codec: numberCodec,
+    },
+    {
+      name: 'createdApps',
+      wireKey: 'created-apps',
+      optional: true,
+      codec: new ArrayCodec(new ObjectModelCodec(ApplicationMeta)),
+    },
+    {
+      name: 'totalCreatedApps',
+      wireKey: 'total-created-apps',
+      optional: false,
+      codec: numberCodec,
+    },
+    {
+      name: 'createdAssets',
+      wireKey: 'created-assets',
+      optional: true,
+      codec: new ArrayCodec(new ObjectModelCodec(AssetMeta)),
+    },
+    {
+      name: 'totalCreatedAssets',
+      wireKey: 'total-created-assets',
+      optional: false,
+      codec: numberCodec,
+    },
+    {
+      name: 'totalBoxes',
+      wireKey: 'total-boxes',
+      optional: true,
+      codec: numberCodec,
+    },
+    {
+      name: 'totalBoxBytes',
+      wireKey: 'total-box-bytes',
+      optional: true,
+      codec: numberCodec,
+    },
+    {
+      name: 'participation',
+      wireKey: 'participation',
+      optional: true,
+      codec: new ObjectModelCodec(AccountParticipationMeta),
+    },
+    {
+      name: 'incentiveEligible',
+      wireKey: 'incentive-eligible',
+      optional: true,
+      codec: booleanCodec,
+    },
+    {
+      name: 'pendingRewards',
+      wireKey: 'pending-rewards',
+      optional: false,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'rewardBase',
+      wireKey: 'reward-base',
+      optional: true,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'rewards',
+      wireKey: 'rewards',
+      optional: false,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'round',
+      wireKey: 'round',
+      optional: false,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'status',
+      wireKey: 'status',
+      optional: false,
+      codec: stringCodec,
+    },
+    {
+      name: 'sigType',
+      wireKey: 'sig-type',
+      optional: true,
+      codec: stringCodec,
+    },
+    {
+      name: 'authAddr',
+      wireKey: 'auth-addr',
+      optional: true,
+      codec: addressCodec,
+    },
+    {
+      name: 'lastProposed',
+      wireKey: 'last-proposed',
+      optional: true,
+      codec: bigIntCodec,
+    },
+    {
+      name: 'lastHeartbeat',
+      wireKey: 'last-heartbeat',
+      optional: true,
+      codec: bigIntCodec,
+    },
+  ],
+}

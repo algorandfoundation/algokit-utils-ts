@@ -14,3 +14,6 @@ coverage
 docs/code
 # don't format test contract artifacts
 tests/example-contracts/**/*.json
+test_data.json
+# don't format slidev presentations (breaks frontmatter)
+presentations
