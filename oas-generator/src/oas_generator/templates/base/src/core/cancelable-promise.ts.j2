@@ -1,0 +1,58 @@
+export type OnCancel = (cancelHandler: () => void) => void;
+
+export class CancelError extends Error {
+  constructor() {
+    super('Request aborted');
+    this.name = 'CancelError';
+  }
+}
+
+export class CancelablePromise<T> implements Promise<T> {
+  [Symbol.toStringTag] = 'CancelablePromise';
+
+  private readonly inner: Promise<T>;
+  private isCancelled = false;
+  private cancelHandlers: Array<() => void> = [];
+
+  constructor(
+    executor: (
+      resolve: (value: T | PromiseLike<T>) => void,
+      reject: (reason?: unknown) => void,
+      onCancel: OnCancel,
+    ) => void,
+  ) {
+    const onCancel: OnCancel = (handler) => {
+      if (this.isCancelled) {
+        handler();
+      } else {
+        this.cancelHandlers.push(handler);
+      }
+    };
+
+    this.inner = new Promise<T>((resolve, reject) => executor(resolve, reject, onCancel));
+  }
+
+  public cancel(): void {
+    if (this.isCancelled) return;
+    this.isCancelled = true;
+    for (const handler of this.cancelHandlers) handler();
+    this.cancelHandlers = [];
+  }
+
+  then<TResult1 = T, TResult2 = never>(
+    onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+    onRejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
+  ): Promise<TResult1 | TResult2> {
+    return this.inner.then(onFulfilled ?? undefined, onRejected ?? undefined);
+  }
+
+  catch<TResult = never>(
+    onRejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null,
+  ): Promise<T | TResult> {
+    return this.inner.catch(onRejected ?? undefined);
+  }
+
+  finally(onFinally?: (() => void) | null): Promise<T> {
+    return this.inner.finally(onFinally ?? undefined);
+  }
+}

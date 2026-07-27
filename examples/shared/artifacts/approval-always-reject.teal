@@ -1,0 +1,14 @@
+#pragma version 10
+// App that always rejects non-creation calls with err opcode
+
+txn ApplicationID
+int 0
+==
+bnz handle_creation
+
+// Always reject non-creation calls with a specific error
+err
+
+handle_creation:
+  int 1
+  return

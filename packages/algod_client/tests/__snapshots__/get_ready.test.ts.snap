@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET ready > Common Tests > Basic request and response validation 1`] = `undefined`;

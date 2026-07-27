@@ -1,0 +1,47 @@
+# MIGRATION NOTES
+
+A collection of random notes pop up during the migration process.
+
+- explain the type differences between transact and algod
+- Transaction fee calc
+  - In algosdk, fee calc happens inside the Transaction ctor. This requires the suggested params to be passed in.
+  - In transact, transaction fee isn't required. When building the transaction with composer, the fee is calculated during the composer build step.
+- `encodeUnsignedSimulateTransaction` was removed from sdk
+- can't addatc into the composer anymore, can addTransactionComposer to composer. Adding composer is just cloning the txns from the param composer to the caller composer
+- SendAtomicTransactionComposerResults.group is string | undefined
+- buildTransactions will include the signer for nested txn now, this was done at the ATC before
+- check for buffer polyfill
+- transaction.ts
+  - sendTransaction takes composer
+  - getGroupExecutionInfo removed
+  - getAtomicTransactionComposerTransactions becomes async
+- call composer .build instead of atc buildGroup. This will populate resources too
+- suggestedParams was removed from AdditionalAtomicTransactionComposerContext
+- generated app client will be changed, no references to atc anymore (this was for v2, confirm for v3)
+- atc.parseMethodResponse was replaced by app-manager.getABIReturn
+- additionalAtcContext was removed from AtomicTransactionComposerToSend
+- ABI
+  - ABIStruct can't be constructed from string.
+  - Bring the unhappy path tests over (fail to encode/decode)
+  - ABIResult vs ABIReturn
+    - TestContractClient was updated
+  - txnCount was removed from ABIMethod, do we need to add it back?
+  - Remove `ABIMethodParams`
+  - name and displayName added. toString() is the `name`, `displayName` is `name`, except for struct
+  - getArc56Method replaced by getABIMethod
+  - getABIDecodedValue changed behaviour, it doesn't deal with struct anymore
+- Make sure that the python utils also sort resources during resource population
+- migration stratefy for EventType.TxnGroupSimulated in utils-ts-debug
+- TODO: docs for composer simulate workflow
+  - without calling `build` first => simulate without resource population
+  - call `build` -> resource population into transactions with signers -> simulate will use the transactions with signers
+- TODO: move ProgramSourceMap
+- trace field at err.traces[].trace is now a typed value, rather than a map.
+- searchCriteria param for indexer-lookup.ts searchTransactions() method is an object, rather than a function which allows chained configuration
+- Doc: Mock server + Rust + polytest
+- searchTransactions introduces breaking change
+  - Old: searchCriteria is a fn (s: SearchForTransactions) => SearchForTransactions
+  - New: searchCriteria is an object type with `SearchForTransactionsCriteria`
+- indexer-lookup was removed from root export
+- indexer-lookup was removed from `import { indexer } from 'utils'` export
+- indexer-lookup was moved to `/indexer-client`

@@ -1,0 +1,22 @@
+[project]
+name = "oas-generator"
+version = "1.0.0"
+description = "A Jinja2-based generator that produces Rust API clients from OpenAPI specifications"
+readme = "README.md"
+authors = [{ name = "AlgoKit Core Team" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.12"
+dependencies = ["jinja2>=3.0.0"]
+
+[project.scripts]
+oas-generator = "oas_generator.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,455 @@
+{
+  "name": "AlgorandClient Package Examples",
+  "description": "Create runnable examples for the AlgorandClient class from @algorandfoundation/algokit-utils. IMPORTANT: After implementing each example, you MUST run it to verify it works: `npx tsx algorand_client/<example>.ts`. AlgorandClient is the main entry point for all Algorand operations - it provides a unified interface for accounts, transactions, assets, and applications. Most examples require LocalNet to be running.",
+  "branchName": "ralph/algorand-client-examples",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Infrastructure Setup - Verify Shared Utilities",
+      "description": "As a developer, I need to verify shared utilities work and set up the algorand_client examples folder structure.",
+      "acceptanceCriteria": [
+        "Verify examples/shared/utils.ts exists and exports: printHeader(), printStep(), printInfo(), printSuccess(), printError(), formatBytes(), formatHex()",
+        "Verify examples/algorand_client folder exists for example files",
+        "Verify the root examples/package.json includes @algorandfoundation/algokit-utils dependency",
+        "Verify the root examples/tsconfig.json has correct ESM module settings",
+        "npm install runs without errors in examples directory",
+        "TypeScript compiles without errors: npx tsc --noEmit",
+        "Create examples/algorand_client/README.md documenting the examples structure"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "No LocalNet required for infrastructure setup",
+      "dependsOn": [],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-002",
+      "title": "Client Instantiation Example",
+      "description": "As a developer, I want to see the different ways to create an AlgorandClient instance, including factory methods for LocalNet, TestNet, MainNet, environment-based configuration, and custom client configuration.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/01-client-instantiation.ts",
+        "Demonstrate AlgorandClient.defaultLocalNet() for local development",
+        "Demonstrate AlgorandClient.testNet() for TestNet connection",
+        "Demonstrate AlgorandClient.mainNet() for MainNet connection",
+        "Demonstrate AlgorandClient.fromEnvironment() reading from environment variables (ALGOD_SERVER, ALGOD_TOKEN, ALGOD_PORT, INDEXER_SERVER, INDEXER_TOKEN, INDEXER_PORT)",
+        "Demonstrate AlgorandClient.fromConfig() with explicit AlgoConfig object",
+        "Demonstrate AlgorandClient.fromClients() with pre-configured algod/indexer/kmd clients",
+        "Show how to verify connection by calling algod.status()",
+        "Handle connection errors gracefully with helpful error messages",
+        "Run the example with `npx tsx algorand_client/01-client-instantiation.ts` and verify it works with LocalNet"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "LocalNet required to verify connection works",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-003",
+      "title": "AlgoAmount Utility Example",
+      "description": "As a developer, I want to see how to use the AlgoAmount utility class to work with ALGO and microALGO amounts safely, avoiding floating point precision issues.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/02-algo-amount.ts",
+        "Demonstrate AlgoAmount.Algo() to create amount from ALGO (e.g., AlgoAmount.Algo(1.5))",
+        "Demonstrate AlgoAmount.MicroAlgo() to create amount from microALGO",
+        "Demonstrate AlgoAmount.Algos() and AlgoAmount.MicroAlgos() aliases",
+        "Show .algo property to get amount in ALGO",
+        "Show .microAlgo property to get amount in microALGO",
+        "Show .toString() for human-readable formatting",
+        "Demonstrate arithmetic: addition, subtraction with other AlgoAmount instances",
+        "Demonstrate comparison methods or operators",
+        "Show how to use AlgoAmount with payment transactions",
+        "Demonstrate avoiding floating point issues (e.g., 0.1 + 0.2 precision)",
+        "Run the example with `npx tsx algorand_client/02-algo-amount.ts` and verify it completes successfully"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "No LocalNet required - pure utility class demonstration",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-004",
+      "title": "Signer Configuration Example",
+      "description": "As a developer, I want to see how to configure transaction signers on AlgorandClient, including default signers, account-specific signers, and address-specific signers.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/03-signer-config.ts",
+        "Demonstrate setDefaultSigner() to set a fallback signer for all transactions",
+        "Demonstrate setSignerFromAccount() to register a signer from an Account object",
+        "Demonstrate setSigner() to register a signer for a specific address",
+        "Show how signers are automatically used when sending transactions",
+        "Demonstrate registering multiple signers for different accounts",
+        "Show how the default signer is used when no specific signer is registered",
+        "Create test accounts using algorand.account.random()",
+        "Send a payment transaction to verify signer configuration works",
+        "Run the example with `npx tsx algorand_client/03-signer-config.ts` and verify it works with LocalNet"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "LocalNet required for transaction signing",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-005",
+      "title": "Suggested Params Configuration Example",
+      "description": "As a developer, I want to see how to configure suggested transaction parameters including validity window and params caching for better performance.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/04-params-config.ts",
+        "Demonstrate setDefaultValidityWindow() to set the number of rounds a transaction is valid for",
+        "Show the default validity window and how changing it affects transactions",
+        "Demonstrate setSuggestedParamsCache() to enable/disable caching",
+        "Demonstrate setSuggestedParamsCacheTimeout() to set cache duration in milliseconds",
+        "Show the performance benefit of caching by sending multiple transactions",
+        "Demonstrate getSuggestedParams() to manually fetch suggested params",
+        "Show how cached params reduce network calls",
+        "Explain when to use longer vs shorter validity windows",
+        "Run the example with `npx tsx algorand_client/04-params-config.ts` and verify it works with LocalNet"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "LocalNet required to fetch suggested params",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-006",
+      "title": "Account Manager Example",
+      "description": "As a developer, I want to see how to use the account manager to create, import, and manage accounts including random accounts, mnemonic-based accounts, KMD wallet accounts, multisig, and logic signatures.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/05-account-manager.ts",
+        "Demonstrate algorand.account.random() to generate a new random account",
+        "Demonstrate algorand.account.fromMnemonic() to import from 25-word mnemonic",
+        "Demonstrate algorand.account.fromEnvironment() to load from env var (ACCOUNT_MNEMONIC)",
+        "Demonstrate algorand.account.fromKmd() to get account from KMD wallet (using default LocalNet wallet)",
+        "Demonstrate algorand.account.multisig() to create a multisig account",
+        "Demonstrate algorand.account.logicsig() to create a logic signature account",
+        "Demonstrate algorand.account.rekeyed() to create a rekeyed account reference",
+        "Demonstrate algorand.account.getInformation() to fetch account details from network",
+        "Demonstrate algorand.account.ensureFunded() to ensure account has minimum balance",
+        "Demonstrate algorand.account.ensureFundedFromEnvironment() for dispenser funding",
+        "Show account properties: addr, address, publicKey, signer",
+        "Run the example with `npx tsx algorand_client/05-account-manager.ts` and verify it works with LocalNet"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "LocalNet required for KMD access and account operations",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-007",
+      "title": "Send Payment Example",
+      "description": "As a developer, I want to see how to send ALGO payment transactions including simple transfers and closing accounts.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/06-send-payment.ts",
+        "Create and fund test accounts using account manager",
+        "Demonstrate algorand.send.payment() with basic parameters (sender, receiver, amount)",
+        "Show using AlgoAmount for the amount parameter",
+        "Demonstrate payment with note field",
+        "Demonstrate closeRemainderTo to close account and send remaining balance",
+        "Show the SendSingleTransactionResult return value: transaction, confirmation, txId",
+        "Display transaction ID and confirmed round",
+        "Show how to wait for confirmation",
+        "Verify balances before and after payment using getInformation()",
+        "Run the example with `npx tsx algorand_client/06-send-payment.ts` and verify it works with LocalNet"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "LocalNet required for sending transactions",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-008",
+      "title": "Send Asset Operations Example",
+      "description": "As a developer, I want to see how to perform asset operations including creation, configuration, transfer, opt-in, opt-out, freeze, clawback, and destruction.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/07-send-asset-ops.ts",
+        "Create and fund test accounts (creator, receiver, frozen account)",
+        "Demonstrate algorand.send.assetCreate() to create a new ASA with all parameters (total, decimals, name, unit, url, manager, reserve, freeze, clawback)",
+        "Demonstrate algorand.send.assetConfig() to reconfigure an asset",
+        "Demonstrate algorand.send.assetOptIn() for receiver to opt into the asset",
+        "Demonstrate algorand.send.assetTransfer() to transfer assets between accounts",
+        "Demonstrate algorand.send.assetFreeze() to freeze/unfreeze an account's asset holding",
+        "Demonstrate algorand.send.assetOptOut() to opt out and close asset holding",
+        "Demonstrate algorand.send.assetDestroy() to destroy an asset (all units must be in creator)",
+        "Show clawback operation using algorand.send.assetTransfer() with clawbackTarget",
+        "Display asset ID and transaction confirmations",
+        "Run the example with `npx tsx algorand_client/07-send-asset-ops.ts` and verify it works with LocalNet"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "LocalNet required for sending transactions",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-009",
+      "title": "Send App Operations Example",
+      "description": "As a developer, I want to see how to perform application operations including create, update, delete, call, and ABI method calls.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/08-send-app-ops.ts",
+        "Create and fund test accounts",
+        "Create a simple TEAL approval and clear program (counter app or simple stateful app)",
+        "Demonstrate algorand.send.appCreate() to deploy a new application with global/local schema",
+        "Demonstrate algorand.send.appUpdate() to update application code",
+        "Demonstrate algorand.send.appCall() for NoOp application calls with args",
+        "Demonstrate algorand.send.appCallMethodCall() for ABI method calls (if using ABI)",
+        "Demonstrate algorand.send.appOptIn() for account to opt into application",
+        "Demonstrate algorand.send.appCloseOut() for account to close out of application",
+        "Demonstrate algorand.send.appClearState() to clear local state",
+        "Demonstrate algorand.send.appDelete() to delete the application",
+        "Show how to pass application arguments, accounts, assets, apps references",
+        "Display app ID and transaction confirmations",
+        "Run the example with `npx tsx algorand_client/08-send-app-ops.ts` and verify it works with LocalNet"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "LocalNet required for sending transactions",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-010",
+      "title": "Create Transaction Example",
+      "description": "As a developer, I want to see how to create unsigned transactions without sending them, for scenarios where I need to inspect, modify, or sign transactions separately.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/09-create-transaction.ts",
+        "Create and fund test accounts",
+        "Demonstrate algorand.createTransaction.payment() to create unsigned payment transaction",
+        "Demonstrate algorand.createTransaction.assetCreate() to create unsigned asset creation",
+        "Demonstrate algorand.createTransaction.assetTransfer() to create unsigned asset transfer",
+        "Demonstrate algorand.createTransaction.appCall() to create unsigned app call",
+        "Show the Transaction object properties: txID(), toByte(), etc.",
+        "Demonstrate manually signing a transaction with account.signer",
+        "Demonstrate sending a manually signed transaction",
+        "Show how to modify transaction fields before signing",
+        "Explain use cases: multi-party signing, transaction inspection, custom signing flows",
+        "Run the example with `npx tsx algorand_client/09-create-transaction.ts` and verify it works with LocalNet"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "LocalNet required for suggested params and account funding",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-011",
+      "title": "Transaction Composer Example",
+      "description": "As a developer, I want to see how to build atomic transaction groups using the transaction composer, including simulation and execution.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/10-transaction-composer.ts",
+        "Create and fund test accounts",
+        "Demonstrate algorand.newGroup() to create a new transaction composer",
+        "Add multiple transactions to the group using .addPayment(), .addAssetOptIn(), etc.",
+        "Demonstrate chaining: algorand.newGroup().addPayment(...).addPayment(...)",
+        "Demonstrate .simulate() to simulate the transaction group before sending",
+        "Show simulation results and how to check for failures",
+        "Demonstrate .send() to execute the atomic transaction group",
+        "Show that all transactions succeed or fail together (atomicity)",
+        "Demonstrate adding transactions with different signers",
+        "Show the group ID assigned to transactions",
+        "Display all transaction IDs and confirmations",
+        "Run the example with `npx tsx algorand_client/10-transaction-composer.ts` and verify it works with LocalNet"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "LocalNet required for sending transactions",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-012",
+      "title": "Asset Manager Example",
+      "description": "As a developer, I want to see how to query asset information and perform bulk opt-in/opt-out operations using the asset manager.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/11-asset-manager.ts",
+        "Create and fund test accounts and create a test asset",
+        "Demonstrate algorand.asset.getById() to fetch asset information by asset ID",
+        "Show asset properties: index, params, created-at-round, deleted flag",
+        "Demonstrate algorand.asset.getAccountInformation() to get account's asset holding",
+        "Show holding properties: amount, is-frozen, opted-in flag",
+        "Demonstrate algorand.asset.bulkOptIn() to opt into multiple assets at once",
+        "Demonstrate algorand.asset.bulkOptOut() to opt out of multiple assets at once",
+        "Show how bulk operations are more efficient than individual opt-ins",
+        "Handle cases where asset doesn't exist or account not opted in",
+        "Run the example with `npx tsx algorand_client/11-asset-manager.ts` and verify it works with LocalNet"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "LocalNet required for asset operations",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-013",
+      "title": "App Manager Example",
+      "description": "As a developer, I want to see how to query application information including global state, local state, box storage, and TEAL compilation.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/12-app-manager.ts",
+        "Create and fund test accounts and deploy a test application with state and boxes",
+        "Demonstrate algorand.app.getById() to fetch application information",
+        "Show app properties: id, params, global-state-schema, local-state-schema",
+        "Demonstrate algorand.app.getGlobalState() to read global state",
+        "Demonstrate algorand.app.getLocalState() to read account's local state",
+        "Demonstrate algorand.app.getBoxNames() to list all box names for an app",
+        "Demonstrate algorand.app.getBoxValue() to read a specific box value",
+        "Demonstrate algorand.app.getBoxValues() to read multiple box values",
+        "Demonstrate algorand.app.getBoxValuesFromABIType() to decode typed box values",
+        "Demonstrate algorand.app.compileTeal() to compile TEAL source code",
+        "Demonstrate algorand.app.compileTealTemplate() to compile TEAL with template variables",
+        "Run the example with `npx tsx algorand_client/12-app-manager.ts` and verify it works with LocalNet"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "LocalNet required for app operations",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-014",
+      "title": "App Deployer Example",
+      "description": "As a developer, I want to see how to use the app deployer for idempotent application deployment with create, update, and replace strategies.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/13-app-deployer.ts",
+        "Create and fund test accounts",
+        "Create a simple versioned TEAL application",
+        "Demonstrate algorand.appDeployer.deploy() for initial deployment",
+        "Show deploy() parameters: name, version, approvalProgram, clearProgram, schema, onUpdate, onSchemaBreak",
+        "Demonstrate idempotency: calling deploy() again with same version does nothing",
+        "Demonstrate onUpdate: 'update' to update existing app when version changes",
+        "Demonstrate onUpdate: 'replace' to delete and recreate app when version changes",
+        "Demonstrate onUpdate: 'fail' to fail if app already exists",
+        "Demonstrate onSchemaBreak: 'replace' when schema changes require new app",
+        "Show deployment metadata stored in app global state",
+        "Show how app name is used for idempotent lookups",
+        "Display deployment result: app ID, whether created/updated/existing",
+        "Run the example with `npx tsx algorand_client/13-app-deployer.ts` and verify it works with LocalNet"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "LocalNet required for app deployment",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-015",
+      "title": "Client Manager Example",
+      "description": "As a developer, I want to see how to access the underlying algod, indexer, and KMD clients through the client manager, and how to get typed app clients.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/14-client-manager.ts",
+        "Demonstrate algorand.client.algod to access the raw algod client",
+        "Show using algod client directly: status(), getTransactionParams(), etc.",
+        "Demonstrate algorand.client.indexer to access the raw indexer client",
+        "Show using indexer client: lookupAccountByID(), searchForTransactions(), etc.",
+        "Demonstrate algorand.client.kmd to access the raw KMD client",
+        "Show using kmd client: listWallets(), listKeys(), etc.",
+        "Demonstrate algorand.client.indexerIfPresent() that returns undefined if indexer not configured",
+        "Demonstrate algorand.client.getAppClientByCreatorAndName() for typed app client",
+        "Demonstrate algorand.client.getAppClientById() for typed app client by ID",
+        "Demonstrate algorand.client.getAppFactory() for creating app factory instances",
+        "Explain when to use raw clients vs AlgorandClient methods",
+        "Run the example with `npx tsx algorand_client/14-client-manager.ts` and verify it works with LocalNet"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "LocalNet required for client access",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-016",
+      "title": "Error Transformers Example",
+      "description": "As a developer, I want to see how to register custom error transformers to enhance error messages and debugging information for failed transactions.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/15-error-transformers.ts",
+        "Create and fund test accounts",
+        "Explain what error transformers are and why they're useful",
+        "Demonstrate algorand.registerErrorTransformer() to add a custom error transformer",
+        "Create a transformer that adds source code context to logic errors",
+        "Create a transformer that provides user-friendly error messages",
+        "Show how transformers receive the error and can return enhanced error",
+        "Demonstrate algorand.unregisterErrorTransformer() to remove a transformer",
+        "Trigger an intentional error (e.g., insufficient funds, logic rejection) and show enhanced output",
+        "Show how multiple transformers can be chained",
+        "Show transformer function signature: (error: Error) => Error | undefined",
+        "Run the example with `npx tsx algorand_client/15-error-transformers.ts` and verify it works with LocalNet"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "LocalNet required for triggering transaction errors",
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-017",
+      "title": "Verification Script",
+      "description": "As a developer, I want a script to run all AlgorandClient examples and verify they work correctly.",
+      "acceptanceCriteria": [
+        "Create examples/algorand_client/verify-all.sh bash script",
+        "Script runs each example in order (01 through 15)",
+        "Script reports success/failure for each example",
+        "Script displays clear pass/fail status for each example",
+        "Script exits with non-zero code if any example fails",
+        "All 15 examples pass when running ./verify-all.sh with LocalNet running",
+        "Update root examples/verify-all.sh to include algorand_client examples"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": "LocalNet required - all examples except 02-algo-amount need network access",
+      "dependsOn": [
+        "US-002",
+        "US-003",
+        "US-004",
+        "US-005",
+        "US-006",
+        "US-007",
+        "US-008",
+        "US-009",
+        "US-010",
+        "US-011",
+        "US-012",
+        "US-013",
+        "US-014",
+        "US-015",
+        "US-016"
+      ],
+      "completionNotes": "Completed by agent"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-01-27T00:00:00.000Z",
+    "updatedAt": "2026-01-27T19:27:46.192Z"
+  }
+}

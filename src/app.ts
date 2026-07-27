@@ -1,432 +1,299 @@
-import algosdk from 'algosdk'
-import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
-import { encodeLease, getSenderAddress } from './transaction/transaction'
+import { ABIMethod, ABIReturn, ABIType, ABIValue } from '@algorandfoundation/algokit-abi'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
+import { Address, Expand, ProgramSourceMap } from '@algorandfoundation/algokit-common'
+import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
+import { BoxIdentifier, BoxReference } from './app-manager'
+import { TransactionWithSigner } from './transaction'
 import {
-  ABIAppCallArgs,
-  ABIReturn,
-  AppCallArgs,
-  AppCallParams,
-  AppCallTransactionResult,
-  AppCallType,
-  AppCompilationResult,
-  AppReference,
-  AppState,
-  BoxIdentifier,
-  BoxName,
-  BoxReference,
-  BoxValueRequestParams,
-  BoxValuesRequestParams,
-  CompiledTeal,
-  CreateAppParams,
-  RawAppCallArgs,
-  UpdateAppParams,
-} from './types/app'
-import { AppManager } from './types/app-manager'
-import { SendTransactionFrom } from './types/transaction'
-import { toNumber } from './util'
-import ABIMethod = algosdk.ABIMethod
-import ABIMethodParams = algosdk.ABIMethodParams
-import ABIValue = algosdk.ABIValue
-import Address = algosdk.Address
-import Algodv2 = algosdk.Algodv2
-import modelsv2 = algosdk.modelsv2
-import OnApplicationComplete = algosdk.OnApplicationComplete
+  SendSingleTransactionResult,
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  SendTransactionResults,
+  TransactionNote,
+  TransactionToSign,
+} from './transaction/types'
+type SourceMap = ProgramSourceMap
+
+/** The name of the TEAL template variable for deploy-time immutability control */
+export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
+
+/** The name of the TEAL template variable for deploy-time permanence control */
+export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
+
+/** The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix */
+export const APP_DEPLOY_NOTE_DAPP = 'ALGOKIT_DEPLOYER'
+
+/** The maximum number of bytes in a single app code page */
+export const APP_PAGE_MAX_SIZE = 2048
+
+/** First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values */
+export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
+
+/** Information about an Algorand app */
+export interface AppReference {
+  /** The id of the app */
+  appId: number | bigint
+  /** The Algorand address of the account associated with the app */
+  appAddress: string
+}
+
+/** Common app call arguments for ABI and non-ABI (raw) calls */
+export interface CoreAppCallArgs {
+  /** The optional lease for the transaction */
+  lease?: string | Uint8Array
+  /** Any box references to load */
+  boxes?: (TransactBoxReference | BoxReference | BoxIdentifier)[]
+  /** The address of any accounts to load in */
+  accounts?: (string | Address)[]
+  /** IDs of any apps to load into the foreignApps array */
+  apps?: number[]
+  /** IDs of any assets to load into the foreignAssets array */
+  assets?: number[]
+  /** Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
+   *
+   * **Note:** Use with extreme caution and review the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying) first.
+   */
+  rekeyTo?: SendTransactionFrom | string
+}
 
 /**
- * @deprecated Use `algorand.send.appCreate()` / `algorand.createTransaction.appCreate()` / `algorand.send.appCreateMethodCall()`
- * / `algorand.createTransaction.appCreateMethodCall()` instead
- *
- * Creates a smart contract app, returns the details of the created app.
- * @param create The parameters to create the app with
- * @param algod An algod client
- * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
+ * App call args with non-ABI (raw) values (minus some processing like encoding strings as binary)
  */
-export async function createApp(
-  create: CreateAppParams,
-  algod: Algodv2,
-): Promise<Partial<AppCompilationResult> & AppCallTransactionResult & AppReference> {
-  const onComplete = getAppOnCompleteAction(create.onCompleteAction)
-  if (onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
-    throw new Error('Cannot create an app with on-complete action of ClearState')
+export interface RawAppCallArgs extends CoreAppCallArgs {
+  /** Any application arguments to pass through */
+  appArgs?: (Uint8Array | string)[]
+  /** Property to aid intellisense */
+  method?: undefined
+}
+
+/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
+export type ABIAppCallArg =
+  | ABIValue
+  | TransactionWithSigner
+  | TransactionToSign
+  | Transaction
+  | Promise<SendTransactionResult>
+  | SendTransactionResult
+  | undefined
+
+/**
+ * App call args for an ABI call
+ */
+export type ABIAppCallArgs = CoreAppCallArgs & {
+  /** The ABI method to call */
+  method: ABIMethod
+  /** The ABI method args to pass in */
+  methodArgs: ABIAppCallArg[]
+}
+
+/** Arguments to pass to an app call either:
+ *   * The raw app call values to pass through into the transaction (after processing); or
+ *   * An ABI method definition (method and args)
+ **/
+export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
+
+/** Parameters representing a call to an app. */
+export interface AppCallParams extends SendTransactionParams {
+  /** The id of the app to call */
+  appId: number | bigint
+  /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
+  callType: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
+  /** The account to make the call from */
+  from: SendTransactionFrom
+  /** Optional transaction parameters */
+  transactionParams?: SuggestedParams
+  /** The (optional) transaction note */
+  note?: TransactionNote
+  /** The arguments passed in to the app call */
+  args?: AppCallArgs
+}
+
+/** Parameters representing the storage schema of an app. */
+export interface AppStorageSchema {
+  /** Restricts number of ints in per-user local state */
+  localInts: number
+  /** Restricts number of byte slices in per-user local state */
+  localByteSlices: number
+  /** Restricts number of ints in global state */
+  globalInts: number
+  /** Restricts number of byte slices in global state */
+  globalByteSlices: number
+  /** Any extra pages that are needed for the smart contract; if left blank then the right number of pages will be calculated based on the teal code size */
+  extraPages?: number
+}
+
+/** Information about a compiled teal program */
+export interface CompiledTeal {
+  /** Original TEAL code */
+  teal: string
+  /** The compiled code */
+  compiled: string
+  /** The hash returned by the compiler */
+  compiledHash: string
+  /** The base64 encoded code as a byte array */
+  compiledBase64ToBytes: Uint8Array
+  /** Source map from the compilation */
+  sourceMap: SourceMap
+}
+
+export interface AppCallTransactionResultOfType<T> extends SendTransactionResults, SendTransactionResult {
+  /** If an ABI method was called the processed return value */
+  return?: T
+}
+
+/** Result from calling an app */
+export type AppCallTransactionResult = AppCallTransactionResultOfType<ABIReturn>
+
+/**
+ * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.
+ */
+export interface AppDeployMetadata {
+  /** The unique name identifier of the app within the creator account */
+  name: string
+  /** The version of app that is / will be deployed */
+  version: string
+  /** Whether or not the app is deletable / permanent / unspecified */
+  deletable?: boolean
+  /** Whether or not the app is updatable / immutable / unspecified */
+  updatable?: boolean
+}
+
+/** The metadata that can be collected about a deployed app */
+export interface AppMetadata extends AppReference, AppDeployMetadata {
+  /** The round the app was created */
+  createdRound: number
+  /** The last round that the app was updated */
+  updatedRound: number
+  /** The metadata when the app was created */
+  createdMetadata: AppDeployMetadata
+  /** Whether or not the app is deleted */
+  deleted: boolean
+}
+
+/** A lookup of name -> Algorand app for a creator */
+export interface AppLookup {
+  creator: Readonly<string>
+  apps: Readonly<{
+    [name: string]: AppMetadata
+  }>
+}
+
+/** Dictionary of deploy-time parameters to replace in a teal template.
+ *
+ * Note: Looks for `TMPL_{parameter}` for template replacements i.e. you can leave out the `TMPL_`.
+ *
+ */
+export interface TealTemplateParams {
+  [key: string]: string | bigint | number | Uint8Array
+}
+
+/** What action to perform when deploying an app and an update is detected in the TEAL code */
+export enum OnUpdate {
+  /** Fail the deployment */
+  Fail,
+  /** Update the app */
+  UpdateApp,
+  /** Delete the app and create a new one in its place */
+  ReplaceApp,
+  /** Create a new app */
+  AppendApp,
+}
+
+/** What action to perform when deploying an app and a breaking schema change is detected */
+export enum OnSchemaBreak {
+  /** Fail the deployment */
+  Fail,
+  /** Delete the app and create a new one in its place */
+  ReplaceApp,
+  /** Create a new app */
+  AppendApp,
+}
+
+/** The result of compiling the approval and clear state TEAL programs for an app */
+export interface AppCompilationResult {
+  /** The result of compiling the approval program */
+  compiledApproval: CompiledTeal
+  /** The result of compiling the clear state program */
+  compiledClear: CompiledTeal
+}
+
+export type AppReturn<TReturn> = {
+  /** The ABI method call return value */
+  return?: TReturn
+}
+
+/** Result from sending a single app transaction. */
+export type SendAppTransactionResult = Expand<
+  SendSingleTransactionResult & {
+    /** If an ABI method was called the processed return value */
+    return?: ABIReturn
   }
+>
 
-  const result = create.args?.method
-    ? await legacySendAppTransactionBridge(
-        algod,
-        create.from,
-        create.args,
-        create,
-        {
-          sender: getSenderAddress(create.from),
-          onComplete,
-          approvalProgram: create.approvalProgram,
-          clearStateProgram: create.clearStateProgram,
-          method: create.args.method instanceof ABIMethod ? create.args.method : new ABIMethod(create.args.method),
-          extraProgramPages: create.schema.extraPages,
-          schema: create.schema,
-        },
-        (c) => c.appCreateMethodCall,
-        (c) => c.appCreateMethodCall,
-      )
-    : await legacySendAppTransactionBridge(
-        algod,
-        create.from,
-        create.args,
-        create,
-        {
-          sender: getSenderAddress(create.from),
-          onComplete,
-          approvalProgram: create.approvalProgram,
-          clearStateProgram: create.clearStateProgram,
-          extraProgramPages: create.schema.extraPages,
-          schema: create.schema,
-        },
-        (c) => c.appCreate,
-        (c) => c.appCreate,
-      )
+/** Result from sending a single app transaction. */
+export type SendAppUpdateTransactionResult = Expand<SendAppTransactionResult & Partial<AppCompilationResult>>
 
-  return {
-    ...result,
-    appId: 'appId' in result ? Number(result.appId) : 0,
-    appAddress: 'appAddress' in result ? result.appAddress.toString() : '',
+/** Result from sending a single app transaction. */
+export type SendAppCreateTransactionResult = Expand<
+  SendAppUpdateTransactionResult & {
+    /** The id of the created app */
+    appId: bigint
+    /** The Algorand address of the account associated with the app */
+    appAddress: Address
   }
+>
+
+/** Object holding app state values */
+export interface AppState {
+  [key: string]:
+    | {
+        value: bigint
+        keyRaw: Uint8Array
+        keyBase64: string
+      }
+    | {
+        value: string
+        valueRaw: Uint8Array
+        valueBase64: string
+        keyRaw: Uint8Array
+        keyBase64: string
+      }
 }
 
 /**
- * @deprecated Use `algorand.send.appUpdate()` / `algorand.createTransaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
- * / `algorand.createTransaction.appUpdateMethodCall()` instead
- *
- * Updates a smart contract app.
- * @param update The parameters to update the app with
- * @param algod An algod client
- * @returns The transaction send result and the compilation result
- */
-export async function updateApp(
-  update: UpdateAppParams,
-  algod: Algodv2,
-): Promise<Partial<AppCompilationResult> & AppCallTransactionResult> {
-  return update.args?.method
-    ? await legacySendAppTransactionBridge(
-        algod,
-        update.from,
-        update.args,
-        update,
-        {
-          appId: BigInt(update.appId),
-          sender: getSenderAddress(update.from),
-          onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
-          approvalProgram: update.approvalProgram,
-          clearStateProgram: update.clearStateProgram,
-          method: update.args.method instanceof ABIMethod ? update.args.method : new ABIMethod(update.args.method),
-        },
-        (c) => c.appUpdateMethodCall,
-        (c) => c.appUpdateMethodCall,
-      )
-    : await legacySendAppTransactionBridge(
-        algod,
-        update.from,
-        update.args,
-        update,
-        {
-          appId: BigInt(update.appId),
-          sender: getSenderAddress(update.from),
-          onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
-          approvalProgram: update.approvalProgram,
-          clearStateProgram: update.clearStateProgram,
-        },
-        (c) => c.appUpdate,
-        (c) => c.appUpdate,
-      )
+ * The name of a box storage box */
+export interface BoxName {
+  /** Name in UTF-8 */
+  name: string
+  /** Name in binary bytes */
+  nameRaw: Uint8Array
+  /** Name in Base64 */
+  nameBase64: string
 }
 
 /**
- * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
- *
- * Returns a `algosdk.OnApplicationComplete` for the given onCompleteAction.
- *
- * If given `undefined` will return `OnApplicationComplete.NoOpOC`.
- *
- * If given an `AppCallType` will convert the string enum to the correct underlying `algosdk.OnApplicationComplete`.
- *
- * @param onCompletionAction The on completion action
- * @returns The `algosdk.OnApplicationComplete`
+ * @deprecated Use `types/app-manager/BoxValueRequestParams` instead.
+ * Parameters to get and decode a box value as an ABI type.
  */
-export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnApplicationComplete) {
-  switch (onCompletionAction) {
-    case undefined:
-    case 'no_op':
-    case OnApplicationComplete.NoOpOC:
-      return OnApplicationComplete.NoOpOC
-    case 'opt_in':
-    case OnApplicationComplete.OptInOC:
-      return OnApplicationComplete.OptInOC
-    case 'close_out':
-    case OnApplicationComplete.CloseOutOC:
-      return OnApplicationComplete.CloseOutOC
-    case 'clear_state':
-    case OnApplicationComplete.ClearStateOC:
-      return OnApplicationComplete.ClearStateOC
-    case 'update_application':
-    case OnApplicationComplete.UpdateApplicationOC:
-      return OnApplicationComplete.UpdateApplicationOC
-    case 'delete_application':
-    case OnApplicationComplete.DeleteApplicationOC:
-      return OnApplicationComplete.DeleteApplicationOC
-  }
+export interface BoxValueRequestParams {
+  /** The ID of the app return box names for */
+  appId: number | bigint
+  /** The name of the box to return either as a string, binary array or `BoxName` */
+  boxName: string | Uint8Array | BoxName
+  /** The ABI type to decode the value using */
+  type: ABIType
 }
 
 /**
- * @deprecated Use `algorand.send.appUpdate()` / `algorand.createTransaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
- * / `algorand.createTransaction.appUpdateMethodCall()` instead
- *
- * Issues a call to a given app.
- * @param call The call details.
- * @param algod An algod client
- * @returns The result of the call
+ * @deprecated Use `types/app-manager/BoxValuesRequestParams` instead.
+ * Parameters to get and decode a box value as an ABI type.
  */
-export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
-  const onComplete = getAppOnCompleteAction(call.callType)
-  if (onComplete === algosdk.OnApplicationComplete.UpdateApplicationOC) {
-    throw new Error('Cannot execute an app call with on-complete action of Update')
-  }
-  if (call.args?.method && onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
-    throw new Error('Cannot execute an ABI method call with on-complete action of ClearState')
-  }
-
-  return call.args?.method
-    ? await legacySendAppTransactionBridge(
-        algod,
-        call.from,
-        call.args,
-        call,
-        {
-          appId: BigInt(call.appId),
-          sender: getSenderAddress(call.from),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onComplete: onComplete as any,
-          method: call.args.method instanceof ABIMethod ? call.args.method : new ABIMethod(call.args.method),
-        },
-        (c) => c.appCallMethodCall,
-        (c) => c.appCallMethodCall,
-      )
-    : await legacySendAppTransactionBridge(
-        algod,
-        call.from,
-        call.args,
-        call,
-        {
-          appId: BigInt(call.appId),
-          sender: getSenderAddress(call.from),
-          onComplete,
-        },
-        (c) => c.appCall,
-        (c) => c.appCall,
-      )
-}
-
-/**
- * @deprecated Use `AppManager.getABIReturn` instead.
- *
- * Returns any ABI return values for the given app call arguments and transaction confirmation.
- * @param args The arguments that were used for the call
- * @param confirmation The transaction confirmation from algod
- * @returns The return value for the method call
- */
-export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.PendingTransactionResponse): ABIReturn | undefined {
-  if (!args || !args.method) {
-    return undefined
-  }
-  const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
-
-  return AppManager.getABIReturn(confirmation, method)
-}
-
-/**
- * @deprecated Use `algorand.app.getGlobalState` instead.
- *
- * Returns the current global state values for the given app ID
- * @param appId The ID of the app return global state for
- * @param algod An algod client instance
- * @returns The current global state
- */
-export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) {
-  return await new AppManager(algod).getGlobalState(BigInt(appId))
-}
-
-/**
- * @deprecated Use `algorand.app.getLocalState` instead.
- *
- * Returns the current global state values for the given app ID and account
- * @param appId The ID of the app return global state for
- * @param account Either the string address of an account or an account object for the account to get local state for the given app
- * @param algod An algod client instance
- * @returns The current local state for the given (app, account) combination
- */
-export async function getAppLocalState(appId: number | bigint, account: string | SendTransactionFrom, algod: Algodv2) {
-  return new AppManager(algod).getLocalState(BigInt(appId), getSenderAddress(account))
-}
-
-/**
- * @deprecated Use `algorand.app.getBoxNames` instead.
- * Returns the names of the boxes for the given app.
- * @param appId The ID of the app return box names for
- * @param algod An algod client instance
- * @returns The current box names
- */
-export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Promise<BoxName[]> {
-  return new AppManager(algod).getBoxNames(BigInt(appId))
-}
-
-/**
- * @deprecated Use `algorand.app.getBoxValue` instead.
- * Returns the value of the given box name for the given app.
- * @param appId The ID of the app return box names for
- * @param boxName The name of the box to return either as a string, binary array or `BoxName`
- * @param algod An algod client instance
- * @returns The current box value as a byte array
- */
-export async function getAppBoxValue(appId: number | bigint, boxName: string | Uint8Array | BoxName, algod: Algodv2): Promise<Uint8Array> {
-  return new AppManager(algod).getBoxValue(BigInt(appId), typeof boxName !== 'string' && 'name' in boxName ? boxName.nameRaw : boxName)
-}
-
-/**
- * @deprecated Use `algorand.app.getBoxValues` instead.
- * Returns the value of the given box names for the given app.
- * @param appId The ID of the app return box names for
- * @param boxNames The names of the boxes to return either as a string, binary array or `BoxName`
- * @param algod An algod client instance
- * @returns The current box values as a byte array in the same order as the passed in box names
- */
-export async function getAppBoxValues(appId: number, boxNames: (string | Uint8Array | BoxName)[], algod: Algodv2): Promise<Uint8Array[]> {
-  return new AppManager(algod).getBoxValues(
-    BigInt(appId),
-    boxNames.map((b) => (typeof b !== 'string' && 'name' in b ? b.nameRaw : b)),
-  )
-}
-
-/**
- * @deprecated Use `algorand.app.getBoxValueFromABIType` instead.
- * Returns the value of the given box name for the given app decoded based on the given ABI type.
- * @param request The parameters for the box value request
- * @param algod An algod client instance
- * @returns The current box value as an ABI value
- */
-export async function getAppBoxValueFromABIType(request: BoxValueRequestParams, algod: Algodv2): Promise<ABIValue> {
-  return new AppManager(algod).getBoxValueFromABIType({
-    appId: BigInt(request.appId),
-    boxName: typeof request.boxName !== 'string' && 'name' in request.boxName ? request.boxName.nameRaw : request.boxName,
-    type: request.type,
-  })
-}
-
-/**
- * @deprecated Use `algorand.app.getBoxValuesFromABIType` instead.
- * Returns the value of the given box names for the given app decoded based on the given ABI type.
- * @param request The parameters for the box value request
- * @param algod An algod client instance
- * @returns The current box values as an ABI value in the same order as the passed in box names
- */
-export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams, algod: Algodv2): Promise<ABIValue[]> {
-  return new AppManager(algod).getBoxValuesFromABIType({
-    appId: BigInt(request.appId),
-    boxNames: request.boxNames.map((b) => (typeof b !== 'string' && 'name' in b ? b.nameRaw : b)),
-    type: request.type,
-  })
-}
-
-/**
- * @deprecated Use `AppManager.decodeAppState` instead.
- *
- * Converts an array of global/local state values from the algod api to a more friendly
- * generic object keyed by the UTF-8 value of the key.
- * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
- * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
- */
-export function decodeAppState(state: { key: string; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
-  return AppManager.decodeAppState(state.map(({ key, value }) => ({ key: Buffer.from(key, 'utf-8'), value })))
-}
-
-/**
- * @deprecated Use `TransactionComposer` methods to construct transactions instead.
- *
- * Returns the app args ready to load onto an app `Transaction` object
- * @param args The app call args
- * @returns The args ready to load into a `Transaction`
- */
-export function getAppArgsForTransaction(args?: RawAppCallArgs) {
-  if (!args) return undefined
-
-  const encoder = new TextEncoder()
-  return {
-    accounts: args?.accounts?.map(_getAccountAddress),
-    appArgs: args?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
-    boxes: args.boxes?.map(getBoxReference),
-    foreignApps: args?.apps,
-    foreignAssets: args?.assets,
-    lease: encodeLease(args?.lease),
-  }
-}
-
-/**
- * @deprecated Use `TransactionComposer` methods to construct transactions instead.
- *
- * Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
- * @param args The ABI app call args
- * @param from The transaction signer
- * @returns The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
- */
-export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
-  return _getAppArgsForABICall(args, from)
-}
-
-/**
- * @deprecated Use `AppManager.getBoxReference()` instead.
- *
- * Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
- * @param box The box to return a reference for
- * @returns The box reference ready to pass into a `Transaction`
- */
-export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxReference): algosdk.BoxReference {
-  return _getBoxReference(box)
-}
-
-function _getAccountAddress(account: string | Address) {
-  return typeof account === 'string' ? account : algosdk.encodeAddress(account.publicKey)
-}
-
-/**
- * @deprecated Use `algorand.app.getById` instead.
- *
- * Gets the current data for the given app from algod.
- *
- * @param appId The id of the app
- * @param algod An algod client
- * @returns The data about the app
- */
-export async function getAppById(appId: number | bigint, algod: Algodv2) {
-  return await algod.getApplicationByID(toNumber(appId)).do()
-}
-
-/**
- * @deprecated Use `algorand.app.compileTeal` instead.
- *
- * Compiles the given TEAL using algod and returns the result, including source map.
- *
- * @param algod An algod client
- * @param tealCode The TEAL code
- * @returns The information about the compiled file
- */
-export async function compileTeal(tealCode: string, algod: Algodv2): Promise<CompiledTeal> {
-  return await new AppManager(algod).compileTeal(tealCode)
-}
-
-/**
- * @deprecated Use `abiMethod.getSignature()` or `new ABIMethod(abiMethodParams).getSignature()` instead.
- *
- * Returns the encoded ABI spec for a given ABI Method
- * @param method The method to return a signature for
- * @returns The encoded ABI method spec e.g. `method_name(uint64,string)string`
- */
-export const getABIMethodSignature = (method: ABIMethodParams | ABIMethod) => {
-  return 'getSignature' in method ? method.getSignature() : new ABIMethod(method).getSignature()
+export interface BoxValuesRequestParams {
+  /** The ID of the app return box names for */
+  appId: number
+  /** The names of the boxes to return either as a string, binary array or BoxName` */
+  boxNames: (string | Uint8Array | BoxName)[]
+  /** The ABI type to decode the value using */
+  type: ABIType
 }

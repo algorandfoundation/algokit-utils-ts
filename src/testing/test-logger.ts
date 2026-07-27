@@ -1,6 +1,6 @@
-import { Logger } from '../types/logging'
-import { LogSnapshotConfig } from '../types/testing'
+import { Logger } from '../logging'
 import { asJson } from '../util'
+import { LogSnapshotConfig } from './types'
 
 /** Exposes an AlgoKit logger which captures log messages, while wrapping an original logger.
  * This is useful for automated testing.
@@ -48,21 +48,12 @@ export class TestLogger implements Logger {
     const { transactions: transactionIds, accounts, apps } = config ?? {}
     let snapshot = this.capturedLogs.filter(config?.filterPredicate ?? (() => true)).join('\n')
     transactionIds?.forEach(
-      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txID(), 'g'), `TXID_${id + 1}`)),
+      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txId(), 'g'), `TXID_${id + 1}`)),
     )
     accounts?.forEach(
       (sender, id) =>
         (snapshot = snapshot.replace(
-          new RegExp(
-            typeof sender === 'string'
-              ? sender
-              : 'addr' in sender
-                ? sender.addr.toString()
-                : 'address' in sender
-                  ? sender.address().toString()
-                  : sender.toString(),
-            'g',
-          ),
+          new RegExp(typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr.toString() : sender.toString(), 'g'),
           `ACCOUNT_${id + 1}`,
         )),
     )

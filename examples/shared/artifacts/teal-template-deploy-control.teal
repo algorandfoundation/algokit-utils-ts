@@ -1,0 +1,35 @@
+#pragma version 10
+// AlgoKit deploy-time control template
+// Uses TMPL_UPDATABLE and TMPL_DELETABLE for controlling app lifecycle
+
+txn ApplicationID
+int 0
+==
+bnz handle_creation
+
+txn OnCompletion
+int UpdateApplication
+==
+bnz handle_update
+
+txn OnCompletion
+int DeleteApplication
+==
+bnz handle_delete
+
+int 1
+return
+
+handle_creation:
+  int 1
+  return
+
+handle_update:
+  // Check if updates are allowed
+  int TMPL_UPDATABLE
+  return
+
+handle_delete:
+  // Check if deletion is allowed
+  int TMPL_DELETABLE
+  return
