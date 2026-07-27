@@ -4,7 +4,7 @@ title: "Algorand client"
 
 `AlgorandClient` is a client class that brokers easy access to Algorand functionality. It's the default entrypoint into AlgoKit Utils functionality.
 
-The main entrypoint to the bulk of the functionality in AlgoKit Utils is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](../algorand-client), e.g.:
+The main entrypoint to the bulk of the functionality in AlgoKit Utils is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an Algorand client, e.g.:
 
 ```typescript
 // Point to the network configured through environment variables or
@@ -43,16 +43,16 @@ const kmdClient = algorand.client.kmd
 
 The `AlgorandClient` has a number of manager class instances that help you quickly use intellisense to get access to advanced functionality.
 
-- [`AccountManager`](../account) via `algorand.account`, there are also some chainable convenience methods which wrap specific methods in `AccountManager`:
+- [`AccountManager`](/algokit-utils-ts/capabilities/account/) via `algorand.account`, there are also some chainable convenience methods which wrap specific methods in `AccountManager`:
   - `algorand.setDefaultSigner(signer)` -
   - `algorand.setSignerFromAccount(account)` -
   - `algorand.setSigner(sender, signer)`
-- [`AssetManager`](../asset) via `algorand.asset`
-- [`ClientManager`](../client) via `algorand.client`
+- [`AssetManager`](/algokit-utils-ts/capabilities/asset/) via `algorand.asset`
+- [`ClientManager`](/algokit-utils-ts/capabilities/client/) via `algorand.client`
 
 ## Creating and issuing transactions
 
-`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`TransactionComposer`](../transaction-composer)).
+`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/)).
 
 ### Creating transactions
 
@@ -96,9 +96,9 @@ You can compose a single transaction via `algorand.send...`, which gives you an 
 
 Further documentation is present in the related capabilities:
 
-- [App management](../app)
-- [Asset management](../asset)
-- [Algo transfers](../transfer)
+- [App management](/algokit-utils-ts/capabilities/app/)
+- [Asset management](/algokit-utils-ts/capabilities/asset/)
+- [Algo transfers](/algokit-utils-ts/capabilities/transfer/)
 
 The signature for the calls to send a single transaction usually look like:
 
@@ -106,15 +106,15 @@ The signature for the calls to send a single transaction usually look like:
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, see the full list
-- `CommonAppCallParams` are the [common app call transaction parameters](../app#common-app-parameters) that can be specified for every single app transaction
+- `CommonAppCallParams` are the [common app call transaction parameters](/algokit-utils-ts/capabilities/app/#common-app-parameters) that can be specified for every single app transaction
 - `SendParams` are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
-- `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](../transaction#sending-a-transaction)
+- `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](/algokit-utils-ts/capabilities/transaction/)
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
 
 ### Composing a group of transactions
 
-You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`TransactionComposer`](../transaction-composer) to add a series of transactions.
+You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) to add a series of transactions.
 
 ```typescript
 const result = algorand
@@ -124,7 +124,7 @@ const result = algorand
   .send()
 ```
 
-`newGroup()` returns a new [`TransactionComposer`](../transaction-composer) instance, which can also return the group of transactions, simulate them and other things.
+`newGroup()` returns a new [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) instance, which can also return the group of transactions, simulate them and other things.
 
 ### Transaction parameters
 
@@ -152,13 +152,13 @@ There are two common base interfaces that get reused:
   - `populateAppCallResources?: boolean` - Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
   - `coverAppCallInnerTransactionFees?: boolean` - Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
 
-Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](../transaction-composer) and we recommend reading these docs, especially when leveraging either `populateAppCallResources` or `coverAppCallInnerTransactionFees`.
+Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and we recommend reading these docs, especially when leveraging either `populateAppCallResources` or `coverAppCallInnerTransactionFees`.
 
 ### Transaction configuration
 
 AlgorandClient caches network provided transaction values for you automatically to reduce network traffic. It has a set of default configurations that control this behaviour, but you have the ability to override and change the configuration of this behaviour:
 
-- `algorand.setDefaultValidityWindow(validityWindow)` - Set the default validity window (number of rounds from the current known round that the transaction will be valid to be accepted for), having a smallish value for this is usually ideal to avoid transactions that are valid for a long future period and may be submitted even after you think it failed to submit if waiting for a particular number of rounds for the transaction to be successfully submitted. The validity window defaults to 10, except in [automated testing](../testing) where it's set to 1000 when targeting LocalNet.
+- `algorand.setDefaultValidityWindow(validityWindow)` - Set the default validity window (number of rounds from the current known round that the transaction will be valid to be accepted for), having a smallish value for this is usually ideal to avoid transactions that are valid for a long future period and may be submitted even after you think it failed to submit if waiting for a particular number of rounds for the transaction to be successfully submitted. The validity window defaults to 10, except in [automated testing](/algokit-utils-ts/capabilities/testing/) where it's set to 1000 when targeting LocalNet.
 - `algorand.setSuggestedParams(suggestedParams, until?)` - Set the suggested network parameters to use (optionally until the given time)
 - `algorand.setSuggestedParamsTimeout(timeout)` - Set the timeout that is used to cache the suggested network parameters (by default 3 seconds)
 - `algorand.getSuggestedParams()` - Get the current suggested network parameters object, either the cached value, or if the cache has expired a fresh value

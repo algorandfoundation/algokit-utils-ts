@@ -4,13 +4,13 @@ title: "Assets"
 
 The Algorand Standard Asset (asset) management functions include creating, opting in and transferring assets, which are fundamental to asset interaction in a blockchain environment.
 
-To see some usage examples check out the [automated tests](../../src/types/algorand-client.asset.spec.ts).
+To see some usage examples check out the [automated tests](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.asset.spec.ts).
 
 ## `AssetManager`
 
 The `AssetManager` is a class that is used to manage asset information.
 
-To get an instance of `AssetManager`, you can use either [`AlgorandClient`](../algorand-client) via `algorand.asset` or instantiate it directly:
+To get an instance of `AssetManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) via `algorand.asset` or instantiate it directly:
 
 ```typescript
 import { AssetManager } from '@algorandfoundation/algokit-utils/types/asset-manager'
@@ -21,9 +21,9 @@ const assetManager = new AssetManager(algod, () => new TransactionComposer({algo
 
 ## Creation
 
-To create an asset you can use `algorand.send.assetCreate(params)` (immediately send a single asset creation transaction), `algorand.createTransaction.assetCreate(params)` (construct an asset creation transaction), or `algorand.newGroup().addAssetCreate(params)` (add asset creation to a group of transactions) per [`AlgorandClient`](../algorand-client) [transaction semantics](../algorand-client#creating-and-issuing-transactions).
+To create an asset you can use `algorand.send.assetCreate(params)` (immediately send a single asset creation transaction), `algorand.createTransaction.assetCreate(params)` (construct an asset creation transaction), or `algorand.newGroup().addAssetCreate(params)` (add asset creation to a group of transactions) per [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) [transaction semantics](/algokit-utils-ts/capabilities/algorand-client/#creating-and-issuing-transactions).
 
-The base type for specifying an asset creation transaction is `AssetCreateParams`, which has the following parameters in addition to the [common transaction parameters](../algorand-client#transaction-parameters):
+The base type for specifying an asset creation transaction is `AssetCreateParams`, which has the following parameters in addition to the [common transaction parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters):
 
 - `total: bigint` - The total amount of the smallest divisible (decimal) unit to create. For example, if `decimals` is, say, 2, then for every 100 `total` there would be 1 whole unit. This field can only be specified upon asset creation.
 - `decimals: number` - The amount of decimal places the asset should have. If unspecified then the asset will be in whole units (i.e. `0`). If 0, the asset is not divisible. If 1, the base unit of the asset is in tenths, and so on up to 19 decimal places. This field can only be specified upon asset creation.
@@ -84,9 +84,9 @@ If you have a `manager` address set on an asset, that address can send a reconfi
 > [!WARNING]
 > If you issue a reconfigure transaction and don't set the _existing_ values for any of the below fields then that field will be permanently set to empty.
 
-To reconfigure an asset you can use `algorand.send.assetConfig(params)` (immediately send a single asset config transaction), `algorand.createTransaction.assetConfig(params)` (construct an asset config transaction), or `algorand.newGroup().addAssetConfig(params)` (add asset config to a group of transactions) per [`AlgorandClient`](../algorand-client) [transaction semantics](../algorand-client#creating-and-issuing-transactions).
+To reconfigure an asset you can use `algorand.send.assetConfig(params)` (immediately send a single asset config transaction), `algorand.createTransaction.assetConfig(params)` (construct an asset config transaction), or `algorand.newGroup().addAssetConfig(params)` (add asset config to a group of transactions) per [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) [transaction semantics](/algokit-utils-ts/capabilities/algorand-client/#creating-and-issuing-transactions).
 
-The base type for specifying an asset creation transaction is `AssetConfigParams`, which has the following parameters in addition to the [common transaction parameters](../algorand-client#transaction-parameters):
+The base type for specifying an asset creation transaction is `AssetConfigParams`, which has the following parameters in addition to the [common transaction parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters):
 
 - `assetId: bigint` - ID of the asset to reconfigure
 - `manager: string | undefined` - The address of the optional account that can manage the configuration of the asset and destroy it. The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`. If not set (`undefined` or `""`) the asset will become permanently immutable.
@@ -131,11 +131,11 @@ await algorand.send.assetConfig({
 
 ## Transfer
 
-To transfer unit(s) of an asset between accounts you can use `algorand.send.assetTransfer(params)` (immediately send a single asset transfer transaction), `algorand.createTransaction.assetTransfer(params)` (construct an asset transfer transaction), or `algorand.newGroup().addAssetTransfer(params)` (add asset transfer to a group of transactions) per [`AlgorandClient`](../algorand-client) [transaction semantics](../algorand-client#creating-and-issuing-transactions).
+To transfer unit(s) of an asset between accounts you can use `algorand.send.assetTransfer(params)` (immediately send a single asset transfer transaction), `algorand.createTransaction.assetTransfer(params)` (construct an asset transfer transaction), or `algorand.newGroup().addAssetTransfer(params)` (add asset transfer to a group of transactions) per [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) [transaction semantics](/algokit-utils-ts/capabilities/algorand-client/#creating-and-issuing-transactions).
 
 **Note:** For an account to receive an asset it needs to have [opted-in](#opt-inout).
 
-The base type for specifying an asset transfer transaction is `AssetTransferParams`, which has the following parameters in addition to the [common transaction parameters](../algorand-client#transaction-parameters):
+The base type for specifying an asset transfer transaction is `AssetTransferParams`, which has the following parameters in addition to the [common transaction parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters):
 
 - `assetId: bigint` - ID of the asset to transfer.
 - `amount: bigint` - Amount of the asset to transfer (in smallest divisible (decimal) units).
@@ -181,7 +181,7 @@ await algorand.send.assetTransfer({
 
 ## Opt-in/out
 
-Before an account can receive a specific asset, it must [`opt-in`](https://dev.algorand.co/concepts/assets/opt-in-out#receiving-an-asset) to receive it. An opt-in transaction places an asset holding of 0 into the account and increases the [minimum balance](https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr) of that account by [100,000 microAlgos](https://dev.algorand.co/concepts/assets/overview/).
+Before an account can receive a specific asset, it must [`opt-in`](https://dev.algorand.co/concepts/assets/asset-operations/#opting-in-and-out-of-assets) to receive it. An opt-in transaction places an asset holding of 0 into the account and increases the [minimum balance](https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr) of that account by [100,000 microAlgos](https://dev.algorand.co/concepts/assets/overview/).
 
 An account can opt out of an asset at any time by closing out it's asset position to another account (usually to the asset creator). This means that the account will no longer hold the asset, and the account will no longer be able to receive the asset. The account also recovers the Minimum Balance Requirement for the asset (100,000 microAlgos).
 
@@ -191,9 +191,9 @@ AlgoKit Utils gives you functions that allow you to do opt-ins and opt-outs in b
 
 ### `assetOptIn`
 
-To opt-in to an asset you can use `algorand.send.assetOptIn(params)` (immediately send a single asset opt-in transaction), `algorand.createTransaction.assetOptIn(params)` (construct an asset opt-in transaction), or `algorand.newGroup().addAssetOptIn(params)` (add asset opt-in to a group of transactions) per [`AlgorandClient`](../algorand-client) [transaction semantics](../algorand-client#creating-and-issuing-transactions).
+To opt-in to an asset you can use `algorand.send.assetOptIn(params)` (immediately send a single asset opt-in transaction), `algorand.createTransaction.assetOptIn(params)` (construct an asset opt-in transaction), or `algorand.newGroup().addAssetOptIn(params)` (add asset opt-in to a group of transactions) per [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) [transaction semantics](/algokit-utils-ts/capabilities/algorand-client/#creating-and-issuing-transactions).
 
-The base type for specifying an asset opt-in transaction is `AssetOptInParams`, which has the following parameters in addition to the [common transaction parameters](../algorand-client#transaction-parameters):
+The base type for specifying an asset opt-in transaction is `AssetOptInParams`, which has the following parameters in addition to the [common transaction parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters):
 
 - `assetId: bigint` - The ID of the asset that will be opted-in to
 
@@ -228,9 +228,9 @@ await algorand.send.assetOptIn({
 
 ### `assetOptOut`
 
-To opt-out to an asset you can use `algorand.send.assetOptOut(params)` (immediately send a single asset opt-out transaction), `algorand.createTransaction.assetOptOut(params)` (construct an asset opt-out transaction), or `algorand.newGroup().addAssetOptOut(params)` (add asset opt-out to a group of transactions) per [`AlgorandClient`](../algorand-client) [transaction semantics](../algorand-client#creating-and-issuing-transactions).
+To opt-out to an asset you can use `algorand.send.assetOptOut(params)` (immediately send a single asset opt-out transaction), `algorand.createTransaction.assetOptOut(params)` (construct an asset opt-out transaction), or `algorand.newGroup().addAssetOptOut(params)` (add asset opt-out to a group of transactions) per [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) [transaction semantics](/algokit-utils-ts/capabilities/algorand-client/#creating-and-issuing-transactions).
 
-The base type for specifying an asset opt-out transaction is `AssetOptOutParams`, which has the following parameters in addition to the [common transaction parameters](../algorand-client#transaction-parameters):
+The base type for specifying an asset opt-out transaction is `AssetOptOutParams`, which has the following parameters in addition to the [common transaction parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters):
 
 - `assetId: bigint` - The ID of the asset that will be opted-out of
 - `creator: string` - The address of the asset creator account to close the asset position to (any remaining asset units will be sent to this account).

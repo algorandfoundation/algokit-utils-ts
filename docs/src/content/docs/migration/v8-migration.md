@@ -4,7 +4,7 @@ title: "v8 migration"
 
 Version 8 of AlgoKit Utils adds support for algosdk@3. This algosdk version has a number of major breaking changes and as a result we have also needed to make some breaking changes to support it. All changes between version 7 and 8 have been made to support algosdk@3.
 
-Depending on the complexity of your project, you may find that first migrating to version 7, then migrating to version 8 is easier and offers a more gradual experience. Either way this migration will heavily reference the [v7 migration guide](../v7-migration) as it documents the majority of changes you will likely need to make.
+Depending on the complexity of your project, you may find that first migrating to version 7, then migrating to version 8 is easier and offers a more gradual experience. Either way this migration will heavily reference the [v7 migration guide](/algokit-utils-ts/migration/v7-migration/) as it documents the majority of changes you will likely need to make.
 
 ## <6.1.0 Migration Guide
 
@@ -16,7 +16,7 @@ First read the [>=7.0.0 migration guide](#700-migration-guide) below to familiar
 
 #### Step 2 - Migrate using the version 7 migration guide
 
-Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](../v7-migration#610-migration-guide).
+Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](/algokit-utils-ts/migration/v7-migration/#610-migration-guide).
 
 A simple example of the before and after follows:
 
@@ -58,13 +58,13 @@ First read the [>=7.0.0 migration guide](#700-migration-guide) below to familiar
 
 #### Step 2 - Migrate using the version 7 migration guide
 
-Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](../v7-migration#610-migration-guide-1).
+Using the context gathered from Step 1, you should have all the information you need to migrate using the [version 7 migration guide](/algokit-utils-ts/migration/v7-migration/#610-migration-guide-1).
 
 ## >=7.0.0 Migration Guide
 
 This migration path assumes you have actioned all the deprecation notices as part of moving to the `>=7.0.0` version and you are using the `AlgorandClient` and it's related abstractions. Given this, all changes you'll need to make are directly related to upgrading from algosdk@2 to algosdk@3.
 
-While AlgoKit utils now wraps most of the algosdk functionality, it's likely you may have functionality that uses algosdk directly. As as result you may need to refer to the [algosdk v3 migration guide](https://github.com/algorand/js-algorand-sdk/blob/develop/v2_TO_v3_MIGRATION_GUIDE.md.
+While AlgoKit utils now wraps most of the algosdk functionality, it's likely you may have functionality that uses algosdk directly. As as result you may need to refer to the [algosdk v3 migration guide](https://github.com/algorand/js-algorand-sdk/blob/main/v2_TO_v3_MIGRATION_GUIDE.md.
 
 ### Migrating
 

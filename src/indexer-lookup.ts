@@ -140,7 +140,7 @@ export async function searchTransactions(
   })
 }
 
-// https://dev.algorand.co/reference/rest-apis/indexer
+// https://dev.algorand.co/reference/rest-api/indexer
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function executePaginatedRequest<TResult, TRequest extends { do: () => Promise<any> }>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

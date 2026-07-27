@@ -4,7 +4,7 @@ title: "Indexer lookups / searching"
 
 Indexer lookups / searching is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It provides type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control.
 
-To see some usage examples check out the [automated tests](../../src/indexer-lookup.spec.ts).
+To see some usage examples check out the [automated tests](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.spec.ts).
 
 To import the indexer functions you can:
 
@@ -12,11 +12,11 @@ To import the indexer functions you can:
 import { indexer } from '@algorandfoundation/algokit-utils'
 ```
 
-All of the indexer functions require you to pass in an indexer SDK client, which you can get from [`AlgorandClient`](../algorand-client) via `algorand.client.indexer`. These calls are not made more easy to call by exposing via `AlgorandClient` and thus not requiring the indexer SDK client to be passed in. This is because we want to add a tiny bit of friction to using indexer, given it's an expensive API to run for node providers, the data from it can sometimes be slow and stale, and there are alternatives [that](https://github.com/algorandfoundation/algokit-subscriber-ts) [allow](https://github.com/algorand/conduit) individual projects to index subsets of chain data specific to them as a preferred option. In saying that, it's a very useful API for doing ad hoc data retrieval, writing automated tests, and many other uses.
+All of the indexer functions require you to pass in an indexer SDK client, which you can get from [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) via `algorand.client.indexer`. These calls are not made more easy to call by exposing via `AlgorandClient` and thus not requiring the indexer SDK client to be passed in. This is because we want to add a tiny bit of friction to using indexer, given it's an expensive API to run for node providers, the data from it can sometimes be slow and stale, and there are alternatives [that](https://github.com/algorandfoundation/algokit-subscriber-ts) [allow](https://github.com/algorand/conduit) individual projects to index subsets of chain data specific to them as a preferred option. In saying that, it's a very useful API for doing ad hoc data retrieval, writing automated tests, and many other uses.
 
 ## Indexer wrapper functions
 
-There is a subset of [indexer API calls](https://dev.algorand.co/reference/rest-apis/indexer) that are exposed as easy to use methods with correct typing exposed and automatic pagination for multi item returns.
+There is a subset of [indexer API calls](https://dev.algorand.co/reference/rest-api/indexer) that are exposed as easy to use methods with correct typing exposed and automatic pagination for multi item returns.
 
 - `indexer.lookupTransactionById(transactionId, algorand.client.indexer)` - Finds a transaction by ID
 - `indexer.lookupAccountByAddress(accountAddress, algorand.client.indexer)` - Finds an account by address
@@ -58,7 +58,7 @@ It takes the first lambda to translate the raw response into the array that shou
 
 ## Indexer API response types
 
-The response model type definitions for the majority of [indexer API](https://dev.algorand.co/reference/rest-apis/indexer) are exposed from the `types/indexer` namespace in AlgoKit Utils. This is so that you can have a much better experience than the default response type of `Record<string, any>` from the indexer client in `algosdk`. If there is a type you want to use that is missing feel free to [submit a pull request](https://github.com/algorandfoundation/algokit-utils-ts/pulls) to [add the type(s)](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts).
+The response model type definitions for the majority of [indexer API](https://dev.algorand.co/reference/rest-api/indexer) are exposed from the `types/indexer` namespace in AlgoKit Utils. This is so that you can have a much better experience than the default response type of `Record<string, any>` from the indexer client in `algosdk`. If there is a type you want to use that is missing feel free to [submit a pull request](https://github.com/algorandfoundation/algokit-utils-ts/pulls) to [add the type(s)](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts).
 
 To access these types you can import them:
 
@@ -70,7 +70,7 @@ As a general convention, the response types are named `{TypeName}Result` for a s
 
 - `{Entity}Lookup` for an API call response that returns a lookup for a single entity e.g. `AssetLookupResult`
 - `{Entity}Search` for an API call response that searches for a type of entity e.g. `TransactionSearchResults`
-- The `UpperCamelCase` name of a given model type as specified in the [official documentation](https://dev.algorand.co/reference/rest-apis/indexer) for any sub-types within a response e.g. `ApplicationResult`
+- The `UpperCamelCase` name of a given model type as specified in the [official documentation](https://dev.algorand.co/reference/rest-api/indexer) for any sub-types within a response e.g. `ApplicationResult`
 
 The reason `Result/Results` is suffixed to the type is to avoid type name clashes for commonly used types from `algosdk` like `Transaction`.
 

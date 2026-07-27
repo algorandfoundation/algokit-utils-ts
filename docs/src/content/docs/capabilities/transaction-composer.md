@@ -4,9 +4,9 @@ title: "Transaction composer"
 
 The `TransactionComposer` class allows you to easily compose one or more compliant Algorand transactions and execute and/or simulate them.
 
-It's the core of how the [`AlgorandClient`](../algorand-client) class composes and sends transactions.
+It's the core of how the [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) class composes and sends transactions.
 
-To get an instance of `TransactionComposer` you can either get it from an [app client](../app-client), from an [`AlgorandClient`](../algorand-client), or by new-ing up via the constructor.
+To get an instance of `TransactionComposer` you can either get it from an [app client](/algokit-utils-ts/capabilities/app-client/), from an [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/), or by new-ing up via the constructor.
 
 ```typescript
 const composerFromAlgorand = algorand.newGroup()
@@ -28,7 +28,7 @@ const composerFromConstructorWithOptionalParams = new TransactionComposer({
 
 ## Constructing a transaction
 
-To construct a transaction you need to add it to the composer, passing in the relevant params object for that transaction. Params are normal JavaScript objects and all of them extend the [common call parameters](../algorand-client#transaction-parameters).
+To construct a transaction you need to add it to the composer, passing in the relevant params object for that transaction. Params are normal JavaScript objects and all of them extend the [common call parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters).
 
 The methods to construct a transaction are all named `add{TransactionType}` and return an instance of the composer so they can be chained together fluently to construct a transaction group.
 
@@ -194,7 +194,7 @@ Application consumers may not be immediately aware of the number of op-up inner 
 ## Simulating a transaction
 
 Transactions can be simulated using the simulate endpoint in algod, which enables evaluating the transaction on the network without it actually being commited to a block.
-This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://dev.algorand.co/reference/rest-apis/output/#simulatetransaction).
+This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://dev.algorand.co/reference/rest-api/algod/operations/simulatetransaction/).
 
 For example you can simulate a transaction group like below:
 
