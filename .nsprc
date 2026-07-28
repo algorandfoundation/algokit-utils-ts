@@ -1,1 +1,12 @@
-{}
+{
+  "1124334": {
+    "active": true,
+    "notes": "brace-expansion DoS (GHSA-mh99-v99m-4gvg). Dev-only transitive dep (eslint, tealscript, rimraf, semantic-release toolchains); not shipped in the published package. Only patched version is 5.0.8, published 2026-07-23, which is inside the min-release-age=7 window enforced by .npmrc. Bump the brace-expansion override to >=5.0.8 and drop this exception from 2026-07-31.",
+    "expiry": "2026-07-31"
+  },
+  "1124287": {
+    "active": true,
+    "notes": "node-tar stack-overflow DoS (GHSA-r292-9mhp-454m). Dev-only transitive dep via semantic-release > @semantic-release/npm > npm; not shipped in the published package. Only patched version is 7.5.21, published 2026-07-21, which is inside the min-release-age=7 window enforced by .npmrc. Add a tar >=7.5.21 override and drop this exception from 2026-07-30.",
+    "expiry": "2026-07-30"
+  }
+}
