@@ -1884,6 +1884,29 @@ export class TransactionComposer {
     }
   }
 
+
+  /**
+   * Reject transaction groups that contain more than one identical transaction.
+   * Identical transactions share a transaction ID (same fields including first/last valid).
+   * This commonly happens when suggestedParams are cached and the same call is composed multiple times.
+   */
+  private assertNoDuplicateTransactions(transactions: algosdk.Transaction[]): void {
+    const firstIndexById = new Map<string, number>()
+    for (let index = 0; index < transactions.length; index++) {
+      const txId = transactions[index].txID()
+      const firstIndex = firstIndexById.get(txId)
+      if (firstIndex !== undefined) {
+        throw new Error(
+          `Transaction group contains duplicate transactions (same transaction ID) at indexes ${firstIndex} and ${index} (txID: ${txId}). ` +
+            `This often happens when suggestedParams are cached, so identical calls get the same firstValid/lastValid rounds. ` +
+            `Make each transaction unique (for example a different note, lease, validityWindow, firstValidRound, or lastValidRound). ` +
+            `If you are using AlgorandClient, refresh suggested params with setSuggestedParamsCacheTimeout(0) or wait for the cache to expire and call getSuggestedParams again.`,
+        )
+      }
+      firstIndexById.set(txId, index)
+    }
+  }
+
   private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
       return [
@@ -1950,6 +1973,8 @@ export class TransactionComposer {
       }
     }
 
+    this.assertNoDuplicateTransactions(transactions)
+
     return { transactions, methodCalls, signers }
   }
 
@@ -1983,6 +2008,8 @@ export class TransactionComposer {
       for (const txn of this.txns) {
         txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
       }
+
+      this.assertNoDuplicateTransactions(txnWithSigners.map(({ txn }) => txn))
 
       // Add all of the transactions to the underlying ATC
       const methodCalls = new Map<number, algosdk.ABIMethod>()
