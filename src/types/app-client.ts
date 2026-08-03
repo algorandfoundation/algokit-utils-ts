@@ -1455,7 +1455,7 @@ export class AppClient {
             const error = e as Error
             // For read-only calls with max opcode budget, fee issues should be rare
             // but we can still provide helpful error message if they occur
-            if (params.coverAppCallInnerTransactionFees && error && error.message && error.message.match(/fee too small/)) {
+            if (params.coverAppCallInnerTransactionFees && error && error.message && error.message.match(/fee ([\w.]+\s+)?too small/)) {
               throw Error(`Fees were too small. You may need to increase the transaction maxFee.`)
             }
             throw e
@@ -1922,7 +1922,7 @@ export class ApplicationClient {
    *
    * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
    *
-   * To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+   * To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/src/content/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
    *
    * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
    *

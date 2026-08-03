@@ -10,48 +10,29 @@ on:
 concurrency: release
 
 permissions:
-  contents: write
-  issues: read
+  contents: read
 
 jobs:
   ci:
-    name: Continuous Integration
-    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-ci.yml@main
     with:
-      node-version: 20.x
       run-commit-lint: true
-      pre-test-script: |
-        pipx install algokit
-        algokit localnet start
-        npx --yes wait-on tcp:4001 -t 30000
-      audit-script: |
-        npm run audit
+      run-build: true
+      audit-script: npm run audit
+      test-script: npm run test -- --silent
+      install-algokit: true
+      polytest: false
 
   check_docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - name: Check docs are up to date
-        shell: bash
-        run: |
-          npm ci --ignore-scripts
-          npm run generate:code-docs
-          # Add untracked files as empty so they come up in diff
-          git add -N .
-          # Print changed files and error out if there are changes after generating docs
-          git diff --exit-code --name-only
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/check-docs.yml@main
 
   build:
     name: Build
-    uses: makerxstudio/shared-config/.github/workflows/node-build-zip.yml@main
     needs:
       - ci
       - check_docs
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/node-build-zip.yml@main
     with:
-      node-version: 20.x
       build-path: dist
       artifact-name: package
 
@@ -59,31 +40,32 @@ jobs:
     name: Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Generate bot token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app_token
         with:
           app-id: ${{ secrets.BOT_ID }}
           private-key: ${{ secrets.BOT_SK }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          # Fetch entire repository history so we can determine version number from it
           fetch-depth: 0
           token: ${{ steps.app_token.outputs.token }}
 
       - name: Set Git user as GitHub actions
         run: git config --global user.email "179917785+engineering-ci[bot]@users.noreply.github.com" && git config --global user.name "engineering-ci[bot]"
 
-      # semantic-release needs node 20
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
-          node-version: 20.x
+          node-version: 24.x
 
       - name: Download built package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: package
           path: artifacts
@@ -101,4 +83,13 @@ jobs:
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish_docs:
+    name: Publish docs to GitHub Pages
+    needs: release
+    if: github.ref_name == 'release'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: algorandfoundation/algokit-shared-config/.github/workflows/publish-docs.yml@main

@@ -34,7 +34,7 @@ export type SkipSignaturesSimulateOptions = Expand<
 >
 
 /** The raw API options to control a simulate request.
- * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
+ * See algod API docs for more information: https://dev.algorand.co/reference/rest-api/algod/operations/simulatetransaction/
  */
 export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
 
@@ -345,7 +345,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   appId: bigint
   /** The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. */
   onComplete?: algosdk.OnApplicationComplete
-  /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
+  /** Any [arguments to pass to the smart contract call](https://dev.algorand.co/concepts/smart-contracts/languages/teal/#argument-passing). */
   args?: Uint8Array[]
   /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   accountReferences?: (string | Address)[]

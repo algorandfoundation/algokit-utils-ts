@@ -322,7 +322,7 @@ async function getGroupExecutionInfo(
   const groupResponse = result.simulateResponse.txnGroups[0]
 
   if (groupResponse.failureMessage) {
-    if (sendParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.match(/fee too small/)) {
+    if (sendParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.match(/fee ([\w.]+\s+)?too small/)) {
       throw Error(`Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.`)
     }
 

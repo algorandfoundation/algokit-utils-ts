@@ -241,19 +241,20 @@ export class AppManager {
    */
   public async getById(appId: bigint): Promise<AppInformation> {
     const app = await this._algod.getApplicationByID(Number(appId)).do()
+    const params = app.params!
     return {
       appId: BigInt(app.id),
       appAddress: algosdk.getApplicationAddress(app.id),
-      approvalProgram: app.params.approvalProgram,
-      clearStateProgram: app.params.clearStateProgram,
-      creator: app.params.creator,
-      localInts: Number(app.params.localStateSchema?.numUint ?? 0),
-      localByteSlices: Number(app.params.localStateSchema?.numByteSlice ?? 0),
-      globalInts: Number(app.params.globalStateSchema?.numUint ?? 0),
-      globalByteSlices: Number(app.params.globalStateSchema?.numByteSlice ?? 0),
-      extraProgramPages: Number(app.params.extraProgramPages ?? 0),
-      globalState: AppManager.decodeAppState(app.params.globalState ?? []),
-      version: app.params.version,
+      approvalProgram: params.approvalProgram,
+      clearStateProgram: params.clearStateProgram,
+      creator: params.creator,
+      localInts: Number(params.localStateSchema?.numUint ?? 0),
+      localByteSlices: Number(params.localStateSchema?.numByteSlice ?? 0),
+      globalInts: Number(params.globalStateSchema?.numUint ?? 0),
+      globalByteSlices: Number(params.globalStateSchema?.numByteSlice ?? 0),
+      extraProgramPages: Number(params.extraProgramPages ?? 0),
+      globalState: AppManager.decodeAppState(params.globalState ?? []),
+      version: params.version,
     }
   }
 
