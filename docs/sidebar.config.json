@@ -1,6 +1,10 @@
 [
   { "label": "Home", "link": "/" },
   {
+    "label": "Core Concepts",
+    "autogenerate": { "directory": "concepts" }
+  },
+  {
     "label": "Capabilities",
     "autogenerate": { "directory": "capabilities" }
   },
