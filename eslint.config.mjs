@@ -52,17 +52,5 @@ export default tseslint.config(
       'no-restricted-syntax': 'off',
     },
   },
-  // The runnable examples are excluded from the base tsconfig, so point type-aware
-  // linting at examples/tsconfig.json (which includes the *.algo.ts files).
-  {
-    files: ['examples/**/*.ts'],
-    languageOptions: {
-      parserOptions: {
-        projectService: false,
-        project: './examples/tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
   prettier,
 )

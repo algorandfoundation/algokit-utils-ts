@@ -14,12 +14,12 @@
  * Run with: tsx --tsconfig examples/tsconfig.json examples/concepts/applications.algo.ts
  */
 
-import { readFileSync } from 'fs'
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'
+import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { OnSchemaBreak, OnUpdate } from '@algorandfoundation/algokit-utils/types/app'
 import { AppClient } from '@algorandfoundation/algokit-utils/types/app-client'
-import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { LogicError } from '@algorandfoundation/algokit-utils/types/logic-error'
+import { readFileSync } from 'fs'
 import { setupLocalNetEnvironment } from './_helpers.algo'
 
 // Minimal approve-everything TEAL pair for the raw-layer create call.
@@ -51,10 +51,7 @@ async function deployHelloWorld(algorand: AlgorandClient, deployer: TransactionS
   if (deployResult.operationPerformed !== 'create') throw new Error('Expected app to be created')
 }
 
-async function templateVariablesAndRedeploy(
-  algorand: AlgorandClient,
-  deployer: TransactionSignerAccount,
-): Promise<AppClient> {
+async function templateVariablesAndRedeploy(algorand: AlgorandClient, deployer: TransactionSignerAccount): Promise<AppClient> {
   // example: TEMPLATE_VARIABLES
   const appSpec = readFileSync('examples/artifacts/State.arc56.json', 'utf-8')
   const factory = algorand.client.getAppFactory({ appSpec, defaultSender: deployer.addr })
