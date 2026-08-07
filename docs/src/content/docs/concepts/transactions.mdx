@@ -1,0 +1,384 @@
+---
+title: "Transactions"
+description: "AlgoKit Utils builds every Algorand transaction from a params object and handles signing and submission, with control over fees, leases, multisig and logic-signature authorization, atomic groups, and simulation."
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import RemoteCode from "/src/components/RemoteCode.astro";
+
+Moving Algo, creating an asset, or calling a smart contract all happen the same way on Algorand: as a [transaction](https://dev.algorand.co/concepts/transactions/types/), a signed instruction the network validates and records atomically. AlgoKit Utils builds every one of them through a single model. Learn the shape for a payment and it carries over to every other type.
+
+That one model covers most of what you will do: payments, atomic groups and simulation, fee control, leases, structured notes, multisig and logic-signature authorization, rekeying, and consensus key registration. Each has a section below. Assets and application calls work the same way, on their own pages. For the protocol-level definition of each transaction type and its wire format, see the Algorand developer portal.
+
+Each send returns a result object with the confirmation, transaction IDs, and any ABI return values. [Transaction Results](#transaction-results) below covers the shapes.
+
+<LinkCard
+  title="Transactions (protocol)"
+  href="https://dev.algorand.co/concepts/transactions/types/"
+  description="The protocol-level model: transaction types, fields, signing, and finality"
+/>
+
+## The Transaction Model
+
+Every transaction starts as a _params object_: `PaymentParams`, `AssetTransferParams`, `OnlineKeyRegistrationParams`, and so on. Fill in the fields for the operation, then hand the params to one of three interfaces on [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/). Which one you pick depends on what you want back:
+
+| Interface                                | Use when you want to                                            |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| `algorand.send.<type>(params)`           | Build, sign, submit, and wait for confirmation in one call      |
+| `algorand.createTransaction.<type>(params)` | Build the unsigned transaction and handle signing/sending yourself |
+| `algorand.newGroup().add<Type>(params)`  | Collect several transactions into one atomic group              |
+
+The client resolves each transaction's sender to its registered signer, so you rarely pass a signer explicitly. When you do, the `signer` field accepts any account the library provides (including the multisig and logic-signature accounts below) or a raw `algosdk` `TransactionSigner`. Suggested parameters (the fee, current round, and genesis identifiers) are fetched and cached for you. Both are covered under [Algorand Client](/algokit-utils-ts/concepts/algorand-client/) and apply to everything below.
+
+Every params object also carries a set of common fields, in addition to its type-specific ones:
+
+| Common field                                    | Purpose                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------- |
+| `sender`                                        | The account authorizing and paying for the transaction             |
+| `signer`                                        | An explicit signer, overriding the registered one                  |
+| `note`                                          | Arbitrary bytes recorded with the transaction                      |
+| `lease`                                         | A mutual-exclusion lock (see [Leases](#reserve-exclusivity-with-a-lease)) |
+| `staticFee` / `extraFee` / `maxFee`             | Fee control (see [Fees](#control-fees))                            |
+| `validityWindow` / `firstValidRound` / `lastValidRound` | The round range in which the transaction is valid          |
+| `rekeyTo`                                       | Rekey the sender to a new authorizing address                     |
+
+## Send Parameters
+
+The params object describes the transaction itself. It also carries a few fields that control how the transaction is sent, rather than what it contains. Set them alongside the transaction fields on any `algorand.send.<type>` call or a group's `send()`:
+
+| Option                                | Effect                                                                          |
+| ------------------------------------- | ------------------------------------------------------------------------------- |
+| `maxRoundsToWaitForConfirmation`      | How many rounds to wait for confirmation before giving up                       |
+| `suppressLog`                         | Suppress the library's send and confirmation logging                            |
+| `populateAppCallResources`            | Auto-populate the resources an app call references (see [Applications](/algokit-utils-ts/concepts/app/)) |
+| `coverAppCallInnerTransactionFees`    | Have the caller cover inner-transaction fees (see [Transaction Composer](/algokit-utils-ts/capabilities/transaction-composer/)) |
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="SEND_PARAMS"
+  lang="ts"
+  frame="none"
+/>
+
+## Issue a Transaction
+
+The model above named three interfaces for issuing a transaction. Each has a section below, starting with a single payment.
+
+### Send a Payment
+
+A payment moves Algo from a sender to a receiver. Pass a `PaymentParams` with an [`AlgoAmount`](/algokit-utils-ts/capabilities/amount/) to `algorand.send.payment`. The result carries the transaction ID and confirmation:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="SEND_PAYMENT"
+  lang="ts"
+  frame="none"
+/>
+
+Setting `closeRemainderTo` sweeps the sender's entire remaining balance to another account and removes the sender from the ledger. Use it to close an account. The `amount` field is whatever you send in addition to the swept balance, usually zero:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="CLOSE_ACCOUNT"
+  lang="ts"
+  frame="none"
+/>
+
+:::caution
+`closeRemainderTo` transfers every remaining microAlgo and deactivates the account. Set it only when you mean to close the account.
+:::
+
+### Group and Simulate Transactions
+
+`algorand.newGroup()` builds an [atomic transaction group](https://dev.algorand.co/concepts/transactions/atomic-txn-groups/): every transaction you add either confirms together or fails together, with no partial outcome. Add any mix of types with the fluent `add<Type>` methods, then call `send()`:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="ATOMIC_GROUP"
+  lang="ts"
+  frame="none"
+/>
+
+A transaction built elsewhere can join the group too. `addTransaction` takes a raw `algosdk` transaction, such as one from `createTransaction` (see [Build Unsigned Transactions](#build-unsigned-transactions)), and signs it with the sender's registered signer. Use it to mix a pre-built transaction into a group of params-built ones:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="ADD_TRANSACTION"
+  lang="ts"
+  frame="none"
+/>
+
+Instead of sending, call `simulate()` to run the group against the current ledger without submitting it. Use it to preview effects, read return values, or estimate cost. Pass `skipSignatures: true` to simulate without signing:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="SIMULATE"
+  lang="ts"
+  frame="none"
+/>
+
+Groups have a deeper API: resource population, per-transaction ABI returns, and inner-fee coverage. The composer behind `newGroup()` documents all of it.
+
+<LinkCard
+  title="Transaction Composer"
+  href="/algokit-utils-ts/capabilities/transaction-composer/"
+  description="Building groups, simulation options, resource population, and error transformers"
+/>
+
+### Build Unsigned Transactions
+
+`algorand.send.<type>` constructs the transaction and takes it all the way through signing and submission. Sometimes you want to stop before that: to hand the transaction to a wallet, sign it out of band, or submit it yourself. `algorand.createTransaction.<type>` returns the unsigned `algosdk` transaction instead. You sign and submit it through the SDK client:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="BUILD_UNSIGNED"
+  lang="ts"
+  frame="none"
+/>
+
+The transaction the client builds is a standard `algosdk` transaction, so anything the SDK can do with it applies. To collect several such transactions into an atomic group, add them with [`addTransaction`](#group-and-simulate-transactions). Building an ABI method call is different: those `createTransaction` methods return a set of built transactions rather than a single one, and are covered under [Applications](/algokit-utils-ts/concepts/app/).
+
+## Transaction Results
+
+Every send returns a result describing what happened on-chain. The shape scales with what you sent: a single confirmed transaction, or the full arrays for a group. A single send is typed as the group result combined with the single confirmation, so learning both shapes lets you read any send's return value in the API.
+
+The minimal shape is a `ConfirmedTransactionResult`: the transaction and its confirmation from algod.
+
+```ts
+interface ConfirmedTransactionResult {
+  transaction: Transaction                          // the transaction sent
+  confirmation: modelsv2.PendingTransactionResponse // its confirmation from algod
+}
+```
+
+`algorand.send.<type>` returns a `SendSingleTransactionResult`, which combines that confirmation with the group-level arrays the transaction was built from:
+
+```ts
+type SendSingleTransactionResult =
+  SendAtomicTransactionComposerResults & ConfirmedTransactionResult
+```
+
+Sending a group returns a `SendAtomicTransactionComposerResults` on its own; simulating returns the same transaction and confirmation arrays without submitting:
+
+```ts
+interface SendAtomicTransactionComposerResults {
+  transactions: Transaction[]
+  confirmations: modelsv2.PendingTransactionResponse[]
+  groupId: string
+  txIds: string[]
+  returns?: ABIReturn[] // ABI return values, when present
+}
+```
+
+App-specific sends refine this: an app call adds decoded ABI returns, and creating an app returns its `appId` and `appAddress`. Those result types live with the client that produces them, in [Applications](/algokit-utils-ts/concepts/app/).
+
+<LinkCard
+  title="Transactions API Reference"
+  href="/algokit-utils-ts/api/types/transaction/"
+  description="Every result type and its fields, generated from the library source"
+/>
+
+## Control Fees
+
+Algorand's minimum fee is 1000 microAlgo, and the client applies it by default. A normal transaction needs no fee field at all. Three fields adjust that when you need them:
+
+| Field       | Effect                                                                             |
+| ----------- | ---------------------------------------------------------------------------------- |
+| `staticFee` | Sets an exact, fixed fee, overriding the calculated one                            |
+| `extraFee`  | Adds to the calculated fee (e.g. to cover another transaction's fee in a group)    |
+| `maxFee`    | Caps the fee the client will accept; sending raises if the fee would exceed it     |
+
+`staticFee` pins the fee to an exact value:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="STATIC_FEE"
+  lang="ts"
+  frame="none"
+/>
+
+`extraFee` adds to the fee the client already calculated rather than replacing it. Use it when one transaction has to pay more than its own share, such as covering the fee of an inner transaction an app call will issue:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="EXTRA_FEE"
+  lang="ts"
+  frame="none"
+/>
+
+`maxFee` caps the fee instead of setting it. The transaction still pays its normal fee, but the send fails with an error if that fee would exceed the cap:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="MAX_FEE"
+  lang="ts"
+  frame="none"
+/>
+
+### Pool Fees Across a Group
+
+Algorand charges fees per group, not per transaction. The network only checks that the group's total covers every transaction in it. So one transaction can pay extra and cover another that pays nothing. In the example below the second payment pays both fees and the first pays zero. This is how a sponsor covers a user's transaction fee:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="FEE_POOLING"
+  lang="ts"
+  frame="none"
+/>
+
+The same mechanism covers the fees of inner transactions issued by a smart contract call, so the outer caller pays for them. AlgoKit Utils can compute that coverage for you through the `coverAppCallInnerTransactionFees` send option. See [Transaction Composer](/algokit-utils-ts/capabilities/transaction-composer/) for the details.
+
+## Reserve Exclusivity with a Lease
+
+A lease is a value of up to 32 bytes that locks the `(sender, lease)` pair until the transaction's last-valid round. A shorter value is padded to 32 bytes. While the lock holds, no second transaction with the same pair can confirm. That guarantees a recurring or replaceable payment runs at most once per window.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="LEASE"
+  lang="ts"
+  frame="none"
+/>
+
+Changing either the sender or the lease value creates a new, independent lock. Once the validity window passes, the lease is released.
+
+<LinkCard
+  title="Leases"
+  href="https://dev.algorand.co/concepts/transactions/leases/"
+  description="How the lease field enforces mutual exclusion at the protocol level"
+/>
+
+## Attach a Structured Note (ARC-2)
+
+Every transaction carries an optional `note` of arbitrary bytes. [ARC-2](https://dev.algorand.co/arc-standards/arc-0002/) gives that field a convention, `<dAppName>:<format><data>`, so on-chain tools can tell which application wrote a note and in what format. `TransactionComposer.arc2Note` builds a conforming note. Pass the bytes it returns as the `note` field on any transaction:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="ARC2_NOTE"
+  lang="ts"
+  frame="none"
+/>
+
+The `format` is `m` for MsgPack, `b` for raw bytes, `u` for UTF-8, or `j` for JSON. The `dAppName` must be 5 to 32 characters and start with a letter or digit. See the [ARC-2 specification](https://dev.algorand.co/arc-standards/arc-0002/) for the full convention.
+
+## Authorize a Transaction
+
+By default the client signs each transaction with the sender's registered key. A transaction can also be authorized by a multisig account, by a logic signature, or through rekeying to a different key.
+
+### Send from a Multisig Account
+
+A [multisig account](https://dev.algorand.co/concepts/accounts/multisig/) needs signatures from a threshold of its members before the network will accept a transaction from it. You send from one exactly as from any other account. The only difference is in how you set up the account and its signer.
+
+Create the account with `algorand.account.multisig`, passing a metadata object (the version, the signing threshold, and every member address in `addrs`) and the member accounts that will sign. This registers a signer for the multisig address. A transaction sent from that address is then signed by those members automatically, with no explicit `signer`:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="MULTISIG"
+  lang="ts"
+  frame="none"
+/>
+
+`addrs` lists every member and sets the multisig address, so order matters. The second argument is the subset of members present to sign now, and it must cover the threshold. The signer is built when the account is created, so every required member has to be available at that point. To coordinate signatures across separate parties or processes, sign at the transaction level instead.
+
+<CardGrid>
+  <LinkCard
+    title="Accounts"
+    href="/algokit-utils-ts/concepts/account/"
+    description="Creating multisig, rekeyed, and other account types, and how signers are registered"
+  />
+  <LinkCard
+    title="Multisignature Accounts"
+    href="https://dev.algorand.co/concepts/accounts/multisig/"
+    description="What multisig accounts are, thresholds, and how authorization works"
+  />
+</CardGrid>
+
+### Sign with a Logic Signature
+
+A [logic signature](https://dev.algorand.co/concepts/smart-contracts/logic-sigs/) authorizes a transaction with a compiled program instead of a private key. The program runs at submission, and the transaction is valid only if it approves. Create one with `algorand.account.logicsig`, passing the compiled program bytes (here produced from TEAL with `algorand.app.compileTeal`). As with multisig, this registers a signer for the logic signature's address, so sending from it is authorized automatically:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="LOGICSIG"
+  lang="ts"
+  frame="none"
+/>
+
+:::caution
+The `int 1` program above approves every transaction, so anyone can spend the escrow. It is illustrative only. A real logic signature encodes the exact conditions under which it approves.
+:::
+
+The address above is a _contract account_: an escrow whose address is the program's hash, so the program authorizes spending from itself. A logic signature can also be _delegated_, where an account grants the program authority to sign on its behalf. In that case the program signs for that account's transactions. Either way the account exposes a `signer`, so you can attach it explicitly to any transaction's `signer` field.
+
+### Rekey an Account
+
+Rekeying moves the authority to sign for an account to a different address, while the account's own address stays the same. Every params object has a `rekeyTo` field that rekeys the sender as a side effect of the transaction. `algorand.account.rekeyAccount(...)` does it on its own. A rekey can permanently hand control of an account to another key, so the mechanics, the risks, and how to sign for a rekeyed sender afterward live with the account model.
+
+<LinkCard
+  title="Accounts"
+  href="/algokit-utils-ts/concepts/account/"
+  description="Rekeying accounts and signing for a rekeyed sender"
+/>
+
+## Register a Key for Consensus
+
+Key registration marks an account online or offline for Algorand consensus participation. Bringing an account online needs participation keys generated on a node. The vote and selection keys below come from that process.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="KEY_REGISTRATION_ONLINE"
+  lang="ts"
+  frame="none"
+/>
+
+Taking an account offline needs no keys. Set `preventAccountFromEverParticipatingAgain` to permanently bar the account from future participation:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="KEY_REGISTRATION_OFFLINE"
+  lang="ts"
+  frame="none"
+/>
+
+Generating participation keys is a node operation. See the [participation key management](https://dev.algorand.co/concepts/protocol/partkey-management/#_top) guide on the developer portal for how to produce the values above.
+
+## Other Transaction Types
+
+Payments and key registrations are built directly on this page. Two other library-built types live on their own pages:
+
+- **Asset transactions.** Creating, configuring, transferring, freezing, and opting in and out of Algorand Standard Assets. Same params-and-send model, through `algorand.send.asset*`.
+- **Application calls.** Calling, creating, updating, and deleting smart contracts, including ABI method calls. These go through app clients rather than raw params.
+
+State Proof and Heartbeat transactions exist at the protocol level too, but the network generates them rather than application code, so the library does not build them.
+
+<CardGrid>
+  <LinkCard
+    title="Assets"
+    href="/algokit-utils-ts/concepts/asset/"
+    description="Creating, transferring, freezing, and opting in to Algorand Standard Assets"
+  />
+  <LinkCard
+    title="Applications"
+    href="/algokit-utils-ts/concepts/app/"
+    description="Deploying and calling smart contracts and making ABI method calls"
+  />
+</CardGrid>
+
+## What's Next
+
+<CardGrid>
+  <LinkCard
+    title="Algorand Client"
+    href="/algokit-utils-ts/concepts/algorand-client/"
+    description="The send pattern, signer resolution, and suggested-parameter caching"
+  />
+  <LinkCard
+    title="Transaction Composer"
+    href="/algokit-utils-ts/capabilities/transaction-composer/"
+    description="Atomic groups, simulation, and resource population in depth"
+  />
+  <LinkCard
+    title="Amounts"
+    href="/algokit-utils-ts/capabilities/amount/"
+    description="Working with AlgoAmount for Algo and microAlgo values"
+  />
+</CardGrid>
