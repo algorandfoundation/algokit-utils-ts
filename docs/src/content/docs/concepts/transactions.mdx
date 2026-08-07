@@ -30,18 +30,6 @@ Every transaction starts as a _params object_: `PaymentParams`, `AssetTransferPa
 
 The client resolves each transaction's sender to its registered signer, so you rarely pass a signer explicitly. When you do, the `signer` field accepts any account the library provides (including the multisig and logic-signature accounts below) or a raw `algosdk` `TransactionSigner`. Suggested parameters (the fee, current round, and genesis identifiers) are fetched and cached for you. Both are covered under [Algorand Client](/algokit-utils-ts/concepts/algorand-client/) and apply to everything below.
 
-Every params object also carries a set of common fields, in addition to its type-specific ones:
-
-| Common field                                    | Purpose                                                             |
-| ----------------------------------------------- | ------------------------------------------------------------------- |
-| `sender`                                        | The account authorizing and paying for the transaction             |
-| `signer`                                        | An explicit signer, overriding the registered one                  |
-| `note`                                          | Arbitrary bytes recorded with the transaction                      |
-| `lease`                                         | A mutual-exclusion lock (see [Leases](#reserve-exclusivity-with-a-lease)) |
-| `staticFee` / `extraFee` / `maxFee`             | Fee control (see [Fees](#control-fees))                            |
-| `validityWindow` / `firstValidRound` / `lastValidRound` | The round range in which the transaction is valid          |
-| `rekeyTo`                                       | Rekey the sender to a new authorizing address                     |
-
 ## Send Parameters
 
 The params object describes the transaction itself. It also carries a few fields that control how the transaction is sent, rather than what it contains. Set them alongside the transaction fields on any `algorand.send.<type>` call or a group's `send()`:
