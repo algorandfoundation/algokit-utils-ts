@@ -1,164 +1,146 @@
 ---
-title: "Algorand client"
+title: "Algorand Client"
+description: "AlgorandClient is the entry point to AlgoKit Utils: a single object that connects to a network, manages signers, and exposes the interfaces for building and sending transactions."
 ---
 
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 import RemoteCode from "/src/components/RemoteCode.astro";
 
-`AlgorandClient` is a client class that brokers easy access to Algorand functionality. It's the default entrypoint into AlgoKit Utils functionality.
+`AlgorandClient` is the entry point to AlgoKit Utils. A single instance connects to a network and exposes the rest of the library: account management, transaction construction and sending, and asset and application operations. It also manages concerns you would otherwise implement yourself, such as caching suggested network parameters and resolving each sender to its registered signer.
 
-The main entrypoint to the bulk of the functionality in AlgoKit Utils is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an Algorand client, e.g.:
+Create one client at startup and share it across your application; every capability described below is reachable from that instance.
 
-```typescript
-// Point to the network configured through environment variables or
-//  if no environment variables it will point to the default LocalNet
-//  configuration
-const algorand = AlgorandClient.fromEnvironment()
-// Point to default LocalNet configuration
-const algorand = AlgorandClient.defaultLocalNet()
-// Point to TestNet using AlgoNode free tier
-const algorand = AlgorandClient.testNet()
-// Point to MainNet using AlgoNode free tier
-const algorand = AlgorandClient.mainNet()
-// Point to a pre-created algod client
-const algorand = AlgorandClient.fromClients({ algod })
-// Point to pre-created algod, indexer and kmd clients
-const algorand = AlgorandClient.fromClients({ algod, indexer, kmd })
-// Point to custom configuration for algod
-const algorand = AlgorandClient.fromConfig({ algodConfig })
-// Point to custom configuration for algod, indexer and kmd
-const algorand = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
-```
+## Create a Client
 
-## Accessing SDK clients
+Static factory methods cover the common ways to connect:
 
-Once you have an `AlgorandClient` instance, you can access the SDK clients for the various Algorand APIs via the `algorand.client` property.
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/algorand_client.algo.ts"
+  snippet="INSTANTIATE_ALGORAND_CLIENT"
+  lang="ts"
+  frame="none"
+/>
+
+| Factory method                          | Connects to                                                                      |
+| --------------------------------------- | -------------------------------------------------------------------------------- |
+| `defaultLocalNet()`                     | LocalNet on the default ports                                                    |
+| `testNet()` / `mainNet()`               | TestNet or MainNet via the free [Nodely](https://nodely.io/docs/free/start) tier |
+| `fromEnvironment()`                     | The network described by environment variables                                   |
+| `fromConfig({ algodConfig, ... })`      | Custom server URLs, ports, or tokens                                             |
+| `fromClients({ algod, ... })`           | Existing SDK client instances                                                    |
+
+For code that runs in more than one environment, use `fromEnvironment()`. It reads `ALGOD_SERVER` (plus `ALGOD_PORT`, `ALGOD_TOKEN`, and `INDEXER_SERVER` / `KMD_PORT` when present) and falls back to the default LocalNet configuration when `ALGOD_SERVER` isn't set, so the same code runs against LocalNet on your machine and against TestNet or MainNet in deployment.
+
+## Navigate the Client
+
+Each area of functionality is exposed as a property or method on the client:
+
+| Property or method                    | Purpose                                                  |
+| ------------------------------------- | -------------------------------------------------------- |
+| `algorand.account`                    | Account creation, funding, lookup, and signer management |
+| `algorand.send`                       | Sending single transactions                              |
+| `algorand.createTransaction`          | Building unsigned transactions without sending them      |
+| `algorand.newGroup()`                 | Building and sending atomic transaction groups           |
+| `algorand.asset`                      | Asset lookups and opt-ins/opt-outs                       |
+| `algorand.app`                        | App state reads and smart contract compilation           |
+| `algorand.appDeployer`                | Idempotent app deployment                                |
+| `algorand.client`                     | App clients, SDK clients, and network details            |
+| `algorand.registerErrorTransformer()` | Transforming raw algod errors into meaningful ones       |
+
+The client is configured through setter methods — `setSigner()` and `setDefaultSigner()`, and `setDefaultValidityWindow()` and the suggested-params cache methods. Each returns the client, so configuration chains into one expression: `AlgorandClient.testNet().setDefaultValidityWindow(50)`.
+
+## Send a Transaction
+
+Sending follows one pattern regardless of transaction type: fill in a params object (`PaymentParams`, `AssetTransferParams`, `AppCallParams`, and so on) and pass it to the matching method on `algorand.send`. The client builds the transaction, signs it, submits it, and waits for confirmation:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/algorand_client.algo.ts"
+  snippet="SEND_PAYMENT"
+  lang="ts"
+  frame="none"
+/>
+
+The same pattern applies to every transaction type.
+
+<LinkCard
+  title="Transactions"
+  href="/algokit-utils-ts/concepts/transaction/"
+  description="The params objects, their common fields, and the structure of returned results"
+/>
+
+## Configure Signers Once
+
+In the example above, the signer was passed explicitly. This is rarely necessary: the client maintains a registry of signers keyed by sender address, and any transaction without an explicit signer is signed by the signer registered for its sender. Accounts created or loaded through `algorand.account` (such as `algorand.account.random()` or `algorand.account.fromEnvironment()`) register their signer automatically. For accounts obtained elsewhere, register the signer explicitly:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/algorand_client.algo.ts"
+  snippet="SIGNER_CONFIG"
+  lang="ts"
+  frame="none"
+/>
+
+Signers are resolved in order: an explicit `signer` on the params wins, then the signer registered for the sender's address, then the default signer if one was set.
+
+<LinkCard
+  title="Accounts"
+  href="/algokit-utils-ts/concepts/account/"
+  description="The account types you can register and the ways to create them"
+/>
+
+## Use the SDK Clients Directly
+
+AlgoKit Utils wraps [`algosdk`](https://github.com/algorand/js-algorand-sdk) rather than replacing it. For operations the library doesn't cover, the underlying SDK clients remain directly accessible:
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/algorand_client.algo.ts"
   snippet="SDK_CLIENTS"
   lang="ts"
+  frame="none"
 />
 
-## Accessing manager class instances
+Which clients are available depends on how the `AlgorandClient` was created: `defaultLocalNet()` configures all three, `testNet()` and `mainNet()` configure algod and indexer but not the Key Management Daemon (KMD), and `fromEnvironment()` configures whatever the environment variables describe. Accessing a client that was not configured raises an error identifying the missing configuration.
 
-The `AlgorandClient` has a number of manager class instances that help you quickly use intellisense to get access to advanced functionality.
+## Tune Network Defaults and Caching
 
-- [`AccountManager`](/algokit-utils-ts/capabilities/account/) via `algorand.account`, there are also some chainable convenience methods which wrap specific methods in `AccountManager`:
-  - `algorand.setDefaultSigner(signer)` -
-  - `algorand.setSignerFromAccount(account)` -
-  - `algorand.setSigner(sender, signer)`
-- [`AssetManager`](/algokit-utils-ts/capabilities/asset/) via `algorand.asset`
-- [`ClientManager`](/algokit-utils-ts/capabilities/client/) via `algorand.client`
+Every transaction the client builds consumes _suggested parameters_ — algod's recommended values for the fee, the current round (which anchors the transaction's validity range), and network identifiers such as the genesis hash. Rather than paying a round trip to the node for every transaction, the client caches the last response briefly. Both the caching behavior and the defaults derived from it are adjustable:
 
-## Creating and issuing transactions
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/algorand_client.algo.ts"
+  snippet="SUGGESTED_PARAMS_CONFIG"
+  lang="ts"
+  frame="none"
+/>
 
-`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/)).
+Each call adjusts one behavior:
 
-### Creating transactions
+- `setDefaultValidityWindow()` sets how many rounds each transaction remains valid, from its first-valid to its last-valid round.
+- `getSuggestedParams()` returns the cached parameters, fetching fresh ones from algod only when the cache has expired.
+- `setSuggestedParamsCache()` seeds the cache directly — useful when you have already fetched parameters or want to pin modified values.
+- `setSuggestedParamsCacheTimeout()` controls how long a fetched response is reused; a timeout of `0` disables caching, so every transaction fetches fresh parameters.
 
-You can compose a transaction via `algorand.createTransaction.`, which gives you an instance of the `AlgorandClientTransactionCreator` class. Intellisense will guide you on the different options.
+The default validity window is 10 rounds (roughly 30 seconds), except on LocalNet, where it is 1000 rounds so that transactions don't expire during debugging. Individual transactions can override the client-wide default through the `validityWindow`, `firstValidRound`, and `lastValidRound` fields present on every params object. A small window is usually the right choice: it bounds the period during which a transaction you have written off as failed can still be validly submitted.
 
-The signature for the calls to send a single transaction usually look like:
+## What's Next
 
-```
-algorand.createTransaction.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<Transaction>
-```
-
-- To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
-- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, see the full list
-- `CommonTransactionParams` are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
-- `Transaction` is an unsigned `algosdk.Transaction` object, ready to be signed and sent
-
-The return type for the ABI method call methods are slightly different:
-
-```
-algorand.createTransaction.app{callType}MethodCall(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<BuiltTransactions>
-```
-
-Where `BuiltTransactions` looks like this:
-
-```typescript
-export interface BuiltTransactions {
-  /** The built transactions */
-  transactions: algosdk.Transaction]
-  /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
-  methodCalls: Map<number, algosdk.ABIMethod>
-  /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
-  signers: Map<number, algosdk.TransactionSigner>
-}
-```
-
-This signifies the fact that an ABI method call can actually result in multiple transactions (which in turn may have different signers), that you need ABI metadata to be able to extract the return value from the transaction result.
-
-### Sending a single transaction
-
-You can compose a single transaction via `algorand.send...`, which gives you an instance of the [`AlgorandClientTransactionSender` class. Intellisense will guide you on the different options.
-
-Further documentation is present in the related capabilities:
-
-- [App management](/algokit-utils-ts/capabilities/app/)
-- [Asset management](/algokit-utils-ts/capabilities/asset/)
-- [Algo transfers](/algokit-utils-ts/capabilities/transfer/)
-
-The signature for the calls to send a single transaction usually look like:
-
-`algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonAppCallParams & SendParams): SingleSendTransactionResult`
-
-- To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
-- `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, see the full list
-- `CommonAppCallParams` are the [common app call transaction parameters](/algokit-utils-ts/capabilities/app/#common-app-parameters) that can be specified for every single app transaction
-- `SendParams` are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
-- `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](/algokit-utils-ts/capabilities/transaction/)
-
-Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
-
-### Composing a group of transactions
-
-You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) to add a series of transactions.
-
-```typescript
-const result = algorand
-  .newGroup()
-  .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: (1).microAlgo() })
-  .addAssetOptIn({ sender: 'SENDERADDRESS', assetId: 12345n })
-  .send()
-```
-
-`newGroup()` returns a new [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) instance, which can also return the group of transactions, simulate them and other things.
-
-### Transaction parameters
-
-To create a transaction you define a set of parameters as a plain TypeScript object.
-
-There are two common base interfaces that get reused:
-
-- `CommonTransactionParams`
-  - `sender: string` - The address of the account sending the transaction.
-  - `signer?: algosdk.TransactionSigner | TransactionSignerAccount` - The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured).
-  - `rekeyTo?: string` - Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
-  - `note?: Uint8Array | string` - Note to attach to the transaction. Max of 1000 bytes.
-  - `lease?: Uint8Array | string` - Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).
-  - Fee management
-    - `staticFee?: AlgoAmount` - The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction.
-    - `extraFee?: AlgoAmount` - The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees.
-    - `maxFee?: AlgoAmount` - Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods.
-  - Round validity management
-    - `validityWindow?: number` - How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used.
-    - `firstValidRound?: bigint` - Set the first round this transaction is valid. If left undefined, the value from algod will be used. We recommend you only set this when you intentionally want this to be some time in the future.
-    - `lastValidRound?: bigint` - The last round this transaction is valid. It is recommended to use `validityWindow` instead.
-- `SendParams`
-  - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
-  - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
-  - `populateAppCallResources?: boolean` - Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
-  - `coverAppCallInnerTransactionFees?: boolean` - Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
-
-Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and we recommend reading these docs, especially when leveraging either `populateAppCallResources` or `coverAppCallInnerTransactionFees`.
-
-### Transaction configuration
-
-AlgorandClient caches network provided transaction values for you automatically to reduce network traffic. It has a set of default configurations that control this behaviour, but you have the ability to override and change the configuration of this behaviour:
-
-- `algorand.setDefaultValidityWindow(validityWindow)` - Set the default validity window (number of rounds from the current known round that the transaction will be valid to be accepted for), having a smallish value for this is usually ideal to avoid transactions that are valid for a long future period and may be submitted even after you think it failed to submit if waiting for a particular number of rounds for the transaction to be successfully submitted. The validity window defaults to 10, except in [automated testing](/algokit-utils-ts/capabilities/testing/) where it's set to 1000 when targeting LocalNet.
-- `algorand.setSuggestedParams(suggestedParams, until?)` - Set the suggested network parameters to use (optionally until the given time)
-- `algorand.setSuggestedParamsTimeout(timeout)` - Set the timeout that is used to cache the suggested network parameters (by default 3 seconds)
-- `algorand.getSuggestedParams()` - Get the current suggested network parameters object, either the cached value, or if the cache has expired a fresh value
+<CardGrid>
+  <LinkCard
+    title="Accounts"
+    href="/algokit-utils-ts/concepts/account/"
+    description="Creating, loading, and funding accounts, and signers in detail"
+  />
+  <LinkCard
+    title="Transactions"
+    href="/algokit-utils-ts/concepts/transaction/"
+    description="Payments, atomic groups, simulation, resource population, and fees"
+  />
+  <LinkCard
+    title="Applications"
+    href="/algokit-utils-ts/concepts/app/"
+    description="Deploying and calling smart contracts"
+  />
+  <LinkCard
+    title="AlgorandClient API Reference"
+    href="/algokit-utils-ts/api/"
+    description="Every method and property on the client"
+  />
+</CardGrid>
