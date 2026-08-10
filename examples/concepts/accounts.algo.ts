@@ -13,9 +13,9 @@
  */
 
 import { AlgorandClient, algo } from '@algorandfoundation/algokit-utils'
+import { MultisigAccount, SigningAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { AccountManager } from '@algorandfoundation/algokit-utils/types/account-manager'
 import { KmdAccountManager } from '@algorandfoundation/algokit-utils/types/kmd-account-manager'
-import { MultisigAccount, SigningAccount } from '@algorandfoundation/algokit-utils/types/account'
 
 // A throwaway 25-word mnemonic used only to demonstrate account recovery.
 // Never commit a real mnemonic to source control — load it from the
@@ -26,7 +26,7 @@ const EXAMPLE_MNEMONIC =
 
 /** Selects an online, well-funded KMD account, such as the default dispenser. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- the KMD account shape is untyped
-function isFundedDispenser(account: Record<string, any>): boolean {
+function isDispenser(account: Record<string, any>): boolean {
   return account.status !== 'Offline' && account.amount > 1_000_000_000
 }
 
@@ -46,7 +46,7 @@ async function main() {
   // --- Create accounts ---
 
   // example: RANDOM_ACCOUNT
-  const randomAccount = algorand.account.random()
+  const newAccount = algorand.account.random()
   // example: RANDOM_ACCOUNT
 
   // example: FROM_MNEMONIC
@@ -55,13 +55,13 @@ async function main() {
 
   // example: FROM_ENVIRONMENT
   // On LocalNet this idempotently creates and funds a KMD wallet named
-  // "MY_ACCOUNT"; against TestNet/MainNet it loads MY_ACCOUNT_MNEMONIC from
-  // the environment, so the same code runs everywhere.
-  const envAccount = await algorand.account.fromEnvironment('MY_ACCOUNT', algo(10))
+  // "DEPLOYER"; against TestNet/MainNet it loads DEPLOYER_MNEMONIC from the
+  // environment, so the same code runs everywhere.
+  const envAccount = await algorand.account.fromEnvironment('DEPLOYER', algo(10))
   // example: FROM_ENVIRONMENT
 
   // example: FROM_KMD
-  const kmdAccount = await algorand.account.fromKmd('MY_ACCOUNT')
+  const kmdAccount = await algorand.account.fromKmd('DEPLOYER')
   // example: FROM_KMD
 
   if (!mnemonicAccount.addr.toString()) throw new Error('Expected an address on the mnemonic account')
@@ -72,19 +72,20 @@ async function main() {
   // --- KMD account management ---
 
   // example: KMD_ACCOUNT_MANAGER
-  const kmdAccountManager = new KmdAccountManager(algorand.client)
+  const kmd = new KmdAccountManager(algorand.client)
   // example: KMD_ACCOUNT_MANAGER
 
   // example: KMD_MANAGER_METHODS
   // Load an account from a named wallet, filtering with a predicate
-  const dispenserAccount = await kmdAccountManager.getWalletAccount('unencrypted-default-wallet', isFundedDispenser)
+  const walletName = 'unencrypted-default-wallet'
+  const defaultDispenser = await kmd.getWalletAccount(walletName, isDispenser)
   // A dedicated method for the default LocalNet dispenser
-  const localNetDispenserAccount = await kmdAccountManager.getLocalNetDispenserAccount()
+  const localNetDispenserAccount = await kmd.getLocalNetDispenserAccount()
   // Idempotently get-or-create a named account, funding it on creation
-  const created = await kmdAccountManager.getOrCreateWalletAccount('account1', algo(2))
+  const created = await kmd.getOrCreateWalletAccount('account1', algo(2))
   // example: KMD_MANAGER_METHODS
 
-  if (!dispenserAccount) throw new Error('Expected to find a funded account in the default wallet')
+  if (!defaultDispenser) throw new Error('Expected a funded account in the default wallet')
   if (!localNetDispenserAccount) throw new Error('Expected a LocalNet dispenser account')
   if (!created) throw new Error('Expected to get or create account1')
 
@@ -92,24 +93,24 @@ async function main() {
 
   // example: DISPENSER
   // The pre-funded default LocalNet dispenser account
-  const localNetDispenser = await algorand.account.localNetDispenser()
+  const dispenser = await algorand.account.localNetDispenser()
   // A dispenser configured via environment variables (falls back to LocalNet)
-  const dispenser = await algorand.account.dispenserFromEnvironment()
+  const envDispenser = await algorand.account.dispenserFromEnvironment()
   // example: DISPENSER
 
-  if (!dispenser) throw new Error('Expected a dispenser account')
+  if (!envDispenser) throw new Error('Expected a dispenser account')
 
   // example: ENSURE_FUNDED
-  await algorand.account.ensureFunded(randomAccount.addr, localNetDispenser.addr, algo(10))
+  await algorand.account.ensureFunded(newAccount.addr, dispenser.addr, algo(10))
   // example: ENSURE_FUNDED
 
   // example: ENSURE_FUNDED_FROM_ENVIRONMENT
-  await algorand.account.ensureFundedFromEnvironment(randomAccount.addr, algo(10))
+  await algorand.account.ensureFundedFromEnvironment(newAccount.addr, algo(10))
   // example: ENSURE_FUNDED_FROM_ENVIRONMENT
 
-  const randomAccountInfo = await algorand.account.getInformation(randomAccount.addr)
-  if (randomAccountInfo.balance.algo < 10) {
-    throw new Error(`Expected ${randomAccount.addr} to hold at least 10 ALGO, but it has ${randomAccountInfo.balance.algo}`)
+  const newAccountInfo = await algorand.account.getInformation(newAccount.addr)
+  if (newAccountInfo.balance.algo < 10) {
+    throw new Error(`Expected ${newAccount.addr} to hold 10 ALGO, has ${newAccountInfo.balance.algo}`)
   }
 
   // Accounts used by the signing, multisig and rekeying sections below.
@@ -117,7 +118,7 @@ async function main() {
   const accountB = algorand.account.random()
   const accountC = algorand.account.random()
   for (const account of [accountA, accountB, accountC]) {
-    await algorand.account.ensureFunded(account.addr, localNetDispenser.addr, algo(10))
+    await algorand.account.ensureFunded(account.addr, dispenser.addr, algo(10))
   }
 
   // --- Keys & signing ---
@@ -127,7 +128,9 @@ async function main() {
   // example: SET_DEFAULT_SIGNER
 
   // example: REGISTER_SIGNERS
-  algorand.account.setSignerFromAccount(accountA).setSignerFromAccount(accountB).setSignerFromAccount(accountC)
+  algorand.account.setSignerFromAccount(accountA)
+  algorand.account.setSignerFromAccount(accountB)
+  algorand.account.setSignerFromAccount(accountC)
   // example: REGISTER_SIGNERS
 
   // example: GET_SIGNER
@@ -151,35 +154,47 @@ async function main() {
   // --- Multisig ---
 
   // example: MULTISIG
-  // A 2-of-3 multisig account: any 2 of the 3 members can authorise a transaction.
+  // A 2-of-3 multisig: any 2 of the 3 members can authorize a transaction.
   // All 3 make up the account's address, but only the 2 keys passed as
   // signingAccounts are loaded — enough to meet the threshold.
-  const multisigAccount = algorand.account.multisig({ version: 1, threshold: 2, addrs: [accountA.addr, accountB.addr, accountC.addr] }, [
-    accountA.account,
-    accountB.account,
-  ])
+  const multisig = algorand.account.multisig(
+    {
+      version: 1,
+      threshold: 2,
+      addrs: [accountA.addr, accountB.addr, accountC.addr],
+    },
+    [accountA.account, accountB.account],
+  )
 
-  // A multisig account must be funded to initialise its state on the ledger
-  await algorand.account.ensureFunded(multisigAccount.addr, localNetDispenser.addr, algo(10))
+  // A multisig account must be funded to initialize its state on the ledger
+  await algorand.account.ensureFunded(multisig.addr, dispenser.addr, algo(10))
 
   // Send a payment from the multisig account. The required number of signatures
   // is collected automatically from the signing accounts provided above.
-  await algorand.send.payment({ sender: multisigAccount.addr, receiver: accountA.addr, amount: algo(1) })
+  await algorand.send.payment({
+    sender: multisig.addr,
+    receiver: accountA.addr,
+    amount: algo(1),
+  })
   // example: MULTISIG
 
   // --- Rekeying ---
 
   // example: REKEY_ACCOUNT
-  // Rekey accountA so that accountB's key now authorises its transactions.
+  // Rekey accountA so that accountB's key now authorizes its transactions.
   // Passing a signing account for rekeyTo registers it as accountA's signer.
   await algorand.account.rekeyAccount(accountA.addr, accountB)
 
   // accountA is still the sender, but accountB's key now signs automatically.
-  const result = await algorand.send.payment({ sender: accountA.addr, receiver: accountB.addr, amount: algo(1) })
+  const result = await algorand.send.payment({
+    sender: accountA.addr,
+    receiver: accountB.addr,
+    amount: algo(1),
+  })
   // example: REKEY_ACCOUNT
 
-  console.log(`Created and funded account ${randomAccount.addr}`)
-  console.log(`Multisig account ${multisigAccount.addr} sent a payment`)
+  console.log(`Created and funded account ${newAccount.addr}`)
+  console.log(`Multisig account ${multisig.addr} sent a payment`)
   console.log(`Rekeyed accountA; payment confirmed in ${result.txIds[0]}`)
 }
 
@@ -192,17 +207,18 @@ async function main() {
  */
 export async function testNetDispenserExamples() {
   const algorand = AlgorandClient.testNet()
-  const randomAccount = algorand.account.random()
+  const account = algorand.account.random()
 
   // example: TESTNET_DISPENSER_ENSURE_FUNDED
-  const testNetDispenser = algorand.client.getTestNetDispenserFromEnvironment()
+  const dispenser = algorand.client.getTestNetDispenserFromEnvironment()
 
-  await algorand.account.ensureFundedFromTestNetDispenserApi(randomAccount.addr, testNetDispenser, algo(10))
+  await algorand.account.ensureFundedFromTestNetDispenserApi(account.addr, dispenser, algo(10))
   // example: TESTNET_DISPENSER_ENSURE_FUNDED
 
   // example: TESTNET_DISPENSER_FUND
-  // `fund` takes the amount in microAlgo and sends it regardless of the current balance
-  await testNetDispenser.fund(randomAccount.addr, algo(10).microAlgo)
+  // `fund` takes the amount in microAlgo and sends it regardless of the
+  // current balance
+  await dispenser.fund(account.addr, algo(10).microAlgo)
   // example: TESTNET_DISPENSER_FUND
 }
 
@@ -216,9 +232,10 @@ export async function kmdWalletAdminExample() {
   const algorand = AlgorandClient.defaultLocalNet()
 
   // example: KMD_WALLET_ADMIN
+  const kmd = algorand.client.kmd
   // Create a wallet, then rename it using the id returned on creation
-  const wallet = await algorand.client.kmd.createWallet('my-wallet', 'password')
-  await algorand.client.kmd.renameWallet(wallet.wallet.id, 'password', 'my-renamed-wallet')
+  const wallet = await kmd.createWallet('my-wallet', 'password')
+  await kmd.renameWallet(wallet.wallet.id, 'password', 'my-renamed-wallet')
   // example: KMD_WALLET_ADMIN
 }
 
@@ -242,7 +259,14 @@ export function registerSignerVariantsExample() {
     // Pass a sender address as the second argument for a rekeyed account
     .setSignerFromAccount(new SigningAccount(accountB.account, undefined))
     .setSignerFromAccount(
-      new MultisigAccount({ version: 1, threshold: 1, addrs: [accountA.addr, accountB.addr] }, [accountA.account, accountB.account]),
+      new MultisigAccount(
+        {
+          version: 1,
+          threshold: 1,
+          addrs: [accountA.addr, accountB.addr],
+        },
+        [accountA.account, accountB.account],
+      ),
     )
   // example: SET_SIGNER_FROM_ACCOUNT_TYPES
 }
