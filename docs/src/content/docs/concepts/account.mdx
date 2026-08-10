@@ -97,7 +97,7 @@ Other operations, such as creating and renaming a wallet, can also be performed 
   frame="none"
 />
 
-The KMD SDK is fairly low level, so to make use of it directly there is a fair bit of boilerplate. This is abstracted away into the `KmdAccountManager` class (exported from `@algorandfoundation/algokit-utils/types/kmd-account-manager`), which you can access from [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account.kmd` or instantiate directly (passing in a [`ClientManager`](/algokit-utils-ts/capabilities/client/)):
+The KMD SDK is fairly low level, so to make use of it directly there is a fair bit of boilerplate. This is abstracted away into the `KmdAccountManager` class (exported from `@algorandfoundation/algokit-utils/types/kmd-account-manager`), which you can access from [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account.kmd` or instantiate directly (passing in a `ClientManager`):
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
