@@ -121,7 +121,7 @@ The methods that are available are:
   frame="none"
 />
 
-The `predicate` is a plain function over the untyped KMD account record — `isFundedDispenser` above is `(account) => account.status !== 'Offline' && account.amount > 1_000_000_000`. `getWalletAccount` returns `undefined` when no wallet or account matches, whereas the `algorand.account.fromKmd` equivalent above throws.
+The `predicate` is a plain function over the untyped KMD account record — `isDispenser` above is `(account) => account.status !== 'Offline' && account.amount > 1_000_000_000`. `getWalletAccount` returns `undefined` when no wallet or account matches, whereas the `algorand.account.fromKmd` equivalent above throws.
 
 The same operations are exposed on [`AccountManager`](#accountmanager) via `algorand.account` (as with `fromKmd` above), with the added benefit of registering the returned account as a signer — including the `localNetDispenser` and `dispenserFromEnvironment` helpers shown under [Dispenser Accounts](#dispenser-accounts).
 
@@ -281,12 +281,12 @@ A signer can be overridden per transaction. Create an unsigned transaction and p
 
 ## Rekeying Accounts
 
-One of the unique features of Algorand is the ability to change the private key that can authorise transactions for an account. This is called rekeying.
+One of the unique features of Algorand is the ability to change the private key that can authorize transactions for an account. This is called rekeying.
 
 <LinkCard
   title="Rekeying"
   href="https://dev.algorand.co/concepts/accounts/rekeying"
-  description="How rekeying changes the authorising key for an account"
+  description="How rekeying changes the authorizing key for an account"
 />
 
 > [!WARNING]
@@ -296,7 +296,7 @@ You can issue a transaction to rekey an account by using the `rekeyAccount` func
 
 You can also pass in `rekeyTo` as a [common transaction parameter](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters) to any transaction.
 
-In the following example, `accountA` is rekeyed to `accountB`. After rekeying, a transaction from `accountA` must be authorised by `accountB`'s private key.
+In the following example, `accountA` is rekeyed to `accountB`. After rekeying, a transaction from `accountA` must be authorized by `accountB`'s private key.
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
@@ -310,7 +310,7 @@ In the following example, `accountA` is rekeyed to `accountB`. After rekeying, a
 
 ## Multisignature Accounts
 
-A multisignature account is an ordered set of addresses with a threshold and version. The threshold determines how many signatures are required to authorise a transaction (such as 2-of-3 or 3-of-5).
+A multisignature account is an ordered set of addresses with a threshold and version. The threshold determines how many signatures are required to authorize a transaction (such as 2-of-3 or 3-of-5).
 
 <LinkCard
   title="Multisignature Accounts"
@@ -318,7 +318,7 @@ A multisignature account is an ordered set of addresses with a threshold and ver
   description="How multisig works at the protocol level, weighted signers, and ARC-55 coordination"
 />
 
-Use `multisig` to register and return a multisig account with one or more signing keys loaded. The example below creates a 2-of-3 multisig account that requires only 2 signatures from the 3 possible signers to authorise transactions.
+Use `multisig` to register and return a multisig account with one or more signing keys loaded. The example below creates a 2-of-3 multisig account that requires only 2 signatures from the 3 possible signers to authorize transactions.
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
