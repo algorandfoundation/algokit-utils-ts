@@ -209,7 +209,7 @@ If you create a signer outside of the `AccountManager` — for instance when usi
 
 The core internal type that holds information about a signer/sender pair for a transaction is `TransactionSignerAccount`, which represents a `TransactionSigner` (`signer`) along with a sender address (`addr`).
 
-`TransactionSignerAccount` can be used with the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and [use-wallet](https://github.com/TxnLab/use-wallet).
+`TransactionSignerAccount` can be used with the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) and [use-wallet](https://github.com/TxnLab/use-wallet).
 
 #### Underlying Account Classes
 
@@ -333,7 +333,7 @@ Use `multisig` to register and return a multisig account with one or more signin
 
 <a id="accountmanager"></a>
 
-Throughout this page, accounts are reached through `algorand.account` — the `AccountManager` instance that an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) creates and shares. `AccountManager` is the class that gets, creates, and funds accounts, and it keeps track of the signer registered for each address so that transactions sent through [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) or the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) are signed by sender automatically, without a signer being specified per transaction.
+Throughout this page, accounts are reached through `algorand.account` — the `AccountManager` instance that an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) creates and shares. `AccountManager` is the class that gets, creates, and funds accounts, and it keeps track of the signer registered for each address so that transactions sent through [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) or the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) are signed by sender automatically, without a signer being specified per transaction.
 
 To get an instance of `AccountManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](/algokit-utils-ts/capabilities/client/)):
 

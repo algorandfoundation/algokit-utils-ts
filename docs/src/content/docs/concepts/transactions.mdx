@@ -39,7 +39,7 @@ The params object describes the transaction itself. It also carries a few fields
 | `maxRoundsToWaitForConfirmation`      | How many rounds to wait for confirmation before giving up                       |
 | `suppressLog`                         | Suppress the library's send and confirmation logging                            |
 | `populateAppCallResources`            | Auto-populate the resources an app call references (see [Applications](/algokit-utils-ts/concepts/app/)) |
-| `coverAppCallInnerTransactionFees`    | Have the caller cover inner-transaction fees (see [Transaction Composer](/algokit-utils-ts/capabilities/transaction-composer/)) |
+| `coverAppCallInnerTransactionFees`    | Have the caller cover inner-transaction fees (see [Applications](/algokit-utils-ts/concepts/app/)) |
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
@@ -105,12 +105,12 @@ Instead of sending, call `simulate()` to run the group against the current ledge
   frame="none"
 />
 
-Groups have a deeper API: resource population, per-transaction ABI returns, and inner-fee coverage. The composer behind `newGroup()` documents all of it.
+Groups have a deeper API: resource population, per-transaction ABI returns, and inner-fee coverage. [Beyond a Single Send](#beyond-a-single-send) below introduces those capabilities, and the API reference lists every method.
 
 <LinkCard
-  title="Transaction Composer"
-  href="/algokit-utils-ts/capabilities/transaction-composer/"
-  description="Building groups, simulation options, resource population, and error transformers"
+  title="Transactions API Reference"
+  href="/algokit-utils-ts/api/types/composer/classes/transactioncomposer/"
+  description="Every composer and group method, generated from the library source"
 />
 
 ### Build Unsigned Transactions
@@ -214,7 +214,7 @@ Algorand charges fees per group, not per transaction. The network only checks th
   frame="none"
 />
 
-The same mechanism covers the fees of inner transactions issued by a smart contract call, so the outer caller pays for them. AlgoKit Utils can compute that coverage for you through the `coverAppCallInnerTransactionFees` send option. See [Transaction Composer](/algokit-utils-ts/capabilities/transaction-composer/) for the details.
+The same mechanism covers the fees of inner transactions issued by a smart contract call, so the outer caller pays for them. AlgoKit Utils can compute that coverage for you through the `coverAppCallInnerTransactionFees` send option, described under [Beyond a Single Send](#beyond-a-single-send). See [Applications](/algokit-utils-ts/concepts/app/) for how app calls issue inner transactions.
 
 ## Reserve Exclusivity with a Lease
 
@@ -329,6 +329,27 @@ Taking an account offline needs no keys. Set `preventAccountFromEverParticipatin
 
 Generating participation keys is a node operation. See the [participation key management](https://dev.algorand.co/concepts/protocol/partkey-management/#_top) guide on the developer portal for how to produce the values above.
 
+## Beyond a Single Send
+
+`newGroup()` and every `algorand.send.<type>` call run through the same `TransactionComposer`. It is the engine that builds, signs, simulates, and submits transactions. It does a few things on your behalf worth knowing:
+
+**Simulate options.** [`simulate()`](#group-and-simulate-transactions) mirrors algod's simulate endpoint, so it accepts the same tuning: raising the opcode budget, allowing extra logs, or evaluating at a past round. The default preview needs none of them.
+
+**Resource population.** An application call has to name the accounts, applications, assets, and boxes it touches. The composer can discover those references by simulating the call first, then fill them in for you, so you rarely list them by hand. Learn more on the [Applications](/algokit-utils-ts/concepts/app/) page.
+
+**Fee and budget coverage.** Beyond [pooling fees across a group](#pool-fees-across-a-group), the composer can compute the fee a parent app call needs to cover the inner transactions it issues, including the op-up transactions a contract sends to raise its own opcode budget. That is the `coverAppCallInnerTransactionFees` send option.
+
+**Error transformers.** When a send or simulate fails, the composer runs any registered _error transformer_ over the raw error before throwing it. That lets you turn an opaque node or logic error into a message that means something in your application. `AppClient` registers one automatically to decode contract logic errors. Register your own on the client, so it applies to every group, or on a single group:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/transactions.algo.ts"
+  snippet="ERROR_TRANSFORMER"
+  lang="ts"
+  frame="none"
+/>
+
+A transformer returns the error unchanged when it does not apply, so several can be registered and each handles its own case.
+
 ## Other Transaction Types
 
 Payments and key registrations are built directly on this page. Two other library-built types live on their own pages:
@@ -348,25 +369,5 @@ State Proof and Heartbeat transactions exist at the protocol level too, but the 
     title="Applications"
     href="/algokit-utils-ts/concepts/app/"
     description="Deploying and calling smart contracts and making ABI method calls"
-  />
-</CardGrid>
-
-## What's Next
-
-<CardGrid>
-  <LinkCard
-    title="Algorand Client"
-    href="/algokit-utils-ts/concepts/algorand-client/"
-    description="The send pattern, signer resolution, and suggested-parameter caching"
-  />
-  <LinkCard
-    title="Transaction Composer"
-    href="/algokit-utils-ts/capabilities/transaction-composer/"
-    description="Atomic groups, simulation, and resource population in depth"
-  />
-  <LinkCard
-    title="Amounts"
-    href="/algokit-utils-ts/capabilities/amount/"
-    description="Working with AlgoAmount for Algo and microAlgo values"
   />
 </CardGrid>
