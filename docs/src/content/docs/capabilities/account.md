@@ -6,7 +6,7 @@ Account management is one of the core capabilities provided by AlgoKit Utils. It
 
 ## `AccountManager`
 
-The `AccountManager` is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
+The `AccountManager` is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
 
 To get an instance of `AccountManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) via `algorand.account` or instantiate it directly:
 
@@ -20,7 +20,7 @@ const accountManager = new AccountManager(clientManager)
 
 The core internal type that holds information about a signer/sender pair for a transaction is `TransactionSignerAccount`, which represents an `algosdk.TransactionSigner` (`signer`) along with a sender address (`addr`) as the encoded string address.
 
-Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and [useWallet](https://github.com/TxnLab/use-wallet).
+Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) and [useWallet](https://github.com/TxnLab/use-wallet).
 
 ## Registering a signer
 
