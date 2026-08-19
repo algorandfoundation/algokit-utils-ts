@@ -252,10 +252,12 @@ async function main() {
 
   algorand.registerErrorTransformer(clarifyOverspend)
   try {
+    // suppressLog keeps the library's raw error log out of the way so only the
+    // transformed message surfaces; the transformed error still throws.
     await algorand
       .newGroup()
       .addPayment({ sender: accountA.addr, receiver: accountB.addr, amount: algo(1_000_000_000) })
-      .send()
+      .send({ suppressLog: true })
   } catch (e) {
     console.error(`Transformed error: ${(e as Error).message}`)
   }
