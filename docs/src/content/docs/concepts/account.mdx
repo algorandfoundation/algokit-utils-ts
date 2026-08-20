@@ -335,7 +335,7 @@ Use `multisig` to register and return a multisig account with one or more signin
 
 Throughout this page, accounts are reached through `algorand.account` — the `AccountManager` instance that an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) creates and shares. `AccountManager` is the class that gets, creates, and funds accounts, and it keeps track of the signer registered for each address so that transactions sent through [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) or the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) are signed by sender automatically, without a signer being specified per transaction.
 
-To get an instance of `AccountManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](/algokit-utils-ts/capabilities/client/)):
+To get an instance of `AccountManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](/algokit-utils-ts/api/types/client-manager/classes/clientmanager/)):
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
