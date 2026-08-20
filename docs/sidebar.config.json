@@ -1,7 +1,7 @@
 [
   { "label": "Home", "link": "/" },
   {
-    "label": "Core Concepts",
+    "label": "Concepts",
     "autogenerate": { "directory": "concepts" }
   },
   {
