@@ -4,14 +4,89 @@
     "notes": "brace-expansion DoS via unbounded expansion length (GHSA-mh99-v99m-4gvg). Remaining path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm > brace-expansion@5.0.7); npm ships it as a bundledDependency, so the package.json override to >=5.0.8 that patches the rest of the tree cannot reach it. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-09-01.",
     "expiry": "2026-09-01"
   },
-  "1130705": {
+  "1130734": {
     "active": true,
-    "notes": "brace-expansion DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (GHSA-rgw5-rvv9-x895). Two sources: (a) the direct tree, patched only in 5.0.9 (published 2026-07-30, inside the min-release-age=7 window until 2026-08-06 — bump the override to >=5.0.9 after that); (b) the copy bundled inside npm (5.0.7), unreachable by overrides until npm ships an updated bundle. Dev-only, not shipped in the published package. Review 2026-09-01.",
+    "notes": "brace-expansion DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (GHSA-rgw5-rvv9-x895). Two sources: (a) the direct tree, patched only in 5.0.9 (published 2026-07-30, inside the min-release-age=7 window until 2026-08-06 \u2014 bump the override to >=5.0.9 after that); (b) the copy bundled inside npm (5.0.7), unreachable by overrides until npm ships an updated bundle. Dev-only, not shipped in the published package. Review 2026-09-01.",
     "expiry": "2026-09-01"
   },
   "1124287": {
     "active": true,
     "notes": "node-tar stack-overflow DoS (GHSA-r292-9mhp-454m). Remaining path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm > tar@7.5.19); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm still bundles a vulnerable tar. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130715": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130716": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130718": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130720": {
+    "active": true,
+    "notes": "fast-uri advisory reported by npm audit only because the audit DB folds in npm's own bundled tree; no fast-uri node exists in this repo's lockfile, so the dormant override was removed from package.json. Dev-only, not shipped in the published package. Exclusion silences the CI-only path; unmatched locally it is a non-fatal warning. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130722": {
+    "active": true,
+    "notes": "ip-address advisory; only reachable via npm's bundled copy node_modules/npm/node_modules/ip-address@9.0.5 (through bundled socks). npm ships it as a bundledDependency, so an override cannot reach it. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130723": {
+    "active": true,
+    "notes": "ip-address advisory; only reachable via npm's bundled copy node_modules/npm/node_modules/ip-address@9.0.5 (through bundled socks). npm ships it as a bundledDependency, so an override cannot reach it. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130724": {
+    "active": true,
+    "notes": "ip-address advisory; only reachable via npm's bundled copy node_modules/npm/node_modules/ip-address@9.0.5 (through bundled socks). npm ships it as a bundledDependency, so an override cannot reach it. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130726": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130727": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130729": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130731": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1130732": {
+    "active": true,
+    "notes": "undici advisory reported by npm audit only from npm's own bundled dependency tree and the GitHub Actions install context; no undici, @actions/http-client or @actions/github node in this repo's lockfile. Dev-only, not shipped in the published package. No local change can affect it; exclusion silences the CI-only path. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1138115": {
+    "active": true,
+    "notes": "js-yaml advisory; patched 5.2.3 is out of range for the tree's required ^4.1.0 (required by @eslint/eslintrc and cosmiconfig), and the range cannot be bumped without breaking those consumers. Dev-only, not shipped in the published package. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1138813": {
+    "active": true,
+    "notes": "nanoid advisory; patched 6.0.1 is out of range for the tree's required ^3.3.17 (required by postcss), and the range cannot be bumped without breaking that consumer. Dev-only, not shipped in the published package. Review 2026-09-01.",
+    "expiry": "2026-09-01"
+  },
+  "1139427": {
+    "active": true,
+    "notes": "nanoid: custom generators can loop indefinitely when size is zero (GHSA-2v37-7h3g-55p8). Patched 6.0.1 is out of range for the tree's required ^3.3.x (postcss); cannot bump without breaking consumers. Dev-only, not shipped in the published package. Supersedes prior advisory id 1138813. Review 2026-09-01.",
     "expiry": "2026-09-01"
   }
 }
