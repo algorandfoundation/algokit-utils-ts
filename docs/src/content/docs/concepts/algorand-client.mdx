@@ -52,7 +52,7 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ## Creating and issuing transactions
 
-`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/)).
+`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/)).
 
 ### Creating transactions
 
@@ -108,13 +108,13 @@ The signature for the calls to send a single transaction usually look like:
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, see the full list
 - `CommonAppCallParams` are the [common app call transaction parameters](/algokit-utils-ts/capabilities/app/#common-app-parameters) that can be specified for every single app transaction
 - `SendParams` are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
-- `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](/algokit-utils-ts/capabilities/transaction/)
+- `SendSingleTransactionResult` is all of the information that is relevant when [sending a single transaction to the network](/algokit-utils-ts/concepts/transactions/#transaction-results)
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
 
 ### Composing a group of transactions
 
-You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) to add a series of transactions.
+You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) to add a series of transactions.
 
 ```typescript
 const result = algorand
@@ -124,7 +124,7 @@ const result = algorand
   .send()
 ```
 
-`newGroup()` returns a new [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) instance, which can also return the group of transactions, simulate them and other things.
+`newGroup()` returns a new [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) instance, which can also return the group of transactions, simulate them and other things.
 
 ### Transaction parameters
 
@@ -152,7 +152,7 @@ There are two common base interfaces that get reused:
   - `populateAppCallResources?: boolean` - Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
   - `coverAppCallInnerTransactionFees?: boolean` - Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
 
-Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and we recommend reading these docs, especially when leveraging either `populateAppCallResources` or `coverAppCallInnerTransactionFees`.
+Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/#beyond-a-single-send) and we recommend reading those docs, especially when leveraging either `populateAppCallResources` or `coverAppCallInnerTransactionFees`.
 
 ### Transaction configuration
 

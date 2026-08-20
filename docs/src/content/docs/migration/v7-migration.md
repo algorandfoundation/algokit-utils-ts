@@ -93,7 +93,7 @@ These deprecation notices should largely let you follow the bouncing ball and ma
 - `extraProgramPages` appears as a top-level params property rather than nested in a `schema` property.
 - Round numbers, app IDs and asset IDs are now consistently `BigInt`'s rather than `number` or `number | bigint`
 - If you previously used `skipSending: true` that no longer exists; the new equivalent of that is to use `algorand.createTransaction...`, but otherwise you should use `algorand.send...` to immediately sign and send.
-- If you previously used `atc` as a parameter when constructing a transaction that no longer exists; the new equivalent is to use `algorand.newGroup()` to obtain a [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and chain method calls to build up a group of transactions and then call `execute()` to execute the group.
+- If you previously used `atc` as a parameter when constructing a transaction that no longer exists; the new equivalent is to use `algorand.newGroup()` to obtain a [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) and chain method calls to build up a group of transactions and then call `execute()` to execute the group.
 - Functions that took multiple params objects largely only take a single, combined object now (intellisense is your friend, ctrl+space or your IDE's equivalent auto-complete keyboard shortcut will help you see all of the options!).
 
 Other things to note that you may come across:
