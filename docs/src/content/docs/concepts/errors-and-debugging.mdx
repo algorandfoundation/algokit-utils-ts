@@ -1,0 +1,154 @@
+---
+title: 'Errors & Debugging'
+description: 'AlgoKit Utils decodes failed smart contract calls into logic errors with TEAL source context, lets you transform errors before they raise, and emits traces for the AlgoKit AVM Debugger.'
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+import RemoteCode from '/src/components/RemoteCode.astro'
+
+When a smart contract call fails, algod reports a `logic eval error` that identifies a program counter, a position in the compiled program rather than a line of your contract's source. AlgoKit Utils layers three capabilities on top of that raw error. It decodes the failure into a `LogicError` that locates the failing line of [Transaction Execution Approval Language (TEAL)](https://dev.algorand.co/concepts/smart-contracts/avm/) source. It lets you register error transformers that rewrite errors before they raise. And in debug mode it emits simulation traces that the AlgoKit Algorand Virtual Machine (AVM) Debugger extension can step through.
+
+<LinkCard
+  title="AlgoKit AVM Debugger"
+  href="https://marketplace.visualstudio.com/items?itemName=algorandfoundation.algokit-avm-vscode-debugger"
+  description="The VS Code extension for stepping through AVM execution traces"
+/>
+
+## Read a Logic Error
+
+Any send that fails logic evaluation raises a `LogicError` when the client holds the failing program's source map. Clients created through a factory, or clients that compiled the app's programs themselves, hold one automatically. If the app spec also names an `errorMessage` for that program counter, `AppClient` wraps the `LogicError` as the `cause` of a runtime error:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/errors_and_debugging.algo.ts"
+  snippet="INSPECT_LOGIC_ERROR"
+  lang="ts"
+  frame="none"
+/>
+
+The parsed details live on `led`: the failing `txId`, the `msg` reported by algod, the program counter as `pc`, and any simulation results as `traces`. `teal_line` is the located TEAL line, and `program` is the decoded TEAL split by line. `logicError.stack` shows the failing line in context with a `<--- Error` marker. Without a source map the error still raises, but `teal_line` is `0`.
+
+<LinkCard
+  title="Applications"
+  href="/algokit-utils-ts/concepts/app/"
+  description="Deploying apps and calling the methods whose failures raise LogicError"
+/>
+
+## Reuse Source Maps
+
+Source maps are produced when the programs compile, so a client constructed later doesn't hold them, whether it was built from an app ID or in another process entirely. `exportSourceMaps()` returns an `AppSourceMaps` you can serialize and store. `importSourceMaps()` restores the maps onto a fresh client, re-enabling TEAL line resolution in `LogicError`:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/errors_and_debugging.algo.ts"
+  snippet="EXPORT_IMPORT_SOURCE_MAPS"
+  lang="ts"
+  frame="none"
+/>
+
+`exportSourceMaps()` throws if the client has not compiled or deployed the app yet.
+
+## Transform Errors
+
+Every send funnels through a `TransactionComposer`. When sending or simulating fails, the error passes through the registered error transformers before it raises. A transformer is an async function that takes the current `Error` and returns an `Error` — either a new one to replace it or the original to leave it unchanged.
+
+`algorand.registerErrorTransformer(fn)` applies a transformer to every group and send the client creates from then on, and `unregisterErrorTransformer(fn)` removes it again:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/errors_and_debugging.algo.ts"
+  snippet="REGISTER_ERROR_TRANSFORMER"
+  lang="ts"
+  frame="none"
+/>
+
+A single group can carry its own transformers. Register them on the composer instead, where they run in registration order and each receives the previous one's output:
+
+```ts
+const composer = algorand.newGroup()
+composer.registerErrorTransformer(toDomainError)
+```
+
+A transformer must return an `Error`. Returning any other value, or throwing from the transformer, wraps the original error so the send still fails with a usable exception.
+
+The `LogicError` decoding described above is itself an error transformer, registered on the `AlgorandClient` by every `AppClient` at construction.
+
+## Configure the Library
+
+The library reads one process-wide configuration object, the `Config` singleton, imported with `import { Config } from '@algorandfoundation/algokit-utils'`. Its `configure()` method sets:
+
+- `debug` is the master switch for simulation-trace emission.
+- `projectRoot` is the directory debug artifacts are written to. It is consumed by the Node debug addon, which auto-detects an AlgoKit project by searching upward for an `.algokit.toml` file, bounded by `maxSearchDepth`.
+- `traceAll` writes traces for every send rather than only for failures. It only takes effect while `debug` is on.
+- `traceBufferSizeMb` caps stored traces at 256 megabytes by default.
+- `populateAppCallResources` sets the library-wide default for the send option of the same name.
+- `logger` replaces the logger the library writes through, covered under [Control Logging](#control-logging) below.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/refs/heads/main/examples/concepts/errors_and_debugging.algo.ts"
+  snippet="CONFIGURE_DEBUG"
+  lang="ts"
+  frame="none"
+/>
+
+<LinkCard
+  title="Transactions"
+  href="/algokit-utils-ts/concepts/transactions/"
+  description="Resource population and the send options that control it"
+/>
+
+## Capture Traces for the AVM Debugger
+
+With `debug` on, the library simulates failed sends (and every send when `traceAll` is also on) and emits a `TxnGroupSimulated` event with the simulation response. How those traces become files the AVM Debugger can open depends on the environment.
+
+In Node, install [`algokit-utils-ts-debug`](https://github.com/algorandfoundation/algokit-utils-ts-debug) alongside this package. The addon subscribes to those events and writes AVM-Debugger-compliant traces and source maps under `projectRoot`. Trace files use a `.trace.avm.json` extension. The debug utilities live in a separate package so this one stays isomorphic and does not pull Node filesystem APIs into browser bundles.
+
+In the browser the addon cannot run. Subscribe to the event yourself and persist the payload:
+
+```ts
+import { Config, EventType } from '@algorandfoundation/algokit-utils'
+
+Config.configure({ debug: true })
+Config.events.on(EventType.TxnGroupSimulated, (eventData) => {
+  Config.logger.info(JSON.stringify(eventData.simulateResponse.get_obj_for_encoding(), null, 2))
+})
+```
+
+Copy the JSON from the console, save it with a `.trace.avm.json` extension, and place it in the `debug_traces` folder of an AlgoKit contract project. If you are not using that layout, the extension presents a file picker as long as the file is inside the VS Code workspace.
+
+Open the trace files with the [AlgoKit AVM Debugger extension](https://marketplace.visualstudio.com/items?itemName=algorandfoundation.algokit-avm-vscode-debugger) to step through the TEAL with full source mapping.
+
+## Control Logging
+
+The library logs through `Config.logger`. Suppress a single send with `suppressLog: true` on the send options (or `Config.getLogger(true)` for the null logger), silence the library globally with `nullLogger`, or substitute any compatible logger of your own:
+
+```ts
+import { Config } from '@algorandfoundation/algokit-utils'
+import { nullLogger } from '@algorandfoundation/algokit-utils/types/logging'
+
+Config.configure({ logger: nullLogger })
+```
+
+`Config.withDebug(() => { ... })` runs a callback with `debug` temporarily on, then restores the previous value.
+
+## What's Next
+
+<CardGrid>
+  <LinkCard
+    title="Applications"
+    href="/algokit-utils-ts/concepts/app/"
+    description="Deploying and calling the contracts whose failures this page decodes"
+  />
+  <LinkCard
+    title="Transactions"
+    href="/algokit-utils-ts/concepts/transactions/"
+    description="Groups, simulation, resource population, and fees"
+  />
+  <LinkCard
+    title="AlgoKit AVM Debugger"
+    href="https://marketplace.visualstudio.com/items?itemName=algorandfoundation.algokit-avm-vscode-debugger"
+    description="The VS Code extension for stepping through AVM execution traces"
+  />
+  <LinkCard
+    title="LogicError API Reference"
+    href="/algokit-utils-ts/api/types/logic-error/classes/logicerror/"
+    description="The LogicError class and parsed logic-error details"
+  />
+</CardGrid>
