@@ -105,6 +105,8 @@ describe('TransactionComposer duplicate detection', () => {
     await expect(composer.build()).rejects.toThrow(/duplicate transactions/)
     await expect(composer.buildTransactions()).rejects.toThrow(/suggestedParams are cached/)
     await expect(composer.build()).rejects.toThrow(/note, lease, validityWindow/)
+    await expect(composer.build()).rejects.toThrow(/0-based indexes 0 and 1/)
+    await expect(composer.build()).rejects.toThrow(/setSuggestedParamsCacheTimeout\(0\)/)
   })
 
   test('allows identical-looking payments when a differentiating note is provided', async () => {

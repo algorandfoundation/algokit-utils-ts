@@ -1884,7 +1884,6 @@ export class TransactionComposer {
     }
   }
 
-
   /**
    * Reject transaction groups that contain more than one identical transaction.
    * Identical transactions share a transaction ID (same fields including first/last valid).
@@ -1897,10 +1896,10 @@ export class TransactionComposer {
       const firstIndex = firstIndexById.get(txId)
       if (firstIndex !== undefined) {
         throw new Error(
-          `Transaction group contains duplicate transactions (same transaction ID) at indexes ${firstIndex} and ${index} (txID: ${txId}). ` +
+          `Transaction group contains duplicate transactions (same transaction ID) at 0-based indexes ${firstIndex} and ${index} (txID: ${txId}). ` +
             `This often happens when suggestedParams are cached, so identical calls get the same firstValid/lastValid rounds. ` +
             `Make each transaction unique (for example a different note, lease, validityWindow, firstValidRound, or lastValidRound). ` +
-            `If you are using AlgorandClient, refresh suggested params with setSuggestedParamsCacheTimeout(0) or wait for the cache to expire and call getSuggestedParams again.`,
+            `If you are using AlgorandClient, refresh suggested params with setSuggestedParamsCacheTimeout(0).`,
         )
       }
       firstIndexById.set(txId, index)
