@@ -100,7 +100,42 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
 }
 
 /**
- * Converts an ARC-56 struct as an ABI tuple.
+ * True when `value` is a named ARC-56 struct object (not a tuple array, bytes, address, or transaction).
+ */
+export function isPlainAbiStructObject(value: unknown): value is ABIStruct {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
+  if (value instanceof Uint8Array) return false
+  if (typeof algosdk.Address === 'function' && value instanceof algosdk.Address) return false
+  if (typeof algosdk.Transaction === 'function' && value instanceof algosdk.Transaction) return false
+  if ('txn' in value && 'signer' in value) return false
+  if ('then' in value && typeof (value as { then?: unknown }).then === 'function') return false
+  return true
+}
+
+/**
+ * Resolves ARC-56 struct fields for an ABI type string or struct name.
+ * Matches by struct name first, then by ABI tuple type so POJO args still encode in ABI order
+ * when callers pass the tuple type (e.g. `(byte[6],byte[],byte[])`) instead of the struct name.
+ */
+export function getStructFieldsForAbiType(
+  type: string | { toString(): string },
+  structs: Record<string, StructField[]>,
+): StructField[] | undefined {
+  const typeStr = typeof type === 'string' ? type : type.toString()
+  if (structs[typeStr]) return structs[typeStr]
+  let want: string
+  try {
+    want = algosdk.ABIType.from(typeStr).toString()
+  } catch {
+    return undefined
+  }
+  return Object.values(structs).find((fields) => getABITupleTypeFromABIStructDefinition(fields, structs).toString() === want)
+}
+
+/**
+ * Converts a named ARC-56 struct object to an ABI tuple in struct-definition order.
+ *
+ * JavaScript object insertion order must not affect encoding: ABI tuples are positional.
  * @param struct The struct to convert
  * @param structFields The struct fields from an ARC-56 app spec
  * @returns The struct as a decoded ABI tuple
@@ -112,10 +147,29 @@ export function getABITupleFromABIStruct(
 ): algosdk.ABIValue[] {
   return structFields.map(({ name: key, type }) => {
     const value = struct[key]
+    if (value === undefined) {
+      throw new Error(`Missing struct field '${key}' when encoding ARC-56 struct`)
+    }
     return typeof type === 'string' && !structs[type]
       ? (value as algosdk.ABIValue)
       : getABITupleFromABIStruct(value as ABIStruct, typeof type === 'string' ? structs[type] : type, structs)
   })
+}
+
+/**
+ * If `value` is a named struct object, convert it to an ABI tuple using ARC-56 field order.
+ * Otherwise return `value` unchanged.
+ */
+export function coerceAbiStructValueToTuple(
+  value: unknown,
+  type: string | { toString(): string },
+  structs: Record<string, StructField[]>,
+  structName?: string,
+): unknown {
+  if (!isPlainAbiStructObject(value)) return value
+  const fields = (structName && structs[structName]) || getStructFieldsForAbiType(type, structs)
+  if (!fields) return value
+  return getABITupleFromABIStruct(value, fields, structs)
 }
 
 /** Decoded ARC-56 struct as a struct rather than a tuple. */
@@ -170,10 +224,15 @@ export function getABIEncodedValue(
   }
   if (structs[type]) {
     const tupleType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
-    if (Array.isArray(value)) {
-      tupleType.encode(value as algosdk.ABIValue[])
-    } else {
-      return tupleType.encode(getABITupleFromABIStruct(value as ABIStruct, structs[type], structs))
+    const tupleValue = Array.isArray(value)
+      ? (value as algosdk.ABIValue[])
+      : getABITupleFromABIStruct(value as ABIStruct, structs[type], structs)
+    return tupleType.encode(tupleValue)
+  }
+  if (isPlainAbiStructObject(value)) {
+    const fields = getStructFieldsForAbiType(type, structs)
+    if (fields) {
+      return getABITupleTypeFromABIStructDefinition(fields, structs).encode(getABITupleFromABIStruct(value, fields, structs))
     }
   }
   return algosdk.ABIType.from(type).encode(value as algosdk.ABIValue)
