@@ -17,8 +17,28 @@ import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import SimulateResponse = algosdk.modelsv2.SimulateResponse
 import modelsv2 = algosdk.modelsv2
 
-const address = (address: string | Address): Address => {
-  return typeof address === 'string' ? Address.fromString(address) : address
+/** An address string, algosdk `Address`, or an account that already has a signer. */
+export type AddressInput = string | Address | TransactionSignerAccount
+
+export const isTransactionSignerAccount = (value: unknown): value is TransactionSignerAccount => {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'addr' in value &&
+    'signer' in value &&
+    typeof (value as TransactionSignerAccount).signer === 'function'
+  )
+}
+
+export const address = (value: AddressInput): Address => {
+  if (typeof value === 'string') {
+    return Address.fromString(value)
+  }
+  if (isTransactionSignerAccount(value)) {
+    const addr = value.addr as Address | string
+    return typeof addr === 'string' ? Address.fromString(addr) : addr
+  }
+  return value
 }
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
@@ -43,8 +63,12 @@ export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & Ra
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
-  /** The address of the account sending the transaction. */
-  sender: string | Address
+  /** The address of the account sending the transaction.
+   *
+   * A `TransactionSignerAccount` (`{ addr, signer }`) is also accepted; its `signer`
+   * is used when `signer` is not passed separately.
+   */
+  sender: AddressInput
   /** The function used to sign transaction(s); if not specified then
    *  an attempt will be made to find a registered signer for the
    *  given `sender` or use a default signer (if configured).
@@ -85,7 +109,7 @@ export type CommonTransactionParams = {
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
   /** The address of the account that will receive the Algo */
-  receiver: string | Address
+  receiver: AddressInput
   /** Amount to send */
   amount: AlgoAmount
   /** If given, close the sender account and send the remaining balance to this address
@@ -1461,6 +1485,16 @@ export class TransactionComposer {
     return txnWithSigners
   }
 
+  private resolveTxnSigner(params: CommonTransactionParams): TransactionSigner {
+    if (params.signer) {
+      return 'signer' in params.signer ? params.signer.signer : params.signer
+    }
+    if (isTransactionSignerAccount(params.sender)) {
+      return params.sender.signer
+    }
+    return this.getSigner(address(params.sender))
+  }
+
   private commonTxnBuildStep<TParams extends algosdk.CommonTransactionParams>(
     buildTxn: (params: TParams) => Transaction,
     params: CommonTransactionParams,
@@ -1468,6 +1502,11 @@ export class TransactionComposer {
   ): TransactionWithContext {
     // We are going to mutate suggested params, let's create a clone first
     txnParams.suggestedParams = { ...txnParams.suggestedParams }
+    for (const [key, value] of Object.entries(txnParams)) {
+      if (isTransactionSignerAccount(value)) {
+        ;(txnParams as Record<string, unknown>)[key] = address(value)
+      }
+    }
 
     if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies algosdk.Transaction['lease']
     if (params.rekeyTo) txnParams.rekeyTo = address(params.rekeyTo) satisfies algosdk.Transaction['rekeyTo']
@@ -1639,7 +1678,7 @@ export class TransactionComposer {
 
     const txnParams = {
       appID: appId,
-      sender: params.sender,
+      sender: address(params.sender),
       suggestedParams,
       onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
       appAccounts: params.accountReferences,
@@ -1662,13 +1701,7 @@ export class TransactionComposer {
       numGlobalInts: appId === 0 ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
       numGlobalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
       method: params.method,
-      signer: includeSigner
-        ? params.signer
-          ? 'signer' in params.signer
-            ? params.signer.signer
-            : params.signer
-          : this.getSigner(params.sender)
-        : TransactionComposer.NULL_SIGNER,
+      signer: includeSigner ? this.resolveTxnSigner(params) : TransactionComposer.NULL_SIGNER,
       methodArgs: methodArgs
         .map((arg) => {
           if (typeof arg === 'object' && 'context' in arg) {
@@ -1712,8 +1745,8 @@ export class TransactionComposer {
 
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      receiver: params.receiver,
+      sender: address(params.sender),
+      receiver: address(params.receiver),
       amount: params.amount.microAlgo,
       closeRemainderTo: params.closeRemainderTo,
       suggestedParams,
@@ -1722,7 +1755,7 @@ export class TransactionComposer {
 
   private buildAssetCreate(params: AssetCreateParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
+      sender: address(params.sender),
       total: params.total,
       decimals: params.decimals ?? 0,
       assetName: params.assetName,
@@ -1740,7 +1773,7 @@ export class TransactionComposer {
 
   private buildAssetConfig(params: AssetConfigParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
+      sender: address(params.sender),
       assetIndex: params.assetId,
       suggestedParams,
       manager: params.manager,
@@ -1753,7 +1786,7 @@ export class TransactionComposer {
 
   private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
+      sender: address(params.sender),
       assetIndex: params.assetId,
       suggestedParams,
     })
@@ -1761,7 +1794,7 @@ export class TransactionComposer {
 
   private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
+      sender: address(params.sender),
       assetIndex: params.assetId,
       freezeTarget: params.account,
       frozen: params.frozen,
@@ -1771,8 +1804,8 @@ export class TransactionComposer {
 
   private buildAssetTransfer(params: AssetTransferParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      receiver: params.receiver,
+      sender: address(params.sender),
+      receiver: address(params.receiver),
       assetIndex: params.assetId,
       amount: params.amount,
       suggestedParams,
@@ -1797,7 +1830,7 @@ export class TransactionComposer {
         : undefined
 
     const sdkParams = {
-      sender: params.sender,
+      sender: address(params.sender),
       suggestedParams,
       appArgs: params.args,
       onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
@@ -1837,7 +1870,7 @@ export class TransactionComposer {
   private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
     if ('voteKey' in params) {
       return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
-        sender: params.sender,
+        sender: address(params.sender),
         voteKey: params.voteKey,
         selectionKey: params.selectionKey,
         voteFirst: params.voteFirst,
@@ -1850,7 +1883,7 @@ export class TransactionComposer {
     }
 
     return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
+      sender: address(params.sender),
       suggestedParams,
       nonParticipation: params.preventAccountFromEverParticipatingAgain,
     })
@@ -1874,9 +1907,16 @@ export class TransactionComposer {
       case 'assetTransfer':
         return [this.buildAssetTransfer(txn, suggestedParams)]
       case 'assetOptIn':
-        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)]
+        return [
+          this.buildAssetTransfer({ ...txn, sender: address(txn.sender), receiver: address(txn.sender), amount: 0n }, suggestedParams),
+        ]
       case 'assetOptOut':
-        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator }, suggestedParams)]
+        return [
+          this.buildAssetTransfer(
+            { ...txn, sender: address(txn.sender), receiver: address(txn.sender), amount: 0n, closeAssetTo: txn.creator },
+            suggestedParams,
+          ),
+        ]
       case 'keyReg':
         return [this.buildKeyReg(txn, suggestedParams)]
       default:
@@ -1902,7 +1942,7 @@ export class TransactionComposer {
       return await this.buildMethodCall(txn, suggestedParams, true)
     }
 
-    const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
+    const signer = this.resolveTxnSigner(txn)
 
     return (await this.buildTxn(txn, suggestedParams)).map(({ txn, context }) => ({ txn, signer, context }))
   }

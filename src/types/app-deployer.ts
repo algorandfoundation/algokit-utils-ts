@@ -21,6 +21,7 @@ import {
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
+  address,
   TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
@@ -346,7 +347,7 @@ export class AppDeployer {
 
     // Lookup existing app metadata
 
-    const apps = existingDeployments ?? (await this.getCreatorAppsByName(createParams.sender, ignoreCache))
+    const apps = existingDeployments ?? (await this.getCreatorAppsByName(address(createParams.sender), ignoreCache))
 
     const existingApp = apps.apps[metadata.name]
     if (!existingApp || existingApp.deleted) {
@@ -466,8 +467,8 @@ export class AppDeployer {
     return { ...existingApp, operationPerformed: 'nothing' }
   }
 
-  private updateAppLookup(sender: string | Address, appMetadata: AppMetadata) {
-    const s = typeof sender === 'string' ? sender : sender.toString()
+  private updateAppLookup(sender: Parameters<typeof address>[0], appMetadata: AppMetadata) {
+    const s = address(sender).toString()
     const lookup = this._appLookups.get(s)
     if (!lookup) {
       this._appLookups.set(s, { creator: Address.fromString(s), apps: { [appMetadata.name]: appMetadata } })
