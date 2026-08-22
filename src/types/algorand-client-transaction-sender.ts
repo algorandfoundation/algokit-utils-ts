@@ -6,6 +6,7 @@ import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdate
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import {
+  address,
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -203,7 +204,7 @@ export class AlgorandClientTransactionSender {
    */
   payment = this._send((c) => c.addPayment, {
     preLog: (params, transaction) =>
-      `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+      `Sending ${params.amount.microAlgo} µALGO from ${address(params.sender)} to ${address(params.receiver)} via transaction ${transaction.txID()}`,
   })
   /**
    * Create a new Algorand Standard Asset.
@@ -524,7 +525,7 @@ export class AlgorandClientTransactionSender {
     if (params.ensureZeroBalance) {
       let balance = 0n
       try {
-        const accountAssetInfo = await this._assetManager.getAccountInformation(params.sender, params.assetId)
+        const accountAssetInfo = await this._assetManager.getAccountInformation(address(params.sender), params.assetId)
         balance = accountAssetInfo.balance
       } catch {
         throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)
