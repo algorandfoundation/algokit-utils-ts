@@ -1,7 +1,7 @@
 {
-  "1124287": {
+  "1145647": {
     "active": true,
-    "notes": "node-tar stack-overflow DoS (GHSA-r292-9mhp-454m). Remaining path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm > tar@7.5.19); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.19.0, verified 2026-08-20) still bundles a vulnerable tar. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-10-01.",
+    "notes": "node-tar uncontrolled-recursion DoS (GHSA-r292-9mhp-454m; supersedes retired advisory ID 1124287). Remaining path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm > tar@7.5.19); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.19.0, verified 2026-08-24) still bundles a vulnerable tar. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-10-01.",
     "expiry": "2026-10-01"
   },
   "1130591": {
