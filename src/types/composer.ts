@@ -1851,7 +1851,11 @@ export class TransactionComposer {
       return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, {
         ...sdkParams,
         appIndex: appId,
-        ...('extraProgramPages' in params && params.extraProgramPages !== undefined ? { extraPages: params.extraProgramPages } : {}),
+        ...('extraProgramPages' in params && params.extraProgramPages !== undefined
+          ? { extraPages: params.extraProgramPages }
+          : 'approvalProgram' in params && 'clearStateProgram' in params && approvalProgram && clearStateProgram
+            ? { extraPages: calculateExtraProgramPages(approvalProgram, clearStateProgram) }
+            : {}),
         ...('schema' in params && params.schema
           ? {
               numGlobalInts: params.schema.globalInts,
