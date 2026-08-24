@@ -40,7 +40,7 @@ import {
   AppCreateParams,
   AppMethodCall,
   AppMethodCallTransactionArgument,
-  AppUpdateSchema,
+  AppUpdateSize,
   CommonAppCallParams,
 } from './composer'
 import { Expand } from './expand'
@@ -151,7 +151,7 @@ export type AppFactoryDeployParams = Expand<
       | Expand<AppClientMethodCallParams & CreateOnComplete & CreateSchema>
       | Expand<AppClientBareCallParams & CreateOnComplete & CreateSchema>
     /** Update transaction parameters to use if a create needs to be issued as part of deployment */
-    updateParams?: Expand<AppClientMethodCallParams & AppUpdateSchema> | Expand<AppClientBareCallParams & AppUpdateSchema>
+    updateParams?: Expand<AppClientMethodCallParams & AppUpdateSize> | Expand<AppClientBareCallParams & AppUpdateSize>
     /** Delete transaction parameters to use if a create needs to be issued as part of deployment */
     deleteParams?: AppClientMethodCallParams | AppClientBareCallParams
     /**
@@ -563,7 +563,7 @@ export class AppFactory {
         ) satisfies AppCreateMethodCall
       },
       /** Return params for a deployment update ABI call */
-      deployUpdate: (params: AppClientMethodCallParams & AppUpdateSchema) => {
+      deployUpdate: (params: AppClientMethodCallParams & AppUpdateSize) => {
         return this.getABIParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateMethodCall
       },
       /** Return params for a deployment delete ABI call */
@@ -589,7 +589,7 @@ export class AppFactory {
           ) satisfies AppCreateParams
         },
         /** Return params for a deployment update bare call */
-        deployUpdate: (params?: AppClientBareCallParams & AppUpdateSchema) => {
+        deployUpdate: (params?: AppClientBareCallParams & AppUpdateSize) => {
           return this.getBareParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateParams
         },
         /** Return params for a deployment delete bare call */

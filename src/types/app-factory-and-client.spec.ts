@@ -176,7 +176,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
       onUpdate: 'update',
       updateParams: {
-        schema: { globalInts: 5, globalByteSlices: 3 },
+        appSize: { globalInts: 5, globalByteSlices: 3, extraProgramPages: 0 },
       },
     })
 
@@ -456,7 +456,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       method: 'update_abi',
       args: ['string_io'],
       deployTimeParams,
-      schema: { globalInts: 5, globalByteSlices: 3 },
+      appSize: { globalInts: 5, globalByteSlices: 3, extraProgramPages: 0 },
     })
 
     expect(call.return).toBe('string_io')

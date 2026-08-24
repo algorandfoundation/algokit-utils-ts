@@ -208,7 +208,7 @@ If you want to construct a custom deploy call, use the underlying [`algorand.app
 
 Deploy method aside, the ability to make update and delete calls happens after there is an instance of an app so are done via `AppClient`. The semantics of this are no different than [other calls](#calling-the-app), with the caveat that the update call is a bit different to the others since the code will be compiled when constructing the update params (making it an async method) and the update calls thus optionally takes compilation parameters (`deployTimeParams`, `updatable` and `deletable`) for [deploy-time parameter replacements and deploy-time immutability and permanence control](/algokit-utils-ts/capabilities/app-deploy/#compilation-and-template-substitution).
 
-Update calls also optionally take the `schema` and `extraProgramPages` parameters to [resize the app](/algokit-utils-ts/capabilities/app/#resizing-an-app) as part of the update.
+Update calls also optionally take the `appSize` parameter to [resize the app](/algokit-utils-ts/capabilities/app/#resizing-an-app) as part of the update.
 
 ## Calling the app
 

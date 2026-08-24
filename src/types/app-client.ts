@@ -67,7 +67,7 @@ import {
   AppMethodCallTransactionArgument,
   AppUpdateMethodCall,
   AppUpdateParams,
-  AppUpdateSchema,
+  AppUpdateSize,
   CommonAppCallParams,
   PaymentParams,
 } from './composer'
@@ -1193,7 +1193,7 @@ export class AppClient {
   private getBareParamsMethods() {
     return {
       /** Return params for an update call, including deploy-time TEAL template replacements and compilation if provided */
-      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & AppUpdateSchema) => {
+      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & AppUpdateSize) => {
         return this.getBareParams(
           {
             ...params,
@@ -1228,7 +1228,7 @@ export class AppClient {
   private getBareCreateTransactionMethods() {
     return {
       /** Returns a transaction for an update call, including deploy-time TEAL template replacements and compilation if provided */
-      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & AppUpdateSchema) => {
+      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & AppUpdateSize) => {
         return this._algorand.createTransaction.appUpdate(await this.params.bare.update(params))
       },
       /** Returns a transaction for an opt-in call */
@@ -1257,7 +1257,7 @@ export class AppClient {
   private getBareSendMethods() {
     return {
       /** Signs and sends an update call, including deploy-time TEAL template replacements and compilation if provided */
-      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & AppUpdateSchema & SendParams) => {
+      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & AppUpdateSize & SendParams) => {
         const compiled = await this.compile(params)
         return {
           ...(await this._algorand.send.appUpdate(await this.params.bare.update(params))),
@@ -1307,7 +1307,7 @@ export class AppClient {
        * @param params The parameters for the update ABI method call
        * @returns The parameters which can be used to create an update ABI method call
        */
-      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & AppUpdateSchema) => {
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & AppUpdateSize) => {
         return (await this.getABIParams(
           {
             ...params,
@@ -1363,7 +1363,7 @@ export class AppClient {
        * @param params The parameters for the update ABI method call
        * @returns The result of sending the update ABI method call
        */
-      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & AppUpdateSchema & SendParams) => {
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & AppUpdateSize & SendParams) => {
         const compiled = await this.compile(params)
         return {
           ...(await this.processMethodCallReturn(
@@ -1485,7 +1485,7 @@ export class AppClient {
        * @param params The parameters for the update ABI method call
        * @returns The transactions which can be used to create an update ABI method call
        */
-      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & AppUpdateSchema) => {
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & AppUpdateSize) => {
         return this._algorand.createTransaction.appUpdateMethodCall(await this.params.update(params))
       },
       /**

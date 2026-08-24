@@ -48,7 +48,11 @@ describe('app', () => {
     await algorand.send.appUpdate({
       appId,
       ...programs,
-      schema: { globalInts: schema.globalInts + 2, globalByteSlices: schema.globalByteSlices + 1 },
+      appSize: {
+        globalInts: schema.globalInts + 2,
+        globalByteSlices: schema.globalByteSlices + 1,
+        extraProgramPages: 0,
+      },
       sender: testAccount,
     })
 
@@ -60,11 +64,16 @@ describe('app', () => {
     expect(updated.localByteSlices).toBe(schema.localByteSlices)
   })
 
-  test('appUpdate adds extra program pages while keeping the existing global state schema', async () => {
+  test('appUpdate adds extra program pages', async () => {
     const { algorand, testAccount } = localnet.context
     const { appId, programs, schema } = await createUpdatableApp()
 
-    await algorand.send.appUpdate({ appId, ...programs, extraProgramPages: 1, sender: testAccount })
+    await algorand.send.appUpdate({
+      appId,
+      ...programs,
+      appSize: { globalInts: schema.globalInts, globalByteSlices: schema.globalByteSlices, extraProgramPages: 1 },
+      sender: testAccount,
+    })
 
     const updated = await algorand.app.getById(appId)
     expect(updated.extraProgramPages).toBe(1)
@@ -72,7 +81,7 @@ describe('app', () => {
     expect(updated.globalByteSlices).toBe(schema.globalByteSlices)
   })
 
-  test('appUpdate without a schema keeps the existing app size', async () => {
+  test('appUpdate without an app size keeps the existing app size', async () => {
     const { algorand, testAccount } = localnet.context
     const { appId, programs, schema } = await createUpdatableApp()
 
