@@ -391,15 +391,39 @@ export type AppCreateParams = Expand<
   }
 >
 
+/**
+ * The size properties of an app that an app update transaction can change.
+ *
+ * Both properties require AVM 13 (consensus v42) or later; before that an app's size is fixed at creation.
+ *
+ * The AVM applies the global state schema and the extra program pages of an update together, so if only one of
+ * these properties is specified the other one is automatically resolved to the app's current on-chain value.
+ * If neither is specified the app keeps its current size.
+ */
+export type AppUpdateSchema = {
+  /** The global state schema to resize the app to; the local state schema is immutable once the app is created.
+   *
+   * The schema can't be reduced below the global state the app has already stored. */
+  schema?: {
+    /** The number of integers saved in global state. */
+    globalInts: number
+    /** The number of byte slices saved in global state. */
+    globalByteSlices: number
+  }
+  /** The number of extra pages to allocate for the programs; the app can't be given fewer pages than its programs need. */
+  extraProgramPages?: number
+}
+
 /** Parameters to define an app update transaction */
 export type AppUpdateParams = Expand<
-  CommonAppCallParams & {
-    onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC
-    /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
-    approvalProgram: string | Uint8Array
-    /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
-    clearStateProgram: string | Uint8Array
-  }
+  CommonAppCallParams &
+    AppUpdateSchema & {
+      onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC
+      /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
+      approvalProgram: string | Uint8Array
+      /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
+      clearStateProgram: string | Uint8Array
+    }
 >
 
 /** Parameters to define an application call transaction. */
@@ -1637,6 +1661,9 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
+    const { schema, createSchema, extraProgramPages } = getAppSizeParams(params)
+    const appSizeChange = appId === 0 ? undefined : await this.resolveAppSizeChange(BigInt(appId), schema, extraProgramPages)
+
     const txnParams = {
       appID: appId,
       sender: params.sender,
@@ -1651,16 +1678,12 @@ export class TransactionComposer {
       clearProgram: clearStateProgram,
       extraPages:
         appId === 0
-          ? 'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : approvalProgram
-              ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
-              : 0
-          : undefined,
-      numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
-      numLocalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.localByteSlices ?? 0) : 0) : undefined,
-      numGlobalInts: appId === 0 ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
-      numGlobalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
+          ? (extraProgramPages ?? (approvalProgram ? calculateExtraProgramPages(approvalProgram, clearStateProgram) : 0))
+          : appSizeChange?.extraPages,
+      numLocalInts: appId === 0 ? (createSchema?.localInts ?? 0) : undefined,
+      numLocalByteSlices: appId === 0 ? (createSchema?.localByteSlices ?? 0) : undefined,
+      numGlobalInts: appId === 0 ? (createSchema?.globalInts ?? 0) : appSizeChange?.numGlobalInts,
+      numGlobalByteSlices: appId === 0 ? (createSchema?.globalByteSlices ?? 0) : appSizeChange?.numGlobalByteSlices,
       method: params.method,
       signer: includeSigner
         ? params.signer
@@ -1811,6 +1834,8 @@ export class TransactionComposer {
       rejectVersion: params.rejectVersion,
     }
 
+    const { schema, createSchema, extraProgramPages } = getAppSizeParams(params)
+
     if (appId === 0n) {
       if (sdkParams.approvalProgram === undefined || sdkParams.clearProgram === undefined) {
         throw new Error('approvalProgram and clearStateProgram are required for application creation')
@@ -1818,19 +1843,39 @@ export class TransactionComposer {
 
       return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
         ...sdkParams,
-        extraPages:
-          'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
-        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
-        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
-        numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
-        numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
+        extraPages: extraProgramPages ?? calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
+        numLocalInts: createSchema?.localInts ?? 0,
+        numLocalByteSlices: createSchema?.localByteSlices ?? 0,
+        numGlobalInts: createSchema?.globalInts ?? 0,
+        numGlobalByteSlices: createSchema?.globalByteSlices ?? 0,
         approvalProgram: approvalProgram!,
         clearProgram: clearStateProgram!,
       })
     } else {
-      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
+      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, {
+        ...sdkParams,
+        appIndex: appId,
+        ...(await this.resolveAppSizeChange(appId, schema, extraProgramPages)),
+      })
+    }
+  }
+
+  /**
+   * Resolves the size properties to set on an app update transaction, or `undefined` if no resize was requested
+   * (in which case the transaction is built without them and the app keeps its current size).
+   *
+   * The AVM applies an update's global state schema and extra program pages together, so whenever only one of them
+   * is specified the other is resolved from the app's current on-chain value rather than being left at zero.
+   */
+  private async resolveAppSizeChange(appId: bigint, schema: AppUpdateSchema['schema'], extraProgramPages: number | undefined) {
+    if (schema === undefined && extraProgramPages === undefined) return undefined
+
+    const existing = schema === undefined || extraProgramPages === undefined ? await this.appManager.getById(appId) : undefined
+
+    return {
+      numGlobalInts: schema?.globalInts ?? existing!.globalInts,
+      numGlobalByteSlices: schema?.globalByteSlices ?? existing!.globalByteSlices,
+      extraPages: extraProgramPages ?? existing!.extraProgramPages,
     }
   }
 
@@ -2189,6 +2234,23 @@ export class TransactionComposer {
     const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : asJson(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
+  }
+}
+
+/**
+ * Extracts the size related parameters (state schema and extra program pages) from any app call params.
+ *
+ * `createSchema` is only populated when the params carry a create schema (i.e. one that includes the
+ * local state schema), since the local state schema can only be set when an app is created.
+ */
+function getAppSizeParams(
+  params: AppCallParams | AppCreateParams | AppUpdateParams | AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
+) {
+  const schema = 'schema' in params ? params.schema : undefined
+  return {
+    schema,
+    createSchema: schema && 'localInts' in schema ? (schema as NonNullable<AppCreateParams['schema']>) : undefined,
+    extraProgramPages: 'extraProgramPages' in params ? params.extraProgramPages : undefined,
   }
 }
 

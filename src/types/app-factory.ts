@@ -35,7 +35,14 @@ import {
   DeployAppUpdateParams,
 } from './app-deployer'
 import { AppSpec } from './app-spec'
-import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
+import {
+  AppCreateMethodCall,
+  AppCreateParams,
+  AppMethodCall,
+  AppMethodCallTransactionArgument,
+  AppUpdateSchema,
+  CommonAppCallParams,
+} from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
 import SourceMap = algosdk.ProgramSourceMap
@@ -144,7 +151,7 @@ export type AppFactoryDeployParams = Expand<
       | Expand<AppClientMethodCallParams & CreateOnComplete & CreateSchema>
       | Expand<AppClientBareCallParams & CreateOnComplete & CreateSchema>
     /** Update transaction parameters to use if a create needs to be issued as part of deployment */
-    updateParams?: AppClientMethodCallParams | AppClientBareCallParams
+    updateParams?: Expand<AppClientMethodCallParams & AppUpdateSchema> | Expand<AppClientBareCallParams & AppUpdateSchema>
     /** Delete transaction parameters to use if a create needs to be issued as part of deployment */
     deleteParams?: AppClientMethodCallParams | AppClientBareCallParams
     /**
@@ -556,7 +563,7 @@ export class AppFactory {
         ) satisfies AppCreateMethodCall
       },
       /** Return params for a deployment update ABI call */
-      deployUpdate: (params: AppClientMethodCallParams) => {
+      deployUpdate: (params: AppClientMethodCallParams & AppUpdateSchema) => {
         return this.getABIParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateMethodCall
       },
       /** Return params for a deployment delete ABI call */
@@ -582,7 +589,7 @@ export class AppFactory {
           ) satisfies AppCreateParams
         },
         /** Return params for a deployment update bare call */
-        deployUpdate: (params?: AppClientBareCallParams) => {
+        deployUpdate: (params?: AppClientBareCallParams & AppUpdateSchema) => {
           return this.getBareParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateParams
         },
         /** Return params for a deployment delete bare call */

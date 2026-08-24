@@ -143,6 +143,10 @@ The base type for specifying an app update transaction is `AppUpdateParams` (ext
 - `onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC` - On Complete can either be omitted or set to update
 - `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 - `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
+- `schema?` - The global state schema to resize the app to. It is an object with:
+  - `globalInts: number` - The number of integers saved in global state.
+  - `globalByteSlices: number` - The number of byte slices saved in global state.
+- `extraProgramPages?: number` - The number of extra pages to allocate for the programs.
 
 If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via `algorand.app.getCompilationResult` (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
@@ -191,6 +195,35 @@ await algorand.send.appUpdateMethodCall({
   clearStateProgram: 'TEALCODE',
   method: method,
   args: ["arg1_value"]
+})
+```
+
+#### Resizing an app
+
+`schema` and `extraProgramPages` require AVM 13 (consensus v42) or later; before that an app's size is fixed when it's created. Both can only be increased: the global state schema can't be reduced below the state the app has already stored, the app can't be given fewer pages than its programs need, and the local state schema stays immutable. Growing an app also costs minimum balance, since the account sending the update takes on the app's size sponsor role and needs to hold the minimum balance for its extra program pages and global state slots.
+
+If neither property is specified the app keeps its current size. The AVM applies both properties together, so if you specify only one of them then the other is automatically resolved to the app's current on-chain value (which costs an extra algod call to look the app up).
+
+```typescript
+// Give the app 3 more global ints, keeping its current extra program pages
+await algorand.send.appUpdate({
+  sender: 'SENDERADDRESS',
+  appId: 12345n,
+  approvalProgram: 'TEALCODE',
+  clearStateProgram: 'TEALCODE',
+  schema: {
+    globalInts: 5,
+    globalByteSlices: 2,
+  },
+})
+
+// Give the app 4 extra program pages, keeping its current global state schema
+await algorand.send.appUpdate({
+  sender: 'SENDERADDRESS',
+  appId: 12345n,
+  approvalProgram: 'TEALCODE',
+  clearStateProgram: 'TEALCODE',
+  extraProgramPages: 4,
 })
 ```
 

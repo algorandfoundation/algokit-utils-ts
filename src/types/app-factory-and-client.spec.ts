@@ -163,6 +163,30 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
   })
 
+  test('Deploy app - update expands the global state schema', async () => {
+    const { result: createdApp } = await factory.deploy({
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      updatable: true,
+    })
+    const { result: app } = await factory.deploy({
+      deployTimeParams: {
+        VALUE: 2,
+      },
+      onUpdate: 'update',
+      updateParams: {
+        schema: { globalInts: 5, globalByteSlices: 3 },
+      },
+    })
+
+    invariant(app.operationPerformed === 'update')
+    expect(app.appId).toBe(createdApp.appId)
+    const appInfo = await localnet.algorand.app.getById(app.appId)
+    expect(appInfo.globalInts).toBe(5)
+    expect(appInfo.globalByteSlices).toBe(3)
+  })
+
   test('Deploy app - update (abi)', async () => {
     const { result: createdApp } = await factory.deploy({
       deployTimeParams: {
@@ -416,6 +440,29 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(call.return)
     expect(call.return).toBe('string_io')
     expect(call.compiledApproval).toBeTruthy()
+  })
+
+  test('Update app with abi and expand the global state schema', async () => {
+    const deployTimeParams = {
+      UPDATABLE: 1,
+      DELETABLE: 0,
+      VALUE: 1,
+    }
+    const { appClient } = await factory.send.bare.create({
+      deployTimeParams,
+    })
+
+    const call = await appClient.send.update({
+      method: 'update_abi',
+      args: ['string_io'],
+      deployTimeParams,
+      schema: { globalInts: 5, globalByteSlices: 3 },
+    })
+
+    expect(call.return).toBe('string_io')
+    const app = await localnet.algorand.app.getById(appClient.appId)
+    expect(app.globalInts).toBe(5)
+    expect(app.globalByteSlices).toBe(3)
   })
 
   test('Delete app with abi', async () => {
