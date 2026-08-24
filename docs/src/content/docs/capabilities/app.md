@@ -66,12 +66,12 @@ The base type for specifying an app creation transaction is `AppCreateParams` (e
 - `onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.ClearStateOC>` - The on-completion action to specify for the call; defaults to NoOp and allows any on-completion apart from clear state.
 - `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 - `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
-- `schema?` - The storage schema to request for the created app. This is immutable once the app is created. It is an object with:
+- `schema?` - The storage schema to request for the created app. Local schema is immutable once the app is created; global schema can be changed during an app update. It is an object with:
   - `globalInts: number` - The number of integers saved in global state.
   - `globalByteSlices: number` - The number of byte slices saved in global state.
   - `localInts: number` - The number of integers saved in local state.
   - `localByteSlices: number` - The number of byte slices saved in local state.
-- `extraProgramPages?: number` - Number of extra pages required for the programs. This is immutable once the app is created.
+- `extraProgramPages?: number` - Number of extra pages required for the programs. This can be changed during an app update.
 
 If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via `algorand.app.getCompilationResult` (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
@@ -143,6 +143,8 @@ The base type for specifying an app update transaction is `AppUpdateParams` (ext
 - `onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC` - On Complete can either be omitted or set to update
 - `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 - `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
+- `schema?` - The global storage schema for the app. It is an object with `globalInts: number` and `globalByteSlices: number`. Increasing either value moves the app's minimum balance requirement to the transaction sender.
+- `extraProgramPages?: number` - Number of extra pages required for the programs. Increasing this value moves the app's minimum balance requirement to the transaction sender.
 
 If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via `algorand.app.getCompilationResult` (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
@@ -155,6 +157,11 @@ await algorand.send.appUpdate({
   sender: 'SENDERADDRESS',
   approvalProgram: "TEALCODE",
   clearStateProgram: "TEALCODE",
+  schema: {
+    globalInts: 1,
+    globalByteSlices: 2,
+  },
+  extraProgramPages: 1,
   onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
   args: [new Uint8Array(1, 2, 3, 4)]
   accountReferences: ["ACCOUNT_1"]

@@ -57,7 +57,7 @@ export const getTestingAppDeployParams = async (deployment: {
       schema: deployment.breakSchema
         ? {
             ...contract.stateSchema,
-            globalByteSlices: contract.stateSchema.globalByteSlices + 1,
+            localByteSlices: contract.stateSchema.localByteSlices + 1,
           }
         : contract.stateSchema,
     },

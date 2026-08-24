@@ -171,7 +171,7 @@ export interface AppClientDeployCoreParams {
    * If this is not specified then it will automatically be determined based on the AppSpec definition
    **/
   allowDelete?: boolean
-  /** What action to perform if a schema break is detected */
+  /** What action to perform if a breaking local schema change is detected */
   onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
   onUpdate?: 'update' | 'replace' | 'append' | 'fail' | OnUpdate

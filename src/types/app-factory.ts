@@ -105,7 +105,7 @@ export type CreateOnComplete = {
 
 /** Specifies a schema used for creating an app */
 export type CreateSchema = {
-  /** The state schema for the app. This is immutable once the app is created. By default uses the ARC32/ARC-56 spec. */
+  /** The state schema for the app. Local schema is immutable once the app is created; global schema can be changed during an app update. By default uses the ARC32/ARC-56 spec. */
   schema?: {
     /** The number of integers saved in global state. */
     globalInts: number
@@ -118,7 +118,7 @@ export type CreateSchema = {
   }
   /** Number of extra pages required for the programs.
    * Defaults to the number needed for the programs in this call if not specified.
-   * This is immutable once the app is created. */
+   * This can be changed during an app update. */
   extraProgramPages?: number
 }
 

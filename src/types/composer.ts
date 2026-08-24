@@ -373,7 +373,7 @@ export type AppCreateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     clearStateProgram: string | Uint8Array
-    /** The state schema for the app. This is immutable once the app is created. */
+    /** The state schema for the app. Local schema is immutable once the app is created; global schema can be changed during an app update. */
     schema?: {
       /** The number of integers saved in global state. */
       globalInts: number
@@ -386,7 +386,7 @@ export type AppCreateParams = Expand<
     }
     /** Number of extra pages required for the programs.
      * Defaults to the number needed for the programs in this call if not specified.
-     * This is immutable once the app is created. */
+     * This can be changed during an app update. */
     extraProgramPages?: number
   }
 >
@@ -399,6 +399,18 @@ export type AppUpdateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     clearStateProgram: string | Uint8Array
+    /** The global state schema for the app. An increase during update will move the MBR for the app to the sender of the transaction. */
+    schema?: {
+      /** The number of integers saved in global state. */
+      globalInts: number
+      /** The number of byte slices saved in global state. */
+      globalByteSlices: number
+    }
+    /** Number of extra pages required for the programs.
+     * Defaults to the number needed for the programs in this call if not specified.
+     * An increase during update will move the MBR for the app to the sender of the transaction.
+     */
+    extraProgramPages?: number
   }
 >
 
@@ -1657,8 +1669,14 @@ export class TransactionComposer {
               ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
               : 0
           : undefined,
-      numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
-      numLocalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.localByteSlices ?? 0) : 0) : undefined,
+      numLocalInts:
+        appId === 0 ? ('schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0) : undefined,
+      numLocalByteSlices:
+        appId === 0
+          ? 'schema' in params && params.schema && 'localByteSlices' in params.schema
+            ? params.schema.localByteSlices
+            : 0
+          : undefined,
       numGlobalInts: appId === 0 ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
       numGlobalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
       method: params.method,
@@ -1822,15 +1840,25 @@ export class TransactionComposer {
           'extraProgramPages' in params && params.extraProgramPages !== undefined
             ? params.extraProgramPages
             : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
-        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
-        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
+        numLocalInts: 'schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0,
+        numLocalByteSlices: 'schema' in params && params.schema && 'localByteSlices' in params.schema ? params.schema.localByteSlices : 0,
         numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
         numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
         approvalProgram: approvalProgram!,
         clearProgram: clearStateProgram!,
       })
     } else {
-      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
+      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, {
+        ...sdkParams,
+        appIndex: appId,
+        ...('extraProgramPages' in params && params.extraProgramPages !== undefined ? { extraPages: params.extraProgramPages } : {}),
+        ...('schema' in params && params.schema
+          ? {
+              numGlobalInts: params.schema.globalInts,
+              numGlobalByteSlices: params.schema.globalByteSlices,
+            }
+          : {}),
+      })
     }
   }
 
