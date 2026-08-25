@@ -399,18 +399,24 @@ export type AppUpdateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     clearStateProgram: string | Uint8Array
-    /** The global state schema for the app. An increase during update will move the MBR for the app to the sender of the transaction. */
-    schema?: {
-      /** The number of integers saved in global state. */
-      globalInts: number
-      /** The number of byte slices saved in global state. */
-      globalByteSlices: number
-    }
-    /** Number of extra pages required for the programs.
-     * Defaults to the number needed for the programs in this call if not specified.
-     * An increase during update will move the MBR for the app to the sender of the transaction.
+    /**
+     * Change size-related parameters for the application.
+     * An increase to any of these values during update will move the MBR for the app to the sender of the transaction.
      */
-    extraProgramPages?: number
+    resize?: {
+      /** The global state schema for the app. */
+      schema: {
+        /** The number of integers saved in global state. */
+        globalInts: number
+        /** The number of byte slices saved in global state. */
+        globalByteSlices: number
+      }
+      /**
+       * Number of extra pages required for the programs.
+       * Defaults to the number needed for the programs in this call if not specified.
+       */
+      extraProgramPages?: number
+    }
   }
 >
 
@@ -1668,7 +1674,9 @@ export class TransactionComposer {
             : approvalProgram
               ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
               : 0
-          : undefined,
+          : 'resize' in params && params.resize?.extraProgramPages !== undefined
+            ? params.resize.extraProgramPages
+            : undefined,
       numLocalInts:
         appId === 0 ? ('schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0) : undefined,
       numLocalByteSlices:
@@ -1851,15 +1859,15 @@ export class TransactionComposer {
       return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, {
         ...sdkParams,
         appIndex: appId,
-        ...('extraProgramPages' in params && params.extraProgramPages !== undefined
-          ? { extraPages: params.extraProgramPages }
+        ...('resize' in params && params.resize?.extraProgramPages !== undefined
+          ? { extraPages: params.resize.extraProgramPages }
           : 'approvalProgram' in params && 'clearStateProgram' in params && approvalProgram && clearStateProgram
             ? { extraPages: calculateExtraProgramPages(approvalProgram, clearStateProgram) }
             : {}),
-        ...('schema' in params && params.schema
+        ...('resize' in params && params.resize
           ? {
-              numGlobalInts: params.schema.globalInts,
-              numGlobalByteSlices: params.schema.globalByteSlices,
+              numGlobalInts: params.resize.schema.globalInts,
+              numGlobalByteSlices: params.resize.schema.globalByteSlices,
             }
           : {}),
       })

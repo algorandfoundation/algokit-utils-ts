@@ -206,7 +206,7 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'update',
     })) as AppDeployParams
-    deployment2.updateParams.schema = schema
+    deployment2.updateParams.resize = { schema }
 
     const result2 = await algorand.appDeployer.deploy(deployment2)
     const app = await algorand.app.getById(result2.appId)
@@ -230,11 +230,13 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'update',
     })) as AppDeployParams
-    deployment2.updateParams.schema = {
-      globalInts: deployment1.createParams.schema!.globalInts,
-      globalByteSlices: deployment1.createParams.schema!.globalByteSlices,
+    deployment2.updateParams.resize = {
+      schema: {
+        globalInts: deployment1.createParams.schema!.globalInts,
+        globalByteSlices: deployment1.createParams.schema!.globalByteSlices,
+      },
+      extraProgramPages: 1,
     }
-    deployment2.updateParams.extraProgramPages = 1
 
     const result2 = await algorand.appDeployer.deploy(deployment2)
     const app = await algorand.app.getById(result2.appId)
