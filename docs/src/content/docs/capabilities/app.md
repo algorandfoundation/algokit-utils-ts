@@ -143,7 +143,8 @@ The base type for specifying an app update transaction is `AppUpdateParams` (ext
 - `onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC` - On Complete can either be omitted or set to update
 - `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 - `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
-- `resize?` - Changes the app's size-related parameters. It contains a required `schema` object with `globalInts: number` and `globalByteSlices: number`, and an optional `extraProgramPages?: number`. Increasing either value moves the app's minimum balance requirement to the transaction sender.
+- `allowStateShrinking?: boolean` - Whether inferred sizing may shrink state. The deployer applies this to global schema; all updates apply it to inferred extra program pages. Defaults to `false`.
+- `resize?` - Changes the app's size-related parameters. It contains a required `schema` object with `globalInts: number` and `globalByteSlices: number`, and an optional `extraPages?: number`. Increasing either value moves the app's minimum balance requirement to the transaction sender.
 
 If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via `algorand.app.getCompilationResult` (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
@@ -161,7 +162,7 @@ await algorand.send.appUpdate({
       globalInts: 1,
       globalByteSlices: 2,
     },
-    extraProgramPages: 1,
+    extraPages: 1,
   },
   onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
   args: [new Uint8Array(1, 2, 3, 4)]

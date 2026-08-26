@@ -399,6 +399,7 @@ export type AppUpdateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     clearStateProgram: string | Uint8Array
+    /** Whether inferred sizing may shrink state. The deployer applies this to global schema; all updates apply it to inferred extra program pages. Defaults to false. */
     allowStateShrinking?: boolean
     /**
      * Change size-related parameters for the application.

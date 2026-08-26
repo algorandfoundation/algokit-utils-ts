@@ -370,11 +370,24 @@ export class AppDeployer {
     const newClearBytes = Buffer.from(clearStateProgram)
     const newApproval = newApprovalBytes.toString('base64')
     const newClear = newClearBytes.toString('base64')
-    const newExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+    const newExtraPages = updateParams.resize?.extraPages ?? calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+    const updateResize =
+      updateParams.resize ??
+      ({
+        schema: {
+          globalInts: createParams.schema?.globalInts ?? 0,
+          globalByteSlices: createParams.schema?.globalByteSlices ?? 0,
+        },
+      } satisfies NonNullable<AppUpdateParams['resize']>)
 
     // Check for changes
 
-    const isUpdate = newApproval !== existingApproval || newClear !== existingClear
+    const isUpdate =
+      newApproval !== existingApproval ||
+      newClear !== existingClear ||
+      existingAppRecord.globalInts !== updateResize.schema.globalInts ||
+      existingAppRecord.globalByteSlices !== updateResize.schema.globalByteSlices ||
+      extraPages !== newExtraPages
     const isSchemaBreak =
       existingAppRecord.localInts < (createParams.schema?.localInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0)
@@ -432,6 +445,18 @@ export class AppDeployer {
       }
 
       if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
+        const shrinksGlobalSchema =
+          updateResize.schema.globalInts < existingAppRecord.globalInts ||
+          updateResize.schema.globalByteSlices < existingAppRecord.globalByteSlices
+        if (shrinksGlobalSchema && !updateParams.allowStateShrinking) {
+          throw new Error(
+            `This app update will shrink the global schema for ${existingApp.appId} from ` +
+              `${existingAppRecord.globalInts} ints and ${existingAppRecord.globalByteSlices} byte slices to ` +
+              `${updateResize.schema.globalInts} ints and ${updateResize.schema.globalByteSlices} byte slices. ` +
+              'To allow this, set "allowStateShrinking" to true',
+          )
+        }
+
         if (existingApp.updatable) {
           Config.getLogger(sendParams?.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
         } else {
@@ -440,6 +465,7 @@ export class AppDeployer {
           )
         }
 
+        updateParams.resize = updateResize
         return await updateApp(existingApp)
       }
 

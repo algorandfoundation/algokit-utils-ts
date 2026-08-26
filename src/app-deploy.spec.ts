@@ -203,10 +203,9 @@ describe('deploy-app', () => {
     const deployment2 = (await getTestingAppDeployParams({
       sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
-      codeInjectionValue: 2,
       onUpdate: 'update',
     })) as AppDeployParams
-    deployment2.updateParams.resize = { schema }
+    deployment2.createParams.schema = { ...deployment2.createParams.schema!, ...schema }
 
     const result2 = await algorand.appDeployer.deploy(deployment2)
     const app = await algorand.app.getById(result2.appId)
@@ -215,6 +214,38 @@ describe('deploy-app', () => {
     expect(result2.appId).toBe(result1.appId)
     expect(app.globalInts).toBe(schema.globalInts)
     expect(app.globalByteSlices).toBe(schema.globalByteSlices)
+  })
+
+  test('Deploy update only shrinks global schema when explicitly allowed', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: true })
+    const deployment1 = (await getTestingAppDeployParams({ sender: testAccount, metadata })) as AppDeployParams
+    deployment1.createParams.schema = {
+      ...deployment1.createParams.schema!,
+      globalInts: deployment1.createParams.schema!.globalInts + 1,
+      globalByteSlices: deployment1.createParams.schema!.globalByteSlices + 1,
+    }
+    const result1 = await algorand.appDeployer.deploy(deployment1)
+    await waitForIndexer()
+
+    const deployment2 = (await getTestingAppDeployParams({
+      sender: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      onUpdate: 'update',
+    })) as AppDeployParams
+
+    await expect(algorand.appDeployer.deploy(deployment2)).rejects.toThrow(
+      `This app update will shrink the global schema for ${result1.appId}`,
+    )
+
+    deployment2.updateParams.allowStateShrinking = true
+    const result2 = await algorand.appDeployer.deploy(deployment2)
+    const app = await algorand.app.getById(result2.appId)
+
+    expect(result2.operationPerformed).toBe('update')
+    expect(result2.appId).toBe(result1.appId)
+    expect(app.globalInts).toBe(deployment2.createParams.schema!.globalInts)
+    expect(app.globalByteSlices).toBe(deployment2.createParams.schema!.globalByteSlices)
   })
 
   test('Deploy update with increased extra program pages', async () => {
