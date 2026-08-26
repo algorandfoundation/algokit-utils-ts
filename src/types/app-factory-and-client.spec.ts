@@ -192,7 +192,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.return).toBe('arg_io')
   })
 
-  test('Deploy app - update detects extra page deficit as a breaking change', async () => {
+  test('Deploy app - update with extra page deficit as a non breaking change', async () => {
     let appFactory = localnet.algorand.client.getAppFactory({
       appSpec: asJson(smallAppArc56Json),
       defaultSender: localnet.context.testAccount,
@@ -204,32 +204,21 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     expect(appCreateResult.operationPerformed).toBe('create')
 
-    // Update the app to a larger program which needs more pages
+    // Update the app to a larger program which needs more pages than the previous program
     appFactory = localnet.algorand.client.getAppFactory({
       appSpec: asJson(largeAppArc56Json),
       defaultSender: localnet.context.testAccount,
     })
 
-    // Update fails when OnSchemaBreak.Fail is used
-    await expect(async () => {
-      await appFactory.deploy({
-        updatable: true,
-        onSchemaBreak: OnSchemaBreak.Fail,
-        onUpdate: OnUpdate.UpdateApp,
-      })
-    }).rejects.toThrowError(
-      'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. If you want to try deleting and recreating the app then re-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
-    )
-
-    // Update succeeds when OnSchemaBreak.AppendApp is used
-    const { result: appAppendResult } = await appFactory.deploy({
+    // Extra program pages can be increased during an update, so this is not a breaking change even with OnSchemaBreak.Fail
+    const { result: appUpdateResult } = await appFactory.deploy({
       updatable: true,
-      onSchemaBreak: OnSchemaBreak.AppendApp,
+      onSchemaBreak: OnSchemaBreak.Fail,
       onUpdate: OnUpdate.UpdateApp,
     })
 
-    expect(appAppendResult.operationPerformed).toBe('create')
-    expect(appCreateResult.appId).not.toEqual(appAppendResult.appId)
+    expect(appUpdateResult.operationPerformed).toBe('update')
+    expect(appCreateResult.appId).toEqual(appUpdateResult.appId)
   })
 
   test('Deploy app - update detects extra page surplus as a non breaking change', async () => {

@@ -313,7 +313,7 @@ export interface AppDeploymentParams
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParams?: TealTemplateParams
-  /** What action to perform if a schema break is detected */
+  /** What action to perform if a breaking local schema change is detected */
   onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
   onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate

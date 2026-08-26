@@ -373,7 +373,7 @@ export type AppCreateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     clearStateProgram: string | Uint8Array
-    /** The state schema for the app. This is immutable once the app is created. */
+    /** The state schema for the app. Local schema is immutable once the app is created; global schema can be changed during an app update. */
     schema?: {
       /** The number of integers saved in global state. */
       globalInts: number
@@ -386,7 +386,7 @@ export type AppCreateParams = Expand<
     }
     /** Number of extra pages required for the programs.
      * Defaults to the number needed for the programs in this call if not specified.
-     * This is immutable once the app is created. */
+     * This can be changed during an app update. */
     extraProgramPages?: number
   }
 >
@@ -399,6 +399,26 @@ export type AppUpdateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     clearStateProgram: string | Uint8Array
+    /** Whether inferred sizing may shrink state. The deployer applies this to global schema; all updates apply it to inferred extra program pages. Defaults to false. */
+    allowStateShrinking?: boolean
+    /**
+     * Change size-related parameters for the application.
+     * An increase to any of these values during update will move the MBR for the app to the sender of the transaction.
+     */
+    resize?: {
+      /** The global state schema for the app. */
+      schema: {
+        /** The number of integers saved in global state. */
+        globalInts: number
+        /** The number of byte slices saved in global state. */
+        globalByteSlices: number
+      }
+      /**
+       * Number of extra pages required for the programs.
+       * Defaults to the number needed for the programs in this call if not specified.
+       */
+      extraPages?: number
+    }
   }
 >
 
@@ -1514,6 +1534,27 @@ export class TransactionComposer {
     return { txn, context: { maxFee: logicalMaxFee } }
   }
 
+  private async inferExtraProgramPages(appID: bigint, approvalProgram: Uint8Array, clearProgram: Uint8Array, allowStateShrinking: boolean) {
+    const calculated = calculateExtraProgramPages(approvalProgram, clearProgram)
+
+    if (!appID) return calculated
+
+    const params = (await this.algod.getApplicationByID(appID).do()).params
+    if (params === undefined) {
+      throw Error(`Could not get app params for ${appID} to infer extra program pages`)
+    }
+
+    const currentEpp = params.extraProgramPages ?? 0
+
+    if (calculated < currentEpp && !allowStateShrinking) {
+      throw Error(
+        `This app update will shrink the extra program pages for ${appID} from ${currentEpp} to ${calculated}. To allow this, set "allowStateShrinking" to true`,
+      )
+    }
+
+    return calculated
+  }
+
   /**
    * Builds an ABI method call transaction and any other associated transactions represented in the ABI args.
    * @param includeSigner Whether to include the actual signer for the transactions.
@@ -1623,7 +1664,7 @@ export class TransactionComposer {
         }
       })
 
-    const appId = Number('appId' in params ? params.appId : 0n)
+    const appId = 'appId' in params ? params.appId : 0n
     const approvalProgram =
       'approvalProgram' in params
         ? typeof params.approvalProgram === 'string'
@@ -1637,7 +1678,7 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
-    const txnParams = {
+    const txnParams: Parameters<typeof AtomicTransactionComposer.prototype.addMethodCall>[0] = {
       appID: appId,
       sender: params.sender,
       suggestedParams,
@@ -1649,18 +1690,16 @@ export class TransactionComposer {
       access: params.accessReferences?.map(getResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
-      extraPages:
-        appId === 0
-          ? 'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : approvalProgram
-              ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
-              : 0
+      numLocalInts:
+        appId === 0n ? ('schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0) : undefined,
+      numLocalByteSlices:
+        appId === 0n
+          ? 'schema' in params && params.schema && 'localByteSlices' in params.schema
+            ? params.schema.localByteSlices
+            : 0
           : undefined,
-      numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
-      numLocalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.localByteSlices ?? 0) : 0) : undefined,
-      numGlobalInts: appId === 0 ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
-      numGlobalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
+      numGlobalInts: appId === 0n ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
+      numGlobalByteSlices: appId === 0n ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
       method: params.method,
       signer: includeSigner
         ? params.signer
@@ -1683,6 +1722,19 @@ export class TransactionComposer {
       note: undefined,
       lease: undefined,
       rekeyTo: undefined,
+    }
+
+    if ('extraProgramPages' in params) {
+      txnParams.extraPages = params.extraProgramPages
+    } else if ('resize' in params && params.resize?.extraPages !== undefined) {
+      txnParams.extraPages = params.resize.extraPages
+    } else if (approvalProgram !== undefined && clearStateProgram !== undefined) {
+      txnParams.extraPages = await this.inferExtraProgramPages(
+        appId,
+        approvalProgram,
+        clearStateProgram,
+        ('allowStateShrinking' in params && params.allowStateShrinking) ?? false,
+      )
     }
 
     // Build the transaction
@@ -1816,21 +1868,46 @@ export class TransactionComposer {
         throw new Error('approvalProgram and clearStateProgram are required for application creation')
       }
 
-      return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
+      const txnParams: Parameters<typeof algosdk.makeApplicationCreateTxnFromObject>[0] = {
         ...sdkParams,
-        extraPages:
-          'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
-        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
-        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
+        numLocalInts: 'schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0,
+        numLocalByteSlices: 'schema' in params && params.schema && 'localByteSlices' in params.schema ? params.schema.localByteSlices : 0,
         numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
         numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
         approvalProgram: approvalProgram!,
         clearProgram: clearStateProgram!,
-      })
+      }
+
+      if ('extraProgramPages' in params && params.extraProgramPages !== undefined) {
+        txnParams.extraPages = params.extraProgramPages
+      } else {
+        txnParams.extraPages = await this.inferExtraProgramPages(appId, approvalProgram!, clearStateProgram!, false)
+      }
+
+      return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, txnParams)
     } else {
-      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
+      const txnParams: Parameters<typeof algosdk.makeApplicationCallTxnFromObject>[0] = {
+        ...sdkParams,
+        appIndex: appId,
+      }
+
+      if ('resize' in params && params.resize?.extraPages !== undefined) {
+        txnParams.extraPages = params.resize.extraPages
+      } else if ('approvalProgram' in params && 'clearStateProgram' in params && approvalProgram && clearStateProgram) {
+        txnParams.extraPages = await this.inferExtraProgramPages(
+          appId,
+          approvalProgram,
+          clearStateProgram,
+          ('allowStateShrinking' in params && params.allowStateShrinking) ?? false,
+        )
+      }
+
+      if ('resize' in params && params.resize) {
+        txnParams.numGlobalInts = params.resize.schema.globalInts
+        txnParams.numGlobalByteSlices = params.resize.schema.globalByteSlices
+      }
+
+      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, txnParams)
     }
   }
 

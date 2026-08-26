@@ -42,7 +42,7 @@ export type AppDeployParams = Expand<
     metadata: AppDeployMetadata
     /** Any deploy-time parameters to replace in the TEAL code before compiling it (used if teal code is passed in as a string) */
     deployTimeParams?: TealTemplateParams
-    /** What action to perform if a schema break (storage schema or extra pages change) is detected:
+    /** What action to perform if a breaking local schema change is detected:
      *
      * * `fail` - Fail the deployment (throw an error, **default**)
      * * `replace` - Delete the old app and create a new one
@@ -138,7 +138,7 @@ export class AppDeployer {
    *
    * **Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
    *
-   * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
+   * **Note:** if there is a breaking local state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created. Global schema and extra program pages can be changed during an update.
    *
    * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
    * @param deployment The arguments to control the app deployment
@@ -370,17 +370,27 @@ export class AppDeployer {
     const newClearBytes = Buffer.from(clearStateProgram)
     const newApproval = newApprovalBytes.toString('base64')
     const newClear = newClearBytes.toString('base64')
-    const newExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+    const newExtraPages = updateParams.resize?.extraPages ?? calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+    const updateResize =
+      updateParams.resize ??
+      ({
+        schema: {
+          globalInts: createParams.schema?.globalInts ?? 0,
+          globalByteSlices: createParams.schema?.globalByteSlices ?? 0,
+        },
+      } satisfies NonNullable<AppUpdateParams['resize']>)
 
     // Check for changes
 
-    const isUpdate = newApproval !== existingApproval || newClear !== existingClear
+    const isUpdate =
+      newApproval !== existingApproval ||
+      newClear !== existingClear ||
+      existingAppRecord.globalInts !== updateResize.schema.globalInts ||
+      existingAppRecord.globalByteSlices !== updateResize.schema.globalByteSlices ||
+      extraPages !== newExtraPages
     const isSchemaBreak =
       existingAppRecord.localInts < (createParams.schema?.localInts ?? 0) ||
-      existingAppRecord.globalInts < (createParams.schema?.globalInts ?? 0) ||
-      existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0) ||
-      existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0) ||
-      extraPages < newExtraPages
+      existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0)
 
     if (isSchemaBreak) {
       Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
@@ -435,6 +445,18 @@ export class AppDeployer {
       }
 
       if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
+        const shrinksGlobalSchema =
+          updateResize.schema.globalInts < existingAppRecord.globalInts ||
+          updateResize.schema.globalByteSlices < existingAppRecord.globalByteSlices
+        if (shrinksGlobalSchema && !updateParams.allowStateShrinking) {
+          throw new Error(
+            `This app update will shrink the global schema for ${existingApp.appId} from ` +
+              `${existingAppRecord.globalInts} ints and ${existingAppRecord.globalByteSlices} byte slices to ` +
+              `${updateResize.schema.globalInts} ints and ${updateResize.schema.globalByteSlices} byte slices. ` +
+              'To allow this, set "allowStateShrinking" to true',
+          )
+        }
+
         if (existingApp.updatable) {
           Config.getLogger(sendParams?.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
         } else {
@@ -443,6 +465,7 @@ export class AppDeployer {
           )
         }
 
+        updateParams.resize = updateResize
         return await updateApp(existingApp)
       }
 
