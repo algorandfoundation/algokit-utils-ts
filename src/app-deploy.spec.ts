@@ -235,7 +235,7 @@ describe('deploy-app', () => {
         globalInts: deployment1.createParams.schema!.globalInts,
         globalByteSlices: deployment1.createParams.schema!.globalByteSlices,
       },
-      extraProgramPages: 1,
+      extraPages: 1,
     }
 
     const result2 = await algorand.appDeployer.deploy(deployment2)
