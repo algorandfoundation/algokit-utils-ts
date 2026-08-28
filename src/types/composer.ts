@@ -582,6 +582,20 @@ export class TransactionComposer {
 
   private errorTransformers: ErrorTransformer[]
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isTransactionComposer = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as TransactionComposer)._isTransactionComposer === true)
+  }
+
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
     if (!(originalError instanceof Error)) {
