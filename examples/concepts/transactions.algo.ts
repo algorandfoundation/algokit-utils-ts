@@ -240,6 +240,29 @@ async function main() {
     suppressLog: true,
   })
   // example: SEND_PARAMS
+
+  // example: ERROR_TRANSFORMER
+  // An error transformer rewrites a failure the composer catches into a clearer,
+  // application-specific message. Register it on the client (or on one group) and
+  // it runs whenever a send or simulate in that group throws.
+  const clarifyOverspend = async (error: Error): Promise<Error> =>
+    error.message.toLowerCase().includes('overspend')
+      ? new Error("Payment exceeds the sender's available balance")
+      : error // return the original error unchanged when it does not apply
+
+  algorand.registerErrorTransformer(clarifyOverspend)
+  try {
+    // suppressLog keeps the library's raw error log out of the way so only the
+    // transformed message surfaces; the transformed error still throws.
+    await algorand
+      .newGroup()
+      .addPayment({ sender: accountA.addr, receiver: accountB.addr, amount: algo(1_000_000_000) })
+      .send({ suppressLog: true })
+  } catch (e) {
+    console.error(`Transformed error: ${(e as Error).message}`)
+  }
+  algorand.unregisterErrorTransformer(clarifyOverspend)
+  // example: ERROR_TRANSFORMER
 }
 
 main().catch((e) => {

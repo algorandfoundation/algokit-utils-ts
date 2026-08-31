@@ -32,11 +32,20 @@ async function main() {
 
   // An account must opt in before it can hold an asset.
   // example: OPT_IN_ASSET
-  await algorand.send.assetOptIn({ sender: holder.addr, assetId, signer: holder.signer })
+  await algorand.send.assetOptIn({
+    sender: holder.addr,
+    assetId,
+    signer: holder.signer,
+  })
   // example: OPT_IN_ASSET
 
   // example: TRANSFER_ASSET
-  await algorand.send.assetTransfer({ sender: creator.addr, receiver: holder.addr, assetId, amount: 100n })
+  await algorand.send.assetTransfer({
+    sender: creator.addr,
+    receiver: holder.addr,
+    assetId,
+    amount: 100n,
+  })
   // example: TRANSFER_ASSET
 
   // Every control address must be specified explicitly on the config params;
@@ -53,7 +62,12 @@ async function main() {
   // example: RECONFIGURE_ASSET
 
   // example: FREEZE_ASSET
-  await algorand.send.assetFreeze({ sender: creator.addr, assetId, account: holder.addr, frozen: true })
+  await algorand.send.assetFreeze({
+    sender: creator.addr, // the freeze authority
+    assetId,
+    account: holder.addr,
+    frozen: true,
+  })
   // example: FREEZE_ASSET
 
   // Unfreeze so the account can participate in the remaining transactions.
@@ -72,17 +86,19 @@ async function main() {
   // example: CLAWBACK_ASSET
 
   // Two throwaway assets to demonstrate the bulk helpers.
-  const asset1Id = (await algorand.send.assetCreate({ sender: creator.addr, total: 1000n, decimals: 0, unitName: 'B1' }))
-    .assetId
-  const asset2Id = (await algorand.send.assetCreate({ sender: creator.addr, total: 1000n, decimals: 0, unitName: 'B2' }))
-    .assetId
+  const asset1Id = (await algorand.send.assetCreate({ sender: creator.addr, total: 1000n, decimals: 0, unitName: 'B1' })).assetId
+  const asset2Id = (await algorand.send.assetCreate({ sender: creator.addr, total: 1000n, decimals: 0, unitName: 'B2' })).assetId
 
   // example: BULK_OPT_IN_ASSET
-  await algorand.asset.bulkOptIn(holder.addr, [asset1Id, asset2Id], { signer: holder.signer })
+  await algorand.asset.bulkOptIn(holder.addr, [asset1Id, asset2Id], {
+    signer: holder.signer,
+  })
   // example: BULK_OPT_IN_ASSET
 
   // example: BULK_OPT_OUT_ASSET
-  await algorand.asset.bulkOptOut(holder.addr, [asset1Id, asset2Id], { signer: holder.signer })
+  await algorand.asset.bulkOptOut(holder.addr, [asset1Id, asset2Id], {
+    signer: holder.signer,
+  })
   // example: BULK_OPT_OUT_ASSET
 
   // Opt-out of a single asset (zero balance after the clawback above).
@@ -91,7 +107,7 @@ async function main() {
     sender: holder.addr,
     assetId,
     creator: creator.addr,
-    ensureZeroBalance: false,
+    ensureZeroBalance: true,
     signer: holder.signer,
   })
   // example: OPT_OUT_ASSET

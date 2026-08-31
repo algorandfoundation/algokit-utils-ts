@@ -1,190 +1,347 @@
 ---
-title: "Account management"
+title: 'Accounts'
+description: 'Reference for the AccountManager in AlgoKit Utils (TypeScript): creating, funding, signing with, rekeying, and tracking Algorand accounts, with runnable examples and links to the full API reference.'
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
 ---
+
+import RemoteCode from '/src/components/RemoteCode.astro'
+import { LinkCard } from '@astrojs/starlight/components'
 
 Account management is one of the core capabilities provided by AlgoKit Utils. It allows you to create mnemonic, rekeyed, multisig, transaction signer, idempotent KMD and environment variable injected accounts that can be used to sign transactions as well as representing a sender address at the same time. This significantly simplifies management of transaction signing.
 
-## `AccountManager`
+## Creating Accounts
 
-The `AccountManager` is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
+In order to get/register accounts for signing operations you can use the following methods on [`AccountManager`](#accountmanager) (expressed here as `algorand.account` to denote the syntax via an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/)). Each returns a [`TransactionSignerAccount`](#transaction-signer-account) and registers its signer against its address, so transactions from that sender sign automatically:
 
-To get an instance of `AccountManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) via `algorand.account` or instantiate it directly:
+| Method                                      | Returns                                                                         |
+| ------------------------------------------- | ------------------------------------------------------------------------------- |
+| `random()`                                  | A new, cryptographically random account                                         |
+| `fromMnemonic(mnemonicSecret, sender?)`     | An account recovered from a 25-word mnemonic                                    |
+| `fromEnvironment(name, fundWith?)`          | An account resolved by name — from KMD on LocalNet, or `{NAME}_MNEMONIC` beyond |
+| `fromKmd(name, predicate?, sender?)`        | An account from a named KMD wallet                                              |
+| `multisig(multisigParams, signingAccounts)` | A multisig account with the supplied signers loaded                             |
+| `rekeyed(sender, account)`                  | An account for a rekeyed sender/signer pair                                     |
+| `logicsig(program, args?)`                  | An account representing a logic signature                                       |
 
-```typescript
-import { AccountManager } from '@algorandfoundation/algokit-utils/types/account-manager'
+Each is detailed below; for full signatures and every parameter, see the [`AccountManager` API reference](/algokit-utils-ts/api/types/account-manager/classes/accountmanager/).
 
-const accountManager = new AccountManager(clientManager)
-```
+<LinkCard
+  title="Creating an Account"
+  href="https://dev.algorand.co/concepts/accounts/create"
+  description="The concepts behind standalone, KMD-managed, and logic signature accounts"
+/>
 
-## `TransactionSignerAccount`
+### Random Account Generation
 
-The core internal type that holds information about a signer/sender pair for a transaction is `TransactionSignerAccount`, which represents an `algosdk.TransactionSigner` (`signer`) along with a sender address (`addr`) as the encoded string address.
+Generate a new, cryptographically random account. Each account has a freshly generated private/public key pair.
 
-Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`TransactionComposer`](/algokit-utils-ts/capabilities/transaction-composer/) and [useWallet](https://github.com/TxnLab/use-wallet).
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="RANDOM_ACCOUNT"
+  lang="ts"
+  frame="none"
+/>
 
-## Registering a signer
+### Mnemonic-Based Account Recovery
 
-The `AccountManager` keeps track of which signer is associated with a given sender address. This is used by [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) to automatically sign transactions by that sender. Any of the [methods](#accounts) within `AccountManager` that return an account will automatically register the signer with the sender. If however, you are creating a signer external to the `AccountManager`, for instance when using the use-wallet library in a dApp, then you need to register the signer with the `AccountManager` if you want it to be able to automatically sign transactions from that sender.
+Create an account from an existing 25-word mnemonic phrase, allowing account recovery and reuse of predefined test accounts. An optional second argument sets the sender address, for when the mnemonic belongs to the authorising key of a rekeyed account.
 
-There are two methods that can be used for this, `setSignerFromAccount`, which takes any number of [account based objects](#underlying-account-classes) that combine signer and sender (`TransactionSignerAccount` | `algosdk.Account` | `algosdk.LogicSigAccount` | `SigningAccount` | `MultisigAccount`), or `setSigner` which takes the sender address and the `TransactionSigner`:
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="FROM_MNEMONIC"
+  lang="ts"
+  frame="none"
+/>
 
-```typescript
-algorand.account
-  .setSignerFromAccount(algosdk.generateAccount())
-  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
-  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
-  .setSignerFromAccount(new MultisigAccount({ version: 1, threshold: 1, addrs: 'ADDRESS1...', 'ADDRESS2...'] }, [account1, account2]))
-  .setSignerFromAccount({ addr: 'SENDERADDRESS', signer: transactionSigner })
-  .setSigner('SENDERADDRESS', transactionSigner)
-```
+### Environment Variable Based Account Creation
 
-## Default signer
+Get or create an account from environment variables. When running against LocalNet, this will create a funded wallet if it doesn't exist.
 
-If you want to have a default signer that is used to sign transactions without a registered signer (rather than throwing an exception) then you can [register a default signer:
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="FROM_ENVIRONMENT"
+  lang="ts"
+  frame="none"
+/>
 
-```typescript
-algorand.account.setDefaultSigner(myDefaultSigner)
-```
+On LocalNet a KMD wallet named `name` is created and funded if missing. Beyond LocalNet the account loads from `process.env['{NAME}_MNEMONIC']` (plus an optional `process.env['{NAME}_SENDER']` for rekeyed accounts), so the same code runs everywhere. Throws when `{NAME}_MNEMONIC` is missing beyond LocalNet, and requires a Node.js environment.
 
-## Get a signer
+### KMD Account Management
 
-[`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can retrieve the signer for a given sender address:
-
-```typescript
-const signer = algorand.account.getSigner('SENDER_ADDRESS')
-```
-
-If there is no signer registered for that sender address it will either return the default signer ([if registered](#default-signer)) or throw an exception.
-
-## Accounts
-
-In order to get/register accounts for signing operations you can use the following methods on [`AccountManager`](#accountmanager) (expressed here as `algorand.account` to denote the syntax via an [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/)):
-
-- `algorand.account.fromEnvironment(name, fundWith)` - Registers and returns an account with private key loaded by convention based on the given name identifier - either by idempotently creating the account in KMD or from environment variable via `process.env'{NAME}_MNEMONIC']` and (optionally) `process.env['{NAME}_SENDER']` (if account is rekeyed)
-  - This allows you to have powerful code that will automatically create and fund an account by name locally and when deployed against TestNet/MainNet will automatically resolve from environment variables, without having to have different code
-  - Note: `fundWith` allows you to control how many Algo are seeded into an account created in KMD
-- [`algorand.account.fromMnemonic(mnemonicSecret, sender?)` - Registers and returns an account with secret key loaded by taking the mnemonic secret
-- `algorand.account.multisig(multisigParams, signingAccounts)` - Registers and returns a multisig account with one or more signing keys loaded
-- `algorand.account.rekeyed(sender, signer)` - Registers and returns an account representing the given rekeyed sender/signer combination
-- `algorand.account.random()` - Returns a new, cryptographically randomly generated account with private key loaded
-- `algorand.account.fromKmd()` - Returns an account with private key loaded from the given KMD wallet (identified by name)
-- `algorand.account.logicsig(program, args?)` - Returns an account that represents a logic signature
-
-### Underlying account classes
-
-While `TransactionSignerAccount` is the main class used to represent an account that can sign, there are underlying account classes that can underpin the signer within the transaction signer account.
-
-- `Account` - An in-built `algosdk.Account` object that has an address and private signing key, this can be created
-- `SigningAccount` - An abstraction around `algosdk.Account` that supports rekeyed accounts
-- `LogicSigAccount` - An in-built algosdk `algosdk.LogicSigAccount` object
-- `MultisigAccount` - An abstraction around `algosdk.MultisigMetadata`, `algosdk.makeMultiSigAccountTransactionSigner`, `algosdk.multisigAddress`, `algosdk.signMultisigTransaction` and `algosdk.appendSignMultisigTransaction` that supports multisig accounts with one or more signers present
-
-### Dispenser
-
-- `algorand.account.dispenserFromEnvironment()` - Returns an account (with private key loaded) that can act as a dispenser from environment variables, or against default LocalNet if no environment variables present
-- `algorand.account.localNetDispenser()` - Returns an account with private key loaded that can act as a dispenser for the default LocalNet dispenser account
-
-## Rekey account
-
-One of the unique features of Algorand is the ability to change the private key that can authorise transactions for an account. This is called [rekeying](https://dev.algorand.co/concepts/accounts/rekeying).
-
-> !WARNING]
-> Rekeying should be done with caution as a rekey transaction can result in permanent loss of control of an account.
-
-You can issue a transaction to rekey an account by using the [`algorand.account.rekeyAccount(account, rekeyTo, options)` function:
-
-- `account: string | TransactionSignerAccount` - The account address or signing account of the account that will be rekeyed
-- `rekeyTo: string | TransactionSignerAccount` - The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward. If a signing account is provided that will now be tracked as the signer for `account` in the `AccountManager` instance.
-- An `options` object, which has:
-  - [Common transaction parameters](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters)
-  - [Execution parameters](/algokit-utils-ts/capabilities/algorand-client/#sending-a-single-transaction)
-
-You can also pass in `rekeyTo` as a [common transaction parameter](/algokit-utils-ts/capabilities/algorand-client/#transaction-parameters) to any transaction.
-
-### Examples
-
-```typescript
-// Basic example (with string addresses)
-
-await algorand.account.rekeyAccount({ account: 'ACCOUNTADDRESS', rekeyTo: 'NEWADDRESS' })
-
-// Basic example (with signer accounts)
-
-await algorand.account.rekeyAccount({ account: account1, rekeyTo: newSignerAccount })
-
-// Advanced example
-
-await algorand.account.rekeyAccount({
-  account: 'ACCOUNTADDRESS',
-  rekeyTo: 'NEWADDRESS',
-  lease: 'lease',
-  note: 'note',
-  firstValidRound: 1000n,
-  validityWindow: 10,
-  extraFee: (1000).microAlgo(),
-  staticFee: (1000).microAlgo(),
-  // Max fee doesn't make sense with extraFee AND staticFee
-  //  already specified, but here for completeness
-  maxFee: (3000).microAlgo(),
-  maxRoundsToWaitForConfirmation: 5,
-  suppressLog: true,
-})
-
-// Using a rekeyed account
-
-// Note: if a signing account is passed into `algorand.account.rekeyAccount` then you don't need to call `rekeyedAccount` to register the new signer
-const rekeyedAccount = algorand.account.rekeyed(account, newAccount)
-// rekeyedAccount can be used to sign transactions on behalf of account...
-```
-
-# KMD account management
-
-When running LocalNet, you have an instance of the [Key Management Daemon](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md), which is useful for:
+When running LocalNet, you have an instance of the [Key Management Daemon](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) (KMD), which you can use for:
 
 - Accessing the private key of the default accounts that are pre-seeded with Algo so that other accounts can be funded and it's possible to use LocalNet
 - Idempotently creating new accounts against a name that will stay intact while the LocalNet instance is running without you needing to store private keys anywhere (i.e. completely automated)
 
-The KMD SDK is fairly low level so to make use of it there is a fair bit of boilerplate code that's needed. This code has been abstracted away into the `KmdAccountManager` class.
+<a id="kmd-client-based-account-creation"></a>
 
-To get an instance of the `KmdAccountManager` class you can access it from [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/) via `algorand.account.kmd` or instantiate it directly (passing in a [`ClientManager`](/algokit-utils-ts/capabilities/client/)):
+The simplest way to get an account by name is `algorand.account.fromKmd`, which registers the returned account as a signer:
 
-```typescript
-import { KmdAccountManager } from '@algorandfoundation/algokit-utils/types/kmd-account-manager'
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="FROM_KMD"
+  lang="ts"
+  frame="none"
+/>
 
-// Algod client only
-const kmdAccountManager = new KmdAccountManager(clientManager)
-```
+Without a `predicate` it returns a random account from the wallet, and throws if no account matches.
+
+Other operations, such as creating and renaming a wallet, can also be performed via the KMD client:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="KMD_WALLET_ADMIN"
+  lang="ts"
+  frame="none"
+/>
+
+The KMD SDK is fairly low level, so to make use of it directly there is a fair bit of boilerplate. This is abstracted away into the `KmdAccountManager` class (exported from `@algorandfoundation/algokit-utils/types/kmd-account-manager`), which you can access from [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account.kmd` or instantiate directly (passing in a `ClientManager`):
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="KMD_ACCOUNT_MANAGER"
+  lang="ts"
+  frame="none"
+/>
 
 The methods that are available are:
 
-- `getWalletAccount(walletName, predicate?, sender?)` - Returns an Algorand signing account with private key loaded from the given KMD wallet (identified by name).
-- `getOrCreateWalletAccount(name, fundWith?)` - Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
-- `getLocalNetDispenserAccount()` - Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts). The "Wallet1" KMD account is resolved from the genesis file and used as the dispenser account.
+| Method                        | Description                                                 |
+| ----------------------------- | ----------------------------------------------------------- |
+| `getWalletAccount`            | Loads a signing account from the named KMD wallet           |
+| `getOrCreateWalletAccount`    | Loads, or creates and funds, an account in the named wallet |
+| `getLocalNetDispenserAccount` | Loads the default LocalNet dispenser account                |
 
-```typescript
-// Get a wallet account that seeded the LocalNet network
-const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
-  'unencrypted-default-wallet',
-  (a) => a.status !== 'Offline' && a.amount > 1_000_000_000,
-)
-// Same as above, but dedicated method call for convenience
-const localNetDispenserAccount = await kmdAccountManager.getLocalNetDispenserAccount()
-// Idempotently get (if exists) or create (if it doesn't exist yet) an account by name using KMD
-// if creating it then fund it with 2 ALGO from the default dispenser account
-const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
-// This will return the same account as above since the name matches
-const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
-```
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="KMD_MANAGER_METHODS"
+  lang="ts"
+  frame="none"
+/>
 
-Some of this functionality is directly exposed from [`AccountManager`](#accountmanager), which has the added benefit of registering the account as a signer so they can be automatically used to sign transactions when using via [`AlgorandClient`](/algokit-utils-ts/capabilities/algorand-client/):
+The `predicate` is a plain function over the untyped KMD account record — `isDispenser` above is `(account) => account.status !== 'Offline' && account.amount > 1_000_000_000`. `getWalletAccount` returns `undefined` when no wallet or account matches, whereas the `algorand.account.fromKmd` equivalent above throws.
 
-```typescript
-// Get and register LocalNet dispenser
-const localNetDispenser = await algorand.account.localNetDispenser()
-// Get and register a dispenser by environment variable, or if not set then LocalNet dispenser via KMD
-const dispenser = await algorand.account.dispenserFromEnvironment()
-// Get an account from KMD idempotently by name. In this case we'll get the default dispenser account
-const account1 = await algorand.account.fromKmd('unencrypted-default-wallet', (a) => a.status !== 'Offline' && a.amount > 1_000_000_000)
-// Get / create and register account from KMD idempotently by name
-const account1 = await algorand.account.kmd.getOrCreateWalletAccount('account1', (2).algo())
-```
+The same operations are exposed on [`AccountManager`](#accountmanager) via `algorand.account` (as with `fromKmd` above), with the added benefit of registering the returned account as a signer — including the `localNetDispenser` and `dispenserFromEnvironment` helpers shown under [Dispenser Accounts](#dispenser-accounts).
+
+## Funding Accounts
+
+All Algorand accounts require a minimum balance to be registered in the ledger. AlgoKit Utils provides helpers to fund accounts from a dispenser, a common need in automation and deployment scripts.
+
+<LinkCard
+  title="Funding an Account"
+  href="https://dev.algorand.co/concepts/accounts/funding"
+  description="Funding options across LocalNet, TestNet, and MainNet"
+/>
+
+### Dispenser Accounts
+
+| Method                       | Description                                                      |
+| ---------------------------- | ---------------------------------------------------------------- |
+| `localNetDispenser()`        | The default LocalNet dispenser account                           |
+| `dispenserFromEnvironment()` | A dispenser from environment variables, falling back to LocalNet |
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="DISPENSER"
+  lang="ts"
+  frame="none"
+/>
+
+`dispenserFromEnvironment` loads `process.env.DISPENSER_MNEMONIC` (and optionally `process.env.DISPENSER_SENDER` for a rekeyed account), falling back to the LocalNet dispenser when neither is set.
+
+### Ensure Funded
+
+`ensureFunded` checks the balance of an account and transfers Algo from a dispenser if the balance falls below the required spending threshold (accounting for the minimum balance requirement).
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="ENSURE_FUNDED"
+  lang="ts"
+  frame="none"
+/>
+
+Returns the result of the funding transaction along with the `amountFunded`, or `undefined` when the balance already met the threshold. An optional `options` argument accepts `minFundingIncrement` alongside the [common transaction and execution parameters](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters).
+
+`ensureFundedFromEnvironment` does the same, but sources the dispenser from the environment (per `dispenserFromEnvironment`), making the code portable across environments without hardcoding account details.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="ENSURE_FUNDED_FROM_ENVIRONMENT"
+  lang="ts"
+  frame="none"
+/>
+
+### TestNet Dispenser API
+
+`ensureFundedFromTestNetDispenserApi` tops up an account from the TestNet Dispenser API when its balance is below the threshold. The dispenser client is authenticated via the `ALGOKIT_DISPENSER_ACCESS_TOKEN` environment variable, so the same call works in CI/CD pipelines and automated tests.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="TESTNET_DISPENSER_ENSURE_FUNDED"
+  lang="ts"
+  frame="none"
+/>
+
+It throws if the client isn't pointed at TestNet. To fund an account with a fixed amount immediately (without a balance check), use the same dispenser client directly.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="TESTNET_DISPENSER_FUND"
+  lang="ts"
+  frame="none"
+/>
+
+## Keys & Signing
+
+The `AccountManager` keeps track of which signer is associated with a given sender address. This is used by [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) to automatically sign transactions by that sender. Any of the [account methods](#creating-accounts) that return an account will automatically register the signer with the sender.
+
+If you create a signer outside of the `AccountManager` — for instance when using [use-wallet](https://github.com/TxnLab/use-wallet) in a dApp — you need to register it yourself, per [Registering Signers](#registering-signers).
+
+<LinkCard
+  title="Keys and Signing"
+  href="https://dev.algorand.co/concepts/accounts/keys-signing"
+  description="How keys, addresses, and mnemonics are derived, and the available signing methods"
+/>
+
+### Transaction Signer Account
+
+The core internal type that holds information about a signer/sender pair for a transaction is `TransactionSignerAccount`, which represents a `TransactionSigner` (`signer`) along with a sender address (`addr`).
+
+`TransactionSignerAccount` can be used with the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) and [use-wallet](https://github.com/TxnLab/use-wallet).
+
+#### Underlying Account Classes
+
+While `TransactionSignerAccount` is the main type used to represent an account that can sign, there are underlying account classes that can underpin the signer within the transaction signer account. You don't construct these yourself — each [account method](#creating-accounts) builds the right one and exposes it on the returned account's `account` property.
+
+| Class             | Built by                                           | Description                                               |
+| ----------------- | -------------------------------------------------- | --------------------------------------------------------- |
+| `Account`         | `random()`                                         | An address and private signing key                        |
+| `SigningAccount`  | `fromMnemonic()`, `fromEnvironment()`, `fromKmd()` | An account that also supports rekeying                    |
+| `LogicSigAccount` | `logicsig()`                                       | A compiled logic signature and its arguments              |
+| `MultisigAccount` | `multisig()`                                       | Multisig metadata plus the signing keys currently present |
+
+`SigningAccount` and `MultisigAccount` are exported from `@algorandfoundation/algokit-utils/types/account` for the rare case where you need to build one directly.
+
+### Default Signer
+
+If you want to have a default signer that is used to sign transactions without a registered signer (rather than throwing an exception) then you can `setDefaultSigner`:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="SET_DEFAULT_SIGNER"
+  lang="ts"
+  frame="none"
+/>
+
+### Registering Signers
+
+There are two methods to register a signer: `setSignerFromAccount`, which takes any [account based object](#underlying-account-classes) that combines signer and sender (`TransactionSignerAccount` | `Account` | `SigningAccount` | `LogicSigAccount` | `MultisigAccount`), or `setSigner` which takes the sender address and the `TransactionSigner`. Both return the `AccountManager`, so calls can be chained:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="REGISTER_SIGNERS"
+  lang="ts"
+  frame="none"
+/>
+
+`setSignerFromAccount` accepts any of the underlying account classes:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="SET_SIGNER_FROM_ACCOUNT_TYPES"
+  lang="ts"
+  frame="none"
+/>
+
+### Get a Signer
+
+[`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can `getSigner` for a given sender address:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="GET_SIGNER"
+  lang="ts"
+  frame="none"
+/>
+
+If there is no signer registered for that sender address it will either return the default signer ([if registered](#default-signer)) or throw an exception. `getAccount` is the equivalent that returns the whole `TransactionSignerAccount` rather than just the signer.
+
+### Override the Signer
+
+A signer can be overridden per transaction. Create an unsigned transaction and pass the signer explicitly when adding it to a group:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="OVERRIDE_SIGNER"
+  lang="ts"
+  frame="none"
+/>
+
+## Rekeying Accounts
+
+One of the unique features of Algorand is the ability to change the private key that can authorize transactions for an account. This is called rekeying.
+
+<LinkCard
+  title="Rekeying"
+  href="https://dev.algorand.co/concepts/accounts/rekeying"
+  description="How rekeying changes the authorizing key for an account"
+/>
+
+> [!WARNING]
+> Rekeying should be done with caution as a rekey transaction can result in permanent loss of control of an account.
+
+You can issue a transaction to rekey an account by using the `rekeyAccount` function. Pass the `account` to rekey and the `rekeyTo` address or signing account that will authorise it from now on; passing a signing account also registers it as the new signer. A third `options` argument accepts the [common transaction and execution parameters](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters), and the result describes the rekey transaction that was sent.
+
+You can also pass in `rekeyTo` as a [common transaction parameter](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters) to any transaction.
+
+In the following example, `accountA` is rekeyed to `accountB`. After rekeying, a transaction from `accountA` must be authorized by `accountB`'s private key.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="REKEY_ACCOUNT"
+  lang="ts"
+  frame="none"
+/>
+
+> [!NOTE]
+> If a signing account is passed into `algorand.account.rekeyAccount` then you don't need to call `rekeyed` to register the new signer — it is tracked automatically.
+
+## Multisignature Accounts
+
+A multisignature account is an ordered set of addresses with a threshold and version. The threshold determines how many signatures are required to authorize a transaction (such as 2-of-3 or 3-of-5).
+
+<LinkCard
+  title="Multisignature Accounts"
+  href="https://dev.algorand.co/concepts/accounts/multisig"
+  description="How multisig works at the protocol level, weighted signers, and ARC-55 coordination"
+/>
+
+Use `multisig` to register and return a multisig account with one or more signing keys loaded. The example below creates a 2-of-3 multisig account that requires only 2 signatures from the 3 possible signers to authorize transactions.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="MULTISIG"
+  lang="ts"
+  frame="none"
+/>
+
+`multisig` takes the multisig metadata (its `version`, `threshold`, and member `addrs`) and the `signingAccounts` available to sign. It returns a `MultisigAccount`, whose signer collects the required signatures from those accounts automatically. Note that the address of a multisig account is derived from the metadata, so the order of `addrs` matters.
+
+## Under the Hood
+
+<a id="accountmanager"></a>
+
+Throughout this page, accounts are reached through `algorand.account` — the `AccountManager` instance that an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) creates and shares. `AccountManager` is the class that gets, creates, and funds accounts, and it keeps track of the signer registered for each address so that transactions sent through [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) or the [`TransactionComposer`](/algokit-utils-ts/concepts/transactions/) are signed by sender automatically, without a signer being specified per transaction.
+
+To get an instance of `AccountManager`, you can use either [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](/algokit-utils-ts/capabilities/client/)):
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/accounts.algo.ts"
+  snippet="ACCOUNT_MANAGER"
+  lang="ts"
+  frame="none"
+/>
+
+`AccountManager` is exported from `@algorandfoundation/algokit-utils/types/account-manager`.
