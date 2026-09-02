@@ -3,10 +3,12 @@ import { Address } from '@algorandfoundation/algokit-common'
 import {
   decodeSignedTransaction,
   generateAddressWithSigners,
+  groupTransactions,
   Transaction,
   TransactionSigner,
   TransactionType,
 } from '@algorandfoundation/algokit-transact'
+import { Buffer } from 'buffer'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { algo, AlgoAmount } from './amount'
 import { algorandFixture } from './testing'
@@ -618,6 +620,103 @@ describe('TransactionComposer', () => {
       })
 
       await expect(composer.gatherSignatures()).rejects.toThrow('Transactions at indexes [0] were not signed')
+    })
+  })
+
+  describe('signers that mutate transactions', () => {
+    test('should use the mutated transaction when waiting for confirmation of a single transaction', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+      const note = new TextEncoder().encode('mutated by the wallet')
+
+      let builtTxId: string | undefined
+      const mutatingSigner: TransactionSigner = async (group, indexes) => {
+        builtTxId = group[0].txId()
+        const mutated = group.map((txn) => new Transaction({ ...txn, note }))
+        return await algorand.account.getSigner(sender)(mutated, indexes)
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: mutatingSigner,
+      })
+
+      const result = await composer.send()
+
+      expect(result.transactions[0].note).toEqual(note)
+      expect(result.txIds[0]).not.toBe(builtTxId)
+      expect(result.txIds[0]).toBe(result.transactions[0].txId())
+      expect(result.confirmations).toHaveLength(1)
+      expect(result.confirmations[0].txn.txn.txId()).toBe(result.txIds[0])
+    })
+
+    test('should use the mutated transactions when waiting for confirmation of a group', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+      const note = new TextEncoder().encode('mutated by the wallet')
+
+      let builtTxIds: string[] = []
+      let builtGroupId: string | undefined
+      const mutatingSigner: TransactionSigner = async (group, indexes) => {
+        builtTxIds = group.map((txn) => txn.txId())
+        builtGroupId = Buffer.from(group[0].group!).toString('base64')
+        // A wallet that mutates a grouped transaction must regroup, as the group ID no longer matches
+        const mutated = groupTransactions(group.map((txn) => new Transaction({ ...txn, note, group: undefined })))
+        return await algorand.account.getSigner(sender)(mutated, indexes)
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: mutatingSigner,
+      })
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(2000),
+        signer: mutatingSigner,
+      })
+
+      const result = await composer.send()
+
+      expect(result.txIds).toHaveLength(2)
+      expect(result.txIds).not.toEqual(builtTxIds)
+      expect(result.txIds).toEqual(result.transactions.map((txn) => txn.txId()))
+      expect(result.groupId).not.toBe(builtGroupId)
+      expect(result.groupId).toBe(Buffer.from(result.transactions[0].group!).toString('base64'))
+      expect(result.confirmations.map((c) => c.txn.txn.txId())).toEqual(result.txIds)
+    })
+
+    test('should report the mutated transaction IDs from simulate', async () => {
+      const { algorand, context } = fixture
+      const sender = context.testAccount
+      const note = new TextEncoder().encode('mutated by the wallet')
+
+      let builtTxId: string | undefined
+      const mutatingSigner: TransactionSigner = async (group, indexes) => {
+        builtTxId = group[0].txId()
+        const mutated = group.map((txn) => new Transaction({ ...txn, note }))
+        return await algorand.account.getSigner(sender)(mutated, indexes)
+      }
+
+      const composer = algorand.newGroup()
+      composer.addPayment({
+        sender,
+        receiver: sender,
+        amount: AlgoAmount.MicroAlgo(1000),
+        signer: mutatingSigner,
+      })
+
+      const result = await composer.simulate()
+
+      expect(result.transactions[0].note).toEqual(note)
+      expect(result.txIds[0]).not.toBe(builtTxId)
+      expect(result.txIds[0]).toBe(result.transactions[0].txId())
     })
   })
 

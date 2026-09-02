@@ -1835,7 +1835,10 @@ export class TransactionComposer {
         throw new Error('No transactions available')
       }
 
-      const transactionsToSend = this.transactionsWithSigners.map((stxn) => stxn.txn)
+      const transactionsToSend = resolveSignedTransactions(
+        this.transactionsWithSigners.map((t) => t.txn),
+        this.signedTransactions,
+      )
       const transactionIds = transactionsToSend.map((txn) => txn.txId())
 
       if (transactionsToSend.length > 1) {
@@ -1862,14 +1865,14 @@ export class TransactionComposer {
         })
       }
 
-      const group = this.transactionsWithSigners[0].txn.group
+      const group = transactionsToSend[0].group
 
       let waitRounds = params?.maxRoundsToWaitForConfirmation
 
       if (waitRounds === undefined) {
         const suggestedParams = await this.getSuggestedParams()
         const firstRound = suggestedParams.firstValid
-        const lastRound = this.transactionsWithSigners.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : max), 0n)
+        const lastRound = transactionsToSend.reduce((max, txn) => (txn.lastValid > max ? txn.lastValid : max), 0n)
         waitRounds = Number(lastRound - firstRound) + 1
       }
 
@@ -1915,6 +1918,13 @@ export class TransactionComposer {
       let sentTransactions: Transaction[] | undefined
       if (this.transactionsWithSigners) {
         sentTransactions = this.transactionsWithSigners.map((t) => t.txn)
+        if (this.signedTransactions?.length) {
+          // Reflect any mutations made by the signers, so the traces below are of what was actually sent
+          try {
+            sentTransactions = resolveSignedTransactions(sentTransactions, this.signedTransactions)
+            // eslint-disable-next-line no-empty
+          } catch {}
+        }
       } else if (this.rawBuildTransactions) {
         sentTransactions = this.rawBuildTransactions.length > 1 ? groupTransactions(this.rawBuildTransactions) : this.rawBuildTransactions
       }
@@ -2034,9 +2044,12 @@ export class TransactionComposer {
       }))
     }
 
-    const transactions = transactionsWithSigner.map((e) => e.txn)
     const encodedSignedTransactions = await this.signTransactions(transactionsWithSigner)
     const signedTransactions = decodeSignedTransactions(encodedSignedTransactions)
+    const transactions = resolveSignedTransactions(
+      transactionsWithSigner.map((e) => e.txn),
+      encodedSignedTransactions,
+    )
 
     const simulateRequest = {
       txnGroups: [
@@ -2187,6 +2200,22 @@ export class TransactionComposer {
       this.txns[index].data.maxFee = new AlgoAmount({ microAlgos: maxFee.microAlgos })
     })
   }
+}
+
+/**
+ * Resolve the transactions as they were signed.
+ *
+ * Signers (e.g. wallets) are allowed to mutate the transactions they are given, so the signed transactions are the
+ * source of truth for what is actually sent to the network. Without this, a mutated transaction would be reported
+ * (and waited for) under the transaction ID of the transaction that was built, which was never sent.
+ *
+ * The built transaction is returned when it wasn't mutated, since decoding is lossy for zero valued fields.
+ */
+function resolveSignedTransactions(builtTransactions: Transaction[], encodedSignedTransactions: Uint8Array[]): Transaction[] {
+  return decodeSignedTransactions(encodedSignedTransactions).map(({ txn }, index) => {
+    const builtTransaction = builtTransactions[index]
+    return builtTransaction !== undefined && builtTransaction.txId() === txn.txId() ? builtTransaction : txn
+  })
 }
 
 /** Get the logical maximum fee based on staticFee and maxFee */
