@@ -76,7 +76,7 @@
     "algosdk": "^3.5.2"
   },
   "devDependencies": {
-    "@algorandfoundation/tealscript": "^0.106.3",
+    "@algorandfoundation/tealscript": "^0.107.2",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@eslint/js": "^9.15.0",
