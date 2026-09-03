@@ -1,17 +1,18 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
-    "target": "ES2020",
+    "target": "ES2022",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
+    "lib": ["ES2022", "dom"],
     "types": ["node"],
     "outDir": "dist",
     "declaration": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup-multi-plugin.ts", "rollup.config.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["**/*.algo.ts"]
 }

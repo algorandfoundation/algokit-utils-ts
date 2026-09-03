@@ -166,24 +166,25 @@ export class AssetManager {
    */
   public async getById(assetId: bigint): Promise<AssetInformation> {
     const asset = await this._algod.getAssetByID(Number(assetId)).do()
+    const params = asset.params!
 
     return {
       assetId: BigInt(asset.index),
-      total: BigInt(asset.params.total),
-      decimals: Number(asset.params.decimals),
-      assetName: asset.params.name,
-      assetNameAsBytes: asset.params.nameB64,
-      unitName: asset.params.unitName,
-      unitNameAsBytes: asset.params.unitNameB64,
-      url: asset.params.url,
-      urlAsBytes: asset.params.urlB64,
-      creator: asset.params.creator,
-      manager: asset.params.manager,
-      clawback: asset.params.clawback,
-      freeze: asset.params.freeze,
-      reserve: asset.params.reserve,
-      defaultFrozen: asset.params.defaultFrozen,
-      metadataHash: asset.params.metadataHash,
+      total: BigInt(params.total),
+      decimals: Number(params.decimals),
+      assetName: params.name,
+      assetNameAsBytes: params.nameB64,
+      unitName: params.unitName,
+      unitNameAsBytes: params.unitNameB64,
+      url: params.url,
+      urlAsBytes: params.urlB64,
+      creator: params.creator,
+      manager: params.manager,
+      clawback: params.clawback,
+      freeze: params.freeze,
+      reserve: params.reserve,
+      defaultFrozen: params.defaultFrozen,
+      metadataHash: params.metadataHash,
     }
   }
 
@@ -197,7 +198,7 @@ export class AssetManager {
    * const accountInfo = await assetManager.getAccountInformation(address, assetId);
    * ```
    *
-   * [Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
+   * [Response data schema details](https://dev.algorand.co/reference/rest-api/algod/operations/accountassetinformation/)
    * @param sender The address of the sender/account to look up
    * @param assetId The ID of the asset to return a holding for
    * @returns The account asset holding information

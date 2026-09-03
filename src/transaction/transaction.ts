@@ -26,6 +26,7 @@ import {
 } from '../types/transaction'
 import { asJson, convertAbiByteArrays, convertABIDecodedBigIntToNumber, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
+import { resolveSignedTransactions } from './resolve-signed-transactions'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import modelsv2 = algosdk.modelsv2
@@ -248,6 +249,10 @@ export const sendTransaction = async function (
 
   const signedTransaction = await signTransaction(txnToSend, from)
 
+  // Signers (e.g. wallets) can mutate the transaction they sign, so the signed transaction is the source of truth for
+  // what is actually sent to the network
+  txnToSend = resolveSignedTransactions([txnToSend], [signedTransaction])[0]
+
   await algod.sendRawTransaction(signedTransaction).do()
 
   Config.getLogger(suppressLog).verbose(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
@@ -322,7 +327,7 @@ async function getGroupExecutionInfo(
   const groupResponse = result.simulateResponse.txnGroups[0]
 
   if (groupResponse.failureMessage) {
-    if (sendParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.match(/fee too small/)) {
+    if (sendParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.match(/fee ([\w.]+\s+)?too small/)) {
       throw Error(`Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.`)
     }
 
@@ -886,19 +891,25 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5,
     )
 
-    if (transactionsToSend.length > 1) {
+    // Signers (e.g. wallets) can mutate the transactions they sign, so the signed transactions are the source of truth
+    // for what was actually sent to the network. The signatures were gathered by `execute` above, so they are returned
+    // from the composer's cache rather than being requested from the signers again.
+    const sentTransactions = resolveSignedTransactions(transactionsToSend, await atc.gatherSignatures())
+
+    if (sentTransactions.length > 1) {
+      groupId = sentTransactions[0].group ? Buffer.from(sentTransactions[0].group).toString('base64') : ''
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
-        `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
+        `Group transaction (${groupId}) sent with ${sentTransactions.length} transactions`,
       )
     } else {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
-        `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender.toString()}`,
+        `Sent transaction ID ${sentTransactions[0].txID()} ${sentTransactions[0].type} from ${sentTransactions[0].sender.toString()}`,
       )
     }
 
     let confirmations: modelsv2.PendingTransactionResponse[] | undefined = undefined
     if (!sendParams?.skipWaiting) {
-      confirmations = await Promise.all(transactionsToSend.map(async (t) => await algod.pendingTransactionInformation(t.txID()).do()))
+      confirmations = await Promise.all(sentTransactions.map(async (t) => await algod.pendingTransactionInformation(t.txID()).do()))
     }
 
     const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
@@ -906,8 +917,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     return {
       groupId,
       confirmations,
-      txIds: transactionsToSend.map((t) => t.txID()),
-      transactions: transactionsToSend,
+      txIds: sentTransactions.map((t) => t.txID()),
+      transactions: sentTransactions,
       returns: result.methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -958,7 +969,12 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     }
 
     // Attach the sent transactions so we can use them in error transformers
-    err.sentTransactions = atc.buildGroup().map((t) => t.txn)
+    let sentTransactions = atc.buildGroup().map((t) => t.txn)
+    if (atc.getStatus() >= algosdk.AtomicTransactionComposerStatus.SIGNED) {
+      // Reflect any mutations made by the signers, so these are the transactions that were actually sent
+      sentTransactions = resolveSignedTransactions(sentTransactions, await atc.gatherSignatures())
+    }
+    err.sentTransactions = sentTransactions
     throw err
   }
 }

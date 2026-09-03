@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "lib": ["ES2022", "dom"],
+    "types": ["node"],
+    "declaration": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declarationMap": true,
+    "strict": true,
+    "baseUrl": ".",
+  }
+}
