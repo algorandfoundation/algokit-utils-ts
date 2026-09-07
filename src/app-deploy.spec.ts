@@ -1,4 +1,4 @@
-import { getApplicationAddress } from 'algosdk'
+import algosdk, { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
@@ -655,6 +655,38 @@ pushbytes "b64 //8="
   const result = AppManager.stripTealComments(tealCode)
 
   expect(result).toBe(tealCodeResult)
+})
+
+test('compileTeal throws before calling algod when TMPL vars remain', async () => {
+  const algod = {
+    compile: () => {
+      throw new Error('algod should not be called')
+    },
+  } as unknown as algosdk.Algodv2
+  const appManager = new AppManager(algod)
+  await expect(appManager.compileTeal('int TMPL_NFD_REGISTRY_APP_ID\nreturn')).rejects.toThrow(
+    /Undefined TEAL template variable\(s\): TMPL_NFD_REGISTRY_APP_ID/,
+  )
+})
+
+test('Reports leftover TMPL variables instead of sending them to algod', () => {
+  const teal = `
+  int TMPL_NFD_REGISTRY_APP_ID // should still be reported
+  int TMPL_OTHER
+  byte "TMPL_QUOTED"
+  int NOTTMPL_X
+  return
+  `
+  expect(AppManager.findUnresolvedTealTemplateVars(teal)).toEqual(['TMPL_NFD_REGISTRY_APP_ID', 'TMPL_OTHER'])
+})
+
+test('Does not report TMPL tokens that were substituted', () => {
+  const teal = `
+  int TMPL_SOME_VALUE
+  return
+  `
+  const substituted = AppManager.replaceTealTemplateParams(teal, { SOME_VALUE: 123 })
+  expect(AppManager.findUnresolvedTealTemplateVars(substituted)).toEqual([])
 })
 
 test('Can substitute template variable with multiple underscores', async () => {
