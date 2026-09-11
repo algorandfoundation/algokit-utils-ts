@@ -370,7 +370,8 @@ export class AppDeployer {
     const newClearBytes = Buffer.from(clearStateProgram)
     const newApproval = newApprovalBytes.toString('base64')
     const newClear = newClearBytes.toString('base64')
-    const newExtraPages = updateParams.resize?.extraPages ?? calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+    const inferredExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+    const newExtraPages = updateParams.resize?.extraPages ?? Math.max(createParams.extraProgramPages ?? 0, inferredExtraPages)
     const updateResize =
       updateParams.resize ??
       ({

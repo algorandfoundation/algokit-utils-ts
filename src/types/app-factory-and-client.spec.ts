@@ -170,6 +170,11 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
       updatable: true,
     })
+    const createdAppRecord = await localnet.algorand.app.getById(createdApp.appId)
+    const resizedSchema = {
+      globalInts: createdAppRecord.globalInts + 1,
+      globalByteSlices: createdAppRecord.globalByteSlices + 1,
+    }
     const { result: app } = await factory.deploy({
       deployTimeParams: {
         VALUE: 2,
@@ -178,8 +183,12 @@ describe('ARC32: app-factory-and-app-client', () => {
       updateParams: {
         method: 'update_abi',
         args: ['arg_io'],
+        resize: {
+          schema: resizedSchema,
+        },
       },
     })
+    const updatedAppRecord = await localnet.algorand.app.getById(app.appId)
 
     invariant(app.operationPerformed === 'update')
     expect(app.appId).toBe(createdApp.appId)
@@ -190,6 +199,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
     expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return).toBe('arg_io')
+    expect(updatedAppRecord.globalInts).toBe(resizedSchema.globalInts)
+    expect(updatedAppRecord.globalByteSlices).toBe(resizedSchema.globalByteSlices)
   })
 
   test('Deploy app - update with extra page deficit as a non breaking change', async () => {
@@ -235,6 +246,16 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     expect(appCreateResult.operationPerformed).toBe('create')
+
+    const { result: unchangedAppResult } = await appFactory.deploy({
+      updatable: true,
+      createParams: {
+        extraProgramPages: 1,
+      },
+    })
+
+    expect(unchangedAppResult.operationPerformed).toBe('nothing')
+    expect(unchangedAppResult.appId).toEqual(appCreateResult.appId)
 
     // Update the app to a larger program which needs more pages than the previous program
     appFactory = localnet.algorand.client.getAppFactory({

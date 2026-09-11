@@ -1724,7 +1724,12 @@ export class TransactionComposer {
       rekeyTo: undefined,
     }
 
-    if ('extraProgramPages' in params) {
+    if ('resize' in params && params.resize) {
+      txnParams.numGlobalInts = params.resize.schema.globalInts
+      txnParams.numGlobalByteSlices = params.resize.schema.globalByteSlices
+    }
+
+    if ('extraProgramPages' in params && params.extraProgramPages !== undefined) {
       txnParams.extraPages = params.extraProgramPages
     } else if ('resize' in params && params.resize?.extraPages !== undefined) {
       txnParams.extraPages = params.resize.extraPages
