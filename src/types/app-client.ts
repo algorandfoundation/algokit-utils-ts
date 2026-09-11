@@ -388,7 +388,7 @@ export type AppClientMethodCallParams = Expand<
 >
 
 /** AppClient parameters specific to an app update call. */
-export type AppClientUpdateCallParams = Pick<AppUpdateParams, 'resize' | 'allowStateShrinking'>
+export type AppClientUpdateCallParams = Pick<AppUpdateParams, 'resize'>
 
 /** Parameters for a bare app update. */
 export type AppClientBareUpdateParams = Expand<AppClientBareCallParams & AppClientUpdateCallParams>

@@ -317,7 +317,7 @@ export interface AppDeploymentParams
   onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
   onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
-  /** Whether an update may reduce the global schema or inferred extra program pages. Defaults to false. */
+  /** Whether an update is allowed to reduce the app's global schema or extra program pages. Defaults to false. */
   allowStateShrinking?: boolean
   /** Optional cached value of the existing apps for the given creator */
   existingDeployments?: AppLookup

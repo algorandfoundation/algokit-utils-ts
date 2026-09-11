@@ -143,8 +143,11 @@ The base type for specifying an app update transaction is `AppUpdateParams` (ext
 - `onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC` - On Complete can either be omitted or set to update
 - `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 - `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
-- `allowStateShrinking?: boolean` - Whether inferred sizing may shrink state. The deployer applies this to global schema; all updates apply it to inferred extra program pages. Defaults to `false`.
-- `resize?` - Changes the app's size-related parameters. It contains a required `schema` object with `globalInts: number` and `globalByteSlices: number`, and an optional `extraPages?: number`. Increasing either value moves the app's minimum balance requirement to the transaction sender.
+- `resize?` - Changes the app's size-related parameters. It contains an optional `schema` object with `globalInts: number` and `globalByteSlices: number`, and an optional `extraPages?: number`. Increasing any of these values increases the minimum balance requirement held by the sender of the transaction.
+
+The values in `resize` are absolute, not deltas, and anything you leave out keeps the app's current value. If you don't specify `resize` at all then the global schema is left as is and extra program pages are only increased if the supplied programs don't fit in the app's current pages - a reduction is never inferred from the programs you pass in, you have to ask for it via `resize`.
+
+The network ignores a resize where the global schema and extra program pages are all zero, so an app can't have all of them reduced to zero in a single update; attempting it throws rather than silently doing nothing. Delete and re-create the app if you need to release all of them.
 
 If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via `algorand.app.getCompilationResult` (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 

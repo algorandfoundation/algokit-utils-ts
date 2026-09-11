@@ -399,15 +399,21 @@ export type AppUpdateParams = Expand<
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     clearStateProgram: string | Uint8Array
-    /** Whether inferred sizing may shrink state. The deployer applies this to global schema; all updates apply it to inferred extra program pages. Defaults to false. */
-    allowStateShrinking?: boolean
     /**
      * Change size-related parameters for the application.
-     * An increase to any of these values during update will move the MBR for the app to the sender of the transaction.
+     *
+     * These are absolute values, not deltas, and any value that is omitted defaults to the app's current value.
+     * An increase to any of these values will increase the minimum balance requirement held by the sender of the transaction.
+     *
+     * Note: the network ignores a resize where the global schema and extra program pages are all zero, so an app can't
+     * have all of them reduced to zero in a single update; use a delete and re-create if you need that.
+     *
+     * If this isn't specified then the app's global schema is left as is, and extra program pages are only increased if
+     * the supplied programs don't fit within the app's current pages. Reductions are never inferred.
      */
     resize?: {
-      /** The global state schema for the app. */
-      schema: {
+      /** The global state schema for the app; defaults to the app's current global schema. */
+      schema?: {
         /** The number of integers saved in global state. */
         globalInts: number
         /** The number of byte slices saved in global state. */
@@ -415,7 +421,7 @@ export type AppUpdateParams = Expand<
       }
       /**
        * Number of extra pages required for the programs.
-       * Defaults to the number needed for the programs in this call if not specified.
+       * Defaults to the app's current extra pages, or the number needed for the programs in this call if that's higher.
        */
       extraPages?: number
     }
@@ -1534,25 +1540,69 @@ export class TransactionComposer {
     return { txn, context: { maxFee: logicalMaxFee } }
   }
 
-  private async inferExtraProgramPages(appID: bigint, approvalProgram: Uint8Array, clearProgram: Uint8Array, allowStateShrinking: boolean) {
-    const calculated = calculateExtraProgramPages(approvalProgram, clearProgram)
+  /**
+   * Resolves the resize values to send with an app update transaction.
+   *
+   * The network only applies a resize if at least one of the global schema / extra program pages values is non-zero, and when it
+   * does it applies all of them as absolute values. Any field left at zero is therefore a reduction of that value to zero, so
+   * every field has to be populated (from the app's current values if the caller didn't supply one) whenever a resize is sent.
+   *
+   * Reductions are never inferred - the only sizing change made without being asked is growing extra program pages so the
+   * supplied programs fit.
+   *
+   * @returns The values to send, or undefined if the transaction shouldn't request a resize at all.
+   */
+  private async resolveUpdateResize(
+    appId: bigint,
+    approvalProgram: Uint8Array | undefined,
+    clearStateProgram: Uint8Array | undefined,
+    resize: AppUpdateParams['resize'],
+  ) {
+    const requiredExtraPages = approvalProgram ? calculateExtraProgramPages(approvalProgram, clearStateProgram) : 0
 
-    if (!appID) return calculated
+    // Nothing was asked for and the programs fit in a single page, so there's nothing that could need changing
+    if (resize === undefined && requiredExtraPages === 0) return undefined
 
-    const params = (await this.algod.getApplicationByID(appID).do()).params
-    if (params === undefined) {
-      throw Error(`Could not get app params for ${appID} to infer extra program pages`)
+    // Every value was supplied, so the app doesn't need to be looked up to fill any of them in
+    if (resize?.schema !== undefined && resize.extraPages !== undefined) {
+      return this.assertResizeIsSupported(appId, { ...resize.schema, extraPages: resize.extraPages })
     }
 
-    const currentEpp = params.extraProgramPages ?? 0
+    const app = await this.appManager.getById(appId)
+    const current = {
+      globalInts: app.globalInts,
+      globalByteSlices: app.globalByteSlices,
+      extraPages: app.extraProgramPages ?? 0,
+    }
 
-    if (calculated < currentEpp && !allowStateShrinking) {
-      throw Error(
-        `This app update will shrink the extra program pages for ${appID} from ${currentEpp} to ${calculated}. To allow this, set "allowStateShrinking" to true`,
+    const resolved = {
+      globalInts: resize?.schema?.globalInts ?? current.globalInts,
+      globalByteSlices: resize?.schema?.globalByteSlices ?? current.globalByteSlices,
+      extraPages: resize?.extraPages ?? Math.max(current.extraPages, requiredExtraPages),
+    }
+
+    // Nothing is actually changing, so leave the resize off the transaction entirely
+    if (
+      resolved.globalInts === current.globalInts &&
+      resolved.globalByteSlices === current.globalByteSlices &&
+      resolved.extraPages === current.extraPages
+    ) {
+      return undefined
+    }
+
+    return this.assertResizeIsSupported(appId, resolved)
+  }
+
+  /** Throws if the given resize is one the network can't carry out, otherwise returns it unchanged. */
+  private assertResizeIsSupported(appId: bigint, resize: { globalInts: number; globalByteSlices: number; extraPages: number }) {
+    if (!resize.globalInts && !resize.globalByteSlices && !resize.extraPages) {
+      throw new Error(
+        `Can't resize app ${appId} to a global schema of 0 ints and 0 byte slices with 0 extra program pages, since the network ` +
+          `ignores a resize where every value is zero. Delete and re-create the app if you need to release all of them.`,
       )
     }
 
-    return calculated
+    return resize
   }
 
   /**
@@ -1690,14 +1740,8 @@ export class TransactionComposer {
       access: params.accessReferences?.map(getResourceReference),
       approvalProgram,
       clearProgram: clearStateProgram,
-      numLocalInts:
-        appId === 0n ? ('schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0) : undefined,
-      numLocalByteSlices:
-        appId === 0n
-          ? 'schema' in params && params.schema && 'localByteSlices' in params.schema
-            ? params.schema.localByteSlices
-            : 0
-          : undefined,
+      numLocalInts: appId === 0n ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
+      numLocalByteSlices: appId === 0n ? ('schema' in params ? (params.schema?.localByteSlices ?? 0) : 0) : undefined,
       numGlobalInts: appId === 0n ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
       numGlobalByteSlices: appId === 0n ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
       method: params.method,
@@ -1724,22 +1768,25 @@ export class TransactionComposer {
       rekeyTo: undefined,
     }
 
-    if ('resize' in params && params.resize) {
-      txnParams.numGlobalInts = params.resize.schema.globalInts
-      txnParams.numGlobalByteSlices = params.resize.schema.globalByteSlices
-    }
-
-    if ('extraProgramPages' in params && params.extraProgramPages !== undefined) {
-      txnParams.extraPages = params.extraProgramPages
-    } else if ('resize' in params && params.resize?.extraPages !== undefined) {
-      txnParams.extraPages = params.resize.extraPages
-    } else if (approvalProgram !== undefined && clearStateProgram !== undefined) {
-      txnParams.extraPages = await this.inferExtraProgramPages(
+    if (appId === 0n) {
+      txnParams.extraPages =
+        'extraProgramPages' in params && params.extraProgramPages !== undefined
+          ? params.extraProgramPages
+          : approvalProgram
+            ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
+            : 0
+    } else if (approvalProgram !== undefined) {
+      const resize = await this.resolveUpdateResize(
         appId,
         approvalProgram,
         clearStateProgram,
-        ('allowStateShrinking' in params && params.allowStateShrinking) ?? false,
+        'resize' in params ? params.resize : undefined,
       )
+      if (resize) {
+        txnParams.numGlobalInts = resize.globalInts
+        txnParams.numGlobalByteSlices = resize.globalByteSlices
+        txnParams.extraPages = resize.extraPages
+      }
     }
 
     // Build the transaction
@@ -1875,19 +1922,18 @@ export class TransactionComposer {
 
       const txnParams: Parameters<typeof algosdk.makeApplicationCreateTxnFromObject>[0] = {
         ...sdkParams,
-        numLocalInts: 'schema' in params && params.schema && 'localInts' in params.schema ? params.schema.localInts : 0,
-        numLocalByteSlices: 'schema' in params && params.schema && 'localByteSlices' in params.schema ? params.schema.localByteSlices : 0,
+        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
+        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
         numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
         numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
         approvalProgram: approvalProgram!,
         clearProgram: clearStateProgram!,
       }
 
-      if ('extraProgramPages' in params && params.extraProgramPages !== undefined) {
-        txnParams.extraPages = params.extraProgramPages
-      } else {
-        txnParams.extraPages = await this.inferExtraProgramPages(appId, approvalProgram!, clearStateProgram!, false)
-      }
+      txnParams.extraPages =
+        'extraProgramPages' in params && params.extraProgramPages !== undefined
+          ? params.extraProgramPages
+          : calculateExtraProgramPages(approvalProgram!, clearStateProgram)
 
       return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, txnParams)
     } else {
@@ -1896,20 +1942,18 @@ export class TransactionComposer {
         appIndex: appId,
       }
 
-      if ('resize' in params && params.resize?.extraPages !== undefined) {
-        txnParams.extraPages = params.resize.extraPages
-      } else if ('approvalProgram' in params && 'clearStateProgram' in params && approvalProgram && clearStateProgram) {
-        txnParams.extraPages = await this.inferExtraProgramPages(
+      if (approvalProgram !== undefined) {
+        const resize = await this.resolveUpdateResize(
           appId,
           approvalProgram,
           clearStateProgram,
-          ('allowStateShrinking' in params && params.allowStateShrinking) ?? false,
+          'resize' in params ? params.resize : undefined,
         )
-      }
-
-      if ('resize' in params && params.resize) {
-        txnParams.numGlobalInts = params.resize.schema.globalInts
-        txnParams.numGlobalByteSlices = params.resize.schema.globalByteSlices
+        if (resize) {
+          txnParams.numGlobalInts = resize.globalInts
+          txnParams.numGlobalByteSlices = resize.globalByteSlices
+          txnParams.extraPages = resize.extraPages
+        }
       }
 
       return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, txnParams)

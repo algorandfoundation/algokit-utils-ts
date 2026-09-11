@@ -118,7 +118,6 @@ export async function deployApp(
     staticFee: deployment.fee,
     maxFee: deployment.maxFee,
     onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
-    allowStateShrinking: deployment.allowStateShrinking,
   } satisfies Partial<AppUpdateParams>
 
   const deleteParams = {
@@ -185,6 +184,7 @@ export async function deployApp(
     deployTimeParams: deployment.deployTimeParams,
     onSchemaBreak: deployment.onSchemaBreak,
     onUpdate: deployment.onUpdate,
+    allowStateShrinking: deployment.allowStateShrinking,
     existingDeployments: deployment.existingDeployments
       ? {
           creator: Address.fromString(deployment.existingDeployments.creator),

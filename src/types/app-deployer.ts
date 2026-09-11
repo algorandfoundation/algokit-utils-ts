@@ -57,6 +57,11 @@ export type AppDeployParams = Expand<
      * * `append` - Deploy a new app and leave the old one as is
      */
     onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
+    /** Whether an update is allowed to reduce the app's global schema or extra program pages, default: `false`.
+     *
+     * The target sizes are taken from `createParams` (or `updateParams.resize` if supplied); a reduction is never inferred
+     * from the supplied programs. */
+    allowStateShrinking?: boolean
     /** Create transaction parameters to use if a create needs to be issued as part of deployment */
     createParams: AppCreateParams | AppCreateMethodCall
     /** Update transaction parameters to use if an update needs to be issued as part of deployment */
@@ -175,6 +180,7 @@ export class AppDeployer {
       deployTimeParams,
       onSchemaBreak,
       onUpdate,
+      allowStateShrinking,
       createParams,
       updateParams: suppliedUpdateParams,
       deleteParams,
@@ -371,28 +377,25 @@ export class AppDeployer {
     const newClearBytes = Buffer.from(clearStateProgram)
     const newApproval = newApprovalBytes.toString('base64')
     const newClear = newClearBytes.toString('base64')
-    const inferredExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
-    const newExtraPages = updateParams.resize?.extraPages ?? Math.max(createParams.extraProgramPages ?? 0, inferredExtraPages)
-    const updateResize = {
-      ...(updateParams.resize ?? {
-        schema: {
-          globalInts: createParams.schema?.globalInts ?? 0,
-          globalByteSlices: createParams.schema?.globalByteSlices ?? 0,
-        },
-      }),
-      ...(updateParams.resize?.extraPages !== undefined || createParams.extraProgramPages !== undefined
-        ? { extraPages: newExtraPages }
-        : {}),
-    } satisfies NonNullable<AppUpdateParams['resize']>
+    const requiredExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
+
+    // Work out the sizes the app should end up with. Anything the caller hasn't asked for keeps its current value, with the
+    // exception of extra program pages, which are grown if that's what it takes to fit the new programs. Reductions are only
+    // ever made because they were explicitly asked for, via `updateParams.resize` or `createParams`.
+    const newSchema =
+      updateParams.resize?.schema ??
+      (createParams.schema
+        ? { globalInts: createParams.schema.globalInts, globalByteSlices: createParams.schema.globalByteSlices }
+        : { globalInts: existingAppRecord.globalInts, globalByteSlices: existingAppRecord.globalByteSlices })
+    const newExtraPages = updateParams.resize?.extraPages ?? Math.max(createParams.extraProgramPages ?? extraPages, requiredExtraPages)
 
     // Check for changes
 
-    const isUpdate =
-      newApproval !== existingApproval ||
-      newClear !== existingClear ||
-      existingAppRecord.globalInts !== updateResize.schema.globalInts ||
-      existingAppRecord.globalByteSlices !== updateResize.schema.globalByteSlices ||
+    const isResize =
+      existingAppRecord.globalInts !== newSchema.globalInts ||
+      existingAppRecord.globalByteSlices !== newSchema.globalByteSlices ||
       extraPages !== newExtraPages
+    const isUpdate = newApproval !== existingApproval || newClear !== existingClear || isResize
     const isSchemaBreak =
       existingAppRecord.localInts < (createParams.schema?.localInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0)
@@ -450,15 +453,17 @@ export class AppDeployer {
       }
 
       if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
-        const shrinksGlobalSchema =
-          updateResize.schema.globalInts < existingAppRecord.globalInts ||
-          updateResize.schema.globalByteSlices < existingAppRecord.globalByteSlices
-        if (shrinksGlobalSchema && !updateParams.allowStateShrinking) {
+        const shrinks =
+          newSchema.globalInts < existingAppRecord.globalInts ||
+          newSchema.globalByteSlices < existingAppRecord.globalByteSlices ||
+          newExtraPages < extraPages
+        if (shrinks && !allowStateShrinking) {
           throw new Error(
-            `This app update will shrink the global schema for ${existingApp.appId} from ` +
-              `${existingAppRecord.globalInts} ints and ${existingAppRecord.globalByteSlices} byte slices to ` +
-              `${updateResize.schema.globalInts} ints and ${updateResize.schema.globalByteSlices} byte slices. ` +
-              'To allow this, set "allowStateShrinking" to true',
+            `This app update will shrink app ${existingApp.appId} from ` +
+              `${existingAppRecord.globalInts} global ints, ${existingAppRecord.globalByteSlices} global byte slices and ` +
+              `${extraPages} extra program pages to ` +
+              `${newSchema.globalInts} global ints, ${newSchema.globalByteSlices} global byte slices and ` +
+              `${newExtraPages} extra program pages. To allow this, set "allowStateShrinking" to true`,
           )
         }
 
@@ -470,7 +475,10 @@ export class AppDeployer {
           )
         }
 
-        updateParams.resize = updateResize
+        // Every value has to be supplied when resizing, since the network applies them all as absolute values
+        if (isResize) {
+          updateParams.resize = { schema: newSchema, extraPages: newExtraPages }
+        }
         return await updateApp(existingApp)
       }
 

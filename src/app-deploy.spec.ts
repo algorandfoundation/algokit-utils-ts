@@ -296,11 +296,9 @@ describe('deploy-app', () => {
       onUpdate: 'update',
     })) as AppDeployParams
 
-    await expect(algorand.appDeployer.deploy(deployment2)).rejects.toThrow(
-      `This app update will shrink the global schema for ${result1.appId}`,
-    )
+    await expect(algorand.appDeployer.deploy(deployment2)).rejects.toThrow(`This app update will shrink app ${result1.appId}`)
 
-    deployment2.updateParams.allowStateShrinking = true
+    deployment2.allowStateShrinking = true
     const result2 = await algorand.appDeployer.deploy(deployment2)
     const app = await algorand.app.getById(result2.appId)
 
@@ -331,6 +329,50 @@ describe('deploy-app', () => {
       extraPages: 1,
     }
 
+    const result2 = await algorand.appDeployer.deploy(deployment2)
+    const app = await algorand.app.getById(result2.appId)
+
+    expect(result2.operationPerformed).toBe('update')
+    expect(result2.appId).toBe(result1.appId)
+    expect(app.extraProgramPages).toBe(1)
+  })
+
+  test('Deploy leaves surplus extra program pages alone', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: true })
+    const deployment1 = (await getTestingAppDeployParams({ sender: testAccount, metadata })) as AppDeployParams
+    deployment1.createParams.extraProgramPages = 1
+    const result1 = await algorand.appDeployer.deploy(deployment1)
+    await waitForIndexer()
+
+    // Same app, but the programs no longer need the extra page and none was asked for
+    const deployment2 = (await getTestingAppDeployParams({ sender: testAccount, metadata, onUpdate: 'update' })) as AppDeployParams
+    const result2 = await algorand.appDeployer.deploy(deployment2)
+    const app = await algorand.app.getById(result2.appId)
+
+    expect(result2.operationPerformed).toBe('nothing')
+    expect(result2.appId).toBe(result1.appId)
+    expect(app.extraProgramPages).toBe(1)
+  })
+
+  test('Deploy update only shrinks extra program pages when explicitly allowed', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: true })
+    const deployment1 = (await getTestingAppDeployParams({ sender: testAccount, metadata })) as AppDeployParams
+    deployment1.createParams.extraProgramPages = 2
+    const result1 = await algorand.appDeployer.deploy(deployment1)
+    await waitForIndexer()
+
+    const deployment2 = (await getTestingAppDeployParams({
+      sender: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      onUpdate: 'update',
+    })) as AppDeployParams
+    deployment2.createParams.extraProgramPages = 1
+
+    await expect(algorand.appDeployer.deploy(deployment2)).rejects.toThrow(`This app update will shrink app ${result1.appId}`)
+
+    deployment2.allowStateShrinking = true
     const result2 = await algorand.appDeployer.deploy(deployment2)
     const app = await algorand.app.getById(result2.appId)
 
