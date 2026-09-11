@@ -176,12 +176,13 @@ export class AppDeployer {
       onSchemaBreak,
       onUpdate,
       createParams,
-      updateParams,
+      updateParams: suppliedUpdateParams,
       deleteParams,
       existingDeployments,
       ignoreCache,
       ...sendParams
     } = deployment
+    const updateParams: AppDeployParams['updateParams'] = { ...suppliedUpdateParams }
 
     // Set creation note
 
