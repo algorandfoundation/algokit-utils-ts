@@ -1,10 +1,15 @@
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
+import {
+  getTestingAppContract,
+  getTestingAppCreateParams,
+  getTestingAppDeployParams,
+} from '../tests/example-contracts/testing-app/contract'
+import { deployApp, replaceDeployTimeControlParams } from './app-deploy'
 import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
-import { AppDeployMetadata } from './types/app'
+import { AppDeploymentParams, AppDeployMetadata } from './types/app'
 import { AppDeployParams } from './types/app-deployer'
 import { AppManager } from './types/app-manager'
 import { LogicError } from './types/logic-error'
@@ -214,6 +219,63 @@ describe('deploy-app', () => {
     expect(result2.appId).toBe(result1.appId)
     expect(app.globalInts).toBe(schema.globalInts)
     expect(app.globalByteSlices).toBe(schema.globalByteSlices)
+  })
+
+  test('Deploy does not retain inferred resize params when reusing a deployment', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const deployment = (await getTestingAppDeployParams({
+      sender: testAccount,
+      metadata: getMetadata({ updatable: true }),
+      onUpdate: 'update',
+    })) as AppDeployParams
+    await algorand.appDeployer.deploy(deployment)
+    await waitForIndexer()
+
+    deployment.createParams.schema = {
+      ...deployment.createParams.schema!,
+      globalInts: deployment.createParams.schema!.globalInts + 1,
+    }
+    await algorand.appDeployer.deploy(deployment)
+    expect(deployment.updateParams.resize).toBeUndefined()
+
+    deployment.createParams.schema.globalInts += 1
+    const result = await algorand.appDeployer.deploy(deployment)
+    const app = await algorand.app.getById(result.appId)
+
+    expect(result.operationPerformed).toBe('update')
+    expect(app.globalInts).toBe(deployment.createParams.schema.globalInts)
+  })
+
+  test('Deprecated deployApp allows global schema shrinking', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const contract = await getTestingAppContract()
+    const metadata = getMetadata({ updatable: true })
+    const approvalProgram = await algorand.app.compileTeal(
+      replaceDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
+    )
+    const clearStateProgram = await algorand.app.compileTeal(contract.clearStateProgram)
+    const deployment: AppDeploymentParams = {
+      from: testAccount,
+      approvalProgram: approvalProgram.compiledBase64ToBytes,
+      clearStateProgram: clearStateProgram.compiledBase64ToBytes,
+      schema: {
+        ...contract.stateSchema,
+        globalInts: contract.stateSchema.globalInts + 1,
+      },
+      metadata,
+      onUpdate: 'update',
+    }
+    const result1 = await deployApp(deployment, algorand.client.algod, algorand.client.indexer)
+    await waitForIndexer()
+
+    deployment.schema.globalInts = contract.stateSchema.globalInts
+    deployment.allowStateShrinking = true
+    const result2 = await deployApp(deployment, algorand.client.algod, algorand.client.indexer)
+    const app = await algorand.app.getById(BigInt(result2.appId))
+
+    expect(result2.operationPerformed).toBe('update')
+    expect(result2.appId).toBe(result1.appId)
+    expect(app.globalInts).toBe(contract.stateSchema.globalInts)
   })
 
   test('Deploy update only shrinks global schema when explicitly allowed', async () => {
