@@ -372,14 +372,17 @@ export class AppDeployer {
     const newClear = newClearBytes.toString('base64')
     const inferredExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
     const newExtraPages = updateParams.resize?.extraPages ?? Math.max(createParams.extraProgramPages ?? 0, inferredExtraPages)
-    const updateResize =
-      updateParams.resize ??
-      ({
+    const updateResize = {
+      ...(updateParams.resize ?? {
         schema: {
           globalInts: createParams.schema?.globalInts ?? 0,
           globalByteSlices: createParams.schema?.globalByteSlices ?? 0,
         },
-      } satisfies NonNullable<AppUpdateParams['resize']>)
+      }),
+      ...(updateParams.resize?.extraPages !== undefined || createParams.extraProgramPages !== undefined
+        ? { extraPages: newExtraPages }
+        : {}),
+    } satisfies NonNullable<AppUpdateParams['resize']>
 
     // Check for changes
 

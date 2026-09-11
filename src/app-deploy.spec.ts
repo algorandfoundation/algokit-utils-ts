@@ -277,6 +277,28 @@ describe('deploy-app', () => {
     expect(app.extraProgramPages).toBe(1)
   })
 
+  test('Deploy update uses extra program pages from create params', async () => {
+    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: true })
+    const deployment1 = await getTestingAppDeployParams({ sender: testAccount, metadata })
+    const result1 = await algorand.appDeployer.deploy(deployment1)
+    await waitForIndexer()
+
+    const deployment2 = (await getTestingAppDeployParams({
+      sender: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      onUpdate: 'update',
+    })) as AppDeployParams
+    deployment2.createParams.extraProgramPages = 1
+
+    const result2 = await algorand.appDeployer.deploy(deployment2)
+    const app = await algorand.app.getById(result2.appId)
+
+    expect(result2.operationPerformed).toBe('update')
+    expect(result2.appId).toBe(result1.appId)
+    expect(app.extraProgramPages).toBe(1)
+  })
+
   test('Deploy update to immutable updated app fails', async () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: false })
