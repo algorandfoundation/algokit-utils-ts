@@ -9,6 +9,20 @@ export class AlgorandClientTransactionCreator {
   private _newGroup: () => TransactionComposer
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAlgorandClientTransactionCreator = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AlgorandClientTransactionCreator)._isAlgorandClientTransactionCreator === true)
+  }
+
+  /**
    * Creates a new `AlgorandClientTransactionCreator`
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @example

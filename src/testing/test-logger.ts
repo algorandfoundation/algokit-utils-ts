@@ -10,6 +10,20 @@ export class TestLogger implements Logger {
   private logs: string[]
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isTestLogger = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as TestLogger)._isTestLogger === true)
+  }
+
+  /**
    * Create a new test logger that wraps the given logger if provided.
    * @param originalLogger The optional original logger to wrap.
    */
