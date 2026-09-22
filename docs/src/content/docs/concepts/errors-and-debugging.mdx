@@ -104,10 +104,11 @@ In the browser the addon cannot run. Subscribe to the event yourself and persist
 
 ```ts
 import { Config, EventType } from '@algorandfoundation/algokit-utils'
+import { encodeJSON } from 'algosdk'
 
 Config.configure({ debug: true })
 Config.events.on(EventType.TxnGroupSimulated, (eventData) => {
-  Config.logger.info(JSON.stringify(eventData.simulateResponse.get_obj_for_encoding(), null, 2))
+  Config.logger.info(encodeJSON(eventData.simulateResponse, { space: 2 }))
 })
 ```
 
