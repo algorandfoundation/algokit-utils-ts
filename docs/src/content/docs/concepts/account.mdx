@@ -162,7 +162,7 @@ All Algorand accounts require a minimum balance to be registered in the ledger. 
   frame="none"
 />
 
-Returns the result of the funding transaction along with the `amountFunded`, or `undefined` when the balance already met the threshold. An optional `options` argument accepts `minFundingIncrement` alongside the [common transaction and execution parameters](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters).
+Returns the result of the funding transaction along with the `amountFunded`, or `undefined` when the balance already met the threshold. An optional `options` argument accepts `minFundingIncrement` alongside the [common transaction and execution parameters](/algokit-utils-ts/concepts/transactions/#send-parameters).
 
 `ensureFundedFromEnvironment` does the same, but sources the dispenser from the environment (per `dispenserFromEnvironment`), making the code portable across environments without hardcoding account details.
 
@@ -292,9 +292,9 @@ One of the unique features of Algorand is the ability to change the private key 
 > [!WARNING]
 > Rekeying should be done with caution as a rekey transaction can result in permanent loss of control of an account.
 
-You can issue a transaction to rekey an account by using the `rekeyAccount` function. Pass the `account` to rekey and the `rekeyTo` address or signing account that will authorise it from now on; passing a signing account also registers it as the new signer. A third `options` argument accepts the [common transaction and execution parameters](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters), and the result describes the rekey transaction that was sent.
+You can issue a transaction to rekey an account by using the `rekeyAccount` function. Pass the `account` to rekey and the `rekeyTo` address or signing account that will authorise it from now on; passing a signing account also registers it as the new signer. A third `options` argument accepts the [common transaction and execution parameters](/algokit-utils-ts/concepts/transactions/#send-parameters), and the result describes the rekey transaction that was sent.
 
-You can also pass in `rekeyTo` as a [common transaction parameter](/algokit-utils-ts/concepts/algorand-client/#transaction-parameters) to any transaction.
+You can also pass in `rekeyTo` as a [common transaction parameter](/algokit-utils-ts/concepts/transactions/#send-parameters) to any transaction.
 
 In the following example, `accountA` is rekeyed to `accountB`. After rekeying, a transaction from `accountA` must be authorized by `accountB`'s private key.
 
