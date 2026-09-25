@@ -1,0 +1,169 @@
+---
+title: 'Assets'
+description: 'Algorand Standard Assets are created, held, and moved by the Algorand ledger itself, and AlgoKit Utils TypeScript exposes every asset operation as a typed params object sent through the Algorand client.'
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+import RemoteCode from '/src/components/RemoteCode.astro'
+
+Algorand Standard Assets (ASAs) are a primitive of the Algorand network. Tokens are created, held, and moved by the ledger itself, and every asset operation is an ordinary transaction. AlgoKit Utils reflects this directly. Each operation is a typed params object (`AssetCreateParams`, `AssetTransferParams`, and so on) passed to `algorand.send`, exactly like a payment. What is asset-specific lives in `algorand.asset`, the `AssetManager`: queries over assets and holdings, plus bulk opt-in and opt-out helpers that add group batching and safety checks single transactions don't provide.
+
+This page walks through the asset lifecycle from creation to destruction. For the protocol rules themselves — the control roles, the opt-in requirement, freeze and clawback semantics — see the [Assets overview](https://dev.algorand.co/concepts/assets/overview/) and [Asset Operations](https://dev.algorand.co/concepts/assets/asset-operations/) pages on the Algorand Developer Portal.
+
+Operations whose effects cannot be undone are collected in [Safety Considerations](#safety-considerations).
+
+## Create an Asset
+
+Creating an ASA raises the creator's minimum balance requirement by 0.1 Algo, so any account able to cover that increase and the transaction fee can create one. The sender becomes the asset's creator, and the entire supply starts in their account. `algorand.send.assetCreate` builds, signs, and submits the transaction, and the result carries the new asset's ID.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="CREATE_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+## Opt In and Out of Assets
+
+An account cannot receive or hold units of an asset it has not opted into. Opting in creates an empty holding for that asset; opting out closes it again. Both directions have a bulk helper on `algorand.asset` for acting on several assets in one call.
+
+### Opt In
+
+Each holding raises the account's minimum balance requirement by 0.1 Algo, so an account pays for the assets it chooses to hold. The opting-in account signs and sends the transaction itself.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="OPT_IN_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+To opt into several assets at once, `algorand.asset.bulkOptIn(...)` takes a list of asset IDs and batches the opt-in transactions into atomic groups of up to 16, the protocol's transaction group limit.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="BULK_OPT_IN_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+### Opt Out
+
+Closing a holding releases the 0.1 Algo it reserved. `AssetOptOutParams` takes the asset's `creator`, which receives any units still held — so `algorand.send.assetOptOut` checks the balance is zero before submitting, unless `ensureZeroBalance: false` says otherwise.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="OPT_OUT_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+`algorand.asset.bulkOptOut(...)` closes several holdings the same way, with the same zero-balance check applied to each.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="BULK_OPT_OUT_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+## Transfer an Asset
+
+A transfer moves units between two accounts that have both opted into the asset. The sender needs at least the amount being sent, and neither holding may be frozen.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="TRANSFER_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+## Access Control
+
+An asset carries four optional authority addresses: `manager`, `reserve`, `freeze`, and `clawback`. Each is assigned when the asset is created, and an address left empty at creation can never be filled in later — an asset created without a `freeze` address can never be frozen.
+
+### Reconfigure an Asset
+
+The `manager` can reassign any of the four addresses. `AssetConfigParams` replaces all of them at once rather than patching one field, so an address left unset is submitted as empty and the role is cleared for good. Pass every address you intend to keep.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="RECONFIGURE_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+### Freeze or Unfreeze Assets
+
+The `freeze` address can stop a single account from moving a single asset. `AssetFreezeParams` names the account and carries a `frozen` flag, so the same call reverses the freeze by passing `false`.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="FREEZE_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+### Clawback Assets
+
+The `clawback` address can move units out of any opted-in account without the holder's consent. There is no dedicated params type for it: a clawback is an `AssetTransferParams` sent by the clawback address, with `clawbackTarget` naming the account the units come from.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="CLAWBACK_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+## Asset Queries
+
+Beyond the bulk helpers above, the `AssetManager` on `algorand.asset` answers two questions — what an asset is, and what an account holds:
+
+- `algorand.asset.getById(assetId)` returns the asset's parameters (total supply, decimals, unit name, control addresses, and so on).
+- `algorand.asset.getAccountInformation(sender, assetId)` returns the given account's holding for the asset.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="ASSET_MANAGER_QUERIES"
+  lang="ts"
+  frame="none"
+/>
+
+## Destroy an Asset
+
+Destroying an asset removes it from the ledger and releases the creator's 0.1 Algo. The `manager` sends the transaction, and every unit must be back in the creator's account first — an asset with units still circulating cannot be destroyed.
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/assets.algo.ts"
+  snippet="DESTROY_ASSET"
+  lang="ts"
+  frame="none"
+/>
+
+## Safety Considerations
+
+Three asset behaviors deserve attention because their effects are difficult or impossible to reverse. The [Asset Operations](https://dev.algorand.co/concepts/assets/asset-operations/) page on the Algorand Developer Portal describes the protocol-level rules in full; the notes below focus on library-level behavior.
+
+- **Reconfiguration can permanently clear control addresses.** A partial reconfiguration that omits a role removes that role from the asset for the remainder of its lifetime.
+- **Clawback removes assets from another account without the holder's consent.** A clawback is a transfer signed by the clawback authority, which can move assets out of any opted-in account without further approval from the holder.
+- **Opting out with a remaining balance can result in losing those assets.** Both `algorand.send.assetOptOut` and `algorand.asset.bulkOptOut` verify a zero balance before submission by default (`ensureZeroBalance: true`). With that check disabled, the opt-out proceeds even when the account still holds units of the asset, and those units are forfeited on submission.
+
+## What's Next
+
+<CardGrid>
+  <LinkCard
+    title="Algorand Client"
+    href="/algokit-utils-ts/concepts/algorand-client/"
+    description="The entry point that provides the send and asset surfaces used on this page"
+  />
+  <LinkCard
+    title="Transactions"
+    href="/algokit-utils-ts/concepts/transactions/"
+    description="Composing asset operations into atomic groups, common params fields, and fees"
+  />
+  <LinkCard
+    title="Asset Metadata"
+    href="https://dev.algorand.co/concepts/assets/asset-metadata/"
+    description="Conventions and ARC standards for attaching metadata to an asset"
+  />
+</CardGrid>
