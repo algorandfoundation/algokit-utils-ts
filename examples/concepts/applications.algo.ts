@@ -155,11 +155,13 @@ async function stateAndErrors(appClient: AppClient, deployer: TransactionSignerA
   void boxMap
 
   // example: HANDLE_LOGIC_ERROR
+  // The State contract's error method fails on purpose, so the logic eval error
+  // logged below is the failure this snippet decodes
   try {
     await appClient.send.call({ method: 'error' })
   } catch (e) {
     if (e instanceof LogicError) {
-      console.log(`Call failed at TEAL line ${e.teal_line}: ${e.message}`)
+      console.log(`Expected failure at TEAL line ${e.teal_line}: ${e.message}`)
     } else {
       throw e
     }
