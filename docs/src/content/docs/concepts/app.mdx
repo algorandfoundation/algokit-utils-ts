@@ -315,7 +315,7 @@ For state not declared in the app spec, the client also exposes raw readers — 
 
 ## Handle Logic Errors
 
-When a smart contract call fails, algod reports a `logic eval error` identifying only a program counter position. When the client holds a TEAL source map from compilation — clients created through a factory, or that have compiled the app's programs themselves — or the app spec carries its TEAL `source` and `sourceInfo`, the failure is decoded into a [`LogicError`](/algokit-utils-ts/api/types/logic-error/classes/logicerror/) locating the failing line in the TEAL source:
+When a smart contract call fails, algod reports a `logic eval error` identifying only a program counter position. When the client holds a TEAL source map from compilation — clients created through a factory, or that have compiled the app's programs themselves — or the app spec carries its TEAL `source` and `sourceInfo`, the failure is decoded into a [`LogicError`](/algokit-utils-ts/api/types/logic-error/classes/logicerror/) locating the failing line in the TEAL source. The `State` contract's `error` method fails deliberately, so the `logic eval error` the library logs here is the expected input:
 
 <RemoteCode
   src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
@@ -329,7 +329,7 @@ When a smart contract call fails, algod reports a `logic eval error` identifying
 <LinkCard
   title="Errors & Debugging"
   href="/algokit-utils-ts/concepts/errors-and-debugging/"
-  description="Reusing source maps, transforming errors, and capturing traces for the AVM Debugger"
+  description="Reusing source maps, transforming errors, and capturing traces for the Algorand Virtual Machine (AVM) Debugger"
 />
 
 ## Under the Hood
