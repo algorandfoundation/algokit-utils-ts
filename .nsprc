@@ -1,1 +1,62 @@
-{}
+{
+  "1239934": {
+    "active": true,
+    "notes": "undici WebSocket permessage-deflate unhandled error DoS (GHSA-3wwx-pv8p-q78v). Other undici copies in the tree are patched (6.29.0 / 7.30.0). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > node-gyp > undici@6.28.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles undici@6.28.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1239948": {
+    "active": true,
+    "notes": "ip-address isLinkLocal() fe80::/64 vs fe80::/10 SSRF bypass (GHSA-rpw4-54j3-4h4q). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > socks > ip-address@10.5.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles ip-address@10.5.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1239949": {
+    "active": true,
+    "notes": "ip-address NAT64 local-use range 64:ff9b:1::/48 not classified (GHSA-2vr4-cq9g-pvrc). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > socks > ip-address@10.5.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles ip-address@10.5.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240039": {
+    "active": true,
+    "notes": "undici downstream response splitting via retry interceptor (GHSA-r53p-7pc4-xj5r). Other undici copies in the tree are patched (6.29.0 / 7.30.0). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > node-gyp > undici@6.28.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles undici@6.28.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240042": {
+    "active": true,
+    "notes": "undici DoS via unrequested WebSocket subprotocol (GHSA-rfgv-xxqx-mfg5). Other undici copies in the tree are patched (6.29.0 / 7.30.0). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > node-gyp > undici@6.28.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles undici@6.28.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240097": {
+    "active": true,
+    "notes": "ip-address isInSubnet()/isHostInSubnet() cross-family comparison (GHSA-j6r3-76f7-8jcv). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > socks > ip-address@10.5.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles ip-address@10.5.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240098": {
+    "active": true,
+    "notes": "ip-address unbounded Address6 parse diagnostic DoS (GHSA-h3mg-xc3c-68pw). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > socks > ip-address@10.5.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles ip-address@10.5.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240103": {
+    "active": true,
+    "notes": "brace-expansion quadratic-time `{a},b}` rewrite DoS (GHSA-q2hr-2g5m-vwhr). The direct tree is patched to 5.0.12 via the package.json override. Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > minimatch > brace-expansion@5.0.9); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles brace-expansion@5.0.9. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240107": {
+    "active": true,
+    "notes": "brace-expansion stack exhaustion via nested brace groups (GHSA-qhr7-859c-m2p7). The direct tree is patched to 5.0.12 via the package.json override. Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > minimatch > brace-expansion@5.0.9); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles brace-expansion@5.0.9. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240111": {
+    "active": true,
+    "notes": "brace-expansion stack exhaustion in parseCommaParts (GHSA-6j4f-fj2g-mc7p). The direct tree is patched to 5.0.12 via the package.json override. Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > minimatch > brace-expansion@5.0.9); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles brace-expansion@5.0.9. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240991": {
+    "active": true,
+    "notes": "http-cache-semantics max-stale cross-user cache disclosure (GHSA-ch52-4w7c-c8xp). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > http-cache-semantics@4.2.0); npm ships it as a bundledDependency, so an override cannot reach it, and even the latest npm 11.x (11.21.0, verified 2026-10-05) still bundles http-cache-semantics@4.2.0. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  },
+  "1240992": {
+    "active": true,
+    "notes": "braces stack-exhaustion DoS via deeply nested patterns (GHSA-vfj7-8cjw-p6xm). Affects every published version (latest is 3.0.3, verified 2026-10-05), so no upgrade or override is possible. Reached only through dev tooling (fast-glob/micromatch via cpy-cli, replace-in-files-cli, tealscript/ts-morph, semantic-release) operating on repo-controlled glob patterns, never untrusted input. Not shipped in the published package. Review 2026-12-01.",
+    "expiry": "2026-12-01"
+  }
+}
