@@ -15,15 +15,19 @@ Account management is one of the core capabilities provided by AlgoKit Utils. It
 
 In order to get/register accounts for signing operations you can use the following methods on [`AccountManager`](#accountmanager) (expressed here as `algorand.account` to denote the syntax via an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/)). Each returns a [`TransactionSignerAccount`](#transaction-signer-account) and registers its signer against its address, so transactions from that sender sign automatically:
 
-| Method                                      | Returns                                                                         |
-| ------------------------------------------- | ------------------------------------------------------------------------------- |
-| `random()`                                  | A new, cryptographically random account                                         |
-| `fromMnemonic(mnemonicSecret, sender?)`     | An account recovered from a 25-word mnemonic                                    |
-| `fromEnvironment(name, fundWith?)`          | An account resolved by name — from KMD on LocalNet, or `{NAME}_MNEMONIC` beyond |
-| `fromKmd(name, predicate?, sender?)`        | An account from a named KMD wallet                                              |
-| `multisig(multisigParams, signingAccounts)` | A multisig account with the supplied signers loaded                             |
-| `rekeyed(sender, account)`                  | An account for a rekeyed sender/signer pair                                     |
-| `logicsig(program, args?)`                  | An account representing a logic signature                                       |
+| Method                                      | Returns                                                                                 |
+| ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `random()`                                  | A new, cryptographically random account                                                 |
+| `fromMnemonic(mnemonicSecret, sender?)`     | An account recovered from a 25-word mnemonic                                            |
+| `fromEnvironment(name, fundWith?)`          | An account from the `{NAME}_MNEMONIC` environment variable, or a KMD wallet on LocalNet |
+| `fromKmd(name, predicate?, sender?)`        | An account from a named KMD wallet                                                      |
+| `multisig(multisigParams, signingAccounts)` | A multisig account with the supplied signers loaded                                     |
+| `rekeyed(sender, account)`                  | An account for a rekeyed sender/signer pair                                             |
+| `logicsig(program, args?)`                  | An account representing a logic signature                                               |
+
+:::caution
+Mnemonic-based accounts (`fromMnemonic`, `fromEnvironment`) suit development and testing, not long-lived production accounts. For those, use a secure key store or a wallet signer, as described under [Keys & Signing](#keys--signing).
+:::
 
 Each is detailed below; for full signatures and every parameter, see the [`AccountManager` API reference](/algokit-utils-ts/api/types/account-manager/classes/accountmanager/).
 
@@ -66,7 +70,7 @@ Get or create an account from environment variables. When running against LocalN
   frame="none"
 />
 
-On LocalNet a KMD wallet named `name` is created and funded if missing. Beyond LocalNet the account loads from `process.env['{NAME}_MNEMONIC']` (plus an optional `process.env['{NAME}_SENDER']` for rekeyed accounts), so the same code runs everywhere. Throws when `{NAME}_MNEMONIC` is missing beyond LocalNet, and requires a Node.js environment.
+If `process.env['{NAME}_MNEMONIC']` is set, the account loads from it (plus an optional `process.env['{NAME}_SENDER']` for rekeyed accounts). Otherwise, on LocalNet, a KMD wallet named `name` is created and funded if missing, so the same code runs everywhere. Throws when neither applies, and requires a Node.js environment.
 
 ### KMD Account Management
 
