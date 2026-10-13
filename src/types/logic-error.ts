@@ -20,6 +20,20 @@ export interface LogicErrorDetails {
 
 /** Wraps key functionality around processing logic errors */
 export class LogicError extends Error {
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isLogicError = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as LogicError)._isLogicError === true)
+  }
+
   /** Takes an error message and parses out the details of any logic errors in there.
    * @param error The error message to parse
    * @returns The logic error details if any, or undefined

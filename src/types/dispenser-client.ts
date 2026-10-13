@@ -73,6 +73,20 @@ export class TestNetDispenserApiClient {
   private _authToken: string
   private _requestTimeout: number
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isTestNetDispenserApiClient = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as TestNetDispenserApiClient)._isTestNetDispenserApiClient === true)
+  }
+
   constructor(params?: TestNetDispenserApiClientParams) {
     const authTokenFromEnv = process?.env?.[DISPENSER_ACCESS_TOKEN_KEY]
 

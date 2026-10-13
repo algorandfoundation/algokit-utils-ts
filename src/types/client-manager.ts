@@ -52,6 +52,20 @@ export class ClientManager {
   private _algorand?: AlgorandClient
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isClientManager = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as ClientManager)._isClientManager === true)
+  }
+
+  /**
    * algosdk clients or config for interacting with the official Algorand APIs.
    * @param clientsOrConfig The clients or config to use
    * @example Algod client only

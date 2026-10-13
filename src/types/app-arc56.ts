@@ -24,6 +24,20 @@ export class Arc56Method extends algosdk.ABIMethod {
   override readonly args: Array<Arc56MethodArg>
   override readonly returns: Arc56MethodReturnType
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isArc56Method = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as Arc56Method)._isArc56Method === true)
+  }
+
   constructor(public method: Method) {
     super(method)
     this.args = method.args.map((arg) => ({
