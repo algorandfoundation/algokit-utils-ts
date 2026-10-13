@@ -46,6 +46,7 @@ import {
   ABIStruct,
   Arc56Contract,
   Arc56Method,
+  coerceAbiStructValueToTuple,
   getABIDecodedValue,
   getABIEncodedValue,
   getABITupleFromABIStruct,
@@ -1120,10 +1121,8 @@ export class AppClient {
           throw new Error(`Unexpected arg at position ${i}. ${m.name} only expects ${m.args.length} args`)
         }
         if (a !== undefined) {
-          // If a struct then convert to tuple for the underlying call
-          return arg.struct && typeof a === 'object' && !Array.isArray(a)
-            ? getABITupleFromABIStruct(a as ABIStruct, this._appSpec.structs[arg.struct], this._appSpec.structs)
-            : (a as ABIValue | AppMethodCallTransactionArgument)
+          // Named struct objects must be encoded in ARC-56 field order, not JS insertion order
+          return coerceAbiStructValueToTuple(a, arg.type, this._appSpec.structs, arg.struct) as ABIValue | AppMethodCallTransactionArgument
         }
         const defaultValue = arg.defaultValue
         if (defaultValue) {
