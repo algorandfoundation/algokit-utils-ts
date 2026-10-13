@@ -1,5 +1,6 @@
 import algosdk, { ABIMethod, Address } from 'algosdk'
 import { Config } from '../config'
+import { resolveSignedTransactions } from '../transaction/resolve-signed-transactions'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
@@ -2166,7 +2167,13 @@ export class TransactionComposer {
       await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
     }
 
-    const transactions = atc.buildGroup().map((t) => t.txn)
+    // Signers (e.g. wallets) can mutate the transactions they sign, so the signed transactions are the source of truth
+    // for what was actually simulated. The signatures were gathered by the simulate call above, so they are returned
+    // from the composer's cache rather than being requested from the signers again.
+    const transactions = resolveSignedTransactions(
+      atc.buildGroup().map((t) => t.txn),
+      await atc.gatherSignatures(),
+    )
     const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
     return {
       confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),

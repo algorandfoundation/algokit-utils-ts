@@ -1607,8 +1607,7 @@ export class AppClient {
       }
     } else {
       // Only handle errors for this app.
-      const appIdString = `app=${this._appId.toString()}`
-      if (!e.message.includes(appIdString)) return e
+      if (!new RegExp(`app=${this._appId.toString()}(?!\\d)`).test(e.message)) return e
     }
 
     const logicError = await this.exposeLogicError(e)

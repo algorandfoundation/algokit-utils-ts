@@ -1,0 +1,20 @@
+// Type checks the *emitted* declarations in `dist`, as a consumer would see them.
+//
+// `tsconfig.typecheck.json` only checks `src`, which cannot catch declaration *emit* bugs. v9.2.1 shipped
+// `.d.ts` files referencing ~30 undeclared names (`Algodv2`, `Transaction`, `OnApplicationComplete`, ...)
+// because `rolldown-plugin-dts` drops `import X = algosdk.Y` alias declarations while bundling. The source
+// was valid throughout, so `check-types` passed and 305 errors reached npm. Consumers with
+// `skipLibCheck: true` silently got `any`, so it surfaced as unrelated-looking errors in their own code.
+//
+// `skipLibCheck` MUST stay false here — with it on, TypeScript skips checking `.d.ts` files entirely and
+// this check becomes a no-op.
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "skipLibCheck": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true
+  },
+  "include": ["dist/**/*.d.ts"]
+}

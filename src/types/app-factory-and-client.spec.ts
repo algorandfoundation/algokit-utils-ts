@@ -634,6 +634,16 @@ describe('ARC32: app-factory-and-app-client', () => {
         ).toMatchSnapshot()
       }
     })
+
+    test('Ignores logic errors from an app whose id has this app id as a prefix', async () => {
+      const client = localnet.algorand.client.getAppClientById({ appId: 1002n, appSpec })
+      const error = new Error(
+        'transaction ABC: logic eval error: assert failed pc=885. Details: app=10020, pc=885, opcodes=intc_0 // 0; assert',
+      )
+
+      expect(await client['handleCallErrors'](error)).toBe(error)
+      expect(logging.testLogger.capturedLogs).toEqual([])
+    })
   })
 
   test('Fund app account', async () => {
