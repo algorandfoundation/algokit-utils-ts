@@ -27,6 +27,8 @@ export class AlgorandClient {
   private _cachedSuggestedParams?: algosdk.SuggestedParams
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
+  private _cachedSuggestedParamsTimeoutExplicit = false
+  private _devModeSuggestedParamsChecked = false
 
   private _defaultValidityWindow: bigint | undefined = undefined
 
@@ -139,6 +141,7 @@ export class AlgorandClient {
    */
   public setSuggestedParamsCacheTimeout(timeout: number) {
     this._cachedSuggestedParamsTimeout = timeout
+    this._cachedSuggestedParamsTimeoutExplicit = true
     return this
   }
 
@@ -156,10 +159,29 @@ export class AlgorandClient {
     }
 
     this._cachedSuggestedParams = await this._clientManager.algod.getTransactionParams().do()
-    this._cachedSuggestedParamsExpiry = new Date(new Date().getTime() + this._cachedSuggestedParamsTimeout)
+
+    if (!this._devModeSuggestedParamsChecked) {
+      this._devModeSuggestedParamsChecked = true
+      if (!this._cachedSuggestedParamsTimeoutExplicit && (await this.isAlgodDevMode())) {
+        this._cachedSuggestedParamsTimeout = 0
+      }
+    }
+
+    this._cachedSuggestedParamsExpiry =
+      this._cachedSuggestedParamsTimeout <= 0 ? new Date(0) : new Date(new Date().getTime() + this._cachedSuggestedParamsTimeout)
 
     return {
       ...this._cachedSuggestedParams,
+    }
+  }
+
+  private async isAlgodDevMode(): Promise<boolean> {
+    try {
+      const raw = await this._clientManager.algod.genesis().do()
+      const genesis = (typeof raw === 'string' ? JSON.parse(raw) : raw) as { devmode?: boolean }
+      return genesis.devmode === true
+    } catch {
+      return false
     }
   }
 
