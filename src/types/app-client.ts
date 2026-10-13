@@ -416,6 +416,25 @@ export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
 const BYTE_CBLOCK = 38
 const INT_CBLOCK = 32
 
+/** Result of resolving a program counter against ARC-56 source info / source maps. */
+export type ResolvedPcSource = {
+  /** The program counter that was resolved (as provided by the caller / network error). */
+  pc: number
+  /**
+   * The program counter adjusted for ARC-56 `pcOffsetMethod` (e.g. after subtracting constant-block offset).
+   * This is the PC used to look up ARC-56 `sourceInfo` entries.
+   */
+  arc56Pc: number
+  /** 0-based TEAL line number when it can be resolved from a source map or ARC-56 teal index. */
+  tealLine?: number
+  /** TEAL source text at `tealLine` when app spec source is available. */
+  teal?: string
+  /** ARC-56 `errorMessage` associated with this PC, if any. */
+  errorMessage?: string
+  /** High-level source path from ARC-56 (e.g. `file.algo.ts:12`), if present. */
+  source?: string
+}
+
 /**
  * Get the offset of the last constant block at the beginning of the program
  * This value is used to calculate the program counter for an ARC56 program that has a pcOffsetMethod of "cblocks"
@@ -857,6 +876,39 @@ export class AppClient {
   }
 
   /**
+   * Map a program counter to TEAL / ARC-56 source information for this app.
+   *
+   * Useful when a call was performed outside this client and you only have a `pc` value.
+   *
+   * @param pc The program counter from the error or simulation
+   * @param isClearStateProgram Whether the PC is from the clear state program (defaults to approval)
+   * @returns The resolved source information for the PC
+   * @example
+   * ```typescript
+   * const info = await appClient.resolvePc(885)
+   * console.log(info.errorMessage, info.tealLine, info.teal)
+   * ```
+   */
+  public async resolvePc(pc: number, isClearStateProgram?: boolean): Promise<ResolvedPcSource> {
+    const pcOffsetMethod = this._appSpec.sourceInfo?.[isClearStateProgram ? 'clear' : 'approval']?.pcOffsetMethod
+
+    let program: Uint8Array | undefined
+    if (pcOffsetMethod === 'cblocks') {
+      const appInfo = await this._algorand.app.getById(this.appId)
+      program = isClearStateProgram ? appInfo.clearStateProgram : appInfo.approvalProgram
+    } else {
+      program = isClearStateProgram ? this._lastCompiled.clear : this._lastCompiled.approval
+    }
+
+    return AppClient.resolvePc(pc, this._appSpec, {
+      isClearStateProgram,
+      approvalSourceMap: this._approvalSourceMap,
+      clearSourceMap: this._clearSourceMap,
+      program,
+    })
+  }
+
+  /**
    * Takes an error that may include a logic error from a call to the current app and re-exposes the
    * error to include source code information via the source map and ARC-56 spec.
    * @param e The error to parse
@@ -960,6 +1012,85 @@ export class AppClient {
     }
 
     return result
+  }
+
+  /**
+   * Map a program counter to TEAL / ARC-56 source information without needing a full logic error string.
+   *
+   * Useful when a call was performed outside this client (or the error was already partially handled)
+   * and you only have a `pc` value to resolve.
+   *
+   * @param pc The program counter from the error or simulation
+   * @param appSpec The ARC-56 app spec for the app
+   * @param details Optional source maps / program bytes needed for resolution
+   * @returns The resolved source information for the PC
+   * @example
+   * ```typescript
+   * const info = AppClient.resolvePc(885, appSpec, { approvalSourceMap })
+   * console.log(info.tealLine, info.errorMessage, info.teal)
+   * ```
+   */
+  public static resolvePc(
+    pc: number,
+    appSpec: Arc56Contract,
+    details: {
+      /** Whether or not the code was running the clear state program (defaults to approval program) */
+      isClearStateProgram?: boolean
+      /** Approval program source map */
+      approvalSourceMap?: SourceMap
+      /** Clear state program source map */
+      clearSourceMap?: SourceMap
+      /** Program bytes (required when pcOffsetMethod is `cblocks`) */
+      program?: Uint8Array
+    } = {},
+  ): ResolvedPcSource {
+    const { isClearStateProgram, approvalSourceMap, clearSourceMap, program } = details
+    const sourceMap = isClearStateProgram ? clearSourceMap : approvalSourceMap
+    const programSourceInfo = isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval
+
+    let arc56Pc = pc
+
+    if (programSourceInfo?.pcOffsetMethod === 'cblocks') {
+      if (program === undefined) {
+        throw new Error('Program bytes are required to calculate the ARC56 cblocks PC offset')
+      }
+      const cblocksOffset = getConstantBlockOffset(program)
+      arc56Pc = pc - cblocksOffset
+    }
+
+    const sourceInfo = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(arc56Pc))
+    const errorMessage = sourceInfo?.errorMessage
+    const source = sourceInfo?.source
+
+    let tealLine: number | undefined
+    if (sourceMap) {
+      tealLine = sourceMap.getLocationForPc?.(pc)?.line
+    } else if (sourceInfo?.teal !== undefined) {
+      // ARC-56 teal indexes are 1-based line numbers
+      tealLine = sourceInfo.teal - 1
+    } else {
+      const tealFromPc = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(arc56Pc))?.teal
+      if (tealFromPc !== undefined) {
+        tealLine = tealFromPc - 1
+      }
+    }
+
+    let teal: string | undefined
+    if (tealLine !== undefined && appSpec.source) {
+      const programSource = Buffer.from(isClearStateProgram ? appSpec.source.clear : appSpec.source.approval, 'base64')
+        .toString()
+        .split('\n')
+      teal = programSource[tealLine]
+    }
+
+    return {
+      pc,
+      arc56Pc,
+      tealLine,
+      teal,
+      errorMessage,
+      source,
+    }
   }
 
   /**
