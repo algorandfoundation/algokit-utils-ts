@@ -124,7 +124,7 @@ export type ApplicationResult = indexerModels.Application
 /** @deprecated Use `algosdk.indexerModels.TransactionSignature`. Indexer Validation signature associated with some data. Only one of the signatures should be provided. https://dev.algorand.co/reference/rest-api/indexer#transactionsignature */
 export type TransactionSignature = indexerModels.TransactionSignature
 
-/** @deprecated Use `algosdk.indexerModels.TransactionSignatureLogicsig`. Indexer [lsig] Programatic transaction signature.
+/** @deprecated Use `algosdk.indexerModels.TransactionSignatureLogicsig`. Indexer [lsig] Programmatic transaction signature.
  *
  * https://dev.algorand.co/reference/rest-api/indexer#transactionsignaturelogicsig
  *
