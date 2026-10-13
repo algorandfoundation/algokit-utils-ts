@@ -163,6 +163,14 @@ export class AppManager {
    * ```
    */
   async compileTeal(tealCode: string): Promise<CompiledTeal> {
+    const unresolved = AppManager.findUnresolvedTealTemplateVars(tealCode)
+    if (unresolved.length > 0) {
+      throw new Error(
+        `Undefined TEAL template variable(s): ${unresolved.join(', ')}. ` +
+          `Pass them via compileTealTemplate templateParams (or replaceTealTemplateParams) before compiling.`,
+      )
+    }
+
     if (this._compilationResults[tealCode]) {
       return this._compilationResults[tealCode]
     }
@@ -522,6 +530,33 @@ export class AppManager {
    * const tealCode = AppManager.replaceTealTemplateParams(tealTemplate, { TMPL_APP_ID: 12345n });
    * ```
    */
+  /**
+   * Returns leftover `TMPL_*` tokens in TEAL (ignoring comments and quoted strings).
+   * Used to fail compilation with a clear error instead of algod's ParseUint message.
+   */
+  static findUnresolvedTealTemplateVars(tealCode: string): string[] {
+    const found = new Set<string>()
+    for (const line of tealCode.split('\n')) {
+      const commentIndex = findUnquotedString(line, '//')
+      const code = commentIndex === undefined ? line : line.slice(0, commentIndex)
+      let index = 0
+      while (index < code.length) {
+        const tokenIndex = findUnquotedString(code, 'TMPL_', index)
+        if (tokenIndex === undefined) {
+          break
+        }
+        const match = code.slice(tokenIndex).match(/^TMPL_[A-Z0-9_]+/)
+        if (match && (tokenIndex === 0 || !/[A-Za-z0-9_]/.test(code[tokenIndex - 1] ?? ''))) {
+          found.add(match[0])
+          index = tokenIndex + match[0].length
+        } else {
+          index = tokenIndex + 5
+        }
+      }
+    }
+    return [...found]
+  }
+
   static replaceTealTemplateParams(tealTemplateCode: string, templateParams?: TealTemplateParams) {
     if (templateParams !== undefined) {
       for (const key in templateParams) {
