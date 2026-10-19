@@ -39,8 +39,8 @@ See [usage](./docs/README.md#usage) for more details.
 Whilst we aim to minimise breaking changes, there are situations where they are required.
 JSDoc deprecations should guide you through most migration paths inside your IDE, however the migration guides will provide more detailed information should you need it.
 
-If you're targetting v7, please refer to the [v7 migration guide](./docs/v7-migration.md).
-If you're targetting v8, please refer to the [v8 migration guide](./docs/v8-migration.md).
+If you're targeting v7, please refer to the [v7 migration guide](./docs/src/content/docs/migration/v7-migration.md).
+If you're targeting v8, please refer to the [v8 migration guide](./docs/src/content/docs/migration/v8-migration.md).
 
 ## Guiding principles
 

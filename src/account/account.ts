@@ -85,7 +85,7 @@ export function randomAccount(): Account {
  * ```
  *
  * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
- * If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
+ * If not running against LocalNet then it will use process.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `name`: string: The name identifier of the account

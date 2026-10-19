@@ -58,5 +58,10 @@
     "active": true,
     "notes": "braces stack-exhaustion DoS via deeply nested patterns (GHSA-vfj7-8cjw-p6xm). Affects every published version (latest is 3.0.3, verified 2026-10-05), so no upgrade or override is possible. Reached only through dev tooling (fast-glob/micromatch via cpy-cli, replace-in-files-cli, tealscript/ts-morph, semantic-release) operating on repo-controlled glob patterns, never untrusted input. Not shipped in the published package. Review 2026-12-01.",
     "expiry": "2026-12-01"
+  },
+  "1241232": {
+    "active": true,
+    "notes": "postcss-selector-parser quadratic flat-selector parsing CPU DoS (GHSA-rj75-hqrm-r3gf). Only path is the copy bundled inside npm (semantic-release > @semantic-release/npm > npm@11.20.0 > postcss-selector-parser@7.1.4); npm ships it as a bundledDependency, so an override cannot reach it. Dev-only, not shipped in the published package. No fix until npm releases an updated bundle. Review 2026-12-01.",
+    "expiry": "2026-12-01"
   }
 }

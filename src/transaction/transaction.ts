@@ -410,7 +410,7 @@ async function getGroupExecutionInfo(
  * @privateRemarks
  *
  * This entire function will eventually be implemented in simulate upstream in algod. The simulate endpoint will return
- * an array of refference arrays for each transaction, so this eventually will eventually just call simulate and set the
+ * an array of reference arrays for each transaction, so this will eventually just call simulate and set the
  * reference arrays in the transactions to the reference arrays returned by simulate.
  *
  * See https://github.com/algorand/go-algorand/pull/5684
