@@ -1,0 +1,370 @@
+---
+title: 'Applications'
+description: "AlgoKit Utils drives smart contract applications from an app spec: an AppFactory creates and deploys apps, and an AppClient calls a deployed app's methods and decodes its state and errors."
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+import RemoteCode from '/src/components/RemoteCode.astro'
+
+Deploying and calling a [smart contract application](https://dev.algorand.co/concepts/smart-contracts/overview/) with AlgoKit Utils starts from one artifact: the application specification (app spec), the JSON document that smart contract frameworks such as Algorand TypeScript and Algorand Python emit when compiling a contract. The format is standardized by [ARC-56](https://dev.algorand.co/arc-standards/arc-0056/). The app spec describes the contract's Application Binary Interface (ABI) methods, its state schema, and its [Transaction Execution Approval Language (TEAL)](https://dev.algorand.co/concepts/smart-contracts/avm/) programs — everything the library needs to encode calls, compile and deploy the contract, and decode its state and errors.
+
+:::note
+Everywhere this page passes an app spec, the older [ARC-32](https://dev.algorand.co/arc-standards/arc-0032/) format is also accepted and converted to ARC-56 internally.
+:::
+
+Two classes consume the app spec. [`AppFactory`](/algokit-utils-ts/api/types/app-factory/classes/appfactory/) covers everything before a specific app instance exists: creating apps, deploying them idempotently, and handing out clients for them. [`AppClient`](/algokit-utils-ts/api/types/app-client/classes/appclient/) covers one deployed instance: calling its methods, reading its state, and funding its account. Use the factory when you don't yet know the application ID; use the client when you do. In application code, you'll usually drive both through a generated typed client, which is where this page starts.
+
+<LinkCard
+  title="Smart Contracts"
+  href="https://dev.algorand.co/concepts/smart-contracts/overview/"
+  description="How smart contract applications work on Algorand"
+/>
+
+<LinkCard
+  title="ARC-56: Extended App Description"
+  href="https://dev.algorand.co/arc-standards/arc-0056/"
+  description="The full specification of the app spec document"
+/>
+
+## Use Typed Clients
+
+For contracts you own, the recommended way to deploy and call an app is a _typed_ client, generated from the app spec with [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients):
+
+```shell
+algokit generate client HelloWorld.arc56.json --output artifacts/HelloWorldClient.ts
+```
+
+The command writes a module containing a typed factory and a typed client named after your contract — here `HelloWorldFactory` and `HelloWorldClient`. These classes wrap `AppFactory` and `AppClient`, so everything on this page applies to them: deployment, state access, and error handling all work the same. The difference is that each ABI method becomes a typed TypeScript method, with arguments and return values checked against the contract:
+
+```typescript
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { OnSchemaBreak, OnUpdate } from '@algorandfoundation/algokit-utils/types/app'
+import { HelloWorldClient, HelloWorldFactory } from './artifacts/HelloWorldClient'
+
+// Connect to the network and resolve the deployer account
+const algorand = AlgorandClient.fromEnvironment()
+const deployer = await algorand.account.fromEnvironment('DEPLOYER')
+
+// Get a typed factory
+const factory = algorand.client.getTypedAppFactory(HelloWorldFactory, { defaultSender: deployer.addr })
+
+// Deploy idempotently; AppendApp deploys a fresh app when the contract changes
+const { appClient, result } = await factory.deploy({
+  onUpdate: OnUpdate.AppendApp,
+  onSchemaBreak: OnSchemaBreak.AppendApp,
+})
+
+// Call an ABI method through the typed client
+const response = await appClient.send.hello({ args: { name: 'world' } })
+console.log(response.return) // Hello, world
+```
+
+The `deploy()` call is the same idempotent deployment covered under [Deploy an App](#deploy-an-app) below, and `result` carries the same deployment result. The difference shows in the last lines: `hello` takes typed arguments, and `response.return` is already decoded to the method's declared return type.
+
+When the app is already deployed, skip the factory and construct the typed client directly from its application ID:
+
+```typescript
+const appClient = algorand.client.getTypedAppClientById(HelloWorldClient, {
+  appId: 1234n,
+  defaultSender: deployer.addr,
+})
+```
+
+`getTypedAppClientByCreatorAndName` and `getTypedAppClientByNetwork` cover the same resolution modes as the untyped lookups described under [Get an App Client](#get-an-app-client) below.
+
+<LinkCard
+  title="Typed Client Usage"
+  href="https://github.com/algorandfoundation/algokit-client-generator-ts/blob/main/docs/usage.md"
+  description="The full API of generated typed factories and clients"
+/>
+
+The rest of this page works with `AppFactory` and `AppClient` directly, identifying ABI methods by their name strings — the same underlying API the generated classes drive, and the way to interact with a contract when you have only its app spec.
+
+## Deploy an App
+
+Deployment starts with a factory. Get one from an [`AlgorandClient`](/algokit-utils-ts/concepts/algorand-client/) by passing the contents of the app spec file your contract's build emitted:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="GET_APP_FACTORY"
+  lang="ts"
+  frame="none"
+/>
+
+The `defaultSender` becomes the sender for every call made through the factory and through the clients it creates, unless a call overrides it.
+
+<LinkCard
+  title="Accounts"
+  href="/algokit-utils-ts/concepts/account/"
+  description="The account types you can register and the ways to create them"
+/>
+
+`factory.deploy()` performs an idempotent deployment. It resolves the app by its name and creator account, creates the app only if it doesn't already exist, and returns an `AppClient` pointing at the result:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="DEPLOY_APP"
+  lang="ts"
+  frame="none"
+/>
+
+What `deploy()` does when the app already exists is configurable, from failing fast to updating the app in place — see [Redeploy Safely](#redeploy-safely) below.
+
+### Fill In Template Variables
+
+Contracts can defer constants to deployment time: a `TemplateVar` in Algorand TypeScript or Algorand Python becomes a `TMPL_{NAME}` placeholder in the app spec's TEAL. Fill the placeholders when `deploy()` compiles the programs:
+
+- `deployTimeParams` maps each placeholder name, without the `TMPL_` prefix, to a `number`, `bigint`, `string`, or `Uint8Array` value.
+- `updatable` and `deletable` fill the reserved `TMPL_UPDATABLE` and `TMPL_DELETABLE` placeholders, fixing at deploy time whether the app can ever be updated or deleted.
+
+The remaining examples on this page use a `State` test contract that declares a `TMPL_VALUE` constant alongside the update and delete gates; deploying it fills in all three:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="TEMPLATE_VARIABLES"
+  lang="ts"
+  frame="none"
+/>
+
+The same three parameters can also be passed once to `getAppFactory()`, becoming the default for every create and deploy call the factory makes.
+
+<LinkCard
+  title="TemplateVar in Algorand TypeScript"
+  href="https://dev.algorand.co/docs/algorand-typescript/typescript/latest/api/index/functions/templatevar/"
+  description="Declaring template variables in your contract that are replaced at compile time"
+/>
+
+### Bare Create
+
+In some cases it may be necessary to bypass the managed `deploy()` flow and create an app unconditionally. The factory's send surface sends a plain creation transaction, making a new app on every call, and returns a client for it:
+
+```typescript
+const { appClient: newClient, result: createResult } = await factory.send.bare.create()
+```
+
+`factory.send.create({ method: 'create_abi', args: [...] })` is the equivalent for contracts with an ABI create method. Apps created this way carry no deployment metadata, so `deploy()` will not find them.
+
+### Redeploy Safely
+
+Running `deploy()` again is safe: it finds the app already deployed under the same name for the creator account, compares its on-chain programs and schema against the new compilation, and acts on what changed through two parameters:
+
+| Parameter       | Governs                                                                     |
+| --------------- | --------------------------------------------------------------------------- |
+| `onUpdate`      | Changed program code                                                        |
+| `onSchemaBreak` | A schema grown beyond the state or extra program pages reserved at creation |
+
+Each parameter chooses an action. Both default to `Fail`, and because the schema reservation is fixed at creation, `UpdateApp` is available only to `onUpdate`:
+
+| Action       | What happens                                          |
+| ------------ | ----------------------------------------------------- |
+| `Fail`       | Stop the deployment                                   |
+| `UpdateApp`  | Update the app in place                               |
+| `ReplaceApp` | Delete the existing app and create a new one          |
+| `AppendApp`  | Create a new app and leave the existing one untouched |
+
+Redeploying unchanged code performs no transactions at all. Here a changed template value turns a redeploy into an in-place update:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="REDEPLOY_APP"
+  lang="ts"
+  frame="none"
+/>
+
+The result's `operationPerformed` reports which path was taken — `'create'`, `'update'`, `'replace'`, or `'nothing'` — and carries the corresponding transaction results.
+
+To find the deployed app, `deploy()` reads deployment metadata that the library records in an [ARC-2](https://dev.algorand.co/arc-standards/arc-0002/) transaction note. The lookup works the same on every network, so a single deployment script serves LocalNet, TestNet, and MainNet. It requires an indexer client on the `AlgorandClient`, unless a pre-fetched lookup is passed as `existingDeployments`, and results are cached per creator account. The name is the app's entire identity: a different contract deployed under the same name by the same creator is treated as a code change to the existing app, not as a new app.
+
+### Fund the App Account
+
+The app's account frequently needs a balance, for example to cover the [minimum balance requirement](https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr) of box storage. `fundAppAccount` is a payment to the app's address with the receiver filled in:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="FUND_APP_ACCOUNT"
+  lang="ts"
+  frame="none"
+/>
+
+Deployment scripts conventionally fund straight after `deploy()`, keyed off the result's `operationPerformed`, so the account is topped up only when the deployment produced a fresh app instance:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="FUND_APP_ACCOUNT_ON_CREATE"
+  lang="ts"
+  frame="none"
+/>
+
+## Get an App Client
+
+When the app is already deployed, construct a client for it directly:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="GET_APP_CLIENT"
+  lang="ts"
+  frame="none"
+/>
+
+An app can also be resolved by its creator and name, using the same lookup as `deploy()`, or from a factory, which pre-populates the app spec, default sender, and compilation source maps:
+
+```typescript
+const appClient = await algorand.client.getAppClientByCreatorAndName({
+  creatorAddress: deployer.addr,
+  appName: 'State',
+  appSpec,
+})
+const sameApp = factory.getAppClientById({ appId: 1234n })
+```
+
+An app spec can also embed the IDs of its published deployments in a `networks` map, keyed by network. When the spec records an ID for the connected network, `algorand.client.getAppClientByNetwork({ appSpec })` returns a client without needing an app ID.
+
+## Call the App
+
+A method call names an ABI method and passes arguments as plain TypeScript values. The client encodes them per the app spec, sends the call, and decodes the return value into `return`:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="CALL_APP_METHOD"
+  lang="ts"
+  frame="none"
+/>
+
+The client's `send` surface covers every kind of call:
+
+- `send.call()` makes a call, with the NoOp on-complete action by default.
+- `send.optIn()`, `send.closeOut()`, `send.update()`, and `send.delete()` send the same shape of method call with a different on-complete action. Update recompiles the programs, so it accepts the same `deployTimeParams`, `updatable`, and `deletable` as deploy.
+- `send.bare.*` covers bare calls that invoke no ABI method.
+
+Alongside `send`, the client mirrors the `AlgorandClient` surface with `appClient.params.*` and `appClient.createTransaction.*` for composing calls into transaction groups without sending them. Because an ABI method call can carry transaction arguments, `createTransaction` for a method call returns the set of built transactions rather than a single one.
+
+<LinkCard
+  title="Transactions"
+  href="/algokit-utils-ts/concepts/transactions/"
+  description="Building transaction groups, common params fields, and the structure of returned results"
+/>
+
+### Readonly Methods
+
+An app spec can declare a method as `readonly`. The client never submits a transaction for these methods: they run through algod's simulate endpoint, returning their result immediately without paying a fee or writing to the ledger. Methods without the flag are signed, submitted, and confirmed like any other transaction. The calling code is identical either way.
+
+### Default Arguments
+
+When the app spec declares a default value for an argument, pass `undefined` and the client fills it in:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="DEFAULT_ARGUMENTS"
+  lang="ts"
+  frame="none"
+/>
+
+### Transaction Arguments
+
+ABI methods can declare transactions as arguments. Build the transaction without sending it and pass it in `args`; the client groups it in front of the method call so the contract can inspect it:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="CALL_APP_METHOD_WITH_TXN_ARG"
+  lang="ts"
+  frame="none"
+/>
+
+### Resources and Inner Transaction Fees
+
+An application call has to name every account, application, asset, and box it touches. By default the client discovers those references for you: before sending, it simulates the group with unnamed resources allowed, reads back which resources each call used, and fills them into the transactions. This is the `populateAppCallResources` send option, on by default through `Config.populateAppCallResources`; pass `populateAppCallResources: false` on a send to list resources yourself. Readonly method calls are simulated anyway, so they get the same treatment without an extra round trip. Explicit references you pass — such as `boxReferences` below — are kept and only the missing ones are added.
+
+Contracts that issue inner transactions need the outer caller to pay for them. Pass `coverAppCallInnerTransactionFees: true` together with a `maxFee`, and the client simulates the call to compute the fee the parent transaction must carry, including the op-up transactions a contract sends to raise its own opcode budget. `maxFee` is required whenever this option is on; the send throws without it. Fee coverage is described in detail under [Beyond a Single Send](/algokit-utils-ts/concepts/transactions/#beyond-a-single-send) on the Transactions page.
+
+## Read State
+
+An ARC-56 app spec declares the app's state — keys and maps in global, local, and box storage, with their value types — so the client can read storage and decode it into TypeScript values. Each storage kind exposes the same accessors: `getAll()`, `getValue(name)`, `getMapValue(mapName, key)`, and `getMap(mapName)`. The last returns a whole map as a `Map` keyed by the decoded key; when the key type is a byte array, each key is a `Uint8Array`, so iterate the entries rather than calling `get` with a fresh array.
+
+### Global State
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="READ_GLOBAL_STATE"
+  lang="ts"
+  frame="none"
+/>
+
+### Local State
+
+Local state is stored per account, so the account must have opted in to the app and the accessor takes its address:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="READ_LOCAL_STATE"
+  lang="ts"
+  frame="none"
+/>
+
+### Box Storage
+
+Boxes require the app account to hold a balance for their minimum balance requirement, covered by `fundAppAccount` above. Transactions that touch a box must declare it in `boxReferences` — a `string` or `Uint8Array` name for the app's own boxes, or a `BoxReference` with an `appId` for another app's box:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="READ_BOX_STATE"
+  lang="ts"
+  frame="none"
+/>
+
+For state not declared in the app spec, the client also exposes raw readers — `getGlobalState()`, `getLocalState(address)`, `getBoxNames()`, `getBoxValue(name)`, and related methods — that return undecoded values.
+
+## Handle Logic Errors
+
+When a smart contract call fails, algod reports a `logic eval error` identifying only a program counter position. When the client holds a TEAL source map from compilation — clients created through a factory, or that have compiled the app's programs themselves — or the app spec carries its TEAL `source` and `sourceInfo`, the failure is decoded into a [`LogicError`](/algokit-utils-ts/api/types/logic-error/classes/logicerror/) locating the failing line in the TEAL source. The `State` contract's `error` method fails deliberately, so the `logic eval error` the library logs here is the expected input:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="HANDLE_LOGIC_ERROR"
+  lang="ts"
+  frame="none"
+/>
+
+`LogicError` carries the failing `txId`, `pc`, and algod's `msg` on `led`, the located TEAL line as `teal_line`, the decoded TEAL as `program`, and a `stack` that shows the failing line in context. When the app spec also names an `errorMessage` for that program counter, the client throws a plain `Error` carrying that message instead, with the `LogicError` attached as its `cause`.
+
+<LinkCard
+  title="Errors & Debugging"
+  href="/algokit-utils-ts/concepts/errors-and-debugging/"
+  description="Reusing source maps, transforming errors, and capturing traces for the Algorand Virtual Machine (AVM) Debugger"
+/>
+
+## Under the Hood
+
+The factory and client build on lower-level interfaces on `AlgorandClient` that remain available when there is no app spec — for example when working with hand-written TEAL:
+
+- [`algorand.appDeployer`](/algokit-utils-ts/api/types/app-deployer/classes/appdeployer/) provides the idempotent, name-resolved deployment described under [Redeploy Safely](#redeploy-safely) for raw create, update, and delete params. `factory.deploy()` delegates to it.
+- [`algorand.send.appCreate()`](/algokit-utils-ts/api/types/algorand-client-transaction-sender/classes/algorandclienttransactionsender/) and its siblings send individual application transactions, as bare calls or as `*MethodCall` ABI variants.
+- `algorand.app`, the [`AppManager`](/algokit-utils-ts/api/types/app-manager/classes/appmanager/), compiles TEAL and caches each result with its source map, substitutes template variables, and reads and decodes app information, state, and boxes.
+
+Here a bare creation goes through the transaction layer, and the `AppManager` reads the app back:
+
+<RemoteCode
+  src="https://raw.githubusercontent.com/algorandfoundation/algokit-utils-ts/main/examples/concepts/applications.algo.ts"
+  snippet="CREATE_AND_READ_APP"
+  lang="ts"
+  frame="none"
+/>
+
+## What's Next
+
+<CardGrid>
+  <LinkCard
+    title="Algorand Client"
+    href="/algokit-utils-ts/concepts/algorand-client/"
+    description="The entry point that provides factories, clients, and the layers beneath them"
+  />
+  <LinkCard
+    title="Transactions"
+    href="/algokit-utils-ts/concepts/transactions/"
+    description="Payments, atomic groups, simulation, resource population, and fees"
+  />
+  <LinkCard
+    title="App Client API Reference"
+    href="/algokit-utils-ts/api/types/app-client/classes/appclient/"
+    description="Every method on the application client"
+  />
+</CardGrid>

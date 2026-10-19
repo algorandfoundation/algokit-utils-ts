@@ -1,8 +1,15 @@
 [
   { "label": "Home", "link": "/" },
   {
-    "label": "Capabilities",
-    "autogenerate": { "directory": "capabilities" }
+    "label": "Concepts",
+    "items": [
+      { "slug": "concepts/algorand-client" },
+      { "slug": "concepts/transactions" },
+      { "slug": "concepts/account" },
+      { "slug": "concepts/asset" },
+      { "slug": "concepts/app" },
+      { "slug": "concepts/errors-and-debugging" }
+    ]
   },
   {
     "label": "Migration Guides",
