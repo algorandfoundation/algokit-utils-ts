@@ -1,5 +1,8 @@
 # AlgoKit TypeScript Utilities
 
+> [!IMPORTANT]
+> This repo has been archived. Development has continued in <https://github.com/algorandfoundation/algokit-ts>
+
 A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
 
 The goal of this library is to provide intuitive, productive utility functions that make it easier, quicker and safer to build applications on Algorand. Largely these functions wrap the underlying Algorand SDK, but provide a higher level interface with sensible defaults and capabilities for common tasks.
